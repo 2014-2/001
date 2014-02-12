@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.xiaohan.ihappy.R;
+
 import com.xiaohan.ihappy.helpers.utils.ThemeUtils;
 
 /**
