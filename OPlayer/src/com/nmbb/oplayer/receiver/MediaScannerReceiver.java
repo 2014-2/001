@@ -61,34 +61,4 @@ public class MediaScannerReceiver extends BroadcastReceiver {
 		args.putString(MediaScannerService.EXTRA_FILE_PATH, path);
 		context.startService(new Intent(context, MediaScannerService.class).putExtras(args));
 	}
-	//	private static boolean isScanning = false;
-	//	//	private boolean isScanningStarted = false;
-	//	private IReceiverNotify mNotify;
-	//
-	//	public MediaScannerReceiver() {
-	//	}
-	//
-	//	public MediaScannerReceiver(IReceiverNotify notify) {
-	//		mNotify = notify;
-	//	}
-	//
-	//	public static boolean isScanning(Context ctx) {
-	//		return isServiceRunning(ctx, "io.vov.vitamio.MediaScannerService");
-	//	}
-	//
-	//	@Override
-	//	public void onReceive(Context context, Intent intent) {
-	//		final String action = intent.getAction();
-	//		Log.i("MediaScannerReceiver", action);
-	//	}
-	//
-	//	/** 服务是否正在运行 */
-	//	public static boolean isServiceRunning(Context ctx, String name) {
-	//		ActivityManager manager = (ActivityManager) ctx.getSystemService(Context.ACTIVITY_SERVICE);
-	//		for (RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
-	//			if (name.equals(service.service.getClassName()))
-	//				return true;
-	//		}
-	//		return false;
-	//	}
 }
