@@ -19,13 +19,14 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.xiaohan.ihappy.R;
 import com.xiaohan.ihappy.activities.AudioPlayerHolder;
 import com.xiaohan.ihappy.activities.QuickQueue;
 import com.xiaohan.ihappy.cache.ImageInfo;
 import com.xiaohan.ihappy.cache.ImageProvider;
 import com.xiaohan.ihappy.helpers.utils.MusicUtils;
 import com.xiaohan.ihappy.helpers.utils.ThemeUtils;
+
+import com.xiaohan.ihappy.R;
 
 /**
  * @author Andrew Neal

@@ -5,8 +5,8 @@
     android:versionName="1.0" >
 
     <uses-sdk
-        android:minSdkVersion="8"
-        android:targetSdkVersion="15" />
+        android:minSdkVersion="11"
+        android:targetSdkVersion="17" />
 
     <!-- This is used for Last.fm and Google Music -->
     <uses-permission android:name="android.permission.INTERNET" />

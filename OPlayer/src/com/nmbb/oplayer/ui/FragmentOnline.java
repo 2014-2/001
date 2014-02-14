@@ -36,17 +36,17 @@ import android.widget.Toast;
 
 public class FragmentOnline extends FragmentBase implements OnItemClickListener {
 
-	/** 缓存视频列表 */
+	/** 缂撳瓨瑙嗛鍒楄〃 */
 	private static ArrayList<String[]> mOnlineList = new ArrayList<String[]>();
-	/** 缓存视频LOGO列表 */
+	/** 缂撳瓨瑙嗛LOGO鍒楄〃 */
 	private static ArrayList<Integer> mOnlineLogoList = new ArrayList<Integer>();
 	private WebView mWebView;
 	private ListView mListView;
-	/** 网页正在加载 */
+	/** 缃戦〉姝ｅ湪鍔犺浇 */
 	private View mLoading;
-	/** 历史记录 */
+	/** 鍘嗗彶璁板綍 */
 	private List<String> mHistory = new ArrayList<String>();
-	/** 显示当前正在加载的url */
+	/** 鏄剧ず褰撳墠姝ｅ湪鍔犺浇鐨剈rl */
 	private TextView mUrl;
 	private String mTitle;
 	private final static ArrayList<OnlineVideo> root = new ArrayList<OnlineVideo>();
@@ -77,15 +77,15 @@ public class FragmentOnline extends FragmentBase implements OnItemClickListener 
 			long id) {
 		final OnlineVideo item = mAdapter.getItem(position);
 		switch (level) {
-		case 1:// 顶级
+		case 1:// 椤剁骇
 			level = 2;
 			if (position == 0) {
-				// 直播 
+				// 鐩存挱聽
 				if (tvs == null)
 					tvs = XmlReaderHelper.getAllCategory(getActivity());
 				mAdapter.replace(tvs);
 			} else {
-				// 视频 
+				// 瑙嗛聽
 				mAdapter.replace(videos);
 			}
 			mListView.setAdapter(mAdapter);
@@ -93,7 +93,7 @@ public class FragmentOnline extends FragmentBase implements OnItemClickListener 
 		case 2://
 			level = 3;
 			if (item.id != null) {
-				// 直播
+				// 鐩存挱
 				mAdapter.replace(XmlReaderHelper.getVideos(getActivity(),
 						item.id));
 				mListView.setAdapter(mAdapter);
@@ -155,15 +155,15 @@ public class FragmentOnline extends FragmentBase implements OnItemClickListener 
 		mLoading.setVisibility(View.GONE);
 	}
 
-	/** 初始化WebView */
+	/** 鍒濆鍖朩ebView */
 	private void initWebView() {
 		mWebView.setScrollBarStyle(View.SCROLLBARS_OUTSIDE_OVERLAY);
 		mWebView.getSettings().setJavaScriptEnabled(true);
-		mWebView.getSettings().setPluginsEnabled(true);
+		//mWebView.getSettings().setPluginsEnabled(true);
 
 		mWebView.setWebViewClient(new WebViewClient() {
 
-			/** 页面开始加载 */
+			/** 椤甸潰寮�鍔犺浇 */
 			@Override
 			public void onPageStarted(WebView view, String url, Bitmap favicon) {
 				super.onPageStarted(view, url, favicon);
@@ -171,7 +171,7 @@ public class FragmentOnline extends FragmentBase implements OnItemClickListener 
 				mUrl.setVisibility(View.VISIBLE);
 			}
 
-			/** 页面加载完成 */
+			/** 椤甸潰鍔犺浇瀹屾垚 */
 			@Override
 			public void onPageFinished(WebView view, String url) {
 				super.onPageFinished(view, url);
@@ -180,19 +180,19 @@ public class FragmentOnline extends FragmentBase implements OnItemClickListener 
 				if (!mHistory.contains(url))
 					mHistory.add(0, url);
 				mUrl.setVisibility(View.GONE);
-				// 取得title
+				// 鍙栧緱title
 				mTitle = view.getTitle();
 			};
 
-			/** 页面跳转 */
+			/** 椤甸潰璺宠浆 */
 			@Override
 			public boolean shouldOverrideUrlLoading(WebView view,
 					final String url) {
 				if (FileUtils.isVideoOrAudio(url)) {
 					Dialog dialog = new AlertDialog.Builder(getActivity())
 							.setIcon(android.R.drawable.btn_star)
-							.setTitle("播放/下载").setMessage(url)
-							.setPositiveButton("播放", new OnClickListener() {
+							.setTitle("鎾斁/涓嬭浇").setMessage(url)
+							.setPositiveButton("鎾斁", new OnClickListener() {
 								@Override
 								public void onClick(DialogInterface dialog,
 										int which) {
@@ -202,7 +202,7 @@ public class FragmentOnline extends FragmentBase implements OnItemClickListener 
 									intent.putExtra("title", mTitle);
 									startActivity(intent);
 								}
-							}).setNeutralButton("下载", new OnClickListener() {
+							}).setNeutralButton("涓嬭浇", new OnClickListener() {
 								@Override
 								public void onClick(DialogInterface dialog,
 										int which) {
@@ -226,18 +226,18 @@ public class FragmentOnline extends FragmentBase implements OnItemClickListener 
 												url, savePath);
 										Toast.makeText(
 												getActivity(),
-												"正在下载 .."
+												"姝ｅ湪涓嬭浇 .."
 														+ FileUtils
 																.getUrlFileName(savePath)
-														+ " ，可从本地视频查看进度！",
+														+ " 锛屽彲浠庢湰鍦拌棰戞煡鐪嬭繘搴︼紒",
 												Toast.LENGTH_LONG).show();
 									} else {
 										Toast.makeText(getActivity(),
-												"请检测SD卡!", Toast.LENGTH_LONG)
+												"璇锋娴婼D鍗�", Toast.LENGTH_LONG)
 												.show();
 									}
 								}
-							}).setNegativeButton("取消", null).create();
+							}).setNegativeButton("鍙栨秷", null).create();
 					dialog.show();
 					return true;
 				}
@@ -245,7 +245,7 @@ public class FragmentOnline extends FragmentBase implements OnItemClickListener 
 			};
 		});
 
-		/** 处理后退键 */
+		/** 澶勭悊鍚庨�閿�*/
 		mWebView.setOnKeyListener(new OnKeyListener() {
 			@Override
 			public boolean onKey(View v, int keyCode, KeyEvent event) {
@@ -262,7 +262,7 @@ public class FragmentOnline extends FragmentBase implements OnItemClickListener 
 		});
 	}
 
-	/** 数据适配 */
+	/** 鏁版嵁閫傞厤 */
 	private class DataAdapter extends ArrayAdapter<OnlineVideo> {
 
 		public DataAdapter(Context ctx) {
@@ -292,7 +292,7 @@ public class FragmentOnline extends FragmentBase implements OnItemClickListener 
 
 	}
 
-	// ~~~~~~~~~~~~~处理FLASH退出的问题 ~~~~~~~~
+	// ~~~~~~~~~~~~~澶勭悊FLASH閫�嚭鐨勯棶棰�~~~~~~~~
 
 	private void callHiddenWebViewMethod(String name) {
 		if (mWebView != null) {
@@ -329,27 +329,27 @@ public class FragmentOnline extends FragmentBase implements OnItemClickListener 
 
 	static {
 
-		// private final static String[] CATEGORY = { "电视直播", "视频网站" };
-		root.add(new OnlineVideo("电视直播", R.drawable.logo_cntv, 1));
-		root.add(new OnlineVideo("视频网站", R.drawable.logo_youku, 0));
+		// private final static String[] CATEGORY = { "鐢佃鐩存挱", "瑙嗛缃戠珯" };
+		root.add(new OnlineVideo("鐢佃鐩存挱", R.drawable.logo_cntv, 1));
+		root.add(new OnlineVideo("瑙嗛缃戠珯", R.drawable.logo_youku, 0));
 
-		videos.add(new OnlineVideo("优酷视频", R.drawable.logo_youku, 0,
+		videos.add(new OnlineVideo("浼橀叿瑙嗛", R.drawable.logo_youku, 0,
 				"http://3g.youku.com"));
-		videos.add(new OnlineVideo("搜狐视频", R.drawable.logo_sohu, 0,
+		videos.add(new OnlineVideo("鎼滅嫄瑙嗛", R.drawable.logo_sohu, 0,
 				"http://m.tv.sohu.com"));
-		videos.add(new OnlineVideo("乐视TV", R.drawable.logo_letv, 0,
+		videos.add(new OnlineVideo("涔愯TV", R.drawable.logo_letv, 0,
 				"http://m.letv.com"));
-		videos.add(new OnlineVideo("爱奇异", R.drawable.logo_iqiyi, 0,
+		videos.add(new OnlineVideo("鐖卞寮", R.drawable.logo_iqiyi, 0,
 				"http://3g.iqiyi.com/"));
 		videos.add(new OnlineVideo("PPTV", R.drawable.logo_pptv, 0,
 				"http://m.pptv.com/"));
-		videos.add(new OnlineVideo("腾讯视频", R.drawable.logo_qq, 0,
+		videos.add(new OnlineVideo("鑵捐瑙嗛", R.drawable.logo_qq, 0,
 				"http://3g.v.qq.com/"));
 		videos.add(new OnlineVideo("56.com", R.drawable.logo_56, 0,
 				"http://m.56.com/"));
-		videos.add(new OnlineVideo("新浪视频", R.drawable.logo_sina, 0,
+		videos.add(new OnlineVideo("鏂版氮瑙嗛", R.drawable.logo_sina, 0,
 				"http://video.sina.cn/"));
-		videos.add(new OnlineVideo("土豆视频", R.drawable.logo_tudou, 0,
+		videos.add(new OnlineVideo("鍦熻眴瑙嗛", R.drawable.logo_tudou, 0,
 				"http://m.tudou.com"));
 	}
 }

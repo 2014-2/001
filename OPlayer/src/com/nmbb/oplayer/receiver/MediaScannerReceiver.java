@@ -1,5 +1,7 @@
 package com.nmbb.oplayer.receiver;
 
+import java.io.File;
+
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -12,8 +14,8 @@ import com.nmbb.oplayer.service.MediaScannerService;
 /** 文件扫描 */
 public class MediaScannerReceiver extends BroadcastReceiver {
 
-	public static final String ACTION_MEDIA_SCANNER_SCAN_FILE = "";
-	public static final String ACTION_MEDIA_SCANNER_SCAN_DIRECTORY = "";
+	public static final String ACTION_MEDIA_SCANNER_SCAN_FILE = "com.nmbb.oplayer.action.MEDIA_SCANNER_SCAN_FILE";
+	public static final String ACTION_MEDIA_SCANNER_SCAN_DIRECTORY = "com.nmbb.oplayer.action.MEDIA_SCANNER_SCAN_DIRECTORY";
 
 	@Override
 	public void onReceive(Context context, Intent intent) {
@@ -21,15 +23,25 @@ public class MediaScannerReceiver extends BroadcastReceiver {
 		Uri uri = intent.getData();
 
 		if (action.equals(Intent.ACTION_BOOT_COMPLETED)) {
-			//扫描整个SD卡目录 
-			//FIXME 处理多个SD卡的问题
-			//			Environment.getExternalStorageDirectory().getParentFile();
-			scanDirectory(context, Environment.getExternalStorageDirectory().getAbsolutePath());
+		    File[] files=new File("/mnt").listFiles();
+		    // scan all the memory devices: internal mem, sd, usb, or TF..., anything mounted.
+		    for (int i = 0; i < files.length; i++) {
+		        scanDirectory(context, files[i].getAbsolutePath().toString());
+		    }
 		} else if (uri.getScheme().equals("file")) {
 			String path = uri.getPath();
 			if (action.equals(Intent.ACTION_MEDIA_MOUNTED)) {
 				scanDirectory(context, path);
-			} else if (action.equals(ACTION_MEDIA_SCANNER_SCAN_FILE) && path != null) {
+			} else if(
+					action.equals(Intent.ACTION_MEDIA_BAD_REMOVAL) ||
+					action.equals(Intent.ACTION_MEDIA_EJECT)       ||
+					action.equals(Intent.ACTION_MEDIA_REMOVED)     ||
+					action.equals(Intent.ACTION_MEDIA_UNMOUNTED)
+					){
+				// rescan the files from parent directory.
+				scanDirectory(context, Environment.getExternalStorageDirectory().getParentFile().toString());
+			}
+			else if (action.equals(ACTION_MEDIA_SCANNER_SCAN_FILE) && path != null) {
 				scanFile(context, path);
 			} else if (action.equals(ACTION_MEDIA_SCANNER_SCAN_DIRECTORY) && path != null) {
 				scanDirectory(context, path);

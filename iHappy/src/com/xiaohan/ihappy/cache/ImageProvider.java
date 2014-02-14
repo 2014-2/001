@@ -11,13 +11,12 @@ import android.graphics.drawable.TransitionDrawable;
 import android.os.AsyncTask;
 import android.util.DisplayMetrics;
 import android.widget.ImageView;
-import com.xiaohan.ihappy.R;
 import com.xiaohan.ihappy.helpers.GetBitmapTask;
 import com.xiaohan.ihappy.helpers.utils.ImageUtils;
 
 import static com.xiaohan.ihappy.Constants.*;
 
-
+import com.xiaohan.ihappy.R;
 
 import java.util.*;
 

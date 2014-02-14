@@ -6,7 +6,6 @@
  */
 package com.xiaohan.ihappy.ui.widgets;
 
-import com.xiaohan.ihappy.R;
 import com.xiaohan.ihappy.helpers.visualizer.AudioData;
 import com.xiaohan.ihappy.helpers.visualizer.BarGraphRenderer;
 import com.xiaohan.ihappy.helpers.visualizer.SolidBarGraphRenderer;
@@ -28,6 +27,8 @@ import android.media.audiofx.Visualizer;
 import android.preference.PreferenceManager;
 import android.util.AttributeSet;
 import android.view.View;
+
+import com.xiaohan.ihappy.R;
 
 
 /*音频可视化效果*/
