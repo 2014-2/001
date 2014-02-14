@@ -1,8 +1,10 @@
 package com.byd.player;
 
-import android.os.Bundle;
 import android.app.Activity;
+import android.os.Bundle;
 import android.view.Menu;
+
+import com.byd.player.video.VideoPlayActivity;
 
 public class MainActivity extends Activity {
 
@@ -10,6 +12,8 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        
+        VideoPlayActivity.playVideoItem(this);
     }
 
     @Override
@@ -18,5 +22,5 @@ public class MainActivity extends Activity {
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
-
+    
 }

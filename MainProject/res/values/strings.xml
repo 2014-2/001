@@ -5,4 +5,8 @@
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello world!</string>
 
+    <!-- Video -->
+    <string name="failed_to_play">Failed to play</string>
+    <string name="failed_to_play_next">Failed to play and read next file</string>
+    
 </resources>

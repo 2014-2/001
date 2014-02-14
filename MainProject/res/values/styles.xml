@@ -17,4 +17,38 @@
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
     </style>
 
+    
+    <style name="style_failed_to_play">
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:singleLine">true</item>
+    </style>
+    
+    
+    <style name="style_seekbar">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">32dp</item>
+        <item name="android:layout_gravity">center_vertical</item>
+        <item name="android:maxHeight">8px</item>
+        <item name="android:minHeight">8px</item>
+        <item name="android:paddingLeft">15px</item>
+        <item name="android:layout_marginTop">5px</item>
+        <item name="android:layout_marginBottom">5px</item>
+        <item name="android:paddingRight">15px</item>
+        <item name="android:progress">0</item>
+        <item name="android:progressDrawable">@drawable/progress_horizontal</item>
+        <item name="android:secondaryProgress">0</item>
+        <item name="android:thumb">@drawable/button_control</item>
+    </style>
+    
+    <style name="header_text">
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:shadowColor">#000000</item>
+        <item name="android:shadowRadius">2</item>
+        <item name="android:shadowDx">1.1</item>
+        <item name="android:shadowDy">-1.5</item>
+    </style>
+    
 </resources>
