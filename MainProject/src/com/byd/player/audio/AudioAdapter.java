@@ -21,6 +21,7 @@ public class AudioAdapter extends BaseAdapter {
     public AudioAdapter(Context context, LayoutInflater inflater) {
         mContext = context;
         mInflater = inflater;
+        mData = AudioManager.getInstance().getSongs();
     }
 
     public void setData(List<Song> data) {
@@ -59,6 +60,10 @@ public class AudioAdapter extends BaseAdapter {
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
+
+        viewHolder.mIamgeAlbum.setImageResource(R.drawable.test_image_album);
+        viewHolder.mTextAudioName.setText(R.string.text_name);
+        viewHolder.mTextAudioSinger.setText(R.string.text_singer);
         return convertView;
     }
 

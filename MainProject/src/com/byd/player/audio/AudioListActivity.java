@@ -7,29 +7,34 @@ import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.WindowManager;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 
 import com.byd.player.R;
 
-public class AudioListActivity extends Activity {
+public class AudioListActivity extends Activity implements OnItemClickListener {
     private GridView mAudioList = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-//        requestWindowFeature(Window.FEATURE_NO_TITLE);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         super.onCreate(savedInstanceState);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON,
                 WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
+        AudioManager.getInstance().init(getApplicationContext());
 
         setContentView(R.layout.audio_list_view);
 
         mAudioList = (GridView) findViewById(R.id.audio_grid_list);
         BaseAdapter adapter = new AudioAdapter(this, getLayoutInflater());
         mAudioList.setAdapter(adapter);
-        
+        mAudioList.setOnItemClickListener(this);
+
         ActionBar actionBar = this.getActionBar();
         actionBar.setDisplayOptions(ActionBar.DISPLAY_HOME_AS_UP, ActionBar.DISPLAY_HOME_AS_UP);
     }
@@ -44,8 +49,6 @@ public class AudioListActivity extends Activity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
         case R.id.action_edit:
-            Intent intent = new Intent(this, AudioPlayerActivity.class);
-            startActivity(intent);
             break;
         }
         return true;
@@ -59,6 +62,12 @@ public class AudioListActivity extends Activity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+        Intent intent = new Intent(this, AudioPlayerActivity.class);
+        startActivity(intent);
     }
 
 }

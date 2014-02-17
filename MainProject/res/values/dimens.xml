@@ -8,9 +8,9 @@
 
     <!-- music dimens -->
     <dimen name="music_item_width">320dp</dimen>
-    <dimen name="music_item_height">110dp</dimen>
-    <dimen name="music_item_album_width">100dp</dimen>
-    <dimen name="music_item_album_height">100dp</dimen>
+    <dimen name="music_item_height">130dp</dimen>
+    <dimen name="music_item_album_width">120dp</dimen>
+    <dimen name="music_item_album_height">120dp</dimen>
     <dimen name="music_item_text_size">40dip</dimen>
 
 </resources>

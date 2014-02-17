@@ -9,6 +9,10 @@ import android.provider.MediaStore;
 public class AudioManager {
     private static AudioManager sInstance = new AudioManager();
 
+    public interface DataListener {
+        void onDataChange();
+    }
+
     private Context mContext = null;
     private List<Song> mSongsList = new ArrayList<Song>();
 
@@ -17,6 +21,26 @@ public class AudioManager {
 
     public void init(Context context) {
         mContext = context;
+        
+        // TODO test
+        mSongsList.add(new Song());
+        mSongsList.add(new Song());
+        mSongsList.add(new Song());
+        mSongsList.add(new Song());
+        mSongsList.add(new Song());
+        mSongsList.add(new Song());
+        mSongsList.add(new Song());
+        mSongsList.add(new Song());
+        mSongsList.add(new Song());
+        mSongsList.add(new Song());
+        mSongsList.add(new Song());
+        mSongsList.add(new Song());
+        mSongsList.add(new Song());
+        mSongsList.add(new Song());
+        mSongsList.add(new Song());
+        mSongsList.add(new Song());
+        mSongsList.add(new Song());
+        mSongsList.add(new Song());
     }
 
     public static AudioManager getInstance() {
@@ -39,6 +63,10 @@ public class AudioManager {
 
     public void add(List<Song> songs) {
         mSongsList.addAll(songs);
+    }
+
+    public List<Song> getSongs() {
+        return mSongsList;
     }
 
     public void notifyDataChange() {
