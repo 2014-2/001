@@ -38,13 +38,8 @@
         <activity
             android:name="com.byd.player.audio.AudioPlayerActivity"
             android:theme="@android:style/Theme.DeviceDefault" />
-    </application>
-
-=======
         
         <service android:name="com.byd.player.services.AuxAudioService"></service>
-        
     </application>
 
->>>>>>> e6dd3d5c8d1d1fa585f59e95d63031bf0698a0ef
 </manifest>
