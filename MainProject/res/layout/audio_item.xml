@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="@dimen/music_item_width"
+    android:layout_height="@dimen/music_item_height"
+    android:layout_marginBottom="4dp"
+    android:layout_marginTop="4dp"
+    android:background="@android:color/darker_gray" >
+
+    <ImageView
+        android:id="@+id/audio_album"
+        android:layout_width="@dimen/music_item_album_width"
+        android:layout_height="@dimen/music_item_album_height"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:src="@drawable/test_image_album" />
+
+    <TextView
+        android:id="@+id/audio_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="4dp"
+        android:layout_toRightOf="@id/audio_album"
+        android:paddingLeft="8dp"
+        android:singleLine="true"
+        android:text="@string/text_name"
+        android:textSize="@dimen/music_item_text_size" />
+
+    <TextView
+        android:id="@+id/audio_singer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="4dp"
+        android:layout_toRightOf="@id/audio_album"
+        android:paddingLeft="8dp"
+        android:singleLine="true"
+        android:text="@string/text_singer"
+        android:textSize="@dimen/music_item_text_size" />
+
+</RelativeLayout>

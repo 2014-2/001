@@ -9,8 +9,16 @@
     <string name="video_page">视频</string>
     <string name="failed_to_play">Failed to play</string>
     <string name="failed_to_play_next">Failed to play and read next file</string>
-    
+
     <!-- Audio -->
     <string name="audio_page">音乐</string>
-    
+    <string name="btn_text_local">本地音乐</string>
+    <string name="btn_text_sdcard">存储卡</string>
+    <string name="btn_text_usb">USB</string>
+    <string name="btn_text_aux">AUX</string>
+    <string name="btn_text_mobile">手机音乐</string>
+
+    <!-- test -->
+    <string name="text_name">我的歌声里</string>
+    <string name="text_singer">曲婉婷</string>
 </resources>

@@ -22,13 +22,19 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        
-        <activity
-            android:name="com.byd.player.video.VideoPlayActivity" >
+        <activity android:name="com.byd.player.video.VideoPlayActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name="com.byd.player.audio.AudioListActivity"
+            android:theme="@android:style/Theme.DeviceDefault" >
+        </activity>
+        <activity
+            android:name="com.byd.player.audio.AudioPlayerActivity"
+            android:theme="@android:style/Theme.DeviceDefault" />
     </application>
 
 </manifest>
