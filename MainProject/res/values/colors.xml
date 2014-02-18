@@ -10,4 +10,6 @@
     <color name="background">#ffc3ddea</color>
     <color name="yellow">#ffffcc00</color>
     <color name="title">#ff274462</color>
+    <color name="gridview_divider">#ff0000</color>
+    <color name="gridview_selected">#555555</color>
 </resources>
