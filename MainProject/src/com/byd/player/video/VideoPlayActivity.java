@@ -148,7 +148,7 @@ public class VideoPlayActivity extends Activity {
 		titleWindow = new PopupWindow(titleView);
 
 		tvTitle = (TextView) titleView.findViewById(R.id.button_header_title);
-		tvTitle.setText(mVideoUrl);
+		tvTitle.setText(mediaName);
 
 		controlView = getLayoutInflater().inflate(R.layout.video_play_view_control, null);
 		controlView.setOnTouchListener(new OnTouchListener() {
