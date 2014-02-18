@@ -9,8 +9,17 @@
     <string name="video_page">视频</string>
     <string name="failed_to_play">Failed to play</string>
     <string name="failed_to_play_next">Failed to play and read next file</string>
+    <string name="local_video">本地视频</string>
+    <string name="sdcard">存储卡</string>
+    <string name="usb">USB</string>
+    <string name="play_history">播放历史</string>
+    <string name="delete">删除</string>
+    <string name="select_all">全选</string>
+    <string name="edit">编辑</string>
+    <string name="cancel">取消</string>
     
     <!-- Audio -->
     <string name="audio_page">音乐</string>
+    
     
 </resources>

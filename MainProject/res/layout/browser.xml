@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="vertical" 
+	android:gravity="center_horizontal"
+	android:layout_width="match_parent" 
+	android:layout_height="match_parent"
+	android:background="@android:color/black">
+	
+	<include layout="@layout/header_browser"/>
+	
+	<FrameLayout android:layout_width="match_parent" 
+        android:layout_height="0dp"
+        android:id="@+id/media_content_frame"
+        android:layout_weight="1"/>
+	
+	<FrameLayout android:layout_width="match_parent" 
+        android:layout_height="wrap_content"
+        android:background="@drawable/bar_top"
+        android:layout_gravity="bottom">
+		<LinearLayout android:layout_width="match_parent" 
+	        android:layout_height="wrap_content"
+	        android:id="@+id/tab_layout"
+	        android:gravity="center_vertical"
+	        android:orientation="horizontal">
+		    <TextView android:id="@+id/tvLocal"
+		        style="@style/browser_footer_tab"
+		        android:text="@string/local_video"/>
+		    <ImageView android:layout_width="wrap_content"
+	            android:layout_height="match_parent"
+	            android:src="@drawable/vertical_seperator"/>
+		    <TextView android:id="@+id/tvSDCard"
+	            style="@style/browser_footer_tab"
+	            android:text="@string/sdcard"/>
+	        <ImageView android:layout_width="wrap_content"
+	            android:layout_height="match_parent"
+	            android:src="@drawable/vertical_seperator"/>
+	        <TextView android:id="@+id/tvUsb"
+	            style="@style/browser_footer_tab"
+	            android:text="@string/usb"/>
+	        <ImageView android:layout_width="wrap_content"
+	            android:layout_height="match_parent"
+	            android:src="@drawable/vertical_seperator"/>
+	        <TextView android:id="@+id/tvHistory"
+	            style="@style/browser_footer_tab"
+	            android:text="@string/play_history"/>
+		</LinearLayout>
+	    <LinearLayout android:layout_width="match_parent" 
+            android:layout_height="wrap_content"
+            android:id="@+id/edit_layout"
+            android:visibility="gone"
+            android:gravity="center">
+	        <TextView android:id="@+id/tvDelete"
+	            android:layout_width="wrap_content" 
+                android:layout_height="wrap_content"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:paddingLeft="50dp"
+                android:paddingRight="50dp"
+                android:layout_margin="5dp"
+                android:textSize="18sp"
+                android:textColor="@android:color/white"
+                android:clickable="true"
+                android:background="@drawable/browser_footer_tab_selected"
+                android:text="@string/delete"/>
+        </LinearLayout>
+	</FrameLayout>
+</LinearLayout>
