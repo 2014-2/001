@@ -5,7 +5,10 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingDeque;
 
 import android.app.Service;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.media.AudioFormat;
 import android.media.AudioManager;
 import android.media.AudioRecord;
@@ -17,6 +20,9 @@ import android.util.Log;
 public class AuxAudioService extends Service {
 	private static final boolean DEBUG = true;
 	private static final String LOG_TAG = "AuxService";
+	
+	private static final String ACTION_DEVICE_CONNECTED   = "aux.device.connected";
+	private static final String ACTION_DEVICE_UNCONNECTED = "aux.device.unconnected";
 	
 	private static final int MIN_BUFFER_SIZE = 4096;
 	private static final int[] SAMPLE_RATES = new int[] { 8000, 11025, 22050, 44100 };
@@ -31,17 +37,21 @@ public class AuxAudioService extends Service {
 	private AuxAudioRecoder mRecoder;
 	private AuxAudioPlayer  mPlayer;
 	
+	private DeviceConnReceiver mDeviceConnReceiver;
+	
 	@Override
 	public void onCreate() {
 		super.onCreate();
-		startRecoder();
+		mDeviceConnReceiver = new DeviceConnReceiver();
+		IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(Intent.ACTION_HEADSET_PLUG);
+        registerReceiver(mDeviceConnReceiver, intentFilter);
 	}
 	
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
-		stopRecoder();
-		stopPlayer();
+		unregisterReceiver(mDeviceConnReceiver);
 	}
 	
 	@Override
@@ -190,6 +200,24 @@ public class AuxAudioService extends Service {
 		public boolean isPlaying() {
 			synchronized (mLock) {
 				return mIsPlaying;
+			}
+		}
+	}
+	
+	private class DeviceConnReceiver extends BroadcastReceiver {
+
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			final String action = intent.getAction();
+			if (ACTION_DEVICE_CONNECTED.equals(action)) {
+				startRecoder();
+			} else if (ACTION_DEVICE_UNCONNECTED.equals(action)) {
+				stopRecoder();
+				stopPlayer();
+			} else {
+				if (DEBUG) {
+					Log.e(LOG_TAG, "DeviceConnReceiver receives unknown action: " + action);
+				}
 			}
 		}
 	}

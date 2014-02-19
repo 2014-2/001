@@ -30,7 +30,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.byd.player.auxaudio.AuxAudioActivity" >
+            android:name="com.byd.player.AuxAudioPlayActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
