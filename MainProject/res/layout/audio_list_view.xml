@@ -9,61 +9,58 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        android:gravity="center_vertical"
         android:orientation="horizontal" >
 
-        <ImageButton
-            android:id="@+id/btn_audio_local"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_weight="1"
-            android:background="@android:color/transparent"
-            android:clickable="true"
-            android:src="@drawable/button_audio_local" />
+        <TextView
+            android:id="@+id/btn_audio_Local"
+            style="@style/browser_footer_tab"
+            android:drawableLeft="@drawable/icon_local"
+            android:text="@string/btn_text_local" />
 
-        <ImageButton
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:src="@drawable/vertical_seperator" />
+
+        <TextView
             android:id="@+id/btn_audio_sdcard"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_weight="1"
-            android:background="@android:color/transparent"
-            android:clickable="true"
-            android:src="@drawable/button_audio_local" />
+            style="@style/browser_footer_tab"
+            android:drawableLeft="@drawable/icon_local"
+            android:text="@string/btn_text_sdcard" />
 
-        <ImageButton
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:src="@drawable/vertical_seperator" />
+
+        <TextView
             android:id="@+id/btn_audio_usb"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_weight="1"
-            android:background="@android:color/transparent"
-            android:clickable="true"
-            android:src="@drawable/button_audio_local" />
+            style="@style/browser_footer_tab"
+            android:drawableLeft="@drawable/icon_local"
+            android:text="@string/btn_text_usb" />
 
-        <ImageButton
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:src="@drawable/vertical_seperator" />
+
+        <TextView
             android:id="@+id/btn_audio_aux"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_weight="1"
-            android:background="@android:color/transparent"
-            android:clickable="true"
-            android:paddingLeft="1dp"
-            android:paddingRight="1dp"
-            android:src="@drawable/button_audio_local" />
+            style="@style/browser_footer_tab"
+            android:drawableLeft="@drawable/icon_local"
+            android:text="@string/btn_text_aux" />
 
-        <ImageButton
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:src="@drawable/vertical_seperator" />
+
+        <TextView
             android:id="@+id/btn_audio_mobile"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_weight="1"
-            android:background="@android:color/transparent"
-            android:clickable="true"
-            android:paddingLeft="1dp"
-            android:paddingRight="1dp"
-            android:src="@drawable/button_audio_local" />
+            style="@style/browser_footer_tab"
+            android:drawableLeft="@drawable/icon_local"
+            android:text="@string/btn_text_mobile" />
     </LinearLayout>
 
     <GridView
@@ -71,10 +68,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/btn_container"
-        android:numColumns="3"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:background="@android:color/holo_blue_dark" >
+        android:background="@android:color/holo_blue_dark"
+        android:numColumns="3" >
     </GridView>
 
 </RelativeLayout>

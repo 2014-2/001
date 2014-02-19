@@ -2,23 +2,23 @@
 
     <!--
         Base application theme, dependent on API level. This theme is replaced
-        by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
+        by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
     -->
     <style name="AppBaseTheme" parent="android:Theme.Light">
         <!--
             Theme customizations available in newer API levels can go in
             res/values-vXX/styles.xml, while customizations related to
-            backward-compatibility can go here.
+            backward-compatibility can go here.
         -->
     </style>
 
     <!-- Application theme. -->
     <style name="AppTheme" parent="AppBaseTheme">
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
-    
+
     </style>
 
-        <style name="main_tab_bottom">
+    <style name="main_tab_bottom">
         <item name="android:textSize">12.0sp</item>
         <item name="android:textColor">#ffffffff</item>
         <item name="android:ellipsize">marquee</item>
@@ -32,14 +32,13 @@
         <!-- <item name="android:drawablePadding">3.0dip</item> -->
         <item name="android:layout_weight">1.0</item>
     </style>
-    
+
     <style name="style_failed_to_play">
         <item name="android:textColor">@android:color/white</item>
         <item name="android:textSize">18sp</item>
         <item name="android:singleLine">true</item>
     </style>
-    
-    
+
     <style name="style_seekbar">
         <item name="android:layout_width">fill_parent</item>
         <item name="android:layout_height">32dp</item>
@@ -55,7 +54,7 @@
         <item name="android:secondaryProgress">0</item>
         <item name="android:thumb">@drawable/button_control</item>
     </style>
-    
+
     <style name="header_text">
         <item name="android:textColor">@android:color/white</item>
         <item name="android:textSize">18sp</item>
@@ -65,5 +64,52 @@
         <item name="android:shadowDx">1.1</item>
         <item name="android:shadowDy">-1.5</item>
     </style>
-    
+
+    <style name="browser_footer_tab">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:gravity">center</item>
+        <item name="android:drawableLeft">@drawable/icon_local</item>
+        <item name="android:drawablePadding">10dp</item>
+        <item name="android:paddingLeft">10dp</item>
+        <item name="android:paddingRight">10dp</item>
+        <item name="android:paddingTop">10dp</item>
+        <item name="android:paddingBottom">10dp</item>
+        <item name="android:layout_margin">5dp</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:clickable">true</item>
+    </style>
+
+    <style name="audio_list_footer_tab">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:gravity">center</item>
+        <item name="android:drawablePadding">10dp</item>
+        <item name="android:paddingLeft">10dp</item>
+        <item name="android:paddingRight">10dp</item>
+        <item name="android:paddingTop">10dp</item>
+        <item name="android:paddingBottom">10dp</item>
+        <item name="android:layout_margin">5dp</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:clickable">true</item>
+    </style>
+
+    <style name="audio_player_footer_tab">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:gravity">center</item>
+        <item name="android:drawablePadding">10dp</item>
+        <item name="android:paddingLeft">10dp</item>
+        <item name="android:paddingRight">10dp</item>
+        <item name="android:paddingTop">10dp</item>
+        <item name="android:paddingBottom">10dp</item>
+        <item name="android:layout_margin">5dp</item>
+        <item name="android:clickable">true</item>
+    </style>
+
 </resources>

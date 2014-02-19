@@ -3,6 +3,7 @@ package com.byd.player;
 import java.util.LinkedList;
 
 import android.app.Activity;
+import android.content.pm.ActivityInfo;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -11,11 +12,16 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-
+/**
+ * 
+ * @author Des
+ *
+ */
 public class MainActivity extends Activity {
 	
 	public static LinkedList<MovieInfo> playList = new LinkedList<MovieInfo>();
@@ -28,6 +34,8 @@ public class MainActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         

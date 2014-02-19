@@ -9,62 +9,33 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:background="@android:color/darker_gray"
+        android:gravity="center_vertical"
         android:orientation="horizontal" >
 
-        <ImageButton
+        <ImageView
             android:id="@+id/btn_audio_local"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_weight="1"
-            android:background="@android:color/transparent"
-            android:clickable="true"
-            android:src="@drawable/button_audio_local" />
+            style="@style/audio_player_footer_tab"
+            android:src="@drawable/selector_audio_button" />
 
-        <ImageButton
-            android:id="@+id/btn_audio_sdcard"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_weight="1"
-            android:background="@android:color/transparent"
-            android:clickable="true"
-            android:src="@drawable/button_audio_local" />
+        <ImageView
+            android:id="@+id/btn_audio_local"
+            style="@style/audio_player_footer_tab"
+            android:src="@drawable/selector_audio_button" />
 
-        <ImageButton
-            android:id="@+id/btn_audio_usb"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_weight="1"
-            android:background="@android:color/transparent"
-            android:clickable="true"
-            android:src="@drawable/button_audio_local" />
+        <ImageView
+            android:id="@+id/btn_audio_local"
+            style="@style/audio_player_footer_tab"
+            android:src="@drawable/selector_audio_button" />
 
-        <ImageButton
-            android:id="@+id/btn_audio_aux"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_weight="1"
-            android:background="@android:color/transparent"
-            android:clickable="true"
-            android:paddingLeft="1dp"
-            android:paddingRight="1dp"
-            android:src="@drawable/button_audio_local" />
+        <ImageView
+            android:id="@+id/btn_audio_local"
+            style="@style/audio_player_footer_tab"
+            android:src="@drawable/selector_audio_button" />
 
-        <ImageButton
-            android:id="@+id/btn_audio_mobile"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_weight="1"
-            android:background="@android:color/transparent"
-            android:clickable="true"
-            android:paddingLeft="1dp"
-            android:paddingRight="1dp"
-            android:src="@drawable/button_audio_local" />
+        <ImageView
+            android:id="@+id/btn_audio_local"
+            style="@style/audio_player_footer_tab"
+            android:src="@drawable/selector_audio_button" />
     </LinearLayout>
 
     <LinearLayout
@@ -72,7 +43,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/btn_container"
-        android:background="@android:color/holo_blue_dark" 
+        android:background="@android:color/holo_blue_dark"
         android:orientation="horizontal" >
     </LinearLayout>
 

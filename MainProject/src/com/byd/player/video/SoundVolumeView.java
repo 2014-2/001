@@ -17,7 +17,11 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.byd.player.R;
-
+/**
+ * 
+ * @author Des
+ *
+ */
 public class SoundVolumeView extends View {
     private Paint mPaint;
     private Context mContext;

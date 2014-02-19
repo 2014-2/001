@@ -43,10 +43,17 @@ import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 
+import com.byd.player.BrowserActivity;
 import com.byd.player.R;
 import com.byd.player.config.Constants;
+import com.byd.player.history.BYDDatabase;
+import com.byd.player.history.PlayRecord;
 import com.byd.player.video.VideoView.MySizeChangeLinstener;
-
+/**
+ * 
+ * @author Des
+ *
+ */
 public class VideoPlayActivity extends Activity {
 
 	public static final String POINT = "POINT";
@@ -75,6 +82,8 @@ public class VideoPlayActivity extends Activity {
 	private boolean isPaused = false;
 	private boolean isFullScreen = false;
 	private String mVideoUrl;
+	private String mediaName;
+	private int duration;
 
 	private TextView tvTitle;
 	protected int statusBarHeight = 38;
@@ -131,13 +140,15 @@ public class VideoPlayActivity extends Activity {
 		Bundle bundle = getIntent().getBundleExtra(Constants.VIDEO_PLAY_PARAMS);
 		
 		mVideoUrl = bundle.getString("video_url");
+		mediaName = bundle.getString("name");
+		duration = bundle.getInt("duration", 0);
 		
 		titleView = getLayoutInflater().inflate(R.layout.header_structure, null);
 		
 		titleWindow = new PopupWindow(titleView);
 
-		tvTitle = (TextView) titleView.findViewById(R.id.top_bar_title);
-		tvTitle.setText(mVideoUrl);
+		tvTitle = (TextView) titleView.findViewById(R.id.button_header_title);
+		tvTitle.setText(mediaName);
 
 		controlView = getLayoutInflater().inflate(R.layout.video_play_view_control, null);
 		controlView.setOnTouchListener(new OnTouchListener() {
@@ -154,7 +165,7 @@ public class VideoPlayActivity extends Activity {
 		progressLayout = (RelativeLayout) findViewById(R.id.ll_progress);
 		dismissProgress();
 
-		ImageView btnhome = (ImageView) titleView.findViewById(R.id.top_bar_left);
+		ImageView btnhome = (ImageView) titleView.findViewById(R.id.button_header_left);
 		btnhome.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -497,14 +508,13 @@ public class VideoPlayActivity extends Activity {
 	}
 
 	private void myPause() {
-		mMediaPlayer.pause();
 		btnPlayPause.setImageResource(R.drawable.button_play);
 		isPaused = true;
 		if (mHandler != null) {
 			mHandler.removeMessages(ERROR_HAPPENED);
 		}
 	}
-
+	
 	@Override
 	protected void onResume() {
 		CurrentP = ReadSharedPreferences(mVideoUrl);
@@ -527,10 +537,28 @@ public class VideoPlayActivity extends Activity {
 		mHandler.removeMessages(0);
 		super.onResume();
 	}
+	
+	private void savePlayRecord() {
+	    BrowserActivity.tabContentChanged[BrowserActivity.TAB_INDEX_HISTORY] = true;
+       PlayRecord playRecord = new PlayRecord();
+       MovieInfo movieInfo = new MovieInfo();
+       movieInfo.path = mVideoUrl;
+       movieInfo.displayName = mediaName;
+       movieInfo.duration = duration;
+       playRecord.setMovieInfo(movieInfo);
+       playRecord.setLastPlayPosition(mMediaPlayer.getCurrentPosition());
+       playRecord.setTime(System.currentTimeMillis());
+       BYDDatabase.getInstance(this).insertVideoPlayRecord(playRecord);
+   }
 
 	@Override
-	protected void onDestroy() {
+    protected void onStop() {
+        super.onStop();
+        savePlayRecord();
+    }
 
+    @Override
+	protected void onDestroy() {
 		if (controlerWindow.isShowing()) {
 			controlerWindow.dismiss();
 			titleWindow.dismiss();
