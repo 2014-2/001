@@ -7,7 +7,7 @@
     <uses-sdk
         android:minSdkVersion="16"
         android:targetSdkVersion="17" />
-    
+
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
 
     <application
@@ -24,16 +24,20 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        
-        <activity
-            android:name="com.byd.player.video.VideoPlayActivity" >
+        <activity android:name="com.byd.player.video.VideoPlayActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
         </activity>
-        
-        <service android:name="com.byd.player.services.AuxAudioService"></service>
-        
+        <activity
+            android:name="com.byd.player.auxaudio.AuxAudioActivity" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
+        </activity>
+
+        <service android:name="com.byd.player.services.AuxAudioService" ></service>
+
     </application>
 
 </manifest>
