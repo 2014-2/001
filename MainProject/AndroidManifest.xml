@@ -43,6 +43,10 @@
         <activity
             android:name="com.byd.player.audio.AudioPlayerActivity"
             android:theme="@android:style/Theme.DeviceDefault" />
+        <activity android:name="com.byd.player.AuxAudioPlayActivity"
+            android:launchMode="singleTask"
+            android:label="@string/app_name">
+        </activity>
 
         <service android:name="com.byd.player.services.AuxAudioService" >
         </service>

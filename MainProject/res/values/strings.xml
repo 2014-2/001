@@ -30,5 +30,7 @@
     <string name="text_name">我的歌声里</string>
     <string name="text_singer">曲婉婷</string>
     
-    <string name="none_aux_plug">none_aux_plug</string>
+    <!-- Aux -->
+    <string name="aux_connected">AUX音频设备已成功连接</string>
+    <string name="aux_disconnected">AUX音频设备已断开连接</string>
 </resources>
