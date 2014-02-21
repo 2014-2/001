@@ -10,7 +10,10 @@
     <ImageView
         android:id="@+id/iv_grid_thumbnail"
         android:layout_width="wrap_content"
-        android:layout_height="85dp"
+        android:layout_height="102dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="13dp"
+        android:paddingRight="3dp"
         android:layout_centerHorizontal="true"
         android:src="@drawable/video_file"
         android:background="@drawable/video_grid_bg"/>
