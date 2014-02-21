@@ -6,6 +6,7 @@ import android.media.ThumbnailUtils;
 import android.os.AsyncTask;
 import android.provider.MediaStore;
 import android.support.v4.util.LruCache;
+import android.text.TextUtils;
 import android.widget.ImageView;
 
 import com.byd.player.R;
@@ -60,15 +61,22 @@ class LoadImageTask extends AsyncTask<String, Void, Bitmap> {
     protected Bitmap doInBackground(String... params) {
         Bitmap bitmap = null;
         String videoPath = params[0];
-        bitmap = getVideoThumbnail(videoPath, 150, 120,
-                MediaStore.Images.Thumbnails.MICRO_KIND);
-        addBitmapToMemoryCache(params[0], bitmap);
+        if(!TextUtils.isEmpty(videoPath)) {
+            bitmap = getBitmapFromMemoryCache(videoPath);
+            if(bitmap == null) {
+                bitmap = getVideoThumbnail(videoPath, 150, 120,
+                        MediaStore.Images.Thumbnails.MICRO_KIND);
+                addBitmapToMemoryCache(videoPath, bitmap); 
+            }
+        }
         return bitmap;
     }  
   
     @Override  
     protected void onPostExecute(Bitmap bitmap) {  
-        image.setImageBitmap(bitmap);  
+        if(bitmap != null && !bitmap.isRecycled()) {
+            image.setImageBitmap(bitmap);  
+        }
     }  
     
     //调用LruCache的put 方法将图片加入内存缓存中，要给这个图片一个key 方便下次从缓存中取出来  
