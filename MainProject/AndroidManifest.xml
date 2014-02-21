@@ -9,6 +9,9 @@
         android:targetSdkVersion="17" />
 
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
 
     <application
         android:allowBackup="true"
@@ -46,6 +49,9 @@
         <activity android:name="com.byd.player.AuxAudioPlayActivity"
             android:launchMode="singleTask"
             android:label="@string/app_name">
+        </activity>
+        <activity
+            android:name="com.byd.player.bluetooth.BlueToothPlayActivity" >
         </activity>
 
         <service android:name="com.byd.player.services.AuxAudioService" >

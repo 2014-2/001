@@ -33,4 +33,10 @@
     <!-- Aux -->
     <string name="aux_connected">AUX音频设备已成功连接</string>
     <string name="aux_disconnected">AUX音频设备已断开连接</string>
+    
+    <!-- BT -->
+    <string name="txt_bt_search">搜索蓝牙</string>
+    <string name="txt_bt_switch">蓝牙开关</string>
+    <string name="txt_bt_visible">蓝牙可见</string>
+    <string name="txt_bt_exit">退出</string>
 </resources>
