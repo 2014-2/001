@@ -18,6 +18,7 @@ import android.media.AudioManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -39,6 +40,8 @@ public class BlueToothPlayActivity extends Activity {
 	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON,
+                WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.bt_play);
         mBTlist = new ArrayAdapter<String>(this,R.layout.list_btdevice, R.id.list_btdevice);
@@ -47,8 +50,6 @@ public class BlueToothPlayActivity extends Activity {
         
 		btnSearch = (Button) this.findViewById(R.id.btnSearch);
 		btnSearch.setOnClickListener(mClickEvent);
-		btnExit = (Button) this.findViewById(R.id.btnExit);
-		btnExit.setOnClickListener(mClickEvent);
 		btnDis = (Button) this.findViewById(R.id.btnDis);
 		btnDis.setOnClickListener(mClickEvent);
 
@@ -125,7 +126,6 @@ public class BlueToothPlayActivity extends Activity {
 	protected void onDestroy() {
 	    this.unregisterReceiver(searchDevices);
 		super.onDestroy();
-		android.os.Process.killProcess(android.os.Process.myPid());
 	}
 
 	class ItemClickEvent implements AdapterView.OnItemClickListener {
@@ -201,15 +201,7 @@ public class BlueToothPlayActivity extends Activity {
 				discoverableIntent.putExtra(
 						BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 300);
 				startActivity(discoverableIntent);
-			} else if (v == btnExit) {
-				try {
-					if (btSocket != null)
-						btSocket.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-				BlueToothPlayActivity.this.finish();
-			}
+			} 
 		}
 
 	}

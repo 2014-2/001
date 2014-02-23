@@ -51,7 +51,9 @@
             android:label="@string/app_name">
         </activity>
         <activity
-            android:name="com.byd.player.bluetooth.BlueToothPlayActivity" >
+            android:name="com.byd.player.bluetooth.BlueToothPlayActivity"
+            android:theme="@android:style/Theme.DeviceDefault" 
+            android:screenOrientation="landscape" >
         </activity>
 
         <service android:name="com.byd.player.services.AuxAudioService" >
