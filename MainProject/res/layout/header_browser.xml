@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="center_vertical"
-    android:background="@drawable/bar_top">
+    android:background="@drawable/head">
 
     <Button
         android:id="@+id/button_header_left"
@@ -11,8 +11,9 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
         android:text="@string/select_all"
+        android:textColor="@android:color/white"
         android:clickable="true"
-        android:src="@drawable/button_header" />
+        android:background="@drawable/button"/>
 
     <TextView
         android:id="@+id/tv_header_title"
@@ -33,8 +34,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginRight="10dp"
+        android:textColor="@android:color/white"
         android:text="@string/edit"
         android:clickable="true"
-        android:src="@drawable/button_header" />
+        android:background="@drawable/button" />
     
 </LinearLayout>

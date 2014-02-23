@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:clickable="true"
-        android:background="@drawable/bar_progress_bg_control" >
+        android:background="@drawable/footer_bg" >
 
         <ImageButton
             android:id="@+id/btnPlayPause"
@@ -36,7 +36,7 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:clickable="true"
-            android:src="@drawable/selector_sound_icon_level" />
+            android:src="@drawable/icon_sound_normal" />
         
         <SeekBar
             android:id="@+id/progress_bar"

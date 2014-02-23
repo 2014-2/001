@@ -15,51 +15,51 @@
         <TextView
             android:id="@+id/btn_audio_Local"
             style="@style/browser_footer_tab"
-            android:drawableLeft="@drawable/icon_local"
+            android:drawableLeft="@drawable/icon_tab_video"
             android:text="@string/btn_text_local" />
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:src="@drawable/vertical_seperator" />
+            android:src="@drawable/line_vertical" />
 
         <TextView
             android:id="@+id/btn_audio_sdcard"
             style="@style/browser_footer_tab"
-            android:drawableLeft="@drawable/icon_local"
+            android:drawableLeft="@drawable/icon_tab_video"
             android:text="@string/btn_text_sdcard" />
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:src="@drawable/vertical_seperator" />
+            android:src="@drawable/line_vertical" />
 
         <TextView
             android:id="@+id/btn_audio_usb"
             style="@style/browser_footer_tab"
-            android:drawableLeft="@drawable/icon_local"
+            android:drawableLeft="@drawable/icon_tab_video"
             android:text="@string/btn_text_usb" />
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:src="@drawable/vertical_seperator" />
+            android:src="@drawable/line_vertical" />
 
         <TextView
             android:id="@+id/btn_audio_aux"
             style="@style/browser_footer_tab"
-            android:drawableLeft="@drawable/icon_local"
+            android:drawableLeft="@drawable/icon_tab_video"
             android:text="@string/btn_text_aux" />
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:src="@drawable/vertical_seperator" />
+            android:src="@drawable/line_vertical" />
 
         <TextView
             android:id="@+id/btn_audio_mobile"
             style="@style/browser_footer_tab"
-            android:drawableLeft="@drawable/icon_local"
+            android:drawableLeft="@drawable/icon_tab_video"
             android:text="@string/btn_text_mobile" />
     </LinearLayout>
 

@@ -126,11 +126,11 @@ public class VideoPlayActivity extends Activity {
 
 				if (controlerWindow != null && mMediaPlayer != null && mMediaPlayer.isShown()) {
 					controlerWindow.showAtLocation(mMediaPlayer, Gravity.BOTTOM, 0, 0);
-					controlerWindow.update(0, 0, screenWidth, controlHeight);
+					controlerWindow.update(0, 8, screenWidth, controlHeight + 8);
 				}
 				if (titleWindow != null && mMediaPlayer != null && mMediaPlayer.isShown()) {
 					titleWindow.showAtLocation(mMediaPlayer, Gravity.TOP, 0, 0);
-					titleWindow.update(0, statusBarHeight, screenWidth, ViewGroup.LayoutParams.WRAP_CONTENT);
+					titleWindow.update(0, statusBarHeight - 6, screenWidth, ViewGroup.LayoutParams.WRAP_CONTENT);
 				}
 
 				return false;
@@ -143,7 +143,7 @@ public class VideoPlayActivity extends Activity {
 		mediaName = bundle.getString("name");
 		duration = bundle.getInt("duration", 0);
 		
-		titleView = getLayoutInflater().inflate(R.layout.header_structure, null);
+		titleView = getLayoutInflater().inflate(R.layout.header_video_player, null);
 		
 		titleWindow = new PopupWindow(titleView);
 
@@ -632,11 +632,11 @@ public class VideoPlayActivity extends Activity {
 	private void showController() {
 		controlView.setVisibility(View.VISIBLE);
 		titleView.setVisibility(View.VISIBLE);
-		controlerWindow.update(0, 0, screenWidth, controlHeight);
+		controlerWindow.update(0, 8, screenWidth, controlHeight + 8);
 		if (isFullScreen) {
 			titleWindow.update(0, 0, screenWidth, ViewGroup.LayoutParams.WRAP_CONTENT);
 		} else {
-			titleWindow.update(0, statusBarHeight, screenWidth, ViewGroup.LayoutParams.WRAP_CONTENT);
+			titleWindow.update(0, statusBarHeight - 6, screenWidth, ViewGroup.LayoutParams.WRAP_CONTENT);
 		}
 
 		isControllerShow = true;

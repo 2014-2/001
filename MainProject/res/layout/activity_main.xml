@@ -13,7 +13,6 @@
 		    android:id="@+id/video_page" 
 		    android:checked="true"
 		    android:background="@color/blue"
-		    android:drawableTop="@drawable/video_file"
 			style="@style/main_tab_bottom" 
 			android:text="@string/video_page" />
 		<RadioButton 
