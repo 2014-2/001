@@ -6,12 +6,9 @@
 	<LinearLayout 
 	    android:id="@+id/LinearLayout01"
 		android:layout_width="wrap_content" 
-		android:layout_height="wrap_content">
-		<TextView 
-		    android:id="@+id/TextView01" 
-		    android:layout_height="wrap_content" 
-		    android:text="@string/txt_bt_switch" 
-		    android:layout_width="100dip"></TextView>
+		android:layout_height="wrap_content"
+		android:orientation="horizontal">
+
 		<ToggleButton 
 		    android:layout_height="wrap_content" 
 		    android:layout_width="wrap_content" 
@@ -19,12 +16,14 @@
 		<Button android:layout_height="wrap_content" 
 	   		android:text="@string/txt_bt_visible" 
 	    	android:id="@+id/btnDis" 
-	    	android:layout_width="160dip"></Button>
+	    	android:layout_width="160dip"
+	    	android:background="@drawable/button"></Button>
 		<Button 
 		    android:layout_height="wrap_content" 
 		    android:id="@+id/btnSearch"
 			android:text="@string/txt_bt_search" 
-			android:layout_width="160dip"></Button>
+			android:layout_width="160dip"
+			android:background="@drawable/button"></Button>
 	</LinearLayout>
 
 	<ListView 

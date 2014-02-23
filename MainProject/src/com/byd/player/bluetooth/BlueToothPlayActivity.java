@@ -14,6 +14,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.util.Log;
@@ -190,10 +192,14 @@ public class BlueToothPlayActivity extends Activity {
 				lstDevices.clear();
 				btAdapt.startDiscovery();
 			} else if (v == tbtnSwitch) { //open/close the device.
-				if (tbtnSwitch.isChecked() == false)
+				if (tbtnSwitch.isChecked() == false){
+					tbtnSwitch.setTextColor(Color.GRAY);
 					btAdapt.enable();
-				else if (tbtnSwitch.isChecked() == true)
+				}
+				else if (tbtnSwitch.isChecked() == true){
+					tbtnSwitch.setTextColor(Color.GREEN);
 					btAdapt.disable();
+				}
 			} else if (v == btnDis) //device visible
 			{
 				Intent discoverableIntent = new Intent(
