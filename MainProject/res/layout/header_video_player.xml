@@ -27,5 +27,14 @@
         android:focusableInTouchMode="true"
         android:marqueeRepeatLimit="marquee_forever"
         android:selectAllOnFocus="true"/>
+    
+    <ImageView
+        android:id="@+id/button_header_right"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="invisible"
+        android:layout_marginLeft="10dp"
+        android:clickable="true"
+        android:background="@drawable/button_back" />
 
 </LinearLayout>
