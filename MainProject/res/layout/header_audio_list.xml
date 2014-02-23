@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:background="@drawable/head">
+
+    <Button
+        android:id="@+id/button_header_back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_alignParentLeft="true"
+        android:clickable="true"
+        android:background="@drawable/button_back"/>
+
+    <Button
+        android:id="@+id/button_header_edit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="10dp"
+        android:textColor="@android:color/white"
+        android:layout_alignParentRight="true"
+        android:text="@string/edit"
+        android:clickable="true"
+        android:background="@drawable/button" />
+    
+    <Button
+        android:id="@+id/button_header_search"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="10dp"
+        android:textColor="@android:color/white"
+        android:layout_toLeftOf="@id/button_header_edit"
+        android:text="@string/search"
+        android:clickable="true"
+        android:background="@drawable/button" />
+    
+    <TextView
+        android:id="@+id/tv_header_title"
+        style="@style/header_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:clickable="true"
+        android:ellipsize="marquee"
+        android:focusable="true"
+        android:text="@string/all_music"
+        android:focusableInTouchMode="true"
+        android:marqueeRepeatLimit="marquee_forever"
+        android:selectAllOnFocus="true"/>
+
+    
+</RelativeLayout>
