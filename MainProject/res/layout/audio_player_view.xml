@@ -94,7 +94,6 @@
                 android:layout_marginLeft="100dp"
                 android:background="@drawable/icon_audio_circle" />
         </LinearLayout>
-"
 
         <LinearLayout
             android:id="@+id/audio_play_control"
