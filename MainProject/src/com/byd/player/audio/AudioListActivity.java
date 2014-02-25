@@ -7,7 +7,6 @@ import android.view.View.OnClickListener;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.TextView;
@@ -29,6 +28,14 @@ public class AudioListActivity extends BaseActivity implements OnItemClickListen
 
         AudioManager.getInstance().init(getApplicationContext());
         AudioManager.getInstance().load();
+        AudioManager.getInstance().addDataListener(new AudioManager.DataListener() {
+            @Override
+            public void onDataChange() {
+                if (mAdapter != null) {
+                    mAdapter.setData(AudioManager.getInstance().getSongs());
+                }
+            }
+        });
 
         setContentView(R.layout.audio_list_view);
 
@@ -74,6 +81,7 @@ public class AudioListActivity extends BaseActivity implements OnItemClickListen
         super.onDestroy();
     }
 
+    @Override
     public void onBackPressed() {
         if (!mAdapter.isNormalMode()) {
             mAdapter.setMode(AudioAdapter.MODE_NORMAL);

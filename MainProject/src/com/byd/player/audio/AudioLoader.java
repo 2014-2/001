@@ -13,16 +13,16 @@ public class AudioLoader extends AsyncQueryHandler {
 
     public final static Uri AUDIO_URI = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
     public final static String[] DEF_PROJECTION = new String[] {
-            MediaStore.Audio.Media._ID,
-            MediaStore.Audio.Media.DISPLAY_NAME,
-            MediaStore.Audio.Media.TITLE,
-            MediaStore.Audio.Media.DURATION,
-            MediaStore.Audio.Media.ARTIST,
-            MediaStore.Audio.Media.ALBUM, 
-            MediaStore.Audio.Media.YEAR,
-            MediaStore.Audio.Media.MIME_TYPE, 
-            MediaStore.Audio.Media.SIZE,
-            MediaStore.Audio.Media.DATA };
+        MediaStore.Audio.Media._ID,
+        MediaStore.Audio.Media.DISPLAY_NAME,
+        MediaStore.Audio.Media.TITLE,
+        MediaStore.Audio.Media.DURATION,
+        MediaStore.Audio.Media.ARTIST,
+        MediaStore.Audio.Media.ALBUM,
+        MediaStore.Audio.Media.YEAR,
+        MediaStore.Audio.Media.MIME_TYPE,
+        MediaStore.Audio.Media.SIZE,
+        MediaStore.Audio.Media.DATA };
 
     public final static String DEF_SELECTION = MediaStore.Audio.Media.MIME_TYPE + "=? or "
             + MediaStore.Audio.Media.MIME_TYPE + "=?";
@@ -87,7 +87,7 @@ public class AudioLoader extends AsyncQueryHandler {
             if (cursor.getString(9) != null) {// file path
                 song.setFilePath(cursor.getString(9));
             }
-
+            songs.add(song);
         } while (cursor.moveToNext());
 
         mAudioManager.clearData();
