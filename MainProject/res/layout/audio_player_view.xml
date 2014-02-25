@@ -43,16 +43,15 @@
                 android:text="05:36"
                 android:textSize="30sp" />
 
-            <ProgressBar
-                style="@android:style/Widget.Holo.Light.ProgressBar.Horizontal"
+            <SeekBar
+                style="@style/style_seekbar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
                 android:layout_toLeftOf="@id/audio_total_time"
-                android:layout_toRightOf="@id/audio_playing_time"
-                android:background="@drawable/bar_progress_bg" />
+                android:layout_toRightOf="@id/audio_playing_time" />
         </RelativeLayout>
 
         <ImageView
@@ -63,93 +62,107 @@
             android:background="@drawable/line1" />
     </RelativeLayout>
 
-    <RelativeLayout
+    <LinearLayout
         android:id="@+id/btn_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:background="@drawable/bg_audio_player_bar"
-        android:orientation="horizontal" >
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingTop="25dp" >
 
         <LinearLayout
-            android:id="@+id/audio_play_control"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
-            android:orientation="horizontal"
-            android:paddingTop="25dp" >
+            android:layout_weight="1"
+            android:gravity="center" >
 
             <ImageView
                 android:id="@+id/btn_audio_random"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="80dp"
-                android:background="@drawable/icon_audio_random" />
+                android:src="@drawable/icon_audio_random" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center" >
 
             <ImageView
                 android:id="@+id/btn_audio_circle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="100dp"
-                android:background="@drawable/icon_audio_circle" />
+                android:src="@drawable/icon_audio_circle" />
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/audio_play_control"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="20dp"
-            android:gravity="center_vertical"
-            android:orientation="horizontal" >
+            android:layout_weight="1"
+            android:gravity="center" >
 
             <ImageView
-                android:id="@+id/btn_audio_last"
+                android:id="@+id/btn_audio_previous"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/icon_audio_last" />
+                android:src="@drawable/icon_audio_previous" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center" >
 
             <ImageView
                 android:id="@+id/btn_audio_play"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="40dp"
-                android:layout_marginRight="40dp"
-                android:background="@drawable/icon_audio_play" />
+                android:src="@drawable/icon_audio_play" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center" >
 
             <ImageView
                 android:id="@+id/btn_audio_next"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/icon_audio_next" />
+                android:src="@drawable/icon_audio_next" />
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/audio_play_control"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:gravity="right|center_vertical"
-            android:orientation="horizontal"
-            android:paddingTop="25dp" >
+            android:layout_weight="1"
+            android:gravity="center" >
 
             <ImageView
                 android:id="@+id/btn_audio_effect"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="100dp"
-                android:background="@drawable/icon_audio_effect" />
+                android:src="@drawable/icon_audio_effect" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center" >
 
             <ImageView
                 android:id="@+id/btn_audio_volume"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="80dp"
-                android:background="@drawable/icon_audio_volume" />
+                android:src="@drawable/icon_audio_volume" />
         </LinearLayout>
-    </RelativeLayout>
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/audio_container"
@@ -157,7 +170,96 @@
         android:layout_height="match_parent"
         android:layout_above="@id/btn_container"
         android:layout_below="@id/audio_player_header"
-        android:orientation="horizontal" >
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingBottom="20dp"
+        android:paddingLeft="60dp"
+        android:paddingRight="60dp"
+        android:paddingTop="20dp" >
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/ablum_pic" >
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/bg_lyrics"
+            android:gravity="center" >
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" >
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="20dp" >
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/icon_album" />
+
+                    <TextView
+                        android:id="@+id/album_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="20dp"
+                        android:text="The Best of Satriani"
+                        android:textColor="@color/white"
+                        android:textSize="25sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="20dp" >
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/icon_singer" />
+
+                    <TextView
+                        android:id="@+id/singer_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="20dp"
+                        android:text="Joe Satriani"
+                        android:textColor="@color/white"
+                        android:textSize="25sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="20dp" >
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/icon_music" />
+
+                    <TextView
+                        android:id="@+id/music_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="20dp"
+                        android:text="They Don&apos;t care About US"
+                        android:textColor="@color/white"
+                        android:textSize="25sp" />
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
     </LinearLayout>
 
 </RelativeLayout>
