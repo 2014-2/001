@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.byd.player.BaseActivity;
 import com.byd.player.R;
 import com.byd.player.bluetooth.BlueToothPlayActivity;
+import com.byd.player.config.Constants;
 
 public class AudioListActivity extends BaseActivity implements OnItemClickListener {
     private GridView mAudioList = null;
@@ -93,6 +94,8 @@ public class AudioListActivity extends BaseActivity implements OnItemClickListen
     @Override
     public void onItemClick(AdapterView<?> arg0, View view, int pos, long arg3) {
         Intent intent = new Intent(this, AudioPlayerActivity.class);
+        intent.putExtra(Constants.EXTENDED_DATA_SONG, AudioManager.getInstance()
+                .getSongs().get(pos));
         startActivity(intent);
     }
 

@@ -58,5 +58,6 @@
 
         <service android:name="com.byd.player.services.AuxAudioService" >
         </service>
+        <service android:name="com.byd.player.audio.AudioPlayerService" />
     </application>
 </manifest>
