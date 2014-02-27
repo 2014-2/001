@@ -4,10 +4,13 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.view.LayoutInflater;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
@@ -16,6 +19,8 @@ import android.widget.TextView;
 
 import com.byd.player.BaseActivity;
 import com.byd.player.R;
+import com.byd.player.audio.AudioPlayerService.OnUpdateListener;
+import com.byd.player.audio.AudioPlayerService.PlayerBinder;
 import com.byd.player.config.Constants;
 
 public class AudioPlayerActivity extends BaseActivity {
@@ -42,6 +47,12 @@ public class AudioPlayerActivity extends BaseActivity {
 
     private PlayerReceiver mPlayerReceiver;
 
+    private Intent mAudioServiceIntent;
+
+    private AudioServiceConn mConn;
+
+    private AudioPlayerService mService;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,10 +64,25 @@ public class AudioPlayerActivity extends BaseActivity {
         mPlayingSong = (Song)getIntent().getExtras().getSerializable(Constants.EXTENDED_DATA_SONG);
         mInflater = this.getLayoutInflater();
 
+        mAudioServiceIntent = new Intent(this, AudioPlayerService.class);
+
         initViews();
         startPlay();
 
         registerBroadcast();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mConn = new AudioServiceConn();
+        bindService(mAudioServiceIntent, mConn, 0);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        unbindService(mConn);
     }
 
     @Override
@@ -95,28 +121,24 @@ public class AudioPlayerActivity extends BaseActivity {
     }
 
     private void startPlay() {
-        Intent intent = new Intent(this, AudioPlayerService.class);
-        intent.putExtra(Constants.PLAYER_MSG, Constants.PlayerCommand.PLAY);
-        intent.putExtra(Constants.MUSIC_URL, mPlayingSong.getFilePath());
-        startService(intent);
+        mAudioServiceIntent.putExtra(Constants.PLAYER_MSG, Constants.PlayerCommand.PLAY);
+        mAudioServiceIntent.putExtra(Constants.MUSIC_URL, mPlayingSong.getFilePath());
+        startService(mAudioServiceIntent);
     }
 
     private void stopPlay() {
-        Intent intent = new Intent(this, AudioPlayerService.class);
-        intent.putExtra(Constants.PLAYER_MSG, Constants.PlayerCommand.STOP);
-        startService(intent);
+        mAudioServiceIntent.putExtra(Constants.PLAYER_MSG, Constants.PlayerCommand.STOP);
+        startService(mAudioServiceIntent);
     }
 
     private void registerBroadcast() {
         mPlayerReceiver = new PlayerReceiver();
         IntentFilter filter = new IntentFilter();
-        filter.addAction(Constants.PlayerAction.ACTION_DURATION);
-        filter.addAction(Constants.PlayerAction.ACTION_UPDATE_CURRENT);
-        registerReceiver(mPlayerReceiver, filter);
+        //        registerReceiver(mPlayerReceiver, filter);
     }
 
     private void unregisterBroadcast() {
-        unregisterReceiver(mPlayerReceiver);
+        //        unregisterReceiver(mPlayerReceiver);
     }
 
     public class PlayerReceiver extends BroadcastReceiver {
@@ -124,15 +146,6 @@ public class AudioPlayerActivity extends BaseActivity {
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
-            if (Constants.PlayerAction.ACTION_UPDATE_CURRENT.equals(action)) {
-                int current = intent.getIntExtra(Constants.MUSIC_CURRENT, 0);
-                mProgressBar.setProgress(current);
-                mPlayingTime.setText(progresstime(current));
-            } else if (Constants.PlayerAction.ACTION_DURATION.equals(action)) {
-                int duration = intent.getIntExtra(Constants.MUSIC_DURATION, 0);
-                mProgressBar.setMax(duration);
-                mTotalTime.setText(progresstime(duration));
-            }
             // if (action.equals(MUSIC_CURRENT)) {
             // currentTime = intent.getIntExtra("currentTime", -1);
             // currentProgress.setText(MediaUtil.formatTime(currentTime));
@@ -156,6 +169,42 @@ public class AudioPlayerActivity extends BaseActivity {
             // isPause = true;
             // }
             // }
+        }
+    }
+
+    private void updateAudioDuration(int duration) {
+        mProgressBar.setMax(duration);
+        mTotalTime.setText(progresstime(duration));
+    }
+
+    private void updateAudioCurrent(int position) {
+        mProgressBar.setProgress(position);
+        mPlayingTime.setText(progresstime(position));
+    }
+
+    private void initPlayTime(int position, int duration) {
+        updateAudioDuration(duration);
+        updateAudioCurrent(position);
+    }
+
+    private class AudioServiceConn implements ServiceConnection {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            PlayerBinder binder = (PlayerBinder)service;
+            mService = binder.getService();
+            initPlayTime(mService.getAudioCurrent(),mService.getAudioDuration());
+            mService.setOnUpdateListener(new OnUpdateListener() {
+                @Override
+                public void onUpdate(int current) {
+                    updateAudioCurrent(current);
+                }
+            });
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            // TODO Auto-generated method stub
+
         }
     }
 

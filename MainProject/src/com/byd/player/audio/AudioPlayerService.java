@@ -6,6 +6,7 @@ import android.app.Service;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnPreparedListener;
+import android.os.Binder;
 import android.os.Handler;
 import android.os.IBinder;
 
@@ -14,6 +15,10 @@ import com.byd.player.config.Constants;
 public class AudioPlayerService extends Service {
     private MediaPlayer mPlayer;
 
+    private IBinder mPlayerBinder = new PlayerBinder();
+
+    private OnUpdateListener mUpdateListener;
+
     private String mPath;
 
     private Handler handler = new Handler() {
@@ -21,15 +26,36 @@ public class AudioPlayerService extends Service {
         public void handleMessage(android.os.Message msg) {
             if (msg.what == 1) {
                 if (mPlayer != null) {
-                    Intent intent = new Intent();
-                    intent.setAction(Constants.PlayerAction.ACTION_UPDATE_CURRENT);
-                    intent.putExtra(Constants.MUSIC_CURRENT, mPlayer.getCurrentPosition());
-                    sendBroadcast(intent);
+                    if (null != mUpdateListener) {
+                        mUpdateListener.onUpdate(mPlayer.getCurrentPosition());
+                    }
                     handler.sendEmptyMessageDelayed(1, 1000);
                 }
             }
         };
     };
+
+    public interface OnUpdateListener {
+        public void onUpdate(int current);
+    }
+
+    public class PlayerBinder extends Binder {
+        AudioPlayerService getService() {
+            return AudioPlayerService.this;
+        }
+    }
+
+    public void setOnUpdateListener(OnUpdateListener listener) {
+        mUpdateListener = listener;
+    }
+
+    public int getAudioDuration(){
+        return mPlayer.getDuration();
+    }
+
+    public int getAudioCurrent(){
+        return mPlayer.getCurrentPosition();
+    }
 
     @Override
     public void onCreate() {
@@ -77,19 +103,13 @@ public class AudioPlayerService extends Service {
 
     @Override
     public IBinder onBind(Intent arg0) {
-        // TODO Auto-generated method stub
-        return null;
+        return mPlayerBinder;
     }
 
     private final class PreparedListener implements OnPreparedListener {
         @Override
         public void onPrepared(MediaPlayer mp) {
             mPlayer.start();
-            Intent intent = new Intent();
-            intent.setAction(Constants.PlayerAction.ACTION_DURATION);
-            int duration = mPlayer.getDuration();
-            intent.putExtra(Constants.MUSIC_DURATION, duration);
-            sendBroadcast(intent);
             handler.sendEmptyMessage(1);
         }
     }

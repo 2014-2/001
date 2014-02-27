@@ -28,8 +28,8 @@ public class Constants {
     }
 
     public class PlayerAction {
-        public static final String ACTION_DURATION = "com.byd.player.ACTION_DURATION";
-
-        public static final String ACTION_UPDATE_CURRENT = "com.byd.player.ACTION_UPDATE_CURRENT";
+        //        public static final String ACTION_DURATION = "com.byd.player.ACTION_DURATION";
+        //
+        //        public static final String ACTION_UPDATE_CURRENT = "com.byd.player.ACTION_UPDATE_CURRENT";
     }
 }
