@@ -13,7 +13,7 @@ import android.widget.TextView;
 
 import com.byd.player.BaseActivity;
 import com.byd.player.R;
-import com.byd.player.bluetooth.BlueToothPlayActivity;
+import com.byd.player.bluetooth.ConnectActivity;
 import com.byd.player.config.Constants;
 
 public class AudioListActivity extends BaseActivity implements OnItemClickListener {
@@ -47,7 +47,7 @@ public class AudioListActivity extends BaseActivity implements OnItemClickListen
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent();
-                intent.setClass(AudioListActivity.this, BlueToothPlayActivity.class);
+                intent.setClass(AudioListActivity.this, ConnectActivity.class);
                 startActivity(intent);
             }
         });

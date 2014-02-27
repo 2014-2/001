@@ -4,6 +4,7 @@
     <color name="black">#ff000000</color>
     <color name="blue">#ff0000ff</color>
     <color name="green">#ff00ff00</color>
+    <color name="gray">#808080</color>
     <color name="red">#ffff0000</color>
     <color name="higtlight">#ff0078f0</color>
     <color name="durationtext">#ff7d7d7d</color>
