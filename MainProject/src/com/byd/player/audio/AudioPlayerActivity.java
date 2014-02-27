@@ -12,19 +12,26 @@ import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.view.LayoutInflater;
+import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
+import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 
 import com.byd.player.BaseActivity;
 import com.byd.player.R;
+import com.byd.player.audio.AudioPlayerService.OnPlayPauseListener;
 import com.byd.player.audio.AudioPlayerService.OnUpdateListener;
 import com.byd.player.audio.AudioPlayerService.PlayerBinder;
 import com.byd.player.config.Constants;
+import com.byd.player.view.CheckableImageView;
 
 public class AudioPlayerActivity extends BaseActivity {
     private Song mPlayingSong;
+
+    private int mSongPosition;
 
     /**
      * The container of song info or lyrics
@@ -42,6 +49,8 @@ public class AudioPlayerActivity extends BaseActivity {
     private TextView mSingerName;
 
     private TextView mMusicName;
+
+    private CheckableImageView mBtnPlayPause;
 
     private LayoutInflater mInflater;
 
@@ -61,12 +70,11 @@ public class AudioPlayerActivity extends BaseActivity {
 
         setContentView(R.layout.audio_player_view);
 
-        mPlayingSong = (Song)getIntent().getExtras().getSerializable(Constants.EXTENDED_DATA_SONG);
         mInflater = this.getLayoutInflater();
 
         mAudioServiceIntent = new Intent(this, AudioPlayerService.class);
 
-        initViews();
+        init(getIntent().getIntExtra(Constants.MUSIC_SONG_POSITION, -1));
         startPlay();
 
         registerBroadcast();
@@ -89,6 +97,19 @@ public class AudioPlayerActivity extends BaseActivity {
     protected void onDestroy() {
         super.onDestroy();
         unregisterBroadcast();
+        if (!mService.isPlaying()) {
+            stopService(mAudioServiceIntent);
+        }
+    }
+
+    private void init(int songPosition) {
+        initSong(songPosition);
+        initViews();
+    }
+
+    private void initSong(int songPosition) {
+        mSongPosition = songPosition;
+        mPlayingSong = AudioManager.getInstance().getSongAtPosition(mSongPosition);
     }
 
     private void initViews() {
@@ -103,16 +124,42 @@ public class AudioPlayerActivity extends BaseActivity {
             mSingerName = (TextView)findViewById(R.id.singer_name);
             mMusicName = (TextView)findViewById(R.id.music_name);
             mAlbumName.setText(mPlayingSong.getAlbum());
-            mAlbumName.setSelected(true);
             mSingerName.setText(mPlayingSong.getSinger());
-            mSingerName.setSelected(true);
             mMusicName.setText(mPlayingSong.getFileTitle());
-            mMusicName.setSelected(true);
         }
 
         mTotalTime = (TextView)findViewById(R.id.audio_total_time);
         mPlayingTime = (TextView)findViewById(R.id.audio_playing_time);
         mProgressBar = (SeekBar)findViewById(R.id.audio_seekbar);
+        mProgressBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                seekTo(seekBar.getProgress());
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+                // TODO Auto-generated method stub
+            }
+
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                // TODO Auto-generated method stub
+            }
+        });
+
+        mBtnPlayPause = (CheckableImageView)findViewById(R.id.btn_audio_play_pause);
+        mBtnPlayPause.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mBtnPlayPause.isChecked()) {
+                    continuePlay();
+                } else {
+                    pause();
+                }
+            }
+        });
     }
 
     private boolean hasLyrics() {
@@ -122,12 +169,28 @@ public class AudioPlayerActivity extends BaseActivity {
 
     private void startPlay() {
         mAudioServiceIntent.putExtra(Constants.PLAYER_MSG, Constants.PlayerCommand.PLAY);
-        mAudioServiceIntent.putExtra(Constants.MUSIC_URL, mPlayingSong.getFilePath());
+        mAudioServiceIntent.putExtra(Constants.MUSIC_SONG_POSITION, mSongPosition);
         startService(mAudioServiceIntent);
     }
 
     private void stopPlay() {
         mAudioServiceIntent.putExtra(Constants.PLAYER_MSG, Constants.PlayerCommand.STOP);
+        startService(mAudioServiceIntent);
+    }
+
+    private void seekTo(int progress) {
+        mAudioServiceIntent.putExtra(Constants.PLAYER_MSG, Constants.PlayerCommand.SEEK);
+        mAudioServiceIntent.putExtra(Constants.MUSIC_SEEK_TO, progress);
+        startService(mAudioServiceIntent);
+    }
+
+    private void pause() {
+        mAudioServiceIntent.putExtra(Constants.PLAYER_MSG, Constants.PlayerCommand.PAUSE);
+        startService(mAudioServiceIntent);
+    }
+
+    private void continuePlay() {
+        mAudioServiceIntent.putExtra(Constants.PLAYER_MSG, Constants.PlayerCommand.CONTINUE_PLAY);
         startService(mAudioServiceIntent);
     }
 
@@ -182,6 +245,11 @@ public class AudioPlayerActivity extends BaseActivity {
         mPlayingTime.setText(progresstime(position));
     }
 
+    private void updatePlayPauseBtn(boolean isPlay) {
+        // Check the button if the audio is not playing.
+        mBtnPlayPause.setChecked(!isPlay);
+    }
+
     private void initPlayTime(int position, int duration) {
         updateAudioDuration(duration);
         updateAudioCurrent(position);
@@ -193,10 +261,21 @@ public class AudioPlayerActivity extends BaseActivity {
             PlayerBinder binder = (PlayerBinder)service;
             mService = binder.getService();
             initPlayTime(mService.getAudioCurrent(),mService.getAudioDuration());
+            updatePlayPauseBtn(mService.isPlaying());
             mService.setOnUpdateListener(new OnUpdateListener() {
                 @Override
                 public void onUpdate(int current) {
                     updateAudioCurrent(current);
+                    // Make sure the status of PlayPause button is right
+                    if (mService.isPlaying() == mBtnPlayPause.isChecked()) {
+                        mBtnPlayPause.setChecked(!mService.isPlaying());
+                    }
+                }
+            });
+            mService.setOnPlayPauseListener(new OnPlayPauseListener() {
+                @Override
+                public void onPlayPause(boolean isPlay) {
+                    updatePlayPauseBtn(isPlay);
                 }
             });
         }

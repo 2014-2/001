@@ -118,11 +118,11 @@
             android:layout_weight="1"
             android:gravity="center" >
 
-            <ImageView
-                android:id="@+id/btn_audio_play"
+            <com.byd.player.view.CheckableImageView
+                android:id="@+id/btn_audio_play_pause"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/icon_audio_play" />
+                android:src="@drawable/audio_play_pause_button_selector" />
         </LinearLayout>
 
         <LinearLayout

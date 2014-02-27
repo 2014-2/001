@@ -63,6 +63,10 @@ public class AudioManager {
         return mSongsList;
     }
 
+    public Song getSongAtPosition(int position) {
+        return mSongsList.get(position);
+    }
+
     public void notifyDataChange() {
         for (DataListener listener : mListeners) {
             listener.onDataChange();

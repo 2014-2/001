@@ -94,8 +94,7 @@ public class AudioListActivity extends BaseActivity implements OnItemClickListen
     @Override
     public void onItemClick(AdapterView<?> arg0, View view, int pos, long arg3) {
         Intent intent = new Intent(this, AudioPlayerActivity.class);
-        intent.putExtra(Constants.EXTENDED_DATA_SONG, AudioManager.getInstance()
-                .getSongs().get(pos));
+        intent.putExtra(Constants.MUSIC_SONG_POSITION, pos);
         startActivity(intent);
     }
 

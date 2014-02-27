@@ -1,13 +1,8 @@
 package com.byd.player.audio;
 
-import java.io.Serializable;
 
-public class Song implements Serializable {
-    /**
-     * serial version ID
-     */
-    private static final long serialVersionUID = 1L;
 
+public class Song {
     /**
      * fileName
      */
@@ -215,4 +210,14 @@ public class Song implements Serializable {
     public void setFilePath(String mFilePath) {
         this.mFilePath = mFilePath;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o instanceof Song) {
+            return mFilePath.equals(((Song)o).mFilePath);
+        } else {
+            return false;
+        }
+    }
+
 }

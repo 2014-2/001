@@ -13,23 +13,28 @@ import android.os.IBinder;
 import com.byd.player.config.Constants;
 
 public class AudioPlayerService extends Service {
+    private static final int HANDLER_MSG_UPDATE = 1;
     private MediaPlayer mPlayer;
 
     private IBinder mPlayerBinder = new PlayerBinder();
 
     private OnUpdateListener mUpdateListener;
 
-    private String mPath;
+    private OnPlayPauseListener mPlayPauseListener;
+
+    private Song mPlayingSong;
+
+    private int mSongPosition;
 
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(android.os.Message msg) {
-            if (msg.what == 1) {
+            if (msg.what == HANDLER_MSG_UPDATE) {
                 if (mPlayer != null) {
                     if (null != mUpdateListener) {
                         mUpdateListener.onUpdate(mPlayer.getCurrentPosition());
                     }
-                    handler.sendEmptyMessageDelayed(1, 1000);
+                    handler.sendEmptyMessageDelayed(HANDLER_MSG_UPDATE, 1000);
                 }
             }
         };
@@ -37,6 +42,10 @@ public class AudioPlayerService extends Service {
 
     public interface OnUpdateListener {
         public void onUpdate(int current);
+    }
+
+    public interface OnPlayPauseListener {
+        public void onPlayPause(boolean isPlay);
     }
 
     public class PlayerBinder extends Binder {
@@ -49,12 +58,20 @@ public class AudioPlayerService extends Service {
         mUpdateListener = listener;
     }
 
+    public void setOnPlayPauseListener(OnPlayPauseListener listener) {
+        mPlayPauseListener = listener;
+    }
+
     public int getAudioDuration(){
         return mPlayer.getDuration();
     }
 
     public int getAudioCurrent(){
         return mPlayer.getCurrentPosition();
+    }
+
+    public boolean isPlaying() {
+        return mPlayer.isPlaying();
     }
 
     @Override
@@ -73,15 +90,16 @@ public class AudioPlayerService extends Service {
         int action = intent.getIntExtra(Constants.PLAYER_MSG, -1);
         switch (action) {
             case Constants.PlayerCommand.PLAY:
-                String path = intent.getStringExtra(Constants.MUSIC_URL);
-                if (!path.equals(mPath)) {
-                    if (mPlayer.isPlaying()) {
+                mSongPosition = intent.getIntExtra(Constants.MUSIC_SONG_POSITION, -1);
+                Song song = AudioManager.getInstance().getSongAtPosition(mSongPosition);
+                if (!song.equals(mPlayingSong)) {
+                    if (isPlaying()) {
                         mPlayer.stop();
                     }
                     mPlayer.reset();
                     try {
-                        mPlayer.setDataSource(path);
-                        mPath = path;
+                        mPlayer.setDataSource(song.getFilePath());
+                        mPlayingSong = song;
                         mPlayer.prepare();
                     } catch (IllegalStateException e) {
                         // TODO Auto-generated catch block
@@ -95,6 +113,23 @@ public class AudioPlayerService extends Service {
             case Constants.PlayerCommand.STOP:
                 mPlayer.stop();
                 break;
+            case Constants.PlayerCommand.SEEK:
+                int progress = intent.getIntExtra(Constants.MUSIC_SEEK_TO,
+                        mPlayer.getCurrentPosition());
+                mPlayer.seekTo(progress);
+                break;
+            case Constants.PlayerCommand.PAUSE:
+                mPlayer.pause();
+                if (null != mPlayPauseListener) {
+                    mPlayPauseListener.onPlayPause(false);
+                }
+                break;
+            case Constants.PlayerCommand.CONTINUE_PLAY:
+                mPlayer.start();
+                if (null != mPlayPauseListener) {
+                    mPlayPauseListener.onPlayPause(true);
+                }
+                break;
             default:
                 break;
         }
@@ -106,11 +141,20 @@ public class AudioPlayerService extends Service {
         return mPlayerBinder;
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        handler.removeMessages(HANDLER_MSG_UPDATE);
+        if (mPlayer != null) {
+            mPlayer.release();
+        }
+    }
+
     private final class PreparedListener implements OnPreparedListener {
         @Override
         public void onPrepared(MediaPlayer mp) {
             mPlayer.start();
-            handler.sendEmptyMessage(1);
+            handler.sendEmptyMessage(HANDLER_MSG_UPDATE);
         }
     }
 }
