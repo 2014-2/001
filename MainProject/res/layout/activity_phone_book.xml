@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@drawable/backgrount_main" 
+    tools:context=".PhoneBook" >
+	<include 
+	    android:id="@+id/ly_title_for_phone_book"
+	    layout="@layout/title"/>
+	
+	<LinearLayout 
+	    android:id="@+id/ly_search_box"
+	    android:layout_width="match_parent"
+   	 	android:layout_height="wrap_content"
+   	 	android:orientation="vertical"
+   	 	android:visibility="gone">
+   	 	
+	    <EditText
+	        android:id="@+id/et_search_key"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_gravity="center_horizontal"
+	        android:layout_marginBottom="10dp"
+	        android:background="@drawable/background_search_box"
+	        android:paddingLeft="20dp"
+	        android:paddingRight="30dp"
+	        android:textSize="30sp" />
+
+	</LinearLayout>
+	<ListView
+	    android:id="@+id/lv_phone_book"
+	    android:layout_width="match_parent"
+	    android:layout_height="match_parent"
+	    android:divider="@null" />
+
+</LinearLayout>
