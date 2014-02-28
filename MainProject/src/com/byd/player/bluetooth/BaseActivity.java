@@ -36,7 +36,7 @@ public abstract class BaseActivity extends Activity implements OnClickListener, 
 	public static final int ALERT_TYPE_SAFE_CODE_ERROR = 1;
 	protected static final int ALERT_TYPE_CUSTOM_BEGIN = 2; 
 	
-	protected BtService btService;
+	static public BtService btService;
 	protected ProgressDialog progressDialog;
 	
 	private ServiceConnection mConnection = new ServiceConnection() {

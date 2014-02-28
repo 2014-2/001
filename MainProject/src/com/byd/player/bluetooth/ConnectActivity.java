@@ -3,6 +3,8 @@ package com.byd.player.bluetooth;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.content.Intent;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -10,6 +12,7 @@ import android.widget.CompoundButton;
 import android.widget.ListView;
 
 import com.byd.player.R;
+import com.byd.player.audio.AudioListActivity;
 import com.byd.player.bluetooth.BtStatusChangedBroadcastReceiver.onBtStatusListener;
 import com.byd.player.bluetooth.BaseContentAdapter.OnMyAdapterCheckedChange;
 import com.byd.player.bluetooth.BtDeviceAdapter;
@@ -21,6 +24,7 @@ import com.byd.player.bluetooth.BtActionManager.BtCmdEnum;
  * 蓝牙连接功能
  */
 public class ConnectActivity extends BaseActivity implements OnMyAdapterCheckedChange, onBtStatusListener, OnItemClickListener {
+	private static final String BTCONNECT = "ConnectActivity";
 	ListView lv_bt_device;
 	//private PopupWindow mPopupWindow;
 	private BtDeviceAdapter adapter;
@@ -28,6 +32,14 @@ public class ConnectActivity extends BaseActivity implements OnMyAdapterCheckedC
 	@Override
 	protected void initView() {
 		super.initView();
+		/* should be open, waiting for the serial port .
+		if (!btService.doAction(BtCmdEnum.BT_CMD_LINK_LAST_BT)){
+    		Log.d(BTCONNECT, "connect last BT FAILED!");
+    		//start bt music play activity.
+		} else {
+			Log.i(BTCONNECT, "connect the last BT SUCCESSFULLY!");
+		}
+		*/
 		lv_bt_device = (ListView) findViewById(R.id.lv_phone_book);
 		tvTitle.setText("蓝牙连接");
 		btnRight.setImageResource(R.drawable.btn_search);
@@ -41,7 +53,12 @@ public class ConnectActivity extends BaseActivity implements OnMyAdapterCheckedC
 		super.onClick(v);
 		switch (v.getId()) {
 		case R.id.btn_right:
-			searchDevice();			
+            Intent intent = new Intent();
+            intent.setClass(ConnectActivity.this, BTPlayerActivity.class);
+            startActivity(intent);
+			/* 
+			searchDevice();	
+			*/		
 			break;
 		default:
 			break;
