@@ -79,11 +79,11 @@
             android:layout_weight="1"
             android:gravity="center" >
 
-            <ImageView
-                android:id="@+id/btn_audio_random"
+            <com.byd.player.view.CheckableImageView
+                android:id="@+id/btn_audio_random_play"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/icon_audio_random" />
+                android:src="@drawable/icon_audio_random_play_selector" />
         </LinearLayout>
 
         <LinearLayout
@@ -92,11 +92,11 @@
             android:layout_weight="1"
             android:gravity="center" >
 
-            <ImageView
-                android:id="@+id/btn_audio_circle"
+            <com.byd.player.view.CheckableImageView
+                android:id="@+id/btn_audio_single_loop"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/icon_audio_circle" />
+                android:src="@drawable/icon_audio_single_loop_selector" />
         </LinearLayout>
 
         <LinearLayout

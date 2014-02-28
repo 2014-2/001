@@ -86,12 +86,20 @@ public class AudioPlayerService extends Service {
     }
 
     private void changeToNext() {
-        mSongPosition++;
+        if (Constants.getRandomPlayStatus(getApplicationContext())) {
+            mSongPosition = getRandomIndex(AudioManager.getInstance().getSize());
+        } else {
+            mSongPosition++;
+        }
         changeSong(mSongPosition);
     }
 
     private void changeToPrevious() {
-        mSongPosition--;
+        if (Constants.getRandomPlayStatus(getApplicationContext())) {
+            mSongPosition = getRandomIndex(AudioManager.getInstance().getSize());
+        } else {
+            mSongPosition--;
+        }
         changeSong(mSongPosition);
     }
 
@@ -116,6 +124,14 @@ public class AudioPlayerService extends Service {
         }
     }
 
+    private int getRandomIndex(int range) {
+        int newPosition = (int)(Math.random() * range);
+        if (newPosition == mSongPosition) {
+            newPosition = getRandomIndex(range);
+        }
+        return newPosition;
+    }
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -125,7 +141,11 @@ public class AudioPlayerService extends Service {
         mPlayer.setOnCompletionListener(new OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mp) {
-                changeToNext();
+                if (Constants.getSingleLoopStatus(getApplicationContext())) {
+                    mPlayer.start();
+                } else {
+                    changeToNext();
+                }
             }
         });
     }

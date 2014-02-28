@@ -58,6 +58,10 @@ public class AudioPlayerActivity extends BaseActivity {
 
     private ImageView mBtnPrevious;
 
+    private CheckableImageView mBtnRandomPlay;
+
+    private CheckableImageView mBtnSingleLoop;
+
     private LayoutInflater mInflater;
 
     private PlayerReceiver mPlayerReceiver;
@@ -84,6 +88,13 @@ public class AudioPlayerActivity extends BaseActivity {
         startPlay();
 
         registerBroadcast();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mBtnRandomPlay.setChecked(Constants.getRandomPlayStatus(this));
+        mBtnSingleLoop.setChecked(Constants.getSingleLoopStatus(this));
     }
 
     @Override
@@ -193,6 +204,30 @@ public class AudioPlayerActivity extends BaseActivity {
                 @Override
                 public void onClick(View v) {
                     playPrevious();
+                }
+            });
+        }
+
+        if (null == mBtnRandomPlay) {
+            mBtnRandomPlay = (CheckableImageView)findViewById(R.id.btn_audio_random_play);
+            mBtnRandomPlay.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    boolean isChecked = mBtnRandomPlay.isChecked();
+                    Constants.setRandomPlayStatus(getApplicationContext(), !isChecked);
+                    mBtnRandomPlay.setChecked(!isChecked);
+                }
+            });
+        }
+
+        if (null == mBtnSingleLoop) {
+            mBtnSingleLoop = (CheckableImageView)findViewById(R.id.btn_audio_single_loop);
+            mBtnSingleLoop.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    boolean isChecked = mBtnSingleLoop.isChecked();
+                    Constants.setSingleLoopStatus(getApplicationContext(), !isChecked);
+                    mBtnSingleLoop.setChecked(!isChecked);
                 }
             });
         }
