@@ -67,6 +67,10 @@ public class AudioManager {
         return mSongsList.get(position);
     }
 
+    public int getSize() {
+        return mSongsList.size();
+    }
+
     public void notifyDataChange() {
         for (DataListener listener : mListeners) {
             listener.onDataChange();

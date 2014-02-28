@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.WindowManager;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
@@ -23,6 +24,7 @@ import android.widget.TextView;
 import com.byd.player.BaseActivity;
 import com.byd.player.R;
 import com.byd.player.audio.AudioPlayerService.OnPlayPauseListener;
+import com.byd.player.audio.AudioPlayerService.OnSongChangedListener;
 import com.byd.player.audio.AudioPlayerService.OnUpdateListener;
 import com.byd.player.audio.AudioPlayerService.PlayerBinder;
 import com.byd.player.config.Constants;
@@ -51,6 +53,10 @@ public class AudioPlayerActivity extends BaseActivity {
     private TextView mMusicName;
 
     private CheckableImageView mBtnPlayPause;
+
+    private ImageView mBtnNext;
+
+    private ImageView mBtnPrevious;
 
     private LayoutInflater mInflater;
 
@@ -113,7 +119,9 @@ public class AudioPlayerActivity extends BaseActivity {
     }
 
     private void initViews() {
-        mSongInfoAndLyricsContainer = (LinearLayout)findViewById(R.id.ll_song_info_and_lyrics);
+        if (null == mSongInfoAndLyricsContainer) {
+            mSongInfoAndLyricsContainer = (LinearLayout)findViewById(R.id.ll_song_info_and_lyrics);
+        }
         mSongInfoAndLyricsContainer.removeAllViews();
         if (hasLyrics()) {
             // TODO: Add lyrics display
@@ -128,38 +136,66 @@ public class AudioPlayerActivity extends BaseActivity {
             mMusicName.setText(mPlayingSong.getFileTitle());
         }
 
-        mTotalTime = (TextView)findViewById(R.id.audio_total_time);
-        mPlayingTime = (TextView)findViewById(R.id.audio_playing_time);
-        mProgressBar = (SeekBar)findViewById(R.id.audio_seekbar);
-        mProgressBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
+        if (null == mTotalTime) {
+            mTotalTime = (TextView)findViewById(R.id.audio_total_time);
+        }
+        if (null == mPlayingTime) {
+            mPlayingTime = (TextView)findViewById(R.id.audio_playing_time);
+        }
+        if (null == mProgressBar) {
+            mProgressBar = (SeekBar)findViewById(R.id.audio_seekbar);
+            mProgressBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
 
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-                seekTo(seekBar.getProgress());
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-                // TODO Auto-generated method stub
-            }
-
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                // TODO Auto-generated method stub
-            }
-        });
-
-        mBtnPlayPause = (CheckableImageView)findViewById(R.id.btn_audio_play_pause);
-        mBtnPlayPause.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (mBtnPlayPause.isChecked()) {
-                    continuePlay();
-                } else {
-                    pause();
+                @Override
+                public void onStopTrackingTouch(SeekBar seekBar) {
+                    seekTo(seekBar.getProgress());
                 }
-            }
-        });
+
+                @Override
+                public void onStartTrackingTouch(SeekBar seekBar) {
+                    // TODO Auto-generated method stub
+                }
+
+                @Override
+                public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                    // TODO Auto-generated method stub
+                }
+            });
+        }
+
+        if (null == mBtnPlayPause) {
+            mBtnPlayPause = (CheckableImageView)findViewById(R.id.btn_audio_play_pause);
+            mBtnPlayPause.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (mBtnPlayPause.isChecked()) {
+                        continuePlay();
+                    } else {
+                        pause();
+                    }
+                }
+            });
+        }
+
+        if (null == mBtnNext) {
+            mBtnNext = (ImageView)findViewById(R.id.btn_audio_next);
+            mBtnNext.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    playNext();
+                }
+            });
+        }
+
+        if (null == mBtnPrevious) {
+            mBtnPrevious = (ImageView)findViewById(R.id.btn_audio_previous);
+            mBtnPrevious.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    playPrevious();
+                }
+            });
+        }
     }
 
     private boolean hasLyrics() {
@@ -191,6 +227,16 @@ public class AudioPlayerActivity extends BaseActivity {
 
     private void continuePlay() {
         mAudioServiceIntent.putExtra(Constants.PLAYER_MSG, Constants.PlayerCommand.CONTINUE_PLAY);
+        startService(mAudioServiceIntent);
+    }
+
+    private void playNext() {
+        mAudioServiceIntent.putExtra(Constants.PLAYER_MSG, Constants.PlayerCommand.NEXT);
+        startService(mAudioServiceIntent);
+    }
+
+    private void playPrevious() {
+        mAudioServiceIntent.putExtra(Constants.PLAYER_MSG, Constants.PlayerCommand.PREVIOUS);
         startService(mAudioServiceIntent);
     }
 
@@ -276,6 +322,13 @@ public class AudioPlayerActivity extends BaseActivity {
                 @Override
                 public void onPlayPause(boolean isPlay) {
                     updatePlayPauseBtn(isPlay);
+                }
+            });
+            mService.setOnSongChangedListener(new OnSongChangedListener() {
+                @Override
+                public void onSongChanged(int newPosition) {
+                    init(newPosition);
+                    initPlayTime(mService.getAudioCurrent(),mService.getAudioDuration());
                 }
             });
         }

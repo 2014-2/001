@@ -33,6 +33,10 @@ public class Constants {
         public static final int PAUSE = 3;
 
         public static final int CONTINUE_PLAY = 4;
+
+        public static final int NEXT = 5;
+
+        public static final int PREVIOUS = 6;
     }
 
     public class PlayerAction {

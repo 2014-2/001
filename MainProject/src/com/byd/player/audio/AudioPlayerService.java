@@ -5,6 +5,7 @@ import java.io.IOException;
 import android.app.Service;
 import android.content.Intent;
 import android.media.MediaPlayer;
+import android.media.MediaPlayer.OnCompletionListener;
 import android.media.MediaPlayer.OnPreparedListener;
 import android.os.Binder;
 import android.os.Handler;
@@ -21,6 +22,8 @@ public class AudioPlayerService extends Service {
     private OnUpdateListener mUpdateListener;
 
     private OnPlayPauseListener mPlayPauseListener;
+
+    private OnSongChangedListener mSongChangedListener;
 
     private Song mPlayingSong;
 
@@ -48,6 +51,10 @@ public class AudioPlayerService extends Service {
         public void onPlayPause(boolean isPlay);
     }
 
+    public interface OnSongChangedListener {
+        public void onSongChanged(int newPosition);
+    }
+
     public class PlayerBinder extends Binder {
         AudioPlayerService getService() {
             return AudioPlayerService.this;
@@ -62,6 +69,10 @@ public class AudioPlayerService extends Service {
         mPlayPauseListener = listener;
     }
 
+    public void setOnSongChangedListener(OnSongChangedListener listener) {
+        mSongChangedListener = listener;
+    }
+
     public int getAudioDuration(){
         return mPlayer.getDuration();
     }
@@ -74,12 +85,49 @@ public class AudioPlayerService extends Service {
         return mPlayer.isPlaying();
     }
 
+    private void changeToNext() {
+        mSongPosition++;
+        changeSong(mSongPosition);
+    }
+
+    private void changeToPrevious() {
+        mSongPosition--;
+        changeSong(mSongPosition);
+    }
+
+    private void changeSong(int position) {
+        int size = AudioManager.getInstance().getSize();
+        mSongPosition = (mSongPosition + size) % size;
+        mPlayer.reset();
+        handler.removeMessages(HANDLER_MSG_UPDATE);
+        mPlayingSong = AudioManager.getInstance().getSongAtPosition(mSongPosition);
+        try {
+            mPlayer.setDataSource(mPlayingSong.getFilePath());
+            mPlayer.prepare();
+        } catch (IllegalStateException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        if (null != mSongChangedListener) {
+            mSongChangedListener.onSongChanged(mSongPosition);
+        }
+    }
+
     @Override
     public void onCreate() {
         super.onCreate();
         mPlayer = new MediaPlayer();
         mPlayer.reset();
         mPlayer.setOnPreparedListener(new PreparedListener());
+        mPlayer.setOnCompletionListener(new OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mp) {
+                changeToNext();
+            }
+        });
     }
 
     @Override
@@ -129,6 +177,12 @@ public class AudioPlayerService extends Service {
                 if (null != mPlayPauseListener) {
                     mPlayPauseListener.onPlayPause(true);
                 }
+                break;
+            case Constants.PlayerCommand.NEXT:
+                changeToNext();
+                break;
+            case Constants.PlayerCommand.PREVIOUS:
+                changeToPrevious();
                 break;
             default:
                 break;
