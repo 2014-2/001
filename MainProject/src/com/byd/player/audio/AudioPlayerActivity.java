@@ -11,12 +11,15 @@ import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup.LayoutParams;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
@@ -29,6 +32,7 @@ import com.byd.player.audio.AudioPlayerService.OnUpdateListener;
 import com.byd.player.audio.AudioPlayerService.PlayerBinder;
 import com.byd.player.config.Constants;
 import com.byd.player.view.CheckableImageView;
+import com.byd.player.view.VerticalSeekBar;
 
 public class AudioPlayerActivity extends BaseActivity {
     private Song mPlayingSong;
@@ -62,6 +66,12 @@ public class AudioPlayerActivity extends BaseActivity {
 
     private CheckableImageView mBtnSingleLoop;
 
+    private CheckableImageView mBtnVolume;
+
+    private PopupWindow mPopupVolume;
+
+    private VerticalSeekBar mVolumeSeekbar;
+
     private LayoutInflater mInflater;
 
     private PlayerReceiver mPlayerReceiver;
@@ -69,6 +79,8 @@ public class AudioPlayerActivity extends BaseActivity {
     private Intent mAudioServiceIntent;
 
     private AudioServiceConn mConn;
+
+    private android.media.AudioManager mAudioMgr;
 
     private AudioPlayerService mService;
 
@@ -83,6 +95,8 @@ public class AudioPlayerActivity extends BaseActivity {
         mInflater = this.getLayoutInflater();
 
         mAudioServiceIntent = new Intent(this, AudioPlayerService.class);
+
+        mAudioMgr = (android.media.AudioManager)getSystemService(Context.AUDIO_SERVICE);
 
         init(getIntent().getIntExtra(Constants.MUSIC_SONG_POSITION, -1));
         startPlay();
@@ -228,6 +242,57 @@ public class AudioPlayerActivity extends BaseActivity {
                     boolean isChecked = mBtnSingleLoop.isChecked();
                     Constants.setSingleLoopStatus(getApplicationContext(), !isChecked);
                     mBtnSingleLoop.setChecked(!isChecked);
+                }
+            });
+        }
+
+        if (null == mPopupVolume) {
+            View volume_view = mInflater.inflate(R.layout.layout_audio_volume, null);
+            mPopupVolume = new PopupWindow(volume_view, LayoutParams.WRAP_CONTENT,
+                    LayoutParams.WRAP_CONTENT);
+            mVolumeSeekbar = (VerticalSeekBar)volume_view.findViewById(R.id.audio_volume_seekbar);
+            mVolumeSeekbar
+            .setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
+
+                @Override
+                public void onStopTrackingTouch(SeekBar seekBar) {
+                    // TODO Auto-generated method stub
+
+                }
+
+                @Override
+                public void onStartTrackingTouch(SeekBar seekBar) {
+                    // TODO Auto-generated method stub
+
+                }
+
+                @Override
+                public void onProgressChanged(SeekBar seekBar, int progress,
+                        boolean fromUser) {
+                    mAudioMgr.setStreamVolume(android.media.AudioManager.STREAM_MUSIC, progress,
+                            android.media.AudioManager.FLAG_PLAY_SOUND);
+                }
+            });
+        }
+
+        if (null == mBtnVolume) {
+            mBtnVolume = (CheckableImageView)findViewById(R.id.btn_audio_volume);
+            mBtnVolume.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    boolean isChecked = mBtnVolume.isChecked();
+                    if (!isChecked) {
+                        mVolumeSeekbar.setProgress(mAudioMgr
+                                .getStreamVolume(android.media.AudioManager.STREAM_MUSIC));
+                        mVolumeSeekbar.setMax(mAudioMgr
+                                .getStreamMaxVolume(android.media.AudioManager.STREAM_MUSIC));
+                        mPopupVolume.showAtLocation(mSongInfoAndLyricsContainer, Gravity.RIGHT,
+                                -100, 0);
+                        mPopupVolume.update();
+                    } else if (mPopupVolume.isShowing()) {
+                        mPopupVolume.dismiss();
+                    }
+                    mBtnVolume.setChecked(!isChecked);
                 }
             });
         }
