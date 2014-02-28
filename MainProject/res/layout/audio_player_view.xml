@@ -157,11 +157,11 @@
             android:layout_weight="1"
             android:gravity="center" >
 
-            <ImageView
+            <com.byd.player.view.CheckableImageView
                 android:id="@+id/btn_audio_volume"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/icon_audio_volume" />
+                android:src="@drawable/icon_audio_volume_selector" />
         </LinearLayout>
     </LinearLayout>
 
