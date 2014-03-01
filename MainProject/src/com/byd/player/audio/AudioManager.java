@@ -41,10 +41,14 @@ public class AudioManager {
         }
     }
 
-    public void load() {
-        new AudioLoader(mContext, sInstance).startQuery(0, (Object) null,
-                MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, AudioLoader.DEF_PROJECTION,
-                AudioLoader.DEF_SELECTION, AudioLoader.DEF_SELECTION_ARGS, null);
+    public void load(int type) {
+        switch (type) {
+        case AudioListActivity.TAB_INDEX_LOCAL:
+            new AudioLoader(mContext, sInstance).startQuery(0, (Object) null,
+                    MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, AudioLoader.DEF_PROJECTION,
+                    AudioLoader.DEF_SELECTION, AudioLoader.DEF_SELECTION_ARGS, null);
+            break;
+        }
     }
 
     public void clearData() {

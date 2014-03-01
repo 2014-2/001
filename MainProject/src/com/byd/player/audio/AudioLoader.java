@@ -8,6 +8,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.util.Log;
 
 public class AudioLoader extends AsyncQueryHandler {
 
@@ -42,6 +43,7 @@ public class AudioLoader extends AsyncQueryHandler {
         if (cursor == null) {
             return;
         }
+        int count = cursor.getCount();
         try {
             if (cursor.moveToFirst()) {
                 getSongList(cursor);
