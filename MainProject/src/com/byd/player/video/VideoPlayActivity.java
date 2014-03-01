@@ -49,6 +49,7 @@ import com.byd.player.config.Constants;
 import com.byd.player.history.BYDDatabase;
 import com.byd.player.history.PlayRecord;
 import com.byd.player.video.VideoView.MySizeChangeLinstener;
+import com.byd.player.view.SoundVolumeView;
 /**
  * 
  * @author Des
@@ -95,7 +96,6 @@ public class VideoPlayActivity extends Activity {
 	private ImageView iv_sound_ctrl;
 	private TextView tv_failed;
 	private SoundVolumeView sv_ctrlbar;
-	private View rl_volume_bar;
 
 	/** Called when the activity is first created. */
 	@Override
@@ -355,7 +355,6 @@ public class VideoPlayActivity extends Activity {
 						cancelDelayHide();
 						hideControllerDelay();
 					} else {
-						sv_ctrlbar.updateSoundIcon();
 						sv_ctrlbar.setVisibility(View.VISIBLE);
 						showController();
 						cancelDelayHide();
@@ -364,11 +363,8 @@ public class VideoPlayActivity extends Activity {
 			}
 		});
 
-		rl_volume_bar = controlView.findViewById(R.id.rl_volume_bar);
-		sv_ctrlbar = (SoundVolumeView) controlView.findViewById(R.id.sv_ctrlbar);
-		sv_ctrlbar.initSoundView(iv_sound_ctrl, rl_volume_bar);
-		sv_ctrlbar.setCallBackHandler(mHandler, HIDE_CONTROLER, TIME);
-		sv_ctrlbar.updateSoundIcon();
+		sv_ctrlbar = (SoundVolumeView) controlView.findViewById(R.id.volume_seek_bar);
+		sv_ctrlbar.updateVolumeView();
 		updateErrorIcon();
 	}
 
@@ -518,7 +514,6 @@ public class VideoPlayActivity extends Activity {
 	@Override
 	protected void onResume() {
 		CurrentP = ReadSharedPreferences(mVideoUrl);
-		sv_ctrlbar.updateSoundIcon();
 		if (!mMediaPlayer.isUrlEmpty()) {
 			if (CurrentP != 0) {
 				showProgress();
@@ -834,8 +829,8 @@ public class VideoPlayActivity extends Activity {
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN || keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
 			// mCtrlDialog.updateSoundIcon(iv_sound_ctrl);
-			sv_ctrlbar.updateSoundIcon();
 			sv_ctrlbar.setVisibility(View.GONE);
+		   sv_ctrlbar.updateVolumeView();
 			showController();
 			cancelDelayHide();
 			hideControllerDelay();
@@ -843,8 +838,6 @@ public class VideoPlayActivity extends Activity {
 		return super.onKeyDown(keyCode, event);
 	}
 
-	// Pulque edited at 2012-10-23 10:42:07am
-	// /data/data/<package name>/shared_prefs/itcast.xml
 	private int ReadSharedPreferences(String propId) {
 		SharedPreferences user = getSharedPreferences(POINT, Context.MODE_PRIVATE);
 		return user.getInt(propId, 0);

@@ -1,17 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/rl_volume_bar"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:visibility="gone" >
+    android:layout_height="wrap_content">
 
-    <com.byd.player.video.SoundVolumeView
-        android:id="@+id/sv_ctrlbar"
-        android:layout_width="@dimen/sound_view_width"
-        android:layout_height="@dimen/sound_view_height"
-        android:layout_centerInParent="true"
-        android:background="@drawable/sound_volume_bg"
-        android:visibility="gone" />
-
+    <com.byd.player.view.SoundVolumeView
+        android:id="@+id/volume_seek_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"/>
 
 </RelativeLayout>
