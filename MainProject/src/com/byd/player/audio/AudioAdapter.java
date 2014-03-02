@@ -15,19 +15,18 @@ import com.byd.player.R;
 import com.byd.player.audio.AudioManager.DataListener;
 
 public class AudioAdapter extends BaseAdapter implements DataListener {
-    public final static int MODE_NORMAL = 0;
-    public final static int MODE_EDIT = MODE_NORMAL + 1;
 
     private List<AudioItem> mData = new ArrayList<AudioItem>();
     private Context mContext = null;
     private LayoutInflater mInflater;
 
-    private int mMode = MODE_NORMAL;
+    private int mMode = AudioListActivity.MODE_NORMAL;
+    private int mDataType = -1;
 
     public AudioAdapter(Context context, LayoutInflater inflater) {
         mContext = context;
         mInflater = inflater;
-        setData(AudioManager.getInstance().getSongs());
+        AudioManager.getInstance().addDataListener(this);
     }
 
     public void setData(List<Song> data) {
@@ -45,13 +44,36 @@ public class AudioAdapter extends BaseAdapter implements DataListener {
             notifyDataSetChanged();
         }
     }
+    
+    public void setDataType(int type) {
+        if (mDataType != type) {
+            mMode = AudioListActivity.MODE_NORMAL;
+            switch (type) {
+            case AudioListActivity.TAB_INDEX_LOCAL:
+                setData(AudioManager.getInstance().getSongs());
+                break;
+            case AudioListActivity.TAB_INDEX_SDCARD:
+                break;
+            case AudioListActivity.TAB_INDEX_USB:
+                break;
+            }
+        }
+    }
 
     public boolean isNormalMode() {
-        return mMode == MODE_NORMAL;
+        return mMode == AudioListActivity.MODE_NORMAL;
     }
 
     public boolean isEditMode() {
-        return mMode == MODE_EDIT;
+        return mMode == AudioListActivity.MODE_EDIT;
+    }
+
+    public void setItemSelected(int pos) {
+        if (isEditMode()){
+            AudioItem item =  getItem(pos);
+            item.setSelected(!item.isSelected());
+            notifyDataSetChanged();
+        }
     }
 
     @Override
@@ -86,9 +108,17 @@ public class AudioAdapter extends BaseAdapter implements DataListener {
         }
 
         AudioItem item = getItem(pos);
-        viewHolder.mIamgeAlbum.setImageBitmap(item.getAlbum());
+        if (item.getAlbum() != null) {
+            viewHolder.mIamgeAlbum.setImageBitmap(item.getAlbum());
+        } else {
+            viewHolder.mIamgeAlbum.setImageResource(R.drawable.ablum_null);
+        }
         viewHolder.mTextAudioName.setText(item.getAudioName());
         viewHolder.mTextAudioSinger.setText(item.getSinger());
+        
+        if (isEditMode()){
+            convertView.setSelected(item.isSelected());
+        }
         return convertView;
     }
 

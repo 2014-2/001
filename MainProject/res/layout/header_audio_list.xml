@@ -2,40 +2,52 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:gravity="center_vertical"
-    android:background="@drawable/head">
+    android:background="@drawable/head"
+    android:gravity="center_vertical" >
 
     <Button
         android:id="@+id/button_header_back"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
         android:layout_alignParentLeft="true"
-        android:clickable="true"
-        android:background="@drawable/button_back"/>
+        android:layout_marginLeft="10dp"
+        android:background="@drawable/button_back"
+        android:clickable="true" />
 
     <Button
         android:id="@+id/button_header_edit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginRight="10dp"
-        android:textColor="@android:color/white"
         android:layout_alignParentRight="true"
-        android:text="@string/edit"
+        android:layout_marginRight="10dp"
+        android:background="@drawable/button"
         android:clickable="true"
-        android:background="@drawable/button" />
-    
+        android:text="@string/edit"
+        android:textColor="@android:color/white" />
+
+    <Button
+        android:id="@+id/button_header_delete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="10dp"
+        android:background="@drawable/button"
+        android:clickable="true"
+        android:text="@string/delete"
+        android:visibility="gone"
+        android:textColor="@android:color/white" />
+
     <Button
         android:id="@+id/button_header_search"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginRight="10dp"
-        android:textColor="@android:color/white"
         android:layout_toLeftOf="@id/button_header_edit"
-        android:text="@string/search"
+        android:background="@drawable/button"
         android:clickable="true"
-        android:background="@drawable/button" />
-    
+        android:text="@string/search"
+        android:textColor="@android:color/white" />
+
     <TextView
         android:id="@+id/tv_header_title"
         style="@style/header_text"
@@ -45,10 +57,9 @@
         android:clickable="true"
         android:ellipsize="marquee"
         android:focusable="true"
-        android:text="@string/all_music"
         android:focusableInTouchMode="true"
         android:marqueeRepeatLimit="marquee_forever"
-        android:selectAllOnFocus="true"/>
+        android:selectAllOnFocus="true"
+        android:text="@string/all_music" />
 
-    
 </RelativeLayout>

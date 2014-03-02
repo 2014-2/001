@@ -15,7 +15,7 @@
         <TextView
             android:id="@+id/btn_audio_Local"
             style="@style/browser_footer_tab"
-            android:drawableLeft="@drawable/icon_tab_video"
+            android:drawableLeft="@drawable/icon_tab_audio"
             android:text="@string/btn_text_local" />
 
         <ImageView
@@ -26,7 +26,7 @@
         <TextView
             android:id="@+id/btn_audio_sdcard"
             style="@style/browser_footer_tab"
-            android:drawableLeft="@drawable/icon_tab_video"
+            android:drawableLeft="@drawable/icon_tab_sdcard"
             android:text="@string/btn_text_sdcard" />
 
         <ImageView
@@ -37,7 +37,7 @@
         <TextView
             android:id="@+id/btn_audio_usb"
             style="@style/browser_footer_tab"
-            android:drawableLeft="@drawable/icon_tab_video"
+            android:drawableLeft="@drawable/icon_tab_usb"
             android:text="@string/btn_text_usb" />
 
         <ImageView
@@ -63,18 +63,22 @@
             android:text="@string/btn_text_mobile" />
     </LinearLayout>
 
-    <include android:id="@+id/header" 
+    <include
+        android:id="@+id/header"
         android:layout_alignParentTop="true"
-        layout="@layout/header_audio_list"/>
+        layout="@layout/header_audio_list" />
 
     <GridView
         android:id="@+id/audio_grid_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/btn_container"
-        android:layout_below="@id/header"
         android:layout_alignParentLeft="true"
-        android:background="@android:color/holo_blue_dark"
+        android:layout_below="@id/header"
+        android:padding="8dip"
+        android:horizontalSpacing="4dip"
+        android:verticalSpacing="8dip"
+        android:background="@drawable/bg_audio_list"
         android:numColumns="3" >
     </GridView>
 

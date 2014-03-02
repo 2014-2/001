@@ -7,7 +7,7 @@ import android.text.TextUtils;
 public class AudioItem {
 
     private Song mSong = null;
-    private boolean mChecked = false;
+    private boolean mSelected = false;
     private Bitmap mAblumBitmap = null;
 
     public AudioItem(Song song) {
@@ -30,11 +30,11 @@ public class AudioItem {
         return mSong.getSinger();
     }
 
-    public void setChecked(boolean flag) {
-        mChecked = flag;
+    public void setSelected(boolean flag) {
+        mSelected = flag;
     }
 
-    public boolean isChecked() {
-        return mChecked;
+    public boolean isSelected() {
+        return mSelected;
     }
 }

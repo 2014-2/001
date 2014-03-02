@@ -49,7 +49,7 @@ public class BrowserActivity extends BaseActivity implements OnClickListener {
 	private final static int MSG_TAB_ON_CHANGED = 10;
 	private boolean isEditMode;
 	private View buttonHeaderLeft, buttonHeaderRight;
-	
+
 	public final static int TAB_INDEX_LOCAL = 0;
 	public final static int TAB_INDEX_SDCARD = 1;
 	public final static int TAB_INDEX_USB = 2;
