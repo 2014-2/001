@@ -128,7 +128,7 @@ public class AudioPlayerActivity extends BaseActivity {
     protected void onDestroy() {
         super.onDestroy();
         unregisterBroadcast();
-        if (!mService.isPlaying()) {
+        if (mService != null && !mService.isPlaying()) {
             stopService(mAudioServiceIntent);
         }
     }

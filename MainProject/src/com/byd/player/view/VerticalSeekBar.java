@@ -3,7 +3,6 @@ package com.byd.player.view;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.widget.SeekBar;
 
@@ -21,6 +20,7 @@ public class VerticalSeekBar extends SeekBar {
         super(context, attrs);
     }
 
+    @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(h, w, oldh, oldw);
     }
@@ -31,6 +31,7 @@ public class VerticalSeekBar extends SeekBar {
         setMeasuredDimension(getMeasuredHeight(), getMeasuredWidth());
     }
 
+    @Override
     protected void onDraw(Canvas c) {
         c.rotate(-90);
         c.translate(-getHeight(), 0);
@@ -51,7 +52,6 @@ public class VerticalSeekBar extends SeekBar {
                 int i = 0;
                 i = getMax() - (int)(getMax() * event.getY() / getHeight());
                 setProgress(i);
-                Log.i("Progress", getProgress() + "");
                 onSizeChanged(getWidth(), getHeight(), 0, 0);
                 break;
 

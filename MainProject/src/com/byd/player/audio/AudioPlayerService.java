@@ -126,7 +126,7 @@ public class AudioPlayerService extends Service {
 
     private int getRandomIndex(int range) {
         int newPosition = (int)(Math.random() * range);
-        if (newPosition == mSongPosition) {
+        if (range > 1 && newPosition == mSongPosition) {
             newPosition = getRandomIndex(range);
         }
         return newPosition;
