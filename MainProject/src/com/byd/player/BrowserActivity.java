@@ -1,17 +1,21 @@
 package com.byd.player;
 
+import java.io.File;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
+import android.text.TextUtils;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,10 +29,12 @@ import android.widget.FrameLayout;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.byd.player.config.Constants;
 import com.byd.player.history.BYDDatabase;
 import com.byd.player.history.PlayRecord;
+import com.byd.player.utils.DialogUtil;
 import com.byd.player.utils.VideoContentObserver;
 import com.byd.player.utils.VideoThumbnailLoader;
 import com.byd.player.video.MovieInfo;
@@ -139,17 +145,35 @@ public class BrowserActivity extends BaseActivity implements OnClickListener {
                findViewById(resId).setBackgroundResource(0);
             }
         }
-        
+        updateTitleBar();
     }
     
     private void initUI() {
         buttonHeaderLeft = ((TextView) findViewById(R.id.button_header_left));
         buttonHeaderLeft.setOnClickListener(this);
-        buttonHeaderLeft.setVisibility(View.GONE);
+        buttonHeaderLeft.setVisibility(View.INVISIBLE);
         buttonHeaderRight = ((TextView) findViewById(R.id.button_header_right));
         buttonHeaderRight.setOnClickListener(this);
         findViewById(R.id.tvDelete).setOnClickListener(this);
         initTabComponent();
+    }
+    
+    private void updateTitleBar() {
+        TextView tvHeadTitle = (TextView) findViewById(R.id.tv_header_title);
+        switch(currentTabSelected) {
+            case TAB_INDEX_LOCAL:
+                tvHeadTitle.setText(R.string.local_video);
+                break;
+            case TAB_INDEX_SDCARD:
+                tvHeadTitle.setText(R.string.sdcard);
+                break;
+            case TAB_INDEX_USB:
+                tvHeadTitle.setText(R.string.usb);
+                break;
+            case TAB_INDEX_HISTORY:
+                tvHeadTitle.setText(R.string.play_history);
+                break;
+        }
     }
     
     static class MyHandler extends Handler {
@@ -192,6 +216,7 @@ public class BrowserActivity extends BaseActivity implements OnClickListener {
                 changeEditMode();
                 break;
             case R.id.tvDelete:
+                new DeleteFileTask().execute(currentTabSelected);
                 break;
             case R.id.tvLocal:
                 mHandler.obtainMessage(MSG_TAB_ON_CHANGED, TAB_INDEX_LOCAL, 0).sendToTarget();
@@ -367,6 +392,16 @@ public class BrowserActivity extends BaseActivity implements OnClickListener {
              }
              return false;
          }
+         
+         public ArrayList<MovieInfo> getChoosedList() {
+             ArrayList<MovieInfo> choosedList = new ArrayList<MovieInfo>();
+             for(int index = 0; index < selectedList.length; index++) {
+                 if(selectedList[index]) {
+                     choosedList.add(mArrayList.get(index));
+                 }
+             }
+             return choosedList;
+         }
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
@@ -399,6 +434,7 @@ public class BrowserActivity extends BaseActivity implements OnClickListener {
             return convertView;
         }
         
+        @SuppressLint("DefaultLocale")
         private String getDurationText(int duration) {
             duration /= 1000;
             int minute = duration / 60;
@@ -417,4 +453,55 @@ public class BrowserActivity extends BaseActivity implements OnClickListener {
         }
     }
 
+    private class DeleteFileTask extends AsyncTask<Integer, Void, Integer> {
+
+        @Override
+        protected void onPreExecute() {
+            DialogUtil.showProgressDialog(BrowserActivity.this);
+            super.onPreExecute();
+        }
+
+        @Override
+        protected Integer doInBackground(Integer... params) {
+            if(params == null || params.length != 1) {
+                return -1;
+            }
+            int tabIndex = params[0];
+            int effectCount = 0;
+            if(tabIndex >= TAB_INDEX_LOCAL && tabIndex <= TAB_INDEX_HISTORY) {
+                VideoAdapter adapter = videoAdapters[tabIndex];
+                ArrayList<MovieInfo> choosedList = adapter.getChoosedList();
+                for(MovieInfo movie : choosedList) {
+                    if(!TextUtils.isEmpty(movie.path)) {
+                        File videoFile = new File(movie.path);
+                        videoFile.delete();
+                        Uri mediaUri = (tabIndex == TAB_INDEX_LOCAL ? 
+                                MediaStore.Video.Media.INTERNAL_CONTENT_URI : MediaStore.Video.Media.EXTERNAL_CONTENT_URI);
+                        getContentResolver().delete(mediaUri ,
+                               "_data='" + movie.path + "'", null); 
+                        getContentResolver().notifyChange(mediaUri, null);
+                        effectCount++;
+                    }
+                }
+            }
+            if(effectCount == 0) {
+                return -1;
+            }
+            return tabIndex;
+        }
+        
+        @Override
+        protected void onPostExecute(Integer tabIndex) {
+            DialogUtil.closeProgressDialog();
+            if(tabIndex != -1) {
+                tabContentChanged[tabIndex] = true;
+                mHandler.obtainMessage(MSG_TAB_ON_CHANGED, tabIndex, 0).sendToTarget();
+                changeEditMode();
+            } else {
+                Toast.makeText(BrowserActivity.this, R.string.select_tips, Toast.LENGTH_SHORT).show();
+            }
+            super.onPostExecute(tabIndex);
+        }
+        
+    }
 }

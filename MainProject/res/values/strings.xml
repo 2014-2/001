@@ -7,9 +7,7 @@
 
     <!-- Video -->
     <string name="video_page">视频</string>
-    <string name="failed_to_play">Failed to play</string>
-    <string name="failed_to_play_next">Failed to play and read next file</string>
-
+    <string name="failed_to_play">视频播放失败</string>
     <string name="local_video">本地视频</string>
     <string name="sdcard">存储卡</string>
     <string name="usb">USB</string>
@@ -18,7 +16,9 @@
     <string name="select_all">全选</string>
     <string name="edit">编辑</string>
     <string name="cancel">取消</string>
-
+    <string name="waiting">请稍等...</string>
+    <string name="select_tips">请至少选择一个文件</string>
+    
     <!-- Audio -->
     <string name="audio_page">音乐</string>
     <string name="btn_text_local">本地音乐</string>
