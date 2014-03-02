@@ -145,17 +145,35 @@ public class BrowserActivity extends BaseActivity implements OnClickListener {
                findViewById(resId).setBackgroundResource(0);
             }
         }
-        
+        updateTitleBar();
     }
     
     private void initUI() {
         buttonHeaderLeft = ((TextView) findViewById(R.id.button_header_left));
         buttonHeaderLeft.setOnClickListener(this);
-        buttonHeaderLeft.setVisibility(View.GONE);
+        buttonHeaderLeft.setVisibility(View.INVISIBLE);
         buttonHeaderRight = ((TextView) findViewById(R.id.button_header_right));
         buttonHeaderRight.setOnClickListener(this);
         findViewById(R.id.tvDelete).setOnClickListener(this);
         initTabComponent();
+    }
+    
+    private void updateTitleBar() {
+        TextView tvHeadTitle = (TextView) findViewById(R.id.tv_header_title);
+        switch(currentTabSelected) {
+            case TAB_INDEX_LOCAL:
+                tvHeadTitle.setText(R.string.local_video);
+                break;
+            case TAB_INDEX_SDCARD:
+                tvHeadTitle.setText(R.string.sdcard);
+                break;
+            case TAB_INDEX_USB:
+                tvHeadTitle.setText(R.string.usb);
+                break;
+            case TAB_INDEX_HISTORY:
+                tvHeadTitle.setText(R.string.play_history);
+                break;
+        }
     }
     
     static class MyHandler extends Handler {

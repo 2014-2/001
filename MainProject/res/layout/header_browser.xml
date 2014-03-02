@@ -12,6 +12,7 @@
         android:layout_marginLeft="10dp"
         android:text="@string/select_all"
         android:textColor="@android:color/white"
+        android:textSize="18sp"
         android:clickable="true"
         android:background="@drawable/button"/>
 
@@ -21,6 +22,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:gravity="center"
         android:layout_weight="1"
         android:clickable="true"
         android:ellipsize="marquee"
@@ -36,6 +38,7 @@
         android:layout_marginRight="10dp"
         android:textColor="@android:color/white"
         android:text="@string/edit"
+        android:textSize="18sp"
         android:clickable="true"
         android:background="@drawable/button" />
     
