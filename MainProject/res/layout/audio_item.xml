@@ -2,8 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="@dimen/music_item_width"
     android:layout_height="@dimen/music_item_height"
-    android:padding="4dip"
-    android:background="@drawable/gridview_selector" >
+    android:background="@drawable/audio_item_selector"
+    android:padding="8dip" >
 
     <ImageView
         android:id="@+id/audio_album"
@@ -22,7 +22,7 @@
         android:paddingLeft="8dp"
         android:singleLine="true"
         android:text="@string/text_name"
-        android:textSize="@dimen/music_item_text_size" />
+        android:textSize="@dimen/music_name_text_size" />
 
     <TextView
         android:id="@+id/audio_singer"
@@ -34,6 +34,7 @@
         android:paddingLeft="8dp"
         android:singleLine="true"
         android:text="@string/text_singer"
-        android:textSize="@dimen/music_item_text_size" />
+        android:textColor="#CCCC99"
+        android:textSize="@dimen/music_singer_text__size" />
 
 </RelativeLayout>

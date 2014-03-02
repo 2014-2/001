@@ -96,7 +96,7 @@ public class AudioListActivity extends BaseActivity implements OnItemClickListen
     }
 
     private void setMode(int mode) {
-        if (mAdapter.isEditMode() && mAdapter.getCount() > 0) {
+        if (!mAdapter.isEditMode() && mAdapter.getCount() > 0) {
             findViewById(R.id.button_header_delete).setVisibility(View.VISIBLE);
             findViewById(R.id.button_header_edit).setVisibility(View.GONE);
             mAdapter.setMode(MODE_EDIT);
@@ -142,6 +142,7 @@ public class AudioListActivity extends BaseActivity implements OnItemClickListen
     @Override
     public void onItemClick(AdapterView<?> arg0, View view, int pos, long arg3) {
         if (mAdapter.isEditMode()) {
+            mAdapter.setItemSelected(pos);
             return;
         }
         Intent intent = new Intent(this, AudioPlayerActivity.class);

@@ -75,10 +75,10 @@
         android:layout_above="@+id/btn_container"
         android:layout_alignParentLeft="true"
         android:layout_below="@id/header"
-        android:padding="8dip"
-        android:horizontalSpacing="4dip"
-        android:verticalSpacing="8dip"
-        android:background="@drawable/bg_audio_list"
+        android:layout_margin="16dip"
+        android:horizontalSpacing="1dp"
+        android:verticalSpacing="1dp"
+        android:background="@android:color/background_dark"
         android:numColumns="3" >
     </GridView>
 
