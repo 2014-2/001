@@ -39,12 +39,18 @@ public class AudioAdapter extends BaseAdapter implements DataListener {
     }
 
     public void setMode(int mode) {
-        if (mMode != mode) {
-            mMode = mode;
-            notifyDataSetChanged();
+        if (mMode == mode) {
+            return;
         }
+        mMode = mode;
+        if (AudioListActivity.MODE_NORMAL == mMode) {
+            for (AudioItem item : mData) {
+                item.setSelected(false);
+            }
+        }
+        notifyDataSetChanged();
     }
-    
+
     public void setDataType(int type) {
         if (mDataType != type) {
             mMode = AudioListActivity.MODE_NORMAL;
@@ -69,8 +75,8 @@ public class AudioAdapter extends BaseAdapter implements DataListener {
     }
 
     public void setItemSelected(int pos) {
-        if (isEditMode()){
-            AudioItem item =  getItem(pos);
+        if (isEditMode()) {
+            AudioItem item = getItem(pos);
             item.setSelected(!item.isSelected());
             notifyDataSetChanged();
         }
@@ -115,9 +121,13 @@ public class AudioAdapter extends BaseAdapter implements DataListener {
         }
         viewHolder.mTextAudioName.setText(item.getAudioName());
         viewHolder.mTextAudioSinger.setText(item.getSinger());
-        
-        if (isEditMode()){
+
+        if (isEditMode() && item.isSelected()) {
             convertView.setSelected(item.isSelected());
+            convertView.setBackgroundResource(R.drawable.audio_item_selected);
+        } else {
+            convertView.setSelected(item.isSelected());
+            convertView.setBackgroundResource(R.drawable.audio_item_selector);
         }
         return convertView;
     }

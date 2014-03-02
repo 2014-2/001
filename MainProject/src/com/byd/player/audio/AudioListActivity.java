@@ -10,6 +10,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.byd.player.BaseActivity;
 import com.byd.player.R;
@@ -51,20 +52,7 @@ public class AudioListActivity extends BaseActivity implements OnItemClickListen
 
         setContentView(R.layout.audio_list_view);
 
-        mPhoneMusic = (TextView) findViewById(R.id.btn_audio_mobile);
-        mPhoneMusic.setClickable(true);
-        mPhoneMusic.setFocusable(true);
-        mPhoneMusic.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent();
-                intent.setClass(AudioListActivity.this, ConnectActivity.class);
-                startActivity(intent);
-            }
-        });
-
         initViews();
-
     }
 
     private void initViews() {
@@ -83,15 +71,39 @@ public class AudioListActivity extends BaseActivity implements OnItemClickListen
             }
         });
 
+        Button delete = (Button) findViewById(R.id.button_header_delete);
+        delete.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mAdapter.isEditMode()) {
+                    Toast.makeText(AudioListActivity.this, "选项待删除....", Toast.LENGTH_SHORT).show();
+                    setMode(MODE_NORMAL);
+                }
+            }
+        });
+
         for (int i = 0; i < TAB_IDS.length; i++) {
             findViewById(TAB_IDS[i]).setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    int index = TAB_INDEX_LOCAL;
                     for (int i = 0; i < TAB_IDS.length; i++) {
                         if (TAB_IDS[i] == v.getId()) {
-                            tabIndex(i);
+                            index = i;
                         }
                     }
+
+                    switch (index) {
+                    case TAB_INDEX_MOBILE:
+                        Intent intent = new Intent();
+                        intent.setClass(AudioListActivity.this, ConnectActivity.class);
+                        startActivity(intent);
+                        break;
+                    default:
+                        tabIndex(index);
+                        break;
+                    }
+
                 }
             });
         }
@@ -99,7 +111,7 @@ public class AudioListActivity extends BaseActivity implements OnItemClickListen
     }
 
     private void setMode(int mode) {
-        if (mAdapter.isEditMode() && mAdapter.getCount() > 0) {
+        if (!mAdapter.isEditMode() && mAdapter.getCount() > 0) {
             findViewById(R.id.button_header_delete).setVisibility(View.VISIBLE);
             findViewById(R.id.button_header_edit).setVisibility(View.GONE);
             mAdapter.setMode(MODE_EDIT);
@@ -145,6 +157,7 @@ public class AudioListActivity extends BaseActivity implements OnItemClickListen
                 findViewById(TAB_IDS[i]).setBackgroundResource(0);
             }
         }
+
     }
 
     @Override
@@ -169,6 +182,7 @@ public class AudioListActivity extends BaseActivity implements OnItemClickListen
     @Override
     public void onItemClick(AdapterView<?> arg0, View view, int pos, long arg3) {
         if (mAdapter.isEditMode()) {
+            mAdapter.setItemSelected(pos);
             return;
         }
         Intent intent = new Intent(this, AudioPlayerActivity.class);

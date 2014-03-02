@@ -48,7 +48,7 @@
         <TextView
             android:id="@+id/btn_audio_aux"
             style="@style/browser_footer_tab"
-            android:drawableLeft="@drawable/icon_tab_video"
+            android:drawableLeft="@drawable/icon_tab_aux"
             android:text="@string/btn_text_aux" />
 
         <ImageView
@@ -59,7 +59,7 @@
         <TextView
             android:id="@+id/btn_audio_mobile"
             style="@style/browser_footer_tab"
-            android:drawableLeft="@drawable/icon_tab_video"
+            android:drawableLeft="@drawable/icon_tab_mobile"
             android:text="@string/btn_text_mobile" />
     </LinearLayout>
 
@@ -72,26 +72,27 @@
         android:layout_height="match_parent"
         android:layout_above="@+id/btn_container"
         android:layout_alignParentLeft="true"
-        android:background="@drawable/bg_audio_list"
-        android:gravity="center"
+        android:layout_below="@id/header"
         android:orientation="vertical"
-        android:layout_below="@id/header">
+        android:background="@android:color/background_dark" >
+
 
         <GridView
              android:id="@+id/audio_grid_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:padding="8dip"
-            android:horizontalSpacing="4dip"
-            android:verticalSpacing="8dip"
             android:visibility="visible"
+            android:layout_margin="16dip"
+            android:horizontalSpacing="1dp"
+            android:verticalSpacing="1dp"
             android:numColumns="3" >
         </GridView>
 
         <TextView
             android:id="@+id/audio_aux_status"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:gravity="center"
             android:text="@string/aux_disconnected"
             android:textColor="@android:color/white"
