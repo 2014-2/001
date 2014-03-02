@@ -48,7 +48,7 @@
         <TextView
             android:id="@+id/btn_audio_aux"
             style="@style/browser_footer_tab"
-            android:drawableLeft="@drawable/icon_tab_video"
+            android:drawableLeft="@drawable/icon_tab_aux"
             android:text="@string/btn_text_aux" />
 
         <ImageView
@@ -59,7 +59,7 @@
         <TextView
             android:id="@+id/btn_audio_mobile"
             style="@style/browser_footer_tab"
-            android:drawableLeft="@drawable/icon_tab_video"
+            android:drawableLeft="@drawable/icon_tab_mobile"
             android:text="@string/btn_text_mobile" />
     </LinearLayout>
 
@@ -75,10 +75,10 @@
         android:layout_above="@+id/btn_container"
         android:layout_alignParentLeft="true"
         android:layout_below="@id/header"
-        android:padding="8dip"
-        android:horizontalSpacing="4dip"
-        android:verticalSpacing="8dip"
-        android:background="@drawable/bg_audio_list"
+        android:layout_margin="16dip"
+        android:horizontalSpacing="1dp"
+        android:verticalSpacing="1dp"
+        android:background="@android:color/background_dark"
         android:numColumns="3" >
     </GridView>
 

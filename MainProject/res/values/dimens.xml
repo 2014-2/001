@@ -7,10 +7,11 @@
     <dimen name="sound_view_height">138dp</dimen>
 
     <!-- music dimens -->
-    <dimen name="music_item_width">320dp</dimen>
-    <dimen name="music_item_height">130dp</dimen>
-    <dimen name="music_item_album_width">120dp</dimen>
-    <dimen name="music_item_album_height">120dp</dimen>
-    <dimen name="music_item_text_size">40dip</dimen>
+    <dimen name="music_item_width">240dip</dimen>
+    <dimen name="music_item_height">80dip</dimen>
+    <dimen name="music_item_album_width">80dip</dimen>
+    <dimen name="music_item_album_height">80dip</dimen>
+    <dimen name="music_name_text_size">28sp</dimen>
+    <dimen name="music_singer_text__size">24sp</dimen>
 
 </resources>
