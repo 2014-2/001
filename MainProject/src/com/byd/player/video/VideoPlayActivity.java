@@ -725,7 +725,7 @@ public class VideoPlayActivity extends Activity {
 			mMediaPlayer.setmUri(null);
 			if (repeatMode == REPEAT_ALL) {
 				mHandler.sendEmptyMessageDelayed(ERROR_HAPPENED, Constants.ERROR_DISMISS_THREE_SECONDS);
-				tv_failed.setText(getString(R.string.failed_to_play_next));
+				tv_failed.setText(getString(R.string.failed_to_play));
 			} else {
 				tv_failed.setText(getString(R.string.failed_to_play));
 			}

@@ -66,7 +66,9 @@ class LoadImageTask extends AsyncTask<String, Void, Bitmap> {
             if(bitmap == null) {
                 bitmap = getVideoThumbnail(videoPath, 150, 120,
                         MediaStore.Images.Thumbnails.MICRO_KIND);
-                addBitmapToMemoryCache(videoPath, bitmap); 
+                if(bitmap != null && !bitmap.isRecycled()) {
+                    addBitmapToMemoryCache(videoPath, bitmap); 
+                }
             }
         }
         return bitmap;
