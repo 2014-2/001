@@ -22,7 +22,7 @@ public class AudioListActivity extends BaseActivity implements OnItemClickListen
     public final static int TAB_INDEX_SDCARD = 1;
     public final static int TAB_INDEX_USB = 2;
     public final static int TAB_INDEX_AUX = 3;
-    public final static int TAB_INDEX_MOBILE = 3;
+    public final static int TAB_INDEX_MOBILE = 4;
 
     public final static int MODE_NORMAL = 0;
     public final static int MODE_EDIT = MODE_NORMAL + 1;
@@ -36,6 +36,7 @@ public class AudioListActivity extends BaseActivity implements OnItemClickListen
     };
 
     private GridView mAudioList = null;
+    private TextView mAuxStatus = null;
     private TextView mPhoneMusic = null;
     private AudioAdapter mAdapter = null;
 
@@ -72,6 +73,8 @@ public class AudioListActivity extends BaseActivity implements OnItemClickListen
         mAudioList.setAdapter(mAdapter);
         mAudioList.setOnItemClickListener(this);
 
+        mAuxStatus = (TextView)findViewById(R.id.audio_aux_status);
+
         Button edit = (Button) findViewById(R.id.button_header_edit);
         edit.setOnClickListener(new OnClickListener() {
             @Override
@@ -107,8 +110,32 @@ public class AudioListActivity extends BaseActivity implements OnItemClickListen
         }
     }
 
+    private void hideViews() {
+        mAudioList.setVisibility(View.GONE);
+        mAuxStatus.setVisibility(View.GONE);
+    }
+
     public void tabIndex(int index) {
-        mAdapter.setDataType(index);
+        switch (index) {
+            case TAB_INDEX_LOCAL:
+            case TAB_INDEX_SDCARD:
+            case TAB_INDEX_USB:
+                if (mAudioList.getVisibility() != View.VISIBLE) {
+                    hideViews();
+                    mAudioList.setVisibility(View.VISIBLE);
+                }
+                mAdapter.setDataType(index);
+                break;
+            case TAB_INDEX_AUX:
+                if (mAuxStatus.getVisibility() != View.VISIBLE) {
+                    hideViews();
+                    mAuxStatus.setVisibility(View.VISIBLE);
+                }
+                break;
+            case TAB_INDEX_MOBILE:
+                break;
+        }
+
         for(int i=0;i<TAB_IDS.length;i++) {
             if(i == index) {
                 findViewById(TAB_IDS[i]).setEnabled(false);

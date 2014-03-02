@@ -34,8 +34,8 @@
     <string name="text_singer">曲婉婷</string>
     
     <!-- Aux -->
-    <string name="aux_connected">AUX音频设备已成功连接</string>
-    <string name="aux_disconnected">AUX音频设备已断开连接</string>
+    <string name="aux_connected">AUX音频设备已连接</string>
+    <string name="aux_disconnected">AUX音频设备未连接</string>
     
     <!-- BT -->
     <string name="txt_bt_search">搜索蓝牙</string>
