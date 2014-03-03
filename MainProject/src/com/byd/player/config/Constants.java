@@ -34,6 +34,8 @@ public class Constants {
     public static final String MUSIC_CURRENT = "com.byd.player.Current";
 
     public static final String MUSIC_SEEK_TO = "com.byd.player.SeekTo";
+    
+    public static final String USB_REGIX = "/mnt/udisk/";
 
     public static final String AUDIO_FX_ID = "com.byd.player.AudioFxId";
 
