@@ -259,28 +259,29 @@ public class BrowserActivity extends BaseActivity implements OnClickListener {
                     } else if (mMediaStore.get(tabIndex) != null) {
                         return mMediaStore.get(tabIndex);
                     }
-                    Cursor cursor = getContentResolver().query(mediaUri,
-                            new String[] {"_display_name", "_data", MediaStore.Video.Media.TITLE,
-                            MediaStore.Video.Media.DURATION}, null, null, null);
-                    int n = cursor.getCount();
-                    cursor.moveToFirst();
-                    ArrayList<MovieInfo> playList2 = new ArrayList<MovieInfo>();
-                    for (int i = 0; i != n; ++i) {
-                        MovieInfo mInfo = new MovieInfo();
-                        mInfo.displayName = cursor.getString(cursor
-                                .getColumnIndex(MediaStore.Video.Media.TITLE));
-                        mInfo.path = cursor.getString(cursor.getColumnIndex("_data"));
-                        mInfo.duration = cursor.getInt(cursor.getColumnIndex(MediaStore.Video.Media.DURATION));
-                        playList2.add(mInfo);
-                        cursor.moveToNext();
-                    }
-                    mMediaStore.put(tabIndex, playList2);
-                    return playList2;
+                    ArrayList<MovieInfo> playList = queryMediaByUri(mediaUri, null);
+                    mMediaStore.put(tabIndex, playList);
+                    return playList;
                 }
                 break;
-            case TAB_INDEX_USB:
-                break;
-            case TAB_INDEX_HISTORY:
+            case TAB_INDEX_USB: {
+                boolean contentChanged = tabContentChanged[tabIndex];
+                if(contentChanged) {
+                    mMediaStore.remove(tabIndex);
+                    tabContentChanged[tabIndex] = false;
+                } else if (mMediaStore.get(tabIndex) != null) {
+                    return mMediaStore.get(tabIndex);
+                }
+                ArrayList<MovieInfo> playList = queryMediaByUri(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, 
+                        Constants.USB_REGIX);
+                if(playList != null && playList.size() > 0) {
+                    mMediaStore.put(tabIndex, playList);
+                } else {
+                    return null;
+                }
+                return playList;
+            }
+            case TAB_INDEX_HISTORY: {
                 boolean contentChanged = tabContentChanged[tabIndex];
                 if(contentChanged) {
                     mMediaStore.remove(tabIndex);
@@ -298,8 +299,35 @@ public class BrowserActivity extends BaseActivity implements OnClickListener {
                     return list;
                 }
                 break;
+            }
         }
         return null;
+    }
+    
+    private ArrayList<MovieInfo> queryMediaByUri(Uri mediaUri, String pathRegix) {
+        String selection = null;
+        String[] selectionArgs = null;
+        if(!TextUtils.isEmpty(pathRegix)) {
+            selection = MediaStore.Video.Media.DATA + " LIKE '" + pathRegix + "%'";
+            //selectionArgs = new String[]{pathRegix};
+        }
+        Cursor cursor = getContentResolver().query(mediaUri,
+                new String[] {"_display_name", "_data", MediaStore.Video.Media.TITLE,
+                    MediaStore.Video.Media.DURATION}, 
+                    selection, selectionArgs, null);
+        int n = cursor.getCount();
+        cursor.moveToFirst();
+        ArrayList<MovieInfo> playList = new ArrayList<MovieInfo>();
+        for (int i = 0; i != n; ++i) {
+            MovieInfo mInfo = new MovieInfo();
+            mInfo.displayName = cursor.getString(cursor
+                    .getColumnIndex(MediaStore.Video.Media.TITLE));
+            mInfo.path = cursor.getString(cursor.getColumnIndex(MediaStore.Video.Media.DATA));
+            mInfo.duration = cursor.getInt(cursor.getColumnIndex(MediaStore.Video.Media.DURATION));
+            playList.add(mInfo);
+            cursor.moveToNext();
+        }
+        return playList;
     }
     
     private void changeEditMode() {

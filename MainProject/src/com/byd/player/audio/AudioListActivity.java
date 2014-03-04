@@ -9,6 +9,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.GridView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.byd.player.BaseActivity;
@@ -32,6 +33,8 @@ public class AudioListActivity extends BaseActivity implements OnItemClickListen
 
     private GridView mAudioList = null;
     private AudioAdapter mAdapter = null;
+
+    private TextView mAuxStatus = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +62,8 @@ public class AudioListActivity extends BaseActivity implements OnItemClickListen
     }
 
     private void initHeaderButtons() {
+        mAuxStatus = (TextView) findViewById(R.id.audio_aux_status);
+
         Button back = (Button) findViewById(R.id.button_header_back);
         back.setOnClickListener(new OnClickListener() {
             @Override
@@ -128,9 +133,34 @@ public class AudioListActivity extends BaseActivity implements OnItemClickListen
         }
     }
 
+    private void hideViews() {
+        mAudioList.setVisibility(View.GONE);
+        mAuxStatus.setVisibility(View.GONE);
+    }
+
     public void tabIndex(int index) {
-        for (int i = 0; i < TAB_IDS.length; i++) {
-            if (i == index) {
+        AudioManager.getInstance().setViewType(index);
+        switch (index) {
+            case TAB_INDEX_LOCAL:
+            case TAB_INDEX_SDCARD:
+            case TAB_INDEX_USB:
+                if (mAudioList.getVisibility() != View.VISIBLE) {
+                    hideViews();
+                    mAudioList.setVisibility(View.VISIBLE);
+                }
+                break;
+            case TAB_INDEX_AUX:
+                if (mAuxStatus.getVisibility() != View.VISIBLE) {
+                    hideViews();
+                    mAuxStatus.setVisibility(View.VISIBLE);
+                }
+                break;
+            case TAB_INDEX_MOBILE:
+                break;
+        }
+
+        for(int i=0;i<TAB_IDS.length;i++) {
+            if(i == index) {
                 findViewById(TAB_IDS[i]).setEnabled(false);
                 findViewById(TAB_IDS[i]).setBackgroundResource(
                         R.drawable.browser_footer_tab_selected);
@@ -139,7 +169,6 @@ public class AudioListActivity extends BaseActivity implements OnItemClickListen
                 findViewById(TAB_IDS[i]).setBackgroundResource(0);
             }
         }
-        AudioManager.getInstance().setViewType(index);
     }
 
     @Override

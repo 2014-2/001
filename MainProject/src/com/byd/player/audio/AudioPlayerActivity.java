@@ -20,6 +20,8 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
+import android.widget.RadioGroup;
+import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
@@ -66,9 +68,15 @@ public class AudioPlayerActivity extends BaseActivity {
 
     private CheckableImageView mBtnSingleLoop;
 
+    private CheckableImageView mBtnAudioFx;
+
     private CheckableImageView mBtnVolume;
 
     private PopupWindow mPopupVolume;
+
+    private PopupWindow mPopupAudioFx;
+
+    private RadioGroup mAudioFxGroup;
 
     private VerticalSeekBar mVolumeSeekbar;
 
@@ -287,12 +295,112 @@ public class AudioPlayerActivity extends BaseActivity {
                         mVolumeSeekbar.setMax(mAudioMgr
                                 .getStreamMaxVolume(android.media.AudioManager.STREAM_MUSIC));
                         mPopupVolume.showAtLocation(mSongInfoAndLyricsContainer, Gravity.RIGHT,
-                                -100, 0);
+                                20, 0);
                         mPopupVolume.update();
                     } else if (mPopupVolume.isShowing()) {
                         mPopupVolume.dismiss();
                     }
                     mBtnVolume.setChecked(!isChecked);
+                }
+            });
+        }
+
+        if (null == mPopupAudioFx) {
+            View audio_fx_view = mInflater.inflate(R.layout.audio_fx_popup, null);
+            mPopupAudioFx = new PopupWindow(audio_fx_view, LayoutParams.WRAP_CONTENT,
+                    LayoutParams.WRAP_CONTENT);
+            mAudioFxGroup = (RadioGroup)audio_fx_view.findViewById(R.id.audio_fx_group);
+            mAudioFxGroup.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(RadioGroup group, int checkedId) {
+                    int audioFxId = Constants.AudioFx.NONE;
+                    switch (checkedId) {
+                        case R.id.fx_none:
+                            audioFxId = Constants.AudioFx.NONE;
+                            break;
+                        case R.id.fx_classical:
+                            audioFxId = Constants.AudioFx.CLASSICAL;
+                            break;
+                        case R.id.fx_dance:
+                            audioFxId = Constants.AudioFx.DANCE;
+                            break;
+                        case R.id.fx_flat:
+                            audioFxId = Constants.AudioFx.FLAT;
+                            break;
+                        case R.id.fx_folk:
+                            audioFxId = Constants.AudioFx.FOLK;
+                            break;
+                        case R.id.fx_heavymetal:
+                            audioFxId = Constants.AudioFx.HEAVYMETAL;
+                            break;
+                        case R.id.fx_hiphop:
+                            audioFxId = Constants.AudioFx.HIPHOP;
+                            break;
+                        case R.id.fx_jazz:
+                            audioFxId = Constants.AudioFx.JAZZ;
+                            break;
+                        case R.id.fx_pop:
+                            audioFxId = Constants.AudioFx.POP;
+                            break;
+                        case R.id.fx_rock:
+                            audioFxId = Constants.AudioFx.ROCK;
+                            break;
+                    }
+                    Constants.setAudioFx(getApplicationContext(), audioFxId);
+                    setAudioFx(audioFxId);
+                }
+            });
+        }
+
+        if (null == mBtnAudioFx) {
+            mBtnAudioFx = (CheckableImageView)findViewById(R.id.btn_audio_effect);
+            mBtnAudioFx.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    boolean isChecked = mBtnAudioFx.isChecked();
+                    if (!isChecked) {
+                        int audioFx = Constants.getAudioFx(getApplicationContext());
+                        switch(audioFx) {
+                            case 0:
+                                mAudioFxGroup.check(R.id.fx_none);
+                                break;
+                            case 1:
+                                mAudioFxGroup.check(R.id.fx_classical);
+                                break;
+                            case 2:
+                                mAudioFxGroup.check(R.id.fx_dance);
+                                break;
+                            case 3:
+                                mAudioFxGroup.check(R.id.fx_flat);
+                                break;
+                            case 4:
+                                mAudioFxGroup.check(R.id.fx_folk);
+                                break;
+                            case 5:
+                                mAudioFxGroup.check(R.id.fx_heavymetal);
+                                break;
+                            case 6:
+                                mAudioFxGroup.check(R.id.fx_hiphop);
+                                break;
+                            case 7:
+                                mAudioFxGroup.check(R.id.fx_jazz);
+                                break;
+                            case 8:
+                                mAudioFxGroup.check(R.id.fx_pop);
+                                break;
+                            case 9:
+                                mAudioFxGroup.check(R.id.fx_rock);
+                                break;
+                            default:
+                                mAudioFxGroup.check(R.id.fx_none);
+                                break;
+                        }
+                        mPopupAudioFx.showAsDropDown(v, 0, -450);
+                        mPopupAudioFx.update();
+                    } else if (mPopupAudioFx.isShowing()) {
+                        mPopupAudioFx.dismiss();
+                    }
+                    mBtnAudioFx.setChecked(!isChecked);
                 }
             });
         }
@@ -337,6 +445,12 @@ public class AudioPlayerActivity extends BaseActivity {
 
     private void playPrevious() {
         mAudioServiceIntent.putExtra(Constants.PLAYER_MSG, Constants.PlayerCommand.PREVIOUS);
+        startService(mAudioServiceIntent);
+    }
+
+    private void setAudioFx(int audioFx) {
+        mAudioServiceIntent.putExtra(Constants.PLAYER_MSG, Constants.PlayerCommand.AUDIO_FX);
+        mAudioServiceIntent.putExtra(Constants.AUDIO_FX_ID, audioFx);
         startService(mAudioServiceIntent);
     }
 
