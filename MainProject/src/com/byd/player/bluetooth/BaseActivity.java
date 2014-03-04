@@ -37,6 +37,7 @@ public abstract class BaseActivity extends Activity implements OnClickListener, 
 	protected static final int ALERT_TYPE_CUSTOM_BEGIN = 2; 
 	
 	static public BtService btService;
+	boolean isBtServiceBinded=false;
 	protected ProgressDialog progressDialog;
 	
 	private ServiceConnection mConnection = new ServiceConnection() {
@@ -56,13 +57,19 @@ public abstract class BaseActivity extends Activity implements OnClickListener, 
 		if (btService == null){
 			Intent in = new Intent();
 			in.setClass(this, BtService.class);
-			bindService(in, mConnection, Context.BIND_AUTO_CREATE);
+			isBtServiceBinded=bindService(in, mConnection, Context.BIND_AUTO_CREATE);
+			startService(in);
 		}
 	}
 	
 	protected void unbindService(){
-		if (mConnection != null){
+		if (mConnection != null && isBtServiceBinded == true){
+			Intent in = new Intent();
+			in.setClass(this, BtService.class);
+			stopService(in);
 			unbindService(mConnection);
+			isBtServiceBinded = false;
+			btService = null;
 		}
 	}
 	

@@ -12,7 +12,6 @@ import android.widget.CompoundButton;
 import android.widget.ListView;
 
 import com.byd.player.R;
-import com.byd.player.audio.AudioListActivity;
 import com.byd.player.bluetooth.BtStatusChangedBroadcastReceiver.onBtStatusListener;
 import com.byd.player.bluetooth.BaseContentAdapter.OnMyAdapterCheckedChange;
 import com.byd.player.bluetooth.BtDeviceAdapter;
@@ -32,14 +31,6 @@ public class ConnectActivity extends BaseActivity implements OnMyAdapterCheckedC
 	@Override
 	protected void initView() {
 		super.initView();
-		/* should be open, waiting for the serial port .
-		if (!btService.doAction(BtCmdEnum.BT_CMD_LINK_LAST_BT)){
-    		Log.d(BTCONNECT, "connect last BT FAILED!");
-    		//start bt music play activity.
-		} else {
-			Log.i(BTCONNECT, "connect the last BT SUCCESSFULLY!");
-		}
-		*/
 		lv_bt_device = (ListView) findViewById(R.id.lv_phone_book);
 		tvTitle.setText("蓝牙连接");
 		btnRight.setImageResource(R.drawable.btn_search);
@@ -56,9 +47,9 @@ public class ConnectActivity extends BaseActivity implements OnMyAdapterCheckedC
             Intent intent = new Intent();
             intent.setClass(ConnectActivity.this, BTPlayerActivity.class);
             startActivity(intent);
-			/* 
+            /*
 			searchDevice();	
-			*/		
+			*/
 			break;
 		default:
 			break;
@@ -147,6 +138,12 @@ public class ConnectActivity extends BaseActivity implements OnMyAdapterCheckedC
 		case BtStatus.BT_STATUS_PAIRED_SUCCESSFUL:
 		case BtStatus.BT_STATUS_PAIRED_LIST_UPDATE_OK:
 			initData();
+			if (!btService.doAction(BtCmdEnum.BT_CMD_LINK_LAST_BT)){
+	    		Log.d("BaseActivity", "connect last BT FAILED!");
+	    		//start bt music play activity.
+			} else {
+				Log.i("BaseActivity", "connect the last BT SUCCESSFULLY!");
+			}
 			break;
 		case BtStatus.BT_STATUS_SEARCH_FINISHED:
 			//Toast.makeText(this, "搜索完成", Toast.LENGTH_SHORT).show();

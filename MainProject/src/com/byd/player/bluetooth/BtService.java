@@ -12,6 +12,7 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
+import android.util.Log;
 import android_serialport_api.BT_Controller;
 import android_serialport_api.BT_Controller.onReadCmdListener;
 
@@ -60,8 +61,10 @@ public class BtService extends Service implements onReadCmdListener{
 			inited = true;
 			
 			//TODO init bt status
+			Log.d("BtService", "send bt commands start!!!");
 			doAction(BtCmdEnum.BT_CMD_GET_CURRENT_BT_SETTING_FUNCTION_STATUS);
 			doAction(BtCmdEnum.BT_CMD_READ_PAIRED_DEVICE_LIST_INFO);
+			Log.d("BtService", "send bt commands start!!!");
 		} catch (SecurityException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -114,7 +117,7 @@ public class BtService extends Service implements onReadCmdListener{
 				btStatus.setStatus(currentCmd);
 				
 				Intent intent = new Intent();
-				intent.setAction("com.chongchi.carkit.btservice.action.BT_STATUS_CHANGED");
+				intent.setAction("com.byd.player.bluetooth.service.action.BT_STATUS_CHANGED");
 				intent.putExtra("type", currentCmd.type);
 				intent.putExtra("success", true);
 				if (currentCmd.ret != null){
@@ -126,7 +129,7 @@ public class BtService extends Service implements onReadCmdListener{
 				needUpdateStatus = false;
 			} else {
 				Intent intent = new Intent();
-				intent.setAction("com.chongchi.carkit.btservice.action.BT_STATUS_CHANGED");
+				intent.setAction("com.byd.player.bluetooth.service.action.BT_STATUS_CHANGED");
 				intent.putExtra("type", currentCmd.type);
 				intent.putExtra("success", false);
 				//TODO add fail reason;
@@ -139,7 +142,7 @@ public class BtService extends Service implements onReadCmdListener{
 			int status = btStatus.setStatus(buffer, size);
 			if (BtStatus.BT_STATUS_INVALID != status){
 				Intent intent = new Intent();
-				intent.setAction("com.chongchi.carkit.btservice.action.BT_STATUS_CHANGED");
+				intent.setAction("com.byd.player.bluetooth.service.action.BT_STATUS_CHANGED");
 				intent.putExtra("status", status);
 				sendBroadcast(intent);
 			}

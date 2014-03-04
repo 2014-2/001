@@ -1,11 +1,18 @@
 package com.byd.player.bluetooth;
 
 
+import java.util.List;
+
+import android.app.ActivityManager;
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.ServiceConnection;
+import android.media.AudioManager;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -20,12 +27,11 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.byd.player.BaseActivity;
-import com.byd.player.audio.AudioPlayerService;
+import com.byd.player.bluetooth.BTChannelService.BTChannelBinder;
 import com.byd.player.bluetooth.BtActionManager.BtCmdEnum;
 import com.byd.player.R;
 import com.byd.player.view.CheckableImageView;
 import com.byd.player.bluetooth.BtService;
-import com.byd.player.config.Constants;
 
 public class BTPlayerActivity extends BaseActivity {
 	private static final String BTMUSIC = "BTPlayerActivity";
@@ -64,7 +70,19 @@ public class BTPlayerActivity extends BaseActivity {
     private PlayerReceiver mPlayerReceiver;
 
     private Intent mAudioServiceIntent;
-	
+    
+    static public BTChannelService BtChannelSrv;
+    private boolean isBtChannelSrvBinded=false;
+    
+	private ServiceConnection mBTChannelSrv = new ServiceConnection() {
+	    public void onServiceConnected(ComponentName className, IBinder service) {
+	    	BTChannelBinder binder = (BTChannelBinder) service;
+	        BtChannelSrv = binder.getService();
+	    }
+	    public void onServiceDisconnected(ComponentName arg0) { 
+	    	BtChannelSrv = null;
+	    }
+	};
     @Override
     protected void onStart() {
         super.onStart();
@@ -79,6 +97,12 @@ public class BTPlayerActivity extends BaseActivity {
     protected void onDestroy() {
         super.onDestroy();
         unregisterBroadcast();
+        /*
+        if (mBTChannelSrv != null && isBtChannelSrvBinded == true){
+			unbindService(mBTChannelSrv);
+			isBtChannelSrvBinded = false;
+		}
+        */
     }
     
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,14 +116,33 @@ public class BTPlayerActivity extends BaseActivity {
         initView();
         registerBroadcast();
     }
-    protected void initBTmusic(){
+	protected void initBTmusic(){
+		if(false == isServiceRunning(this, "com.byd.player.bluetooth.BTChannelService")){
+			Intent service = new Intent(this, BTChannelService.class); 
+			this.startService(service); 
+			isBtChannelSrvBinded=bindService(service, mBTChannelSrv, Context.BIND_AUTO_CREATE);
+		}
+		 
+        Log.v("BtService", "BtService¿ª»úÆô¶¯");  
     	if (!btService.doAction(BtCmdEnum.BT_CMD_CONNECT_A2DP)){
 			//TODO deal with a2dp-connect failed, give a toast?
     		Log.e(BTMUSIC, "connect a2dp FAILED!");
-    		return;
 		} else {
 			Log.i(BTMUSIC, "connect a2dp SUCCESSFULLY!");
+			AudioManager mAudioManager = (AudioManager) getBaseContext().getSystemService(Context.AUDIO_SERVICE);
+			mAudioManager.setStreamMute(AudioManager.STREAM_VOICE_CALL, false);
+			mAudioManager.setStreamVolume(AudioManager.STREAM_VOICE_CALL, mAudioManager.getStreamMaxVolume(AudioManager.STREAM_VOICE_CALL), 0);
+			boolean a = mAudioManager.isBluetoothA2dpOn();
+			boolean b = mAudioManager.isBluetoothScoOn();
+			boolean c = mAudioManager.isMusicActive();
+			boolean d = mAudioManager.isSpeakerphoneOn();
+			mAudioManager.setMode(AudioManager.MODE_IN_CALL);
+			mAudioManager.setBluetoothScoOn(true);
+			mAudioManager.startBluetoothSco();
+			setVolumeControlStream(AudioManager.STREAM_MUSIC);
+			
 		}
+    	
     	if (!btService.doAction(BtCmdEnum.BT_CMD_AVRCP_CONECT)){
     		Log.w(BTMUSIC, "This phone doesn't support AVRCP!");
 		} else {
@@ -110,13 +153,12 @@ public class BTPlayerActivity extends BaseActivity {
 		} else {
 			Log.i(BTMUSIC, "support ID3 info!");
 		}
-    	BTcontinuePlay();    	
+    	//BTcontinuePlay();  
+    	
     }
     
 	protected void initView() {
-    	/*
     	initBTmusic();
-    	*/
     	
         if (null == mSongInfoAndLyricsContainer) {
             mSongInfoAndLyricsContainer = (LinearLayout)findViewById(R.id.ll_song_info_and_lyrics);
@@ -175,7 +217,7 @@ public class BTPlayerActivity extends BaseActivity {
 					} else {
 						Log.i(BTMUSIC, "fast forward successfully!");
 					}
-					return false;
+					return true;
 				}
 			});
             
@@ -212,7 +254,7 @@ public class BTPlayerActivity extends BaseActivity {
 					} else {
 						Log.i(BTMUSIC, "fast backward successfully!");
 					}
-					return false;
+					return true;
 				}
 			});
             
@@ -293,5 +335,22 @@ public class BTPlayerActivity extends BaseActivity {
     private void updatePlayPauseBtn(boolean isPlay) {
         // Check the button if the audio is not playing.
         mBtnPlayPause.setChecked(!isPlay);
+    }
+    
+    public boolean isServiceRunning(Context mContext,String className){
+        boolean isRunning = false;
+        ActivityManager activityManager = (ActivityManager)mContext.getSystemService(Context.ACTIVITY_SERVICE); 
+        List<ActivityManager.RunningServiceInfo> serviceList 
+        = activityManager.getRunningServices(30);
+       if (!(serviceList.size()>0)) {
+            return false;
+        }
+        for (int i=0; i<serviceList.size(); i++) {
+            if (serviceList.get(i).service.getClassName().equals(className) == true) {
+                isRunning = true;
+                break;
+            }
+        }
+        return isRunning;
     }
 }
