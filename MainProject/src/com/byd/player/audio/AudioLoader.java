@@ -8,11 +8,9 @@ import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.MediaStore;
-import android.util.Log;
 
 public class AudioLoader extends AsyncQueryHandler {
 
-    public final static Uri AUDIO_URI = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
     public final static String[] DEF_PROJECTION = new String[] {
         MediaStore.Audio.Media._ID,
         MediaStore.Audio.Media.DISPLAY_NAME,
@@ -31,10 +29,30 @@ public class AudioLoader extends AsyncQueryHandler {
     public final static String[] DEF_SELECTION_ARGS = new String[] { "audio/mpeg", "audio/x-ms-wma" };
 
     private AudioManager mAudioManager;
+    private int mType;
 
-    public AudioLoader(Context context, AudioManager am) {
+    public AudioLoader(Context context, AudioManager am, int type) {
         super(context.getContentResolver());
         mAudioManager = am;
+        mType = type;
+    }
+
+    public void loadData() {
+        switch (mType) {
+        case AudioManager.INTERNAL_TYPE:
+            startQuery(0, (Object) null, MediaStore.Audio.Media.INTERNAL_CONTENT_URI,
+                    AudioLoader.DEF_PROJECTION, AudioLoader.DEF_SELECTION,
+                    AudioLoader.DEF_SELECTION_ARGS, null);
+            break;
+
+        case AudioManager.EXTERNAL_TYPE:
+            startQuery(0, (Object) null, MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
+                    AudioLoader.DEF_PROJECTION, AudioLoader.DEF_SELECTION,
+                    AudioLoader.DEF_SELECTION_ARGS, null);
+            break;
+        default:
+            break;
+        }
     }
 
     @Override
@@ -43,7 +61,6 @@ public class AudioLoader extends AsyncQueryHandler {
         if (cursor == null) {
             return;
         }
-        int count = cursor.getCount();
         try {
             if (cursor.moveToFirst()) {
                 getSongList(cursor);
@@ -92,8 +109,8 @@ public class AudioLoader extends AsyncQueryHandler {
             songs.add(song);
         } while (cursor.moveToNext());
 
-        mAudioManager.clearData();
-        mAudioManager.add(songs);
+        mAudioManager.clearData(mType);
+        mAudioManager.add(songs, mType);
         mAudioManager.notifyDataChange();
     }
 }

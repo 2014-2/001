@@ -51,20 +51,12 @@ public class AudioAdapter extends BaseAdapter implements DataListener {
         notifyDataSetChanged();
     }
 
-    public void setDataType(int type) {
-        if (mDataType != type) {
-            mMode = AudioListActivity.MODE_NORMAL;
-            switch (type) {
-            case AudioListActivity.TAB_INDEX_LOCAL:
-                setData(AudioManager.getInstance().getSongs());
-                break;
-            case AudioListActivity.TAB_INDEX_SDCARD:
-                break;
-            case AudioListActivity.TAB_INDEX_USB:
-                break;
-            }
-        }
-    }
+//    public void setDataType(int type) {
+////        if (mDataType != type) {
+////            mMode = AudioListActivity.MODE_NORMAL;
+////            setData(AudioManager.getInstance().getSongs());
+////        }
+//    }
 
     public boolean isNormalMode() {
         return mMode == AudioListActivity.MODE_NORMAL;
@@ -140,6 +132,6 @@ public class AudioAdapter extends BaseAdapter implements DataListener {
 
     @Override
     public void onDataChange() {
-        setData(AudioManager.getInstance().getSongs());
+        setData(AudioManager.getInstance().getViewSongs());
     }
 }

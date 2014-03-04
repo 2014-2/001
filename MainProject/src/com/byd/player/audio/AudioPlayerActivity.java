@@ -140,7 +140,7 @@ public class AudioPlayerActivity extends BaseActivity {
 
     private void initSong(int songPosition) {
         mSongPosition = songPosition;
-        mPlayingSong = AudioManager.getInstance().getSongAtPosition(mSongPosition);
+        mPlayingSong = AudioManager.getInstance().getPlaySongAtPosition(mSongPosition);
     }
 
     private void initViews() {
