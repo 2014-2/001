@@ -295,7 +295,7 @@ public class AudioPlayerActivity extends BaseActivity {
                         mVolumeSeekbar.setMax(mAudioMgr
                                 .getStreamMaxVolume(android.media.AudioManager.STREAM_MUSIC));
                         mPopupVolume.showAtLocation(mSongInfoAndLyricsContainer, Gravity.RIGHT,
-                                -100, 0);
+                                20, 0);
                         mPopupVolume.update();
                     } else if (mPopupVolume.isShowing()) {
                         mPopupVolume.dismiss();
