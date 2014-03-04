@@ -16,6 +16,7 @@ import com.byd.player.BaseActivity;
 import com.byd.player.R;
 import com.byd.player.bluetooth.ConnectActivity;
 import com.byd.player.config.Constants;
+import com.byd.player.services.AuxAudioService;
 
 public class AudioListActivity extends BaseActivity implements OnItemClickListener {
     private final static String TAG = "AudioListActivity";
@@ -53,6 +54,7 @@ public class AudioListActivity extends BaseActivity implements OnItemClickListen
         setContentView(R.layout.audio_list_view);
 
         initViews();
+        startService(new Intent(this, AuxAudioService.class));
     }
 
     private void initViews() {
@@ -94,14 +96,14 @@ public class AudioListActivity extends BaseActivity implements OnItemClickListen
                     }
 
                     switch (index) {
-                    case TAB_INDEX_MOBILE:
-                        Intent intent = new Intent();
-                        intent.setClass(AudioListActivity.this, ConnectActivity.class);
-                        startActivity(intent);
-                        break;
-                    default:
-                        tabIndex(index);
-                        break;
+                        case TAB_INDEX_MOBILE:
+                            Intent intent = new Intent();
+                            intent.setClass(AudioListActivity.this, ConnectActivity.class);
+                            startActivity(intent);
+                            break;
+                        default:
+                            tabIndex(index);
+                            break;
                     }
 
                 }

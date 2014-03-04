@@ -30,7 +30,7 @@ public class AuxAudioService extends Service {
     private static final int SAMPLE_RATE = 44100;
     private static final int AUDIO_FORMAT =  AudioFormat.ENCODING_PCM_16BIT;
     // FIXME: not sure
-    private static final int IN_CHANNEL_CONFIG  = AudioFormat.CHANNEL_IN_STEREO; 
+    private static final int IN_CHANNEL_CONFIG  = AudioFormat.CHANNEL_IN_STEREO;
     private static final int OUT_CHANNEL_CONFIG = AudioFormat.CHANNEL_OUT_STEREO;
 
     private BlockingQueue<byte[]> mAudioDataQueue = new LinkedBlockingDeque<byte[]>();
@@ -72,6 +72,10 @@ public class AuxAudioService extends Service {
     public void onDestroy() {
         super.onDestroy();
         unregisterReceiver(mDeviceConnReceiver);
+        stopPlayer();
+        stopRecoder();
+        // Make sure the service is always running
+        startService(new Intent(this, AuxAudioService.class));
     }
 
     @Override
@@ -156,7 +160,7 @@ public class AuxAudioService extends Service {
         public void run() {
             AudioRecord record = getAudioRecord();
             if (record != null) {
-            	selectAuxChannel();
+                selectAuxChannel();
                 record.startRecording();
                 startPlayer();
                 byte[] audioData = new byte[mBufSize];
@@ -218,25 +222,25 @@ public class AuxAudioService extends Service {
         }
     }
 
-	private static void selectAuxChannel() {
-		FileWriter fr = null;
-		try {
-			fr = new FileWriter(new File("sys/kernel/debug/esai/esai_reg"));
-			String cmd = "";
-			cmd += "ff ";
-			cmd += "3";
-			fr.write(cmd); 
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
-			if (fr != null) {
-				try {
-					fr.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-		}
-	}
+    private static void selectAuxChannel() {
+        FileWriter fr = null;
+        try {
+            fr = new FileWriter(new File("sys/kernel/debug/esai/esai_reg"));
+            String cmd = "";
+            cmd += "ff ";
+            cmd += "3";
+            fr.write(cmd);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (fr != null) {
+                try {
+                    fr.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
 
 }
