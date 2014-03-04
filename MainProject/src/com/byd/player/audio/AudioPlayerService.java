@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.media.MediaPlayer.OnPreparedListener;
+import android.media.audiofx.Equalizer;
 import android.os.Binder;
 import android.os.Handler;
 import android.os.IBinder;
@@ -28,6 +29,8 @@ public class AudioPlayerService extends Service {
     private Song mPlayingSong;
 
     private int mSongPosition;
+
+    private Equalizer mEqualizer;
 
     private Handler handler = new Handler() {
         @Override
@@ -87,7 +90,7 @@ public class AudioPlayerService extends Service {
 
     private void changeToNext() {
         if (Constants.getRandomPlayStatus(getApplicationContext())) {
-            mSongPosition = getRandomIndex(AudioManager.getInstance().getSize());
+            mSongPosition = getRandomIndex(AudioManager.getInstance().getPlaySongsCount());
         } else {
             mSongPosition++;
         }
@@ -96,7 +99,7 @@ public class AudioPlayerService extends Service {
 
     private void changeToPrevious() {
         if (Constants.getRandomPlayStatus(getApplicationContext())) {
-            mSongPosition = getRandomIndex(AudioManager.getInstance().getSize());
+            mSongPosition = getRandomIndex(AudioManager.getInstance().getPlaySongsCount());
         } else {
             mSongPosition--;
         }
@@ -104,11 +107,11 @@ public class AudioPlayerService extends Service {
     }
 
     private void changeSong(int position) {
-        int size = AudioManager.getInstance().getSize();
+        int size = AudioManager.getInstance().getPlaySongsCount();
         mSongPosition = (mSongPosition + size) % size;
         mPlayer.reset();
         handler.removeMessages(HANDLER_MSG_UPDATE);
-        mPlayingSong = AudioManager.getInstance().getSongAtPosition(mSongPosition);
+        mPlayingSong = AudioManager.getInstance().getPlaySongAtPosition(mSongPosition);
         try {
             mPlayer.setDataSource(mPlayingSong.getFilePath());
             mPlayer.prepare();
@@ -121,6 +124,14 @@ public class AudioPlayerService extends Service {
         }
         if (null != mSongChangedListener) {
             mSongChangedListener.onSongChanged(mSongPosition);
+        }
+    }
+
+    private void setEqualizer(int audioFx) {
+        short bands = mEqualizer.getNumberOfBands();
+
+        for (short i = 0; i < bands; i++) {
+            mEqualizer.setBandLevel(i, Constants.SOUND_EFFECT_LEVEL[audioFx][i]);
         }
     }
 
@@ -148,6 +159,11 @@ public class AudioPlayerService extends Service {
                 }
             }
         });
+
+        mEqualizer = new Equalizer(0, mPlayer.getAudioSessionId());
+        mEqualizer.setEnabled(true);
+        int audioFx = Constants.getAudioFx(getApplicationContext());
+        setEqualizer(audioFx);
     }
 
     @Override
@@ -159,7 +175,7 @@ public class AudioPlayerService extends Service {
         switch (action) {
             case Constants.PlayerCommand.PLAY:
                 mSongPosition = intent.getIntExtra(Constants.MUSIC_SONG_POSITION, -1);
-                Song song = AudioManager.getInstance().getSongAtPosition(mSongPosition);
+                Song song = AudioManager.getInstance().getPlaySongAtPosition(mSongPosition);
                 if (!song.equals(mPlayingSong)) {
                     if (isPlaying()) {
                         mPlayer.stop();
@@ -203,6 +219,10 @@ public class AudioPlayerService extends Service {
                 break;
             case Constants.PlayerCommand.PREVIOUS:
                 changeToPrevious();
+                break;
+            case Constants.PlayerCommand.AUDIO_FX:
+                int audioFx = intent.getIntExtra(Constants.AUDIO_FX_ID, Constants.AudioFx.NONE);
+                setEqualizer(audioFx);
                 break;
             default:
                 break;

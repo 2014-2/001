@@ -16,6 +16,7 @@ import com.byd.player.BaseActivity;
 import com.byd.player.R;
 import com.byd.player.bluetooth.ConnectActivity;
 import com.byd.player.config.Constants;
+import com.byd.player.services.AuxAudioService;
 
 public class AudioListActivity extends BaseActivity implements OnItemClickListener {
     private final static String TAG = "AudioListActivity";
@@ -28,18 +29,13 @@ public class AudioListActivity extends BaseActivity implements OnItemClickListen
     public final static int MODE_NORMAL = 0;
     public final static int MODE_EDIT = MODE_NORMAL + 1;
 
-    private final int[] TAB_IDS = new int[]{
-            R.id.btn_audio_Local,
-            R.id.btn_audio_sdcard,
-            R.id.btn_audio_usb,
-            R.id.btn_audio_aux,
-            R.id.btn_audio_mobile
-    };
+    private final int[] TAB_IDS = new int[] { R.id.btn_audio_Local, R.id.btn_audio_sdcard,
+            R.id.btn_audio_usb, R.id.btn_audio_aux, R.id.btn_audio_mobile };
 
     private GridView mAudioList = null;
-    private TextView mAuxStatus = null;
-    private TextView mPhoneMusic = null;
     private AudioAdapter mAdapter = null;
+
+    private TextView mAuxStatus = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,11 +44,13 @@ public class AudioListActivity extends BaseActivity implements OnItemClickListen
                 WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         AudioManager.getInstance().init(getApplicationContext());
-        AudioManager.getInstance().load(TAB_INDEX_LOCAL);
+        AudioManager.getInstance().loadData(AudioManager.EXTERNAL_TYPE);
+        AudioManager.getInstance().loadData(AudioManager.INTERNAL_TYPE);
 
         setContentView(R.layout.audio_list_view);
 
         initViews();
+        startService(new Intent(this, AuxAudioService.class));
     }
 
     private void initViews() {
@@ -61,7 +59,20 @@ public class AudioListActivity extends BaseActivity implements OnItemClickListen
         mAudioList.setAdapter(mAdapter);
         mAudioList.setOnItemClickListener(this);
 
-        mAuxStatus = (TextView)findViewById(R.id.audio_aux_status);
+        initHeaderButtons();
+        initBottomButtons();
+    }
+
+    private void initHeaderButtons() {
+        mAuxStatus = (TextView) findViewById(R.id.audio_aux_status);
+
+        Button back = (Button) findViewById(R.id.button_header_back);
+        back.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AudioListActivity.this.finish();
+            }
+        });
 
         Button edit = (Button) findViewById(R.id.button_header_edit);
         edit.setOnClickListener(new OnClickListener() {
@@ -81,7 +92,9 @@ public class AudioListActivity extends BaseActivity implements OnItemClickListen
                 }
             }
         });
+    }
 
+    private void initBottomButtons() {
         for (int i = 0; i < TAB_IDS.length; i++) {
             findViewById(TAB_IDS[i]).setOnClickListener(new OnClickListener() {
                 @Override
@@ -94,14 +107,14 @@ public class AudioListActivity extends BaseActivity implements OnItemClickListen
                     }
 
                     switch (index) {
-                    case TAB_INDEX_MOBILE:
-                        Intent intent = new Intent();
-                        intent.setClass(AudioListActivity.this, ConnectActivity.class);
-                        startActivity(intent);
-                        break;
-                    default:
-                        tabIndex(index);
-                        break;
+                        case TAB_INDEX_MOBILE:
+                            Intent intent = new Intent();
+                            intent.setClass(AudioListActivity.this, ConnectActivity.class);
+                            startActivity(intent);
+                            break;
+                        default:
+                            tabIndex(index);
+                            break;
                     }
 
                 }
@@ -128,6 +141,7 @@ public class AudioListActivity extends BaseActivity implements OnItemClickListen
     }
 
     public void tabIndex(int index) {
+        AudioManager.getInstance().setViewType(index);
         switch (index) {
             case TAB_INDEX_LOCAL:
             case TAB_INDEX_SDCARD:
@@ -136,7 +150,7 @@ public class AudioListActivity extends BaseActivity implements OnItemClickListen
                     hideViews();
                     mAudioList.setVisibility(View.VISIBLE);
                 }
-                mAdapter.setDataType(index);
+                mAdapter.onDataChange();
                 break;
             case TAB_INDEX_AUX:
                 if (mAuxStatus.getVisibility() != View.VISIBLE) {
@@ -151,13 +165,13 @@ public class AudioListActivity extends BaseActivity implements OnItemClickListen
         for(int i=0;i<TAB_IDS.length;i++) {
             if(i == index) {
                 findViewById(TAB_IDS[i]).setEnabled(false);
-                findViewById(TAB_IDS[i]).setBackgroundResource(R.drawable.browser_footer_tab_selected);
+                findViewById(TAB_IDS[i]).setBackgroundResource(
+                        R.drawable.browser_footer_tab_selected);
             } else {
                 findViewById(TAB_IDS[i]).setEnabled(true);
                 findViewById(TAB_IDS[i]).setBackgroundResource(0);
             }
         }
-
     }
 
     @Override
@@ -188,6 +202,7 @@ public class AudioListActivity extends BaseActivity implements OnItemClickListen
         Intent intent = new Intent(this, AudioPlayerActivity.class);
         intent.putExtra(Constants.MUSIC_SONG_POSITION, pos);
         startActivity(intent);
+        AudioManager.getInstance().setPlayType(AudioManager.getInstance().getViewType());
     }
 
 }

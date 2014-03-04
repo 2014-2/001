@@ -29,6 +29,18 @@
     <string name="btn_text_usb">USB</string>
     <string name="btn_text_aux">AUX</string>
     <string name="btn_text_mobile">手机音乐</string>
+
+    <string name="audio_fx_none">无</string>
+    <string name="audio_fx_classical">古典</string>
+    <string name="audio_fx_dance">舞曲</string>
+    <string name="audio_fx_flat">平直</string>
+    <string name="audio_fx_folk">民谣</string>
+    <string name="audio_fx_heavymetal">重金属</string>
+    <string name="audio_fx_hiphop">嘻哈</string>
+    <string name="audio_fx_jazz">爵士</string>
+    <string name="audio_fx_pop">流行</string>
+    <string name="audio_fx_rock">摇滚</string>
+
     <!-- test -->
     <string name="text_name">我的歌声里</string>
     <string name="text_singer">曲婉婷</string>

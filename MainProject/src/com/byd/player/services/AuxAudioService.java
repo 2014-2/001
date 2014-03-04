@@ -1,5 +1,8 @@
 package com.byd.player.services;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingDeque;
@@ -24,13 +27,14 @@ public class AuxAudioService extends Service {
     private static final String LOG_TAG = "AuxService";
 
     private static final int MIN_BUFFER_SIZE = 4096;
-    private static final int[] SAMPLE_RATES = new int[] { 8000, 11025, 22050, 44100 };
-    private static final short[] AUDIO_FORMATS =  new short[] { AudioFormat.ENCODING_PCM_8BIT, AudioFormat.ENCODING_PCM_16BIT };
-    private static final short[] CHANNELS = new short[] { AudioFormat.CHANNEL_IN_MONO, AudioFormat.CHANNEL_IN_STEREO };
+    private static final int SAMPLE_RATE = 44100;
+    private static final int AUDIO_FORMAT =  AudioFormat.ENCODING_PCM_16BIT;
+    // FIXME: not sure
+    private static final int IN_CHANNEL_CONFIG  = AudioFormat.CHANNEL_IN_STEREO;
+    private static final int OUT_CHANNEL_CONFIG = AudioFormat.CHANNEL_OUT_STEREO;
 
     private BlockingQueue<byte[]> mAudioDataQueue = new LinkedBlockingDeque<byte[]>();
 
-    private int mRate;
     private int mBufSize;
 
     private AuxAudioRecoder mRecoder;
@@ -68,6 +72,10 @@ public class AuxAudioService extends Service {
     public void onDestroy() {
         super.onDestroy();
         unregisterReceiver(mDeviceConnReceiver);
+        stopPlayer();
+        stopRecoder();
+        // Make sure the service is always running
+        startService(new Intent(this, AuxAudioService.class));
     }
 
     @Override
@@ -100,50 +108,43 @@ public class AuxAudioService extends Service {
     }
 
     private AudioRecord getAudioRecord() {
-        for (int rate : SAMPLE_RATES) {
-            for (short audioFormat : AUDIO_FORMATS) {
-                for (short channelConfig : CHANNELS) {
-                    try {
-                        if (DEBUG) {
-                            Log.d(LOG_TAG, "Attempting rate " + rate + "Hz, bits: " + audioFormat + ", channel: " + channelConfig);
-                        }
-                        int minBufferSize = AudioRecord.getMinBufferSize(rate,
-                                AudioFormat.CHANNEL_IN_MONO,
-                                AudioFormat.ENCODING_PCM_16BIT);
-                        if (minBufferSize != AudioRecord.ERROR_BAD_VALUE) {
-                            final int bufferSize = (minBufferSize < MIN_BUFFER_SIZE) ? MIN_BUFFER_SIZE : minBufferSize;
-                            // check if we can instantiate and have a success
-                            AudioRecord recorder = new AudioRecord(
-                                    AudioSource.MIC, rate, channelConfig,
-                                    audioFormat, bufferSize);
-                            if (recorder.getState() == AudioRecord.STATE_INITIALIZED) {
-                                if (DEBUG) {
-                                    Log.d(LOG_TAG, "Initalized successfully at rate " + rate + "Hz, bits: " + audioFormat + ", channel: " + channelConfig);
-                                }
-                                mRate = rate;
-                                mBufSize = bufferSize;
-                                return recorder;
-                            } else {
-                                recorder.release();
-                                recorder = null;
-                            }
-                        }
-                    } catch (Exception e) {
-                        if (DEBUG) {
-                            Log.e(LOG_TAG, rate + "Exception, keep trying.", e);
-                        }
+        try {
+            if (DEBUG) {
+                Log.d(LOG_TAG, "Attempting rate " + SAMPLE_RATE + "Hz, bits: " + AUDIO_FORMAT + ", channel: " + IN_CHANNEL_CONFIG);
+            }
+            int minBufferSize = AudioRecord.getMinBufferSize(SAMPLE_RATE,
+                    AudioFormat.CHANNEL_IN_MONO,
+                    AudioFormat.ENCODING_PCM_16BIT);
+            if (minBufferSize != AudioRecord.ERROR_BAD_VALUE) {
+                final int bufferSize = (minBufferSize < MIN_BUFFER_SIZE) ? MIN_BUFFER_SIZE : minBufferSize;
+                // check if we can instantiate and have a success
+                AudioRecord recorder = new AudioRecord(
+                        AudioSource.MIC, SAMPLE_RATE, IN_CHANNEL_CONFIG,
+                        AUDIO_FORMAT, bufferSize);
+                if (recorder.getState() == AudioRecord.STATE_INITIALIZED) {
+                    if (DEBUG) {
+                        Log.d(LOG_TAG, "Initalized successfully at rate " + SAMPLE_RATE + "Hz, bits: " + AUDIO_FORMAT + ", channel: " + IN_CHANNEL_CONFIG);
                     }
+                    mBufSize = bufferSize;
+                    return recorder;
+                } else {
+                    recorder.release();
+                    recorder = null;
                 }
+            }
+        } catch (Exception e) {
+            if (DEBUG) {
+                Log.e(LOG_TAG, SAMPLE_RATE + "Exception, keep trying.", e);
             }
         }
         return null;
     }
 
     private AudioTrack getAudioTrack() {
-        final int minBufferSize = AudioTrack.getMinBufferSize(mRate, AudioFormat.CHANNEL_OUT_MONO, AudioFormat.ENCODING_PCM_16BIT);
+        final int minBufferSize = AudioTrack.getMinBufferSize(SAMPLE_RATE, AudioFormat.CHANNEL_OUT_MONO, AUDIO_FORMAT);
         final int bufferSize = (minBufferSize < MIN_BUFFER_SIZE) ? MIN_BUFFER_SIZE : minBufferSize;
-        AudioTrack audioTrack = new AudioTrack(AudioManager.STREAM_MUSIC, mRate,
-                AudioFormat.CHANNEL_OUT_MONO, AudioFormat.ENCODING_PCM_16BIT,
+        AudioTrack audioTrack = new AudioTrack(AudioManager.STREAM_MUSIC, SAMPLE_RATE,
+                OUT_CHANNEL_CONFIG, AUDIO_FORMAT,
                 bufferSize, AudioTrack.MODE_STREAM);
         if (audioTrack.getState() == AudioTrack.STATE_INITIALIZED) {
             return audioTrack;
@@ -159,6 +160,7 @@ public class AuxAudioService extends Service {
         public void run() {
             AudioRecord record = getAudioRecord();
             if (record != null) {
+                selectAuxChannel();
                 record.startRecording();
                 startPlayer();
                 byte[] audioData = new byte[mBufSize];
@@ -219,23 +221,26 @@ public class AuxAudioService extends Service {
             }
         }
     }
-    //
-    // private class DeviceConnReceiver extends BroadcastReceiver {
-    //
-    // @Override
-    // public void onReceive(Context context, Intent intent) {
-    // final String action = intent.getAction();
-    // if (ACTION_DEVICE_CONNECTED.equals(action)) {
-    // startRecoder();
-    // } else if (ACTION_DEVICE_UNCONNECTED.equals(action)) {
-    // stopRecoder();
-    // stopPlayer();
-    // } else {
-    // if (DEBUG) {
-    // Log.e(LOG_TAG, "DeviceConnReceiver receives unknown action: " + action);
-    // }
-    // }
-    // }
-    // }
+
+    private static void selectAuxChannel() {
+        FileWriter fr = null;
+        try {
+            fr = new FileWriter(new File("sys/kernel/debug/esai/esai_reg"));
+            String cmd = "";
+            cmd += "ff ";
+            cmd += "3";
+            fr.write(cmd);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (fr != null) {
+                try {
+                    fr.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
 
 }
