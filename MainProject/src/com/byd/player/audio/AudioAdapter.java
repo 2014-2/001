@@ -21,7 +21,6 @@ public class AudioAdapter extends BaseAdapter implements DataListener {
     private LayoutInflater mInflater;
 
     private int mMode = AudioListActivity.MODE_NORMAL;
-    private int mDataType = -1;
 
     public AudioAdapter(Context context, LayoutInflater inflater) {
         mContext = context;

@@ -148,6 +148,7 @@ public class AudioListActivity extends BaseActivity implements OnItemClickListen
                     hideViews();
                     mAudioList.setVisibility(View.VISIBLE);
                 }
+                mAdapter.onDataChange();
                 break;
             case TAB_INDEX_AUX:
                 if (mAuxStatus.getVisibility() != View.VISIBLE) {
