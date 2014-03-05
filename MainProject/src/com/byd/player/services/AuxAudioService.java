@@ -36,7 +36,7 @@ public class AuxAudioService extends Service {
 
     private BlockingQueue<byte[]> mAudioDataQueue = new LinkedBlockingDeque<byte[]>();
 
-    private int mBufSize;
+    private volatile int mBufSize;
 
     private AuxAudioRecoder mRecoder;
     private AuxAudioPlayer  mPlayer;
@@ -114,9 +114,8 @@ public class AuxAudioService extends Service {
             if (DEBUG) {
                 Log.d(LOG_TAG, "Attempting rate " + SAMPLE_RATE + "Hz, bits: " + AUDIO_FORMAT + ", channel: " + IN_CHANNEL_CONFIG);
             }
-            int minBufferSize = AudioRecord.getMinBufferSize(SAMPLE_RATE,
-                    AudioFormat.CHANNEL_IN_MONO,
-                    AudioFormat.ENCODING_PCM_16BIT);
+			int minBufferSize = AudioRecord.getMinBufferSize(SAMPLE_RATE,
+					IN_CHANNEL_CONFIG, AUDIO_FORMAT);
             if (minBufferSize != AudioRecord.ERROR_BAD_VALUE) {
                 final int bufferSize = (minBufferSize < MIN_BUFFER_SIZE) ? MIN_BUFFER_SIZE : minBufferSize;
                 // check if we can instantiate and have a success
@@ -143,7 +142,7 @@ public class AuxAudioService extends Service {
     }
 
     private AudioTrack getAudioTrack() {
-        final int minBufferSize = AudioTrack.getMinBufferSize(SAMPLE_RATE, AudioFormat.CHANNEL_OUT_MONO, AUDIO_FORMAT);
+        final int minBufferSize = AudioTrack.getMinBufferSize(SAMPLE_RATE, OUT_CHANNEL_CONFIG, AUDIO_FORMAT);
         final int bufferSize = (minBufferSize < MIN_BUFFER_SIZE) ? MIN_BUFFER_SIZE : minBufferSize;
         AudioTrack audioTrack = new AudioTrack(AudioManager.STREAM_MUSIC, SAMPLE_RATE,
                 OUT_CHANNEL_CONFIG, AUDIO_FORMAT,
