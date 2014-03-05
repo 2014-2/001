@@ -42,7 +42,8 @@ public class AudioListActivity extends BaseActivity implements OnItemClickListen
                 WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         AudioManager.getInstance().init(getApplicationContext());
-        AudioManager.getInstance().loadData(AudioManager.EXTERNAL_TYPE);
+        AudioManager.getInstance().loadData(AudioManager.EXTERNAL_SDCARD_TYPE);
+        AudioManager.getInstance().loadData(AudioManager.EXTERNAL_USB_TYPE);
         AudioManager.getInstance().loadData(AudioManager.INTERNAL_TYPE);
 
         setContentView(R.layout.audio_list_view);

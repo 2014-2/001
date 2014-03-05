@@ -259,7 +259,7 @@ public class BrowserActivity extends BaseActivity implements OnClickListener {
                     } else if (mMediaStore.get(tabIndex) != null) {
                         return mMediaStore.get(tabIndex);
                     }
-                    ArrayList<MovieInfo> playList = queryMediaByUri(mediaUri, null);
+                    ArrayList<MovieInfo> playList = queryMediaByUri(mediaUri, tabIndex);
                     mMediaStore.put(tabIndex, playList);
                     return playList;
                 }
@@ -273,7 +273,7 @@ public class BrowserActivity extends BaseActivity implements OnClickListener {
                     return mMediaStore.get(tabIndex);
                 }
                 ArrayList<MovieInfo> playList = queryMediaByUri(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, 
-                        Constants.USB_REGIX);
+                        tabIndex);
                 if(playList != null && playList.size() > 0) {
                     mMediaStore.put(tabIndex, playList);
                 } else {
@@ -304,17 +304,21 @@ public class BrowserActivity extends BaseActivity implements OnClickListener {
         return null;
     }
     
-    private ArrayList<MovieInfo> queryMediaByUri(Uri mediaUri, String pathRegix) {
+    private ArrayList<MovieInfo> queryMediaByUri(Uri mediaUri, int tabIndex) {
         String selection = null;
-        String[] selectionArgs = null;
-        if(!TextUtils.isEmpty(pathRegix)) {
-            selection = MediaStore.Video.Media.DATA + " LIKE '" + pathRegix + "%'";
-            //selectionArgs = new String[]{pathRegix};
+        switch(tabIndex) {
+            case TAB_INDEX_LOCAL:
+                break;
+            case TAB_INDEX_SDCARD:
+                selection = MediaStore.Video.Media.DATA + " NOT LIKE '" + Constants.USB_REGIX + "%'";
+                break;
+            case TAB_INDEX_USB:
+                selection = MediaStore.Video.Media.DATA + " LIKE '" + Constants.USB_REGIX + "%'";
+                break;
         }
         Cursor cursor = getContentResolver().query(mediaUri,
                 new String[] {"_display_name", "_data", MediaStore.Video.Media.TITLE,
-                    MediaStore.Video.Media.DURATION}, 
-                    selection, selectionArgs, null);
+                    MediaStore.Video.Media.DURATION}, selection, null, null);
         int n = cursor.getCount();
         cursor.moveToFirst();
         ArrayList<MovieInfo> playList = new ArrayList<MovieInfo>();

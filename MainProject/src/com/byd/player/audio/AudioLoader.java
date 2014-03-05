@@ -6,8 +6,9 @@ import java.util.List;
 import android.content.AsyncQueryHandler;
 import android.content.Context;
 import android.database.Cursor;
-import android.net.Uri;
 import android.provider.MediaStore;
+
+import com.byd.player.config.Constants;
 
 public class AudioLoader extends AsyncQueryHandler {
 
@@ -25,9 +26,19 @@ public class AudioLoader extends AsyncQueryHandler {
 
     public final static String DEF_SELECTION = MediaStore.Audio.Media.MIME_TYPE + "=? or "
             + MediaStore.Audio.Media.MIME_TYPE + "=?";
+    
+    public final static String DEF_SELECTION_SDCARD = "(" + MediaStore.Audio.Media.MIME_TYPE + "=? or "
+            + MediaStore.Audio.Media.MIME_TYPE + "=?) and " 
+            + MediaStore.Audio.Media.DATA + " not like '"
+            + Constants.USB_REGIX + "'";
+    
+    public final static String DEF_SELECTION_USB = "(" + MediaStore.Audio.Media.MIME_TYPE + "=? or "
+            + MediaStore.Audio.Media.MIME_TYPE + "=?) and "
+            + MediaStore.Audio.Media.DATA + " like '"
+            + Constants.USB_REGIX + "'";
 
     public final static String[] DEF_SELECTION_ARGS = new String[] { "audio/mpeg", "audio/x-ms-wma" };
-
+    
     private AudioManager mAudioManager;
     private int mType;
 
@@ -45,9 +56,14 @@ public class AudioLoader extends AsyncQueryHandler {
                     AudioLoader.DEF_SELECTION_ARGS, null);
             break;
 
-        case AudioManager.EXTERNAL_TYPE:
+        case AudioManager.EXTERNAL_SDCARD_TYPE:
             startQuery(0, (Object) null, MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
-                    AudioLoader.DEF_PROJECTION, AudioLoader.DEF_SELECTION,
+                    AudioLoader.DEF_PROJECTION, AudioLoader.DEF_SELECTION_SDCARD,
+                    AudioLoader.DEF_SELECTION_ARGS, null);
+            break;
+        case AudioManager.EXTERNAL_USB_TYPE:
+            startQuery(0, (Object) null, MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
+                    AudioLoader.DEF_PROJECTION, AudioLoader.DEF_SELECTION_USB,
                     AudioLoader.DEF_SELECTION_ARGS, null);
             break;
         default:

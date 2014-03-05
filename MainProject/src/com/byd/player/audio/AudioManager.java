@@ -9,7 +9,8 @@ public class AudioManager {
     private static AudioManager sInstance = new AudioManager();
 
     public final static int INTERNAL_TYPE = AudioListActivity.TAB_INDEX_LOCAL;
-    public final static int EXTERNAL_TYPE = AudioListActivity.TAB_INDEX_SDCARD;
+    public final static int EXTERNAL_SDCARD_TYPE = AudioListActivity.TAB_INDEX_SDCARD;
+    public final static int EXTERNAL_USB_TYPE = AudioListActivity.TAB_INDEX_USB;
 
     public interface DataListener {
         void onDataChange();
@@ -19,7 +20,8 @@ public class AudioManager {
 
     private Context mContext = null;
     private List<Song> mInteralSongs = new ArrayList<Song>();
-    private List<Song> mExtenalSongs = new ArrayList<Song>();
+    private List<Song> mExtenalSDCARDSongs = new ArrayList<Song>();
+    private List<Song> mExtenalUSBSongs = new ArrayList<Song>();
 
     private int mViewType = INTERNAL_TYPE;
     private int mPlayType = INTERNAL_TYPE;
@@ -69,7 +71,8 @@ public class AudioManager {
 
     public void clear() {
         mInteralSongs.clear();
-        mExtenalSongs.clear();
+        mExtenalUSBSongs.clear();
+        mExtenalSDCARDSongs.clear();
     }
 
     public void clearData(int type) {
@@ -77,8 +80,11 @@ public class AudioManager {
         case INTERNAL_TYPE:
             mInteralSongs.clear();
             break;
-        case EXTERNAL_TYPE:
-            mExtenalSongs.clear();
+        case EXTERNAL_SDCARD_TYPE:
+            mExtenalSDCARDSongs.clear();
+            break;
+        case EXTERNAL_USB_TYPE:
+            mExtenalUSBSongs.clear();
             break;
         default:
             break;
@@ -90,8 +96,11 @@ public class AudioManager {
         case INTERNAL_TYPE:
             mInteralSongs.add(song);
             break;
-        case EXTERNAL_TYPE:
-            mExtenalSongs.add(song);
+        case EXTERNAL_SDCARD_TYPE:
+            mExtenalSDCARDSongs.add(song);
+            break;
+        case EXTERNAL_USB_TYPE:
+            mExtenalUSBSongs.add(song);
             break;
         default:
             break;
@@ -103,8 +112,11 @@ public class AudioManager {
         case INTERNAL_TYPE:
             mInteralSongs.addAll(songs);
             break;
-        case EXTERNAL_TYPE:
-            mExtenalSongs.addAll(songs);
+        case EXTERNAL_SDCARD_TYPE:
+            mExtenalSDCARDSongs.addAll(songs);
+            break;
+        case EXTERNAL_USB_TYPE:
+            mExtenalUSBSongs.addAll(songs);
             break;
         default:
             break;
@@ -115,8 +127,10 @@ public class AudioManager {
         switch (mViewType) {
         case INTERNAL_TYPE:
             return mInteralSongs;
-        case EXTERNAL_TYPE:
-            return mExtenalSongs;
+        case EXTERNAL_SDCARD_TYPE:
+            return mExtenalSDCARDSongs;
+        case EXTERNAL_USB_TYPE:
+            return mExtenalUSBSongs;
         default:
             return null;
         }
@@ -129,9 +143,14 @@ public class AudioManager {
                 return mInteralSongs.get(position);
             }
             break;
-        case EXTERNAL_TYPE:
-            if (position < mExtenalSongs.size()) {
-                return mExtenalSongs.get(position);
+        case EXTERNAL_SDCARD_TYPE:
+            if (position < mExtenalSDCARDSongs.size()) {
+                return mExtenalSDCARDSongs.get(position);
+            }
+            break;
+        case EXTERNAL_USB_TYPE:
+            if (position < mExtenalUSBSongs.size()) {
+                return mExtenalUSBSongs.get(position);
             }
             break;
         default:
@@ -144,8 +163,10 @@ public class AudioManager {
         switch (mViewType) {
         case INTERNAL_TYPE:
             return mInteralSongs.size();
-        case EXTERNAL_TYPE:
-            return mExtenalSongs.size();
+        case EXTERNAL_SDCARD_TYPE:
+            return mExtenalSDCARDSongs.size();
+        case EXTERNAL_USB_TYPE:
+            return mExtenalUSBSongs.size();
         default:
             break;
         }

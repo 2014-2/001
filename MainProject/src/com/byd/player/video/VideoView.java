@@ -21,6 +21,7 @@ import java.io.IOException;
 import android.content.Context;
 import android.content.Intent;
 import android.media.AudioManager;
+import android.media.AudioManager.OnAudioFocusChangeListener;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.media.MediaPlayer.OnErrorListener;
@@ -67,7 +68,26 @@ public class VideoView extends SurfaceView implements MediaPlayerControl {
 	private OnErrorListener mOnErrorListener;
 	private boolean mStartWhenPrepared;
 	private int mSeekWhenPrepared;
-
+	private AudioManager audioManager;
+	
+	OnAudioFocusChangeListener afChangeListener = new OnAudioFocusChangeListener() {  
+	    public void onAudioFocusChange(int focusChange) {  
+	        if (focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT) {
+	            // Pause playback 
+	            VideoView.this.pause();
+	        } else if (focusChange == AudioManager.AUDIOFOCUS_LOSS) {  
+	            audioManager.abandonAudioFocus(afChangeListener);  
+	            // Stop playback  
+	            VideoView.this.stopPlayback();;
+	        } else if (focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK) {  
+	            // Lower the volume  
+	        } else if (focusChange == AudioManager.AUDIOFOCUS_GAIN) {  
+	            // Resume playback or Raise it back to normal  
+	            VideoView.this.start();
+	        }
+	    }  
+	};  
+	
 	private MySizeChangeLinstener mMyChangeLinstener;
 
 	public int getVideoWidth() {
@@ -150,6 +170,7 @@ public class VideoView extends SurfaceView implements MediaPlayerControl {
 	}
 
 	private void initVideoView() {
+	   audioManager = (AudioManager) mContext.getSystemService(Context.AUDIO_SERVICE);
 		mVideoWidth = 0;
 		mVideoHeight = 0;
 		getHolder().addCallback(mSHCallback);
@@ -542,7 +563,8 @@ public class VideoView extends SurfaceView implements MediaPlayerControl {
 
 	public void start() {
 		if (mMediaPlayer != null && mIsPrepared) {
-
+		   audioManager.requestAudioFocus(afChangeListener, 
+		            AudioManager.AUDIOFOCUS_GAIN_TRANSIENT, AudioManager.AUDIOFOCUS_GAIN_TRANSIENT_MAY_DUCK);
 			mMediaPlayer.start();
 			mStartWhenPrepared = false;
 		} else {
@@ -554,6 +576,7 @@ public class VideoView extends SurfaceView implements MediaPlayerControl {
 		if (mMediaPlayer != null && mIsPrepared) {
 			if (mMediaPlayer.isPlaying()) {
 				mMediaPlayer.pause();
+				audioManager.abandonAudioFocus(afChangeListener);
 			}
 		}
 		mStartWhenPrepared = false;

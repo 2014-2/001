@@ -106,7 +106,7 @@ public class VideoPlayActivity extends Activity {
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON,
 				WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 		setContentView(R.layout.video_play_view);
-
+		
 		final TextView tv1 = (TextView) findViewById(R.id.VideoViewTest);
 		tv1.post(new Runnable() {
 			public void run() {
@@ -228,7 +228,6 @@ public class VideoPlayActivity extends Activity {
 						msg.what = SEEKTO;
 						msg.arg1 = progress;
 						mHandler.sendMessageDelayed(msg, 1000);
-						// mMediaPlayer.start();
 					} else {
 						seekBar.setProgress(0);
 						seekBar.setSecondaryProgress(0);
