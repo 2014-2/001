@@ -1,4 +1,4 @@
-package com.byd.player.bluetooth;
+package com.byd.player.services;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -15,20 +15,20 @@ import android.os.IBinder;
 import android.util.Log;
 import android.widget.Toast;
 
-public class BTChannelService extends Service {
+public class AudioChannelService extends Service {
 
 	private int recBufSize = 0;
 	private int playBufSize = 0;
 	/**
-	 * ²ÉÑùÂÊ 441
+	 * é‡‡æ ·ç‡  441
 	 * */
 	private int sampleRateInHz = 44100;
 	/**
-	 * ÉùµÀ,Ë«ÉùµÀ
+	 * å£°é“,åŒå£°é“
 	 * */
 	private int channelConfig = AudioFormat.CHANNEL_IN_STEREO;
 	/**
-	 * ±àÂëÂÊ
+	 * ç¼–ç ç‡
 	 * */
 	private int encodingBitrate = AudioFormat.ENCODING_PCM_16BIT;
 
@@ -37,23 +37,23 @@ public class BTChannelService extends Service {
 	private AudioTrack audioTrack;
 
 	/**
-	 * ÊÇ·ñÂ¼Òô
+	 * æ˜¯å¦å½•éŸ³
 	 * */
 	private boolean blnRecord = false;
 	/**
-	 * ÊÇ·ñ²¥·Å
+	 * æ˜¯å¦æ’­æ”¾
 	 * */
 	private boolean blnPlay = false;
 	/**
-	 * ¼´Ê±²¥·Å
+	 * å³æ—¶æ’­æ”¾
 	 * */
 	private boolean blnInstantPlay = false;
 
 	private static final int RECORDER_BPP = 16;
 
-	private static final String SERVICE_TAG = "chongchi-bt";
+	private static final String SERVICE_TAG = "audiochannel-bt";
 	    /**
-	     * 0: bluetoothchongchi
+	     * 0: bluetooth
 	     * 1: fm
 	     * 2: cmmb
 	     * 3: aux
@@ -75,20 +75,20 @@ public class BTChannelService extends Service {
 	             Log.v(SERVICE_TAG, "select the audio channel");
 	             String cmd = "";
 	             cmd += "ff ";
-	             if (SERVICE_TAG.equalsIgnoreCase("chongchi-bt"))
+	             if (SERVICE_TAG.equalsIgnoreCase("audiochannel-bt"))
 	             {
 	                 cmd += "0";
 	                 Log.d("BTChannelService", "select bt!");
 	             }
-	             else if (SERVICE_TAG.equalsIgnoreCase("chongchi-fm"))
+	             else if (SERVICE_TAG.equalsIgnoreCase("audiochannel-fm"))
 	             {
 	                 cmd += "1";
 	             }
-	             else if (SERVICE_TAG.equalsIgnoreCase("chongchi-cmmb"))
+	             else if (SERVICE_TAG.equalsIgnoreCase("audiochannel-cmmb"))
 	             {
 	                cmd += "2";
 	             }
-	             else if (SERVICE_TAG.equalsIgnoreCase("chongchi-aux"))
+	             else if (SERVICE_TAG.equalsIgnoreCase("audiochannel-aux"))
 	             {
 	                 cmd += "3";
 	             }
@@ -104,12 +104,12 @@ public class BTChannelService extends Service {
 	    }
 	   
 	/**
-	 * ²¥·ÅÂ¼ÒôÏß³Ì
+	 * æ’­æ”¾å½•éŸ³çº¿ç¨‹
 	 * */
 
 	public class LocalBinderPlayer extends Binder {
-		public BTChannelService getService() {
-			return BTChannelService.this;
+		public AudioChannelService getService() {
+			return AudioChannelService.this;
 		}
 	}
 
@@ -126,15 +126,15 @@ public class BTChannelService extends Service {
 		super.onCreate();
 	}
 	
-	public class BTChannelBinder extends Binder {
-		public BTChannelService getService() {
-	        return BTChannelService.this;
+	public class AudioChannelBinder extends Binder {
+		public AudioChannelService getService() {
+	        return AudioChannelService.this;
 	    }
 	}
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		// TODO Auto-generated method stub
-		// ¿ªÊ¼¼´Ê±²¥·Å
+		// å¼€å§‹å³æ—¶æ’­æ”¾
 		Log.d("BTChannelService", "bt channel starting...");
 		recBufSize = AudioRecord.getMinBufferSize(sampleRateInHz,
 				channelConfig, encodingBitrate);
@@ -158,7 +158,7 @@ public class BTChannelService extends Service {
 
 	/**
 	 * 
-	 * ¼´Ê±²¥·ÅÏß³Ì
+	 * ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½ï¿½ß³ï¿½
 	 * */
 	class ThreadInstantPlay extends Thread {
 		@Override
@@ -190,8 +190,8 @@ public class BTChannelService extends Service {
 	@Override
 	public void onDestroy() {
 		// TODO Auto-generated method stub
-		blnInstantPlay = false;// Í£Ö¹¼´Ê±²¥·Å
-		audioRecord.release();// Í£Ö¹¼´Ê±²¥·Å
+		blnInstantPlay = false;
+		audioRecord.release();
 		audioTrack.release();
 		android.os.Process.killProcess(android.os.Process.myPid());
 		super.onDestroy();
@@ -202,7 +202,7 @@ public class BTChannelService extends Service {
 		@Override
 		public void handleMessage(Message msg) {
 			super.handleMessage(msg);
-			//Toast.makeText(PlayerService.this, "²¥·Å½áÊø", 2000).show();
+			//Toast.makeText(PlayerService.this, "æ’­æ”¾ç»“æŸ", 2000).show();
 		}
 	};
 */

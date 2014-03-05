@@ -2,6 +2,7 @@ package com.byd.player.bluetooth;
 
 import java.util.List;
 
+import com.byd.player.bluetooth.BTBaseActivity;
 import com.byd.player.R;
 import com.byd.player.bluetooth.BtDevice;
 
@@ -15,7 +16,7 @@ import android.widget.TextView;
  */
 public class BtDeviceAdapter extends BaseContentAdapter<BtDevice> {
 
-	public BtDeviceAdapter(BaseActivity activity,
+	public BtDeviceAdapter(BTBaseActivity activity,
 			List<? extends BtDevice> list) {
 		super(activity, list);
 	}

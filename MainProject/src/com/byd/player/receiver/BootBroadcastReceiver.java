@@ -1,20 +1,23 @@
-package com.byd.player.bluetooth;
+package com.byd.player.receiver;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 
 import com.byd.player.services.AuxAudioService;
+import com.byd.player.services.BtService;
 
 public class BootBroadcastReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent arg1) {
         // TODO Auto-generated method stub
+    	
+    	//1. start bt service.
         Intent service = new Intent(context, BtService.class);
         context.startService(service);
-        Log.v("BtService", "BtService开机启动");
+        
+        //2. start aux service.
         Intent auxService = new Intent(context, AuxAudioService.class);
         context.startService(auxService);
     }

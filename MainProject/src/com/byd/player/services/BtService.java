@@ -1,9 +1,10 @@
-package com.byd.player.bluetooth;
+package com.byd.player.services;
 
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.Queue;
 
+import com.byd.player.bluetooth.BtActionManager;
 import com.byd.player.bluetooth.BtActionManager.BtCmd;
 import com.byd.player.bluetooth.BtActionManager.BtCmdEnum;
 import com.byd.player.bluetooth.BtStatus;
@@ -24,7 +25,7 @@ public class BtService extends Service implements onReadCmdListener{
 	private boolean inited = false;
 	private Queue<BtCmd> cmdQueue = new LinkedList<BtCmd>();
 
-	private final IBinder mBinder = new LocalBinder();
+	private final LocalBinder mBinder = new LocalBinder();
 	public class LocalBinder extends Binder {
 		public BtService getService() {
 	        return BtService.this;
@@ -52,7 +53,7 @@ public class BtService extends Service implements onReadCmdListener{
 		return btStatus;
 	}
 	
-	private void init(){
+	public void init(){
 		btStatus = new BtStatus(this);
 		btController = new BT_Controller();
 		btController.setOnReadCmdListener(this);
@@ -117,7 +118,7 @@ public class BtService extends Service implements onReadCmdListener{
 				btStatus.setStatus(currentCmd);
 				
 				Intent intent = new Intent();
-				intent.setAction("com.byd.player.bluetooth.service.action.BT_STATUS_CHANGED");
+				intent.setAction("com.byd.player.receiver.action.BT_STATUS_CHANGED");
 				intent.putExtra("type", currentCmd.type);
 				intent.putExtra("success", true);
 				if (currentCmd.ret != null){
@@ -129,7 +130,7 @@ public class BtService extends Service implements onReadCmdListener{
 				needUpdateStatus = false;
 			} else {
 				Intent intent = new Intent();
-				intent.setAction("com.byd.player.bluetooth.service.action.BT_STATUS_CHANGED");
+				intent.setAction("com.byd.player.receiver.action.BT_STATUS_CHANGED");
 				intent.putExtra("type", currentCmd.type);
 				intent.putExtra("success", false);
 				//TODO add fail reason;
@@ -140,12 +141,12 @@ public class BtService extends Service implements onReadCmdListener{
 		
 		if (needUpdateStatus){
 			int status = btStatus.setStatus(buffer, size);
-			if (BtStatus.BT_STATUS_INVALID != status){
+			//if (BtStatus.BT_STATUS_INVALID != status){
 				Intent intent = new Intent();
-				intent.setAction("com.byd.player.bluetooth.service.action.BT_STATUS_CHANGED");
+				intent.setAction("com.byd.player.receiver.action.BT_STATUS_CHANGED");
 				intent.putExtra("status", status);
 				sendBroadcast(intent);
-			}
+			//}
 		}
 	}
 	

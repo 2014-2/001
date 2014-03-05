@@ -1,4 +1,4 @@
-package com.byd.player.bluetooth;
+package com.byd.player.receiver;
 
 import java.util.ArrayList;
 
@@ -35,6 +35,10 @@ public class BtStatusChangedBroadcastReceiver extends BroadcastReceiver{
 		
 		if (intent.hasExtra("status")){
 			int status = intent.getIntExtra("status", BtStatus.BT_STATUS_INVALID);
+			/*
+			 * BtCmdEnum status_Enum = (BtCmdEnum)intent.getSerializableExtra("status");
+			int status = status_Enum.ordinal();
+			*/
 			for (int i = 0; i < statusListeners.size(); i++){
 				statusListeners.get(i).onStatusChanged(status);
 			}

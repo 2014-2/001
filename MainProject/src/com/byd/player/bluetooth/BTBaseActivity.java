@@ -1,10 +1,10 @@
 package com.byd.player.bluetooth;
 
 import com.byd.player.R;
-import com.byd.player.bluetooth.BtStatusChangedBroadcastReceiver;
-import com.byd.player.bluetooth.BtService;
-import com.byd.player.bluetooth.BtService.LocalBinder;
-import com.byd.player.bluetooth.BtStatusChangedBroadcastReceiver.onBtStatusListener;
+import com.byd.player.receiver.BtStatusChangedBroadcastReceiver;
+import com.byd.player.services.BtService;
+import com.byd.player.services.BtService.LocalBinder;
+import com.byd.player.receiver.BtStatusChangedBroadcastReceiver.onBtStatusListener;
 
 import android.app.Activity;
 import android.app.Dialog;
@@ -21,6 +21,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
+import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -30,7 +31,7 @@ import android.widget.TextView;
 /**
  * 基本的Activity,实现一些方法
  */
-public abstract class BaseActivity extends Activity implements OnClickListener, onBtStatusListener{
+public abstract class BTBaseActivity extends Activity implements OnClickListener, onBtStatusListener{
 	
 	public static final int ALERT_TYPE_RETURN_BACK = 0;
 	public static final int ALERT_TYPE_SAFE_CODE_ERROR = 1;
@@ -83,6 +84,7 @@ public abstract class BaseActivity extends Activity implements OnClickListener, 
 	@Override
 	protected final void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		initBtService();
 		initDataFromIntent();
 		setContentView();
@@ -96,7 +98,7 @@ public abstract class BaseActivity extends Activity implements OnClickListener, 
 	@Override
 	protected void onDestroy(){
 		super.onDestroy();
-		unbindService();
+		//unbindService();
 		if (listenBtStatus){
 			BtStatusChangedBroadcastReceiver.unRegisterStatusListener(this);
 		}

@@ -27,15 +27,16 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.byd.player.BaseActivity;
-import com.byd.player.bluetooth.BTChannelService.BTChannelBinder;
+import com.byd.player.services.AudioChannelService;
+import com.byd.player.services.AudioChannelService.AudioChannelBinder;
 import com.byd.player.bluetooth.BtActionManager.BtCmdEnum;
 import com.byd.player.R;
 import com.byd.player.view.CheckableImageView;
-import com.byd.player.bluetooth.BtService;
+import com.byd.player.services.BtService;
 
 public class BTPlayerActivity extends BaseActivity {
 	private static final String BTMUSIC = "BTPlayerActivity";
-	BtService btService = com.byd.player.bluetooth.BaseActivity.btService;
+	BtService btService = com.byd.player.bluetooth.BTBaseActivity.btService;
 	/* if we can ge ID3 info, this is useful.
     private Song mPlayingSong;
     */
@@ -71,12 +72,12 @@ public class BTPlayerActivity extends BaseActivity {
 
     private Intent mAudioServiceIntent;
     
-    static public BTChannelService BtChannelSrv;
-    private boolean isBtChannelSrvBinded=false;
+    static public AudioChannelService BtChannelSrv;
+    private boolean isChannelSrvBinded=false;
     
 	private ServiceConnection mBTChannelSrv = new ServiceConnection() {
 	    public void onServiceConnected(ComponentName className, IBinder service) {
-	    	BTChannelBinder binder = (BTChannelBinder) service;
+	    	AudioChannelBinder binder = (AudioChannelBinder) service;
 	        BtChannelSrv = binder.getService();
 	    }
 	    public void onServiceDisconnected(ComponentName arg0) { 
@@ -98,9 +99,9 @@ public class BTPlayerActivity extends BaseActivity {
         super.onDestroy();
         unregisterBroadcast();
         /*
-        if (mBTChannelSrv != null && isBtChannelSrvBinded == true){
+        if (mBTChannelSrv != null){
 			unbindService(mBTChannelSrv);
-			isBtChannelSrvBinded = false;
+			isChannelSrvBinded = false;
 		}
         */
     }
@@ -110,20 +111,19 @@ public class BTPlayerActivity extends BaseActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON,
                 WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
-        setContentView(R.layout.audio_player_view);
+        setContentView(R.layout.bt_player);
 
         mInflater = this.getLayoutInflater();
         initView();
         registerBroadcast();
     }
 	protected void initBTmusic(){
-		if(false == isServiceRunning(this, "com.byd.player.bluetooth.BTChannelService")){
-			Intent service = new Intent(this, BTChannelService.class); 
+		if(false == isServiceRunning(this, "com.byd.player.services.AudioChannelService")){
+			Intent service = new Intent(this, AudioChannelService.class); 
 			this.startService(service); 
-			isBtChannelSrvBinded=bindService(service, mBTChannelSrv, Context.BIND_AUTO_CREATE);
+			isChannelSrvBinded=bindService(service, mBTChannelSrv, Context.BIND_AUTO_CREATE);
 		}
 		 
-        Log.v("BtService", "BtService¿ª»úÆô¶¯");  
     	if (!btService.doAction(BtCmdEnum.BT_CMD_CONNECT_A2DP)){
 			//TODO deal with a2dp-connect failed, give a toast?
     		Log.e(BTMUSIC, "connect a2dp FAILED!");

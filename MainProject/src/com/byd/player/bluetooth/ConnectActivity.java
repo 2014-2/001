@@ -3,35 +3,60 @@ package com.byd.player.bluetooth;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.app.ProgressDialog;
+import android.content.ComponentName;
 import android.content.Intent;
+import android.content.ServiceConnection;
+import android.os.IBinder;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.CompoundButton;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.byd.player.R;
-import com.byd.player.bluetooth.BtStatusChangedBroadcastReceiver.onBtStatusListener;
+import com.byd.player.receiver.BtStatusChangedBroadcastReceiver.onBtStatusListener;
 import com.byd.player.bluetooth.BaseContentAdapter.OnMyAdapterCheckedChange;
 import com.byd.player.bluetooth.BtDeviceAdapter;
-import com.byd.player.bluetooth.BaseActivity;
+import com.byd.player.bluetooth.BTBaseActivity;
 import com.byd.player.bluetooth.BtDevice;
 import com.byd.player.bluetooth.BtStatus;
 import com.byd.player.bluetooth.BtActionManager.BtCmdEnum;
+import com.byd.player.services.BtService;
+import com.byd.player.services.BtService.LocalBinder;
 /**
  * 蓝牙连接功能
  */
-public class ConnectActivity extends BaseActivity implements OnMyAdapterCheckedChange, onBtStatusListener, OnItemClickListener {
+public class ConnectActivity extends BTBaseActivity implements OnMyAdapterCheckedChange, onBtStatusListener, OnItemClickListener {
 	private static final String BTCONNECT = "ConnectActivity";
 	ListView lv_bt_device;
 	//private PopupWindow mPopupWindow;
 	private BtDeviceAdapter adapter;
 	
+	/*
+	static public BtService btService;
+	
+	@Override
+	protected void onResume(){
+		super.onDestroy();
+		super.initBtService();
+		initData();
+		
+	}
+	
+	@Override
+	protected void onDestroy(){
+		super.onDestroy();
+		super.unbindService();
+	}
+	*/
+	
 	@Override
 	protected void initView() {
 		super.initView();
-		lv_bt_device = (ListView) findViewById(R.id.lv_phone_book);
+		lv_bt_device = (ListView) findViewById(R.id.lv_bt_connect);
 		tvTitle.setText("蓝牙连接");
 		btnRight.setImageResource(R.drawable.btn_search);
 		btnRight.setVisibility(View.VISIBLE);
@@ -44,12 +69,10 @@ public class ConnectActivity extends BaseActivity implements OnMyAdapterCheckedC
 		super.onClick(v);
 		switch (v.getId()) {
 		case R.id.btn_right:
-            Intent intent = new Intent();
+			Intent intent = new Intent();
             intent.setClass(ConnectActivity.this, BTPlayerActivity.class);
             startActivity(intent);
-            /*
-			searchDevice();	
-			*/
+			//searchDevice();	
 			break;
 		default:
 			break;
@@ -59,8 +82,9 @@ public class ConnectActivity extends BaseActivity implements OnMyAdapterCheckedC
 	private void searchDevice() {
 		if (!btService.doAction(BtCmdEnum.BT_CMD_SEARCH_BT_MOBILE)){
 			//TODO deal with SearchPhone failed
+			Log.w(BTCONNECT, "no bt device found!");
 		} else {
-			showProcessDialog(null, "正在搜索附近蓝牙设备。。。", 0);
+			//showProcessDialog(null, "正在搜索附近蓝牙设备。。。", 0);
 		}
 	}
 	
@@ -83,7 +107,7 @@ public class ConnectActivity extends BaseActivity implements OnMyAdapterCheckedC
 
 	@Override
 	protected void setContentView() {
-		setContentView(R.layout.activity_phone_book);
+		setContentView(R.layout.activity_bt_connect);
 		listenBtStatus = true;
 	}
 	

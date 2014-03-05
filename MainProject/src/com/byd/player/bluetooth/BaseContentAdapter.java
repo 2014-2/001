@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import com.byd.player.bluetooth.BaseActivity;
+import com.byd.player.bluetooth.BTBaseActivity;
 
 import android.app.Activity;
 import android.view.View;
@@ -24,7 +24,7 @@ public abstract class BaseContentAdapter<T> extends BaseAdapter implements
 	HashMap<Integer, View> views = new HashMap<Integer, View>();
 	private OnMyAdapterItemClick onMyAdapterItemClick = null;
 	private OnMyAdapterCheckedChange onMyAdapterCheckedChange = null;
-	public BaseContentAdapter(BaseActivity activity, List<? extends T> list) {
+	public BaseContentAdapter(BTBaseActivity activity, List<? extends T> list) {
 		super();
 		this.activity = activity;
 		this.list = list;
