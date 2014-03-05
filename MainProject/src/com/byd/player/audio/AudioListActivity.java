@@ -9,9 +9,9 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.GridView;
-import android.widget.TextView;
 import android.widget.Toast;
 
+import com.byd.player.AuxAudioPlayActivity;
 import com.byd.player.BaseActivity;
 import com.byd.player.R;
 import com.byd.player.bluetooth.ConnectActivity;
@@ -34,8 +34,6 @@ public class AudioListActivity extends BaseActivity implements OnItemClickListen
 
     private GridView mAudioList = null;
     private AudioAdapter mAdapter = null;
-
-    private TextView mAuxStatus = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,8 +62,6 @@ public class AudioListActivity extends BaseActivity implements OnItemClickListen
     }
 
     private void initHeaderButtons() {
-        mAuxStatus = (TextView) findViewById(R.id.audio_aux_status);
-
         Button back = (Button) findViewById(R.id.button_header_back);
         back.setOnClickListener(new OnClickListener() {
             @Override
@@ -106,17 +102,7 @@ public class AudioListActivity extends BaseActivity implements OnItemClickListen
                         }
                     }
 
-                    switch (index) {
-                        case TAB_INDEX_MOBILE:
-                            Intent intent = new Intent();
-                            intent.setClass(AudioListActivity.this, ConnectActivity.class);
-                            startActivity(intent);
-                            break;
-                        default:
-                            tabIndex(index);
-                            break;
-                    }
-
+                    tabIndex(index);
                 }
             });
         }
@@ -135,30 +121,21 @@ public class AudioListActivity extends BaseActivity implements OnItemClickListen
         }
     }
 
-    private void hideViews() {
-        mAudioList.setVisibility(View.GONE);
-        mAuxStatus.setVisibility(View.GONE);
-    }
-
     public void tabIndex(int index) {
         AudioManager.getInstance().setViewType(index);
         switch (index) {
             case TAB_INDEX_LOCAL:
             case TAB_INDEX_SDCARD:
             case TAB_INDEX_USB:
-                if (mAudioList.getVisibility() != View.VISIBLE) {
-                    hideViews();
-                    mAudioList.setVisibility(View.VISIBLE);
-                }
                 mAdapter.onDataChange();
                 break;
             case TAB_INDEX_AUX:
-                if (mAuxStatus.getVisibility() != View.VISIBLE) {
-                    hideViews();
-                    mAuxStatus.setVisibility(View.VISIBLE);
-                }
+                startActivity(new Intent(AudioListActivity.this, AuxAudioPlayActivity.class));
                 break;
             case TAB_INDEX_MOBILE:
+                Intent intent = new Intent();
+                intent.setClass(AudioListActivity.this, ConnectActivity.class);
+                startActivity(intent);
                 break;
         }
 

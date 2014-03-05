@@ -19,6 +19,7 @@ import android.os.IBinder;
 import android.util.Log;
 
 import com.byd.player.AuxAudioPlayActivity;
+import com.byd.player.config.Constants;
 import com.byd.player.receiver.DeviceConnReceiver;
 import com.byd.player.receiver.DeviceConnReceiver.AuxConnectListener;
 
@@ -60,6 +61,7 @@ public class AuxAudioService extends Service {
                 Intent intent = new Intent(AuxAudioService.this,
                         AuxAudioPlayActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.putExtra(Constants.IS_AUX_CONNECTED, true);
                 AuxAudioService.this.startActivity(intent);
             }
         });

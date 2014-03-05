@@ -78,8 +78,7 @@
         </service>
         <service android:name="com.byd.player.bluetooth.BTChannelService" />
         <receiver
-            android:name="com.byd.player.bluetooth.bluetooth.BootBroadcastReceiver"
-            android:permission="android.permission.RECEIVE_BOOT_COMPLETED" >
+            android:name=".bluetooth.BootBroadcastReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>

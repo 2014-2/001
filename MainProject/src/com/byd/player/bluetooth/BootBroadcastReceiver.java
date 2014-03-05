@@ -5,13 +5,17 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
+import com.byd.player.services.AuxAudioService;
+
 public class BootBroadcastReceiver extends BroadcastReceiver {
 
-	@Override
-	public void onReceive(Context context, Intent arg1) {
-		// TODO Auto-generated method stub
-		Intent service = new Intent(context, BtService.class); 
-        context.startService(service);  
-        Log.v("BtService", "BtService开机启动");  
-	}
+    @Override
+    public void onReceive(Context context, Intent arg1) {
+        // TODO Auto-generated method stub
+        Intent service = new Intent(context, BtService.class);
+        context.startService(service);
+        Log.v("BtService", "BtService开机启动");
+        Intent auxService = new Intent(context, AuxAudioService.class);
+        context.startService(auxService);
+    }
 }

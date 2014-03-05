@@ -6,6 +6,7 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.widget.TextView;
 
+import com.byd.player.config.Constants;
 import com.byd.player.receiver.DeviceConnReceiver;
 import com.byd.player.receiver.DeviceConnReceiver.AuxConnectListener;
 
@@ -21,6 +22,10 @@ public class AuxAudioPlayActivity extends BaseActivity {
         setContentView(R.layout.aux_audio);
 
         mTvAuxStatus = (TextView)findViewById(R.id.aux_status);
+
+        if (getIntent().getBooleanExtra(Constants.IS_AUX_CONNECTED, false)) {
+            mTvAuxStatus.setText(R.string.aux_connected);
+        }
 
         mDeviceConnReceiver = new DeviceConnReceiver(new AuxConnectListener() {
 
