@@ -1,6 +1,5 @@
 package com.byd.player.lrc;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -9,6 +8,10 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.mozilla.universalchardet.UniversalDetector;
+
+import android.util.Log;
 
 public class LrcUtils {
 
@@ -75,36 +78,40 @@ public class LrcUtils {
         return currentTime;
     }
 
-    public static String encodeOfFile(File file){
-        String code = "UTF-8";
-        if(file==null || !file.exists()){
-            return code;
-        }
+    public static String encodeOfFile(File file) {
+        byte[] buf = new byte[4096];
+        String fileName = file.getAbsolutePath();
+        java.io.FileInputStream fis = null;
         try {
-            BufferedInputStream bin = new BufferedInputStream( new FileInputStream(file));
-            int p = (bin.read() << 8) + bin.read();
-            //其中的 0xefbb、0xfffe、0xfeff、0x5c75这些都是这个文件的前面两个字节的16进制数
-            switch (p) {
-                case 0xefbb:
-                    code = "UTF-8";
-                    break;
-                case 0xfffe:
-                    code = "Unicode";
-                    break;
-                case 0xfeff:
-                    code = "UTF-16BE";
-                    break;
-                case 0x5c75:
-                    code = "ANSI|ASCII" ;
-                    break ;
-                default:
-                    code = "GBK";
-            }
-        } catch (FileNotFoundException ex){
-            ex.printStackTrace();
-        } catch (IOException ex) {
-            ex.printStackTrace();
+            fis = new java.io.FileInputStream(fileName);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
         }
-        return code;
+
+        UniversalDetector detector = new UniversalDetector(null);
+
+        int nread;
+        try {
+            while ((nread = fis.read(buf)) > 0 && !detector.isDone()) {
+                detector.handleData(buf, 0, nread);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        detector.dataEnd();
+
+        String encoding = detector.getDetectedCharset();
+        if (encoding != null) {
+            Log.v("LrcUtils", "Detected encoding = " + encoding);
+        } else {
+            Log.v("LrcUtils", "No encoding detected.");
+            encoding = "UTF-8";
+        }
+        detector.reset();
+        return encoding;
+    }
+
+    public static String replaceExtensionToLrc(String path) {
+        return path.replaceAll("\\.\\w+$", ".lrc");
     }
 }

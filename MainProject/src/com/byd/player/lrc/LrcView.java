@@ -76,16 +76,74 @@ public class LrcView extends TextView {
 
         try {
             setText("");
-            canvas.drawText(mLrcList.get(index).getLrcStr(), width / 2, height / 2, currentPaint);
-
             float tempY = height / 2;
+            float lastY = height / 2;
+            float textWidth = currentPaint.measureText(mLrcList.get(index).getLrcStr());
+            float windowWidth = this.width;
+            if (textWidth > windowWidth) {
+                // 当前歌词过长，需要分割显示
+                int rows = (int)Math.ceil(textWidth / windowWidth);
+
+                String[] separateStrings = mLrcList.get(index).getLrcStr().split(" ");
+                if (separateStrings.length > 1) {
+                    // 外文歌词太长分割显示
+                    int column = separateStrings.length / rows + 1;
+                    String[][] words = new String[rows][column];
+                    String[] sentences = new String[rows];
+                    for (int i = 0; i < separateStrings.length; i++) {
+                        words[i / column][i % column] = separateStrings[i];
+                    }
+                    for (int x = 0; x < sentences.length; x++) {
+                        sentences[x] = "";
+                    }
+                    for (int r = 0; r < rows; r++) {
+                        for (int c = 0; c < column; c++) {
+                            if (words[r][c] != null) {
+                                sentences[r] += words[r][c] + " ";
+                            }
+                        }
+                    }
+                    for (String line : sentences) {
+                        canvas.drawText(line, width / 2, lastY, currentPaint);
+                        lastY += textHeight;
+                    }
+                    lastY -= textHeight;
+                } else {
+                    // 中文歌词太长分割显示
+                    String singleString = separateStrings[0];
+                    int column = singleString.length() / rows + 1;
+                    String[][] words = new String[rows][column];
+                    String[] sentences = new String[rows];
+                    for (int i = 0; i < singleString.length(); i++) {
+                        words[i / column][i % column] = String.valueOf(singleString.charAt(i));
+                    }
+                    for (int x = 0; x < sentences.length; x++) {
+                        sentences[x] = "";
+                    }
+                    for (int r = 0; r < rows; r++) {
+                        for (int c = 0; c < column; c++) {
+                            if (words[r][c] != null) {
+                                sentences[r] += words[r][c];
+                            }
+                        }
+                    }
+                    for (String line : sentences) {
+                        canvas.drawText(line, width / 2, lastY, currentPaint);
+                        lastY += textHeight;
+                    }
+                    lastY -= textHeight;
+                }
+            } else {
+                canvas.drawText(mLrcList.get(index).getLrcStr(), width / 2, lastY, currentPaint);
+            }
+
             //画出本句之前的句子
             for(int i = index - 1; i >= 0; i--) {
                 //向上推移
                 tempY = tempY - textHeight;
                 canvas.drawText(mLrcList.get(i).getLrcStr(), width / 2, tempY, notCurrentPaint);
             }
-            tempY = height / 2;
+            tempY = lastY;
             //画出本句之后的句子
             for(int i = index + 1; i < mLrcList.size(); i++) {
                 //往下推移

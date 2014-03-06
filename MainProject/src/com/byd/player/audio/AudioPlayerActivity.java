@@ -167,7 +167,7 @@ public class AudioPlayerActivity extends BaseActivity {
         }
         mSongInfoAndLyricsContainer.removeAllViews();
         String songPath = mPlayingSong.getFilePath();
-        String lrcPath = songPath.replace(".mp3", ".lrc");
+        String lrcPath = LrcUtils.replaceExtensionToLrc(songPath);
         mDisplayLyrics = LrcUtils.isLrcFileExist(lrcPath);
         if (mDisplayLyrics) {
             mLrcList = LrcUtils.readLRC(lrcPath);
@@ -521,7 +521,9 @@ public class AudioPlayerActivity extends BaseActivity {
     private void updateAudioCurrent(int position) {
         mProgressBar.setProgress(position);
         mPlayingTime.setText(progresstime(position));
-        mLrcView.setIndex(lrcIndex(position));
+        if (mDisplayLyrics) {
+            mLrcView.setIndex(lrcIndex(position));
+        }
     }
 
     private void updatePlayPauseBtn(boolean isPlay) {
