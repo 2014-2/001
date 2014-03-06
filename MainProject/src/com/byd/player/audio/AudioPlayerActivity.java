@@ -2,6 +2,7 @@ package com.byd.player.audio;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
@@ -33,6 +34,9 @@ import com.byd.player.audio.AudioPlayerService.OnSongChangedListener;
 import com.byd.player.audio.AudioPlayerService.OnUpdateListener;
 import com.byd.player.audio.AudioPlayerService.PlayerBinder;
 import com.byd.player.config.Constants;
+import com.byd.player.lrc.LrcContent;
+import com.byd.player.lrc.LrcUtils;
+import com.byd.player.lrc.LrcView;
 import com.byd.player.view.CheckableImageView;
 import com.byd.player.view.VerticalSeekBar;
 
@@ -91,6 +95,12 @@ public class AudioPlayerActivity extends BaseActivity {
     private android.media.AudioManager mAudioMgr;
 
     private AudioPlayerService mService;
+
+    private boolean mDisplayLyrics;
+
+    private LrcView mLrcView;
+
+    List<LrcContent> mLrcList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -156,8 +166,21 @@ public class AudioPlayerActivity extends BaseActivity {
             mSongInfoAndLyricsContainer = (LinearLayout)findViewById(R.id.ll_song_info_and_lyrics);
         }
         mSongInfoAndLyricsContainer.removeAllViews();
-        if (hasLyrics()) {
-            // TODO: Add lyrics display
+        String songPath = mPlayingSong.getFilePath();
+        String lrcPath = songPath.replace(".mp3", ".lrc");
+        mDisplayLyrics = LrcUtils.isLrcFileExist(lrcPath);
+        if (mDisplayLyrics) {
+            mLrcList = LrcUtils.readLRC(lrcPath);
+            //            if (mLrcList != null) {
+            //                for (LrcContent content : mLrcList) {
+            //                    Log.d("debug", "time:" + content.getLrcTime());
+            //                    Log.d("debug", "lrc:" + content.getLrcStr());
+            //                }
+            //            }
+            mSongInfoAndLyricsContainer.addView(mInflater.inflate(
+                    R.layout.layout_lyrics, null));
+            mLrcView = (LrcView)findViewById(R.id.lrc_view);
+            mLrcView.setLrcList(mLrcList);
         } else {
             mSongInfoAndLyricsContainer.addView(mInflater.inflate(
                     R.layout.layout_song_info, null));
@@ -406,11 +429,6 @@ public class AudioPlayerActivity extends BaseActivity {
         }
     }
 
-    private boolean hasLyrics() {
-        // TODO: Add lyrics check
-        return false;
-    }
-
     private void startPlay() {
         mAudioServiceIntent.putExtra(Constants.PLAYER_MSG, Constants.PlayerCommand.PLAY);
         mAudioServiceIntent.putExtra(Constants.MUSIC_SONG_POSITION, mSongPosition);
@@ -503,6 +521,7 @@ public class AudioPlayerActivity extends BaseActivity {
     private void updateAudioCurrent(int position) {
         mProgressBar.setProgress(position);
         mPlayingTime.setText(progresstime(position));
+        mLrcView.setIndex(lrcIndex(position));
     }
 
     private void updatePlayPauseBtn(boolean isPlay) {
@@ -513,6 +532,31 @@ public class AudioPlayerActivity extends BaseActivity {
     private void initPlayTime(int position, int duration) {
         updateAudioDuration(duration);
         updateAudioCurrent(position);
+    }
+
+    /**
+     * Find the current index of lyric in the mLrcList
+     * @param currentTime
+     * @return index
+     */
+    public int lrcIndex(int currentTime) {
+        int index = 0;
+        for (int i = 0; i < mLrcList.size(); i++) {
+            if (i < mLrcList.size() - 1) {
+                if (currentTime < mLrcList.get(i).getLrcTime() && i == 0) {
+                    index = i;
+                }
+                if (currentTime > mLrcList.get(i).getLrcTime()
+                        && currentTime < mLrcList.get(i + 1).getLrcTime()) {
+                    index = i;
+                }
+            }
+            if (i == mLrcList.size() - 1
+                    && currentTime > mLrcList.get(i).getLrcTime()) {
+                index = i;
+            }
+        }
+        return index;
     }
 
     private class AudioServiceConn implements ServiceConnection {
