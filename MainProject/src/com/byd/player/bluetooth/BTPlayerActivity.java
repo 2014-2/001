@@ -17,29 +17,29 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.WindowManager;
 import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
 import android.view.View.OnTouchListener;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.byd.player.BaseActivity;
+import com.byd.player.R;
+import com.byd.player.bluetooth.BtActionManager.BtCmdEnum;
 import com.byd.player.services.AudioChannelService;
 import com.byd.player.services.AudioChannelService.AudioChannelBinder;
-import com.byd.player.bluetooth.BtActionManager.BtCmdEnum;
-import com.byd.player.R;
-import com.byd.player.view.CheckableImageView;
 import com.byd.player.services.BtService;
+import com.byd.player.view.CheckableImageView;
 
 public class BTPlayerActivity extends BaseActivity {
-	private static final String BTMUSIC = "BTPlayerActivity";
-	BtService btService = com.byd.player.bluetooth.BTBaseActivity.btService;
-	/* if we can ge ID3 info, this is useful.
+    private static final String BTMUSIC = "BTPlayerActivity";
+    BtService btService = com.byd.player.bluetooth.BTBaseActivity.btService;
+    /* if we can ge ID3 info, this is useful.
     private Song mPlayingSong;
-    */
+     */
 
     private int mSongPosition;
 
@@ -71,19 +71,24 @@ public class BTPlayerActivity extends BaseActivity {
     private PlayerReceiver mPlayerReceiver;
 
     private Intent mAudioServiceIntent;
-    
+
     static public AudioChannelService BtChannelSrv;
+
+    private static final String SERVICE_TAG = "audiochannel-bt";
+
     private boolean isChannelSrvBinded=false;
-    
-	private ServiceConnection mBTChannelSrv = new ServiceConnection() {
-	    public void onServiceConnected(ComponentName className, IBinder service) {
-	    	AudioChannelBinder binder = (AudioChannelBinder) service;
-	        BtChannelSrv = binder.getService();
-	    }
-	    public void onServiceDisconnected(ComponentName arg0) { 
-	    	BtChannelSrv = null;
-	    }
-	};
+
+    private ServiceConnection mBTChannelSrv = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName className, IBinder service) {
+            AudioChannelBinder binder = (AudioChannelBinder) service;
+            BtChannelSrv = binder.getService();
+        }
+        @Override
+        public void onServiceDisconnected(ComponentName arg0) {
+            BtChannelSrv = null;
+        }
+    };
     @Override
     protected void onStart() {
         super.onStart();
@@ -103,9 +108,10 @@ public class BTPlayerActivity extends BaseActivity {
 			unbindService(mBTChannelSrv);
 			isChannelSrvBinded = false;
 		}
-        */
+         */
     }
-    
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON,
@@ -117,49 +123,48 @@ public class BTPlayerActivity extends BaseActivity {
         initView();
         registerBroadcast();
     }
-	protected void initBTmusic(){
-		if(false == isServiceRunning(this, "com.byd.player.services.AudioChannelService")){
-			Intent service = new Intent(this, AudioChannelService.class); 
-			this.startService(service); 
-			isChannelSrvBinded=bindService(service, mBTChannelSrv, Context.BIND_AUTO_CREATE);
-		}
-		 
-    	if (!btService.doAction(BtCmdEnum.BT_CMD_CONNECT_A2DP)){
-			//TODO deal with a2dp-connect failed, give a toast?
-    		Log.e(BTMUSIC, "connect a2dp FAILED!");
-		} else {
-			Log.i(BTMUSIC, "connect a2dp SUCCESSFULLY!");
-			AudioManager mAudioManager = (AudioManager) getBaseContext().getSystemService(Context.AUDIO_SERVICE);
-			mAudioManager.setStreamMute(AudioManager.STREAM_VOICE_CALL, false);
-			mAudioManager.setStreamVolume(AudioManager.STREAM_VOICE_CALL, mAudioManager.getStreamMaxVolume(AudioManager.STREAM_VOICE_CALL), 0);
-			boolean a = mAudioManager.isBluetoothA2dpOn();
-			boolean b = mAudioManager.isBluetoothScoOn();
-			boolean c = mAudioManager.isMusicActive();
-			boolean d = mAudioManager.isSpeakerphoneOn();
-			mAudioManager.setMode(AudioManager.MODE_IN_CALL);
-			mAudioManager.setBluetoothScoOn(true);
-			mAudioManager.startBluetoothSco();
-			setVolumeControlStream(AudioManager.STREAM_MUSIC);
-			
-		}
-    	
-    	if (!btService.doAction(BtCmdEnum.BT_CMD_AVRCP_CONECT)){
-    		Log.w(BTMUSIC, "This phone doesn't support AVRCP!");
-		} else {
-			Log.i(BTMUSIC, "support AVCRP!");
-		}
-    	if (!btService.doAction(BtCmdEnum.BT_CMD_ID3_SUPPORT_INDICATION)){
-    		Log.w(BTMUSIC, "The device doesn't support ID3 info!");
-		} else {
-			Log.i(BTMUSIC, "support ID3 info!");
-		}
-    	//BTcontinuePlay();  
-    	
+    protected void initBTmusic(){
+        Intent service = new Intent(this, AudioChannelService.class);
+        service.putExtra("service_tag", SERVICE_TAG);
+        this.startService(service);
+        isChannelSrvBinded = bindService(service, mBTChannelSrv, Context.BIND_AUTO_CREATE);
+
+        if (!btService.doAction(BtCmdEnum.BT_CMD_CONNECT_A2DP)){
+            //TODO deal with a2dp-connect failed, give a toast?
+            Log.e(BTMUSIC, "connect a2dp FAILED!");
+        } else {
+            Log.i(BTMUSIC, "connect a2dp SUCCESSFULLY!");
+            AudioManager mAudioManager = (AudioManager) getBaseContext().getSystemService(Context.AUDIO_SERVICE);
+            mAudioManager.setStreamMute(AudioManager.STREAM_VOICE_CALL, false);
+            mAudioManager.setStreamVolume(AudioManager.STREAM_VOICE_CALL, mAudioManager.getStreamMaxVolume(AudioManager.STREAM_VOICE_CALL), 0);
+            boolean a = mAudioManager.isBluetoothA2dpOn();
+            boolean b = mAudioManager.isBluetoothScoOn();
+            boolean c = mAudioManager.isMusicActive();
+            boolean d = mAudioManager.isSpeakerphoneOn();
+            mAudioManager.setMode(AudioManager.MODE_IN_CALL);
+            mAudioManager.setBluetoothScoOn(true);
+            mAudioManager.startBluetoothSco();
+            setVolumeControlStream(AudioManager.STREAM_MUSIC);
+
+        }
+
+        if (!btService.doAction(BtCmdEnum.BT_CMD_AVRCP_CONECT)){
+            Log.w(BTMUSIC, "This phone doesn't support AVRCP!");
+        } else {
+            Log.i(BTMUSIC, "support AVCRP!");
+        }
+        if (!btService.doAction(BtCmdEnum.BT_CMD_ID3_SUPPORT_INDICATION)){
+            Log.w(BTMUSIC, "The device doesn't support ID3 info!");
+        } else {
+            Log.i(BTMUSIC, "support ID3 info!");
+        }
+        //BTcontinuePlay();
+
     }
-    
-	protected void initView() {
-    	initBTmusic();
-    	
+
+    protected void initView() {
+        initBTmusic();
+
         if (null == mSongInfoAndLyricsContainer) {
             mSongInfoAndLyricsContainer = (LinearLayout)findViewById(R.id.ll_song_info_and_lyrics);
         }
@@ -176,7 +181,7 @@ public class BTPlayerActivity extends BaseActivity {
             mAlbumName.setText(mPlayingSong.getAlbum());
             mSingerName.setText(mPlayingSong.getSinger());
             mMusicName.setText(mPlayingSong.getFileTitle());
-            */
+             */
         }
 
         if (null == mTotalTime) {
@@ -185,7 +190,7 @@ public class BTPlayerActivity extends BaseActivity {
         if (null == mPlayingTime) {
             mPlayingTime = (TextView)findViewById(R.id.audio_playing_time);
         }
-        
+
         if (null == mBtnPlayPause) {
             mBtnPlayPause = (CheckableImageView)findViewById(R.id.btn_audio_play_pause);
             mBtnPlayPause.setOnClickListener(new OnClickListener() {
@@ -209,32 +214,32 @@ public class BTPlayerActivity extends BaseActivity {
                 }
             });
             mBtnNext.setOnLongClickListener(new OnLongClickListener() {
-				@Override
-				public boolean onLongClick(View v) {
-					// TODO Auto-generated method stub
-					if (!btService.doAction(BtCmdEnum.BT_CMD_FAST_FORWARD)){
-			    		Log.w(BTMUSIC, "fast forward failed!");
-					} else {
-						Log.i(BTMUSIC, "fast forward successfully!");
-					}
-					return true;
-				}
-			});
-            
+                @Override
+                public boolean onLongClick(View v) {
+                    // TODO Auto-generated method stub
+                    if (!btService.doAction(BtCmdEnum.BT_CMD_FAST_FORWARD)){
+                        Log.w(BTMUSIC, "fast forward failed!");
+                    } else {
+                        Log.i(BTMUSIC, "fast forward successfully!");
+                    }
+                    return true;
+                }
+            });
+
             mBtnNext.setOnTouchListener(new OnTouchListener() {
-				@Override
-				public boolean onTouch(View v, MotionEvent event) {
-					// TODO Auto-generated method stub
-					if (event.getAction()== MotionEvent.ACTION_UP){
-						if (!btService.doAction(BtCmdEnum.BT_CMD_FAST_FORWARD_STOP)){
-				    		Log.w(BTMUSIC, "fast forward stop failed!");
-						} else {
-							Log.i(BTMUSIC, "fast forward stop successfully!");
-						}
-					}
-					return false;
-				}
-			});
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    // TODO Auto-generated method stub
+                    if (event.getAction()== MotionEvent.ACTION_UP){
+                        if (!btService.doAction(BtCmdEnum.BT_CMD_FAST_FORWARD_STOP)){
+                            Log.w(BTMUSIC, "fast forward stop failed!");
+                        } else {
+                            Log.i(BTMUSIC, "fast forward stop successfully!");
+                        }
+                    }
+                    return false;
+                }
+            });
         }
 
         if (null == mBtnPrevious) {
@@ -246,32 +251,32 @@ public class BTPlayerActivity extends BaseActivity {
                 }
             });
             mBtnPrevious.setOnLongClickListener(new OnLongClickListener() {
-				@Override
-				public boolean onLongClick(View v) {
-					// TODO Auto-generated method stub
-					if (!btService.doAction(BtCmdEnum.BT_CMD_FAST_BACKWARD)){
-			    		Log.w(BTMUSIC, "fast backward failed!");
-					} else {
-						Log.i(BTMUSIC, "fast backward successfully!");
-					}
-					return true;
-				}
-			});
-            
+                @Override
+                public boolean onLongClick(View v) {
+                    // TODO Auto-generated method stub
+                    if (!btService.doAction(BtCmdEnum.BT_CMD_FAST_BACKWARD)){
+                        Log.w(BTMUSIC, "fast backward failed!");
+                    } else {
+                        Log.i(BTMUSIC, "fast backward successfully!");
+                    }
+                    return true;
+                }
+            });
+
             mBtnPrevious.setOnTouchListener(new OnTouchListener() {
-				@Override
-				public boolean onTouch(View v, MotionEvent event) {
-					// TODO Auto-generated method stub
-					if (event.getAction()== MotionEvent.ACTION_UP){
-						if (!btService.doAction(BtCmdEnum.BT_CMD_FAST_BACKWARD_STOP)){
-				    		Log.w(BTMUSIC, "fast backward stop failed!");
-						} else {
-							Log.i(BTMUSIC, "fast backward stop successfully!");
-						}
-					}
-					return false;
-				}
-			});
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    // TODO Auto-generated method stub
+                    if (event.getAction()== MotionEvent.ACTION_UP){
+                        if (!btService.doAction(BtCmdEnum.BT_CMD_FAST_BACKWARD_STOP)){
+                            Log.w(BTMUSIC, "fast backward stop failed!");
+                        } else {
+                            Log.i(BTMUSIC, "fast backward stop successfully!");
+                        }
+                    }
+                    return false;
+                }
+            });
         }
     }
 
@@ -281,37 +286,37 @@ public class BTPlayerActivity extends BaseActivity {
     }
 
     private void BTpause() {
-		if (!btService.doAction(BtCmdEnum.BT_CMD_AV_PAUSE)){
-    		Log.e(BTMUSIC, "pause music failed!");
-		} else {
-			Log.i(BTMUSIC, "music should be paused right now!");
-		}
-		updatePlayPauseBtn(false);
+        if (!btService.doAction(BtCmdEnum.BT_CMD_AV_PAUSE)){
+            Log.e(BTMUSIC, "pause music failed!");
+        } else {
+            Log.i(BTMUSIC, "music should be paused right now!");
+        }
+        updatePlayPauseBtn(false);
     }
 
     private void BTcontinuePlay() {
-		if (!btService.doAction(BtCmdEnum.BT_CMD_AV_PLAY)){
-    		Log.e(BTMUSIC, "play music failed!");
-		} else {
-			Log.i(BTMUSIC, "music should be played right now!");
-		}
-		updatePlayPauseBtn(true);
+        if (!btService.doAction(BtCmdEnum.BT_CMD_AV_PLAY)){
+            Log.e(BTMUSIC, "play music failed!");
+        } else {
+            Log.i(BTMUSIC, "music should be played right now!");
+        }
+        updatePlayPauseBtn(true);
     }
 
     private void BTplayNext() {
-		if (!btService.doAction(BtCmdEnum.BT_CMD_AV_FORWARD)){
-    		Log.e(BTMUSIC, "next play failed!");
-		} else {
-			Log.i(BTMUSIC, "next music!");
-		}
+        if (!btService.doAction(BtCmdEnum.BT_CMD_AV_FORWARD)){
+            Log.e(BTMUSIC, "next play failed!");
+        } else {
+            Log.i(BTMUSIC, "next music!");
+        }
     }
 
     private void BTplayPrevious() {
-		if (!btService.doAction(BtCmdEnum.BT_CMD_AV_BACKWARD)){
-    		Log.e(BTMUSIC, "previous play failed!");
-		} else {
-			Log.i(BTMUSIC, "previous music!");
-		}
+        if (!btService.doAction(BtCmdEnum.BT_CMD_AV_BACKWARD)){
+            Log.e(BTMUSIC, "previous play failed!");
+        } else {
+            Log.i(BTMUSIC, "previous music!");
+        }
     }
 
     private void registerBroadcast() {
@@ -336,13 +341,13 @@ public class BTPlayerActivity extends BaseActivity {
         // Check the button if the audio is not playing.
         mBtnPlayPause.setChecked(!isPlay);
     }
-    
+
     public boolean isServiceRunning(Context mContext,String className){
         boolean isRunning = false;
-        ActivityManager activityManager = (ActivityManager)mContext.getSystemService(Context.ACTIVITY_SERVICE); 
-        List<ActivityManager.RunningServiceInfo> serviceList 
+        ActivityManager activityManager = (ActivityManager)mContext.getSystemService(Context.ACTIVITY_SERVICE);
+        List<ActivityManager.RunningServiceInfo> serviceList
         = activityManager.getRunningServices(30);
-       if (!(serviceList.size()>0)) {
+        if (!(serviceList.size()>0)) {
             return false;
         }
         for (int i=0; i<serviceList.size(); i++) {
