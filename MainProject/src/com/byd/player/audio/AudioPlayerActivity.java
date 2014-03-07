@@ -6,12 +6,11 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
-import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.ServiceConnection;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.view.Gravity;
@@ -20,6 +19,8 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
 import android.view.WindowManager;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -38,6 +39,7 @@ import com.byd.player.audio.AudioPlayerService.OnPlayPauseListener;
 import com.byd.player.audio.AudioPlayerService.OnSongChangedListener;
 import com.byd.player.audio.AudioPlayerService.OnUpdateListener;
 import com.byd.player.audio.AudioPlayerService.PlayerBinder;
+import com.byd.player.bluetooth.BTPlayerActivity.PlayerReceiver;
 import com.byd.player.config.Constants;
 import com.byd.player.lrc.LrcContent;
 import com.byd.player.lrc.LrcUtils;
@@ -134,7 +136,6 @@ public class AudioPlayerActivity extends BaseActivity {
         init(getIntent().getIntExtra(Constants.MUSIC_SONG_POSITION, -1));
         startPlay();
 
-        registerBroadcast();
     }
 
     @Override
@@ -160,7 +161,6 @@ public class AudioPlayerActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        unregisterBroadcast();
         if (mService != null && !mService.isPlaying()) {
             stopService(mAudioServiceIntent);
         }
@@ -186,12 +186,7 @@ public class AudioPlayerActivity extends BaseActivity {
         mDisplayLyrics = LrcUtils.isLrcFileExist(lrcPath);
         if (mDisplayLyrics) {
             mLrcList = LrcUtils.readLRC(lrcPath);
-            //            if (mLrcList != null) {
-            //                for (LrcContent content : mLrcList) {
-            //                    Log.d("debug", "time:" + content.getLrcTime());
-            //                    Log.d("debug", "lrc:" + content.getLrcStr());
-            //                }
-            //            }
+
             mSongInfoAndLyricsContainer.addView(mInflater.inflate(
                     R.layout.layout_lyrics, null));
             mLrcView = (LrcView)findViewById(R.id.lrc_view);
@@ -434,7 +429,6 @@ public class AudioPlayerActivity extends BaseActivity {
                                 break;
                         }
                         mPopupAudioFx.showAsDropDown(v, 0, -450);
-                        mPopupAudioFx.update();
                     } else if (mPopupAudioFx.isShowing()) {
                         mPopupAudioFx.dismiss();
                     }
@@ -466,6 +460,17 @@ public class AudioPlayerActivity extends BaseActivity {
             String[] from = {"audio_name"};
             int[] to = {R.id.song_name};
             mAudioListView.setAdapter(new SimpleAdapter(this, mAudioList, R.layout.simple_audio_list_item, from, to));
+            mAudioListView.setOnItemClickListener(new OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+                    if (arg2 != mSongPosition) {
+                        playPosition(arg2);
+                    }
+                    if (mPopupAudioList.isShowing()) {
+                        mPopupAudioList.dismiss();
+                    }
+                }
+            });
         }
 
         if (null == mBtnAudioList) {
@@ -473,15 +478,14 @@ public class AudioPlayerActivity extends BaseActivity {
             mBtnAudioList.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mAudioListView.setSelected(true);
                     mAudioListView.setSelection(mSongPosition);
-                    mAudioListView.setItemChecked(mSongPosition, true);
                     if (mPopupAudioList != null) {
                         if (mPopupAudioList.isShowing()) {
                             mPopupAudioList.dismiss();
                         } else {
-                            mPopupAudioList.showAsDropDown(mBtnAudioList);
-                            mPopupAudioList.update();
+                            mPopupAudioList.setFocusable(true);
+                            mPopupAudioList.setBackgroundDrawable(new BitmapDrawable());
+                            mPopupAudioList.showAsDropDown(mBtnAudioList, 0, 10);
                         }
                     }
                 }
@@ -492,6 +496,12 @@ public class AudioPlayerActivity extends BaseActivity {
     private void startPlay() {
         mAudioServiceIntent.putExtra(Constants.PLAYER_MSG, Constants.PlayerCommand.PLAY);
         mAudioServiceIntent.putExtra(Constants.MUSIC_SONG_POSITION, mSongPosition);
+        startService(mAudioServiceIntent);
+    }
+
+    private void playPosition(int position) {
+        mAudioServiceIntent.putExtra(Constants.PLAYER_MSG, Constants.PlayerCommand.PLAY_POSITION);
+        mAudioServiceIntent.putExtra(Constants.MUSIC_SONG_POSITION, position);
         startService(mAudioServiceIntent);
     }
 
@@ -530,47 +540,6 @@ public class AudioPlayerActivity extends BaseActivity {
         mAudioServiceIntent.putExtra(Constants.PLAYER_MSG, Constants.PlayerCommand.AUDIO_FX);
         mAudioServiceIntent.putExtra(Constants.AUDIO_FX_ID, audioFx);
         startService(mAudioServiceIntent);
-    }
-
-    private void registerBroadcast() {
-        mPlayerReceiver = new PlayerReceiver();
-        IntentFilter filter = new IntentFilter();
-        //        registerReceiver(mPlayerReceiver, filter);
-    }
-
-    private void unregisterBroadcast() {
-        //        unregisterReceiver(mPlayerReceiver);
-    }
-
-    public class PlayerReceiver extends BroadcastReceiver {
-
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            String action = intent.getAction();
-            // if (action.equals(MUSIC_CURRENT)) {
-            // currentTime = intent.getIntExtra("currentTime", -1);
-            // currentProgress.setText(MediaUtil.formatTime(currentTime));
-            // music_progressBar.setProgress(currentTime);
-            // } else if (action.equals(MUSIC_DURATION)) {
-            // int duration = intent.getIntExtra("duration", -1);
-            // music_progressBar.setMax(duration);
-            // finalProgress.setText(MediaUtil.formatTime(duration));
-            // } else if (action.equals(UPDATE_ACTION)) {
-            // // 获取Intent中的current消息，current代表当前正在播放的歌曲
-            // listPosition = intent.getIntExtra("current", -1);
-            // url = mp3Infos.get(listPosition).getUrl();
-            // if (listPosition >= 0) {
-            // musicTitle.setText(mp3Infos.get(listPosition).getTitle());
-            // musicArtist.setText(mp3Infos.get(listPosition).getArtist());
-            // }
-            // if (listPosition == 0) {
-            // finalProgress.setText(MediaUtil.formatTime(mp3Infos.get(
-            // listPosition).getDuration()));
-            // playBtn.setBackgroundResource(R.drawable.pause_selector);
-            // isPause = true;
-            // }
-            // }
-        }
     }
 
     private void updateAudioDuration(int duration) {

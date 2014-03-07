@@ -224,6 +224,10 @@ public class AudioPlayerService extends Service {
                 int audioFx = intent.getIntExtra(Constants.AUDIO_FX_ID, Constants.AudioFx.NONE);
                 setEqualizer(audioFx);
                 break;
+            case Constants.PlayerCommand.PLAY_POSITION:
+                mSongPosition = intent.getIntExtra(Constants.MUSIC_SONG_POSITION, -1);
+                changeSong(mSongPosition);
+                break;
             default:
                 break;
         }

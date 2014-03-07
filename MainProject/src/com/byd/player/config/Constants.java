@@ -57,6 +57,8 @@ public class Constants {
         public static final int PREVIOUS = 6;
 
         public static final int AUDIO_FX = 7;
+
+        public static final int PLAY_POSITION = 8;
     }
 
     public class AudioFx {
@@ -93,12 +95,6 @@ public class Constants {
         {800, 400, -400, 400, 1000}, // POP
         {-200, 400, 1000, 200, -400} // ROCK
     };
-
-    public class PlayerAction {
-        //        public static final String ACTION_DURATION = "com.byd.player.ACTION_DURATION";
-        //
-        //        public static final String ACTION_UPDATE_CURRENT = "com.byd.player.ACTION_UPDATE_CURRENT";
-    }
 
     public static final boolean getSingleLoopStatus(Context context) {
         SharedPreferences pref = context.getSharedPreferences(AUDIO_PREF, Context.MODE_PRIVATE);
