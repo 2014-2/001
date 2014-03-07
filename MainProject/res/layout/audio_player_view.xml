@@ -20,7 +20,6 @@
             android:layout_width="match_parent"
             android:layout_height="76px"
             android:layout_below="@id/header_bar"
-            android:layout_marginTop="-6dp"
             android:background="#CF000000" >
 
             <TextView
@@ -59,7 +58,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/header_bar"
-            android:layout_marginTop="-32px"
+            android:layout_marginTop="-26px"
             android:background="@drawable/line1" />
     </RelativeLayout>
 

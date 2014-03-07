@@ -17,7 +17,7 @@
         android:clickable="true" />
 
     <Button
-        android:id="@+id/button_header_edit"
+        android:id="@+id/button_header_list"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
@@ -25,7 +25,7 @@
         android:layout_marginRight="10dp"
         android:background="@drawable/button"
         android:clickable="true"
-        android:text="菜单"
+        android:text="列表"
         android:textColor="@android:color/white" />
 
     <TextView

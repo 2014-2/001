@@ -9,7 +9,7 @@
         android:id="@+id/audio_volume_seekbar"
         android:layout_width="29dp"
         android:layout_height="200dp"
-        android:background="@drawable/bg_volume"
+        android:background="@drawable/sound_volume_bg"
         android:progressDrawable="@null"
         android:thumb="@drawable/volume_dobber_vertical" />
 

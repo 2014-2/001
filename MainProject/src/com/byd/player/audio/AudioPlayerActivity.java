@@ -1,7 +1,9 @@
 package com.byd.player.audio;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import android.content.BroadcastReceiver;
@@ -18,13 +20,16 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
+import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
 import com.byd.player.BaseActivity;
@@ -80,6 +85,8 @@ public class AudioPlayerActivity extends BaseActivity {
 
     private PopupWindow mPopupAudioFx;
 
+    private PopupWindow mPopupAudioList;
+
     private RadioGroup mAudioFxGroup;
 
     private VerticalSeekBar mVolumeSeekbar;
@@ -101,6 +108,14 @@ public class AudioPlayerActivity extends BaseActivity {
     private LrcView mLrcView;
 
     List<LrcContent> mLrcList;
+
+    private Button mBtnBack;
+
+    private ListView mAudioListView;
+
+    private List<HashMap<String, String>> mAudioList;
+
+    private Button mBtnAudioList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -424,6 +439,51 @@ public class AudioPlayerActivity extends BaseActivity {
                         mPopupAudioFx.dismiss();
                     }
                     mBtnAudioFx.setChecked(!isChecked);
+                }
+            });
+        }
+
+        if (null == mBtnBack) {
+            mBtnBack = (Button)findViewById(R.id.button_audio_header_back);
+            mBtnBack.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onBackPressed();
+                }
+            });
+        }
+
+        if (null == mPopupAudioList) {
+            mAudioListView = (ListView)mInflater.inflate(R.layout.list_audio, null);
+            mPopupAudioList = new PopupWindow(mAudioListView, 350, LayoutParams.WRAP_CONTENT);
+            List<Song> songList = AudioManager.getInstance().getViewSongs();
+            mAudioList = new ArrayList<HashMap<String,String>>();
+            for (Song song : songList) {
+                HashMap<String, String> map = new HashMap<String, String>();
+                map.put("audio_name", song.getFileTitle());
+                mAudioList.add(map);
+            }
+            String[] from = {"audio_name"};
+            int[] to = {R.id.song_name};
+            mAudioListView.setAdapter(new SimpleAdapter(this, mAudioList, R.layout.simple_audio_list_item, from, to));
+        }
+
+        if (null == mBtnAudioList) {
+            mBtnAudioList = (Button)findViewById(R.id.button_header_list);
+            mBtnAudioList.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mAudioListView.setSelected(true);
+                    mAudioListView.setSelection(mSongPosition);
+                    mAudioListView.setItemChecked(mSongPosition, true);
+                    if (mPopupAudioList != null) {
+                        if (mPopupAudioList.isShowing()) {
+                            mPopupAudioList.dismiss();
+                        } else {
+                            mPopupAudioList.showAsDropDown(mBtnAudioList);
+                            mPopupAudioList.update();
+                        }
+                    }
                 }
             });
         }
