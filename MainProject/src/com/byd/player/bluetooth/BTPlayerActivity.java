@@ -21,6 +21,7 @@ import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
 import android.view.View.OnTouchListener;
 import android.view.WindowManager;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
@@ -59,6 +60,8 @@ public class BTPlayerActivity extends BaseActivity {
     private TextView mSingerName;
 
     private TextView mMusicName;
+    
+    private ImageButton mBtnBack;
 
     private CheckableImageView mBtnPlayPause;
 
@@ -204,7 +207,18 @@ public class BTPlayerActivity extends BaseActivity {
                 }
             });
         }
-
+        
+        if(null == mBtnBack)
+        {
+        	mBtnBack = (ImageButton) findViewById(R.id.btn_reback);
+        	mBtnBack.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    finish();
+                }
+            });
+        }
+        
         if (null == mBtnNext) {
             mBtnNext = (ImageView)findViewById(R.id.btn_audio_next);
             mBtnNext.setOnClickListener(new OnClickListener() {

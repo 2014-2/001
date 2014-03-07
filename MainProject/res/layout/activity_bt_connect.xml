@@ -4,10 +4,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@drawable/backgrount_main" 
-    tools:context=".PhoneBook" >
+    android:background="@drawable/bg_aux_and_bt" 
+    tools:context=".BTConnect" >
 	<include 
-	    android:id="@+id/ly_title_for_phone_book"
+	    android:id="@+id/ly_title_for_bt_connect"
 	    layout="@layout/title"/>
 	
 	<LinearLayout 

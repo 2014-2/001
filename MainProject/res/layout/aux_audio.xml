@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/backgrount_main" >
+    android:background="@drawable/bg_aux_and_bt" >
 
     <View
         android:id="@+id/aux_top_bar"

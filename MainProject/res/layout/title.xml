@@ -22,6 +22,13 @@
 	    android:textColor="@color/white"
 	    android:textSize="30sp" />
 
+	<ImageView
+        android:id="@+id/icon_bt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/icon_bt_play" />
+	
 	<ImageButton
 	    android:id="@+id/btn_left"
 	    android:layout_width="wrap_content"
