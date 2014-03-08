@@ -1,5 +1,6 @@
 package com.byd.player.audio;
 
+import java.lang.ref.WeakReference;
 import java.util.List;
 
 import android.app.AlertDialog;
@@ -9,10 +10,12 @@ import android.app.FragmentManager;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
+import android.provider.MediaStore;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.WindowManager;
@@ -31,8 +34,10 @@ import com.byd.player.audio.AudioDeleteAsyncTask.DeleteListener;
 import com.byd.player.audio.AudioSearchTask.SearchListener;
 import com.byd.player.bluetooth.ConnectActivity;
 import com.byd.player.config.Constants;
+import com.byd.player.receiver.USBMountReceiver;
 import com.byd.player.services.AuxAudioService;
 import com.byd.player.utils.ToastUtils;
+import com.byd.player.utils.VideoContentObserver;
 
 public class AudioListActivity extends BaseActivity implements OnItemClickListener,OnItemLongClickListener,SearchListener, DeleteListener {
     private final static String TAG = "AudioListActivity";
@@ -55,12 +60,38 @@ public class AudioListActivity extends BaseActivity implements OnItemClickListen
     private EditText mSearchText = null;
     private ProgressDialog mProgressDialog = null;
 
+    private USBMountReceiver mUSBMountReceiver;
+    
+    private MediaStoreChangedHandler mMediaStoreChangedHandler;
+    
+    static class MediaStoreChangedHandler extends Handler {
+        WeakReference<AudioListActivity> wrActivity = null;
+        MediaStoreChangedHandler(AudioListActivity activity) {
+            wrActivity = new WeakReference<AudioListActivity>(activity);
+        }
+        @Override
+        public void handleMessage(Message msg) {
+            AudioListActivity activity = wrActivity.get();
+            switch(msg.what) {
+                case VideoContentObserver.INTERNAL_VIDEO_CONTENT_CHANGED:
+                case VideoContentObserver.EXTERNAL_VIDEO_CONTENT_CHANGED:
+                    AudioManager.getInstance().loadData(AudioManager.EXTERNAL_SDCARD_TYPE);
+                    AudioManager.getInstance().loadData(AudioManager.EXTERNAL_USB_TYPE);
+                    AudioManager.getInstance().loadData(AudioManager.INTERNAL_TYPE);
+                    break;
+            }
+            super.handleMessage(msg);
+        }
+    }
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON,
                 WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
+        mMediaStoreChangedHandler = new MediaStoreChangedHandler(this);
+        
         AudioManager.getInstance().init(getApplicationContext());
         AudioManager.getInstance().loadData(AudioManager.EXTERNAL_SDCARD_TYPE);
         AudioManager.getInstance().loadData(AudioManager.EXTERNAL_USB_TYPE);
@@ -70,8 +101,12 @@ public class AudioListActivity extends BaseActivity implements OnItemClickListen
 
         initViews();
         setMode(MODE_NORMAL);
-
-         startService(new Intent(this, AuxAudioService.class));
+        
+        registerUSBStateChangedReceiver();
+        
+        registerMediaStoreChangedObserver();
+        
+        startService(new Intent(this, AuxAudioService.class));
     }
 
     private void initViews() {
@@ -244,6 +279,30 @@ public class AudioListActivity extends BaseActivity implements OnItemClickListen
         mAdapter.setMode(mode);
         updateHeadTitle();
     }
+    
+    private void registerUSBStateChangedReceiver() {
+        mUSBMountReceiver = new USBMountReceiver();
+        IntentFilter filter = new IntentFilter();  
+        filter.addAction(Intent.ACTION_MEDIA_MOUNTED);  
+        filter.addAction(Intent.ACTION_MEDIA_CHECKING);  
+        filter.addAction(Intent.ACTION_MEDIA_EJECT);  
+        filter.addAction(Intent.ACTION_MEDIA_REMOVED);
+        filter.addDataScheme("file");  
+        registerReceiver(mUSBMountReceiver, filter);
+    }
+    
+    private void unregisterUSBStateChangedReceiver() {
+        unregisterReceiver(mUSBMountReceiver);
+    }
+    
+    private void registerMediaStoreChangedObserver() {
+        getContentResolver().registerContentObserver(MediaStore.Video.Media.INTERNAL_CONTENT_URI, true, 
+                new VideoContentObserver(VideoContentObserver.INTERNAL_VIDEO_CONTENT_CHANGED, 
+                        mMediaStoreChangedHandler)); 
+        getContentResolver().registerContentObserver(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, true, 
+                new VideoContentObserver(VideoContentObserver.EXTERNAL_VIDEO_CONTENT_CHANGED, 
+                        mMediaStoreChangedHandler)); 
+    }
 
     public void tabIndex(int index) {
         AudioManager.getInstance().setViewType(index);
@@ -283,6 +342,7 @@ public class AudioListActivity extends BaseActivity implements OnItemClickListen
 
     @Override
     protected void onDestroy() {
+        unregisterUSBStateChangedReceiver();
         super.onDestroy();
     }
 
