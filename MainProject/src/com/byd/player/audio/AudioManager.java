@@ -3,6 +3,8 @@ package com.byd.player.audio;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.byd.player.audio.AudioDeleteAsyncTask.DeleteListener;
+
 import android.content.Context;
 
 public class AudioManager {
@@ -14,6 +16,7 @@ public class AudioManager {
 
     public interface DataListener {
         void onDataChange();
+        List<Song> getSeletedSongs();
     }
 
     private List<DataListener> mListeners = new ArrayList<AudioManager.DataListener>();
@@ -172,6 +175,23 @@ public class AudioManager {
         }
         return 0;
 
+    }
+
+    public void deleteSongs(List<Song> songs, DeleteListener listener) {
+        switch (mViewType) {
+        case INTERNAL_TYPE:
+            mInteralSongs.removeAll(songs);
+            break;
+        case EXTERNAL_SDCARD_TYPE:
+            mExtenalSDCARDSongs.removeAll(songs);
+            break;
+        case EXTERNAL_USB_TYPE:
+            mExtenalUSBSongs.removeAll(songs);
+            break;
+        }
+        notifyDataChange();
+
+        new AudioDeleteAsyncTask(songs, listener).execute((Object) null);
     }
 
     public void notifyDataChange() {

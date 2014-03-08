@@ -133,4 +133,17 @@ public class AudioAdapter extends BaseAdapter implements DataListener {
     public void onDataChange() {
         setData(AudioManager.getInstance().getViewSongs());
     }
+
+    public List<Song> getSeletedSongs() {
+        List<Song> songs = new ArrayList<Song>();
+        if (isEditMode()) {
+            for (AudioItem item : mData) {
+                if (item.isSelected()) {
+                    songs.add(item.getSong());
+                }
+            }
+        }
+
+        return songs;
+    }
 }

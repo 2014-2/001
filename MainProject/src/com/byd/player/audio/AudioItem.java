@@ -14,6 +14,10 @@ public class AudioItem {
         mSong = song;
     }
 
+    public Song getSong() {
+        return mSong;
+    }
+
     public Bitmap getAlbum() {
         String path = mSong.getAlbum();
         if (!TextUtils.isEmpty(path) && mAblumBitmap == null) {
