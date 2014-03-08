@@ -62,7 +62,7 @@ public class AudioListActivity extends BaseActivity implements OnItemClickListen
         setContentView(R.layout.audio_list_view);
 
         initViews();
-//        startService(new Intent(this, AuxAudioService.class));
+        startService(new Intent(this, AuxAudioService.class));
     }
 
     private void initViews() {
