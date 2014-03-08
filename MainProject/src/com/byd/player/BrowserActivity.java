@@ -8,6 +8,7 @@ import java.util.List;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -34,6 +35,7 @@ import android.widget.Toast;
 import com.byd.player.config.Constants;
 import com.byd.player.history.BYDDatabase;
 import com.byd.player.history.PlayRecord;
+import com.byd.player.receiver.USBMountReceiver;
 import com.byd.player.utils.DialogUtil;
 import com.byd.player.utils.VideoContentObserver;
 import com.byd.player.utils.VideoThumbnailLoader;
@@ -66,6 +68,7 @@ public class BrowserActivity extends BaseActivity implements OnClickListener {
 	
 	public static boolean[] tabContentChanged = new boolean[tabResId.length];
 	private MyHandler mHandler;
+	private USBMountReceiver mUSBMountReceiver;
 	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,6 +77,7 @@ public class BrowserActivity extends BaseActivity implements OnClickListener {
         mLayoutInflater = LayoutInflater.from(this);
         mHandler = new MyHandler(this);
         initUI();
+        registerUSBStateChangedReceiver();
         registerContentObserver();
     }
     
@@ -83,6 +87,21 @@ public class BrowserActivity extends BaseActivity implements OnClickListener {
         for(int resId : tabResId) {
             findViewById(resId).setOnClickListener(this);
         }
+    }
+    
+    private void registerUSBStateChangedReceiver() {
+        mUSBMountReceiver = new USBMountReceiver();
+        IntentFilter filter = new IntentFilter();  
+        filter.addAction(Intent.ACTION_MEDIA_MOUNTED);  
+        filter.addAction(Intent.ACTION_MEDIA_CHECKING);  
+        filter.addAction(Intent.ACTION_MEDIA_EJECT);  
+        filter.addAction(Intent.ACTION_MEDIA_REMOVED);
+        filter.addDataScheme("file");  
+        registerReceiver(mUSBMountReceiver, filter);
+    }
+    
+    private void unregisterUSBStateChangedReceiver() {
+        unregisterReceiver(mUSBMountReceiver);
     }
     
     private void registerContentObserver() {
@@ -183,18 +202,25 @@ public class BrowserActivity extends BaseActivity implements OnClickListener {
         }
         @Override
         public void handleMessage(Message msg) {
+            BrowserActivity activity = wrActivity.get();
             switch(msg.what) {
                 case VideoContentObserver.INTERNAL_VIDEO_CONTENT_CHANGED:
                     tabContentChanged[TAB_INDEX_LOCAL] = true;
+                    if(activity != null && activity.currentTabSelected == TAB_INDEX_LOCAL) {
+                        activity.tabToIndex(TAB_INDEX_LOCAL);
+                    }
                     break;
                 case VideoContentObserver.EXTERNAL_VIDEO_CONTENT_CHANGED:
                     tabContentChanged[TAB_INDEX_SDCARD] = true;
+                    if(activity != null && (activity.currentTabSelected == TAB_INDEX_SDCARD ||
+                            activity.currentTabSelected == TAB_INDEX_USB)) {
+                        activity.tabToIndex(activity.currentTabSelected);
+                    }
                     break;
                 case VideoContentObserver.HISTORY_VIDEO_CONTENT_CHANGED:
                     tabContentChanged[TAB_INDEX_HISTORY] = true;
                     break;
                 case MSG_TAB_ON_CHANGED:
-                    BrowserActivity activity = wrActivity.get();
                     if(activity != null) {
                         activity.tabToIndex(msg.arg1);
                     }
@@ -242,8 +268,14 @@ public class BrowserActivity extends BaseActivity implements OnClickListener {
             super.onBackPressed();
         }
     }
-
     
+    
+    @Override
+    protected void onDestroy() {
+        unregisterUSBStateChangedReceiver();
+        super.onDestroy();
+    }
+
     private ArrayList<MovieInfo> getVideoList(int tabIndex) {
         switch(tabIndex) {
             case TAB_INDEX_LOCAL:
