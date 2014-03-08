@@ -70,6 +70,17 @@
                 android:text="@string/delete"
                 android:textColor="@android:color/white"
                 android:visibility="gone" />
+
+            <Button
+                android:id="@+id/button_header_delete_all"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
+                android:background="@drawable/button"
+                android:clickable="true"
+                android:text="@string/delete_all"
+                android:textColor="@android:color/white"
+                android:visibility="gone" />
         </LinearLayout>
 
         <LinearLayout

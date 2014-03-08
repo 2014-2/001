@@ -153,4 +153,14 @@ public class AudioAdapter extends BaseAdapter implements DataListener {
 
         return songs;
     }
+
+    public List<Song> getAllSongs() {
+        List<Song> songs = new ArrayList<Song>();
+        if (isEditMode()) {
+            for (AudioItem item : mData) {
+                songs.add(item.getSong());
+            }
+        }
+        return songs;
+    }
 }
