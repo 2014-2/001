@@ -12,6 +12,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.WindowManager;
@@ -19,17 +20,21 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.GridView;
+import android.widget.TextView;
 
 import com.byd.player.AuxAudioPlayActivity;
 import com.byd.player.BaseActivity;
 import com.byd.player.R;
 import com.byd.player.audio.AudioDeleteAsyncTask.DeleteListener;
+import com.byd.player.audio.AudioSearchTask.SearchListener;
 import com.byd.player.bluetooth.ConnectActivity;
 import com.byd.player.config.Constants;
 import com.byd.player.services.AuxAudioService;
+import com.byd.player.utils.ToastUtils;
 
-public class AudioListActivity extends BaseActivity implements OnItemClickListener,OnItemLongClickListener, DeleteListener {
+public class AudioListActivity extends BaseActivity implements OnItemClickListener,OnItemLongClickListener,SearchListener, DeleteListener {
     private final static String TAG = "AudioListActivity";
     public final static int TAB_INDEX_LOCAL = 0;
     public final static int TAB_INDEX_SDCARD = 1;
@@ -39,6 +44,7 @@ public class AudioListActivity extends BaseActivity implements OnItemClickListen
 
     public final static int MODE_NORMAL = 0;
     public final static int MODE_EDIT = MODE_NORMAL + 1;
+    public final static int MODE_SEARCH = MODE_EDIT + 1;
 
     private final int[] TAB_IDS = new int[] { R.id.btn_audio_Local, R.id.btn_audio_sdcard,
             R.id.btn_audio_usb, R.id.btn_audio_aux, R.id.btn_audio_mobile };
@@ -46,6 +52,7 @@ public class AudioListActivity extends BaseActivity implements OnItemClickListen
     private GridView mAudioList = null;
     private AudioAdapter mAdapter = null;
 
+    private EditText mSearchText = null;
     private ProgressDialog mProgressDialog = null;
 
     @Override
@@ -62,7 +69,9 @@ public class AudioListActivity extends BaseActivity implements OnItemClickListen
         setContentView(R.layout.audio_list_view);
 
         initViews();
-        startService(new Intent(this, AuxAudioService.class));
+        setMode(MODE_NORMAL);
+
+         startService(new Intent(this, AuxAudioService.class));
     }
 
     private void initViews() {
@@ -76,12 +85,35 @@ public class AudioListActivity extends BaseActivity implements OnItemClickListen
         initBottomButtons();
     }
 
+    private void updateHeadTitle() {
+        TextView headTitle = (TextView) findViewById(R.id.header_title);
+        int titleId = R.string.audio_page;
+        if (mAdapter.isSearchMode()) {
+            titleId = R.string.search;
+        } else {
+            switch (AudioManager.getInstance().getViewType()) {
+            case TAB_INDEX_LOCAL:
+                titleId = R.string.title_audio_local;
+                break;
+            case TAB_INDEX_SDCARD:
+                titleId = R.string.title_audio_sdcard;
+                break;
+            case TAB_INDEX_USB:
+                titleId = R.string.title_audio_usb;
+                break;
+            default:
+                break;
+            }
+        }
+        headTitle.setText(titleId);
+    }
+
     private void initHeaderButtons() {
         Button back = (Button) findViewById(R.id.button_header_back);
         back.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mAdapter.isEditMode()) {
+                if (!mAdapter.isNormalMode()) {
                     setMode(MODE_NORMAL);
                 } else {
                     AudioListActivity.this.finish();
@@ -97,6 +129,14 @@ public class AudioListActivity extends BaseActivity implements OnItemClickListen
             }
         });
 
+        Button search = (Button) findViewById(R.id.button_header_search);
+        search.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setMode(MODE_SEARCH);
+            }
+        });
+
         Button delete = (Button) findViewById(R.id.button_header_delete);
         delete.setOnClickListener(new OnClickListener() {
             @Override
@@ -104,6 +144,40 @@ public class AudioListActivity extends BaseActivity implements OnItemClickListen
                 if (mAdapter.isEditMode()) {
                     FragmentManager fm = AudioListActivity.this.getFragmentManager();
                     DeleteDialog.newInstance(AudioListActivity.this).show(fm, "DELETE_DIALOG");
+                }
+            }
+        });
+
+        mSearchText = (EditText) findViewById(R.id.search_text);
+
+        Button searchByName = (Button) findViewById(R.id.button_search_name);
+        searchByName.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mAdapter.isSearchMode()) {
+                    String text = mSearchText.getText().toString();
+                    if (!TextUtils.isEmpty(text)){
+                        Message msg = mHandler.obtainMessage(MSG_SHOW_SEARCH_PROGRESS_DIALOG);
+                        mHandler.sendMessageDelayed(msg, 200);
+                        new AudioSearchTask(AudioListActivity.this, AudioListActivity.this).search(
+                                text, AudioManager.SEARCH_BY_NAME);
+                    }
+                }
+            }
+        });
+
+        Button searchBySinger = (Button) findViewById(R.id.button_search_signer);
+        searchBySinger.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mAdapter.isSearchMode()) {
+                    String text = mSearchText.getText().toString();
+                    if (!TextUtils.isEmpty(text)) {
+                        Message msg = mHandler.obtainMessage(MSG_SHOW_SEARCH_PROGRESS_DIALOG);
+                        mHandler.sendMessageDelayed(msg, 200);
+                        new AudioSearchTask(AudioListActivity.this, AudioListActivity.this).search(
+                                text, AudioManager.SEARCH_BY_SINGER);
+                    }
                 }
             }
         });
@@ -129,15 +203,46 @@ public class AudioListActivity extends BaseActivity implements OnItemClickListen
     }
 
     private void setMode(int mode) {
-        if (!mAdapter.isEditMode() && mAdapter.getCount() > 0) {
-            findViewById(R.id.button_header_delete).setVisibility(View.VISIBLE);
-            findViewById(R.id.button_header_edit).setVisibility(View.GONE);
-            mAdapter.setMode(MODE_EDIT);
-        } else {
-            findViewById(R.id.button_header_delete).setVisibility(View.GONE);
-            findViewById(R.id.button_header_edit).setVisibility(View.VISIBLE);
-            mAdapter.setMode(MODE_NORMAL);
+        switch(mode){
+        case MODE_NORMAL:
+            if (!mAdapter.isNormalMode()){
+                findViewById(R.id.btn_edit_container).setVisibility(View.VISIBLE);
+                findViewById(R.id.button_header_search).setVisibility(View.VISIBLE);
+                findViewById(R.id.button_header_edit).setVisibility(View.VISIBLE);
+                findViewById(R.id.btn_bottom_container).setVisibility(View.VISIBLE);
+
+                findViewById(R.id.button_header_delete).setVisibility(View.GONE);
+                findViewById(R.id.search_text_container).setVisibility(View.GONE);
+                findViewById(R.id.btn_search_container).setVisibility(View.GONE);
+            }
+            break;
+        case MODE_EDIT:
+            if (!mAdapter.isEditMode() && mAdapter.getCount() > 0) {
+                findViewById(R.id.btn_edit_container).setVisibility(View.VISIBLE);
+                findViewById(R.id.button_header_delete).setVisibility(View.VISIBLE);
+                findViewById(R.id.btn_bottom_container).setVisibility(View.VISIBLE);
+
+                findViewById(R.id.button_header_search).setVisibility(View.GONE);
+                findViewById(R.id.button_header_edit).setVisibility(View.GONE);
+
+                findViewById(R.id.search_text_container).setVisibility(View.GONE);
+                findViewById(R.id.btn_search_container).setVisibility(View.GONE);
+            }
+            break;
+        case MODE_SEARCH:
+            if (!mAdapter.isSearchMode()) {
+                findViewById(R.id.btn_search_container).setVisibility(View.VISIBLE);
+                findViewById(R.id.search_text_container).setVisibility(View.VISIBLE);
+
+                findViewById(R.id.btn_edit_container).setVisibility(View.GONE);
+                findViewById(R.id.btn_bottom_container).setVisibility(View.GONE);
+                mSearchText.requestFocus();
+            }
+            break;
         }
+        mSearchText.setText(null);
+        mAdapter.setMode(mode);
+        updateHeadTitle();
     }
 
     public void tabIndex(int index) {
@@ -168,6 +273,7 @@ public class AudioListActivity extends BaseActivity implements OnItemClickListen
                 findViewById(TAB_IDS[i]).setBackgroundResource(0);
             }
         }
+        updateHeadTitle();
     }
 
     @Override
@@ -194,16 +300,17 @@ public class AudioListActivity extends BaseActivity implements OnItemClickListen
         if (mAdapter.isEditMode()) {
             mAdapter.setItemSelected(pos);
             return;
+        } else {
+            Intent intent = new Intent(this, AudioPlayerActivity.class);
+            intent.putExtra(Constants.MUSIC_SONG_POSITION, pos);
+            startActivity(intent);
+            AudioManager.getInstance().setPlayType(AudioManager.getInstance().getViewType());
         }
-        Intent intent = new Intent(this, AudioPlayerActivity.class);
-        intent.putExtra(Constants.MUSIC_SONG_POSITION, pos);
-        startActivity(intent);
-        AudioManager.getInstance().setPlayType(AudioManager.getInstance().getViewType());
     }
 
     @Override
     public boolean onItemLongClick(AdapterView<?> arg0, View view, int pos, long arg3) {
-        if (!mAdapter.isEditMode()) {
+        if (mAdapter.isNormalMode()) {
             setMode(MODE_EDIT);
         }
         mAdapter.setItemSelected(pos);
@@ -216,7 +323,7 @@ public class AudioListActivity extends BaseActivity implements OnItemClickListen
 
     private static class DeleteDialog extends DialogFragment {
         private AudioListActivity mActivity = null;
-        private DeleteDialog (AudioListActivity activity){
+        public DeleteDialog (AudioListActivity activity){
             mActivity = activity;
         }
 
@@ -279,7 +386,8 @@ public class AudioListActivity extends BaseActivity implements OnItemClickListen
 
     // Don't show the delete dialog if not spent too much time.
     private final static int MSG_SHOW_DELETE_PROGRESS_DIALOG = 10;
-    private final static int MSG_DISMISS_PROGRESS_DIALOG = 11;
+    private final static int MSG_SHOW_SEARCH_PROGRESS_DIALOG = 11;
+    private final static int MSG_DISMISS_PROGRESS_DIALOG = 21;
     private Handler mHandler = new Handler() {
 
         @Override
@@ -297,6 +405,17 @@ public class AudioListActivity extends BaseActivity implements OnItemClickListen
                     mProgressDialog.show();
                 }
                 break;
+            case MSG_SHOW_SEARCH_PROGRESS_DIALOG:
+                if (mProgressDialog == null) {
+                    mProgressDialog = new ProgressDialog(AudioListActivity.this);
+                    mProgressDialog.setCancelable(false);
+                    mProgressDialog.setTitle("搜索歌曲");
+                    mProgressDialog.setMessage("正在搜索歌曲,请稍候...");
+                }
+                if (!mProgressDialog.isShowing()) {
+                    mProgressDialog.show();
+                }
+                break;
             case MSG_DISMISS_PROGRESS_DIALOG:
                 if (mProgressDialog != null && mProgressDialog.isShowing()) {
                     mProgressDialog.dismiss();
@@ -306,5 +425,15 @@ public class AudioListActivity extends BaseActivity implements OnItemClickListen
         }
 
     };
-    
+
+    @Override
+    public void onSearchComplete(List<Song> result) {
+        if (result == null || result.isEmpty()) {
+            ToastUtils.showToast(this, "未搜索到相关歌曲");
+        }
+        mAdapter.setData(result);
+        mHandler.removeMessages(MSG_SHOW_SEARCH_PROGRESS_DIALOG);
+        mHandler.sendEmptyMessage(MSG_DISMISS_PROGRESS_DIALOG);
+    }
+
 }

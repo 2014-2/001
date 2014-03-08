@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:gravity="center_vertical"
     android:orientation="vertical" >
 
     <RelativeLayout
@@ -19,42 +20,8 @@
             android:background="@drawable/button_back"
             android:clickable="true" />
 
-        <Button
-            android:id="@+id/button_header_edit"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="10dp"
-            android:background="@drawable/button"
-            android:clickable="true"
-            android:text="@string/edit"
-            android:textColor="@android:color/white" />
-
-        <Button
-            android:id="@+id/button_header_delete"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="10dp"
-            android:background="@drawable/button"
-            android:clickable="true"
-            android:text="@string/delete"
-            android:textColor="@android:color/white"
-            android:visibility="gone" />
-
-        <Button
-            android:id="@+id/button_header_search"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="10dp"
-            android:layout_toLeftOf="@id/button_header_edit"
-            android:background="@drawable/button"
-            android:clickable="true"
-            android:text="@string/search"
-            android:textColor="@android:color/white" />
-
         <TextView
-            android:id="@+id/tv_header_title"
+            android:id="@+id/header_title"
             style="@style/header_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -64,8 +31,74 @@
             android:focusable="true"
             android:focusableInTouchMode="true"
             android:marqueeRepeatLimit="marquee_forever"
-            android:selectAllOnFocus="true"
-            android:text="@string/all_music" />
+            android:selectAllOnFocus="true" />
+
+        <LinearLayout
+            android:id="@+id/btn_edit_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:orientation="horizontal" >
+
+            <Button
+                android:id="@+id/button_header_search"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
+                android:background="@drawable/button"
+                android:clickable="true"
+                android:text="@string/search"
+                android:textColor="@android:color/white" />
+
+            <Button
+                android:id="@+id/button_header_edit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
+                android:background="@drawable/button"
+                android:clickable="true"
+                android:text="@string/edit"
+                android:textColor="@android:color/white" />
+
+            <Button
+                android:id="@+id/button_header_delete"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
+                android:background="@drawable/button"
+                android:clickable="true"
+                android:text="@string/delete"
+                android:textColor="@android:color/white"
+                android:visibility="gone" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/btn_search_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:visibility="gone" >
+
+            <Button
+                android:id="@+id/button_search_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
+                android:background="@drawable/button"
+                android:clickable="true"
+                android:text="@string/btn_search_byname"
+                android:textColor="@android:color/white" />
+
+            <Button
+                android:id="@+id/button_search_signer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
+                android:background="@drawable/button"
+                android:clickable="true"
+                android:text="@string/btn_search_bysinger"
+                android:textColor="@android:color/white" />
+        </LinearLayout>
     </RelativeLayout>
 
     <ImageView
@@ -73,5 +106,22 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="-20dp"
         android:background="@drawable/line1" />
+
+    <RelativeLayout
+        android:id="@+id/search_text_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone" >
+
+        <EditText
+            android:id="@+id/search_text"
+            android:layout_width="600dip"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:gravity="center_vertical"
+            android:inputType="text"
+            android:maxLength="128"
+            android:singleLine="true" />
+    </RelativeLayout>
 
 </LinearLayout>

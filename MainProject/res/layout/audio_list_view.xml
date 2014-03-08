@@ -5,7 +5,7 @@
     android:orientation="vertical" >
 
     <LinearLayout
-        android:id="@+id/btn_container"
+        android:id="@+id/btn_bottom_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -67,12 +67,12 @@
         android:id="@+id/header"
         android:layout_alignParentTop="true"
         layout="@layout/header_audio_list" />
-    
+
     <GridView
         android:id="@+id/audio_grid_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@id/btn_container"
+        android:layout_above="@id/btn_bottom_container"
         android:layout_alignParentLeft="true"
         android:layout_below="@id/header"
         android:layout_margin="16dip"

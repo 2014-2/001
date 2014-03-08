@@ -1,5 +1,6 @@
 package com.byd.player.audio;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,7 +11,7 @@ import android.provider.MediaStore;
 
 import com.byd.player.config.Constants;
 
-public class AudioLoader extends AsyncQueryHandler {
+public class AudioLoaderTask extends AsyncQueryHandler {
 
     public final static String[] DEF_PROJECTION = new String[] {
         MediaStore.Audio.Media._ID,
@@ -24,9 +25,9 @@ public class AudioLoader extends AsyncQueryHandler {
         MediaStore.Audio.Media.SIZE,
         MediaStore.Audio.Media.DATA };
 
-    public final static String DEF_SELECTION = MediaStore.Audio.Media.MIME_TYPE + "=? or "
+    public final static String DEF_SELECTION_LOCAL = MediaStore.Audio.Media.MIME_TYPE + "=? or "
             + MediaStore.Audio.Media.MIME_TYPE + "=?";
-    
+
     public final static String DEF_SELECTION_SDCARD = "(" + MediaStore.Audio.Media.MIME_TYPE + "=? or "
             + MediaStore.Audio.Media.MIME_TYPE + "=?) and " 
             + MediaStore.Audio.Media.DATA + " not like '"
@@ -38,11 +39,11 @@ public class AudioLoader extends AsyncQueryHandler {
             + Constants.USB_REGIX + "'";
 
     public final static String[] DEF_SELECTION_ARGS = new String[] { "audio/mpeg", "audio/x-ms-wma" };
-    
-    private AudioManager mAudioManager;
+
+    protected AudioManager mAudioManager;
     private int mType;
 
-    public AudioLoader(Context context, AudioManager am, int type) {
+    public AudioLoaderTask(Context context, AudioManager am, int type) {
         super(context.getContentResolver());
         mAudioManager = am;
         mType = type;
@@ -52,19 +53,19 @@ public class AudioLoader extends AsyncQueryHandler {
         switch (mType) {
         case AudioManager.INTERNAL_TYPE:
             startQuery(0, (Object) null, MediaStore.Audio.Media.INTERNAL_CONTENT_URI,
-                    AudioLoader.DEF_PROJECTION, AudioLoader.DEF_SELECTION,
-                    AudioLoader.DEF_SELECTION_ARGS, null);
+                    AudioLoaderTask.DEF_PROJECTION, AudioLoaderTask.DEF_SELECTION_LOCAL,
+                    AudioLoaderTask.DEF_SELECTION_ARGS, null);
             break;
 
         case AudioManager.EXTERNAL_SDCARD_TYPE:
             startQuery(0, (Object) null, MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
-                    AudioLoader.DEF_PROJECTION, AudioLoader.DEF_SELECTION_SDCARD,
-                    AudioLoader.DEF_SELECTION_ARGS, null);
+                    AudioLoaderTask.DEF_PROJECTION, AudioLoaderTask.DEF_SELECTION_SDCARD,
+                    AudioLoaderTask.DEF_SELECTION_ARGS, null);
             break;
         case AudioManager.EXTERNAL_USB_TYPE:
             startQuery(0, (Object) null, MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
-                    AudioLoader.DEF_PROJECTION, AudioLoader.DEF_SELECTION_USB,
-                    AudioLoader.DEF_SELECTION_ARGS, null);
+                    AudioLoaderTask.DEF_PROJECTION, AudioLoaderTask.DEF_SELECTION_USB,
+                    AudioLoaderTask.DEF_SELECTION_ARGS, null);
             break;
         default:
             break;
@@ -73,16 +74,20 @@ public class AudioLoader extends AsyncQueryHandler {
 
     @Override
     protected void onQueryComplete(int token, Object cookie, Cursor cursor) {
-        super.onQueryComplete(token, cookie, cursor);
         if (cursor == null) {
             return;
         }
+        List<Song> songs = null;
         try {
             if (cursor.moveToFirst()) {
-                getSongList(cursor);
+                songs = getSongs(cursor);
+
             }
         } finally {
             cursor.close();
+            mAudioManager.clearData(mType);
+            mAudioManager.add(songs, mType);
+            mAudioManager.notifyDataChange();
         }
     }
 
@@ -91,7 +96,7 @@ public class AudioLoader extends AsyncQueryHandler {
      * 
      * @param cursor
      */
-    public void getSongList(Cursor cursor) {
+    public List<Song> getSongs(Cursor cursor) {
         List<Song> songs = new ArrayList<Song>();
         do {
             Song song = null;
@@ -122,11 +127,11 @@ public class AudioLoader extends AsyncQueryHandler {
             if (cursor.getString(9) != null) {// file path
                 song.setFilePath(cursor.getString(9));
             }
-            songs.add(song);
+            if (new File(song.getFilePath()).exists()) {
+                songs.add(song);
+            }
+            
         } while (cursor.moveToNext());
-
-        mAudioManager.clearData(mType);
-        mAudioManager.add(songs, mType);
-        mAudioManager.notifyDataChange();
+        return songs;
     }
 }

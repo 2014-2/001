@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.byd.player.R;
 import com.byd.player.audio.AudioManager.DataListener;
+import com.byd.player.utils.ToastUtils;
 
 public class AudioAdapter extends BaseAdapter implements DataListener {
 
@@ -20,7 +21,7 @@ public class AudioAdapter extends BaseAdapter implements DataListener {
     private Context mContext = null;
     private LayoutInflater mInflater;
 
-    private int mMode = AudioListActivity.MODE_NORMAL;
+    private int mMode = -1;
 
     public AudioAdapter(Context context, LayoutInflater inflater) {
         mContext = context;
@@ -30,9 +31,11 @@ public class AudioAdapter extends BaseAdapter implements DataListener {
 
     public void setData(List<Song> data) {
         mData.clear();
-
-        for (Song song : data) {
-            mData.add(new AudioItem(song));
+        if (data == null || data.isEmpty()) {
+        } else {
+            for (Song song : data) {
+                mData.add(new AudioItem(song));
+            }
         }
         notifyDataSetChanged();
     }
@@ -50,19 +53,16 @@ public class AudioAdapter extends BaseAdapter implements DataListener {
         notifyDataSetChanged();
     }
 
-//    public void setDataType(int type) {
-////        if (mDataType != type) {
-////            mMode = AudioListActivity.MODE_NORMAL;
-////            setData(AudioManager.getInstance().getSongs());
-////        }
-//    }
-
     public boolean isNormalMode() {
         return mMode == AudioListActivity.MODE_NORMAL;
     }
 
     public boolean isEditMode() {
         return mMode == AudioListActivity.MODE_EDIT;
+    }
+
+    public boolean isSearchMode() {
+        return mMode == AudioListActivity.MODE_SEARCH;
     }
 
     public void setItemSelected(int pos) {
@@ -131,7 +131,14 @@ public class AudioAdapter extends BaseAdapter implements DataListener {
 
     @Override
     public void onDataChange() {
-        setData(AudioManager.getInstance().getViewSongs());
+        List<Song> result = null;
+        if (!isSearchMode()) {
+            result = AudioManager.getInstance().getViewSongs();
+        }
+        if (result == null || result.isEmpty()) {
+            ToastUtils.showToast(mContext, "未找到相关歌曲");
+        }
+        setData(result);
     }
 
     public List<Song> getSeletedSongs() {

@@ -24,11 +24,16 @@
     <string name="btn_text_local">本地音乐</string>
     <string name="btn_text_sdcard">存储卡</string>
     <string name="search">搜索</string>
-    <string name="all_music">所有音乐</string>
     <string name="audio_player">音乐播放</string>
     <string name="btn_text_usb">USB</string>
     <string name="btn_text_aux">AUX</string>
     <string name="btn_text_mobile">手机音乐</string>
+    <string name="btn_search_byname">按歌曲</string>
+    <string name="btn_search_bysinger">按演唱者</string>
+    <string name="search_hint">搜索歌曲</string>
+    <string name="title_audio_local">本地音乐</string>
+    <string name="title_audio_sdcard">存储卡音乐</string>
+    <string name="title_audio_usb">USB音乐</string>
 
     <string name="audio_fx_none">无</string>
     <string name="audio_fx_classical">古典</string>
@@ -41,10 +46,6 @@
     <string name="audio_fx_pop">流行</string>
     <string name="audio_fx_rock">摇滚</string>
 
-    <!-- test -->
-    <string name="text_name">我的歌声里</string>
-    <string name="text_singer">曲婉婷</string>
-    
     <!-- Aux -->
     <string name="aux_connected">AUX音频设备已连接</string>
     <string name="aux_disconnected">AUX音频设备未连接</string>

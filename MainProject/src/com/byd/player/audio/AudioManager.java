@@ -3,9 +3,9 @@ package com.byd.player.audio;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.byd.player.audio.AudioDeleteAsyncTask.DeleteListener;
-
 import android.content.Context;
+
+import com.byd.player.audio.AudioDeleteAsyncTask.DeleteListener;
 
 public class AudioManager {
     private static AudioManager sInstance = new AudioManager();
@@ -13,6 +13,9 @@ public class AudioManager {
     public final static int INTERNAL_TYPE = AudioListActivity.TAB_INDEX_LOCAL;
     public final static int EXTERNAL_SDCARD_TYPE = AudioListActivity.TAB_INDEX_SDCARD;
     public final static int EXTERNAL_USB_TYPE = AudioListActivity.TAB_INDEX_USB;
+
+    public final static int SEARCH_BY_NAME = 0;
+    public final static int SEARCH_BY_SINGER = 1;
 
     public interface DataListener {
         void onDataChange();
@@ -69,7 +72,7 @@ public class AudioManager {
     }
 
     public void loadData(int type) {
-        new AudioLoader(mContext, sInstance, type).loadData();
+        new AudioLoaderTask(mContext, sInstance, type).loadData();
     }
 
     public void clear() {
@@ -111,6 +114,9 @@ public class AudioManager {
     }
 
     public void add(List<Song> songs, int type) {
+        if (songs == null || songs.isEmpty()) {
+            return;
+        }
         switch (type) {
         case INTERNAL_TYPE:
             mInteralSongs.addAll(songs);
