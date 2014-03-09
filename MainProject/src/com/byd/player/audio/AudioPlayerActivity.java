@@ -186,7 +186,7 @@ public class AudioPlayerActivity extends BaseActivity {
             songPath = mPlayingSong.getFilePath();
         } catch (NullPointerException ex) {
             ex.printStackTrace();
-            mPlayingSong = AudioManager.getInstance().getPlaySongAtPosition(mSongPosition);
+            mPlayingSong = AudioPlayerManager.getInstance().getSongAtPosition(mSongPosition);
             if (null == mPlayingSong) {
                 finish();
             }
