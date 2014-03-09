@@ -173,7 +173,7 @@ public class AudioPlayerActivity extends BaseActivity {
 
     private void initSong(int songPosition) {
         mSongPosition = songPosition;
-        mPlayingSong = AudioManager.getInstance().getPlaySongAtPosition(mSongPosition);
+        mPlayingSong = AudioPlayerManager.getInstance().getSongAtPosition(mSongPosition);
     }
 
     private void initViews() {
@@ -450,7 +450,7 @@ public class AudioPlayerActivity extends BaseActivity {
         if (null == mPopupAudioList) {
             mAudioListView = (ListView)mInflater.inflate(R.layout.list_audio, null);
             mPopupAudioList = new PopupWindow(mAudioListView, 350, LayoutParams.WRAP_CONTENT);
-            List<Song> songList = AudioManager.getInstance().getViewSongs();
+            List<Song> songList = AudioLoaderManager.getInstance().getViewSongs();
             mAudioList = new ArrayList<HashMap<String,String>>();
             for (Song song : songList) {
                 HashMap<String, String> map = new HashMap<String, String>();

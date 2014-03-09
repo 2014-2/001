@@ -40,10 +40,10 @@ public class AudioLoaderTask extends AsyncQueryHandler {
 
     public final static String[] DEF_SELECTION_ARGS = new String[] { "audio/mpeg", "audio/x-ms-wma" };
 
-    protected AudioManager mAudioManager;
+    protected AudioLoaderManager mAudioManager;
     private int mType;
 
-    public AudioLoaderTask(Context context, AudioManager am, int type) {
+    public AudioLoaderTask(Context context, AudioLoaderManager am, int type) {
         super(context.getContentResolver());
         mAudioManager = am;
         mType = type;
@@ -51,18 +51,18 @@ public class AudioLoaderTask extends AsyncQueryHandler {
 
     public void loadData() {
         switch (mType) {
-        case AudioManager.INTERNAL_TYPE:
+        case AudioLoaderManager.INTERNAL_TYPE:
             startQuery(0, (Object) null, MediaStore.Audio.Media.INTERNAL_CONTENT_URI,
                     AudioLoaderTask.DEF_PROJECTION, AudioLoaderTask.DEF_SELECTION_LOCAL,
                     AudioLoaderTask.DEF_SELECTION_ARGS, null);
             break;
 
-        case AudioManager.EXTERNAL_SDCARD_TYPE:
+        case AudioLoaderManager.EXTERNAL_SDCARD_TYPE:
             startQuery(0, (Object) null, MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
                     AudioLoaderTask.DEF_PROJECTION, AudioLoaderTask.DEF_SELECTION_SDCARD,
                     AudioLoaderTask.DEF_SELECTION_ARGS, null);
             break;
-        case AudioManager.EXTERNAL_USB_TYPE:
+        case AudioLoaderManager.EXTERNAL_USB_TYPE:
             startQuery(0, (Object) null, MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
                     AudioLoaderTask.DEF_PROJECTION, AudioLoaderTask.DEF_SELECTION_USB,
                     AudioLoaderTask.DEF_SELECTION_ARGS, null);

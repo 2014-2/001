@@ -8,11 +8,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.byd.player.R;
-import com.byd.player.audio.AudioManager.DataListener;
+import com.byd.player.audio.AudioLoaderManager.DataListener;
 import com.byd.player.utils.ToastUtils;
 
 public class AudioAdapter extends BaseAdapter implements DataListener {
@@ -26,7 +27,7 @@ public class AudioAdapter extends BaseAdapter implements DataListener {
     public AudioAdapter(Context context, LayoutInflater inflater) {
         mContext = context;
         mInflater = inflater;
-        AudioManager.getInstance().addDataListener(this);
+        AudioLoaderManager.getInstance().addDataListener(this);
     }
 
     public void setData(List<Song> data) {
@@ -45,7 +46,8 @@ public class AudioAdapter extends BaseAdapter implements DataListener {
             return;
         }
         mMode = mode;
-        if (AudioListActivity.MODE_NORMAL == mMode) {
+        onDataChange();
+        if (AudioListActivity.MODE_EDIT != mMode) {
             for (AudioItem item : mData) {
                 item.setSelected(false);
             }
@@ -98,6 +100,7 @@ public class AudioAdapter extends BaseAdapter implements DataListener {
             viewHolder.mIamgeAlbum = (ImageView) convertView.findViewById(R.id.audio_album);
             viewHolder.mTextAudioName = (TextView) convertView.findViewById(R.id.audio_name);
             viewHolder.mTextAudioSinger = (TextView) convertView.findViewById(R.id.audio_singer);
+            viewHolder.mCheckBox = (CheckBox) convertView.findViewById(R.id.audio_checkbox);
             // construct an item tag
             convertView.setTag(viewHolder);
         } else {
@@ -113,13 +116,13 @@ public class AudioAdapter extends BaseAdapter implements DataListener {
         viewHolder.mTextAudioName.setText(item.getAudioName());
         viewHolder.mTextAudioSinger.setText(item.getSinger());
 
-        if (isEditMode() && item.isSelected()) {
-            convertView.setSelected(item.isSelected());
-            convertView.setBackgroundResource(R.drawable.audio_item_selected);
+        if (isEditMode()) {
+            viewHolder.mCheckBox.setVisibility(View.VISIBLE);
+            viewHolder.mCheckBox.setChecked(item.isSelected());
         } else {
-            convertView.setSelected(item.isSelected());
-            convertView.setBackgroundResource(R.drawable.audio_item_selector);
+            viewHolder.mCheckBox.setVisibility(View.GONE);
         }
+
         return convertView;
     }
 
@@ -127,13 +130,14 @@ public class AudioAdapter extends BaseAdapter implements DataListener {
         ImageView mIamgeAlbum;
         TextView mTextAudioName;
         TextView mTextAudioSinger;
+        CheckBox mCheckBox;
     }
 
     @Override
     public void onDataChange() {
         List<Song> result = null;
         if (!isSearchMode()) {
-            result = AudioManager.getInstance().getViewSongs();
+            result = AudioLoaderManager.getInstance().getViewSongs();
         }
         if (result == null || result.isEmpty()) {
             ToastUtils.showToast(mContext, "未找到相关歌曲");

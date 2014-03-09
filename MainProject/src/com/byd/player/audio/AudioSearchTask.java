@@ -20,13 +20,13 @@ public class AudioSearchTask extends AudioLoaderTask {
     public void search(String text, int byWhich) {
         String selection = null;
         switch (byWhich) {
-        case AudioManager.SEARCH_BY_NAME:
+        case AudioLoaderManager.SEARCH_BY_NAME:
             selection = "(" + MediaStore.Audio.Media.MIME_TYPE + "=? or "
                     + MediaStore.Audio.Media.MIME_TYPE + "=?) and "
                     + MediaStore.Audio.Media.DISPLAY_NAME + " like '"
                     + text + "'";
             break;
-        case AudioManager.SEARCH_BY_SINGER:
+        case AudioLoaderManager.SEARCH_BY_SINGER:
             selection = "(" + MediaStore.Audio.Media.MIME_TYPE + "=? or "
                     + MediaStore.Audio.Media.MIME_TYPE + "=?) and "
                     + MediaStore.Audio.Media.ARTIST + " like '"

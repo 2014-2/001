@@ -7,8 +7,8 @@ import android.content.Context;
 
 import com.byd.player.audio.AudioDeleteAsyncTask.DeleteListener;
 
-public class AudioManager {
-    private static AudioManager sInstance = new AudioManager();
+public class AudioLoaderManager {
+    private static AudioLoaderManager sInstance = new AudioLoaderManager();
 
     public final static int INTERNAL_TYPE = AudioListActivity.TAB_INDEX_LOCAL;
     public final static int EXTERNAL_SDCARD_TYPE = AudioListActivity.TAB_INDEX_SDCARD;
@@ -22,7 +22,7 @@ public class AudioManager {
         List<Song> getSeletedSongs();
     }
 
-    private List<DataListener> mListeners = new ArrayList<AudioManager.DataListener>();
+    private List<DataListener> mListeners = new ArrayList<AudioLoaderManager.DataListener>();
 
     private Context mContext = null;
     private List<Song> mInteralSongs = new ArrayList<Song>();
@@ -32,14 +32,14 @@ public class AudioManager {
     private int mViewType = INTERNAL_TYPE;
     private int mPlayType = INTERNAL_TYPE;
 
-    private AudioManager() {
+    private AudioLoaderManager() {
     }
 
     public void init(Context context) {
         mContext = context;
     }
 
-    public static AudioManager getInstance() {
+    public static AudioLoaderManager getInstance() {
         return sInstance;
     }
 
@@ -145,43 +145,43 @@ public class AudioManager {
         }
     }
 
-    public Song getPlaySongAtPosition(int position) {
-        switch (mViewType) {
-        case INTERNAL_TYPE:
-            if (position < mInteralSongs.size()) {
-                return mInteralSongs.get(position);
-            }
-            break;
-        case EXTERNAL_SDCARD_TYPE:
-            if (position < mExtenalSDCARDSongs.size()) {
-                return mExtenalSDCARDSongs.get(position);
-            }
-            break;
-        case EXTERNAL_USB_TYPE:
-            if (position < mExtenalUSBSongs.size()) {
-                return mExtenalUSBSongs.get(position);
-            }
-            break;
-        default:
-            break;
-        }
-        return null;
-    }
-
-    public int getPlaySongsCount() {
-        switch (mViewType) {
-        case INTERNAL_TYPE:
-            return mInteralSongs.size();
-        case EXTERNAL_SDCARD_TYPE:
-            return mExtenalSDCARDSongs.size();
-        case EXTERNAL_USB_TYPE:
-            return mExtenalUSBSongs.size();
-        default:
-            break;
-        }
-        return 0;
-
-    }
+//    public Song getPlaySongAtPosition(int position) {
+//        switch (mViewType) {
+//        case INTERNAL_TYPE:
+//            if (position < mInteralSongs.size()) {
+//                return mInteralSongs.get(position);
+//            }
+//            break;
+//        case EXTERNAL_SDCARD_TYPE:
+//            if (position < mExtenalSDCARDSongs.size()) {
+//                return mExtenalSDCARDSongs.get(position);
+//            }
+//            break;
+//        case EXTERNAL_USB_TYPE:
+//            if (position < mExtenalUSBSongs.size()) {
+//                return mExtenalUSBSongs.get(position);
+//            }
+//            break;
+//        default:
+//            break;
+//        }
+//        return null;
+//    }
+//
+//    public int getPlaySongsCount() {
+//        switch (mViewType) {
+//        case INTERNAL_TYPE:
+//            return mInteralSongs.size();
+//        case EXTERNAL_SDCARD_TYPE:
+//            return mExtenalSDCARDSongs.size();
+//        case EXTERNAL_USB_TYPE:
+//            return mExtenalUSBSongs.size();
+//        default:
+//            break;
+//        }
+//        return 0;
+//
+//    }
 
     public void deleteSongs(List<Song> songs, DeleteListener listener) {
         switch (mViewType) {
@@ -195,9 +195,9 @@ public class AudioManager {
             mExtenalUSBSongs.removeAll(songs);
             break;
         }
-        notifyDataChange();
 
         new AudioDeleteAsyncTask(songs, listener).execute((Object) null);
+        notifyDataChange();
     }
 
     public void notifyDataChange() {

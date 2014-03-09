@@ -35,4 +35,15 @@
         android:textColor="#CCCC99"
         android:textSize="@dimen/music_singer_text__size" />
 
+    <CheckBox
+        android:id="@+id/audio_checkbox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:button="@drawable/my_check_box"
+        android:clickable="false"
+        android:focusable="false"
+        android:visibility="gone" />
+
 </RelativeLayout>

@@ -90,7 +90,7 @@ public class AudioPlayerService extends Service {
 
     private void changeToNext() {
         if (Constants.getRandomPlayStatus(getApplicationContext())) {
-            mSongPosition = getRandomIndex(AudioManager.getInstance().getPlaySongsCount());
+            mSongPosition = getRandomIndex(AudioPlayerManager.getInstance().getCount());
         } else {
             mSongPosition++;
         }
@@ -99,7 +99,7 @@ public class AudioPlayerService extends Service {
 
     private void changeToPrevious() {
         if (Constants.getRandomPlayStatus(getApplicationContext())) {
-            mSongPosition = getRandomIndex(AudioManager.getInstance().getPlaySongsCount());
+            mSongPosition = getRandomIndex(AudioPlayerManager.getInstance().getCount());
         } else {
             mSongPosition--;
         }
@@ -107,11 +107,11 @@ public class AudioPlayerService extends Service {
     }
 
     private void changeSong(int position) {
-        int size = AudioManager.getInstance().getPlaySongsCount();
+        int size = AudioPlayerManager.getInstance().getCount();
         mSongPosition = (mSongPosition + size) % size;
         mPlayer.reset();
         handler.removeMessages(HANDLER_MSG_UPDATE);
-        mPlayingSong = AudioManager.getInstance().getPlaySongAtPosition(mSongPosition);
+        mPlayingSong = AudioPlayerManager.getInstance().getSongAtPosition(mSongPosition);
         try {
             mPlayer.setDataSource(mPlayingSong.getFilePath());
             mPlayer.prepare();
@@ -175,7 +175,7 @@ public class AudioPlayerService extends Service {
         switch (action) {
             case Constants.PlayerCommand.PLAY:
                 mSongPosition = intent.getIntExtra(Constants.MUSIC_SONG_POSITION, -1);
-                Song song = AudioManager.getInstance().getPlaySongAtPosition(mSongPosition);
+                Song song = AudioPlayerManager.getInstance().getSongAtPosition(mSongPosition);
                 if (!song.equals(mPlayingSong)) {
                     if (isPlaying()) {
                         mPlayer.stop();
