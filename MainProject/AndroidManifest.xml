@@ -23,7 +23,8 @@
             android:name="com.byd.player.BrowserActivity"
             android:label="@string/app_name"
             android:screenOrientation="landscape"
-            android:icon="@drawable/launch_video" >
+            android:icon="@drawable/launch_video"
+            android:launchMode="singleTask" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -38,7 +39,8 @@
             android:name="com.byd.player.audio.AudioListActivity"
             android:icon="@drawable/launch_music"
             android:label="@string/audio_page"
-            android:theme="@android:style/Theme.DeviceDefault" >
+            android:theme="@android:style/Theme.DeviceDefault"
+            android:launchMode="singleTask" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
