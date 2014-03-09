@@ -181,7 +181,16 @@ public class AudioPlayerActivity extends BaseActivity {
             mSongInfoAndLyricsContainer = (LinearLayout)findViewById(R.id.ll_song_info_and_lyrics);
         }
         mSongInfoAndLyricsContainer.removeAllViews();
-        String songPath = mPlayingSong.getFilePath();
+        String songPath = "";
+        try {
+            songPath = mPlayingSong.getFilePath();
+        } catch (NullPointerException ex) {
+            ex.printStackTrace();
+            mPlayingSong = AudioManager.getInstance().getPlaySongAtPosition(mSongPosition);
+            if (null == mPlayingSong) {
+                onBackPressed();
+            }
+        }
         String lrcPath = LrcUtils.replaceExtensionToLrc(songPath);
         mDisplayLyrics = LrcUtils.isLrcFileExist(lrcPath);
         if (mDisplayLyrics) {
@@ -328,7 +337,7 @@ public class AudioPlayerActivity extends BaseActivity {
                         mVolumeSeekbar.setMax(mAudioMgr
                                 .getStreamMaxVolume(android.media.AudioManager.STREAM_MUSIC));
                         mPopupVolume.showAtLocation(mSongInfoAndLyricsContainer, Gravity.RIGHT,
-                                20, 0);
+                                20, 30);
                         mPopupVolume.update();
                     } else if (mPopupVolume.isShowing()) {
                         mPopupVolume.dismiss();
@@ -428,7 +437,7 @@ public class AudioPlayerActivity extends BaseActivity {
                                 mAudioFxGroup.check(R.id.fx_none);
                                 break;
                         }
-                        mPopupAudioFx.showAsDropDown(v, 0, -450);
+                        mPopupAudioFx.showAsDropDown(v, -40, -390);
                     } else if (mPopupAudioFx.isShowing()) {
                         mPopupAudioFx.dismiss();
                     }

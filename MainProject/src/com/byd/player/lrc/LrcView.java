@@ -87,7 +87,7 @@ public class LrcView extends TextView {
                 String[] separateStrings = mLrcList.get(index).getLrcStr().split(" ");
                 if (separateStrings.length > 1) {
                     // 外文歌词太长分割显示
-                    int column = separateStrings.length / rows + 1;
+                    int column = (int)Math.ceil(separateStrings.length / (double)rows);;
                     String[][] words = new String[rows][column];
                     String[] sentences = new String[rows];
                     for (int i = 0; i < separateStrings.length; i++) {
@@ -111,7 +111,7 @@ public class LrcView extends TextView {
                 } else {
                     // 中文歌词太长分割显示
                     String singleString = separateStrings[0];
-                    int column = singleString.length() / rows + 1;
+                    int column = (int)Math.ceil(singleString.length() / (double)rows);
                     String[][] words = new String[rows][column];
                     String[] sentences = new String[rows];
                     for (int i = 0; i < singleString.length(); i++) {
