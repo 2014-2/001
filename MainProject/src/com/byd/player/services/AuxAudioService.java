@@ -11,7 +11,7 @@ import com.byd.player.receiver.DeviceConnReceiver;
 import com.byd.player.receiver.DeviceConnReceiver.AuxConnectListener;
 
 public class AuxAudioService extends Service {
-    private static final boolean DEBUG = true;
+    private static final boolean DEBUG = false;
 
     private static final String SERVICE_TAG = "audiochannel-aux";
 
@@ -47,7 +47,7 @@ public class AuxAudioService extends Service {
     }
 
     private void startAudioChannelService() {
-        Intent service = new Intent(this, AudioChannelService.class);
+        Intent service = new Intent(AuxAudioService.this, AudioChannelService.class);
         service.putExtra("service_tag", SERVICE_TAG);
         startService(service);
     }
