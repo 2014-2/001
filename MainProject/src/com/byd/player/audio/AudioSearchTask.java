@@ -1,5 +1,6 @@
 package com.byd.player.audio;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Context;
@@ -7,10 +8,19 @@ import android.database.Cursor;
 import android.provider.MediaStore;
 
 public class AudioSearchTask extends AudioLoaderTask {
-    public interface SearchListener{
+    public interface SearchListener {
         void onSearchComplete(List<Song> result);
     }
+
     private SearchListener mListener = null;
+
+    private final int QUERY_EMPTY = 0;
+    private final int QUERY_INTERNAL = 1;
+    private final int QUERY_EXTENRAL = 2;
+
+    private int mQueryStep = QUERY_EMPTY;
+    private List<Song> mQueryResult = new ArrayList<Song>();
+    private String mSelection = null;
 
     public AudioSearchTask(Context context, SearchListener listener) {
         super(context, null, -1);
@@ -18,40 +28,49 @@ public class AudioSearchTask extends AudioLoaderTask {
     }
 
     public void search(String text, int byWhich) {
-        String selection = null;
         switch (byWhich) {
         case AudioLoaderManager.SEARCH_BY_NAME:
-            selection = "(" + MediaStore.Audio.Media.MIME_TYPE + "=? or "
+            mSelection = "(" + MediaStore.Audio.Media.MIME_TYPE + "=? or "
                     + MediaStore.Audio.Media.MIME_TYPE + "=?) and "
-                    + MediaStore.Audio.Media.DISPLAY_NAME + " like '"
-                    + text + "'";
+                    + MediaStore.Audio.Media.DISPLAY_NAME + " like '" + text + "'";
             break;
         case AudioLoaderManager.SEARCH_BY_SINGER:
-            selection = "(" + MediaStore.Audio.Media.MIME_TYPE + "=? or "
-                    + MediaStore.Audio.Media.MIME_TYPE + "=?) and "
-                    + MediaStore.Audio.Media.ARTIST + " like '"
-                    + text + "'";
+        default:
+            mSelection = "(" + MediaStore.Audio.Media.MIME_TYPE + "=? or "
+                    + MediaStore.Audio.Media.MIME_TYPE + "=?) and " + MediaStore.Audio.Media.ARTIST
+                    + " like '" + text + "'";
             break;
         }
+        mQueryStep = QUERY_INTERNAL;
+        mQueryResult.clear();
         startQuery(0, (Object) null, MediaStore.Audio.Media.INTERNAL_CONTENT_URI,
-                AudioLoaderTask.DEF_PROJECTION, selection,
-                AudioLoaderTask.DEF_SELECTION_ARGS, null);
+                AudioLoaderTask.DEF_PROJECTION, mSelection, AudioLoaderTask.DEF_SELECTION_ARGS,
+                null);
     }
 
     @Override
     protected void onQueryComplete(int token, Object cookie, Cursor cursor) {
-        List<Song> songs = null;
-        if (cursor == null) {
-            mListener.onSearchComplete(songs);
-            return;
-        }
         try {
-            if (cursor.moveToFirst()) {
-                songs = getSongs(cursor);
+            if (cursor != null && cursor.moveToFirst()) {
+                List<Song> songs = getSongs(cursor);
+                if (songs != null) {
+                    mQueryResult.addAll(songs);
+                }
             }
         } finally {
-            mListener.onSearchComplete(songs);
-            cursor.close();
+            if (cursor != null) {
+                cursor.close();
+            }
+
+            if (mQueryStep == QUERY_INTERNAL) {
+                mQueryStep = QUERY_EXTENRAL;
+                startQuery(0, (Object) null, MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
+                        AudioLoaderTask.DEF_PROJECTION, mSelection,
+                        AudioLoaderTask.DEF_SELECTION_ARGS, null);
+            } else {
+                mListener.onSearchComplete(mQueryResult);
+                mQueryStep = QUERY_EMPTY;
+            }
         }
     }
 

@@ -109,7 +109,7 @@ public class AudioListActivity extends BaseActivity implements OnItemClickListen
 
         registerMediaStoreChangedObserver();
 
-        startService(new Intent(this, AuxAudioService.class));
+//        startService(new Intent(this, AuxAudioService.class));
     }
 
     private void initViews() {
