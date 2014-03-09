@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@drawable/bg_aux_and_bt" 
+    android:background="@drawable/bg_bt_music" 
     tools:context=".BTConnect" >
 	<include 
 	    android:id="@+id/ly_title_for_bt_connect"

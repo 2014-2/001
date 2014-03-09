@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_bt_play"
+    android:background="@drawable/bg_bt_music"
     android:orientation="vertical" >
 
 	<include 
@@ -15,7 +15,7 @@
         android:layout_height="wrap_content"
         android:paddingLeft="400dp"
         android:paddingRight="400dp"
-        android:paddingTop="200dp"
+        android:paddingTop="150dp"
         android:gravity="center"
         android:orientation="horizontal">
 
