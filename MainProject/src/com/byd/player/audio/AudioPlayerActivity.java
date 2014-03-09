@@ -188,7 +188,7 @@ public class AudioPlayerActivity extends BaseActivity {
             ex.printStackTrace();
             mPlayingSong = AudioManager.getInstance().getPlaySongAtPosition(mSongPosition);
             if (null == mPlayingSong) {
-                onBackPressed();
+                finish();
             }
         }
         String lrcPath = LrcUtils.replaceExtensionToLrc(songPath);
