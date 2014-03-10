@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.media.AudioManager;
+import android.media.AudioManager.OnAudioFocusChangeListener;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
@@ -33,6 +34,7 @@ import com.byd.player.bluetooth.BtActionManager.BtCmdEnum;
 import com.byd.player.services.AudioChannelService;
 import com.byd.player.services.AudioChannelService.AudioChannelBinder;
 import com.byd.player.services.BtService;
+import com.byd.player.video.VideoView;
 import com.byd.player.view.CheckableImageView;
 
 public class BTPlayerActivity extends BaseActivity {
@@ -74,13 +76,33 @@ public class BTPlayerActivity extends BaseActivity {
     private PlayerReceiver mPlayerReceiver;
 
     private Intent mAudioServiceIntent;
+    
+    private AudioManager audioManager;
 
     static public AudioChannelService BtChannelSrv;
 
     private static final String SERVICE_TAG = "audiochannel-bt";
 
     private boolean isChannelSrvBinded=false;
-
+    
+	OnAudioFocusChangeListener afChangeListener = new OnAudioFocusChangeListener() {  
+	    public void onAudioFocusChange(int focusChange) {  
+	        if (focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT) {
+	            // Pause bt playback 
+	            BTpause();
+	        } else if (focusChange == AudioManager.AUDIOFOCUS_LOSS) {  
+	            audioManager.abandonAudioFocus(afChangeListener);  
+	            // Pause bt playback  
+	            BTpause();
+	        } else if (focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK) {  
+	            // Lower the volume  
+	        } else if (focusChange == AudioManager.AUDIOFOCUS_GAIN) {  
+	            // Resume bt playback  
+	        	BTcontinuePlay();
+	        }
+	    }  
+	}; 
+	
     private ServiceConnection mBTChannelSrv = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName className, IBinder service) {
@@ -105,6 +127,7 @@ public class BTPlayerActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        BTpause();
         unregisterBroadcast();
         /*
         if (mBTChannelSrv != null){
@@ -304,6 +327,7 @@ public class BTPlayerActivity extends BaseActivity {
             Log.e(BTMUSIC, "pause music failed!");
         } else {
             Log.i(BTMUSIC, "music should be paused right now!");
+            audioManager.abandonAudioFocus(afChangeListener);
         }
         updatePlayPauseBtn(false);
     }
@@ -313,6 +337,8 @@ public class BTPlayerActivity extends BaseActivity {
             Log.e(BTMUSIC, "play music failed!");
         } else {
             Log.i(BTMUSIC, "music should be played right now!");
+            audioManager.requestAudioFocus(afChangeListener, 
+		            AudioManager.AUDIOFOCUS_GAIN_TRANSIENT, AudioManager.AUDIOFOCUS_GAIN_TRANSIENT_MAY_DUCK);
         }
         updatePlayPauseBtn(true);
     }
