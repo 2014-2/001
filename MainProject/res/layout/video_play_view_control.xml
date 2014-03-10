@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:clickable="true"
-        android:background="@drawable/footer_bg" >
+        android:background="@drawable/footer_bg_space" >
 
         <ImageButton
             android:id="@+id/btnPlayPause"
