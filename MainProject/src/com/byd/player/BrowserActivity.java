@@ -378,7 +378,7 @@ public class BrowserActivity extends BaseActivity implements OnClickListener {
             buttonHeaderLeft.setVisibility(View.VISIBLE);
             ((TextView) buttonHeaderRight).setText(R.string.cancel);
         } else {
-            buttonHeaderLeft.setVisibility(View.GONE);
+            buttonHeaderLeft.setVisibility(View.INVISIBLE);
             ((TextView) buttonHeaderRight).setText(R.string.edit);
         }
     }
