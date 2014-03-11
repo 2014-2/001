@@ -9,7 +9,8 @@
         android:id="@+id/audio_player_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true" >
+        android:layout_alignParentTop="true"
+        android:background="@drawable/audio_progress_bg" >
 
         <include
             android:id="@+id/header_bar"
@@ -18,9 +19,11 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="76px"
+            android:layout_height="wrap_content"
             android:layout_below="@id/header_bar"
-            android:background="#CF000000" >
+            android:layout_marginTop="-15dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp" >
 
             <TextView
                 android:id="@+id/audio_playing_time"
@@ -29,8 +32,9 @@
                 android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="30dp"
+                android:textColor="@android:color/white"
                 android:text="00:00"
-                android:textSize="30sp" />
+                android:textSize="25sp" />
 
             <TextView
                 android:id="@+id/audio_total_time"
@@ -39,12 +43,13 @@
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="30dp"
+                android:textColor="@android:color/white"
                 android:text="00:00"
-                android:textSize="30sp" />
+                android:textSize="25sp" />
 
             <SeekBar
                 android:id="@+id/audio_seekbar"
-                style="@style/style_seekbar"
+                style="@style/style_audio_seekbar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
@@ -53,13 +58,6 @@
                 android:layout_toLeftOf="@id/audio_total_time"
                 android:layout_toRightOf="@id/audio_playing_time" />
         </RelativeLayout>
-
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/header_bar"
-            android:layout_marginTop="-26px"
-            android:background="@drawable/line1" />
     </RelativeLayout>
 
     <LinearLayout
@@ -67,10 +65,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:background="@drawable/bg_audio_player_bar"
+        android:paddingLeft="6dp"
+        android:background="@drawable/audio_control_bar_bg"
         android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:paddingTop="25dp" >
+        android:orientation="horizontal" >
 
         <LinearLayout
             android:layout_width="0dp"
@@ -170,6 +168,12 @@
                 android:src="@drawable/icon_audio_volume_selector" />
         </LinearLayout>
     </LinearLayout>
+    
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="24dp"
+        android:layout_above="@id/btn_container"
+        android:background="@drawable/audio_control_bar_top" />
 
     <LinearLayout
         android:id="@+id/audio_container"
@@ -184,16 +188,29 @@
         android:paddingRight="60dp"
         android:paddingTop="20dp" >
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="@drawable/ablum_pic" >
-        </LinearLayout>
+            android:layout_weight="1" >
+            <ImageView android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_alignParentBottom="true"
+                android:src="@drawable/audio_ablum_bottom" />
+            <ImageView android:layout_width="231px"
+                android:layout_height="249px"
+                android:layout_centerInParent="true"
+                android:src="@drawable/audio_album_bg" />
+            <ImageView android:layout_width="232px"
+                android:layout_height="266px"
+                android:layout_centerInParent="true"
+                android:src="@drawable/ablum_school"
+                android:background="@drawable/audio_ablum_frame" />
+        </RelativeLayout>
 
         <LinearLayout
             android:layout_width="0dp"
-            android:layout_height="match_parent"
+            android:layout_height="250dp"
             android:layout_weight="1"
             android:id="@+id/ll_song_info_and_lyrics"
             android:background="@drawable/bg_lyrics"

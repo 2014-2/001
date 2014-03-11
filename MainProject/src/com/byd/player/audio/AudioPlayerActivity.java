@@ -21,7 +21,7 @@ import android.view.ViewGroup.LayoutParams;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -111,13 +111,13 @@ public class AudioPlayerActivity extends BaseActivity {
 
     List<LrcContent> mLrcList;
 
-    private Button mBtnBack;
+    private ImageButton mBtnBack;
 
     private ListView mAudioListView;
 
     private List<HashMap<String, String>> mAudioList;
 
-    private Button mBtnAudioList;
+    private ImageButton mBtnAudioList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -447,7 +447,7 @@ public class AudioPlayerActivity extends BaseActivity {
         }
 
         if (null == mBtnBack) {
-            mBtnBack = (Button)findViewById(R.id.button_audio_header_back);
+            mBtnBack = (ImageButton)findViewById(R.id.button_audio_header_back);
             mBtnBack.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -483,7 +483,7 @@ public class AudioPlayerActivity extends BaseActivity {
         }
 
         if (null == mBtnAudioList) {
-            mBtnAudioList = (Button)findViewById(R.id.button_header_list);
+            mBtnAudioList = (ImageButton)findViewById(R.id.button_header_list);
             mBtnAudioList.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {

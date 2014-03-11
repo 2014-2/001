@@ -2,39 +2,40 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/head"
-    android:paddingBottom="5dp"
+    android:background="@drawable/audio_player_header_bg"
+    android:paddingBottom="24dp"
     android:paddingTop="5dp" >
 
-    <Button
+    <ImageButton
         android:id="@+id/button_audio_header_back"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:layout_centerVertical="true"
         android:layout_marginLeft="10dp"
-        android:background="@drawable/button_back"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/button"
+        android:src="@drawable/btn_reback"
         android:clickable="true" />
 
-    <Button
+    <ImageButton
         android:id="@+id/button_header_list"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
         android:layout_marginRight="10dp"
+        android:layout_marginBottom="10dp"
         android:background="@drawable/button"
-        android:clickable="true"
-        android:text="列表"
-        android:textColor="@android:color/white" />
+        android:src="@drawable/icon_audio_list"
+        android:clickable="true" />
 
     <TextView
         android:id="@+id/tv_header_title"
         style="@style/header_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:text="@string/audio_player"
-        android:textSize="20sp" />
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="20dp"
+        android:text="@string/audio_player" />
 
 </RelativeLayout>

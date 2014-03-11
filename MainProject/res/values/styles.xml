@@ -54,6 +54,22 @@
         <item name="android:secondaryProgress">0</item>
         <item name="android:thumb">@drawable/button_control</item>
     </style>
+    
+    <style name="style_audio_seekbar">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">32dp</item>
+        <item name="android:layout_gravity">center_vertical</item>
+        <item name="android:maxHeight">8dp</item>
+        <item name="android:minHeight">8dp</item>
+        <item name="android:paddingLeft">15dp</item>
+        <item name="android:layout_marginTop">5dp</item>
+        <item name="android:layout_marginBottom">5dp</item>
+        <item name="android:paddingRight">15dp</item>
+        <item name="android:progress">0</item>
+        <item name="android:progressDrawable">@drawable/audio_progress_horizontal</item>
+        <item name="android:secondaryProgress">0</item>
+        <item name="android:thumb">@drawable/audio_seekbar_thumb</item>
+    </style>
 
     <style name="header_text">
         <item name="android:textColor">@android:color/white</item>
