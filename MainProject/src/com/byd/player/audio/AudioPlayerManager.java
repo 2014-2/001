@@ -20,6 +20,7 @@ public class AudioPlayerManager {
             return;
         }
 
+        mPlayerList.clear();
         mPlayerList.addAll(songs);
         mPlayerPosition = 0;
     }
