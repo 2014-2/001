@@ -11,6 +11,7 @@ import android.media.audiofx.Equalizer;
 import android.os.Binder;
 import android.os.Handler;
 import android.os.IBinder;
+import android.widget.Toast;
 
 import com.byd.player.config.Constants;
 
@@ -89,21 +90,61 @@ public class AudioPlayerService extends Service {
     }
 
     private void changeToNext() {
-        if (Constants.getRandomPlayStatus(getApplicationContext())) {
-            mSongPosition = getRandomIndex(AudioPlayerManager.getInstance().getCount());
-        } else {
-            mSongPosition++;
+        boolean isPlayOrderChecked = Constants.isPlayOrderChecked(getApplicationContext());
+        boolean isLoopModeChecked = Constants.isLoopModeChecked(getApplicationContext());
+        int status = -1;
+        if (isPlayOrderChecked && !isLoopModeChecked) {
+            status = Constants.getPlayOrder(getApplicationContext());
+        } else if (!isPlayOrderChecked && isLoopModeChecked) {
+            status = Constants.getLoopMode(getApplicationContext());
         }
-        changeSong(mSongPosition);
+        switch (status) {
+            case Constants.PlayOrder.ORDER_PLAY:
+                mSongPosition++;
+                if (mSongPosition < AudioPlayerManager.getInstance().getCount()) {
+                    changeSong(mSongPosition);
+                } else {
+                    Toast.makeText(getApplicationContext(), "已经是最后一首歌曲", Toast.LENGTH_SHORT).show();
+                    mSongPosition--;
+                }
+                break;
+            case Constants.PlayOrder.RANDOM_PLAY:
+                mSongPosition = getRandomIndex(AudioPlayerManager.getInstance().getCount());
+                changeSong(mSongPosition);
+                break;
+            case Constants.LoopMode.SINGLE_LOOP:
+                changeSong(mSongPosition);
+                break;
+            case Constants.LoopMode.LIST_LOOP:
+            default:
+                mSongPosition++;
+                changeSong(mSongPosition);
+        }
     }
 
     private void changeToPrevious() {
-        if (Constants.getRandomPlayStatus(getApplicationContext())) {
-            mSongPosition = getRandomIndex(AudioPlayerManager.getInstance().getCount());
-        } else {
-            mSongPosition--;
+        boolean isPlayOrderChecked = Constants.isPlayOrderChecked(getApplicationContext());
+        boolean isLoopModeChecked = Constants.isLoopModeChecked(getApplicationContext());
+        int status = -1;
+        if (isPlayOrderChecked && !isLoopModeChecked) {
+            status = Constants.getPlayOrder(getApplicationContext());
+        } else if (!isPlayOrderChecked && isLoopModeChecked) {
+            status = Constants.getLoopMode(getApplicationContext());
         }
-        changeSong(mSongPosition);
+        switch (status) {
+            case Constants.PlayOrder.RANDOM_PLAY:
+                mSongPosition = getRandomIndex(AudioPlayerManager.getInstance().getCount());
+                changeSong(mSongPosition);
+                break;
+            case Constants.LoopMode.SINGLE_LOOP:
+                changeSong(mSongPosition);
+                break;
+            case Constants.PlayOrder.ORDER_PLAY:
+            case Constants.LoopMode.LIST_LOOP:
+            default:
+                mSongPosition--;
+                changeSong(mSongPosition);
+        }
     }
 
     private void changeSong(int position) {
@@ -152,11 +193,7 @@ public class AudioPlayerService extends Service {
         mPlayer.setOnCompletionListener(new OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mp) {
-                if (Constants.getSingleLoopStatus(getApplicationContext())) {
-                    mPlayer.start();
-                } else {
-                    changeToNext();
-                }
+                changeToNext();
             }
         });
 

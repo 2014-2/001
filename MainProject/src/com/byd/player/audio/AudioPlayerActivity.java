@@ -32,6 +32,7 @@ import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.byd.player.BaseActivity;
 import com.byd.player.R;
@@ -75,9 +76,9 @@ public class AudioPlayerActivity extends BaseActivity {
 
     private ImageView mBtnPrevious;
 
-    private CheckableImageView mBtnRandomPlay;
+    private CheckableImageView mBtnPlayOrder;
 
-    private CheckableImageView mBtnSingleLoop;
+    private CheckableImageView mBtnLoopMode;
 
     private CheckableImageView mBtnAudioFx;
 
@@ -141,8 +142,8 @@ public class AudioPlayerActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        mBtnRandomPlay.setChecked(Constants.getRandomPlayStatus(this));
-        mBtnSingleLoop.setChecked(Constants.getSingleLoopStatus(this));
+        mBtnPlayOrder.setChecked(Constants.isPlayOrderChecked(this));
+        mBtnLoopMode.setChecked(Constants.isLoopModeChecked(this));
     }
 
     @Override
@@ -272,28 +273,124 @@ public class AudioPlayerActivity extends BaseActivity {
             });
         }
 
-        if (null == mBtnRandomPlay) {
-            mBtnRandomPlay = (CheckableImageView)findViewById(R.id.btn_audio_random_play);
-            mBtnRandomPlay.setOnClickListener(new OnClickListener() {
+        if (null == mBtnPlayOrder) {
+            mBtnPlayOrder = (CheckableImageView)findViewById(R.id.btn_audio_random_play);
+            mBtnPlayOrder.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    boolean isChecked = mBtnRandomPlay.isChecked();
-                    Constants.setRandomPlayStatus(getApplicationContext(), !isChecked);
-                    mBtnRandomPlay.setChecked(!isChecked);
+                    boolean isChecked = mBtnPlayOrder.isChecked();
+                    int playOrder = Constants.getPlayOrder(getApplicationContext());
+                    if (!isChecked) {
+                        Constants.setCheckedStatus(getApplicationContext(), Constants.PREF_PLAY_ORDER_STATUS, true);
+                        mBtnPlayOrder.setChecked(true);
+                        switch (playOrder) {
+                            case Constants.PlayOrder.ORDER_PLAY:
+                                Toast.makeText(getApplicationContext(), "顺序播放", Toast.LENGTH_SHORT)
+                                .show();
+                                break;
+                            case Constants.PlayOrder.RANDOM_PLAY:
+                                Toast.makeText(getApplicationContext(), "随机播放", Toast.LENGTH_SHORT)
+                                .show();
+                                break;
+                        }
+                        Constants.setCheckedStatus(getApplicationContext(),
+                                Constants.PREF_LOOP_MODE_STATUS, false);
+                        mBtnLoopMode.setChecked(false);
+                    } else {
+                        // Change the play order if the button is checked
+                        switch (playOrder){
+                            case Constants.PlayOrder.ORDER_PLAY:
+                                Constants.setPlayOrder(getApplicationContext(),
+                                        Constants.PlayOrder.RANDOM_PLAY);
+                                mBtnPlayOrder.setImageResource(R.drawable.icon_audio_random_play_selector);
+                                Toast.makeText(getApplicationContext(), "随机播放", Toast.LENGTH_SHORT)
+                                .show();
+                                break;
+                            case Constants.PlayOrder.RANDOM_PLAY:
+                                Constants.setPlayOrder(getApplicationContext(),
+                                        Constants.PlayOrder.ORDER_PLAY);
+                                mBtnPlayOrder.setImageResource(R.drawable.icon_audio_order_play_selector);
+                                Toast.makeText(getApplicationContext(), "顺序播放", Toast.LENGTH_SHORT)
+                                .show();
+                                break;
+                        }
+                        Constants.setCheckedStatus(getApplicationContext(), Constants.PREF_LOOP_MODE_STATUS, false);
+                        mBtnLoopMode.setChecked(false);
+                    }
                 }
             });
         }
+        // Init play order status
+        mBtnPlayOrder.setChecked(Constants.isPlayOrderChecked(getApplicationContext()));
+        switch (Constants.getPlayOrder(getApplicationContext())) {
+            case Constants.PlayOrder.ORDER_PLAY:
+                mBtnPlayOrder.setImageResource(R.drawable.icon_audio_order_play_selector);
+                break;
+            case Constants.PlayOrder.RANDOM_PLAY:
+                mBtnPlayOrder.setImageResource(R.drawable.icon_audio_random_play_selector);
+                break;
+        }
 
-        if (null == mBtnSingleLoop) {
-            mBtnSingleLoop = (CheckableImageView)findViewById(R.id.btn_audio_single_loop);
-            mBtnSingleLoop.setOnClickListener(new OnClickListener() {
+        if (null == mBtnLoopMode) {
+            mBtnLoopMode = (CheckableImageView)findViewById(R.id.btn_audio_single_loop);
+            mBtnLoopMode.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    boolean isChecked = mBtnSingleLoop.isChecked();
-                    Constants.setSingleLoopStatus(getApplicationContext(), !isChecked);
-                    mBtnSingleLoop.setChecked(!isChecked);
+                    boolean isChecked = mBtnLoopMode.isChecked();
+                    int loopMode = Constants.getLoopMode(getApplicationContext());
+                    if (!isChecked) {
+                        Constants.setCheckedStatus(getApplicationContext(),
+                                Constants.PREF_LOOP_MODE_STATUS, true);
+                        mBtnLoopMode.setChecked(true);
+                        switch (loopMode) {
+                            case Constants.LoopMode.LIST_LOOP:
+                                Toast.makeText(getApplicationContext(), "列表循环", Toast.LENGTH_SHORT)
+                                .show();
+                                break;
+                            case Constants.LoopMode.SINGLE_LOOP:
+                                Toast.makeText(getApplicationContext(), "单曲循环", Toast.LENGTH_SHORT)
+                                .show();
+                                break;
+                        }
+                        Constants.setCheckedStatus(getApplicationContext(),
+                                Constants.PREF_PLAY_ORDER_STATUS, false);
+                        mBtnPlayOrder.setChecked(false);
+                    } else {
+                        // Change the loop mode if the button is checked
+                        switch (loopMode) {
+                            case Constants.LoopMode.LIST_LOOP:
+                                Constants.setLoopMode(getApplicationContext(),
+                                        Constants.LoopMode.SINGLE_LOOP);
+                                mBtnLoopMode
+                                .setImageResource(R.drawable.icon_audio_single_loop_selector);
+                                Toast.makeText(getApplicationContext(), "单曲循环", Toast.LENGTH_SHORT)
+                                .show();
+                                break;
+                            case Constants.LoopMode.SINGLE_LOOP:
+                                Constants.setLoopMode(getApplicationContext(),
+                                        Constants.LoopMode.LIST_LOOP);
+                                mBtnLoopMode
+                                .setImageResource(R.drawable.icon_audio_list_loop_selector);
+                                Toast.makeText(getApplicationContext(), "列表循环", Toast.LENGTH_SHORT)
+                                .show();
+                                break;
+                        }
+                        Constants.setCheckedStatus(getApplicationContext(),
+                                Constants.PREF_PLAY_ORDER_STATUS, false);
+                        mBtnPlayOrder.setChecked(false);
+                    }
                 }
             });
+        }
+        // Init loop mode status
+        mBtnLoopMode.setChecked(Constants.isLoopModeChecked(getApplicationContext()));
+        switch (Constants.getLoopMode(getApplicationContext())) {
+            case Constants.LoopMode.LIST_LOOP:
+                mBtnLoopMode.setImageResource(R.drawable.icon_audio_list_loop_selector);
+                break;
+            case Constants.LoopMode.SINGLE_LOOP:
+                mBtnLoopMode.setImageResource(R.drawable.icon_audio_single_loop_selector);
+                break;
         }
 
         if (null == mPopupVolume) {

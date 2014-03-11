@@ -17,9 +17,13 @@ public class Constants {
 
     private static final String AUDIO_PREF = "audio.pref";
 
-    private static final String PREF_SINGLE_LOOP = "single_loop";
+    private static final String PREF_PLAY_ORDER = "play_order";
 
-    private static final String PREF_RANDOM_PLAY = "random_play";
+    public static final String PREF_PLAY_ORDER_STATUS = "play_order_status";
+
+    private static final String PREF_LOOP_MODE = "loop_mode";
+
+    public static final String PREF_LOOP_MODE_STATUS = "loop_mode_status";
 
     private static final String PREF_AUDIO_FX = "audio_fx";
 
@@ -96,24 +100,51 @@ public class Constants {
         {-200, 400, 1000, 200, -400} // ROCK
     };
 
-    public static final boolean getSingleLoopStatus(Context context) {
-        SharedPreferences pref = context.getSharedPreferences(AUDIO_PREF, Context.MODE_PRIVATE);
-        return pref.getBoolean(PREF_SINGLE_LOOP, false);
+    public class PlayOrder {
+        public static final int ORDER_PLAY = 0;
+
+        public static final int RANDOM_PLAY = 1;
     }
 
-    public static final void setSingleLoopStatus(Context context, boolean isSingleLoop) {
-        SharedPreferences pref = context.getSharedPreferences(AUDIO_PREF, Context.MODE_PRIVATE);
-        pref.edit().putBoolean(PREF_SINGLE_LOOP, isSingleLoop).commit();
+    public class LoopMode {
+        public static final int LIST_LOOP = 2;
+
+        public static final int SINGLE_LOOP = 3;
     }
 
-    public static final boolean getRandomPlayStatus(Context context) {
+    public static final int getPlayOrder(Context context) {
         SharedPreferences pref = context.getSharedPreferences(AUDIO_PREF, Context.MODE_PRIVATE);
-        return pref.getBoolean(PREF_RANDOM_PLAY, false);
+        return pref.getInt(PREF_PLAY_ORDER, PlayOrder.ORDER_PLAY);
     }
 
-    public static final void setRandomPlayStatus(Context context, boolean isRandomPlay) {
+    public static final void setPlayOrder(Context context, int order) {
         SharedPreferences pref = context.getSharedPreferences(AUDIO_PREF, Context.MODE_PRIVATE);
-        pref.edit().putBoolean(PREF_RANDOM_PLAY, isRandomPlay).commit();
+        pref.edit().putInt(PREF_PLAY_ORDER, order).commit();
+    }
+
+    public static final int getLoopMode(Context context) {
+        SharedPreferences pref = context.getSharedPreferences(AUDIO_PREF, Context.MODE_PRIVATE);
+        return pref.getInt(PREF_LOOP_MODE, LoopMode.LIST_LOOP);
+    }
+
+    public static final void setLoopMode(Context context, int mode) {
+        SharedPreferences pref = context.getSharedPreferences(AUDIO_PREF, Context.MODE_PRIVATE);
+        pref.edit().putInt(PREF_LOOP_MODE, mode).commit();
+    }
+
+    public static final boolean isPlayOrderChecked(Context context) {
+        SharedPreferences pref = context.getSharedPreferences(AUDIO_PREF, Context.MODE_PRIVATE);
+        return pref.getBoolean(PREF_PLAY_ORDER_STATUS, true);
+    }
+
+    public static final boolean isLoopModeChecked(Context context) {
+        SharedPreferences pref = context.getSharedPreferences(AUDIO_PREF, Context.MODE_PRIVATE);
+        return pref.getBoolean(PREF_LOOP_MODE_STATUS, false);
+    }
+
+    public static final void setCheckedStatus(Context context, String key, boolean isChecked) {
+        SharedPreferences pref = context.getSharedPreferences(AUDIO_PREF, Context.MODE_PRIVATE);
+        pref.edit().putBoolean(key, isChecked).commit();
     }
 
     public static final int getAudioFx(Context context) {

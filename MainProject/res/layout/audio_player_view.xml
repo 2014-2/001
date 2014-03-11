@@ -60,6 +60,13 @@
         </RelativeLayout>
     </RelativeLayout>
 
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="60dp"
+        android:layout_marginTop="330dp"
+        android:src="@drawable/audio_ablum_bottom" />
+
     <LinearLayout
         android:id="@+id/btn_container"
         android:layout_width="match_parent"
@@ -80,7 +87,7 @@
                 android:id="@+id/btn_audio_random_play"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/icon_audio_random_play_selector" />
+                android:src="@drawable/icon_audio_order_play_selector" />
         </LinearLayout>
 
         <LinearLayout
@@ -93,7 +100,7 @@
                 android:id="@+id/btn_audio_single_loop"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/icon_audio_single_loop_selector" />
+                android:src="@drawable/icon_audio_list_loop_selector" />
         </LinearLayout>
 
         <LinearLayout
@@ -171,7 +178,7 @@
     
     <ImageView
         android:layout_width="match_parent"
-        android:layout_height="24dp"
+        android:layout_height="24px"
         android:layout_above="@id/btn_container"
         android:background="@drawable/audio_control_bar_top" />
 
@@ -192,20 +199,39 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1" >
-            <ImageView android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_alignParentBottom="true"
-                android:src="@drawable/audio_ablum_bottom" />
             <ImageView android:layout_width="231px"
                 android:layout_height="249px"
-                android:layout_centerInParent="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="170dp"
                 android:src="@drawable/audio_album_bg" />
-            <ImageView android:layout_width="232px"
-                android:layout_height="266px"
-                android:layout_centerInParent="true"
-                android:src="@drawable/ablum_school"
-                android:background="@drawable/audio_ablum_frame" />
+            <RelativeLayout
+                android:id="@+id/ablum_covers"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:orientation="horizontal" >
+                <ImageView
+                    android:layout_width="186px"
+                    android:layout_height="213px"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="30dp"
+                    android:background="@drawable/audio_ablum_frame"
+                    android:src="@drawable/ablum_pop" />
+                <ImageView
+                    android:layout_width="209px"
+                    android:layout_height="239px"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="55dp"
+                    android:background="@drawable/audio_ablum_frame"
+                    android:src="@drawable/ablum_dance" />
+                <ImageView
+                    android:layout_width="232px"
+                    android:layout_height="266px"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="80dp"
+                    android:background="@drawable/audio_ablum_frame"
+                    android:src="@drawable/ablum_school" />
+            </RelativeLayout>
         </RelativeLayout>
 
         <LinearLayout
