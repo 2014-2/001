@@ -3,7 +3,10 @@ package com.byd.player.audio;
 import java.io.IOException;
 
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
+import android.media.AudioManager;
+import android.media.AudioManager.OnAudioFocusChangeListener;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.media.MediaPlayer.OnPreparedListener;
@@ -32,6 +35,8 @@ public class AudioPlayerService extends Service {
     private int mSongPosition;
 
     private Equalizer mEqualizer;
+
+    private AudioManager am;
 
     private Handler handler = new Handler() {
         @Override
@@ -187,6 +192,8 @@ public class AudioPlayerService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
+        am = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
+        am.requestAudioFocus(afChangeListener, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
         mPlayer = new MediaPlayer();
         mPlayer.reset();
         mPlayer.setOnPreparedListener(new PreparedListener());
@@ -279,6 +286,7 @@ public class AudioPlayerService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        am.abandonAudioFocus(afChangeListener);
         handler.removeMessages(HANDLER_MSG_UPDATE);
         if (mPlayer != null) {
             mPlayer.release();
@@ -292,4 +300,25 @@ public class AudioPlayerService extends Service {
             handler.sendEmptyMessage(HANDLER_MSG_UPDATE);
         }
     }
+
+    OnAudioFocusChangeListener afChangeListener = new OnAudioFocusChangeListener() {
+        @Override
+        public void onAudioFocusChange(int focusChange) {
+            switch (focusChange) {
+                case AudioManager.AUDIOFOCUS_GAIN:
+                    if (mPlayer != null && !mPlayer.isPlaying()) {
+                        mPlayer.start();
+                    }
+                    break;
+                case AudioManager.AUDIOFOCUS_LOSS:
+                    mPlayer.stop();
+                    am.abandonAudioFocus(afChangeListener);
+                    stopSelf();
+                    break;
+                case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT:
+                    mPlayer.pause();
+                    break;
+            }
+        }
+    };
 }

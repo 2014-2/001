@@ -26,6 +26,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupWindow;
+import android.widget.PopupWindow.OnDismissListener;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.SeekBar;
@@ -397,6 +398,13 @@ public class AudioPlayerActivity extends BaseActivity {
             View volume_view = mInflater.inflate(R.layout.layout_audio_volume, null);
             mPopupVolume = new PopupWindow(volume_view, LayoutParams.WRAP_CONTENT,
                     LayoutParams.WRAP_CONTENT);
+            mPopupVolume.setOnDismissListener(new OnDismissListener() {
+
+                @Override
+                public void onDismiss() {
+                    mBtnVolume.setChecked(false);
+                }
+            });
             mVolumeSeekbar = (VerticalSeekBar)volume_view.findViewById(R.id.audio_volume_seekbar);
             mVolumeSeekbar
             .setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
@@ -433,6 +441,8 @@ public class AudioPlayerActivity extends BaseActivity {
                                 .getStreamVolume(android.media.AudioManager.STREAM_MUSIC));
                         mVolumeSeekbar.setMax(mAudioMgr
                                 .getStreamMaxVolume(android.media.AudioManager.STREAM_MUSIC));
+                        mPopupVolume.setFocusable(true);
+                        mPopupVolume.setBackgroundDrawable(new BitmapDrawable());
                         mPopupVolume.showAtLocation(mSongInfoAndLyricsContainer, Gravity.RIGHT,
                                 20, 30);
                         mPopupVolume.update();
@@ -448,6 +458,13 @@ public class AudioPlayerActivity extends BaseActivity {
             View audio_fx_view = mInflater.inflate(R.layout.audio_fx_popup, null);
             mPopupAudioFx = new PopupWindow(audio_fx_view, LayoutParams.WRAP_CONTENT,
                     LayoutParams.WRAP_CONTENT);
+            mPopupAudioFx.setOnDismissListener(new OnDismissListener() {
+
+                @Override
+                public void onDismiss() {
+                    mBtnAudioFx.setChecked(false);
+                }
+            });
             mAudioFxGroup = (RadioGroup)audio_fx_view.findViewById(R.id.audio_fx_group);
             mAudioFxGroup.setOnCheckedChangeListener(new OnCheckedChangeListener() {
                 @Override
@@ -534,6 +551,8 @@ public class AudioPlayerActivity extends BaseActivity {
                                 mAudioFxGroup.check(R.id.fx_none);
                                 break;
                         }
+                        mPopupAudioFx.setFocusable(true);
+                        mPopupAudioFx.setBackgroundDrawable(new BitmapDrawable());
                         mPopupAudioFx.showAsDropDown(v, -40, -390);
                     } else if (mPopupAudioFx.isShowing()) {
                         mPopupAudioFx.dismiss();
