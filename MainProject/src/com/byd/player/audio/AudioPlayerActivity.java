@@ -121,6 +121,14 @@ public class AudioPlayerActivity extends BaseActivity {
 
     private ImageButton mBtnAudioList;
 
+    private Toast mToastOrderPlay;
+
+    private Toast mToastRandomPlay;
+
+    private Toast mToastListLoop;
+
+    private Toast mToastSingleLoop;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -286,12 +294,10 @@ public class AudioPlayerActivity extends BaseActivity {
                         mBtnPlayOrder.setChecked(true);
                         switch (playOrder) {
                             case Constants.PlayOrder.ORDER_PLAY:
-                                Toast.makeText(getApplicationContext(), "顺序播放", Toast.LENGTH_SHORT)
-                                .show();
+                                mToastOrderPlay.show();
                                 break;
                             case Constants.PlayOrder.RANDOM_PLAY:
-                                Toast.makeText(getApplicationContext(), "随机播放", Toast.LENGTH_SHORT)
-                                .show();
+                                mToastRandomPlay.show();
                                 break;
                         }
                         Constants.setCheckedStatus(getApplicationContext(),
@@ -304,15 +310,13 @@ public class AudioPlayerActivity extends BaseActivity {
                                 Constants.setPlayOrder(getApplicationContext(),
                                         Constants.PlayOrder.RANDOM_PLAY);
                                 mBtnPlayOrder.setImageResource(R.drawable.icon_audio_random_play_selector);
-                                Toast.makeText(getApplicationContext(), "随机播放", Toast.LENGTH_SHORT)
-                                .show();
+                                mToastRandomPlay.show();
                                 break;
                             case Constants.PlayOrder.RANDOM_PLAY:
                                 Constants.setPlayOrder(getApplicationContext(),
                                         Constants.PlayOrder.ORDER_PLAY);
                                 mBtnPlayOrder.setImageResource(R.drawable.icon_audio_order_play_selector);
-                                Toast.makeText(getApplicationContext(), "顺序播放", Toast.LENGTH_SHORT)
-                                .show();
+                                mToastOrderPlay.show();
                                 break;
                         }
                         Constants.setCheckedStatus(getApplicationContext(), Constants.PREF_LOOP_MODE_STATUS, false);
@@ -345,12 +349,10 @@ public class AudioPlayerActivity extends BaseActivity {
                         mBtnLoopMode.setChecked(true);
                         switch (loopMode) {
                             case Constants.LoopMode.LIST_LOOP:
-                                Toast.makeText(getApplicationContext(), "列表循环", Toast.LENGTH_SHORT)
-                                .show();
+                                mToastListLoop.show();
                                 break;
                             case Constants.LoopMode.SINGLE_LOOP:
-                                Toast.makeText(getApplicationContext(), "单曲循环", Toast.LENGTH_SHORT)
-                                .show();
+                                mToastSingleLoop.show();
                                 break;
                         }
                         Constants.setCheckedStatus(getApplicationContext(),
@@ -364,16 +366,14 @@ public class AudioPlayerActivity extends BaseActivity {
                                         Constants.LoopMode.SINGLE_LOOP);
                                 mBtnLoopMode
                                 .setImageResource(R.drawable.icon_audio_single_loop_selector);
-                                Toast.makeText(getApplicationContext(), "单曲循环", Toast.LENGTH_SHORT)
-                                .show();
+                                mToastSingleLoop.show();
                                 break;
                             case Constants.LoopMode.SINGLE_LOOP:
                                 Constants.setLoopMode(getApplicationContext(),
                                         Constants.LoopMode.LIST_LOOP);
                                 mBtnLoopMode
                                 .setImageResource(R.drawable.icon_audio_list_loop_selector);
-                                Toast.makeText(getApplicationContext(), "列表循环", Toast.LENGTH_SHORT)
-                                .show();
+                                mToastListLoop.show();
                                 break;
                         }
                         Constants.setCheckedStatus(getApplicationContext(),
@@ -615,6 +615,38 @@ public class AudioPlayerActivity extends BaseActivity {
                     }
                 }
             });
+        }
+
+        if (null == mToastOrderPlay) {
+            mToastOrderPlay = new Toast(this);
+            ImageView v = new ImageView(this);
+            v.setImageResource(R.drawable.toast_order_play);
+            mToastOrderPlay.setView(v);
+            mToastOrderPlay.setDuration(2000);
+        }
+
+        if (null == mToastRandomPlay) {
+            mToastRandomPlay = new Toast(this);
+            ImageView v = new ImageView(this);
+            v.setImageResource(R.drawable.toast_random_play);
+            mToastRandomPlay.setView(v);
+            mToastRandomPlay.setDuration(2000);
+        }
+
+        if (null == mToastListLoop) {
+            mToastListLoop = new Toast(this);
+            ImageView v = new ImageView(this);
+            v.setImageResource(R.drawable.toast_list_loop);
+            mToastListLoop.setView(v);
+            mToastListLoop.setDuration(2000);
+        }
+
+        if (null == mToastSingleLoop) {
+            mToastSingleLoop = new Toast(this);
+            ImageView v = new ImageView(this);
+            v.setImageResource(R.drawable.toast_single_play);
+            mToastSingleLoop.setView(v);
+            mToastSingleLoop.setDuration(2000);
         }
     }
 
