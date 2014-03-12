@@ -168,13 +168,14 @@ public class AudioPlayerActivity extends BaseActivity {
         unbindService(mConn);
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if (mService != null && !mService.isPlaying()) {
-            stopService(mAudioServiceIntent);
-        }
-    }
+    //
+    // @Override
+    // protected void onDestroy() {
+    // super.onDestroy();
+    // if (mService != null && !mService.isPlaying()) {
+    // stopService(mAudioServiceIntent);
+    // }
+    // }
 
     private void init(int songPosition) {
         initSong(songPosition);
