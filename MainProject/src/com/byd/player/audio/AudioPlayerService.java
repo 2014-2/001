@@ -20,7 +20,8 @@ import com.byd.player.config.Constants;
 
 public class AudioPlayerService extends Service {
     private static final int HANDLER_MSG_UPDATE = 1;
-    private MediaPlayer mPlayer;
+
+    public static MediaPlayer mPlayer;
 
     private IBinder mPlayerBinder = new PlayerBinder();
 
@@ -32,7 +33,7 @@ public class AudioPlayerService extends Service {
 
     private Song mPlayingSong;
 
-    private int mSongPosition;
+    public static int mSongPosition = -1;
 
     private Equalizer mEqualizer;
 

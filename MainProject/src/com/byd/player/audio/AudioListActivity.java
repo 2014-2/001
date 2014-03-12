@@ -359,6 +359,7 @@ OnItemLongClickListener, SearchListener, DeleteListener {
 
     @Override
     protected void onResume() {
+        mAdapter.notifyDataSetInvalidated();
         super.onResume();
     }
 

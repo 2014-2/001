@@ -98,6 +98,7 @@ public class AudioAdapter extends BaseAdapter implements DataListener {
 
             viewHolder = new ViewHolder();
             viewHolder.mIamgeAlbum = (ImageView) convertView.findViewById(R.id.audio_album);
+            viewHolder.mAudioStatus = (ImageView)convertView.findViewById(R.id.audio_status);
             viewHolder.mTextAudioName = (TextView) convertView.findViewById(R.id.audio_name);
             viewHolder.mTextAudioSinger = (TextView) convertView.findViewById(R.id.audio_singer);
             viewHolder.mCheckBox = (CheckBox) convertView.findViewById(R.id.audio_checkbox);
@@ -112,6 +113,16 @@ public class AudioAdapter extends BaseAdapter implements DataListener {
             viewHolder.mIamgeAlbum.setImageBitmap(item.getAlbum());
         } else {
             viewHolder.mIamgeAlbum.setImageResource(R.drawable.ablum_null);
+        }
+        if (AudioPlayerService.mPlayer != null && AudioPlayerService.mSongPosition == pos) {
+            if (AudioPlayerService.mPlayer.isPlaying()) {
+                viewHolder.mAudioStatus.setImageResource(R.drawable.audio_item_playing);
+            } else {
+                viewHolder.mAudioStatus.setImageResource(R.drawable.audio_item_pause);
+            }
+            viewHolder.mAudioStatus.setVisibility(View.VISIBLE);
+        } else {
+            viewHolder.mAudioStatus.setVisibility(View.GONE);
         }
         viewHolder.mTextAudioName.setText(item.getAudioName());
         viewHolder.mTextAudioSinger.setText(item.getSinger());
@@ -128,6 +139,7 @@ public class AudioAdapter extends BaseAdapter implements DataListener {
 
     private final class ViewHolder {
         ImageView mIamgeAlbum;
+        ImageView mAudioStatus;
         TextView mTextAudioName;
         TextView mTextAudioSinger;
         CheckBox mCheckBox;
@@ -145,6 +157,7 @@ public class AudioAdapter extends BaseAdapter implements DataListener {
         setData(result);
     }
 
+    @Override
     public List<Song> getSeletedSongs() {
         List<Song> songs = new ArrayList<Song>();
         if (isEditMode()) {
