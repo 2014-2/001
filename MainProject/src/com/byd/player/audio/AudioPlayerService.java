@@ -21,7 +21,7 @@ import com.byd.player.config.Constants;
 public class AudioPlayerService extends Service {
     private static final int HANDLER_MSG_UPDATE = 1;
 
-    public static MediaPlayer mPlayer;
+    public static MediaPlayer mPlayer = null;
 
     private IBinder mPlayerBinder = new PlayerBinder();
 
@@ -291,7 +291,9 @@ public class AudioPlayerService extends Service {
         handler.removeMessages(HANDLER_MSG_UPDATE);
         if (mPlayer != null) {
             mPlayer.release();
+            mPlayer = null;
         }
+        mSongPosition = -1;
     }
 
     private final class PreparedListener implements OnPreparedListener {
