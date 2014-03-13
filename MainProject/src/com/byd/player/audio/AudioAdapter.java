@@ -156,11 +156,11 @@ public class AudioAdapter extends BaseAdapter implements DataListener {
         List<Song> result = null;
         if (!isSearchMode()) {
             result = AudioLoaderManager.getInstance().getViewSongs();
+            if (result == null || result.isEmpty()) {
+                ToastUtils.showToast(mContext, "未找到相关歌曲");
+            }
+            setData(result);
         }
-        if (result == null || result.isEmpty()) {
-            ToastUtils.showToast(mContext, "未找到相关歌曲");
-        }
-        setData(result);
     }
 
     @Override
