@@ -18,8 +18,8 @@ public class AudioItem {
         return mSong;
     }
 
-    public Bitmap getAlbum() {
-        String path = mSong.getAlbum();
+    public Bitmap getAlbumArt() {
+        String path = mSong.getAlbumArt();
         if (!TextUtils.isEmpty(path) && mAblumBitmap == null) {
             mAblumBitmap = BitmapFactory.decodeFile(path);
         }

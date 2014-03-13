@@ -17,40 +17,26 @@
             style="@style/browser_footer_tab"
             android:background="@drawable/bg_audio_local_normal" />
 
+        <!-- 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:src="@drawable/line_vertical" />
+            android:src="@drawable/line_vertical" /> -->
 
         <TextView
             android:id="@+id/btn_audio_sdcard"
             style="@style/browser_footer_tab"
             android:background="@drawable/bg_sdcard_normal" />
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:src="@drawable/line_vertical" />
-
         <TextView
             android:id="@+id/btn_audio_usb"
             style="@style/browser_footer_tab"
             android:background="@drawable/bg_usb_normal" />
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:src="@drawable/line_vertical" />
-
         <TextView
             android:id="@+id/btn_audio_aux"
             style="@style/browser_footer_tab"
             android:background="@drawable/bg_aux_normal" />
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:src="@drawable/line_vertical" />
 
         <TextView
             android:id="@+id/btn_audio_mobile"

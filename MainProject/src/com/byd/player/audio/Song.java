@@ -29,6 +29,11 @@ public class Song {
     private String mAlbum = "";
 
     /**
+     * album art name
+     */
+    private String mAlbumArt = "";
+
+    /**
      * mYear
      */
     private String mYear = "";
@@ -134,9 +139,28 @@ public class Song {
      * 
      * @param mAlbum
      */
-    public void setAlbum(String mAlbum) {
-        this.mAlbum = mAlbum;
+    public void setAlbum(String album) {
+        this.mAlbum = album;
     }
+    
+    /**
+     * getAlbumArt()
+     * 
+     * @return
+     */
+    public String getAlbumArt() {
+        return mAlbumArt;
+    }
+
+    /**
+     * setAlbumArt()
+     * 
+     * @param mAlbum
+     */
+    public void setAlbumArt(String mAlbum) {
+        this.mAlbumArt = mAlbum;
+    }
+
 
     /**
      * getYear()

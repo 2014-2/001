@@ -47,7 +47,7 @@ public class SongInfoUtils {
                             && mSongsList.get(i).getFileName()
                                     .equals(fileName)) {
                         fileMessage[0] = mSongsList.get(i).getFileTitle();
-                        fileMessage[1] = mSongsList.get(i).getAlbum();
+                        fileMessage[1] = mSongsList.get(i).getAlbumArt();
                         fileMessage[2] = mSongsList.get(i).getSinger();
                         break;
                     }
@@ -96,7 +96,7 @@ public class SongInfoUtils {
             song.setFileTitle(cursor.getString(2));// song name
             song.setDuration(cursor.getInt(3));// play time
             song.setSinger(cursor.getString(4));// artist
-            song.setAlbum(cursor.getString(5));// album
+            song.setAlbumArt(cursor.getString(5));// album
             if (cursor.getString(6) != null) {
                 song.setYear(cursor.getString(6));
             } else {
