@@ -64,6 +64,8 @@ public class BTPlayerActivity extends BaseActivity {
     private TextView mMusicName;
     
     private ImageButton mBtnBack;
+    
+    private ImageView mBtStatus;
 
     private CheckableImageView mBtnPlayPause;
 
@@ -189,6 +191,9 @@ public class BTPlayerActivity extends BaseActivity {
     }
 
     protected void initView() {
+    	mBtStatus = (ImageView)findViewById(R.id.icon_bt);
+    	mBtStatus.setVisibility(View.VISIBLE);
+    	
         initBTmusic();
 
         if (null == mSongInfoAndLyricsContainer) {
