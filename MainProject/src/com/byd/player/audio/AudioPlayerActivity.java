@@ -192,6 +192,9 @@ public class AudioPlayerActivity extends BaseActivity {
     private void initSong(int songPosition) {
         mSongPosition = songPosition;
         mPlayingSong = AudioPlayerManager.getInstance().getSongAtPosition(mSongPosition);
+        if (mPlayingSong == null) {
+            finish();
+        }
     }
 
     private void initViews() {
@@ -785,7 +788,7 @@ public class AudioPlayerActivity extends BaseActivity {
                 public void onUpdate(int current) {
                     updateAudioCurrent(current);
                     // Make sure the status of PlayPause button is right
-                    if (mService.isPlaying() == mIsPlaying) {
+                    if (mService.isPlaying() != mIsPlaying) {
                         updatePlayPauseBtn(mService.isPlaying());
                     }
                 }

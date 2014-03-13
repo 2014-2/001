@@ -2,14 +2,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_aux_and_bt" >
+    android:background="@drawable/bg_audio_player" >
 
     <View
         android:id="@+id/aux_top_bar"
         android:layout_width="match_parent"
         android:layout_height="72dp"
         android:layout_alignParentTop="true"
-        android:background="@drawable/background_title" >
+        android:background="@drawable/audio_player_header_bg" >
     </View>
 
     <LinearLayout
