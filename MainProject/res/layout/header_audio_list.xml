@@ -11,13 +11,13 @@
         android:background="@drawable/head"
         android:gravity="center_vertical" >
 
-        <Button
+        <ImageView
             android:id="@+id/button_header_back"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_marginLeft="10dp"
-            android:background="@drawable/button_back"
+            android:background="@drawable/btn_back"
             android:clickable="true" />
 
         <TextView
@@ -112,27 +112,35 @@
         </LinearLayout>
     </RelativeLayout>
 
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="-20dp"
-        android:background="@drawable/line1" />
-
     <RelativeLayout
         android:id="@+id/search_text_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@drawable/bg_search"
         android:visibility="gone" >
 
         <EditText
             android:id="@+id/search_text"
+            style="@android:style/TextAppearance.Medium"
             android:layout_width="600dip"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
+            android:background="@drawable/bg_search_text"
             android:gravity="center_vertical"
             android:inputType="text"
             android:maxLength="128"
-            android:singleLine="true" />
+            android:paddingLeft="16dip"
+            android:paddingRight="32dip"
+            android:singleLine="true"
+            android:textCursorDrawable="@drawable/search_cursor" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="250dip"
+            android:src="@drawable/search" />
     </RelativeLayout>
 
 </LinearLayout>

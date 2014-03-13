@@ -15,8 +15,7 @@
         <TextView
             android:id="@+id/btn_audio_Local"
             style="@style/browser_footer_tab"
-            android:drawableLeft="@drawable/icon_tab_audio"
-            android:text="@string/btn_text_local" />
+            android:background="@drawable/bg_audio_local_normal" />
 
         <ImageView
             android:layout_width="wrap_content"
@@ -26,8 +25,7 @@
         <TextView
             android:id="@+id/btn_audio_sdcard"
             style="@style/browser_footer_tab"
-            android:drawableLeft="@drawable/icon_tab_sdcard"
-            android:text="@string/btn_text_sdcard" />
+            android:background="@drawable/bg_sdcard_normal" />
 
         <ImageView
             android:layout_width="wrap_content"
@@ -37,8 +35,7 @@
         <TextView
             android:id="@+id/btn_audio_usb"
             style="@style/browser_footer_tab"
-            android:drawableLeft="@drawable/icon_tab_usb"
-            android:text="@string/btn_text_usb" />
+            android:background="@drawable/bg_usb_normal" />
 
         <ImageView
             android:layout_width="wrap_content"
@@ -48,8 +45,7 @@
         <TextView
             android:id="@+id/btn_audio_aux"
             style="@style/browser_footer_tab"
-            android:drawableLeft="@drawable/icon_tab_aux"
-            android:text="@string/btn_text_aux" />
+            android:background="@drawable/bg_aux_normal" />
 
         <ImageView
             android:layout_width="wrap_content"
@@ -59,8 +55,7 @@
         <TextView
             android:id="@+id/btn_audio_mobile"
             style="@style/browser_footer_tab"
-            android:drawableLeft="@drawable/icon_tab_mobile"
-            android:text="@string/btn_text_mobile" />
+            android:background="@drawable/bg_mobile_normal" />
     </LinearLayout>
 
     <include
@@ -68,19 +63,23 @@
         android:layout_alignParentTop="true"
         layout="@layout/header_audio_list" />
 
-    <GridView
-        android:id="@+id/audio_grid_list"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@id/btn_bottom_container"
         android:layout_alignParentLeft="true"
         android:layout_below="@id/header"
-        android:layout_margin="16dip"
-        android:background="@android:color/background_dark"
-        android:horizontalSpacing="1dp"
-        android:numColumns="3"
-        android:verticalSpacing="1dp"
-        android:visibility="visible" >
-    </GridView>
+        android:background="@drawable/bg_audio_list" >
+        <GridView
+            android:id="@+id/audio_grid_list"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dip"
+            android:horizontalSpacing="1dp"
+            android:numColumns="3"
+            android:verticalSpacing="1dp"
+            android:visibility="visible" >
+        </GridView>
+    </LinearLayout>
 
 </RelativeLayout>

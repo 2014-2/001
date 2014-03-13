@@ -18,6 +18,10 @@ import com.byd.player.utils.ToastUtils;
 
 public class AudioAdapter extends BaseAdapter implements DataListener {
 
+    private final static int[] AUDIO_ITEM_BGS = new int[] { R.drawable.bg_audio_item1,
+            R.drawable.bg_audio_item1, R.drawable.bg_audio_item1, R.drawable.bg_audio_item2,
+            R.drawable.bg_audio_item2, R.drawable.bg_audio_item2, };
+
     private List<AudioItem> mData = new ArrayList<AudioItem>();
     private Context mContext = null;
     private LayoutInflater mInflater;
@@ -98,10 +102,10 @@ public class AudioAdapter extends BaseAdapter implements DataListener {
 
             viewHolder = new ViewHolder();
             viewHolder.mIamgeAlbum = (ImageView) convertView.findViewById(R.id.audio_album);
-            viewHolder.mAudioStatus = (ImageView)convertView.findViewById(R.id.audio_status);
+            viewHolder.mAudioStatus = (ImageView) convertView.findViewById(R.id.audio_status);
             viewHolder.mTextAudioName = (TextView) convertView.findViewById(R.id.audio_name);
             viewHolder.mTextAudioSinger = (TextView) convertView.findViewById(R.id.audio_singer);
-            viewHolder.mCheckBox = (CheckBox) convertView.findViewById(R.id.audio_checkbox);
+            viewHolder.mDelete = (ImageView) convertView.findViewById(R.id.audio_delete);
             // construct an item tag
             convertView.setTag(viewHolder);
         } else {
@@ -109,6 +113,7 @@ public class AudioAdapter extends BaseAdapter implements DataListener {
         }
 
         AudioItem item = getItem(pos);
+        ToastUtils.showToast(mContext, "Album: " + item.getSong().getAlbum());
         if (item.getAlbum() != null) {
             viewHolder.mIamgeAlbum.setImageBitmap(item.getAlbum());
         } else {
@@ -127,13 +132,14 @@ public class AudioAdapter extends BaseAdapter implements DataListener {
         viewHolder.mTextAudioName.setText(item.getAudioName());
         viewHolder.mTextAudioSinger.setText(item.getSinger());
 
-        if (isEditMode()) {
-            viewHolder.mCheckBox.setVisibility(View.VISIBLE);
-            viewHolder.mCheckBox.setChecked(item.isSelected());
+        if (isEditMode() && item.isSelected()) {
+            viewHolder.mDelete.setVisibility(View.VISIBLE);
         } else {
-            viewHolder.mCheckBox.setVisibility(View.GONE);
+            viewHolder.mDelete.setVisibility(View.GONE);
         }
 
+        final int index = pos % AUDIO_ITEM_BGS.length;
+        convertView.setBackgroundResource(AUDIO_ITEM_BGS[index]);
         return convertView;
     }
 
@@ -142,7 +148,7 @@ public class AudioAdapter extends BaseAdapter implements DataListener {
         ImageView mAudioStatus;
         TextView mTextAudioName;
         TextView mTextAudioSinger;
-        CheckBox mCheckBox;
+        ImageView mDelete;
     }
 
     @Override
