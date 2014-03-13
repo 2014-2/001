@@ -121,19 +121,28 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center" >
-
+            
             <LinearLayout
+                android:id="@+id/btn_audio_play_pause"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:background="@drawable/icon_audio_play_bg" >
+                android:background="@drawable/icon_audio_play_bg"
+                android:gravity="center" >
 
-                <com.byd.player.view.CheckableImageView
-                    android:id="@+id/btn_audio_play_pause"
+                <ImageView
+                    android:id="@+id/audio_play"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/audio_play_pause_button_selector" />
+                    android:src="@drawable/icon_audio_play"
+                    android:visibility="visible" />
+
+                <com.byd.player.view.VisualizeView
+                    android:id="@+id/audio_pause"
+                    android:visibility="gone"
+                    android:layout_width="20dp"
+                    android:layout_height="27dp"/>
             </LinearLayout>
+
         </LinearLayout>
 
         <LinearLayout

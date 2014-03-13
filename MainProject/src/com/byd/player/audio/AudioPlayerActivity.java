@@ -48,6 +48,7 @@ import com.byd.player.lrc.LrcUtils;
 import com.byd.player.lrc.LrcView;
 import com.byd.player.view.CheckableImageView;
 import com.byd.player.view.VerticalSeekBar;
+import com.byd.player.view.VisualizeView;
 
 public class AudioPlayerActivity extends BaseActivity {
     private Song mPlayingSong;
@@ -71,7 +72,11 @@ public class AudioPlayerActivity extends BaseActivity {
 
     private TextView mMusicName;
 
-    private CheckableImageView mBtnPlayPause;
+    private LinearLayout mBtnPlayPause;
+
+    private ImageView mIconPlay;
+
+    private VisualizeView mIconPause;
 
     private ImageView mBtnNext;
 
@@ -128,6 +133,8 @@ public class AudioPlayerActivity extends BaseActivity {
     private Toast mToastListLoop;
 
     private Toast mToastSingleLoop;
+
+    private boolean mIsPlaying = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -250,14 +257,14 @@ public class AudioPlayerActivity extends BaseActivity {
         }
 
         if (null == mBtnPlayPause) {
-            mBtnPlayPause = (CheckableImageView)findViewById(R.id.btn_audio_play_pause);
+            mBtnPlayPause = (LinearLayout)findViewById(R.id.btn_audio_play_pause);
             mBtnPlayPause.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (mBtnPlayPause.isChecked()) {
-                        continuePlay();
-                    } else {
+                    if (mIsPlaying) {
                         pause();
+                    } else {
+                        continuePlay();
                     }
                 }
             });
@@ -649,6 +656,24 @@ public class AudioPlayerActivity extends BaseActivity {
             mToastSingleLoop.setView(v);
             mToastSingleLoop.setDuration(2000);
         }
+
+        if (null == mIconPlay) {
+            mIconPlay = (ImageView)findViewById(R.id.audio_play);
+        }
+
+        if (null == mIconPause) {
+            mIconPause = (VisualizeView)findViewById(R.id.audio_pause);
+        }
+    }
+
+    private void setPlayPauseIcon(boolean isPlaying) {
+        if (isPlaying) {
+            mIconPause.setVisibility(View.VISIBLE);
+            mIconPlay.setVisibility(View.GONE);
+        } else {
+            mIconPlay.setVisibility(View.VISIBLE);
+            mIconPause.setVisibility(View.GONE);
+        }
     }
 
     private void startPlay() {
@@ -714,8 +739,8 @@ public class AudioPlayerActivity extends BaseActivity {
     }
 
     private void updatePlayPauseBtn(boolean isPlay) {
-        // Check the button if the audio is not playing.
-        mBtnPlayPause.setChecked(!isPlay);
+        mIsPlaying = isPlay;
+        setPlayPauseIcon(isPlay);
     }
 
     private void initPlayTime(int position, int duration) {
@@ -760,8 +785,8 @@ public class AudioPlayerActivity extends BaseActivity {
                 public void onUpdate(int current) {
                     updateAudioCurrent(current);
                     // Make sure the status of PlayPause button is right
-                    if (mService.isPlaying() == mBtnPlayPause.isChecked()) {
-                        mBtnPlayPause.setChecked(!mService.isPlaying());
+                    if (mService.isPlaying() == mIsPlaying) {
+                        updatePlayPauseBtn(mService.isPlaying());
                     }
                 }
             });
