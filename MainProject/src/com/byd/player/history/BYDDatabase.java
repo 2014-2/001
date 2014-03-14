@@ -120,18 +120,17 @@ public class BYDDatabase {
         return null;
     }
 
-    public void deletePlayRecords(List<PlayRecord> playRecords) {
-        if(playRecords != null && playRecords.size() > 0) {
+    public void deletePlayRecords(List<String> playRecordsData) {
+        if(playRecordsData != null && playRecordsData.size() > 0) {
             try {
                 getDatabase(true).beginTransaction();
-                for(final PlayRecord item : playRecords) {
-                  String path = item.getMovieInfo().path;
-                  if(TextUtils.isEmpty(path) || TextUtils.isEmpty(path)) {
+                for(final String item : playRecordsData) {
+                  if(TextUtils.isEmpty(item) || TextUtils.isEmpty(item)) {
                      continue;
                   }
                   getDatabase(true).delete(PlayRecordTable.TABLE_NAME,
                           PlayRecordTable.DATA + "=?",
-                         new String[] { path});
+                         new String[] { item});
                 }
                 getDatabase(true).setTransactionSuccessful();
              } finally {

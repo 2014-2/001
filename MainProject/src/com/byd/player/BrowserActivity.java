@@ -112,6 +112,9 @@ public class BrowserActivity extends BaseActivity implements OnClickListener {
     }
     
     private void tabToIndex(int tabIndex) {
+        if(isEditMode) {
+            return;
+        }
         if(tabIndex < tabResId.length && tabIndex >= 0) {
             currentTabSelected = tabIndex;
         }
@@ -219,6 +222,9 @@ public class BrowserActivity extends BaseActivity implements OnClickListener {
                     break;
                 case VideoContentObserver.HISTORY_VIDEO_CONTENT_CHANGED:
                     tabContentChanged[TAB_INDEX_HISTORY] = true;
+                    /*if(activity != null && (activity.currentTabSelected == TAB_INDEX_HISTORY)) {
+                        activity.tabToIndex(activity.currentTabSelected);
+                    }*/
                     break;
                 case MSG_TAB_ON_CHANGED:
                     if(activity != null) {
@@ -532,7 +538,7 @@ public class BrowserActivity extends BaseActivity implements OnClickListener {
             }
             int tabIndex = params[0];
             int effectCount = 0;
-            if(tabIndex >= TAB_INDEX_LOCAL && tabIndex <= TAB_INDEX_HISTORY) {
+            if(tabIndex >= TAB_INDEX_LOCAL && tabIndex < TAB_INDEX_HISTORY) {
                 VideoAdapter adapter = videoAdapters[tabIndex];
                 ArrayList<MovieInfo> choosedList = adapter.getChoosedList();
                 for(MovieInfo movie : choosedList) {
@@ -547,7 +553,17 @@ public class BrowserActivity extends BaseActivity implements OnClickListener {
                         effectCount++;
                     }
                 }
+            } else if(tabIndex == TAB_INDEX_HISTORY) {//Delete history
+                VideoAdapter adapter = videoAdapters[tabIndex];
+                ArrayList<MovieInfo> choosedList = adapter.getChoosedList();
+                ArrayList<String> choosedListData = new ArrayList<String>(choosedList.size());
+                for(MovieInfo movieInfo : choosedList) {
+                    choosedListData.add(movieInfo.path);
+                    effectCount++;
+                }
+                BYDDatabase.getInstance(BrowserActivity.this).deletePlayRecords(choosedListData);
             }
+            
             if(effectCount == 0) {
                 return -1;
             }

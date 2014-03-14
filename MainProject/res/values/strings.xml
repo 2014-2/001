@@ -18,6 +18,8 @@
     <string name="cancel">取消</string>
     <string name="waiting">请稍等...</string>
     <string name="select_tips">请至少选择一个文件</string>
+    <string name="no_records_video">未找到相关视频</string>
+    
     
     <!-- Audio -->
     <string name="audio_page">音乐</string>
