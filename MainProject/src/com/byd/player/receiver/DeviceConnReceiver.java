@@ -26,7 +26,7 @@ public class DeviceConnReceiver extends BroadcastReceiver {
         if (intent.hasExtra("state")) {
             if (intent.getIntExtra("state", 0) == 0) {
                 mListener.onDisconnected();
-            } else if (intent.getIntExtra("state", 0) == 1) {
+            } else if (intent.getIntExtra("state", 0) >= 1) {
                 mListener.onConnected();
             }
         }

@@ -4,6 +4,7 @@ package com.byd.player;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.TextView;
 
 import com.byd.player.config.Constants;
@@ -18,6 +19,8 @@ public class AuxAudioPlayActivity extends BaseActivity {
     private static final String SERVICE_TAG = "audiochannel-aux";
 
     private TextView mTvAuxStatus;
+
+    private Intent mAudioChannelIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,11 +38,13 @@ public class AuxAudioPlayActivity extends BaseActivity {
             @Override
             public void onDisconnected() {
                 mTvAuxStatus.setText(R.string.aux_disconnected);
+                stopService(mAudioChannelIntent);
             }
 
             @Override
             public void onConnected() {
                 mTvAuxStatus.setText(R.string.aux_connected);
+                startService(mAudioChannelIntent);
             }
         });
         IntentFilter intentFilter = new IntentFilter();
@@ -47,15 +52,19 @@ public class AuxAudioPlayActivity extends BaseActivity {
         registerReceiver(mDeviceConnReceiver, intentFilter);
 
         // TODO: Need start service when aux device connected
-        Intent service = new Intent(this, AudioChannelService.class);
-        service.putExtra("service_tag", SERVICE_TAG);
-        startService(service);
+        mAudioChannelIntent = new Intent(this, AudioChannelService.class);
+        mAudioChannelIntent.putExtra("service_tag", SERVICE_TAG);
+        // startService(mAudioChannelIntent);
     }
 
     @Override
     protected void onDestroy() {
         unregisterReceiver(mDeviceConnReceiver);
+        stopService(mAudioChannelIntent);
         super.onDestroy();
     }
 
+    public void onBackBtn(View v) {
+        onBackPressed();
+    }
 }

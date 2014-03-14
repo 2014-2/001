@@ -68,8 +68,6 @@
         
         <service android:name="com.byd.player.services.AudioChannelService" >
         </service>
-        <service android:name="com.byd.player.services.AudioChannelService" />
-        
         <service android:name="com.byd.player.services.AuxAudioService" >
         </service>
         <service android:name="com.byd.player.audio.AudioPlayerService" />
