@@ -214,7 +214,7 @@ public class AudioListActivity extends BaseActivity implements OnItemClickListen
             @Override
             public void onClick(View v) {
                 if (mAdapter.isSearchMode()) {
-                    String text = mSearchText.getText().toString();
+                    String text = mSearchText.getText().toString().trim();
                     if (!TextUtils.isEmpty(text)) {
                         Message msg = mHandler.obtainMessage(MSG_SHOW_SEARCH_PROGRESS_DIALOG);
                         mHandler.sendMessageDelayed(msg, 200);

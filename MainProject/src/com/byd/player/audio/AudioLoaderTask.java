@@ -58,19 +58,19 @@ public class AudioLoaderTask extends AsyncQueryHandler {
         switch (mType) {
         case AudioLoaderManager.INTERNAL_TYPE:
             startQuery(0, (Object) null, MediaStore.Audio.Media.INTERNAL_CONTENT_URI,
-                    AudioLoaderTask.DEF_PROJECTION, AudioLoaderTask.DEF_SELECTION_LOCAL,
-                    AudioLoaderTask.DEF_SELECTION_ARGS, null);
+                    AudioLoaderTask.DEF_PROJECTION, null/*AudioLoaderTask.DEF_SELECTION_LOCAL*/,
+                    null/*DEF_SELECTION_ARGS*/, null);
             break;
 
         case AudioLoaderManager.EXTERNAL_SDCARD_TYPE:
             startQuery(0, (Object) null, MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
                     AudioLoaderTask.DEF_PROJECTION, AudioLoaderTask.DEF_SELECTION_SDCARD,
-                    AudioLoaderTask.DEF_SELECTION_ARGS, null);
+                    DEF_SELECTION_ARGS, null);
             break;
         case AudioLoaderManager.EXTERNAL_USB_TYPE:
             startQuery(0, (Object) null, MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
                     AudioLoaderTask.DEF_PROJECTION, AudioLoaderTask.DEF_SELECTION_USB,
-                    AudioLoaderTask.DEF_SELECTION_ARGS, null);
+                    DEF_SELECTION_ARGS, null);
             break;
         default:
             break;

@@ -158,6 +158,7 @@ public class AudioPlayerService extends Service {
         mSongPosition = (mSongPosition + size) % size;
         mPlayer.reset();
         handler.removeMessages(HANDLER_MSG_UPDATE);
+        AudioPlayerManager.getInstance().setPlaySong(mSongPosition);
         mPlayingSong = AudioPlayerManager.getInstance().getSongAtPosition(mSongPosition);
         try {
             mPlayer.setDataSource(mPlayingSong.getFilePath());

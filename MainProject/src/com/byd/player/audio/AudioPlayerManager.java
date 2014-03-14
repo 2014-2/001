@@ -65,6 +65,13 @@ public class AudioPlayerManager {
         return null;
     }
 
+    public void setPlaySong(int pos) {
+        if (pos < 0 || pos >= mPlayerList.size()) {
+            return;
+        }
+        mPlayerPosition = pos;
+    }
+
     public int getCount() {
         return mPlayerList.size();
     }

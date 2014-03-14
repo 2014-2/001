@@ -113,13 +113,15 @@ public class AudioAdapter extends BaseAdapter implements DataListener {
         }
 
         AudioItem item = getItem(pos);
-        ToastUtils.showToast(mContext, "Album: " + item.getSong().getAlbumArt());
         if (item.getAlbumArt() != null) {
             viewHolder.mIamgeAlbum.setImageBitmap(item.getAlbumArt());
         } else {
             viewHolder.mIamgeAlbum.setImageResource(R.drawable.ablum_null);
         }
-        if (AudioPlayerService.mPlayer != null && AudioPlayerService.mSongPosition == pos) {
+        Song song = AudioPlayerManager.getInstance().getCurrentPlaySong();
+        if (AudioPlayerService.mPlayer != null
+                && song.getFilePath().equals(item.getSong().getFilePath())
+                && song.getFileName().endsWith(item.getSong().getFileName())) {
             if (AudioPlayerService.mPlayer.isPlaying()) {
                 viewHolder.mAudioStatus.setImageResource(R.drawable.audio_item_playing);
             } else {
