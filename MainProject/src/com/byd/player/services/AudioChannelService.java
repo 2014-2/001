@@ -169,16 +169,16 @@ public class AudioChannelService extends Service {
 					channelConfig, encodingBitrate);
 			audioRecord = new AudioRecord(MediaRecorder.AudioSource.MIC,
 					sampleRateInHz, channelConfig, encodingBitrate, recBufSize);*/
-            audioRecord.startRecording();//
-            audioTrack.play();
-            while (blnInstantPlay && !isInterrupted()) {
-                int line = audioRecord.read(bsBuffer, 0, recBufSize);
-                /*byte[] tmpBuf = new byte[line];
-				System.arraycopy(bsBuffer, 0, tmpBuf, 0, line);*/
-                audioTrack.write(bsBuffer, 0, bsBuffer.length);
-            }
-            audioTrack.stop();
             try {
+                audioRecord.startRecording();//
+                audioTrack.play();
+                while (blnInstantPlay && !isInterrupted()) {
+                    int line = audioRecord.read(bsBuffer, 0, recBufSize);
+                    /*byte[] tmpBuf = new byte[line];
+				System.arraycopy(bsBuffer, 0, tmpBuf, 0, line);*/
+                    audioTrack.write(bsBuffer, 0, bsBuffer.length);
+                }
+                audioTrack.stop();
                 audioRecord.stop();
             } catch (Exception e) {
                 // TODO: handle exception
@@ -193,7 +193,7 @@ public class AudioChannelService extends Service {
         blnInstantPlay = false;
         audioRecord.release();
         audioTrack.release();
-        android.os.Process.killProcess(android.os.Process.myPid());
+        // android.os.Process.killProcess(android.os.Process.myPid());
         super.onDestroy();
 
     }

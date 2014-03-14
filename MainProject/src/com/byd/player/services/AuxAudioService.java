@@ -17,14 +17,19 @@ public class AuxAudioService extends Service {
 
     private DeviceConnReceiver mDeviceConnReceiver;
 
+    private Intent mAudioChannelIntent;
+
     @Override
     public void onCreate() {
         super.onCreate();
+        mAudioChannelIntent = new Intent(AuxAudioService.this, AudioChannelService.class);
+        mAudioChannelIntent.putExtra("service_tag", SERVICE_TAG);
         if (!DEBUG) {
             mDeviceConnReceiver = new DeviceConnReceiver(new AuxConnectListener() {
 
                 @Override
                 public void onDisconnected() {
+                    stopAudioChannelService();
                 }
 
                 @Override
@@ -47,9 +52,11 @@ public class AuxAudioService extends Service {
     }
 
     private void startAudioChannelService() {
-        Intent service = new Intent(AuxAudioService.this, AudioChannelService.class);
-        service.putExtra("service_tag", SERVICE_TAG);
-        startService(service);
+        startService(mAudioChannelIntent);
+    }
+
+    private void stopAudioChannelService() {
+        stopService(mAudioChannelIntent);
     }
 
     @Override

@@ -48,6 +48,7 @@
     <string name="audio_fx_rock">摇滚</string>
 
     <!-- Aux -->
+    <string name="aux_title">AUX连接</string>
     <string name="aux_connected">AUX音频设备已连接</string>
     <string name="aux_disconnected">AUX音频设备未连接</string>
     
