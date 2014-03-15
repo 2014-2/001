@@ -284,10 +284,8 @@ public class BrowserActivity extends BaseActivity implements OnClickListener {
 
     private ArrayList<MovieInfo> getVideoList(int tabIndex) {
         switch(tabIndex) {
-            case TAB_INDEX_LOCAL:
-            case TAB_INDEX_SDCARD:
-                Uri mediaUri = (tabIndex == TAB_INDEX_LOCAL ? 
-                        MediaStore.Video.Media.INTERNAL_CONTENT_URI : MediaStore.Video.Media.EXTERNAL_CONTENT_URI);
+            case TAB_INDEX_LOCAL: {
+                Uri mediaUri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
                 if (android.os.Environment.getExternalStorageState().equals(
                         android.os.Environment.MEDIA_MOUNTED)) {
                     boolean contentChanged = tabContentChanged[tabIndex];
@@ -301,7 +299,20 @@ public class BrowserActivity extends BaseActivity implements OnClickListener {
                     mMediaStore.put(tabIndex, playList);
                     return playList;
                 }
-                break;
+            }
+            case TAB_INDEX_SDCARD: {
+                Uri mediaUri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
+                boolean contentChanged = tabContentChanged[tabIndex];
+                if(contentChanged) {
+                    mMediaStore.remove(tabIndex);
+                    tabContentChanged[tabIndex] = false;
+                } else if (mMediaStore.get(tabIndex) != null) {
+                    return mMediaStore.get(tabIndex);
+                }
+                ArrayList<MovieInfo> playList = queryMediaByUri(mediaUri, tabIndex);
+                mMediaStore.put(tabIndex, playList);
+                return playList;
+            }
             case TAB_INDEX_USB: {
                 boolean contentChanged = tabContentChanged[tabIndex];
                 if(contentChanged) {
@@ -346,12 +357,13 @@ public class BrowserActivity extends BaseActivity implements OnClickListener {
         String selection = null;
         switch(tabIndex) {
             case TAB_INDEX_LOCAL:
-                break;
-            case TAB_INDEX_SDCARD:
-                selection = MediaStore.Video.Media.DATA + " NOT LIKE '" + Constants.USB_REGIX + "%'";
+                selection = MediaStore.Video.Media.DATA + " LIKE '%" + Constants.LOCAL_REGIX + "%'";
                 break;
             case TAB_INDEX_USB:
-                selection = MediaStore.Video.Media.DATA + " LIKE '" + Constants.USB_REGIX + "%'";
+                selection = MediaStore.Video.Media.DATA + " LIKE '%" + Constants.USB_REGIX + "%'";
+                break;
+            case TAB_INDEX_SDCARD:
+                selection = MediaStore.Video.Media.DATA + " LIKE '%" + Constants.SDCARD_REGIX + "%'";
                 break;
         }
         Cursor cursor = getContentResolver().query(mediaUri,
@@ -360,7 +372,7 @@ public class BrowserActivity extends BaseActivity implements OnClickListener {
         int n = cursor.getCount();
         cursor.moveToFirst();
         ArrayList<MovieInfo> playList = new ArrayList<MovieInfo>();
-        for (int i = 0; i != n; ++i) {
+        for (int i = 0; i < n; ++i) {
             MovieInfo mInfo = new MovieInfo();
             mInfo.displayName = cursor.getString(cursor
                     .getColumnIndex(MediaStore.Video.Media.TITLE));

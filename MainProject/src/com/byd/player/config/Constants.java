@@ -10,6 +10,13 @@ import android.content.SharedPreferences;
  * 
  */
 public class Constants {
+    
+    /**
+     * 目录结构
+     */
+    public static final String USB_REGIX = "/udisk/";
+    public static final String LOCAL_REGIX = "/storage/emulated/0";
+    public static final String SDCARD_REGIX = "/extsd/";
 
     public static final int ERROR_DISMISS_THREE_SECONDS = 3000;
 
@@ -38,8 +45,6 @@ public class Constants {
     public static final String MUSIC_CURRENT = "com.byd.player.Current";
 
     public static final String MUSIC_SEEK_TO = "com.byd.player.SeekTo";
-
-    public static final String USB_REGIX = "/mnt/udisk/";
 
     public static final String AUDIO_FX_ID = "com.byd.player.AudioFxId";
 

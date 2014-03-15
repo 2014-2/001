@@ -24,6 +24,12 @@ public class USBMountReceiver extends BroadcastReceiver {
         Intent intentScanner = new Intent(Intent.ACTION_MEDIA_MOUNTED, Uri.parse("file://"
                 + Environment.getExternalStorageDirectory()));
         context.sendBroadcast(intentScanner);
+        intentScanner = new Intent(Intent.ACTION_MEDIA_MOUNTED, Uri.parse("file://"
+                + "/extsd/"));
+        context.sendBroadcast(intentScanner);
+        intentScanner = new Intent(Intent.ACTION_MEDIA_MOUNTED, Uri.parse("file://"
+                + "/udisk/"));
+        context.sendBroadcast(intentScanner);
     }
     
 }

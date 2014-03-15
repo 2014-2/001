@@ -8,8 +8,6 @@ import android.content.AsyncQueryHandler;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.provider.MediaStore;
 
@@ -30,16 +28,17 @@ public class AudioLoaderTask extends AsyncQueryHandler {
             MediaStore.Audio.Media.SIZE,
             MediaStore.Audio.Media.DATA };
 
-    public final static String DEF_SELECTION_LOCAL = MediaStore.Audio.Media.MIME_TYPE + "=? or "
-            + MediaStore.Audio.Media.MIME_TYPE + "=?";
+    public final static String DEF_SELECTION_LOCAL = "(" + MediaStore.Audio.Media.MIME_TYPE + "=? or "
+            + MediaStore.Audio.Media.MIME_TYPE + "=?) and "
+            + MediaStore.Audio.Media.DATA + " like '%" + Constants.LOCAL_REGIX + "%'";
 
     public final static String DEF_SELECTION_SDCARD = "(" + MediaStore.Audio.Media.MIME_TYPE
             + "=? or " + MediaStore.Audio.Media.MIME_TYPE + "=?) and "
-            + MediaStore.Audio.Media.DATA + " not like '" + Constants.USB_REGIX + "'";
+            + MediaStore.Audio.Media.DATA + " like '%" + Constants.SDCARD_REGIX + "%'";
 
     public final static String DEF_SELECTION_USB = "(" + MediaStore.Audio.Media.MIME_TYPE
             + "=? or " + MediaStore.Audio.Media.MIME_TYPE + "=?) and "
-            + MediaStore.Audio.Media.DATA + " like '" + Constants.USB_REGIX + "'";
+            + MediaStore.Audio.Media.DATA + " like '%" + Constants.USB_REGIX + "%'";
 
     public final static String[] DEF_SELECTION_ARGS = new String[] { "audio/mpeg", "audio/x-ms-wma" };
 
