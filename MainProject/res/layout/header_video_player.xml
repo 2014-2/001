@@ -9,6 +9,8 @@
         android:id="@+id/button_header_left"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:layout_marginBottom="6dp"
         android:layout_marginLeft="10dp"
         android:clickable="true"
         android:src="@drawable/icon_back_selector"
@@ -35,6 +37,8 @@
         android:layout_height="wrap_content"
         android:visibility="invisible"
         android:layout_marginLeft="10dp"
+        android:layout_marginTop="6dp"
+        android:layout_marginBottom="6dp"
         android:clickable="true"
         android:background="@drawable/button_back" />
 
