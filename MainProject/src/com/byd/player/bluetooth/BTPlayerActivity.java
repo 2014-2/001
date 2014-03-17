@@ -195,11 +195,11 @@ public class BTPlayerActivity extends BaseActivity {
     	mBtStatus.setVisibility(View.VISIBLE);
     	
         initBTmusic();
-
+        /*
         if (null == mSongInfoAndLyricsContainer) {
             mSongInfoAndLyricsContainer = (LinearLayout)findViewById(R.id.ll_song_info_and_lyrics);
         }
-        mSongInfoAndLyricsContainer.removeAllViews();
+        mSongInfoAndLyricsContainer.removeAllViews();       
         if (hasLyrics()) {
             // TODO: Add lyrics display
         } else {
@@ -208,11 +208,9 @@ public class BTPlayerActivity extends BaseActivity {
             mAlbumName = (TextView)findViewById(R.id.album_name);
             mSingerName = (TextView)findViewById(R.id.singer_name);
             mMusicName = (TextView)findViewById(R.id.music_name);
-            /*
             mAlbumName.setText(mPlayingSong.getAlbum());
             mSingerName.setText(mPlayingSong.getSinger());
             mMusicName.setText(mPlayingSong.getFileTitle());
-             */
         }
 
         if (null == mTotalTime) {
@@ -221,7 +219,7 @@ public class BTPlayerActivity extends BaseActivity {
         if (null == mPlayingTime) {
             mPlayingTime = (TextView)findViewById(R.id.audio_playing_time);
         }
-
+        */
         if (null == mBtnPlayPause) {
             mBtnPlayPause = (CheckableImageView)findViewById(R.id.btn_audio_play_pause);
             mBtnPlayPause.setOnClickListener(new OnClickListener() {
