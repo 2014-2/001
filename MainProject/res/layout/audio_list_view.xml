@@ -10,11 +10,13 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:gravity="center_vertical"
-        android:orientation="horizontal" >
+        android:orientation="horizontal"
+        android:layout_marginTop="4dp"
+        android:background="@drawable/footer_bg_4" >
 
         <TextView
             android:id="@+id/btn_audio_Local"
-            style="@style/browser_footer_tab"
+            style="@style/audio_list_footer_tab2"
             android:background="@drawable/bg_audio_local_normal" />
 
         <!-- 
@@ -25,22 +27,22 @@
 
         <TextView
             android:id="@+id/btn_audio_sdcard"
-            style="@style/browser_footer_tab"
+            style="@style/audio_list_footer_tab2"
             android:background="@drawable/bg_sdcard_normal" />
 
         <TextView
             android:id="@+id/btn_audio_usb"
-            style="@style/browser_footer_tab"
+            style="@style/audio_list_footer_tab2"
             android:background="@drawable/bg_usb_normal" />
 
         <TextView
             android:id="@+id/btn_audio_aux"
-            style="@style/browser_footer_tab"
+            style="@style/audio_list_footer_tab2"
             android:background="@drawable/bg_aux_normal" />
 
         <TextView
             android:id="@+id/btn_audio_mobile"
-            style="@style/browser_footer_tab"
+            style="@style/audio_list_footer_tab2"
             android:background="@drawable/bg_mobile_normal" />
     </LinearLayout>
 
