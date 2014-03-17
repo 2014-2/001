@@ -36,6 +36,7 @@ import com.byd.player.services.AudioChannelService.AudioChannelBinder;
 import com.byd.player.services.BtService;
 import com.byd.player.video.VideoView;
 import com.byd.player.view.CheckableImageView;
+import com.byd.player.view.VisualizeView;
 
 public class BTPlayerActivity extends BaseActivity {
     private static final String BTMUSIC = "BTPlayerActivity";
@@ -67,7 +68,13 @@ public class BTPlayerActivity extends BaseActivity {
     
     private ImageView mBtStatus;
 
-    private CheckableImageView mBtnPlayPause;
+    private LinearLayout mBtnPlayPause;
+    
+    private ImageView mIconPlay;
+
+    private VisualizeView mIconPause;
+    
+    private boolean mIsPlaying = false;
 
     private ImageView mBtnNext;
 
@@ -129,7 +136,7 @@ public class BTPlayerActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        BTpause();
+        //BTpause();
         unregisterBroadcast();
         /*
         if (mBTChannelSrv != null){
@@ -145,7 +152,7 @@ public class BTPlayerActivity extends BaseActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON,
                 WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
-        setContentView(R.layout.bt_player);
+        setContentView(R.layout.bt_music_play);
 
         mInflater = this.getLayoutInflater();
         initView();
@@ -154,8 +161,8 @@ public class BTPlayerActivity extends BaseActivity {
     protected void initBTmusic(){
         Intent service = new Intent(this, AudioChannelService.class);
         service.putExtra("service_tag", SERVICE_TAG);
-        this.startService(service);
-        isChannelSrvBinded = bindService(service, mBTChannelSrv, Context.BIND_AUTO_CREATE);
+        //this.startService(service);
+        //isChannelSrvBinded = bindService(service, mBTChannelSrv, Context.BIND_AUTO_CREATE);
 
         if (!btService.doAction(BtCmdEnum.BT_CMD_CONNECT_A2DP)){
             //TODO deal with a2dp-connect failed, give a toast?
@@ -165,10 +172,6 @@ public class BTPlayerActivity extends BaseActivity {
             AudioManager mAudioManager = (AudioManager) getBaseContext().getSystemService(Context.AUDIO_SERVICE);
             mAudioManager.setStreamMute(AudioManager.STREAM_VOICE_CALL, false);
             mAudioManager.setStreamVolume(AudioManager.STREAM_VOICE_CALL, mAudioManager.getStreamMaxVolume(AudioManager.STREAM_VOICE_CALL), 0);
-            boolean a = mAudioManager.isBluetoothA2dpOn();
-            boolean b = mAudioManager.isBluetoothScoOn();
-            boolean c = mAudioManager.isMusicActive();
-            boolean d = mAudioManager.isSpeakerphoneOn();
             mAudioManager.setMode(AudioManager.MODE_IN_CALL);
             mAudioManager.setBluetoothScoOn(true);
             mAudioManager.startBluetoothSco();
@@ -221,11 +224,11 @@ public class BTPlayerActivity extends BaseActivity {
         }
         */
         if (null == mBtnPlayPause) {
-            mBtnPlayPause = (CheckableImageView)findViewById(R.id.btn_audio_play_pause);
+            mBtnPlayPause = (LinearLayout)findViewById(R.id.btn_audio_play_pause);
             mBtnPlayPause.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (mBtnPlayPause.isChecked()) {
+                    if (!mIsPlaying) {
                         BTcontinuePlay();
                     } else {
                         BTpause();
@@ -320,11 +323,6 @@ public class BTPlayerActivity extends BaseActivity {
         }
     }
 
-    private boolean hasLyrics() {
-        // TODO: Add lyrics check
-        return false;
-    }
-
     private void BTpause() {
         if (!btService.doAction(BtCmdEnum.BT_CMD_AV_PAUSE)){
             Log.e(BTMUSIC, "pause music failed!");
@@ -381,8 +379,8 @@ public class BTPlayerActivity extends BaseActivity {
     }
 
     private void updatePlayPauseBtn(boolean isPlay) {
-        // Check the button if the audio is not playing.
-        mBtnPlayPause.setChecked(!isPlay);
+        mIsPlaying = isPlay;
+        setPlayPauseIcon(isPlay);
     }
 
     public boolean isServiceRunning(Context mContext,String className){
@@ -400,5 +398,15 @@ public class BTPlayerActivity extends BaseActivity {
             }
         }
         return isRunning;
+    }
+    
+    private void setPlayPauseIcon(boolean isPlaying) {
+        if (isPlaying) {
+            mIconPause.setVisibility(View.VISIBLE);
+            mIconPlay.setVisibility(View.GONE);
+        } else {
+            mIconPlay.setVisibility(View.VISIBLE);
+            mIconPause.setVisibility(View.GONE);
+        }
     }
 }

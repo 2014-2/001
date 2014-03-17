@@ -3,6 +3,7 @@ package com.byd.player.bluetooth;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.R.integer;
 import android.app.ProgressDialog;
 import android.content.ComponentName;
 import android.content.Intent;
@@ -24,8 +25,6 @@ import com.byd.player.bluetooth.BTBaseActivity;
 import com.byd.player.bluetooth.BtDevice;
 import com.byd.player.bluetooth.BtStatus;
 import com.byd.player.bluetooth.BtActionManager.BtCmdEnum;
-import com.byd.player.services.BtService;
-import com.byd.player.services.BtService.LocalBinder;
 /**
  * 蓝牙连接功能
  */
@@ -58,7 +57,7 @@ public class ConnectActivity extends BTBaseActivity implements OnMyAdapterChecke
 		super.initView();
 		lv_bt_device = (ListView) findViewById(R.id.lv_bt_connect);
 		tvTitle.setText("蓝牙连接");
-		btnRight.setImageResource(R.drawable.btn_search);
+		btnRight.setImageResource(R.drawable.button_play);
 		btnRight.setVisibility(View.VISIBLE);
 		btnRight.setOnClickListener(this);	
 		lv_bt_device.setOnItemClickListener(this);
@@ -69,9 +68,17 @@ public class ConnectActivity extends BTBaseActivity implements OnMyAdapterChecke
 		super.onClick(v);
 		switch (v.getId()) {
 		case R.id.btn_right:
-			Intent intent = new Intent();
-            intent.setClass(ConnectActivity.this, BTPlayerActivity.class);
-            startActivity(intent);
+			BtStatus status_bt = btService.getBtStatus();
+			if(status_bt.getHfpStatus() == BtStatus.HFP_STATUS_CONNECTED || 
+			   status_bt.getA2dpStatus() == BtStatus.A2DP_STATUS_CONNECTED)
+			{
+				Intent intent = new Intent();
+				intent.setClass(ConnectActivity.this, BTPlayerActivity.class);
+	            startActivity(intent);
+			}
+			else {
+				Toast.makeText(this, "Please connect BT device!", Toast.LENGTH_SHORT).show();
+			}
 			//searchDevice();	
 			break;
 		default:
