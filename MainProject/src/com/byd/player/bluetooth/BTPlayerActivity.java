@@ -169,12 +169,12 @@ public class BTPlayerActivity extends BaseActivity {
             Log.e(BTMUSIC, "connect a2dp FAILED!");
         } else {
             Log.i(BTMUSIC, "connect a2dp SUCCESSFULLY!");
-            AudioManager mAudioManager = (AudioManager) getBaseContext().getSystemService(Context.AUDIO_SERVICE);
-            mAudioManager.setStreamMute(AudioManager.STREAM_VOICE_CALL, false);
-            mAudioManager.setStreamVolume(AudioManager.STREAM_VOICE_CALL, mAudioManager.getStreamMaxVolume(AudioManager.STREAM_VOICE_CALL), 0);
-            mAudioManager.setMode(AudioManager.MODE_IN_CALL);
-            mAudioManager.setBluetoothScoOn(true);
-            mAudioManager.startBluetoothSco();
+            audioManager = (AudioManager) getBaseContext().getSystemService(Context.AUDIO_SERVICE);
+            audioManager.setStreamMute(AudioManager.STREAM_VOICE_CALL, false);
+            audioManager.setStreamVolume(AudioManager.STREAM_VOICE_CALL, audioManager.getStreamMaxVolume(AudioManager.STREAM_VOICE_CALL), 0);
+            audioManager.setMode(AudioManager.MODE_IN_CALL);
+            audioManager.setBluetoothScoOn(true);
+            audioManager.startBluetoothSco();
             setVolumeControlStream(AudioManager.STREAM_MUSIC);
 
         }
