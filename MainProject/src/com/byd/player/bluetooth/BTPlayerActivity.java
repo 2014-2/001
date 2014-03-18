@@ -223,6 +223,15 @@ public class BTPlayerActivity extends BaseActivity {
             mPlayingTime = (TextView)findViewById(R.id.audio_playing_time);
         }
         */
+        
+        if (null == mIconPlay) {
+            mIconPlay = (ImageView)findViewById(R.id.audio_play);
+        }
+
+        if (null == mIconPause) {
+            mIconPause = (VisualizeView)findViewById(R.id.audio_pause);
+        }
+        
         if (null == mBtnPlayPause) {
             mBtnPlayPause = (LinearLayout)findViewById(R.id.btn_audio_play_pause);
             mBtnPlayPause.setOnClickListener(new OnClickListener() {
