@@ -337,7 +337,6 @@ public class BTPlayerActivity extends BaseActivity {
             Log.e(BTMUSIC, "pause music failed!");
         } else {
             Log.i(BTMUSIC, "music should be paused right now!");
-            audioManager.abandonAudioFocus(afChangeListener);
         }
         updatePlayPauseBtn(false);
     }
@@ -347,8 +346,8 @@ public class BTPlayerActivity extends BaseActivity {
             Log.e(BTMUSIC, "play music failed!");
         } else {
             Log.i(BTMUSIC, "music should be played right now!");
-            audioManager.requestAudioFocus(afChangeListener, 
-		            AudioManager.AUDIOFOCUS_GAIN_TRANSIENT, AudioManager.AUDIOFOCUS_GAIN_TRANSIENT_MAY_DUCK);
+//            audioManager.requestAudioFocus(afChangeListener, 
+//		            AudioManager.AUDIOFOCUS_GAIN_TRANSIENT, AudioManager.AUDIOFOCUS_GAIN_TRANSIENT_MAY_DUCK);
         }
         updatePlayPauseBtn(true);
     }
