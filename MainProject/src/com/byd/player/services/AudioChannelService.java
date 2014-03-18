@@ -60,7 +60,7 @@ public class AudioChannelService extends Service {
      * 3: aux
      */
 
-    private void selectChannel(String service_tag) {
+    public void selectChannel(String service_tag) {
         Log.d("AudioChannelService", "service tag is " + service_tag);
         File select = new File("sys/kernel/debug/esai/esai_reg");
         FileWriter fr;
@@ -84,7 +84,7 @@ public class AudioChannelService extends Service {
                 Log.d("AudioChannelService", "select aux!");
             }
 
-            fr.write(cmd); // select bt
+            fr.write(cmd);
             fr.close();
             Log.d("BTChannelService", "select bt(ff0): " + cmd);
         } catch (IOException e) {
@@ -125,7 +125,6 @@ public class AudioChannelService extends Service {
         // TODO Auto-generated method stub
         // 开始即时播放
         String service_tag = intent.getStringExtra("service_tag");
-        Log.d("BTChannelService", "bt channel starting...");
         recBufSize = AudioRecord.getMinBufferSize(sampleRateInHz, channelConfig, encodingBitrate);
         playBufSize = AudioTrack.getMinBufferSize(sampleRateInHz, channelConfig, encodingBitrate);
         if (audioRecord == null) {

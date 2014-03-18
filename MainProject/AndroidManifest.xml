@@ -85,6 +85,14 @@
             </intent-filter>
         </receiver>
         
+        <receiver
+            android:name="com.byd.player.receiver.AudioChannelBroadcastReceiver">
+            <intent-filter>
+                <action android:name="com.byd.player.receiver.action.BTCHANNEL" />
+                <action android:name="com.byd.player.receiver.action.AUXCHANNEL" />
+            </intent-filter>
+        </receiver>
+        
         <receiver android:name="com.byd.player.receiver.BtStatusChangedBroadcastReceiver" >
             <intent-filter>
                 <action android:name="com.byd.player.receiver.action.BT_STATUS_CHANGED" />

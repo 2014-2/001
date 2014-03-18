@@ -159,8 +159,10 @@ public class BTPlayerActivity extends BaseActivity {
         registerBroadcast();
     }
     protected void initBTmusic(){
-        Intent service = new Intent(this, AudioChannelService.class);
-        service.putExtra("service_tag", SERVICE_TAG);
+    	Intent intent = new Intent("com.byd.player.receiver.action.BTCHANNEL");
+    	sendBroadcast(intent);
+        //Intent service = new Intent(this, AudioChannelService.class);
+        //service.putExtra("service_tag", SERVICE_TAG);
         //this.startService(service);
         //isChannelSrvBinded = bindService(service, mBTChannelSrv, Context.BIND_AUTO_CREATE);
 
