@@ -335,11 +335,11 @@ public class AudioListActivity extends BaseActivity implements OnItemClickListen
     }
 
     public void tabIndex(int index) {
-        AudioLoaderManager.getInstance().setViewType(index);
         switch (index) {
         case TAB_INDEX_LOCAL:
         case TAB_INDEX_SDCARD:
         case TAB_INDEX_USB:
+            AudioLoaderManager.getInstance().setViewType(index);
             mAdapter.onDataChange();
             break;
         case TAB_INDEX_AUX:
