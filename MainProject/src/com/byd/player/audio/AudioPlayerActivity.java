@@ -588,10 +588,12 @@ public class AudioPlayerActivity extends BaseActivity {
             mPopupAudioList = new PopupWindow(mAudioListView, 350, LayoutParams.WRAP_CONTENT);
             List<Song> songList = AudioLoaderManager.getInstance().getViewSongs();
             mAudioList = new ArrayList<HashMap<String,String>>();
-            for (Song song : songList) {
-                HashMap<String, String> map = new HashMap<String, String>();
-                map.put("audio_name", song.getFileTitle());
-                mAudioList.add(map);
+            if (null != songList) {
+                for (Song song : songList) {
+                    HashMap<String, String> map = new HashMap<String, String>();
+                    map.put("audio_name", song.getFileTitle());
+                    mAudioList.add(map);
+                }
             }
             String[] from = {"audio_name"};
             int[] to = {R.id.song_name};
