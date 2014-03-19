@@ -7,6 +7,7 @@ import android.os.IBinder;
 
 import com.byd.player.AuxAudioPlayActivity;
 import com.byd.player.config.Constants;
+import com.byd.player.receiver.AudioChannelBroadcastReceiver;
 import com.byd.player.receiver.DeviceConnReceiver;
 import com.byd.player.receiver.DeviceConnReceiver.AuxConnectListener;
 
@@ -34,6 +35,10 @@ public class AuxAudioService extends Service {
 
                 @Override
                 public void onConnected() {
+                    Intent setChannel = new Intent(
+                            AudioChannelBroadcastReceiver.ACTION_SWITCH_TO_AUX_CHANNEL);
+                    sendBroadcast(setChannel);
+
                     startAudioChannelService();
                     // Start AuxAudioPlayActivity
                     Intent activityIntent = new Intent(AuxAudioService.this,
