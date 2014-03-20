@@ -20,11 +20,11 @@ public class AudioChannelBroadcastReceiver extends BroadcastReceiver{
         AudioChannelService audioChannelService = new AudioChannelService();
         if (action.equals(ACTION_SWITCH_TO_BT_CHANNEL)){
             Log.d("AudioChannelBroadcastReceiver", "audiochannel: bt.");
-            audioChannelService.selectChannel(SERVICE_TAG_BT);
+            audioChannelService.startPlayAudio(SERVICE_TAG_BT);
         }
         else if (action.equals(ACTION_SWITCH_TO_AUX_CHANNEL)) {
             Log.d("AudioChannelBroadcastReceiver", "audiochannel: aux.");
-            audioChannelService.selectChannel(SERVICE_TAG_AUX);
+            audioChannelService.startPlayAudio(SERVICE_TAG_AUX);
         }
     }
 }

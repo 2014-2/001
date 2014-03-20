@@ -123,8 +123,15 @@ public class AudioChannelService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         // TODO Auto-generated method stub
-        // 开始即时播放
-        String service_tag = intent.getStringExtra("service_tag");
+        
+    	//startPlayAudio();
+        return super.onStartCommand(intent, flags, startId);
+    }
+
+    public void startPlayAudio(String channel)
+    {
+    	// 开始即时播放
+        //String service_tag = intent.getStringExtra("service_tag");
         recBufSize = AudioRecord.getMinBufferSize(sampleRateInHz, channelConfig, encodingBitrate);
         playBufSize = AudioTrack.getMinBufferSize(sampleRateInHz, channelConfig, encodingBitrate);
         if (audioRecord == null) {
@@ -145,17 +152,15 @@ public class AudioChannelService extends Service {
         if (blnInstantPlay || blnPlay) {
             audioTrack.setPlaybackRate(sampleRateInHz);
         }
-        selectChannel(service_tag);
+        selectChannel(channel);
         if (playThread != null && playThread.isAlive()) {
             playThread.interrupt();
             playThread = null;
         }
         playThread = new ThreadInstantPlay();
         playThread.start();
-
-        return super.onStartCommand(intent, flags, startId);
     }
-
+    
     /**
      * 即时播放线程
      */
