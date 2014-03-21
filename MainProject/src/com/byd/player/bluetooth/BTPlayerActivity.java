@@ -3,7 +3,6 @@ package com.byd.player.bluetooth;
 
 import java.util.List;
 
-import android.R.string;
 import android.app.ActivityManager;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
@@ -26,41 +25,19 @@ import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.SeekBar;
-import android.widget.TextView;
 
 import com.byd.player.BaseActivity;
 import com.byd.player.R;
 import com.byd.player.services.AudioChannelService;
 import com.byd.player.services.AudioChannelService.AudioChannelBinder;
-import com.byd.player.video.VideoView;
-import com.byd.player.view.CheckableImageView;
 import com.byd.player.view.VisualizeView;
 
 public class BTPlayerActivity extends BaseActivity {
     private static final String BTMUSIC = "BTPlayerActivity";
-    /* if we can ge ID3 info, this is useful.
-    private Song mPlayingSong;
-     */
 
-    private int mSongPosition;
-
-    /**
-     * The container of song info or lyrics
-     */
-    private LinearLayout mSongInfoAndLyricsContainer;
-
-    private TextView mTotalTime;
-
-    private TextView mPlayingTime;
-
-    private SeekBar mProgressBar;
-
-    private TextView mAlbumName;
-
-    private TextView mSingerName;
-
-    private TextView mMusicName;
+    private LayoutInflater mInflater;
+    
+    private PlayerReceiver mBTStatusReceiver;
     
     private ImageButton mBtnBack;
     
@@ -72,24 +49,30 @@ public class BTPlayerActivity extends BaseActivity {
 
     private VisualizeView mIconPause;
     
-    private boolean mIsPlaying = false;
+    private static boolean mIsPlaying = false;
 
     private ImageView mBtnNext;
 
     private ImageView mBtnPrevious;
 
-    private LayoutInflater mInflater;
-
-    private PlayerReceiver mPlayerReceiver;
-
-    private Intent mAudioServiceIntent;
-    
     private AudioManager audioManager;
 
     static public AudioChannelService BtChannelSrv;
 
     private static final String SERVICE_TAG = "audiochannel-bt";
     
+    //broadcast for receiving.
+    private final String BTSTATUS = "com.byd.player.receiver.action.BTSTATUS";
+    
+    //BT status.
+    private final int BTSTATUS_DISCONNECT = 48;
+    private final int BTSTATUS_CONNECTING = 49;
+    private final int BTSTATUS_CONNECTED  = 50;
+    private final int BTSTATUS_PLAYING    = 51;
+    private int btstatus = 48;
+    private static volatile boolean isBTMusicOperation = false;
+    
+    //broadcast for sending.
     private final String REQUESTSTATUS= "com.byd.player.bluetooth.action.REQUIRESTATUS";
     private final String A2DPCONNECT= "com.byd.player.bluetooth.action.A2DPCONNECT";
     private final String AVRCPCONNECT= "com.byd.player.bluetooth.action.AVRCPCONNECT";
@@ -105,16 +88,22 @@ public class BTPlayerActivity extends BaseActivity {
 	OnAudioFocusChangeListener afChangeListener = new OnAudioFocusChangeListener() {  
 	    public void onAudioFocusChange(int focusChange) {  
 	        if (focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT) {
-	            // Pause bt playback 
+	            // Pause bt playback
+	        	Log.d(BTMUSIC, "AUDIOFOCUS_LOSS_TRANSIENT");
 	            BTpause();
 	        } else if (focusChange == AudioManager.AUDIOFOCUS_LOSS) {  
-	            audioManager.abandonAudioFocus(afChangeListener);  
-	            // Pause bt playback  
-	            BTpause();
+	            if(false == isBTMusicOperation)
+	            {
+	            	audioManager.abandonAudioFocus(afChangeListener); 
+	            	// Pause bt playback  
+		            Log.d(BTMUSIC, "AUDIOFOCUS_LOSS");
+		            BTpause();
+	            }
 	        } else if (focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK) {  
 	            // Lower the volume  
 	        } else if (focusChange == AudioManager.AUDIOFOCUS_GAIN) {  
-	            // Resume bt playback  
+	            // Resume bt playback
+	        	Log.d(BTMUSIC, "AUDIOFOCUS_GAIN");
 	        	BTcontinuePlay();
 	        }
 	    }  
@@ -131,14 +120,22 @@ public class BTPlayerActivity extends BaseActivity {
             BtChannelSrv = null;
         }
     };
+    
     @Override
     protected void onStart() {
         super.onStart();
+    }
+    
+    @Override
+    protected void onResume() {
+        super.onResume();
+        sendBTMusicCmd(REQUESTSTATUS);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
+        isBTMusicOperation = false;
     }
 
     @Override
@@ -162,7 +159,7 @@ public class BTPlayerActivity extends BaseActivity {
 
         setContentView(R.layout.bt_music_play);
 
-        mInflater = this.getLayoutInflater();
+        //mInflater = this.getLayoutInflater();
         initView();
         registerBroadcast();
     }
@@ -343,20 +340,21 @@ public class BTPlayerActivity extends BaseActivity {
             Log.e(BTMUSIC, "pause music failed!");
         } else {
             Log.i(BTMUSIC, "music should be paused right now!");
+            updatePlayPauseBtn(false);
         }
-        updatePlayPauseBtn(false);
+        
     }
 
     private void BTcontinuePlay() {
         if (!sendBTMusicCmd(PLAY)){
             Log.e(BTMUSIC, "play music failed!");
         } else {
+        	isBTMusicOperation = true;
         	audioManager.requestAudioFocus(afChangeListener, AudioManager.STREAM_MUSIC,  AudioManager.AUDIOFOCUS_GAIN);  
-            Log.i(BTMUSIC, "music should be played right now!");
-//            audioManager.requestAudioFocus(afChangeListener, 
-//		            AudioManager.AUDIOFOCUS_GAIN_TRANSIENT, AudioManager.AUDIOFOCUS_GAIN_TRANSIENT_MAY_DUCK);
+            Log.i(BTMUSIC, "music should be played right now!" + ": " + isBTMusicOperation);
+            updatePlayPauseBtn(true);
         }
-        updatePlayPauseBtn(true);
+        
     }
 
     private void BTplayNext() {
@@ -384,13 +382,14 @@ public class BTPlayerActivity extends BaseActivity {
     }
 
     private void registerBroadcast() {
-        mPlayerReceiver = new PlayerReceiver();
+        mBTStatusReceiver = new PlayerReceiver();
         IntentFilter filter = new IntentFilter();
-        //        registerReceiver(mPlayerReceiver, filter);
+        filter.addAction(BTSTATUS);
+        registerReceiver(mBTStatusReceiver, filter);
     }
 
     private void unregisterBroadcast() {
-        //        unregisterReceiver(mPlayerReceiver);
+        unregisterReceiver(mBTStatusReceiver);
     }
 
     public class PlayerReceiver extends BroadcastReceiver {
@@ -398,12 +397,37 @@ public class BTPlayerActivity extends BaseActivity {
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
+            if(BTSTATUS.equals(action))
+            {
+            	if (intent.hasExtra("a2dp")) {
+            		switch(intent.getIntExtra("a2dp", 0)){
+            		case BTSTATUS_DISCONNECT:
+            			btstatus = BTSTATUS_DISCONNECT;
+            			updatePlayPauseBtn(false);
+            			break;
+            		case BTSTATUS_CONNECTING:
+            			btstatus = BTSTATUS_CONNECTING;
+            			updatePlayPauseBtn(false);
+            			break;
+            		case BTSTATUS_CONNECTED:
+            			btstatus = BTSTATUS_CONNECTED;
+            			updatePlayPauseBtn(false);
+            			break;
+            		case BTSTATUS_PLAYING:
+            			btstatus = BTSTATUS_PLAYING;
+            			updatePlayPauseBtn(true);
+            			break;
+            		default:
+            			btstatus = BTSTATUS_DISCONNECT;
+            		}
+                }
+            }
         }
     }
 
     private void updatePlayPauseBtn(boolean isPlay) {
         mIsPlaying = isPlay;
-        setPlayPauseIcon(isPlay);
+        setBTPlayPauseIcon();
     }
 
     public boolean isServiceRunning(Context mContext,String className){
@@ -423,8 +447,8 @@ public class BTPlayerActivity extends BaseActivity {
         return isRunning;
     }
     
-    private void setPlayPauseIcon(boolean isPlaying) {
-        if (isPlaying) {
+    private void setBTPlayPauseIcon() {
+        if (mIsPlaying) {
             mIconPause.setVisibility(View.VISIBLE);
             mIconPlay.setVisibility(View.GONE);
         } else {
