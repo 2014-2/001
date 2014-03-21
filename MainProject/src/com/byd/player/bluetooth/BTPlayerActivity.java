@@ -3,6 +3,7 @@ package com.byd.player.bluetooth;
 
 import java.util.List;
 
+import android.R.string;
 import android.app.ActivityManager;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
@@ -30,17 +31,14 @@ import android.widget.TextView;
 
 import com.byd.player.BaseActivity;
 import com.byd.player.R;
-import com.byd.player.bluetooth.BtActionManager.BtCmdEnum;
 import com.byd.player.services.AudioChannelService;
 import com.byd.player.services.AudioChannelService.AudioChannelBinder;
-import com.byd.player.services.BtService;
 import com.byd.player.video.VideoView;
 import com.byd.player.view.CheckableImageView;
 import com.byd.player.view.VisualizeView;
 
 public class BTPlayerActivity extends BaseActivity {
     private static final String BTMUSIC = "BTPlayerActivity";
-    BtService btService = com.byd.player.bluetooth.BTBaseActivity.btService;
     /* if we can ge ID3 info, this is useful.
     private Song mPlayingSong;
      */
@@ -91,8 +89,18 @@ public class BTPlayerActivity extends BaseActivity {
     static public AudioChannelService BtChannelSrv;
 
     private static final String SERVICE_TAG = "audiochannel-bt";
-
-    private boolean isChannelSrvBinded=false;
+    
+    private final String REQUESTSTATUS= "com.byd.player.bluetooth.action.REQUIRESTATUS";
+    private final String A2DPCONNECT= "com.byd.player.bluetooth.action.A2DPCONNECT";
+    private final String AVRCPCONNECT= "com.byd.player.bluetooth.action.AVRCPCONNECT";
+    private final String PLAY= "com.byd.player.bluetooth.action.PLAY";
+    private final String PAUSE= "com.byd.player.bluetooth.action.PAUSE";
+    private final String FORWARD= "com.byd.player.bluetooth.action.FORWARD";
+    private final String BACKWARD= "com.byd.player.bluetooth.action.BACKWARD";
+    private final String FASTFORWARD= "com.byd.player.bluetooth.action.FASTFORWARD";
+    private final String FASTFORWARDSTOP= "com.byd.player.bluetooth.action.FASTFORWARDSTOP";
+    private final String FASTBACKWARD= "com.byd.player.bluetooth.action.FASTBACKWARD";
+    private final String FASTBACKWARDSTOP= "com.byd.player.bluetooth.action.FASTBACKWARDSTOP";
     
 	OnAudioFocusChangeListener afChangeListener = new OnAudioFocusChangeListener() {  
 	    public void onAudioFocusChange(int focusChange) {  
@@ -166,7 +174,7 @@ public class BTPlayerActivity extends BaseActivity {
         //this.startService(service);
         //isChannelSrvBinded = bindService(service, mBTChannelSrv, Context.BIND_AUTO_CREATE);
 
-        if (!btService.doAction(BtCmdEnum.BT_CMD_CONNECT_A2DP)){
+        if (!sendBTMusicCmd(A2DPCONNECT)){
             //TODO deal with a2dp-connect failed, give a toast?
             Log.e(BTMUSIC, "connect a2dp FAILED!");
         } else {
@@ -174,23 +182,19 @@ public class BTPlayerActivity extends BaseActivity {
             audioManager = (AudioManager) getBaseContext().getSystemService(Context.AUDIO_SERVICE);
             audioManager.setStreamMute(AudioManager.STREAM_VOICE_CALL, false);
             audioManager.setStreamVolume(AudioManager.STREAM_VOICE_CALL, audioManager.getStreamMaxVolume(AudioManager.STREAM_VOICE_CALL), 0);
-            audioManager.setMode(AudioManager.MODE_IN_CALL);
+            audioManager.setMode(AudioManager.STREAM_MUSIC);
             audioManager.setBluetoothScoOn(true);
             audioManager.startBluetoothSco();
             setVolumeControlStream(AudioManager.STREAM_MUSIC);
 
         }
 
-        if (!btService.doAction(BtCmdEnum.BT_CMD_AVRCP_CONECT)){
+        if (!sendBTMusicCmd(AVRCPCONNECT)){
             Log.w(BTMUSIC, "This phone doesn't support AVRCP!");
         } else {
             Log.i(BTMUSIC, "support AVCRP!");
         }
-        if (!btService.doAction(BtCmdEnum.BT_CMD_ID3_SUPPORT_INDICATION)){
-            Log.w(BTMUSIC, "The device doesn't support ID3 info!");
-        } else {
-            Log.i(BTMUSIC, "support ID3 info!");
-        }
+
         //BTcontinuePlay();
 
     }
@@ -271,7 +275,7 @@ public class BTPlayerActivity extends BaseActivity {
                 @Override
                 public boolean onLongClick(View v) {
                     // TODO Auto-generated method stub
-                    if (!btService.doAction(BtCmdEnum.BT_CMD_FAST_FORWARD)){
+                    if (!sendBTMusicCmd(FASTFORWARD)){
                         Log.w(BTMUSIC, "fast forward failed!");
                     } else {
                         Log.i(BTMUSIC, "fast forward successfully!");
@@ -285,7 +289,7 @@ public class BTPlayerActivity extends BaseActivity {
                 public boolean onTouch(View v, MotionEvent event) {
                     // TODO Auto-generated method stub
                     if (event.getAction()== MotionEvent.ACTION_UP){
-                        if (!btService.doAction(BtCmdEnum.BT_CMD_FAST_FORWARD_STOP)){
+                        if (!sendBTMusicCmd(FASTFORWARDSTOP)){
                             Log.w(BTMUSIC, "fast forward stop failed!");
                         } else {
                             Log.i(BTMUSIC, "fast forward stop successfully!");
@@ -308,7 +312,7 @@ public class BTPlayerActivity extends BaseActivity {
                 @Override
                 public boolean onLongClick(View v) {
                     // TODO Auto-generated method stub
-                    if (!btService.doAction(BtCmdEnum.BT_CMD_FAST_BACKWARD)){
+                    if (!sendBTMusicCmd(FASTBACKWARD)){
                         Log.w(BTMUSIC, "fast backward failed!");
                     } else {
                         Log.i(BTMUSIC, "fast backward successfully!");
@@ -322,7 +326,7 @@ public class BTPlayerActivity extends BaseActivity {
                 public boolean onTouch(View v, MotionEvent event) {
                     // TODO Auto-generated method stub
                     if (event.getAction()== MotionEvent.ACTION_UP){
-                        if (!btService.doAction(BtCmdEnum.BT_CMD_FAST_BACKWARD_STOP)){
+                        if (!sendBTMusicCmd(FASTBACKWARDSTOP)){
                             Log.w(BTMUSIC, "fast backward stop failed!");
                         } else {
                             Log.i(BTMUSIC, "fast backward stop successfully!");
@@ -335,7 +339,7 @@ public class BTPlayerActivity extends BaseActivity {
     }
 
     private void BTpause() {
-        if (!btService.doAction(BtCmdEnum.BT_CMD_AV_PAUSE)){
+        if (!sendBTMusicCmd(PAUSE)){
             Log.e(BTMUSIC, "pause music failed!");
         } else {
             Log.i(BTMUSIC, "music should be paused right now!");
@@ -344,9 +348,10 @@ public class BTPlayerActivity extends BaseActivity {
     }
 
     private void BTcontinuePlay() {
-        if (!btService.doAction(BtCmdEnum.BT_CMD_AV_PLAY)){
+        if (!sendBTMusicCmd(PLAY)){
             Log.e(BTMUSIC, "play music failed!");
         } else {
+        	audioManager.requestAudioFocus(afChangeListener, AudioManager.STREAM_MUSIC,  AudioManager.AUDIOFOCUS_GAIN);  
             Log.i(BTMUSIC, "music should be played right now!");
 //            audioManager.requestAudioFocus(afChangeListener, 
 //		            AudioManager.AUDIOFOCUS_GAIN_TRANSIENT, AudioManager.AUDIOFOCUS_GAIN_TRANSIENT_MAY_DUCK);
@@ -355,7 +360,7 @@ public class BTPlayerActivity extends BaseActivity {
     }
 
     private void BTplayNext() {
-        if (!btService.doAction(BtCmdEnum.BT_CMD_AV_FORWARD)){
+        if (!sendBTMusicCmd(FORWARD)){
             Log.e(BTMUSIC, "next play failed!");
         } else {
             Log.i(BTMUSIC, "next music!");
@@ -363,11 +368,19 @@ public class BTPlayerActivity extends BaseActivity {
     }
 
     private void BTplayPrevious() {
-        if (!btService.doAction(BtCmdEnum.BT_CMD_AV_BACKWARD)){
+        if (!sendBTMusicCmd(BACKWARD)){
             Log.e(BTMUSIC, "previous play failed!");
         } else {
             Log.i(BTMUSIC, "previous music!");
         }
+    }
+    
+    private boolean sendBTMusicCmd(String BTcmd)
+    {
+    	Intent intent_toBTphone= new Intent();
+    	intent_toBTphone.setAction(BTcmd);
+        sendBroadcast(intent_toBTphone);
+    	return true;
     }
 
     private void registerBroadcast() {

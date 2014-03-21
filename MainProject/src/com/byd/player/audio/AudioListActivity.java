@@ -33,7 +33,7 @@ import com.byd.player.BaseActivity;
 import com.byd.player.R;
 import com.byd.player.audio.AudioDeleteAsyncTask.DeleteListener;
 import com.byd.player.audio.AudioSearchTask.SearchListener;
-import com.byd.player.bluetooth.ConnectActivity;
+import com.byd.player.bluetooth.BTPlayerActivity;
 import com.byd.player.config.Constants;
 import com.byd.player.receiver.USBMountReceiver;
 import com.byd.player.utils.ToastUtils;
@@ -347,7 +347,7 @@ public class AudioListActivity extends BaseActivity implements OnItemClickListen
             break;
         case TAB_INDEX_MOBILE:
             Intent intent = new Intent();
-            intent.setClass(AudioListActivity.this, ConnectActivity.class);
+            intent.setClass(AudioListActivity.this, BTPlayerActivity.class);
             startActivity(intent);
             break;
         }
