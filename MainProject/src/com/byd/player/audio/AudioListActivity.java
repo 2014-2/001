@@ -51,6 +51,9 @@ public class AudioListActivity extends BaseActivity implements OnItemClickListen
     public final static int MODE_NORMAL = 0;
     public final static int MODE_EDIT = MODE_NORMAL + 1;
     public final static int MODE_SEARCH = MODE_EDIT + 1;
+    
+    private final static int REQCODE_AUX = 100;
+    private final static int REQCODE_BT = 200;
 
     private final int[] TAB_IDS = new int[] { R.id.btn_audio_Local, R.id.btn_audio_sdcard,
             R.id.btn_audio_usb, R.id.btn_audio_aux, R.id.btn_audio_mobile };
@@ -343,12 +346,14 @@ public class AudioListActivity extends BaseActivity implements OnItemClickListen
             mAdapter.onDataChange();
             break;
         case TAB_INDEX_AUX:
-            startActivity(new Intent(AudioListActivity.this, AuxAudioPlayActivity.class));
+            Intent intent_aux = new Intent();
+            intent_aux.setClass(AudioListActivity.this, AuxAudioPlayActivity.class);
+            startActivityForResult(intent_aux, REQCODE_AUX); 
             break;
         case TAB_INDEX_MOBILE:
-            Intent intent = new Intent();
-            intent.setClass(AudioListActivity.this, BTPlayerActivity.class);
-            startActivity(intent);
+            Intent intent_bt = new Intent();
+            intent_bt.setClass(AudioListActivity.this, BTPlayerActivity.class);
+            startActivityForResult(intent_bt, REQCODE_BT);  
             break;
         }
 
@@ -530,4 +535,22 @@ public class AudioListActivity extends BaseActivity implements OnItemClickListen
         mHandler.sendEmptyMessage(MSG_DISMISS_PROGRESS_DIALOG);
     }
 
+    @Override  
+    protected void onActivityResult(int requestCode, int resultCode, Intent data)  
+    {  
+    	super.onActivityResult(requestCode, resultCode, data);  
+    	if (requestCode == REQCODE_BT)
+        {
+            findViewById(TAB_IDS[0]).setEnabled(false);
+            findViewById(TAB_IDS[0]).setBackgroundResource(TAB_SELECTED_BGS[0]);
+            findViewById(TAB_IDS[4]).setEnabled(true);
+            findViewById(TAB_IDS[4]).setBackgroundResource(TAB_NORMAL_BGS[4]);
+        } else if (requestCode == REQCODE_AUX)
+        {
+            findViewById(TAB_IDS[0]).setEnabled(false);
+            findViewById(TAB_IDS[0]).setBackgroundResource(TAB_SELECTED_BGS[0]);
+            findViewById(TAB_IDS[3]).setEnabled(true);
+            findViewById(TAB_IDS[3]).setBackgroundResource(TAB_NORMAL_BGS[3]);
+        }
+    }  
 }

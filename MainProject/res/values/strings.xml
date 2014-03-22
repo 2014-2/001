@@ -55,10 +55,7 @@
     <string name="aux_disconnected">AUX音频设备未连接</string>
     
     <!-- BT -->
-    <string name="txt_bt_search">搜索蓝牙</string>
-    <string name="txt_bt_switch">蓝牙开关</string>
-    <string name="txt_bt_visible">蓝牙可见</string>
-    <string name="txt_bt_exit">退出</string>
-    <string name="enter_pin_code_prompt">请输入配对码</string>
-    <string name="auto_connect">自动连接</string>
+    <string name="bt_plsconnect">请连接蓝牙音频</string>
+    <string name="bt_connected">已连接蓝牙音频</string>
+    
 </resources>

@@ -25,6 +25,7 @@ import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.byd.player.BaseActivity;
 import com.byd.player.R;
@@ -141,8 +142,9 @@ public class BTPlayerActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        //BTpause();
         unregisterBroadcast();
+        //BTpause();
+        
         /*
         if (mBTChannelSrv != null){
 			unbindService(mBTChannelSrv);
@@ -404,27 +406,37 @@ public class BTPlayerActivity extends BaseActivity {
             		case BTSTATUS_DISCONNECT:
             			btstatus = BTSTATUS_DISCONNECT;
             			updatePlayPauseBtn(false);
+            			showToast(getString(R.string.bt_plsconnect));
             			break;
             		case BTSTATUS_CONNECTING:
             			btstatus = BTSTATUS_CONNECTING;
             			updatePlayPauseBtn(false);
+            			showToast(getString(R.string.bt_plsconnect));
             			break;
             		case BTSTATUS_CONNECTED:
             			btstatus = BTSTATUS_CONNECTED;
             			updatePlayPauseBtn(false);
+            			showToast(getString(R.string.bt_connected));
             			break;
             		case BTSTATUS_PLAYING:
             			btstatus = BTSTATUS_PLAYING;
             			updatePlayPauseBtn(true);
+            			showToast(getString(R.string.bt_connected));
             			break;
             		default:
             			btstatus = BTSTATUS_DISCONNECT;
+            			showToast(getString(R.string.bt_plsconnect));
             		}
                 }
             }
         }
     }
 
+    private void showToast(String info)
+    {
+    	Toast.makeText(this, info, Toast.LENGTH_SHORT).show();
+    }
+    
     private void updatePlayPauseBtn(boolean isPlay) {
         mIsPlaying = isPlay;
         setBTPlayPauseIcon();
