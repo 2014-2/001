@@ -32,9 +32,9 @@ public class AudioChannelService extends Service {
      * */
     private int encodingBitrate = AudioFormat.ENCODING_PCM_16BIT;
 
-    private AudioRecord audioRecord;
+    private static AudioRecord audioRecord;
 
-    private AudioTrack audioTrack;
+    private static AudioTrack audioTrack;
 
     /**
      * 是否录音
@@ -130,44 +130,54 @@ public class AudioChannelService extends Service {
         return super.onStartCommand(intent, flags, startId);
     }
 
-    public void startPlayAudio(String channel)
+    public void startPlayAudio(String channel) throws InterruptedException
     {
     	// 开始即时播放
         //String service_tag = intent.getStringExtra("service_tag");
     	
     	if(currentChannelString != channel)
     	{
+//    		if(audioRecord != null)
+//            {
+//    			audioRecord.release();
+//            }
+//    		if(audioTrack != null)
+//            {
+//    			audioTrack.release();
+//            }
+            
     		blnInstantPlay = false;
+    		recBufSize = AudioRecord.getMinBufferSize(sampleRateInHz, channelConfig, encodingBitrate);
+            playBufSize = AudioTrack.getMinBufferSize(sampleRateInHz, channelConfig, encodingBitrate);
+            if (audioRecord == null) {
+                audioRecord = new AudioRecord(1,
+                        sampleRateInHz, channelConfig, encodingBitrate, recBufSize);
+            } else {
+                audioRecord.stop();
+                Thread.sleep(500);
+            }
+            if (audioTrack == null) {
+                audioTrack = new AudioTrack(AudioManager.STREAM_MUSIC, sampleRateInHz,
+                        channelConfig, encodingBitrate, playBufSize,
+                        AudioTrack.MODE_STREAM);
+            } else {
+                audioTrack.stop();
+                Thread.sleep(500);
+            }
+            blnInstantPlay = true;
+
+            if (blnInstantPlay || blnPlay) {
+                audioTrack.setPlaybackRate(sampleRateInHz);
+            }
+            selectChannel(channel);
+            if (playThread != null && playThread.isAlive()) {
+                playThread.interrupt();
+                playThread = null;
+            }
+            playThread = new ThreadInstantPlay();
+            playThread.start();
     	}
     	currentChannelString = channel;
-    	
-        recBufSize = AudioRecord.getMinBufferSize(sampleRateInHz, channelConfig, encodingBitrate);
-        playBufSize = AudioTrack.getMinBufferSize(sampleRateInHz, channelConfig, encodingBitrate);
-        if (audioRecord == null) {
-            audioRecord = new AudioRecord(1,
-                    sampleRateInHz, channelConfig, encodingBitrate, recBufSize);
-        } else {
-            audioRecord.stop();
-        }
-        if (audioTrack == null) {
-            audioTrack = new AudioTrack(AudioManager.STREAM_MUSIC, sampleRateInHz,
-                    channelConfig, encodingBitrate, playBufSize,
-                    AudioTrack.MODE_STREAM);
-        } else {
-            audioTrack.stop();
-        }
-        blnInstantPlay = true;
-
-        if (blnInstantPlay || blnPlay) {
-            audioTrack.setPlaybackRate(sampleRateInHz);
-        }
-        selectChannel(channel);
-        if (playThread != null && playThread.isAlive()) {
-            playThread.interrupt();
-            playThread = null;
-        }
-        playThread = new ThreadInstantPlay();
-        playThread.start();
     }
     
     /**

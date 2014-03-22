@@ -61,11 +61,11 @@ public class AuxAudioPlayActivity extends BaseActivity {
         Intent setChannel = new Intent(
                 AudioChannelBroadcastReceiver.ACTION_SWITCH_TO_AUX_CHANNEL);
         sendBroadcast(setChannel);
-        audioManager = (AudioManager) getBaseContext().getSystemService(Context.AUDIO_SERVICE);
-    	audioManager.requestAudioFocus(afChangeListener, AudioManager.STREAM_MUSIC,  AudioManager.AUDIOFOCUS_GAIN);  
-    	Intent intent_toBTphone= new Intent();
-    	intent_toBTphone.setAction("com.byd.player.bluetooth.action.STOP");
-        sendBroadcast(intent_toBTphone);
+        //audioManager = (AudioManager) getBaseContext().getSystemService(Context.AUDIO_SERVICE);
+    	//audioManager.requestAudioFocus(afChangeListener, AudioManager.STREAM_MUSIC,  AudioManager.AUDIOFOCUS_GAIN);  
+//    	Intent intent_toBTphone= new Intent();
+//    	intent_toBTphone.setAction("com.byd.player.bluetooth.action.PLAY");
+//        sendBroadcast(intent_toBTphone);
         
         mDeviceConnReceiver = new DeviceConnReceiver(new AuxConnectListener() {
 

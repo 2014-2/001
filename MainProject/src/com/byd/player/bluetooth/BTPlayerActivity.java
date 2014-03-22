@@ -92,14 +92,14 @@ public class BTPlayerActivity extends BaseActivity {
 	        if (focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT) {
 	            // Pause bt playback
 	        	Log.d(BTMUSIC, "AUDIOFOCUS_LOSS_TRANSIENT");
-	        	BTstop();
+	        	BTpause();
 	        } else if (focusChange == AudioManager.AUDIOFOCUS_LOSS) {  
 	            if(false == isBTMusicOperation)
 	            {
 	            	audioManager.abandonAudioFocus(afChangeListener); 
 	            	// Pause bt playback  
 		            Log.d(BTMUSIC, "AUDIOFOCUS_LOSS");
-		            BTstop();
+		            BTpause();
 	            }
 	        } else if (focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK) {  
 	            // Lower the volume  
