@@ -79,6 +79,7 @@ public class BTPlayerActivity extends BaseActivity {
     private final String AVRCPCONNECT= "com.byd.player.bluetooth.action.AVRCPCONNECT";
     private final String PLAY= "com.byd.player.bluetooth.action.PLAY";
     private final String PAUSE= "com.byd.player.bluetooth.action.PAUSE";
+    private final String STOP= "com.byd.player.bluetooth.action.STOP";
     private final String FORWARD= "com.byd.player.bluetooth.action.FORWARD";
     private final String BACKWARD= "com.byd.player.bluetooth.action.BACKWARD";
     private final String FASTFORWARD= "com.byd.player.bluetooth.action.FASTFORWARD";
@@ -91,14 +92,14 @@ public class BTPlayerActivity extends BaseActivity {
 	        if (focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT) {
 	            // Pause bt playback
 	        	Log.d(BTMUSIC, "AUDIOFOCUS_LOSS_TRANSIENT");
-	            BTpause();
+	        	BTstop();
 	        } else if (focusChange == AudioManager.AUDIOFOCUS_LOSS) {  
 	            if(false == isBTMusicOperation)
 	            {
 	            	audioManager.abandonAudioFocus(afChangeListener); 
 	            	// Pause bt playback  
 		            Log.d(BTMUSIC, "AUDIOFOCUS_LOSS");
-		            BTpause();
+		            BTstop();
 	            }
 	        } else if (focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK) {  
 	            // Lower the volume  
@@ -181,9 +182,9 @@ public class BTPlayerActivity extends BaseActivity {
             audioManager = (AudioManager) getBaseContext().getSystemService(Context.AUDIO_SERVICE);
             audioManager.setStreamMute(AudioManager.STREAM_VOICE_CALL, false);
             audioManager.setStreamVolume(AudioManager.STREAM_VOICE_CALL, audioManager.getStreamMaxVolume(AudioManager.STREAM_VOICE_CALL), 0);
-            audioManager.setMode(AudioManager.STREAM_MUSIC);
             audioManager.setBluetoothScoOn(true);
             audioManager.startBluetoothSco();
+            audioManager.setMode(AudioManager.STREAM_MUSIC);
             setVolumeControlStream(AudioManager.STREAM_MUSIC);
 
         }
@@ -344,7 +345,15 @@ public class BTPlayerActivity extends BaseActivity {
             Log.i(BTMUSIC, "music should be paused right now!");
             updatePlayPauseBtn(false);
         }
-        
+    }
+    
+    private void BTstop() {
+        if (!sendBTMusicCmd(STOP)){
+            Log.e(BTMUSIC, "stop music failed!");
+        } else {
+            Log.i(BTMUSIC, "music should be stop right now!");
+            updatePlayPauseBtn(false);
+        }
     }
 
     private void BTcontinuePlay() {

@@ -47,7 +47,9 @@ public class AudioChannelService extends Service {
     /**
      * 即时播放
      * */
-    private boolean blnInstantPlay = false;
+    private static volatile boolean blnInstantPlay = false;
+    
+    private volatile static String currentChannelString = "none";
 
     private static final int RECORDER_BPP = 16;
 
@@ -132,6 +134,13 @@ public class AudioChannelService extends Service {
     {
     	// 开始即时播放
         //String service_tag = intent.getStringExtra("service_tag");
+    	
+    	if(currentChannelString != channel)
+    	{
+    		blnInstantPlay = false;
+    	}
+    	currentChannelString = channel;
+    	
         recBufSize = AudioRecord.getMinBufferSize(sampleRateInHz, channelConfig, encodingBitrate);
         playBufSize = AudioTrack.getMinBufferSize(sampleRateInHz, channelConfig, encodingBitrate);
         if (audioRecord == null) {
