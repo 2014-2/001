@@ -15,6 +15,7 @@ import android.media.AudioManager.OnAudioFocusChangeListener;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -25,6 +26,8 @@ import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.byd.player.BaseActivity;
@@ -42,11 +45,15 @@ public class BTPlayerActivity extends BaseActivity {
     
     private ImageButton mBtnBack;
     
+    private ImageButton mAudioList;
+    
     private ImageView mBtStatus;
 
     private LinearLayout mBtnPlayPause;
     
     private ImageView mIconPlay;
+    
+    private TextView mHeaderTitle;
 
     private VisualizeView mIconPause;
     
@@ -200,8 +207,8 @@ public class BTPlayerActivity extends BaseActivity {
     }
 
     protected void initView() {
-    	mBtStatus = (ImageView)findViewById(R.id.icon_bt);
-    	mBtStatus.setVisibility(View.VISIBLE);
+//    	mBtStatus = (ImageView)findViewById(R.id.icon_bt);
+//    	mBtStatus.setVisibility(View.VISIBLE);
     	
         initBTmusic();
         /*
@@ -229,6 +236,19 @@ public class BTPlayerActivity extends BaseActivity {
             mPlayingTime = (TextView)findViewById(R.id.audio_playing_time);
         }
         */
+          
+        
+        if(null == mAudioList)
+        {
+        	mAudioList = (ImageButton)findViewById(R.id.button_header_list);
+        	mAudioList.setVisibility(View.INVISIBLE);;
+        }
+        
+        if(null == mHeaderTitle)
+        {
+        	mHeaderTitle = (TextView)findViewById(R.id.tv_header_title);
+        	mHeaderTitle.setText(R.string.bt_title);
+        }
         
         if (null == mIconPlay) {
             mIconPlay = (ImageView)findViewById(R.id.audio_play);
@@ -254,10 +274,11 @@ public class BTPlayerActivity extends BaseActivity {
         
         if(null == mBtnBack)
         {
-        	mBtnBack = (ImageButton) findViewById(R.id.btn_reback);
+        	mBtnBack = (ImageButton) findViewById(R.id.button_audio_header_back);
         	mBtnBack.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                	BTpause();
                     finish();
                 }
             });
@@ -477,4 +498,13 @@ public class BTPlayerActivity extends BaseActivity {
             mIconPause.setVisibility(View.GONE);
         }
     }
+
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if (KeyEvent.KEYCODE_BACK == keyCode)
+		{
+			BTpause();
+		}
+		return super.onKeyDown(keyCode, event);
+	}
 }

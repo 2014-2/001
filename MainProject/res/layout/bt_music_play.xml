@@ -12,10 +12,10 @@
         android:layout_alignParentTop="true"
         android:background="@drawable/audio_progress_bg" >
 
-        <include 
-	    android:id="@+id/ly_title_for_bt_connect"
-	    android:layout_alignParentTop="true"
-	    layout="@layout/title"/>
+        <include
+            android:id="@+id/header_bar"
+            android:layout_alignParentTop="true"
+            layout="@layout/header_audio_player" />
 
         <RelativeLayout
             android:layout_width="match_parent"

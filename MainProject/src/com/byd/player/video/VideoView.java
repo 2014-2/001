@@ -564,7 +564,7 @@ public class VideoView extends SurfaceView implements MediaPlayerControl {
 	public void start() {
 		if (mMediaPlayer != null && mIsPrepared) {
 		   audioManager.requestAudioFocus(afChangeListener, 
-		            AudioManager.AUDIOFOCUS_GAIN_TRANSIENT, AudioManager.AUDIOFOCUS_GAIN_TRANSIENT_MAY_DUCK);
+		            AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
 			mMediaPlayer.start();
 			mStartWhenPrepared = false;
 		} else {
