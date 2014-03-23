@@ -118,7 +118,8 @@ public class BrowserActivity extends BaseActivity implements OnClickListener {
         if(tabIndex < tabResId.length && tabIndex >= 0) {
             currentTabSelected = tabIndex;
         }
-        boolean isEmpty = getVideoList(currentTabSelected) == null;
+        ArrayList<MovieInfo> videoList = getVideoList(currentTabSelected);
+        boolean isEmpty = (videoList == null) || (videoList.size() == 0);
         View videoContentFrame;
         if(frameContentView[currentTabSelected] == null) {
             videoContentFrame = mLayoutInflater.inflate(R.layout.video_content_frame, null);
