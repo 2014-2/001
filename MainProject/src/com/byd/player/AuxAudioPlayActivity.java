@@ -3,48 +3,40 @@ package com.byd.player;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.media.AudioManager;
 import android.media.AudioManager.OnAudioFocusChangeListener;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.byd.player.bluetooth.BTPlayerActivity;
 import com.byd.player.config.Constants;
 import com.byd.player.receiver.AudioChannelBroadcastReceiver;
-import com.byd.player.receiver.DeviceConnReceiver;
-import com.byd.player.receiver.DeviceConnReceiver.AuxConnectListener;
 import com.byd.player.services.AudioChannelService;
 
 public class AuxAudioPlayActivity extends BaseActivity {
 
-    private DeviceConnReceiver mDeviceConnReceiver;
-
-    private static final String SERVICE_TAG = "audiochannel-aux";
-
     private TextView mTvAuxStatus;
 
     private Intent mAudioChannelIntent;
-    
+
     private AudioManager audioManager;
-    
-	OnAudioFocusChangeListener afChangeListener = new OnAudioFocusChangeListener() {  
-	    public void onAudioFocusChange(int focusChange) {  
-	        if (focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT) {
-	        	
-	        } else if (focusChange == AudioManager.AUDIOFOCUS_LOSS) {  
-	            switchToBTChannel();
-	        } else if (focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK) {  
-	        	
-	        } else if (focusChange == AudioManager.AUDIOFOCUS_GAIN) {  
-	        	
-	        }
-	    }  
-	};
+
+    OnAudioFocusChangeListener afChangeListener = new OnAudioFocusChangeListener() {
+        @Override
+        public void onAudioFocusChange(int focusChange) {
+            if (focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT) {
+
+            } else if (focusChange == AudioManager.AUDIOFOCUS_LOSS) {
+                switchToBTChannel();
+            } else if (focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK) {
+
+            } else if (focusChange == AudioManager.AUDIOFOCUS_GAIN) {
+
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,55 +52,26 @@ public class AuxAudioPlayActivity extends BaseActivity {
         // because of the fail of receiving aux device event, open the aux channel directly.
         Toast.makeText(this, "已切换至aux声道", Toast.LENGTH_LONG).show();
 
-        //audioManager = (AudioManager) getBaseContext().getSystemService(Context.AUDIO_SERVICE);
-    	//audioManager.requestAudioFocus(afChangeListener, AudioManager.STREAM_MUSIC,  AudioManager.AUDIOFOCUS_GAIN);  
-//    	Intent intent_toBTphone= new Intent();
-//    	intent_toBTphone.setAction("com.byd.player.bluetooth.action.PLAY");
-//        sendBroadcast(intent_toBTphone);
-        
-        mDeviceConnReceiver = new DeviceConnReceiver(new AuxConnectListener() {
-
-            @Override
-            public void onDisconnected() {
-                mTvAuxStatus.setText(R.string.aux_disconnected);
-                stopService(mAudioChannelIntent);
-            }
-
-            @Override
-            public void onConnected() {
-                mTvAuxStatus.setText(R.string.aux_connected);
-                startService(mAudioChannelIntent);
-            }
-        });
-        IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(Intent.ACTION_HEADSET_PLUG);
-        registerReceiver(mDeviceConnReceiver, intentFilter);
-
-        
-        // TODO: Need start service when aux device connected
         mAudioChannelIntent = new Intent(this, AudioChannelService.class);
-        mAudioChannelIntent.putExtra("service_tag", SERVICE_TAG);
-        // startService(mAudioChannelIntent);
+        startService(mAudioChannelIntent);
     }
 
     @Override
     protected void onDestroy() {
-        unregisterReceiver(mDeviceConnReceiver);
-//        Toast.makeText(this, "已切换至蓝牙声道", Toast.LENGTH_LONG).show();
-        //stopService(mAudioChannelIntent);
+        stopService(mAudioChannelIntent);
         super.onDestroy();
     }
-    
+
     @Override
     protected void onResume()
     {
 
         audioManager = (AudioManager) getBaseContext().getSystemService(Context.AUDIO_SERVICE);
-    	audioManager.requestAudioFocus(afChangeListener, AudioManager.STREAM_MUSIC,  AudioManager.AUDIOFOCUS_GAIN); 
-    	switchToAUXChannel();
-    	super.onResume();
+        audioManager.requestAudioFocus(afChangeListener, AudioManager.STREAM_MUSIC,  AudioManager.AUDIOFOCUS_GAIN);
+        switchToAUXChannel();
+        super.onResume();
     }
-    
+
     private void switchToBTChannel()
     {
         Intent setChannel = new Intent(
@@ -116,7 +79,7 @@ public class AuxAudioPlayActivity extends BaseActivity {
         sendBroadcast(setChannel);
         audioManager.abandonAudioFocus(afChangeListener);
     }
-    
+
     private void switchToAUXChannel()
     {
         Intent setChannel = new Intent(
@@ -125,17 +88,17 @@ public class AuxAudioPlayActivity extends BaseActivity {
     }
 
     public void onBackBtn(View v) {
-    	switchToBTChannel();
+        switchToBTChannel();
         onBackPressed();
 
     }
-    
-	@Override
-	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		if (KeyEvent.KEYCODE_BACK == keyCode)
-		{
-			switchToBTChannel();
-		}
-		return super.onKeyDown(keyCode, event);
-	}
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (KeyEvent.KEYCODE_BACK == keyCode)
+        {
+            switchToBTChannel();
+        }
+        return super.onKeyDown(keyCode, event);
+    }
 }

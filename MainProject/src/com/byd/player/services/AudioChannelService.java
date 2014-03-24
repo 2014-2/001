@@ -48,7 +48,7 @@ public class AudioChannelService extends Service {
      * 即时播放
      * */
     private static volatile boolean blnInstantPlay = false;
-    
+
     private volatile static String currentChannelString = "none";
 
     private static final int RECORDER_BPP = 16;
@@ -125,35 +125,37 @@ public class AudioChannelService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         // TODO Auto-generated method stub
-        
-    	//startPlayAudio();
+
+        //startPlayAudio();
         return super.onStartCommand(intent, flags, startId);
     }
 
     public void startPlayAudio(String channel) throws InterruptedException
     {
-    	// 开始即时播放
+        // 开始即时播放
         //String service_tag = intent.getStringExtra("service_tag");
-    	
-    	if(currentChannelString != channel)
-    	{
-//    		if(audioRecord != null)
-//            {
-//    			audioRecord.release();
-//            }
-//    		if(audioTrack != null)
-//            {
-//    			audioTrack.release();
-//            }
-            
-    		blnInstantPlay = false;
-    		recBufSize = AudioRecord.getMinBufferSize(sampleRateInHz, channelConfig, encodingBitrate);
+
+        if(currentChannelString != channel)
+        {
+            //    		if(audioRecord != null)
+            //            {
+            //    			audioRecord.release();
+            //            }
+            //    		if(audioTrack != null)
+            //            {
+            //    			audioTrack.release();
+            //            }
+
+            blnInstantPlay = false;
+            recBufSize = AudioRecord.getMinBufferSize(sampleRateInHz, channelConfig, encodingBitrate);
             playBufSize = AudioTrack.getMinBufferSize(sampleRateInHz, channelConfig, encodingBitrate);
             if (audioRecord == null) {
                 audioRecord = new AudioRecord(1,
                         sampleRateInHz, channelConfig, encodingBitrate, recBufSize);
             } else {
-                audioRecord.stop();
+                if (audioRecord.getState() == AudioRecord.STATE_INITIALIZED) {
+                    audioRecord.stop();
+                }
                 Thread.sleep(500);
             }
             if (audioTrack == null) {
@@ -161,7 +163,9 @@ public class AudioChannelService extends Service {
                         channelConfig, encodingBitrate, playBufSize,
                         AudioTrack.MODE_STREAM);
             } else {
-                audioTrack.stop();
+                if (audioTrack.getState() == AudioRecord.STATE_INITIALIZED){
+                    audioTrack.stop();
+                }
                 Thread.sleep(500);
             }
             blnInstantPlay = true;
@@ -176,10 +180,10 @@ public class AudioChannelService extends Service {
             }
             playThread = new ThreadInstantPlay();
             playThread.start();
-    	}
-    	currentChannelString = channel;
+        }
+        currentChannelString = channel;
     }
-    
+
     /**
      * 即时播放线程
      */
@@ -216,6 +220,8 @@ public class AudioChannelService extends Service {
         blnInstantPlay = false;
         audioRecord.release();
         audioTrack.release();
+        audioRecord = null;
+        audioTrack = null;
         // android.os.Process.killProcess(android.os.Process.myPid());
         super.onDestroy();
 
