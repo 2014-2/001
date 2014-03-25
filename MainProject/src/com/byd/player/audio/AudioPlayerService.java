@@ -1,6 +1,7 @@
 package com.byd.player.audio;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import android.app.Service;
 import android.content.Context;
@@ -29,7 +30,7 @@ public class AudioPlayerService extends Service {
 
     private OnPlayPauseListener mPlayPauseListener;
 
-    private OnSongChangedListener mSongChangedListener;
+    private static ArrayList<OnSongChangedListener> mSongChangedListenerList = new ArrayList<AudioPlayerService.OnSongChangedListener>();
 
     private Song mPlayingSong;
 
@@ -79,8 +80,18 @@ public class AudioPlayerService extends Service {
         mPlayPauseListener = listener;
     }
 
-    public void setOnSongChangedListener(OnSongChangedListener listener) {
-        mSongChangedListener = listener;
+    public static void setOnSongChangedListener(OnSongChangedListener listener) {
+        if (!isContainThisListener(listener)) {
+            mSongChangedListenerList.add(listener);
+        }
+    }
+
+    public static void removeOnSongChangeListener (OnSongChangedListener listener) {
+        mSongChangedListenerList.remove(listener);
+    }
+
+    private static boolean isContainThisListener (OnSongChangedListener listener) {
+        return mSongChangedListenerList.contains(listener);
     }
 
     public int getAudioDuration(){
@@ -170,8 +181,10 @@ public class AudioPlayerService extends Service {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-        if (null != mSongChangedListener) {
-            mSongChangedListener.onSongChanged(mSongPosition);
+        if (null != mSongChangedListenerList && !mSongChangedListenerList.isEmpty()) {
+            for (OnSongChangedListener listener : mSongChangedListenerList) {
+                listener.onSongChanged(mSongPosition);
+            }
         }
     }
 
@@ -295,6 +308,7 @@ public class AudioPlayerService extends Service {
             mPlayer = null;
         }
         mSongPosition = -1;
+        mSongChangedListenerList.clear();
     }
 
     private final class PreparedListener implements OnPreparedListener {

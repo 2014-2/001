@@ -136,6 +136,8 @@ public class AudioPlayerActivity extends BaseActivity {
 
     private boolean mIsPlaying = false;
 
+    private OnSongChangedListener onSongChangeListener;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -149,6 +151,14 @@ public class AudioPlayerActivity extends BaseActivity {
         mAudioServiceIntent = new Intent(this, AudioPlayerService.class);
 
         mAudioMgr = (android.media.AudioManager)getSystemService(Context.AUDIO_SERVICE);
+
+        onSongChangeListener = new OnSongChangedListener() {
+            @Override
+            public void onSongChanged(int newPosition) {
+                init(newPosition);
+                initPlayTime(mService.getAudioCurrent(),mService.getAudioDuration());
+            }
+        };
 
         init(getIntent().getIntExtra(Constants.MUSIC_SONG_POSITION, -1));
         startPlay();
@@ -175,14 +185,14 @@ public class AudioPlayerActivity extends BaseActivity {
         unbindService(mConn);
     }
 
-    //
-    // @Override
-    // protected void onDestroy() {
-    // super.onDestroy();
-    // if (mService != null && !mService.isPlaying()) {
-    // stopService(mAudioServiceIntent);
-    // }
-    // }
+
+    @Override
+    protected void onDestroy() {
+        if (null != mService) {
+            mService.removeOnSongChangeListener(onSongChangeListener);
+        }
+        super.onDestroy();
+    }
 
     private void init(int songPosition) {
         initSong(songPosition);
@@ -801,13 +811,7 @@ public class AudioPlayerActivity extends BaseActivity {
                     updatePlayPauseBtn(isPlay);
                 }
             });
-            mService.setOnSongChangedListener(new OnSongChangedListener() {
-                @Override
-                public void onSongChanged(int newPosition) {
-                    init(newPosition);
-                    initPlayTime(mService.getAudioCurrent(),mService.getAudioDuration());
-                }
-            });
+            mService.setOnSongChangedListener(onSongChangeListener);
         }
 
         @Override
