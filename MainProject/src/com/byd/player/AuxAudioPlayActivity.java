@@ -11,7 +11,6 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.byd.player.config.Constants;
 import com.byd.player.receiver.AudioChannelBroadcastReceiver;
 import com.byd.player.services.AudioChannelService;
 
@@ -44,10 +43,6 @@ public class AuxAudioPlayActivity extends BaseActivity {
         setContentView(R.layout.aux_audio);
 
         mTvAuxStatus = (TextView)findViewById(R.id.aux_status);
-
-        if (getIntent().getBooleanExtra(Constants.IS_AUX_CONNECTED, false)) {
-            mTvAuxStatus.setText(R.string.aux_connected);
-        }
 
         // because of the fail of receiving aux device event, open the aux channel directly.
         Toast.makeText(this, "已切换至aux声道", Toast.LENGTH_LONG).show();
