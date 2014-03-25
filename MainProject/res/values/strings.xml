@@ -37,6 +37,7 @@
     <string name="title_audio_sdcard">存储卡音乐</string>
     <string name="title_audio_usb">USB音乐</string>
     <string name="delete_all">全部删除</string>
+    <string name="last_song">已经是最后一首歌曲</string>
 
     <string name="audio_fx_none">无</string>
     <string name="audio_fx_classical">古典</string>

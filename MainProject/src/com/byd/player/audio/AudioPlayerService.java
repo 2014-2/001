@@ -17,6 +17,7 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.widget.Toast;
 
+import com.byd.player.R;
 import com.byd.player.config.Constants;
 
 public class AudioPlayerService extends Service {
@@ -121,7 +122,8 @@ public class AudioPlayerService extends Service {
                 if (mSongPosition < AudioPlayerManager.getInstance().getCount()) {
                     changeSong(mSongPosition);
                 } else {
-                    Toast.makeText(getApplicationContext(), "已经是最后一首歌曲", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), R.string.last_song, Toast.LENGTH_SHORT)
+                    .show();
                     mSongPosition--;
                 }
                 break;
@@ -210,7 +212,6 @@ public class AudioPlayerService extends Service {
         am = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
         am.requestAudioFocus(afChangeListener, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
         mPlayer = new MediaPlayer();
-        mPlayer.reset();
         mPlayer.setOnPreparedListener(new PreparedListener());
         mPlayer.setOnCompletionListener(new OnCompletionListener() {
             @Override
@@ -243,7 +244,7 @@ public class AudioPlayerService extends Service {
                     try {
                         mPlayer.setDataSource(song.getFilePath());
                         mPlayingSong = song;
-                        mPlayer.prepare();
+                        mPlayer.prepareAsync();
                     } catch (IllegalStateException e) {
                         // TODO Auto-generated catch block
                         e.printStackTrace();
