@@ -4,6 +4,8 @@ import java.io.File;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -49,6 +51,8 @@ import com.byd.player.video.VideoPlayActivity;
  */
 public class BrowserActivity extends BaseActivity implements OnClickListener {
 	private final static int MSG_TAB_ON_CHANGED = 10;
+	private final static int MSG_SCAN_MEDIA_CHANGED = 20;
+	public final static int MEDIA_SCAN_PERIOD = 60 * 1000;
 	private boolean isEditMode;
 	private View buttonHeaderLeft, buttonHeaderRight;
 
@@ -60,7 +64,7 @@ public class BrowserActivity extends BaseActivity implements OnClickListener {
 	  R.id.tvLocal, R.id.tvSDCard, R.id.tvUsb, R.id.tvHistory      
 	};
 	private View[] frameContentView = new View[tabResId.length];
-	private VideoAdapter[] videoAdapters = new VideoAdapter[tabResId.length];
+	public VideoAdapter[] videoAdapters = new VideoAdapter[tabResId.length];
 	private int currentTabSelected;
 	private FrameLayout mediaContentLayout;
 	private SparseArray<ArrayList<MovieInfo>> mMediaStore = new SparseArray<ArrayList<MovieInfo>>(tabResId.length);
@@ -69,6 +73,7 @@ public class BrowserActivity extends BaseActivity implements OnClickListener {
 	public static boolean[] tabContentChanged = new boolean[tabResId.length];
 	private MyHandler mHandler;
 	private USBMountReceiver mUSBMountReceiver;
+	private Timer mScanTimer;
 	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,7 +86,23 @@ public class BrowserActivity extends BaseActivity implements OnClickListener {
         registerContentObserver();
     }
     
-    private void initTabComponent() {
+    @Override
+	protected void onPause() {
+		super.onPause();
+		if(mScanTimer != null) {
+			mScanTimer.cancel();
+			mScanTimer = null;
+		}
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		mScanTimer = new Timer();
+        mScanTimer.schedule(new ScanMediaRunnable(), MEDIA_SCAN_PERIOD>>1, MEDIA_SCAN_PERIOD);
+	}
+
+	private void initTabComponent() {
         mediaContentLayout = (FrameLayout) findViewById(R.id.media_content_frame);
         tabToIndex(TAB_INDEX_LOCAL);
         for(int resId : tabResId) {
@@ -232,6 +253,13 @@ public class BrowserActivity extends BaseActivity implements OnClickListener {
                         activity.tabToIndex(msg.arg1);
                     }
                     break;
+                case MSG_SCAN_MEDIA_CHANGED: 
+                	if(activity != null) {
+                		if(activity.videoAdapters[activity.currentTabSelected] != null) {
+                			activity.videoAdapters[activity.currentTabSelected].notifyDataSetChanged();
+                		}
+                	}
+                	break;
             }
             super.handleMessage(msg);
         }
@@ -286,7 +314,6 @@ public class BrowserActivity extends BaseActivity implements OnClickListener {
     private ArrayList<MovieInfo> getVideoList(int tabIndex) {
         switch(tabIndex) {
             case TAB_INDEX_LOCAL: {
-                Uri mediaUri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
                 if (android.os.Environment.getExternalStorageState().equals(
                         android.os.Environment.MEDIA_MOUNTED)) {
                     boolean contentChanged = tabContentChanged[tabIndex];
@@ -296,13 +323,12 @@ public class BrowserActivity extends BaseActivity implements OnClickListener {
                     } else if (mMediaStore.get(tabIndex) != null) {
                         return mMediaStore.get(tabIndex);
                     }
-                    ArrayList<MovieInfo> playList = queryMediaByUri(mediaUri, tabIndex);
+                    ArrayList<MovieInfo> playList = queryMediaByUri(tabIndex);
                     mMediaStore.put(tabIndex, playList);
                     return playList;
                 }
             }
             case TAB_INDEX_SDCARD: {
-                Uri mediaUri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
                 boolean contentChanged = tabContentChanged[tabIndex];
                 if(contentChanged) {
                     mMediaStore.remove(tabIndex);
@@ -310,7 +336,7 @@ public class BrowserActivity extends BaseActivity implements OnClickListener {
                 } else if (mMediaStore.get(tabIndex) != null) {
                     return mMediaStore.get(tabIndex);
                 }
-                ArrayList<MovieInfo> playList = queryMediaByUri(mediaUri, tabIndex);
+                ArrayList<MovieInfo> playList = queryMediaByUri(tabIndex);
                 mMediaStore.put(tabIndex, playList);
                 return playList;
             }
@@ -322,8 +348,7 @@ public class BrowserActivity extends BaseActivity implements OnClickListener {
                 } else if (mMediaStore.get(tabIndex) != null) {
                     return mMediaStore.get(tabIndex);
                 }
-                ArrayList<MovieInfo> playList = queryMediaByUri(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, 
-                        tabIndex);
+                ArrayList<MovieInfo> playList = queryMediaByUri(tabIndex);
                 if(playList != null && playList.size() > 0) {
                     mMediaStore.put(tabIndex, playList);
                 } else {
@@ -354,7 +379,9 @@ public class BrowserActivity extends BaseActivity implements OnClickListener {
         return null;
     }
     
-    private ArrayList<MovieInfo> queryMediaByUri(Uri mediaUri, int tabIndex) {
+    private synchronized ArrayList<MovieInfo> queryMediaByUri(int tabIndex) {
+    	//As logic from BYD, all the exteneral/usb/sdcard from Media.EXTERNAL_CONTENT_URI
+    	Uri mediaUri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
         String selection = null;
         switch(tabIndex) {
             case TAB_INDEX_LOCAL:
@@ -597,4 +624,28 @@ public class BrowserActivity extends BaseActivity implements OnClickListener {
         }
         
     }
+    
+	class ScanMediaRunnable extends TimerTask {
+		@Override
+		public void run() {
+			for (int tabIndex = TAB_INDEX_LOCAL; tabIndex < TAB_INDEX_HISTORY; tabIndex++) {
+				ArrayList<MovieInfo> newList = queryMediaByUri(tabIndex);
+				ArrayList<MovieInfo> curList = mMediaStore
+						.get(tabIndex);
+				//Log.i("BrowserActivity.class", "SCAN SLAP");
+				if (curList != null) {
+					if (curList.size() != newList.size()) {// 有新的设备插入或者数据变化导致数量不一致
+						curList.clear();
+						curList.addAll(newList);
+						mHandler.obtainMessage(MSG_SCAN_MEDIA_CHANGED,
+								tabIndex, 0).sendToTarget();
+						//Log.i("BrowserActivity.class", "New media found!");
+					} else {
+						//Noting changed
+						//Log.i("BrowserActivity.class", "No more media found!");
+					}
+				}
+			}
+		}
+	}
 }
