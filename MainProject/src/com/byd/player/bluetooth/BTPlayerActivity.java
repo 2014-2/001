@@ -14,6 +14,9 @@ import android.media.AudioManager;
 import android.media.AudioManager.OnAudioFocusChangeListener;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.os.IPlayerService;
+import android.os.RemoteException;
+import android.os.ServiceManager;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -102,7 +105,7 @@ public class BTPlayerActivity extends BaseActivity {
 	            // Pause bt playback
 	        	Log.d(BTMUSIC, "AUDIOFOCUS_LOSS_TRANSIENT");
 	        	BTpause();
-				audioChannelService.stopPlaybackService("0");
+				stopPlaybackService("0");
 	        } else if (focusChange == AudioManager.AUDIOFOCUS_LOSS) {  
 	            if(false == isBTMusicOperation)
 	            {
@@ -110,7 +113,7 @@ public class BTPlayerActivity extends BaseActivity {
 	            	// Pause bt playback  
 		            Log.d(BTMUSIC, "AUDIOFOCUS_LOSS");
 		            BTpause();
-					audioChannelService.stopPlaybackService("0");
+					stopPlaybackService("0");
 	            }
 	        } else if (focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK) {  
 	            // Lower the volume  
@@ -118,7 +121,7 @@ public class BTPlayerActivity extends BaseActivity {
 	            // Resume bt playback
 	        	Log.d(BTMUSIC, "AUDIOFOCUS_GAIN");
 	        	BTcontinuePlay();
-				audioChannelService.startPlaybackService("0");
+				startPlaybackService("0");
 	        }
 	    }  
 	}; 
@@ -181,7 +184,7 @@ public class BTPlayerActivity extends BaseActivity {
     protected void initBTmusic(){
 //    	Intent intent = new Intent("com.byd.player.receiver.action.BTCHANNEL");
 //    	sendBroadcast(intent);
-    	audioChannelService.startPlaybackService("0");
+    	startPlaybackService("0");
 
         if (!sendBTMusicCmd(A2DPCONNECT)){
             //TODO deal with a2dp-connect failed, give a toast?
@@ -506,9 +509,54 @@ public class BTPlayerActivity extends BaseActivity {
 		if (KeyEvent.KEYCODE_BACK == keyCode)
 		{
 			BTpause();
-			audioChannelService.stopPlaybackService("0");
+			stopPlaybackService("0");
 		}
 		return super.onKeyDown(keyCode, event);
+	}
+	
+	public void startPlaybackService(String channel){
+		if(false == isChannelValid(channel))
+			return;
+		IPlayerService playerService = IPlayerService.Stub.asInterface(ServiceManager.getService("PlayerService"));
+		try {
+			playerService.startPlayer(getPackageName(), channel);
+			//playing = true;
+		} catch (RemoteException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void stopPlaybackService(String channel){
+		if(false == isChannelValid(channel))
+			return;
+		IPlayerService playerService = IPlayerService.Stub.asInterface(ServiceManager.getService("PlayerService"));
+		try {
+			playerService.stopPlayer(getPackageName(), "1");
+			//playing = false;
+		} catch (RemoteException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void pausePlaybackService(String channel){
+		if(false == isChannelValid(channel))
+			return;
+		IPlayerService playerService = IPlayerService.Stub.asInterface(ServiceManager.getService("PlayerService"));
+		try {
+			playerService.pausePlayer(getPackageName(), channel);
+			//playing = false;
+		} catch (RemoteException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private boolean isChannelValid(String channel){
+		if(channel.equals("0") || channel.equals("1") || channel.equals("2") || channel.equals("3"))
+		{
+			return true;
+		}else{
+			return false;
+		}
 	}
 	
 }
