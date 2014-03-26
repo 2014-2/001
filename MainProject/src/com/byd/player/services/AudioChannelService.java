@@ -10,6 +10,7 @@ import android.media.AudioFormat;
 import android.media.AudioManager;
 import android.media.AudioRecord;
 import android.media.AudioTrack;
+import android.media.MediaRecorder;
 import android.os.Binder;
 import android.os.IBinder;
 import android.util.Log;
@@ -150,7 +151,7 @@ public class AudioChannelService extends Service {
             recBufSize = AudioRecord.getMinBufferSize(sampleRateInHz, channelConfig, encodingBitrate);
             playBufSize = AudioTrack.getMinBufferSize(sampleRateInHz, channelConfig, encodingBitrate);
             if (audioRecord == null) {
-                audioRecord = new AudioRecord(1,
+                audioRecord = new AudioRecord(MediaRecorder.AudioSource.VOICE_COMMUNICATION,
                         sampleRateInHz, channelConfig, encodingBitrate, recBufSize);
             } else {
                 if (audioRecord.getState() == AudioRecord.STATE_INITIALIZED) {
