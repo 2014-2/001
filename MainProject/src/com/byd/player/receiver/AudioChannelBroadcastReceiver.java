@@ -19,22 +19,22 @@ public class AudioChannelBroadcastReceiver extends BroadcastReceiver{
         String action = intent.getAction();
         AudioChannelService audioChannelService = new AudioChannelService();
         if (action.equals(ACTION_SWITCH_TO_BT_CHANNEL)){
-            Log.d("AudioChannelBroadcastReceiver", "audiochannel: bt.");
-            try {
-				audioChannelService.startPlayAudio(SERVICE_TAG_BT);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+//            Log.d("AudioChannelBroadcastReceiver", "audiochannel: bt.");
+//            try {
+//				audioChannelService.startPlayAudio(SERVICE_TAG_BT);
+//			} catch (InterruptedException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
         }
         else if (action.equals(ACTION_SWITCH_TO_AUX_CHANNEL)) {
-            Log.d("AudioChannelBroadcastReceiver", "audiochannel: aux.");
-            try {
-				audioChannelService.startPlayAudio(SERVICE_TAG_AUX);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+//            Log.d("AudioChannelBroadcastReceiver", "audiochannel: aux.");
+//            try {
+//				audioChannelService.startPlayAudio(SERVICE_TAG_AUX);
+//			} catch (InterruptedException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
         }
     }
 }

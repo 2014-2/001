@@ -33,7 +33,7 @@ import android.widget.Toast;
 import com.byd.player.BaseActivity;
 import com.byd.player.R;
 import com.byd.player.services.AudioChannelService;
-import com.byd.player.services.AudioChannelService.AudioChannelBinder;
+//import com.byd.player.services.AudioChannelService.AudioChannelBinder;
 import com.byd.player.view.VisualizeView;
 
 public class BTPlayerActivity extends BaseActivity {
@@ -94,12 +94,15 @@ public class BTPlayerActivity extends BaseActivity {
     private final String FASTBACKWARD= "com.byd.player.bluetooth.action.FASTBACKWARD";
     private final String FASTBACKWARDSTOP= "com.byd.player.bluetooth.action.FASTBACKWARDSTOP";
     
+    private AudioChannelService audioChannelService = new AudioChannelService();
+    
 	OnAudioFocusChangeListener afChangeListener = new OnAudioFocusChangeListener() {  
 	    public void onAudioFocusChange(int focusChange) {  
 	        if (focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT) {
 	            // Pause bt playback
 	        	Log.d(BTMUSIC, "AUDIOFOCUS_LOSS_TRANSIENT");
 	        	BTpause();
+				audioChannelService.stopPlaybackService("0");
 	        } else if (focusChange == AudioManager.AUDIOFOCUS_LOSS) {  
 	            if(false == isBTMusicOperation)
 	            {
@@ -107,6 +110,7 @@ public class BTPlayerActivity extends BaseActivity {
 	            	// Pause bt playback  
 		            Log.d(BTMUSIC, "AUDIOFOCUS_LOSS");
 		            BTpause();
+					audioChannelService.stopPlaybackService("0");
 	            }
 	        } else if (focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK) {  
 	            // Lower the volume  
@@ -114,21 +118,22 @@ public class BTPlayerActivity extends BaseActivity {
 	            // Resume bt playback
 	        	Log.d(BTMUSIC, "AUDIOFOCUS_GAIN");
 	        	BTcontinuePlay();
+				audioChannelService.startPlaybackService("0");
 	        }
 	    }  
 	}; 
 	
-    private ServiceConnection mBTChannelSrv = new ServiceConnection() {
-        @Override
-        public void onServiceConnected(ComponentName className, IBinder service) {
-            AudioChannelBinder binder = (AudioChannelBinder) service;
-            BtChannelSrv = binder.getService();
-        }
-        @Override
-        public void onServiceDisconnected(ComponentName arg0) {
-            BtChannelSrv = null;
-        }
-    };
+//    private ServiceConnection mBTChannelSrv = new ServiceConnection() {
+//        @Override
+//        public void onServiceConnected(ComponentName className, IBinder service) {
+//            AudioChannelBinder binder = (AudioChannelBinder) service;
+//            BtChannelSrv = binder.getService();
+//        }
+//        @Override
+//        public void onServiceDisconnected(ComponentName arg0) {
+//            BtChannelSrv = null;
+//        }
+//    };
     
     @Override
     protected void onStart() {
@@ -174,12 +179,9 @@ public class BTPlayerActivity extends BaseActivity {
         registerBroadcast();
     }
     protected void initBTmusic(){
-    	Intent intent = new Intent("com.byd.player.receiver.action.BTCHANNEL");
-    	sendBroadcast(intent);
-        //Intent service = new Intent(this, AudioChannelService.class);
-        //service.putExtra("service_tag", SERVICE_TAG);
-        //this.startService(service);
-        //isChannelSrvBinded = bindService(service, mBTChannelSrv, Context.BIND_AUTO_CREATE);
+//    	Intent intent = new Intent("com.byd.player.receiver.action.BTCHANNEL");
+//    	sendBroadcast(intent);
+    	audioChannelService.startPlaybackService("0");
 
         if (!sendBTMusicCmd(A2DPCONNECT)){
             //TODO deal with a2dp-connect failed, give a toast?
@@ -504,7 +506,9 @@ public class BTPlayerActivity extends BaseActivity {
 		if (KeyEvent.KEYCODE_BACK == keyCode)
 		{
 			BTpause();
+			audioChannelService.stopPlaybackService("0");
 		}
 		return super.onKeyDown(keyCode, event);
 	}
+	
 }

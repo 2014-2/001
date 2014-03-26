@@ -21,6 +21,8 @@ public class AuxAudioPlayActivity extends BaseActivity {
     private Intent mAudioChannelIntent;
 
     private AudioManager audioManager;
+    
+    private AudioChannelService audioChannelService = new AudioChannelService();
 
     OnAudioFocusChangeListener afChangeListener = new OnAudioFocusChangeListener() {
         @Override
@@ -28,11 +30,12 @@ public class AuxAudioPlayActivity extends BaseActivity {
             if (focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT) {
 
             } else if (focusChange == AudioManager.AUDIOFOCUS_LOSS) {
-                switchToBTChannel();
+                //switchToBTChannel();
+                audioChannelService.stopPlaybackService("3");
             } else if (focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK) {
 
             } else if (focusChange == AudioManager.AUDIOFOCUS_GAIN) {
-
+            	audioChannelService.startPlaybackService("3");
             }
         }
     };
@@ -48,12 +51,12 @@ public class AuxAudioPlayActivity extends BaseActivity {
         Toast.makeText(this, "已切换至aux声道", Toast.LENGTH_LONG).show();
 
         mAudioChannelIntent = new Intent(this, AudioChannelService.class);
-        startService(mAudioChannelIntent);
+        //startService(mAudioChannelIntent);
     }
 
     @Override
     protected void onDestroy() {
-        stopService(mAudioChannelIntent);
+        //stopService(mAudioChannelIntent);
         super.onDestroy();
     }
 
@@ -83,7 +86,8 @@ public class AuxAudioPlayActivity extends BaseActivity {
     }
 
     public void onBackBtn(View v) {
-        switchToBTChannel();
+        //switchToBTChannel();
+    	audioChannelService.stopPlaybackService("3");
         onBackPressed();
 
     }
@@ -92,7 +96,8 @@ public class AuxAudioPlayActivity extends BaseActivity {
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (KeyEvent.KEYCODE_BACK == keyCode)
         {
-            switchToBTChannel();
+            //switchToBTChannel();
+        	audioChannelService.stopPlaybackService("3");
         }
         return super.onKeyDown(keyCode, event);
     }
