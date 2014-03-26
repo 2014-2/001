@@ -110,9 +110,7 @@ OnItemLongClickListener, SearchListener, DeleteListener {
         mMediaStoreChangedHandler = new MediaStoreChangedHandler(this);
 
         AudioLoaderManager.getInstance().init(getApplicationContext());
-        AudioLoaderManager.getInstance().loadData(AudioLoaderManager.EXTERNAL_SDCARD_TYPE);
-        AudioLoaderManager.getInstance().loadData(AudioLoaderManager.EXTERNAL_USB_TYPE);
-        AudioLoaderManager.getInstance().loadData(AudioLoaderManager.INTERNAL_TYPE);
+        refreshDatas();
 
         setContentView(R.layout.audio_list_view);
 
@@ -124,6 +122,12 @@ OnItemLongClickListener, SearchListener, DeleteListener {
         registerMediaStoreChangedObserver();
 
         // startService(new Intent(this, AuxAudioService.class));
+    }
+
+    public void refreshDatas() {
+        AudioLoaderManager.getInstance().loadData(AudioLoaderManager.EXTERNAL_SDCARD_TYPE);
+        AudioLoaderManager.getInstance().loadData(AudioLoaderManager.EXTERNAL_USB_TYPE);
+        AudioLoaderManager.getInstance().loadData(AudioLoaderManager.INTERNAL_TYPE);
     }
 
     private void initViews() {
@@ -315,7 +319,7 @@ OnItemLongClickListener, SearchListener, DeleteListener {
     }
 
     private void registerUSBStateChangedReceiver() {
-        mUSBMountReceiver = new USBMountReceiver();
+        mUSBMountReceiver = new USBMountReceiver(this);
         IntentFilter filter = new IntentFilter();
         filter.addAction(Intent.ACTION_MEDIA_MOUNTED);
         filter.addAction(Intent.ACTION_MEDIA_CHECKING);
