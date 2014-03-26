@@ -66,7 +66,8 @@ public class AuxAudioPlayActivity extends BaseActivity {
 
         audioManager = (AudioManager) getBaseContext().getSystemService(Context.AUDIO_SERVICE);
         audioManager.requestAudioFocus(afChangeListener, AudioManager.STREAM_MUSIC,  AudioManager.AUDIOFOCUS_GAIN);
-        switchToAUXChannel();
+        //switchToAUXChannel();
+        startPlaybackService("3");
         super.onResume();
     }
 
