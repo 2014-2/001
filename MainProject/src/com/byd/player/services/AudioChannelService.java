@@ -247,7 +247,7 @@ public class AudioChannelService extends Activity{
 	
 
 	public void startPlaybackService(String channel){
-		if(true == isChannelValid(channel))
+		if(false == isChannelValid(channel))
 			return;
 		IPlayerService playerService = IPlayerService.Stub.asInterface(ServiceManager.getService("PlayerService"));
 		try {
@@ -259,7 +259,7 @@ public class AudioChannelService extends Activity{
 	}
 	
 	public void stopPlaybackService(String channel){
-		if(true == isChannelValid(channel))
+		if(false == isChannelValid(channel))
 			return;
 		IPlayerService playerService = IPlayerService.Stub.asInterface(ServiceManager.getService("PlayerService"));
 		try {
@@ -271,7 +271,7 @@ public class AudioChannelService extends Activity{
 	}
 	
 	public void pausePlaybackService(String channel){
-		if(true == isChannelValid(channel))
+		if(false == isChannelValid(channel))
 			return;
 		IPlayerService playerService = IPlayerService.Stub.asInterface(ServiceManager.getService("PlayerService"));
 		try {
