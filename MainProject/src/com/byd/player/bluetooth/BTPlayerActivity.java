@@ -97,8 +97,6 @@ public class BTPlayerActivity extends BaseActivity {
     private final String FASTBACKWARD= "com.byd.player.bluetooth.action.FASTBACKWARD";
     private final String FASTBACKWARDSTOP= "com.byd.player.bluetooth.action.FASTBACKWARDSTOP";
     
-    private AudioChannelService audioChannelService = new AudioChannelService();
-    
 	OnAudioFocusChangeListener afChangeListener = new OnAudioFocusChangeListener() {  
 	    public void onAudioFocusChange(int focusChange) {  
 	        if (focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT) {
@@ -514,7 +512,7 @@ public class BTPlayerActivity extends BaseActivity {
 		return super.onKeyDown(keyCode, event);
 	}
 	
-	public void startPlaybackService(String channel){
+	private void startPlaybackService(String channel){
 		if(false == isChannelValid(channel))
 			return;
 		IPlayerService playerService = IPlayerService.Stub.asInterface(ServiceManager.getService("PlayerService"));
@@ -526,7 +524,7 @@ public class BTPlayerActivity extends BaseActivity {
 		}
 	}
 	
-	public void stopPlaybackService(String channel){
+	private void stopPlaybackService(String channel){
 		if(false == isChannelValid(channel))
 			return;
 		IPlayerService playerService = IPlayerService.Stub.asInterface(ServiceManager.getService("PlayerService"));
@@ -538,7 +536,7 @@ public class BTPlayerActivity extends BaseActivity {
 		}
 	}
 	
-	public void pausePlaybackService(String channel){
+	private void pausePlaybackService(String channel){
 		if(false == isChannelValid(channel))
 			return;
 		IPlayerService playerService = IPlayerService.Stub.asInterface(ServiceManager.getService("PlayerService"));

@@ -6,13 +6,15 @@ import android.content.Intent;
 import android.media.AudioManager;
 import android.media.AudioManager.OnAudioFocusChangeListener;
 import android.os.Bundle;
+import android.os.IPlayerService;
+import android.os.RemoteException;
+import android.os.ServiceManager;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.byd.player.receiver.AudioChannelBroadcastReceiver;
-import com.byd.player.services.AudioChannelService;
 
 public class AuxAudioPlayActivity extends BaseActivity {
 
@@ -22,8 +24,6 @@ public class AuxAudioPlayActivity extends BaseActivity {
 
     private AudioManager audioManager;
     
-    private AudioChannelService audioChannelService = new AudioChannelService();
-
     OnAudioFocusChangeListener afChangeListener = new OnAudioFocusChangeListener() {
         @Override
         public void onAudioFocusChange(int focusChange) {
@@ -31,11 +31,11 @@ public class AuxAudioPlayActivity extends BaseActivity {
 
             } else if (focusChange == AudioManager.AUDIOFOCUS_LOSS) {
                 //switchToBTChannel();
-                audioChannelService.stopPlaybackService("3");
+                stopPlaybackService("3");
             } else if (focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK) {
 
             } else if (focusChange == AudioManager.AUDIOFOCUS_GAIN) {
-            	audioChannelService.startPlaybackService("3");
+            	startPlaybackService("3");
             }
         }
     };
@@ -50,7 +50,7 @@ public class AuxAudioPlayActivity extends BaseActivity {
         // because of the fail of receiving aux device event, open the aux channel directly.
         Toast.makeText(this, "已切换至aux声道", Toast.LENGTH_LONG).show();
 
-        mAudioChannelIntent = new Intent(this, AudioChannelService.class);
+        //mAudioChannelIntent = new Intent(this, AudioChannelService.class);
         //startService(mAudioChannelIntent);
     }
 
@@ -87,7 +87,7 @@ public class AuxAudioPlayActivity extends BaseActivity {
 
     public void onBackBtn(View v) {
         //switchToBTChannel();
-    	audioChannelService.stopPlaybackService("3");
+    	stopPlaybackService("3");
         onBackPressed();
 
     }
@@ -97,8 +97,55 @@ public class AuxAudioPlayActivity extends BaseActivity {
         if (KeyEvent.KEYCODE_BACK == keyCode)
         {
             //switchToBTChannel();
-        	audioChannelService.stopPlaybackService("3");
+        	stopPlaybackService("3");
         }
         return super.onKeyDown(keyCode, event);
     }
+    
+
+	private void startPlaybackService(String channel){
+		if(false == isChannelValid(channel))
+			return;
+		IPlayerService playerService = IPlayerService.Stub.asInterface(ServiceManager.getService("PlayerService"));
+		try {
+			playerService.startPlayer(getPackageName(), channel);
+			//playing = true;
+		} catch (RemoteException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private void stopPlaybackService(String channel){
+		if(false == isChannelValid(channel))
+			return;
+		IPlayerService playerService = IPlayerService.Stub.asInterface(ServiceManager.getService("PlayerService"));
+		try {
+			playerService.stopPlayer(getPackageName(), "1");
+			//playing = false;
+		} catch (RemoteException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private void pausePlaybackService(String channel){
+		if(false == isChannelValid(channel))
+			return;
+		IPlayerService playerService = IPlayerService.Stub.asInterface(ServiceManager.getService("PlayerService"));
+		try {
+			playerService.pausePlayer(getPackageName(), channel);
+			//playing = false;
+		} catch (RemoteException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private boolean isChannelValid(String channel){
+		if(channel.equals("0") || channel.equals("1") || channel.equals("2") || channel.equals("3"))
+		{
+			return true;
+		}else{
+			return false;
+		}
+	}
+	
 }
