@@ -263,7 +263,7 @@ public class AudioChannelService extends Activity{
 			return;
 		IPlayerService playerService = IPlayerService.Stub.asInterface(ServiceManager.getService("PlayerService"));
 		try {
-			playerService.stopPlayer(getPackageName(), "1");
+			playerService.stopPlayer(getPackageName(), channel);
 			//playing = false;
 		} catch (RemoteException e) {
 			e.printStackTrace();
