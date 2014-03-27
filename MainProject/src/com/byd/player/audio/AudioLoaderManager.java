@@ -19,6 +19,7 @@ public class AudioLoaderManager {
 
     public interface DataListener {
         void onDataChange();
+
         List<Song> getSeletedSongs();
     }
 
@@ -84,12 +85,21 @@ public class AudioLoaderManager {
     public void clearData(int type) {
         switch (type) {
         case INTERNAL_TYPE:
+            for (Song song : mInteralSongs) {
+                song.free();
+            }
             mInteralSongs.clear();
             break;
         case EXTERNAL_SDCARD_TYPE:
+            for (Song song : mExtenalSDCARDSongs) {
+                song.free();
+            }
             mExtenalSDCARDSongs.clear();
             break;
         case EXTERNAL_USB_TYPE:
+            for (Song song : mExtenalUSBSongs) {
+                song.free();
+            }
             mExtenalUSBSongs.clear();
             break;
         default:
@@ -145,43 +155,43 @@ public class AudioLoaderManager {
         }
     }
 
-//    public Song getPlaySongAtPosition(int position) {
-//        switch (mViewType) {
-//        case INTERNAL_TYPE:
-//            if (position < mInteralSongs.size()) {
-//                return mInteralSongs.get(position);
-//            }
-//            break;
-//        case EXTERNAL_SDCARD_TYPE:
-//            if (position < mExtenalSDCARDSongs.size()) {
-//                return mExtenalSDCARDSongs.get(position);
-//            }
-//            break;
-//        case EXTERNAL_USB_TYPE:
-//            if (position < mExtenalUSBSongs.size()) {
-//                return mExtenalUSBSongs.get(position);
-//            }
-//            break;
-//        default:
-//            break;
-//        }
-//        return null;
-//    }
-//
-//    public int getPlaySongsCount() {
-//        switch (mViewType) {
-//        case INTERNAL_TYPE:
-//            return mInteralSongs.size();
-//        case EXTERNAL_SDCARD_TYPE:
-//            return mExtenalSDCARDSongs.size();
-//        case EXTERNAL_USB_TYPE:
-//            return mExtenalUSBSongs.size();
-//        default:
-//            break;
-//        }
-//        return 0;
-//
-//    }
+    // public Song getPlaySongAtPosition(int position) {
+    // switch (mViewType) {
+    // case INTERNAL_TYPE:
+    // if (position < mInteralSongs.size()) {
+    // return mInteralSongs.get(position);
+    // }
+    // break;
+    // case EXTERNAL_SDCARD_TYPE:
+    // if (position < mExtenalSDCARDSongs.size()) {
+    // return mExtenalSDCARDSongs.get(position);
+    // }
+    // break;
+    // case EXTERNAL_USB_TYPE:
+    // if (position < mExtenalUSBSongs.size()) {
+    // return mExtenalUSBSongs.get(position);
+    // }
+    // break;
+    // default:
+    // break;
+    // }
+    // return null;
+    // }
+    //
+    // public int getPlaySongsCount() {
+    // switch (mViewType) {
+    // case INTERNAL_TYPE:
+    // return mInteralSongs.size();
+    // case EXTERNAL_SDCARD_TYPE:
+    // return mExtenalSDCARDSongs.size();
+    // case EXTERNAL_USB_TYPE:
+    // return mExtenalUSBSongs.size();
+    // default:
+    // break;
+    // }
+    // return 0;
+    //
+    // }
 
     public void deleteSongs(List<Song> songs, DeleteListener listener) {
         switch (mViewType) {
@@ -194,6 +204,10 @@ public class AudioLoaderManager {
         case EXTERNAL_USB_TYPE:
             mExtenalUSBSongs.removeAll(songs);
             break;
+        }
+
+        for (Song song : songs) {
+            song.free();
         }
 
         new AudioDeleteAsyncTask(songs, listener).execute((Object) null);

@@ -252,12 +252,22 @@ public class Song {
     }
 
     private Bitmap mAblumBitmapCatch = null;
-    
+
     /**
-     * getAblumBitma()
+     * getAblumBitmap()
      * @return
      */
     public Bitmap getAblumBitmap() {
+        if (!TextUtils.isEmpty(mAlbum) && mAblumBitmapCatch == null) {
+            mAblumBitmapCatch = BitmapFactory.decodeFile(mAlbum);
+        }
         return mAblumBitmapCatch;
+    }
+
+    public void free() {
+        if (mAblumBitmapCatch != null) {
+            mAblumBitmapCatch.recycle();
+            mAblumBitmapCatch = null;
+        }
     }
 }
