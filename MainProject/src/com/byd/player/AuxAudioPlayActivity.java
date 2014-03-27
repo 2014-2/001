@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.os.IPlayerService;
 import android.os.RemoteException;
 import android.os.ServiceManager;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.TextView;
@@ -28,13 +29,15 @@ public class AuxAudioPlayActivity extends BaseActivity {
         @Override
         public void onAudioFocusChange(int focusChange) {
             if (focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT) {
-
+                Log.d("AuxAudioPlayActivity", "AUDIOFOCUS_LOSS_TRANSIENT");
             } else if (focusChange == AudioManager.AUDIOFOCUS_LOSS) {
                 //switchToBTChannel();
-                stopPlaybackService("3");
+                Log.d("AuxAudioPlayActivity", "AUDIOFOCUS_LOSS");
+                stopPlay();
             } else if (focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK) {
-
+                Log.d("AuxAudioPlayActivity", "AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK");
             } else if (focusChange == AudioManager.AUDIOFOCUS_GAIN) {
+                Log.d("AuxAudioPlayActivity", "AUDIOFOCUS_GAIN");
             	startPlaybackService("3");
             }
         }
@@ -52,22 +55,21 @@ public class AuxAudioPlayActivity extends BaseActivity {
 
         //mAudioChannelIntent = new Intent(this, AudioChannelService.class);
         //startService(mAudioChannelIntent);
+        audioManager = (AudioManager) getBaseContext().getSystemService(Context.AUDIO_SERVICE);
     }
 
     @Override
     protected void onDestroy() {
         //stopService(mAudioChannelIntent);
+        audioManager.abandonAudioFocus(afChangeListener);
         super.onDestroy();
     }
 
     @Override
     protected void onResume()
     {
-
-        audioManager = (AudioManager) getBaseContext().getSystemService(Context.AUDIO_SERVICE);
-        audioManager.requestAudioFocus(afChangeListener, AudioManager.STREAM_MUSIC,  AudioManager.AUDIOFOCUS_GAIN);
+        play();
         //switchToAUXChannel();
-        startPlaybackService("3");
         super.onResume();
     }
 
@@ -88,7 +90,7 @@ public class AuxAudioPlayActivity extends BaseActivity {
 
     public void onBackBtn(View v) {
         //switchToBTChannel();
-    	stopPlaybackService("3");
+        stopPlay();
         onBackPressed();
 
     }
@@ -98,7 +100,7 @@ public class AuxAudioPlayActivity extends BaseActivity {
         if (KeyEvent.KEYCODE_BACK == keyCode)
         {
             //switchToBTChannel();
-        	stopPlaybackService("3");
+            stopPlay();
         }
         return super.onKeyDown(keyCode, event);
     }
@@ -121,7 +123,7 @@ public class AuxAudioPlayActivity extends BaseActivity {
 			return;
 		IPlayerService playerService = IPlayerService.Stub.asInterface(ServiceManager.getService("PlayerService"));
 		try {
-			playerService.stopPlayer(getPackageName(), "1");
+			playerService.stopPlayer(getPackageName(), channel);
 			//playing = false;
 		} catch (RemoteException e) {
 			e.printStackTrace();
@@ -148,5 +150,14 @@ public class AuxAudioPlayActivity extends BaseActivity {
 			return false;
 		}
 	}
-	
+
+    private void play() {
+        int focus = audioManager.requestAudioFocus(afChangeListener, AudioManager.STREAM_MUSIC,  AudioManager.AUDIOFOCUS_GAIN);
+        startPlaybackService("3");
+    }
+
+    private void stopPlay() {
+        audioManager.abandonAudioFocus(afChangeListener);
+        stopPlaybackService("3");
+    }
 }

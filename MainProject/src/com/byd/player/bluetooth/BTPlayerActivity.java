@@ -107,12 +107,10 @@ public class BTPlayerActivity extends BaseActivity {
 	        } else if (focusChange == AudioManager.AUDIOFOCUS_LOSS) {  
 	            if(false == isBTMusicOperation)
 	            {
-	            	audioManager.abandonAudioFocus(afChangeListener); 
-	            	// Pause bt playback  
+	                BTpause();
 		            Log.d(BTMUSIC, "AUDIOFOCUS_LOSS");
-		            BTpause();
-					stopPlaybackService("0");
 	            }
+	            stopPlay();
 	        } else if (focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK) {  
 	            // Lower the volume  
 	        } else if (focusChange == AudioManager.AUDIOFOCUS_GAIN) {  
@@ -144,6 +142,7 @@ public class BTPlayerActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        play();
         sendBTMusicCmd(REQUESTSTATUS);
     }
 
@@ -156,6 +155,7 @@ public class BTPlayerActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        audioManager.abandonAudioFocus(afChangeListener);
         unregisterBroadcast();
         //BTpause();
         
@@ -182,7 +182,7 @@ public class BTPlayerActivity extends BaseActivity {
     protected void initBTmusic(){
 //    	Intent intent = new Intent("com.byd.player.receiver.action.BTCHANNEL");
 //    	sendBroadcast(intent);
-    	startPlaybackService("0");
+//    	startPlaybackService("0");
 
         if (!sendBTMusicCmd(A2DPCONNECT)){
             //TODO deal with a2dp-connect failed, give a toast?
@@ -385,7 +385,7 @@ public class BTPlayerActivity extends BaseActivity {
             Log.e(BTMUSIC, "play music failed!");
         } else {
         	isBTMusicOperation = true;
-        	audioManager.requestAudioFocus(afChangeListener, AudioManager.STREAM_MUSIC,  AudioManager.AUDIOFOCUS_GAIN);  
+        	play();
             Log.i(BTMUSIC, "music should be played right now!" + ": " + isBTMusicOperation);
             updatePlayPauseBtn(true);
         }
@@ -507,7 +507,7 @@ public class BTPlayerActivity extends BaseActivity {
 		if (KeyEvent.KEYCODE_BACK == keyCode)
 		{
 			BTpause();
-			stopPlaybackService("0");
+			stopPlay();
 		}
 		return super.onKeyDown(keyCode, event);
 	}
@@ -529,7 +529,7 @@ public class BTPlayerActivity extends BaseActivity {
 			return;
 		IPlayerService playerService = IPlayerService.Stub.asInterface(ServiceManager.getService("PlayerService"));
 		try {
-			playerService.stopPlayer(getPackageName(), "1");
+			playerService.stopPlayer(getPackageName(), channel);
 			//playing = false;
 		} catch (RemoteException e) {
 			e.printStackTrace();
@@ -556,5 +556,14 @@ public class BTPlayerActivity extends BaseActivity {
 			return false;
 		}
 	}
-	
+
+    private void play() {
+        int focus = audioManager.requestAudioFocus(afChangeListener, AudioManager.STREAM_MUSIC,  AudioManager.AUDIOFOCUS_GAIN);
+        startPlaybackService("0");
+    }
+
+    private void stopPlay() {
+        audioManager.abandonAudioFocus(afChangeListener);
+        stopPlaybackService("0");
+    }
 }
