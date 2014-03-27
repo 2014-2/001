@@ -282,6 +282,7 @@ public class BTPlayerActivity extends BaseActivity {
                 @Override
                 public void onClick(View v) {
                 	BTpause();
+                	stopPlay();
                     finish();
                 }
             });
