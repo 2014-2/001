@@ -92,7 +92,6 @@ public class AudioLoaderTask extends AsyncQueryHandler {
             try {
                 if (params[0].moveToFirst()) {
                     songs = getSongs(params[0]);
-
                 }
             } finally {
                 params[0].close();
@@ -123,7 +122,7 @@ public class AudioLoaderTask extends AsyncQueryHandler {
             song.setFileTitle(cursor.getString(2));// song name
             song.setDuration(cursor.getInt(3));// play time
             song.setSinger(cursor.getString(4));// artist
-            song.setAlbumArt(cursor.getString(5)); // album
+//            song.setAlbumArt(cursor.getString(5)); // album
             final int albumId = cursor.getInt(6); // album id
             String album = getAlbumArt(mContext.getContentResolver(), albumId);
             song.setAlbumArt(album);
@@ -157,7 +156,7 @@ public class AudioLoaderTask extends AsyncQueryHandler {
         return songs;
     }
 
-    private String getAlbumArt(ContentResolver resolver, int album_id) {
+    public static String getAlbumArt(ContentResolver resolver, int album_id) {
         String mUriAlbums = "content://media/external/audio/albums";
         String[] projection = new String[] { "album_art" };
         Cursor cur = null;

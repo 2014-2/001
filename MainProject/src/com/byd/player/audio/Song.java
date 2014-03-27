@@ -1,5 +1,9 @@
 package com.byd.player.audio;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.text.TextUtils;
+
 
 
 public class Song {
@@ -141,15 +145,18 @@ public class Song {
      */
     public void setAlbum(String album) {
         this.mAlbum = album;
+        if (!TextUtils.isEmpty(mAlbum)) {
+            mAblumBitmapCatch = BitmapFactory.decodeFile(mAlbum);
+        }
     }
-    
+
     /**
      * getAlbumArt()
      * 
      * @return
      */
     public String getAlbumArt() {
-        return mAlbumArt;
+        return mAlbum;
     }
 
     /**
@@ -244,4 +251,13 @@ public class Song {
         }
     }
 
+    private Bitmap mAblumBitmapCatch = null;
+    
+    /**
+     * getAblumBitma()
+     * @return
+     */
+    public Bitmap getAblumBitmap() {
+        return mAblumBitmapCatch;
+    }
 }

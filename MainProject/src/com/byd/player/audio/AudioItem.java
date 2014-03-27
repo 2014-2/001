@@ -8,7 +8,6 @@ public class AudioItem {
 
     private Song mSong = null;
     private boolean mSelected = false;
-    private Bitmap mAblumBitmap = null;
 
     public AudioItem(Song song) {
         mSong = song;
@@ -18,12 +17,8 @@ public class AudioItem {
         return mSong;
     }
 
-    public Bitmap getAlbumArt() {
-        String path = mSong.getAlbumArt();
-        if (!TextUtils.isEmpty(path) && mAblumBitmap == null) {
-            mAblumBitmap = BitmapFactory.decodeFile(path);
-        }
-        return mAblumBitmap;
+    public Bitmap getAlbumBitmap() {
+        return mSong.getAblumBitmap();
     }
 
     public String getAudioName() {
