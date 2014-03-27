@@ -35,6 +35,7 @@ public class USBMountReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         long curTime = System.currentTimeMillis();
+        // make sure the application would not request scan file frequently.
         if (curTime - mLastActionTime > ONE_MIN) {
             Intent intentScanner = new Intent(Intent.ACTION_MEDIA_MOUNTED, Uri.parse("file://"
                     + Environment.getExternalStorageDirectory()));
@@ -47,7 +48,7 @@ public class USBMountReceiver extends BroadcastReceiver {
             mContext.sendBroadcast(intentScanner);
 
             // send a message for reloading audio list.
-            mHandler.sendEmptyMessageDelayed(RELOAD_AUDIO, 60 * 1000);
+            mHandler.sendEmptyMessageDelayed(RELOAD_AUDIO, ONE_MIN);
             mLastActionTime = curTime;
         }
     }

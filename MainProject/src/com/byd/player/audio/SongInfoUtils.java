@@ -71,6 +71,7 @@ public class SongInfoUtils {
                         MediaStore.Audio.Media.DURATION,
                         MediaStore.Audio.Media.ARTIST,
                         MediaStore.Audio.Media.ALBUM,
+                        MediaStore.Audio.Media.ALBUM_ID,
                         MediaStore.Audio.Media.YEAR,
                         MediaStore.Audio.Media.MIME_TYPE,
                         MediaStore.Audio.Media.SIZE,
@@ -96,27 +97,31 @@ public class SongInfoUtils {
             song.setFileTitle(cursor.getString(2));// song name
             song.setDuration(cursor.getInt(3));// play time
             song.setSinger(cursor.getString(4));// artist
-            song.setAlbumArt(cursor.getString(5));// album
-            if (cursor.getString(6) != null) {
+//            song.setAlbumArt(cursor.getString(5));// album
+            final int albumId = cursor.getInt(6); // album id
+            String album = AudioLoaderTask.getAlbumArt(mContext.getContentResolver(), albumId);
+            song.setAlbumArt(album);
+
+            if (cursor.getString(7) != null) {
                 song.setYear(cursor.getString(6));
             } else {
                 song.setYear("undefine");
             }
-            if ("audio/mpeg".equals(cursor.getString(7).trim())) {// file type
+            if ("audio/mpeg".equals(cursor.getString(8).trim())) {// file type
                 song.setFileType("mp3");
-            } else if ("audio/x-ms-wma".equals(cursor.getString(7).trim())) {
+            } else if ("audio/x-ms-wma".equals(cursor.getString(8).trim())) {
                 song.setFileType("wma");
             }
-            if (cursor.getString(8) != null) {// fileSize
-                float temp = cursor.getInt(8) / 1024f / 1024f;
+            if (cursor.getString(9) != null) {// fileSize
+                float temp = cursor.getInt(9) / 1024f / 1024f;
                 String sizeStr = (temp + "").substring(0, 4);
                 song.setFileSize(sizeStr + "M");
             } else {
                 song.setFileSize("undefine");
             }
 
-            if (cursor.getString(9) != null) {//file path
-                song.setFilePath(cursor.getString(9));
+            if (cursor.getString(10) != null) {//file path
+                song.setFilePath(cursor.getString(10));
             }
 
             mSongsList.add(song);

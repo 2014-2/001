@@ -113,8 +113,8 @@ public class AudioAdapter extends BaseAdapter implements DataListener {
         }
 
         AudioItem item = getItem(pos);
-        if (item.getAlbumArt() != null) {
-            viewHolder.mIamgeAlbum.setImageBitmap(item.getAlbumArt());
+        if (item.getAlbumBitmap() != null) {
+            viewHolder.mIamgeAlbum.setImageBitmap(item.getAlbumBitmap());
         } else {
             viewHolder.mIamgeAlbum.setImageResource(R.drawable.ablum_null);
         }
