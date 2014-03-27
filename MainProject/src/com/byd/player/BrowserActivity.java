@@ -72,7 +72,7 @@ public class BrowserActivity extends BaseActivity implements OnClickListener {
 	
 	public static boolean[] tabContentChanged = new boolean[tabResId.length];
 	private MyHandler mHandler;
-	private USBMountReceiver mUSBMountReceiver;
+	//private USBMountReceiver mUSBMountReceiver;
 	private Timer mScanTimer;
 	
     @Override
@@ -82,7 +82,7 @@ public class BrowserActivity extends BaseActivity implements OnClickListener {
         mLayoutInflater = LayoutInflater.from(this);
         mHandler = new MyHandler(this);
         initUI();
-        registerUSBStateChangedReceiver();
+        //registerUSBStateChangedReceiver();
         registerContentObserver();
     }
     
@@ -109,21 +109,22 @@ public class BrowserActivity extends BaseActivity implements OnClickListener {
             findViewById(resId).setOnClickListener(this);
         }
     }
-    
-    private void registerUSBStateChangedReceiver() {
-        mUSBMountReceiver = new USBMountReceiver();
-        IntentFilter filter = new IntentFilter();  
-        filter.addAction(Intent.ACTION_MEDIA_MOUNTED);  
-        filter.addAction(Intent.ACTION_MEDIA_CHECKING);  
-        filter.addAction(Intent.ACTION_MEDIA_EJECT);  
-        filter.addAction(Intent.ACTION_MEDIA_REMOVED);
-        filter.addDataScheme("file");  
-        registerReceiver(mUSBMountReceiver, filter);
-    }
-    
-    private void unregisterUSBStateChangedReceiver() {
-        unregisterReceiver(mUSBMountReceiver);
-    }
+	
+//    没啥用，故去掉
+//    private void registerUSBStateChangedReceiver() {
+//        mUSBMountReceiver = new USBMountReceiver();
+//        IntentFilter filter = new IntentFilter();  
+//        filter.addAction(Intent.ACTION_MEDIA_MOUNTED);  
+//        filter.addAction(Intent.ACTION_MEDIA_CHECKING);  
+//        filter.addAction(Intent.ACTION_MEDIA_EJECT);  
+//        filter.addAction(Intent.ACTION_MEDIA_REMOVED);
+//        filter.addDataScheme("file");  
+//        registerReceiver(mUSBMountReceiver, filter);
+//    }
+//    
+//    private void unregisterUSBStateChangedReceiver() {
+//        unregisterReceiver(mUSBMountReceiver);
+//    }
     
     private void registerContentObserver() {
         getContentResolver().registerContentObserver(MediaStore.Video.Media.INTERNAL_CONTENT_URI, true, 
@@ -307,7 +308,7 @@ public class BrowserActivity extends BaseActivity implements OnClickListener {
     
     @Override
     protected void onDestroy() {
-        unregisterUSBStateChangedReceiver();
+//        unregisterUSBStateChangedReceiver();
         super.onDestroy();
     }
 
