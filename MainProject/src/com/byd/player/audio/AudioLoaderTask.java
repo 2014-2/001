@@ -9,6 +9,7 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.provider.MediaStore;
 
 import com.byd.player.config.Constants;
@@ -16,17 +17,17 @@ import com.byd.player.config.Constants;
 public class AudioLoaderTask extends AsyncQueryHandler {
 
     public final static String[] DEF_PROJECTION = new String[] {
-            MediaStore.Audio.Media._ID,
-            MediaStore.Audio.Media.DISPLAY_NAME,
-            MediaStore.Audio.Media.TITLE,
-            MediaStore.Audio.Media.DURATION,
-            MediaStore.Audio.Media.ARTIST,
-            MediaStore.Audio.Media.ALBUM,
-            MediaStore.Audio.Media.ALBUM_ID, 
-            MediaStore.Audio.Media.YEAR,
-            MediaStore.Audio.Media.MIME_TYPE,
-            MediaStore.Audio.Media.SIZE,
-            MediaStore.Audio.Media.DATA };
+        MediaStore.Audio.Media._ID,
+        MediaStore.Audio.Media.DISPLAY_NAME,
+        MediaStore.Audio.Media.TITLE,
+        MediaStore.Audio.Media.DURATION,
+        MediaStore.Audio.Media.ARTIST,
+        MediaStore.Audio.Media.ALBUM,
+        MediaStore.Audio.Media.ALBUM_ID,
+        MediaStore.Audio.Media.YEAR,
+        MediaStore.Audio.Media.MIME_TYPE,
+        MediaStore.Audio.Media.SIZE,
+        MediaStore.Audio.Media.DATA };
 
     public final static String DEF_SELECTION_LOCAL = "(" + MediaStore.Audio.Media.MIME_TYPE + "=? or "
             + MediaStore.Audio.Media.MIME_TYPE + "=?) and "
@@ -55,24 +56,24 @@ public class AudioLoaderTask extends AsyncQueryHandler {
 
     public void loadData() {
         switch (mType) {
-        case AudioLoaderManager.INTERNAL_TYPE:
-            startQuery(0, (Object) null, MediaStore.Audio.Media.INTERNAL_CONTENT_URI,
-                    AudioLoaderTask.DEF_PROJECTION, null/*AudioLoaderTask.DEF_SELECTION_LOCAL*/,
-                    null/*DEF_SELECTION_ARGS*/, null);
-            break;
+            case AudioLoaderManager.INTERNAL_TYPE:
+                startQuery(0, (Object) null, MediaStore.Audio.Media.INTERNAL_CONTENT_URI,
+                        AudioLoaderTask.DEF_PROJECTION, null/*AudioLoaderTask.DEF_SELECTION_LOCAL*/,
+                        null/*DEF_SELECTION_ARGS*/, null);
+                break;
 
-        case AudioLoaderManager.EXTERNAL_SDCARD_TYPE:
-            startQuery(0, (Object) null, MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
-                    AudioLoaderTask.DEF_PROJECTION, AudioLoaderTask.DEF_SELECTION_SDCARD,
-                    DEF_SELECTION_ARGS, null);
-            break;
-        case AudioLoaderManager.EXTERNAL_USB_TYPE:
-            startQuery(0, (Object) null, MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
-                    AudioLoaderTask.DEF_PROJECTION, AudioLoaderTask.DEF_SELECTION_USB,
-                    DEF_SELECTION_ARGS, null);
-            break;
-        default:
-            break;
+            case AudioLoaderManager.EXTERNAL_SDCARD_TYPE:
+                startQuery(0, (Object) null, MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
+                        AudioLoaderTask.DEF_PROJECTION, AudioLoaderTask.DEF_SELECTION_SDCARD,
+                        DEF_SELECTION_ARGS, null);
+                break;
+            case AudioLoaderManager.EXTERNAL_USB_TYPE:
+                startQuery(0, (Object) null, MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
+                        AudioLoaderTask.DEF_PROJECTION, AudioLoaderTask.DEF_SELECTION_USB,
+                        DEF_SELECTION_ARGS, null);
+                break;
+            default:
+                break;
         }
     }
 
@@ -81,17 +82,30 @@ public class AudioLoaderTask extends AsyncQueryHandler {
         if (cursor == null) {
             return;
         }
-        List<Song> songs = null;
-        try {
-            if (cursor.moveToFirst()) {
-                songs = getSongs(cursor);
+        new LoadSongsTask().execute(cursor);
+    }
 
+    class LoadSongsTask extends AsyncTask<Cursor, Void, List<Song>> {
+        @Override
+        protected List<Song> doInBackground(Cursor... params) {
+            List<Song> songs = null;
+            try {
+                if (params[0].moveToFirst()) {
+                    songs = getSongs(params[0]);
+
+                }
+            } finally {
+                params[0].close();
             }
-        } finally {
-            cursor.close();
+            return songs;
+        }
+
+        @Override
+        protected void onPostExecute(List<Song> result) {
             mAudioManager.clearData(mType);
-            mAudioManager.add(songs, mType);
+            mAudioManager.add(result, mType);
             mAudioManager.notifyDataChange();
+            super.onPostExecute(result);
         }
     }
 
