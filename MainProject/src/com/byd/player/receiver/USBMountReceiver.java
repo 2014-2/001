@@ -22,31 +22,33 @@ import android.os.Message;
  *
  */
 public class USBMountReceiver extends BroadcastReceiver {
-    private Context mContext = null;
 
-    public USBMountReceiver() {
-
-    }
+    private final long ONE_MIN = 60 * 1000;
+    private long mLastActionTime;
+    private Context mContext;
 
     public USBMountReceiver(Context context) {
         mContext = context;
+        mLastActionTime = 0;
     }
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        Intent intentScanner = new Intent(Intent.ACTION_MEDIA_MOUNTED, Uri.parse("file://"
-                + Environment.getExternalStorageDirectory()));
-        context.sendBroadcast(intentScanner);
-        intentScanner = new Intent(Intent.ACTION_MEDIA_MOUNTED, Uri.parse("file://"
-                + "/extsd/"));
-        context.sendBroadcast(intentScanner);
-        intentScanner = new Intent(Intent.ACTION_MEDIA_MOUNTED, Uri.parse("file://"
-                + "/udisk/"));
-        context.sendBroadcast(intentScanner);
+        long curTime = System.currentTimeMillis();
+        if (curTime - mLastActionTime > ONE_MIN) {
+            Intent intentScanner = new Intent(Intent.ACTION_MEDIA_MOUNTED, Uri.parse("file://"
+                    + Environment.getExternalStorageDirectory()));
+            mContext.sendBroadcast(intentScanner);
+            intentScanner = new Intent(Intent.ACTION_MEDIA_MOUNTED,
+                    Uri.parse("file://" + "/extsd/"));
+            mContext.sendBroadcast(intentScanner);
+            intentScanner = new Intent(Intent.ACTION_MEDIA_MOUNTED,
+                    Uri.parse("file://" + "/udisk/"));
+            mContext.sendBroadcast(intentScanner);
 
-        if (mContext != null && mContext instanceof AudioListActivity) {
-            // update audio list 1 min later.
+            // send a message for reloading audio list.
             mHandler.sendEmptyMessageDelayed(RELOAD_AUDIO, 60 * 1000);
+            mLastActionTime = curTime;
         }
     }
 
@@ -56,7 +58,7 @@ public class USBMountReceiver extends BroadcastReceiver {
         public void handleMessage(Message msg) {
             switch (msg.what) {
             case RELOAD_AUDIO:
-                if (mContext != null && mContext instanceof AudioListActivity) {
+                if (mContext instanceof AudioListActivity) {
                     ((AudioListActivity) mContext).refreshDatas();
                 }
                 break;
