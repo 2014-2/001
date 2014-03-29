@@ -10,7 +10,6 @@ import java.util.TimerTask;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -37,7 +36,6 @@ import android.widget.Toast;
 import com.byd.player.config.Constants;
 import com.byd.player.history.BYDDatabase;
 import com.byd.player.history.PlayRecord;
-import com.byd.player.receiver.USBMountReceiver;
 import com.byd.player.utils.DialogUtil;
 import com.byd.player.utils.VideoContentObserver;
 import com.byd.player.utils.VideoThumbnailLoader;
@@ -410,6 +408,8 @@ public class BrowserActivity extends BaseActivity implements OnClickListener {
             playList.add(mInfo);
             cursor.moveToNext();
         }
+        cursor.close();
+        cursor = null;
         return playList;
     }
     
