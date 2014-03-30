@@ -80,7 +80,7 @@ public class BTPlayerActivity extends BaseActivity {
     private final int BTSTATUS_CONNECTING = 49;
     private final int BTSTATUS_CONNECTED  = 50;
     private final int BTSTATUS_PLAYING    = 51;
-    private int btstatus = 48;
+    private int btstatus = BTSTATUS_DISCONNECT;
     private static volatile boolean isBTMusicOperation = false;
     
     //broadcast for sending.
@@ -368,7 +368,7 @@ public class BTPlayerActivity extends BaseActivity {
             Log.e(BTMUSIC, "pause music failed!");
         } else {
             Log.i(BTMUSIC, "music should be paused right now!");
-            updatePlayPauseBtn(false);
+            sendBTMusicCmd(REQUESTSTATUS);
         }
     }
     
@@ -377,7 +377,7 @@ public class BTPlayerActivity extends BaseActivity {
             Log.e(BTMUSIC, "stop music failed!");
         } else {
             Log.i(BTMUSIC, "music should be stop right now!");
-            updatePlayPauseBtn(false);
+            sendBTMusicCmd(REQUESTSTATUS);
         }
     }
 
@@ -388,7 +388,7 @@ public class BTPlayerActivity extends BaseActivity {
         	isBTMusicOperation = true;
         	play();
             Log.i(BTMUSIC, "music should be played right now!" + ": " + isBTMusicOperation);
-            updatePlayPauseBtn(true);
+            sendBTMusicCmd(REQUESTSTATUS);
         }
         
     }
@@ -398,6 +398,7 @@ public class BTPlayerActivity extends BaseActivity {
             Log.e(BTMUSIC, "next play failed!");
         } else {
             Log.i(BTMUSIC, "next music!");
+            sendBTMusicCmd(REQUESTSTATUS);
         }
     }
 
@@ -406,6 +407,7 @@ public class BTPlayerActivity extends BaseActivity {
             Log.e(BTMUSIC, "previous play failed!");
         } else {
             Log.i(BTMUSIC, "previous music!");
+            sendBTMusicCmd(REQUESTSTATUS);
         }
     }
     
@@ -460,6 +462,7 @@ public class BTPlayerActivity extends BaseActivity {
             		default:
             			btstatus = BTSTATUS_DISCONNECT;
             			showToast(getString(R.string.bt_plsconnect));
+            			break;
             		}
                 }
             }
