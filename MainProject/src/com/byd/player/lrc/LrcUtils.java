@@ -62,6 +62,12 @@ public class LrcUtils {
         return f.exists();
     }
 
+    /**
+     * 将歌词中的时间转换成毫秒
+     * 
+     * @param timeStr 时间字符串
+     * @return 转换成毫秒的时间
+     */
     public static int time2Str(String timeStr) {
         timeStr = timeStr.replace(":", ".");
         timeStr = timeStr.replace(".", "@");
@@ -78,6 +84,12 @@ public class LrcUtils {
         return currentTime;
     }
 
+    /**
+     * 获取歌词文件编码类型
+     * 
+     * @param file 歌词文件
+     * @return 编码类型
+     */
     public static String encodeOfFile(File file) {
         byte[] buf = new byte[4096];
         String fileName = file.getAbsolutePath();
@@ -111,6 +123,12 @@ public class LrcUtils {
         return encoding;
     }
 
+    /**
+     * 替换歌曲文件扩展名为.lrc，用于寻找与歌曲名称相同的歌词文件
+     * 
+     * @param path 歌曲路径
+     * @return 歌词文件路径
+     */
     public static String replaceExtensionToLrc(String path) {
         return path.replaceAll("\\.\\w+$", ".lrc");
     }

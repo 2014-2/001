@@ -56,14 +56,29 @@ public class AudioPlayerService extends Service {
     };
 
     public interface OnUpdateListener {
+        /**
+         * 更新音乐播放进度
+         * 
+         * @param current 当前播放时间
+         */
         public void onUpdate(int current);
     }
 
     public interface OnPlayPauseListener {
+        /**
+         * 播放或暂停音乐
+         * 
+         * @param isPlay true代表音乐开始播放，false代表音乐被暂停
+         */
         public void onPlayPause(boolean isPlay);
     }
 
     public interface OnSongChangedListener {
+        /**
+         * 歌曲切换
+         * 
+         * @param newPosition 切换到的歌曲在音乐列表中的索引位置
+         */
         public void onSongChanged(int newPosition);
     }
 
@@ -95,10 +110,20 @@ public class AudioPlayerService extends Service {
         return mSongChangedListenerList.contains(listener);
     }
 
-    public int getAudioDuration(){
+    /**
+     * 获取歌曲总时间长度
+     * 
+     * @return 歌曲的时间长度
+     */
+    public int getAudioDuration() {
         return mPlayer.getDuration();
     }
 
+    /**
+     * 获取歌曲当前播放时间
+     * 
+     * @return 歌曲当前播放时间
+     */
     public int getAudioCurrent(){
         return mPlayer.getCurrentPosition();
     }
