@@ -90,6 +90,10 @@ public class VideoView extends SurfaceView implements MediaPlayerControl {
 	
 	private MySizeChangeLinstener mMyChangeLinstener;
 
+	/**
+	 * 
+	 * @return 获取视频播放的尺寸
+	 */
 	public int getVideoWidth() {
 		return mVideoWidth;
 	}
@@ -105,10 +109,18 @@ public class VideoView extends SurfaceView implements MediaPlayerControl {
 		setLayoutParams(lp);
 	}
 
+	/**
+	 * 当全频播放时，需要对尺寸变化做回调处理
+	 */
 	public interface MySizeChangeLinstener {
 		public void onSizeChanged();
 	}
 
+	/**
+	 * 设置尺寸变化的回调
+	 * 
+	 * @param l
+	 */
 	public void setMySizeChangeLinstener(MySizeChangeLinstener l) {
 		mMyChangeLinstener = l;
 	}
@@ -180,10 +192,20 @@ public class VideoView extends SurfaceView implements MediaPlayerControl {
 		requestFocus();
 	}
 
+	/**
+	 * 设置播放源
+	 * 
+	 * @param path 媒体文件路径
+	 */
 	public void setVideoPath(String path) {
 		setVideoURI(Uri.parse(path));
 	}
 
+	/**
+	 * 设置播放源
+	 * 
+	 * @param path 媒体文件URI
+	 */
 	public void setVideoURI(Uri uri) {
 		mUri = uri;
 		mStartWhenPrepared = false;
@@ -197,6 +219,9 @@ public class VideoView extends SurfaceView implements MediaPlayerControl {
 		return mUri == null;
 	}
 
+	/**
+	 * 停止播放
+	 */
 	public void stopPlayback() {
 		if (mMediaPlayer != null) {
 			mMediaPlayer.stop();
@@ -205,6 +230,9 @@ public class VideoView extends SurfaceView implements MediaPlayerControl {
 		}
 	}
 
+	/**
+	 * 开始播放
+	 */
 	private void openVideo() {
 		if (mUri == null || mSurfaceHolder == null) {
 			// not ready for playback just yet, will try again later

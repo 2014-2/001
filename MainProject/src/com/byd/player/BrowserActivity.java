@@ -44,6 +44,11 @@ import com.byd.player.video.VideoPlayActivity;
 
 /**
  * 
+ * 视频浏览器，从外部设备中查询：
+ * 1. 系统的本身SDCARD为内部存储；
+ * 2. USB外部存储
+ * 3. 外部SDCARD
+ * 
  * @author Des
  *
  */

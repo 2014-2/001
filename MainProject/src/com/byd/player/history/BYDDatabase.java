@@ -12,6 +12,8 @@ import android.text.TextUtils;
 import android.util.Log;
 /**
  * 
+ * 存储播放历史
+ * 
  * @author Des
  *
  */
@@ -58,6 +60,12 @@ public class BYDDatabase {
         }
     }
 
+    /**
+     * 获取Database单例
+     * 
+     * @param context
+     * @return
+     */
     public static synchronized BYDDatabase getInstance(Context context) {
         if (sSingleton == null) {
             sSingleton = new BYDDatabase(context);
@@ -73,6 +81,9 @@ public class BYDDatabase {
         }
     }
 
+    /**
+     * 关闭DB相关操作
+     */
     public synchronized void close() {
         if (null != sSingleton) {
             mOpenHelper.close();
@@ -80,6 +91,12 @@ public class BYDDatabase {
         }
     }
 
+    /**
+     * 根据用户点击后播放，插入记录播放历史
+     * 
+     * @param playRecord
+     * @return
+     */
     public long insertVideoPlayRecord(PlayRecord playRecord) {
         if (playRecord != null) {
             ContentValues contentValues = playRecord.getDBContentValue();
@@ -102,6 +119,11 @@ public class BYDDatabase {
         return -1;
     }
 
+    /**
+     * 在视频播放器列表中获取播放列表
+     * 
+     * @return 播放列表
+     */
     public List<PlayRecord> getPlayRecord() {
         Cursor cursor = getDatabase(true).rawQuery(
                 "SELECT * FROM " + PlayRecordTable.TABLE_NAME, null);
@@ -120,6 +142,11 @@ public class BYDDatabase {
         return null;
     }
 
+    /**
+     * 根据用户选择编辑的视频播放记录删除相关的数据库记录
+     * 
+     * @param playRecordsData
+     */
     public void deletePlayRecords(List<String> playRecordsData) {
         if(playRecordsData != null && playRecordsData.size() > 0) {
             try {

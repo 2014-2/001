@@ -60,7 +60,6 @@ public class VisualizeView extends SurfaceView implements SurfaceHolder.Callback
 
     @Override
     public void surfaceRedrawNeeded(SurfaceHolder holder) {
-        // TODO Auto-generated method stub
 
     }
 
@@ -71,32 +70,30 @@ public class VisualizeView extends SurfaceView implements SurfaceHolder.Callback
         }
         @Override
         public void run() {
-            try {
-                while(!isInterrupted()) {
-                    synchronized(mSurface) {
-                        Canvas c = mSurface.lockCanvas();
-                        Paint p = new Paint();
-                        c.drawColor(Color.TRANSPARENT, Mode.CLEAR);
-                        Bitmap flash_point = ((BitmapDrawable)getResources().getDrawable(R.drawable.visualize_flash_point)).getBitmap();
-                        Bitmap bg = ((BitmapDrawable)getResources().getDrawable(R.drawable.audio_pause_icon_bg)).getBitmap();
-                        c.drawBitmap(bg, 0, 0, p);
-                        int count1 = (int)(Math.random()*7);
-                        for (int i =0; i<=count1;i++){
-                            c.drawBitmap(flash_point, 0, 18-3*i, p);
-                        }
-                        int count2 = (int)(Math.random()*7);
-                        for (int i =0; i<=count2;i++){
-                            c.drawBitmap(flash_point, bg.getWidth()/2+1, 18-3*i, p);
-                        }
-                        mSurface.unlockCanvasAndPost(c);
-                        sleep(500);
+            while(!isInterrupted()) {
+                synchronized(mSurface) {
+                    Canvas c = mSurface.lockCanvas();
+                    if(c == null) return;
+                    Paint p = new Paint();
+                    c.drawColor(Color.TRANSPARENT, Mode.CLEAR);
+                    Bitmap flash_point = ((BitmapDrawable)getResources().getDrawable(R.drawable.visualize_flash_point)).getBitmap();
+                    Bitmap bg = ((BitmapDrawable)getResources().getDrawable(R.drawable.audio_pause_icon_bg)).getBitmap();
+                    c.drawBitmap(bg, 0, 0, p);
+                    int count1 = (int)(Math.random()*7);
+                    for (int i =0; i<=count1;i++){
+                        c.drawBitmap(flash_point, 0, 18-3*i, p);
+                    }
+                    int count2 = (int)(Math.random()*7);
+                    for (int i =0; i<=count2;i++){
+                        c.drawBitmap(flash_point, bg.getWidth()/2+1, 18-3*i, p);
+                    }
+                    mSurface.unlockCanvasAndPost(c);
+                    try {
+                    	sleep(500);
+                    } catch (InterruptedException e) {
+                    	e.printStackTrace();
                     }
                 }
-            } catch (InterruptedException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            } catch (NullPointerException ex) {
-                ex.printStackTrace();
             }
         }
 

@@ -69,7 +69,7 @@ public class VideoPlayActivity extends Activity {
 	private GestureDetector mGestureDetector = null;
 
 	private ImageButton btnPlayPause = null;
-
+	/**播放条*/
 	private PopupWindow controlerWindow = null;
 	private PopupWindow titleWindow = null;
 
