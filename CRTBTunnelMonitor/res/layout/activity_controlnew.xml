@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+     >
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical">
+        <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="40dp" >
+
+        <include
+            android:id="@+id/header"
+            layout="@layout/header" >
+        </include>
+
+        <TextView
+            android:id="@+id/ts_new_tv_header"
+            style="@style/header"
+            android:text="新建全站仪" />
+    </RelativeLayout>
+    <LinearLayout 
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dip">
+        <TextView 
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="品牌"
+            android:layout_marginLeft="20dip"
+            android:layout_weight="4"
+            android:textSize="15dip"/>
+        <EditText 
+            android:id="@+id/pp"
+            android:layout_width="fill_parent"
+            android:layout_marginLeft="10dip"
+            android:layout_height="50dip"
+            android:editable="false"
+            android:layout_weight="2"/>
+        <Spinner 
+            android:id="@+id/pps"
+            android:layout_width="fill_parent"
+            android:layout_height="50dip"
+            android:layout_weight="4"/>
+    </LinearLayout>
+    
+    <LinearLayout 
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dip">
+        <TextView 
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="名称"
+            android:layout_marginLeft="20dip"
+            android:layout_weight="4"
+            android:textSize="15dip"/>
+        <EditText 
+            android:id="@+id/name"
+            android:layout_width="fill_parent"
+            android:layout_marginLeft="10dip"
+            android:layout_height="50dip"
+            android:layout_weight="2"
+            android:hint="全站仪品牌仪器型号"/>
+        <Spinner 
+            android:id="@+id/pps"
+            android:layout_width="fill_parent"
+            android:layout_height="50dip"
+            android:layout_weight="4"
+            android:visibility="invisible"/>
+    </LinearLayout>
+    
+    <LinearLayout 
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dip">
+        <TextView 
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="校验位"
+            android:layout_marginLeft="20dip"
+            android:layout_weight="4"
+            android:textSize="15dip"/>
+        <EditText 
+            android:id="@+id/xyw"
+            android:layout_width="fill_parent"
+            android:layout_marginLeft="10dip"
+            android:layout_height="50dip"
+            android:editable="false"
+            android:layout_weight="2"/>
+        <Spinner 
+            android:id="@+id/xyws"
+            android:layout_width="fill_parent"
+            android:layout_height="50dip"
+            android:layout_weight="4"/>
+    </LinearLayout>
+    
+    
+    <LinearLayout 
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dip">
+        <TextView 
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="波特率"
+            android:layout_marginLeft="20dip"
+            android:layout_weight="4"
+            android:textSize="15dip"/>
+        <EditText 
+            android:id="@+id/btl"
+            android:layout_width="fill_parent"
+            android:layout_marginLeft="10dip"
+            android:layout_height="50dip"
+            android:editable="false"
+            android:layout_weight="2"/>
+        <Spinner 
+            android:id="@+id/btls"
+            android:layout_width="fill_parent"
+            android:layout_height="50dip"
+            android:layout_weight="4"/>
+    </LinearLayout>
+    
+    <LinearLayout 
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dip">
+        <TextView 
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="串口"
+            android:layout_marginLeft="20dip"
+            android:layout_weight="4"
+            android:textSize="15dip"/>
+        <EditText 
+            android:id="@+id/ck"
+            android:layout_width="fill_parent"
+            android:layout_marginLeft="10dip"
+            android:layout_height="50dip"
+            android:editable="false"
+            android:layout_weight="2"/>
+        <Spinner 
+            android:id="@+id/cks"
+            android:layout_width="fill_parent"
+            android:layout_height="50dip"
+            android:layout_weight="4"/>
+    </LinearLayout>
+    
+    
+    <LinearLayout 
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dip">
+        <TextView 
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="数据位"
+            android:layout_marginLeft="20dip"
+            android:layout_weight="4"
+            android:textSize="15dip"/>
+        <EditText 
+            android:id="@+id/sjw"
+            android:layout_width="fill_parent"
+            android:layout_marginLeft="10dip"
+            android:layout_height="50dip"
+            android:layout_weight="2"/>
+        <Spinner 
+            android:id="@+id/cks"
+            android:layout_width="fill_parent"
+            android:layout_height="50dip"
+            android:layout_weight="4"
+            android:visibility="invisible"/>
+        
+    </LinearLayout>
+    
+    
+    
+    <LinearLayout 
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dip">
+        <TextView 
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="停止位"
+            android:layout_marginLeft="20dip"
+            android:layout_weight="4"
+            android:textSize="15dip"/>
+        <EditText 
+            android:id="@+id/tzw"
+            android:layout_width="fill_parent"
+            android:layout_marginLeft="10dip"
+            android:layout_height="50dip"
+            android:layout_weight="2"/>
+        <Spinner 
+            android:id="@+id/cks"
+            android:layout_width="fill_parent"
+            android:layout_height="50dip"
+            android:layout_weight="4"
+            android:visibility="invisible"/>
+    </LinearLayout>
+    <RelativeLayout
+        android:id="@+id/main"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" >
+
+
+        <LinearLayout
+            android:id="@+id/bottom_panel"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:orientation="horizontal" >
+
+            <Button
+                android:id="@+id/work_btn_quxiao"
+                android:layout_width="0dp"
+                android:layout_height="40dip"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:text="取消" 
+                android:background="@color/green"
+                />
+<ImageView 
+    android:layout_width="2dip"
+    android:layout_height="fill_parent"
+    android:background="@color/black"
+    />
+            <Button
+                android:id="@+id/work_btn_queding"
+                android:layout_width="0dp"
+                android:layout_height="40dip"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:background="@color/green"
+                android:text="确定" />
+        </LinearLayout>
+    </RelativeLayout>
+</LinearLayout>
+</ScrollView>

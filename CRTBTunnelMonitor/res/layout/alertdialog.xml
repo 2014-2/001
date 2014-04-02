@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/alert_bg"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/dialog_marginleft"
+        android:layout_marginTop="5dip"
+        android:gravity="center_vertical"
+        android:orientation="horizontal" >
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/dig" 
+            android:scaleType="fitXY"/>
+
+        <TextView
+            android:id="@+id/dialogtitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="30dp"
+            android:singleLine="true"
+            android:text="提示"
+            android:textColor="@color/black"
+            android:textSize="@dimen/dialog_title_textsize" />
+
+    </LinearLayout>
+
+    <View
+        android:id="@+id/divderid"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_margin="@dimen/dialog_marginleft" />
+
+    <TextView
+        android:id="@+id/dialogcontent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/dialog_marginleft"
+        android:gravity="left"
+        android:text="在系统Dialog样式基础上，相当于继承系统样式"
+        android:textColor="@color/black"
+        android:textSize="@dimen/dialog_content_textsize" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" 
+        android:layout_marginTop="5dip"
+        android:paddingTop="5dip"
+        android:paddingBottom="5dip"
+        android:background="#c5c5c5"
+        android:orientation="horizontal"
+        android:gravity="center">
+
+        <Button
+            android:id="@+id/btnleft"
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dialog_btn_height"
+            android:background="@drawable/selector_alertdialog_btn_bg"
+            android:layout_marginLeft="5dip"
+            android:layout_marginRight="5dip"
+            android:layout_gravity="left"
+            android:text="取消"
+            android:textColor="@color/black"
+            android:visibility="gone" />
+
+        <Button
+            android:id="@+id/btncenter"
+            android:layout_width="@dimen/dialog_btn_width"
+            android:layout_height="@dimen/dialog_btn_height"
+            android:layout_marginRight="20dp"
+            android:background="@drawable/selector_alertdialog_btn_bg"
+            android:text="确定"
+            android:textColor="@color/black"
+            android:visibility="visible" />
+
+        <Button
+            android:id="@+id/btnright"
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dialog_btn_height"
+            android:background="@drawable/selector_alertdialog_btn_bg"
+            android:layout_marginLeft="5dip"
+            android:layout_marginRight="5dip"
+            android:layout_gravity="right"
+            android:text="确定"
+            android:textColor="@color/black"
+            android:visibility="gone" />
+    </LinearLayout>
+
+</LinearLayout>

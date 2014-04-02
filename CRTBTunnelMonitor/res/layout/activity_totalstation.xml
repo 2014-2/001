@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/total"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <include
+        android:id="@+id/header"
+        layout="@layout/header" >
+    </include>
+
+    <TextView
+        style="@style/header"
+        android:text="@string/total" />
+
+    <RelativeLayout
+        android:id="@+id/total_qzy"
+        style="@style/main_rl"
+        android:layout_below="@id/header"
+        android:layout_marginLeft="20dip" >
+
+        <ImageView
+            android:id="@+id/totalimg1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/four" />
+
+        <TextView
+            style="@style/main_tv"
+            android:layout_below="@id/totalimg1"
+            android:layout_marginLeft="20dip"
+            android:layout_marginTop="5dip"
+            android:text="全站仪" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/total_kd"
+        style="@style/main_rl"
+        android:layout_below="@id/header"
+        android:layout_marginLeft="20dip"
+        android:layout_toRightOf="@id/total_qzy" >
+
+        <ImageView
+            android:id="@+id/totalimg2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/pic2" />
+         <TextView
+            style="@style/main_tv"
+            android:layout_below="@id/totalimg2"
+            android:layout_marginTop="5dip"
+            android:text="控点管理" />
+
+       
+    </RelativeLayout>
+
+</RelativeLayout>

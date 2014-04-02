@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.sxlc.activity"
+    android:versionCode="1"
+    android:versionName="1.0" >
+
+    <uses-sdk
+        android:minSdkVersion="8"
+        android:targetSdkVersion="14" />
+    <uses-permission android:name="android.permission.INTERNET"/>
+
+    <application
+        android:name=".CRTBTunnelMonitor"
+        android:allowBackup="true"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme" 
+        >
+        <activity
+            android:name="com.sxlc.activity.SelecActivity"
+            android:label="@string/app_name" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name="com.sxlc.activity.LoginActivity"/>
+        <activity android:name="com.sxlc.activity.MainActivity"/>
+        <activity android:name="com.sxlc.activity.AsregardsActivity"/>
+        <activity android:name="com.sxlc.activity.ServersActivity"/>
+        <activity android:name="com.sxlc.activity.RecordActivity"/>
+        <activity android:name="com.sxlc.activity.RecordNewActivity"/>
+        <activity android:name="com.sxlc.activity.WarningActivity"/>
+        <activity android:name="com.sxlc.activity.WorkActivity"/>
+        <activity android:name="com.sxlc.activity.WorkNewActivity"/>
+        <activity android:name="com.sxlc.activity.SectionActivity"/>
+        <activity android:name="com.sxlc.activity.SectionNewActivity"/>
+
+        <activity android:name="com.sxlc.activity.SectionEditActivity"/>
+        <activity android:name="com.sxlc.activity.TotalStationActivity"/>
+        <activity android:name="com.sxlc.activity.ControlPointsActivity"/>
+		<activity android:name="com.sxlc.activity.ControlNewActivity"/>
+		<activity android:name="com.sxlc.activity.ControlNewActivityTwo"/>
+		<activity android:name="com.sxlc.activity.TestRecordActivity"/>
+				
+        <!-- <activity android:name="com.sxlc.activity.ControlNewActivity"/> -->
+        <activity android:name="com.sxlc.activity.ControlxgActivity"/>
+        
+
+        <activity android:name="com.sxlc.activity.StationActivity"/>
+ 
+        
+
+    </application>
+
+</manifest>

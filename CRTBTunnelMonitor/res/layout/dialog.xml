@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" 
+    android:background="@color/white">
+    <include
+            android:id="@+id/dialog1"
+            layout="@layout/header" />
+	<TextView 
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:text="提示"
+	    android:textColor="@color/white"
+	    android:textSize="20dip"/>
+	<ImageButton 
+	    android:id="@+id/delete2"
+	    android:layout_width="30dip"
+	    android:layout_height="30dip"
+	    android:layout_alignParentRight="true"
+	    android:background="@drawable/failred"/>
+	
+	<LinearLayout 
+	    android:id="@+id/dialin1"
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content"
+	    android:layout_below="@id/delete2"
+	    android:layout_marginRight="30dip"
+	    android:layout_marginTop="20dip"
+	    android:layout_marginLeft="30dip">
+	    <ImageView 
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:background="@drawable/js"/>
+	    <TextView 
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:text="是否删除全站仪连接的信息,删除后将无法恢复!"
+	        android:textSize="20dip"/>
+	    
+	</LinearLayout>
+	<LinearLayout 
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_below="@id/dialin1"
+	    android:layout_alignParentRight="true">
+	    <Button 
+	        android:id="@+id/qd"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:text="确定"/>
+	    <Button 
+	        android:id="@+id/qx"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_marginLeft="20dip"
+	        android:text="取消"/>
+	</LinearLayout>
+</RelativeLayout>
