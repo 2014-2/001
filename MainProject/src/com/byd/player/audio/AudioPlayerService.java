@@ -166,7 +166,30 @@ public class AudioPlayerService extends Service {
         }
     }
 
-    private void changeToPrevious() {
+    private void forceChangeToNext() {
+        boolean isPlayOrderChecked = Constants.isPlayOrderChecked(getApplicationContext());
+        boolean isLoopModeChecked = Constants.isLoopModeChecked(getApplicationContext());
+        int status = -1;
+        if (isPlayOrderChecked && !isLoopModeChecked) {
+            status = Constants.getPlayOrder(getApplicationContext());
+        } else if (!isPlayOrderChecked && isLoopModeChecked) {
+            status = Constants.getLoopMode(getApplicationContext());
+        }
+        switch (status) {
+            case Constants.PlayOrder.RANDOM_PLAY:
+                mSongPosition = getRandomIndex(AudioPlayerManager.getInstance().getCount());
+                changeSong(mSongPosition);
+                break;
+            case Constants.PlayOrder.ORDER_PLAY:
+            case Constants.LoopMode.SINGLE_LOOP:
+            case Constants.LoopMode.LIST_LOOP:
+            default:
+                mSongPosition++;
+                changeSong(mSongPosition);
+        }
+    }
+
+    private void forceChangeToPrevious() {
         boolean isPlayOrderChecked = Constants.isPlayOrderChecked(getApplicationContext());
         boolean isLoopModeChecked = Constants.isLoopModeChecked(getApplicationContext());
         int status = -1;
@@ -181,8 +204,6 @@ public class AudioPlayerService extends Service {
                 changeSong(mSongPosition);
                 break;
             case Constants.LoopMode.SINGLE_LOOP:
-                changeSong(mSongPosition);
-                break;
             case Constants.PlayOrder.ORDER_PLAY:
             case Constants.LoopMode.LIST_LOOP:
             default:
@@ -300,10 +321,10 @@ public class AudioPlayerService extends Service {
                 }
                 break;
             case Constants.PlayerCommand.NEXT:
-                changeToNext();
+                forceChangeToNext();
                 break;
             case Constants.PlayerCommand.PREVIOUS:
-                changeToPrevious();
+                forceChangeToPrevious();
                 break;
             case Constants.PlayerCommand.AUDIO_FX:
                 int audioFx = intent.getIntExtra(Constants.AUDIO_FX_ID, Constants.AudioFx.NONE);
