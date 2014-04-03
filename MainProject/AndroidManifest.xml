@@ -60,36 +60,6 @@
             android:theme="@android:style/Theme.DeviceDefault" 
             android:screenOrientation="landscape" >
         </activity>
-        
-        <service android:name="com.byd.player.services.AudioChannelService" >
-        </service>
-        <service android:name="com.byd.player.audio.AudioPlayerService" />
-        
-        <service android:name="com.byd.player.services.BtService" >
-         	<intent-filter>
-              	<action android:name="com.byd.player.services.BtService" />
-         	</intent-filter>
-        </service>
-        
-        <receiver
-            android:name="com.byd.player.receiver.BootBroadcastReceiver">
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-            </intent-filter>
-        </receiver>
-        
-        <receiver
-            android:name="com.byd.player.receiver.AudioChannelBroadcastReceiver">
-            <intent-filter>
-                <action android:name="com.byd.player.receiver.action.BTCHANNEL" />
-                <action android:name="com.byd.player.receiver.action.AUXCHANNEL" />
-            </intent-filter>
-        </receiver>
-        
-        <receiver android:name="com.byd.player.receiver.BtStatusChangedBroadcastReceiver" >
-            <intent-filter>
-                <action android:name="com.byd.player.receiver.action.BT_STATUS_CHANGED" />
-            </intent-filter>
-        </receiver>
+
     </application>
 </manifest>

@@ -5,21 +5,17 @@ import java.util.List;
 
 import android.app.ActivityManager;
 import android.content.BroadcastReceiver;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.ServiceConnection;
 import android.media.AudioManager;
 import android.media.AudioManager.OnAudioFocusChangeListener;
 import android.os.Bundle;
-import android.os.IBinder;
 import android.os.IPlayerService;
 import android.os.RemoteException;
 import android.os.ServiceManager;
 import android.util.Log;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -29,21 +25,16 @@ import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.byd.player.BaseActivity;
 import com.byd.player.R;
-import com.byd.player.services.AudioChannelService;
-//import com.byd.player.services.AudioChannelService.AudioChannelBinder;
 import com.byd.player.view.VisualizeView;
 
 public class BTPlayerActivity extends BaseActivity {
     private static final String BTMUSIC = "BTPlayerActivity";
 
-    private LayoutInflater mInflater;
-    
     private PlayerReceiver mBTStatusReceiver;
     
     private ImageButton mBtnBack;
@@ -68,10 +59,6 @@ public class BTPlayerActivity extends BaseActivity {
 
     private AudioManager audioManager;
 
-    static public AudioChannelService BtChannelSrv;
-
-    private static final String SERVICE_TAG = "audiochannel-bt";
-    
     //broadcast for receiving.
     private final String BTSTATUS = "com.byd.player.receiver.action.BTSTATUS";
     
@@ -83,7 +70,7 @@ public class BTPlayerActivity extends BaseActivity {
     private int btstatus = BTSTATUS_DISCONNECT;
     private static volatile boolean isBTMusicOperation = false;
     
-    //broadcast for sending.
+    //broadcast: bt music -> bt phone -> bt driver.
     private final String REQUESTSTATUS= "com.byd.player.bluetooth.action.REQUIRESTATUS";
     private final String A2DPCONNECT= "com.byd.player.bluetooth.action.A2DPCONNECT";
     private final String AVRCPCONNECT= "com.byd.player.bluetooth.action.AVRCPCONNECT";
@@ -100,7 +87,6 @@ public class BTPlayerActivity extends BaseActivity {
 	OnAudioFocusChangeListener afChangeListener = new OnAudioFocusChangeListener() {  
 	    public void onAudioFocusChange(int focusChange) {  
 	        if (focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT) {
-	            // Pause bt playback
 	        	Log.d(BTMUSIC, "AUDIOFOCUS_LOSS_TRANSIENT");
 	        	BTpause();
 				stopPlaybackService("0");
@@ -121,18 +107,6 @@ public class BTPlayerActivity extends BaseActivity {
 	        }
 	    }  
 	}; 
-	
-//    private ServiceConnection mBTChannelSrv = new ServiceConnection() {
-//        @Override
-//        public void onServiceConnected(ComponentName className, IBinder service) {
-//            AudioChannelBinder binder = (AudioChannelBinder) service;
-//            BtChannelSrv = binder.getService();
-//        }
-//        @Override
-//        public void onServiceDisconnected(ComponentName arg0) {
-//            BtChannelSrv = null;
-//        }
-//    };
     
     @Override
     protected void onStart() {
@@ -143,6 +117,7 @@ public class BTPlayerActivity extends BaseActivity {
     protected void onResume() {
         super.onResume();
         play();
+        // when go back to bt music, request the play status.
         sendBTMusicCmd(REQUESTSTATUS);
     }
 
@@ -157,14 +132,6 @@ public class BTPlayerActivity extends BaseActivity {
         super.onDestroy();
         audioManager.abandonAudioFocus(afChangeListener);
         unregisterBroadcast();
-        //BTpause();
-        
-        /*
-        if (mBTChannelSrv != null){
-			unbindService(mBTChannelSrv);
-			isChannelSrvBinded = false;
-		}
-         */
     }
 
     @Override
@@ -180,10 +147,6 @@ public class BTPlayerActivity extends BaseActivity {
         registerBroadcast();
     }
     protected void initBTmusic(){
-//    	Intent intent = new Intent("com.byd.player.receiver.action.BTCHANNEL");
-//    	sendBroadcast(intent);
-//    	startPlaybackService("0");
-
         if (!sendBTMusicCmd(A2DPCONNECT)){
             //TODO deal with a2dp-connect failed, give a toast?
             Log.e(BTMUSIC, "connect a2dp FAILED!");
@@ -204,42 +167,11 @@ public class BTPlayerActivity extends BaseActivity {
         } else {
             Log.i(BTMUSIC, "support AVCRP!");
         }
-
-        //BTcontinuePlay();
-
     }
 
     protected void initView() {
-//    	mBtStatus = (ImageView)findViewById(R.id.icon_bt);
-//    	mBtStatus.setVisibility(View.VISIBLE);
-    	
+    	//connect a2dp, if possible, connect avrcp.
         initBTmusic();
-        /*
-        if (null == mSongInfoAndLyricsContainer) {
-            mSongInfoAndLyricsContainer = (LinearLayout)findViewById(R.id.ll_song_info_and_lyrics);
-        }
-        mSongInfoAndLyricsContainer.removeAllViews();       
-        if (hasLyrics()) {
-            // TODO: Add lyrics display
-        } else {
-            mSongInfoAndLyricsContainer.addView(mInflater.inflate(
-                    R.layout.layout_song_info, null));
-            mAlbumName = (TextView)findViewById(R.id.album_name);
-            mSingerName = (TextView)findViewById(R.id.singer_name);
-            mMusicName = (TextView)findViewById(R.id.music_name);
-            mAlbumName.setText(mPlayingSong.getAlbum());
-            mSingerName.setText(mPlayingSong.getSinger());
-            mMusicName.setText(mPlayingSong.getFileTitle());
-        }
-
-        if (null == mTotalTime) {
-            mTotalTime = (TextView)findViewById(R.id.audio_total_time);
-        }
-        if (null == mPlayingTime) {
-            mPlayingTime = (TextView)findViewById(R.id.audio_playing_time);
-        }
-        */
-          
         
         if(null == mAudioList)
         {
@@ -261,6 +193,7 @@ public class BTPlayerActivity extends BaseActivity {
             mIconPause = (VisualizeView)findViewById(R.id.audio_pause);
         }
         
+        //button event: play&pause.
         if (null == mBtnPlayPause) {
             mBtnPlayPause = (LinearLayout)findViewById(R.id.btn_audio_play_pause);
             mBtnPlayPause.setOnClickListener(new OnClickListener() {
@@ -275,6 +208,7 @@ public class BTPlayerActivity extends BaseActivity {
             });
         }
         
+        //button event: back.
         if(null == mBtnBack)
         {
         	mBtnBack = (ImageButton) findViewById(R.id.button_audio_header_back);
@@ -288,6 +222,7 @@ public class BTPlayerActivity extends BaseActivity {
             });
         }
         
+        //button event: 1.click-next song. 2.long click-fast forward.
         if (null == mBtnNext) {
             mBtnNext = (ImageView)findViewById(R.id.btn_audio_next);
             mBtnNext.setOnClickListener(new OnClickListener() {
@@ -325,6 +260,7 @@ public class BTPlayerActivity extends BaseActivity {
             });
         }
 
+        //button event: 1.click-previous song. 2.long click-fast backward.
         if (null == mBtnPrevious) {
             mBtnPrevious = (ImageView)findViewById(R.id.btn_audio_previous);
             mBtnPrevious.setOnClickListener(new OnClickListener() {
@@ -363,6 +299,7 @@ public class BTPlayerActivity extends BaseActivity {
         }
     }
 
+    //pause the bt music, refresh the play&pause button status.
     private void BTpause() {
         if (!sendBTMusicCmd(PAUSE)){
             Log.e(BTMUSIC, "pause music failed!");
@@ -372,6 +309,7 @@ public class BTPlayerActivity extends BaseActivity {
         }
     }
     
+    //stop the bt music, refresh the play&pause button status.
     private void BTstop() {
         if (!sendBTMusicCmd(STOP)){
             Log.e(BTMUSIC, "stop music failed!");
@@ -381,6 +319,7 @@ public class BTPlayerActivity extends BaseActivity {
         }
     }
 
+    //play the bt music, refresh the play&pause button status.
     private void BTcontinuePlay() {
         if (!sendBTMusicCmd(PLAY)){
             Log.e(BTMUSIC, "play music failed!");
@@ -393,6 +332,7 @@ public class BTPlayerActivity extends BaseActivity {
         
     }
 
+    //play the next bt music, refresh the play&pause button status.
     private void BTplayNext() {
         if (!sendBTMusicCmd(FORWARD)){
             Log.e(BTMUSIC, "next play failed!");
@@ -402,6 +342,7 @@ public class BTPlayerActivity extends BaseActivity {
         }
     }
 
+    //play the previous bt music, refresh the play&pause button status.
     private void BTplayPrevious() {
         if (!sendBTMusicCmd(BACKWARD)){
             Log.e(BTMUSIC, "previous play failed!");
@@ -411,6 +352,7 @@ public class BTPlayerActivity extends BaseActivity {
         }
     }
     
+    //api for sending command to bt phone.
     private boolean sendBTMusicCmd(String BTcmd)
     {
     	Intent intent_toBTphone= new Intent();
@@ -419,6 +361,7 @@ public class BTPlayerActivity extends BaseActivity {
     	return true;
     }
 
+    //register the broadcast sending to bt phone.
     private void registerBroadcast() {
         mBTStatusReceiver = new PlayerReceiver();
         IntentFilter filter = new IntentFilter();
@@ -426,10 +369,12 @@ public class BTPlayerActivity extends BaseActivity {
         registerReceiver(mBTStatusReceiver, filter);
     }
 
+    //deregister the broadcast sending to bt phone.
     private void unregisterBroadcast() {
         unregisterReceiver(mBTStatusReceiver);
     }
 
+    //broadcast receiving response from bt phone.
     public class PlayerReceiver extends BroadcastReceiver {
 
         @Override
@@ -474,11 +419,13 @@ public class BTPlayerActivity extends BaseActivity {
     	Toast.makeText(this, info, Toast.LENGTH_SHORT).show();
     }
     
+    //api for updating status of play&pause button.
     private void updatePlayPauseBtn(boolean isPlay) {
         mIsPlaying = isPlay;
         setBTPlayPauseIcon();
     }
 
+    //judge if the specified service is running.
     public boolean isServiceRunning(Context mContext,String className){
         boolean isRunning = false;
         ActivityManager activityManager = (ActivityManager)mContext.getSystemService(Context.ACTIVITY_SERVICE);
@@ -496,6 +443,7 @@ public class BTPlayerActivity extends BaseActivity {
         return isRunning;
     }
     
+    //update UI of play&pause button.
     private void setBTPlayPauseIcon() {
         if (mIsPlaying) {
             mIconPause.setVisibility(View.VISIBLE);
@@ -510,12 +458,14 @@ public class BTPlayerActivity extends BaseActivity {
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (KeyEvent.KEYCODE_BACK == keyCode)
 		{
+			//when chick back button, stop bt music.
 			BTpause();
 			stopPlay();
 		}
 		return super.onKeyDown(keyCode, event);
 	}
 	
+	//start playback stream for bt music, invoking system service "PlayerService".
 	private void startPlaybackService(String channel){
 		if(false == isChannelValid(channel))
 			return;
@@ -528,6 +478,7 @@ public class BTPlayerActivity extends BaseActivity {
 		}
 	}
 	
+	//stop playback stream for bt music, invoking system service "PlayerService".
 	private void stopPlaybackService(String channel){
 		if(false == isChannelValid(channel))
 			return;
@@ -540,6 +491,7 @@ public class BTPlayerActivity extends BaseActivity {
 		}
 	}
 	
+	//pause playback stream for bt music, invoking system service "PlayerService".
 	private void pausePlaybackService(String channel){
 		if(false == isChannelValid(channel))
 			return;
@@ -552,6 +504,7 @@ public class BTPlayerActivity extends BaseActivity {
 		}
 	}
 	
+	//judge whether audiochannel is valid: 0-bt music, 1-fm, 2-cmmb, 3-aux.
 	private boolean isChannelValid(String channel){
 		if(channel.equals("0") || channel.equals("1") || channel.equals("2") || channel.equals("3"))
 		{
@@ -561,11 +514,13 @@ public class BTPlayerActivity extends BaseActivity {
 		}
 	}
 
+	//api for bt play.
     private void play() {
         int focus = audioManager.requestAudioFocus(afChangeListener, AudioManager.STREAM_MUSIC,  AudioManager.AUDIOFOCUS_GAIN);
         startPlaybackService("0");
     }
 
+    //api for bt stop.
     private void stopPlay() {
         audioManager.abandonAudioFocus(afChangeListener);
         stopPlaybackService("0");

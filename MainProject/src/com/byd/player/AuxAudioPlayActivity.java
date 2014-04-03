@@ -15,8 +15,6 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.byd.player.receiver.AudioChannelBroadcastReceiver;
-
 public class AuxAudioPlayActivity extends BaseActivity {
 
     private TextView mTvAuxStatus;
@@ -71,21 +69,6 @@ public class AuxAudioPlayActivity extends BaseActivity {
         play();
         //switchToAUXChannel();
         super.onResume();
-    }
-
-    private void switchToBTChannel()
-    {
-        Intent setChannel = new Intent(
-                AudioChannelBroadcastReceiver.ACTION_SWITCH_TO_BT_CHANNEL);
-        sendBroadcast(setChannel);
-        audioManager.abandonAudioFocus(afChangeListener);
-    }
-
-    private void switchToAUXChannel()
-    {
-        Intent setChannel = new Intent(
-                AudioChannelBroadcastReceiver.ACTION_SWITCH_TO_AUX_CHANNEL);
-        sendBroadcast(setChannel);
     }
 
     public void onBackBtn(View v) {
