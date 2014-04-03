@@ -578,14 +578,16 @@ OnItemLongClickListener, SearchListener, DeleteListener {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQCODE_BT)
         {
-            findViewById(TAB_IDS[0]).setEnabled(false);
-            findViewById(TAB_IDS[0]).setBackgroundResource(TAB_SELECTED_BGS[0]);
+            final int tabIndex = AudioLoaderManager.getInstance().getViewType();
+            findViewById(TAB_IDS[tabIndex]).setEnabled(false);
+            findViewById(TAB_IDS[tabIndex]).setBackgroundResource(TAB_SELECTED_BGS[tabIndex]);
             findViewById(TAB_IDS[4]).setEnabled(true);
             findViewById(TAB_IDS[4]).setBackgroundResource(TAB_NORMAL_BGS[4]);
         } else if (requestCode == REQCODE_AUX)
         {
-            findViewById(TAB_IDS[0]).setEnabled(false);
-            findViewById(TAB_IDS[0]).setBackgroundResource(TAB_SELECTED_BGS[0]);
+            final int tabIndex = AudioLoaderManager.getInstance().getViewType();
+            findViewById(TAB_IDS[tabIndex]).setEnabled(false);
+            findViewById(TAB_IDS[tabIndex]).setBackgroundResource(TAB_SELECTED_BGS[tabIndex]);
             findViewById(TAB_IDS[3]).setEnabled(true);
             findViewById(TAB_IDS[3]).setBackgroundResource(TAB_NORMAL_BGS[3]);
         } else if (requestCode == REQUEST_CODE_PLAY) {
