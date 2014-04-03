@@ -18,6 +18,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
 import android.text.TextUtils;
+import android.util.Log;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -49,10 +50,19 @@ import com.byd.player.video.VideoPlayActivity;
  * 2. USB外部存储
  * 3. 外部SDCARD
  * 
+ * 启动视频浏览器页面，指定default的页面的方法：
+ * Intent intent = new Intent();
+ * intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+ * intent.setClassName("com.byd.player", "com.byd.player.BrowserActivity");
+ * intent.putExtra("video_page", number); // number: 0-本地, 1-sdcard, 2-usb
+ * startActivity(intent)
+ * 
  * @author Des
  *
  */
 public class BrowserActivity extends BaseActivity implements OnClickListener {
+    private final static String TAB_INDEX = "video_page";
+
 	private final static int MSG_TAB_ON_CHANGED = 10;
 	private final static int MSG_SCAN_MEDIA_CHANGED = 20;
 	public final static int MEDIA_SCAN_PERIOD = 60 * 1000;
@@ -87,8 +97,24 @@ public class BrowserActivity extends BaseActivity implements OnClickListener {
         initUI();
         //registerUSBStateChangedReceiver();
         registerContentObserver();
+
+        if (getIntent() != null) {
+            final int tabIndex = getIntent().getIntExtra(TAB_INDEX, TAB_INDEX_LOCAL);
+            tabToIndex(tabIndex);
+            Log.d("Video", "onCreate tabIndex=" + tabIndex);
+        }
     }
-    
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        if (intent != null) {
+            final int tabIndex = intent.getIntExtra(TAB_INDEX, TAB_INDEX_LOCAL);
+            tabToIndex(tabIndex);
+            Log.d("Video", "onNewIntent tabIndex=" + tabIndex);
+        }
+    }
+
     @Override
 	protected void onPause() {
 		super.onPause();
