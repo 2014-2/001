@@ -145,9 +145,12 @@ public class AudioLoaderTask extends AsyncQueryHandler {
                 song.setFileSize("undefine");
             }
 
-            if (cursor.getString(10) != null) {// file path
-                song.setFilePath(cursor.getString(10));
+            String path = cursor.getString(10);
+            if (path != null && path.contains("system/media/audio")) {
+                // if audio in system path, ignore it
+                continue;
             }
+            song.setFilePath(path);
             if (new File(song.getFilePath()).exists()) {
                 songs.add(song);
             }
