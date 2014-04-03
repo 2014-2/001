@@ -16,6 +16,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.WindowManager;
@@ -40,9 +41,20 @@ import com.byd.player.receiver.USBMountReceiver;
 import com.byd.player.utils.ToastUtils;
 import com.byd.player.utils.VideoContentObserver;
 
+/**
+ * 启动Audio List页面，指定default的页面的方法：
+ * Intent intent = new Intent();
+ * intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+ * intent.setClassName("com.byd.player.audio", "com.byd.player.audio.AudioListActivity");
+ * intent.putExtra("audio_page", number); // number: 0-local, 1-sdcard, 2-usb, 3-usb, 4-mobile
+ * startActivity(intent)
+ */
 public class AudioListActivity extends BaseActivity implements OnItemClickListener,
 OnItemLongClickListener, SearchListener, DeleteListener {
     private final static String TAG = "AudioListActivity";
+
+    private final static String TAB_INDEX = "audio_page";
+
     public final static int TAB_INDEX_LOCAL = 0;
     public final static int TAB_INDEX_SDCARD = 1;
     public final static int TAB_INDEX_USB = 2;
@@ -121,9 +133,26 @@ OnItemLongClickListener, SearchListener, DeleteListener {
 
         registerMediaStoreChangedObserver();
 
-        // startService(new Intent(this, AuxAudioService.class));
+        if (getIntent() != null) {
+            final int tabIndex = getIntent().getIntExtra(TAB_INDEX, TAB_INDEX_LOCAL);
+            tabIndex(tabIndex);
+            Log.d(TAG, "onCreate tabIndex=" + tabIndex);
+        }
     }
 
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        if (intent != null) {
+            final int tabIndex = intent.getIntExtra(TAB_INDEX, TAB_INDEX_LOCAL);
+            tabIndex(tabIndex);
+            Log.d(TAG, "onNewIntent tabIndex=" + tabIndex);
+        }
+    }
+
+    /**
+     * Reload Audio List form MediaProvider.
+     */
     public void refreshDatas() {
         AudioLoaderManager.getInstance().loadData(AudioLoaderManager.EXTERNAL_SDCARD_TYPE);
         AudioLoaderManager.getInstance().loadData(AudioLoaderManager.EXTERNAL_USB_TYPE);
