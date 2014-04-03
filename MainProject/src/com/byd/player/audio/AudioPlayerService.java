@@ -4,8 +4,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import android.app.Service;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.hardware.Canbus;
 import android.media.AudioManager;
 import android.media.AudioManager.OnAudioFocusChangeListener;
 import android.media.MediaPlayer;
@@ -40,6 +43,8 @@ public class AudioPlayerService extends Service {
     private Equalizer mEqualizer;
 
     private AudioManager am;
+
+    private WheelKeyReceiver mWheelKeyReceiver;
 
     private Handler handler = new Handler() {
         @Override
@@ -270,6 +275,12 @@ public class AudioPlayerService extends Service {
         mEqualizer.setEnabled(true);
         int audioFx = Constants.getAudioFx(getApplicationContext());
         setEqualizer(audioFx);
+
+        mWheelKeyReceiver = new WheelKeyReceiver();
+        IntentFilter filter = new IntentFilter();
+        filter.addAction("com.canbus.action.CAR_SETTING");
+        filter.addCategory("com.canbus.action.CAR_SETTING.WHEEL_KEY");
+        registerReceiver(mWheelKeyReceiver, filter);
     }
 
     @Override
@@ -356,6 +367,7 @@ public class AudioPlayerService extends Service {
         }
         mSongPosition = -1;
         mSongChangedListenerList.clear();
+        unregisterReceiver(mWheelKeyReceiver);
     }
 
     private final class PreparedListener implements OnPreparedListener {
@@ -386,4 +398,23 @@ public class AudioPlayerService extends Service {
             }
         }
     };
+
+    class WheelKeyReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if ("com.canbus.action.CAR_SETTING".equals(action)) {
+                int value = intent.getIntExtra("value", 0);
+                switch (value) {
+                    case Canbus.WHEEL_KEY_SEEK_UP_SHORT:
+                        forceChangeToPrevious();
+                        break;
+                    case Canbus.WHEEL_KEY_SEEK_DOWN_SHORT:
+                        forceChangeToNext();
+                        break;
+                }
+            }
+        }
+    }
 }
