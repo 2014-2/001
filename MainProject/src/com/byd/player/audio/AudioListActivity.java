@@ -46,7 +46,7 @@ import com.byd.player.utils.VideoContentObserver;
  * Intent intent = new Intent();
  * intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
  * intent.setClassName("com.byd.player.audio", "com.byd.player.audio.AudioListActivity");
- * intent.putExtra("audio_page", number); // number: 0-local, 1-sdcard, 2-usb, 3-usb, 4-mobile
+ * intent.putExtra("audio_page", number); // number: 0-本地, 1-sdcard, 2-usb, 3-aux, 4-手机
  * startActivity(intent)
  */
 public class AudioListActivity extends BaseActivity implements OnItemClickListener,
