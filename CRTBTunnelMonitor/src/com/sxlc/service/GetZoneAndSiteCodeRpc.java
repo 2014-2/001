@@ -71,7 +71,7 @@ public class GetZoneAndSiteCodeRpc extends AbstractRpc {
 	
 	private void notifySuccess() {
 		if (mCallback != null) {
-			mCallback.onSuccess();
+			//mCallback.onSuccess();
 		}
 	}
 	
