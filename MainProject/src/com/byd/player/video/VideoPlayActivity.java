@@ -20,6 +20,7 @@ import android.os.Looper;
 import android.os.Message;
 import android.os.MessageQueue.IdleHandler;
 import android.provider.MediaStore;
+import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
@@ -45,6 +46,7 @@ import android.widget.TextView;
 
 import com.byd.player.BrowserActivity;
 import com.byd.player.R;
+import com.byd.player.UnsupportedEncodingException;
 import com.byd.player.config.Constants;
 import com.byd.player.history.BYDDatabase;
 import com.byd.player.history.PlayRecord;
@@ -148,7 +150,9 @@ public class VideoPlayActivity extends Activity {
 		titleWindow = new PopupWindow(titleView);
 
 		tvTitle = (TextView) titleView.findViewById(R.id.button_header_title);
-		tvTitle.setText(mediaName);
+		if(!TextUtils.isEmpty(mediaName)) {
+			tvTitle.setText(mediaName);
+		}
 
 		controlView = getLayoutInflater().inflate(R.layout.video_play_view_control, null);
 		controlView.setOnTouchListener(new OnTouchListener() {
@@ -366,6 +370,45 @@ public class VideoPlayActivity extends Activity {
 		sv_ctrlbar.updateVolumeView();
 		updateErrorIcon();
 	}
+	
+	 public void launchFromThird(Intent i) {
+	    	if (i!= null) {
+				Uri uri = i.getData();
+				if (uri!= null) {
+					openfileFromBrowser = uri.getEncodedPath();	
+
+					//Change from 1.6
+					String decodedOpenFileFromBrowser = null;
+					try {
+						decodedOpenFileFromBrowser = URLDecoder.decode(openfileFromBrowser,"UTF-8");
+					} catch (UnsupportedEncodingException e) {
+						//e.printStackTrace();
+						//文件可能存在乱码
+					}
+					if (decodedOpenFileFromBrowser != null)
+					{
+						openfileFromBrowser = decodedOpenFileFromBrowser; 
+					}
+				}	
+			}
+
+			if(FileManager.isVideoFile(openfileFromBrowser)){
+				Globals.setFileName(openfileFromBrowser);	
+				System.out.println("================openfileFromBrowser:"+openfileFromBrowser+"=============");			
+
+			}	
+			else {
+				Bundle extras = i.getExtras();
+				if (extras != null) {
+					String tmpFileName = extras.getString("videofilename");
+
+					if (FileManager.isVideoFile(tmpFileName)) {
+						Globals.setFileName(tmpFileName);
+						System.out.println("================extras.getString videofilename:"+tmpFileName+"============");
+					}
+				}
+			}
+	    }
 
 	private void updateErrorIcon() {
 		if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
@@ -746,6 +789,7 @@ public class VideoPlayActivity extends Activity {
 				showController();
 			}
 			int i = mMediaPlayer.getDuration();
+			duration = i;
 			seekBar.setMax(i);
 			i /= 1000;
 			int minute = i / 60;
