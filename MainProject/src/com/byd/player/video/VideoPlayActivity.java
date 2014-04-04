@@ -1,5 +1,8 @@
 package com.byd.player.video;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -46,7 +49,6 @@ import android.widget.TextView;
 
 import com.byd.player.BrowserActivity;
 import com.byd.player.R;
-import com.byd.player.UnsupportedEncodingException;
 import com.byd.player.config.Constants;
 import com.byd.player.history.BYDDatabase;
 import com.byd.player.history.PlayRecord;
@@ -139,11 +141,20 @@ public class VideoPlayActivity extends Activity {
 			}
 		});
 		
-		Bundle bundle = getIntent().getBundleExtra(Constants.VIDEO_PLAY_PARAMS);
+		Intent intent = getIntent();
+		int playType = 0;
+		if(intent != null) {
+		      Bundle bundle = getIntent().getBundleExtra(Constants.VIDEO_PLAY_PARAMS);
+		      if(bundle != null) {
+   		      mVideoUrl = bundle.getString("video_url");
+   		      mediaName = bundle.getString("name");
+   		      duration = bundle.getInt("duration", 0);
+   		      playType = bundle.getInt("repeat_mode");
+		      } else {
+		          launchBrowser(intent);
+		      }
+		}
 		
-		mVideoUrl = bundle.getString("video_url");
-		mediaName = bundle.getString("name");
-		duration = bundle.getInt("duration", 0);
 		
 		titleView = getLayoutInflater().inflate(R.layout.header_video_player, null);
 		
@@ -315,7 +326,7 @@ public class VideoPlayActivity extends Activity {
 		mMediaPlayer.setOnCompletionListener(mCompletionListener);
 		mMediaPlayer.setMySizeChangeLinstener(mySizeChangeLinstener);
 		mMediaPlayer.setOnSeekCompleteListener(mSeekCompleteListener);
-		int playType = bundle.getInt("repeat_mode");
+		
 		if (playType == 0) {
 			repeatMode = REPEAT_ALL;
 		}
@@ -371,44 +382,37 @@ public class VideoPlayActivity extends Activity {
 		updateErrorIcon();
 	}
 	
-	 public void launchFromThird(Intent i) {
-	    	if (i!= null) {
-				Uri uri = i.getData();
-				if (uri!= null) {
-					openfileFromBrowser = uri.getEncodedPath();	
+	/**
+	 * 从第三方媒体浏览器上观看视频的入口
+	 * 
+	 * @param intent
+	 */
+    public void launchBrowser(Intent intent) {
+        if (intent != null) {
+            Uri uri = intent.getData();
+            if (uri != null) {
+                mVideoUrl = uri.getEncodedPath();
 
-					//Change from 1.6
-					String decodedOpenFileFromBrowser = null;
-					try {
-						decodedOpenFileFromBrowser = URLDecoder.decode(openfileFromBrowser,"UTF-8");
-					} catch (UnsupportedEncodingException e) {
-						//e.printStackTrace();
-						//文件可能存在乱码
-					}
-					if (decodedOpenFileFromBrowser != null)
-					{
-						openfileFromBrowser = decodedOpenFileFromBrowser; 
-					}
-				}	
-			}
-
-			if(FileManager.isVideoFile(openfileFromBrowser)){
-				Globals.setFileName(openfileFromBrowser);	
-				System.out.println("================openfileFromBrowser:"+openfileFromBrowser+"=============");			
-
-			}	
-			else {
-				Bundle extras = i.getExtras();
-				if (extras != null) {
-					String tmpFileName = extras.getString("videofilename");
-
-					if (FileManager.isVideoFile(tmpFileName)) {
-						Globals.setFileName(tmpFileName);
-						System.out.println("================extras.getString videofilename:"+tmpFileName+"============");
-					}
-				}
-			}
-	    }
+                // Change from 1.6
+                String decodedOpenFileFromBrowser = null;
+                try {
+                    decodedOpenFileFromBrowser = URLDecoder.decode(mVideoUrl,
+                            "UTF-8");
+                }
+                catch (UnsupportedEncodingException e) {
+                    // e.printStackTrace();
+                    // 文件可能存在乱码
+                }
+                if (decodedOpenFileFromBrowser != null) {
+                    mVideoUrl = decodedOpenFileFromBrowser;
+                }
+                
+                if(!TextUtils.isEmpty(mVideoUrl) && mVideoUrl.lastIndexOf('.') > 0 && mVideoUrl.lastIndexOf('/') > 0) {
+                    mediaName = mVideoUrl.substring(mVideoUrl.lastIndexOf('/') + 1, mVideoUrl.lastIndexOf('.'));
+                }
+            }
+        }
+    }
 
 	private void updateErrorIcon() {
 		if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
