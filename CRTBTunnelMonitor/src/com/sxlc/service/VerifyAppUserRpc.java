@@ -8,18 +8,22 @@ import org.ksoap2.serialization.SoapObject;
 import android.text.TextUtils;
 import android.util.Log;
 
-public class GetPublicKeyRpc extends AbstractRpc {
-	private static final String LOG_TAG = "GetPublicKeyRpc";
+public class VerifyAppUserRpc extends AbstractRpc {
+	private static final String LOG_TAG = "VerifyAppUserRpc";
 	private static final String KEY_ACCOUNT = "登陆账号";
+	private static final String KEY_PASSWORD = "登陆密码";
 	private static final String KEY_MAC_ADDRESS = "设备物理地址";
-	private static final String KEY_ACTION = "getPublicKey";
+	private static final String KEY_PUBLIC_KEY = "加密后密钥";
+	private static final String KEY_ACTION = "verifyAppUser";
 	
 	private Map<String, String> mParameters = new HashMap<String, String>();
 	private RpcCallback mCallback;
 	
-	public GetPublicKeyRpc(String account, String macAddress, RpcCallback callback) {
+	public VerifyAppUserRpc(String account, String password, String macAddress, String publicKey, RpcCallback callback) {
 		mParameters.put(KEY_ACCOUNT, account);
+		mParameters.put(KEY_PASSWORD, password);
 		mParameters.put(KEY_MAC_ADDRESS, macAddress);
+		mParameters.put(KEY_PUBLIC_KEY, publicKey);
 		mCallback = callback;
 	}
 	
@@ -45,11 +49,11 @@ public class GetPublicKeyRpc extends AbstractRpc {
 		try {
 			Log.d(LOG_TAG, "response: " + response);
 			SoapObject result = (SoapObject) response;
-			String publicKey = result.getPropertyAsString(0);
-			if (TextUtils.isEmpty(publicKey)) {
-				notifyFailed("Invalid public key");
+			String randomCode = result.getPropertyAsString(0);
+			if (TextUtils.isEmpty(randomCode)) {
+				notifyFailed("Invalid random code");
 			} else {
-				notifySuccess(publicKey);
+				notifySuccess(randomCode);
 			}
 		} catch (Exception e) {
 			notifyFailed("Exception: " + e.getMessage());
@@ -57,9 +61,9 @@ public class GetPublicKeyRpc extends AbstractRpc {
 		}
 	}
 	
-	private void notifySuccess(String publicKey) {
+	private void notifySuccess(String randomCode) {
 		if (mCallback != null) {
-			mCallback.onSuccess(new String[] { publicKey });
+			mCallback.onSuccess(new String[] { randomCode });
 		}
 	}
 	
@@ -68,4 +72,5 @@ public class GetPublicKeyRpc extends AbstractRpc {
 			mCallback.onFailed();
 		}
 	}
+
 }

@@ -69,6 +69,7 @@ public final class CrtbWebService {
 	        SoapSerializationEnvelope soapEnvelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
 	        soapEnvelope.bodyOut = rpcMessage;
 	        soapEnvelope.dotNet  = true;
+	        soapEnvelope.encodingStyle = "UTF-8";
 	        soapEnvelope.setOutputSoapObject(rpcMessage);
 	        HttpTransportSE localHttpTransportSE = new HttpTransportSE(mUrl, CONNECITON_TIME_OUT);
 	        List<HeaderProperty> headerList = new ArrayList<HeaderProperty>();
