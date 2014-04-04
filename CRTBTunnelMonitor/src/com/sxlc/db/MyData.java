@@ -7,10 +7,10 @@ import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-//Êı¾İ¿âÉè¼ÆÖĞ¸ù¾İµ¥¸öproject·Ö±ğĞÂ½¨µ¥¸öµÄÊı¾İ¿â
+//æ•°æ®åº“è®¾è®¡ä¸­æ ¹æ®å•ä¸ªprojectåˆ†åˆ«æ–°å»ºå•ä¸ªçš„æ•°æ®åº“
 public class MyData extends SQLiteOpenHelper {
 	private String TAG = "MyData";
-	private static final int VERSION = 1; // ³õÊ¼Ä¬ÈÏ°æ±¾
+	private static final int VERSION = 1; // åˆå§‹é»˜è®¤ç‰ˆæœ¬
 	Context mcontext;
 
 	public MyData(Context context, String name, CursorFactory factory,
@@ -30,14 +30,14 @@ public class MyData extends SQLiteOpenHelper {
 
 	public void onCreate(SQLiteDatabase db) {
 
-		// ´´½¨ProjectIndex±í
+		// åˆ›å»ºProjectIndexè¡¨
 		db.execSQL("create table if not exists ProjectIndex(id integer primary key,ProjectName varchar(255),"
 				+ "CreateTime text,StartChainage double,EndChainage double,"
 				+ "LastOpenTime text,Info text, ChainagePrefix varchar(255),"
 				+ "GDLimitVelocity float,GDLimitTotalSettlement float,SLLimitVelocity float"
 				+ "SLLimitTotalSettlement float,DBLimitVelocity float,DBLimitTotalSettlement float"
 				+ ",ConstructionFirm varchar(255),LimitedTotalSubsidenceTime text)");
-		// ´´½¨TunnelCrossSectionIndex±í ËùÓĞËíµÀÄÚ¶ÏÃæ»ù´¡ĞÅÏ¢±í
+		// åˆ›å»ºTunnelCrossSectionIndexè¡¨ æ‰€æœ‰éš§é“å†…æ–­é¢åŸºç¡€ä¿¡æ¯è¡¨
 		db.execSQL("create table if not exists TunnelCrossSectionIndex(Id INTEGER PRIMARY KEY AUTOINCREMENT,Chainage double,"
 				+ "InbuiltTime text,Width float,ExcavateMethod integer,"
 				+ "SurveyPntName VARCHAR(255),Info text,ChainagePrefix varchar(255),"
@@ -52,7 +52,7 @@ public class MyData extends SQLiteOpenHelper {
 				+ "Lithologic varchar(255),"
 				+ "LAYVALUE FLOAT," + "ROCKGRADE varchar(255))");
 
-		// ´´½¨SubsidenceCrossSectionIndex±í ËùÓĞµØ±íÏÂ³Á¶ÏÃæ»ù´¡ĞÅÏ¢±í
+		// åˆ›å»ºSubsidenceCrossSectionIndexè¡¨ æ‰€æœ‰åœ°è¡¨ä¸‹æ²‰æ–­é¢åŸºç¡€ä¿¡æ¯è¡¨
 		db.execSQL("create table if not exists SubsidenceCrossSectionIndex("
 				+ "Id INTEGER PRIMARY KEY AUTOINCREMENT,Chainage DOUBLE,InbuiltTime DateTime,"
 				+ "Width DOUBLE,SurveyPnts INTEGER,SurveyPntName varchar(255),Info TEXT,"
@@ -60,7 +60,7 @@ public class MyData extends SQLiteOpenHelper {
 				+ "DBU0Time DateTime,DBU0Description TEXT,Lithologic VARCHAR(255),"
 				+ "LAYVALUE FLOAT,ROCKGRADE VARCHAR(255))");
 
-		// ´´½¨ TunnelCrossSectionExIndex±í Âú×ãÌú¿ÆÔºÉÏ´«½Ó¿ÚÒªÇóµÄ¶ÏÃæ»ù´¡ĞÅÏ¢±í
+		// åˆ›å»º TunnelCrossSectionExIndexè¡¨ æ»¡è¶³é“ç§‘é™¢ä¸Šä¼ æ¥å£è¦æ±‚çš„æ–­é¢åŸºç¡€ä¿¡æ¯è¡¨
 		db.execSQL("create table if not exists TunnelCrossSectionExIndex(Id INTEGER PRIMARY KEY AUTOINCREMENT"
 				+ ",ZONECODE  varchar(64),"
 				+ "SITECODE  varchar(64),"
@@ -80,7 +80,7 @@ public class MyData extends SQLiteOpenHelper {
 				+ "UPLOAD  INTEGER,"
 				+ "DESCRIPTION  TEXT)");
 
-		// ´´½¨RawSheetIndex±í ËíµÀÄÚ¶ÏÃæ¼ÇÂ¼µ¥ºÍµØ±íÏÂ³Á¼ÇÂ¼µ¥µÄË÷Òı
+		// åˆ›å»ºRawSheetIndexè¡¨ éš§é“å†…æ–­é¢è®°å½•å•å’Œåœ°è¡¨ä¸‹æ²‰è®°å½•å•çš„ç´¢å¼•
 		db.execSQL("create table if not exists RawSheetIndex(Id INTEGER PRIMARY KEY AUTOINCREMENT"
 				+ ",CrossSectionType  INTEGER,"
 				+ "CreateTime  DateTime,"
@@ -89,7 +89,7 @@ public class MyData extends SQLiteOpenHelper {
 				+ "FACEDESCRIPTION  TEXT,"
 				+ "TEMPERATURE  Double," + "CrossSectionIDs  TEXT)");
 
-		// ´´½¨SubsidenceTotalData±í µØ±íÏÂ³Á¶ÏÃæ¼ÇÂ¼µ¥µÄËùÓĞÊı¾İ
+		// åˆ›å»ºSubsidenceTotalDataè¡¨ åœ°è¡¨ä¸‹æ²‰æ–­é¢è®°å½•å•çš„æ‰€æœ‰æ•°æ®
 		db.execSQL("create table if not exists SubsidenceTotalData(id integer primary key,"
 				+ "StationId  INTEGER,"
 				+ "ChainageId  INTEGER,"
@@ -102,7 +102,7 @@ public class MyData extends SQLiteOpenHelper {
 				+ "DataStatus  INTEGER,"
 				+ "DataCorrection  FLOAT," + "Info  TEXT"+")");
 
-		// ´´½¨ TunnelSettlementTotalData±í ËíµÀÄÚ¶ÏÃæ¼ÇÂ¼µ¥µÄËùÓĞÊı¾İ
+		// åˆ›å»º TunnelSettlementTotalDataè¡¨ éš§é“å†…æ–­é¢è®°å½•å•çš„æ‰€æœ‰æ•°æ®
 		db.execSQL("create table if not exists TunnelSettlementTotalData(id integer primary key,"
 				+ "StationId  INTEGER,"
 				+ "ChainageId  INTEGER,"
@@ -115,24 +115,24 @@ public class MyData extends SQLiteOpenHelper {
 				+ "DataStatus  INTEGER,"
 				+ "DataCorrection  FLOAT," + "Info  TEXT"+")");
 
-		// ´´½¨ StationInfoIndex±í ÉèÕ¾ĞÅÏ¢±í
+		// åˆ›å»º StationInfoIndexè¡¨ è®¾ç«™ä¿¡æ¯è¡¨
 		db.execSQL("create table if not exists TunnelSettlementTotalData(id integer primary key,StationPointId integer,"
 				+ "StationHeight double,BackSightPointIds text,BackeSightHeight text,"
 				+ "CreateTime text," + "Info text)");
-		// ´´½¨ ControlPointsIndex±í ¿ØÖÆµã¹ÜÀí
+		// åˆ›å»º ControlPointsIndexè¡¨ æ§åˆ¶ç‚¹ç®¡ç†
 		db.execSQL("create table if not exists TunnelSettlementTotalData(id integer primary key,Name varchar(255),"
 				+ "x double,y double,z double,Info text)");
-		// ´´½¨ TotalStationIndex±í È«Õ¾ÒÇÁ¬½Ó²ÎÊıĞÅÏ¢
+		// åˆ›å»º TotalStationIndexè¡¨ å…¨ç«™ä»ªè¿æ¥å‚æ•°ä¿¡æ¯
 		db.execSQL("create table if not exists TunnelSettlementTotalData(id integer primary key,Name varchar(255),"
 				+ "BaudRate integer,Port integer,Parity integer,Databits integer,Stopbits integer,Info text)");
 	}
 
 	@Override
 	/**
-	 * µ±Êı¾İ¿âĞèÒª±»¸üĞÂµÄÊ±ºòÖ´ĞĞ£¬ÀıÈçÉ¾³ı¾Ã±í£¬´´½¨ĞÂ±í¡£
+	 * å½“æ•°æ®åº“éœ€è¦è¢«æ›´æ–°çš„æ—¶å€™æ‰§è¡Œï¼Œä¾‹å¦‚åˆ é™¤ä¹…è¡¨ï¼Œåˆ›å»ºæ–°è¡¨ã€‚
 	 */
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 		db.execSQL("alter table user add age int");
-		System.out.println("¸üĞÂ");
+		System.out.println("æ›´æ–°");
 	}
 }

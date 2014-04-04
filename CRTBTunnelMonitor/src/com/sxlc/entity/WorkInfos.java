@@ -13,40 +13,40 @@ import android.R.integer;
 import android.content.Context;
 
 /**
- * ´´½¨¹¤×÷ÃæÊµÌåÀà
- * ´´½¨Ê±¼ä£º2014-3-21ÏÂÎç2:55:32
+ * åˆ›å»ºå·¥ä½œé¢å®ä½“ç±»
+ * åˆ›å»ºæ—¶é—´ï¼š2014-3-21ä¸‹åˆ2:55:32
  * 
- * @author ÕÅÌÎ
+ * @author å¼ æ¶›
  * @since JDK1.6
  * @version 1.0
  */
 public class WorkInfos {
 
-	/** Ãû³Æ */
+	/** åç§° */
 	private String ProjectName;
-	/** Ê±¼ä */
+	/** æ—¶é—´ */
 	private String CreateTime;
-	/** Àï³ÌÇ°×º */
+	/** é‡Œç¨‹å‰ç¼€ */
 	private String ChainagePrefix;
-	/** ÆğÊ¼Àï³Ì */
+	/** èµ·å§‹é‡Œç¨‹ */
 	private Double StartChainage;
-	/** ½áÊøÀï³Ì */
+	/** ç»“æŸé‡Œç¨‹ */
 	private Double EndChainage;
-	/** Ê©¹¤µ¥Î»Ãû³Æ */
+	/** æ–½å·¥å•ä½åç§° */
 	private String ConstructionFirm;
-	/** ¹°¶¥µ¥´ÎËÙÂÊÏŞ²î */
+	/** æ‹±é¡¶å•æ¬¡é€Ÿç‡é™å·® */
 	private Float GDLimitVelocity;
-	/** ¹°¶¥ ÀÛ¼Æ³Á½µÁ¿ÏŞ²î*/
+	/** æ‹±é¡¶ ç´¯è®¡æ²‰é™é‡é™å·®*/
 	private Float GDLimitTotalSettlement;
-	/** ÊÕÁ² µ¥´Î±äĞÎËÙÂÊ*/
+	/** æ”¶æ•› å•æ¬¡å˜å½¢é€Ÿç‡*/
 	private Float SLLimitVelocity;
-	/** ÊÕÁ² ÀÛ¼Æ±äĞÎÏŞ²î*/
+	/** æ”¶æ•› ç´¯è®¡å˜å½¢é™å·®*/
 	private Float SLLimitTotalSettlement;
-	/** µØ±íÏÂ³Á µ¥´ÎËÙÂÊ*/
+	/** åœ°è¡¨ä¸‹æ²‰ å•æ¬¡é€Ÿç‡*/
 	private Float DBLimitVelocity;
-	/**µØ±íÏÂ³Á ÀÛ¼ÆÏÂ³ÁÏŞ²î*/
+	/**åœ°è¡¨ä¸‹æ²‰ ç´¯è®¡ä¸‹æ²‰é™å·®*/
 	private String DBLimitTotalSettlement;
-	/** ±¸×¢ */
+	/** å¤‡æ³¨ */
 	private String info;
 	private String LastOpenTime;
 
@@ -147,7 +147,7 @@ public class WorkInfos {
 	public void setLastOpenTime(String lastOpenTime) {
 		LastOpenTime = lastOpenTime;
 	}
-	/**ÏŞ²îÊ±¼ä*/
+	/**é™å·®æ—¶é—´*/
 	private String LimitedTotalSubsidenceTime;
 	
 	

@@ -24,7 +24,7 @@ public class TotalStationDaoImpl implements TotalStationDao{
 		db = helper.getReadableDatabase();
 	}
 	
-	/**²éÑ¯È«²¿È«Õ¾ÒÇÁ¬½Ó²ÎÊıĞÅÏ¢*/
+	/**æŸ¥è¯¢å…¨éƒ¨å…¨ç«™ä»ªè¿æ¥å‚æ•°ä¿¡æ¯*/
 	public List<TotalStationInfo> SelectAllTotalStation() {
 		List<TotalStationInfo> list = null;
 		String sql = "select * from TotalStationIndex";
@@ -66,7 +66,7 @@ public class TotalStationDaoImpl implements TotalStationDao{
 		return list;
 	}
 
-	/**ĞÂ½¨È«Õ¾ÒÇÁ¬½Ó²ÎÊıĞÅÏ¢*/
+	/**æ–°å»ºå…¨ç«™ä»ªè¿æ¥å‚æ•°ä¿¡æ¯*/
 	public Boolean InsertTotalStation(TotalStationInfo s) {
 		boolean result = false;
 		if(s == null){
@@ -95,7 +95,7 @@ public class TotalStationDaoImpl implements TotalStationDao{
 		return result;
 	}
 
-	/**²éÑ¯È«Õ¾ÒÇÁ¬½Ó²ÎÊıĞÅÏ¢*/
+	/**æŸ¥è¯¢å…¨ç«™ä»ªè¿æ¥å‚æ•°ä¿¡æ¯*/
 	public TotalStationInfo SelectTotalStation(int id) {
 		TotalStationInfo entity = null;
 		String sql = "select * from TotalStationIndex where id=" + Integer.toString(id);
@@ -134,7 +134,7 @@ public class TotalStationDaoImpl implements TotalStationDao{
 		return entity;
 	}
 
-	/**É¾³ıÈ«Õ¾ÒÇÁ¬½Ó²ÎÊıĞÅÏ¢*/
+	/**åˆ é™¤å…¨ç«™ä»ªè¿æ¥å‚æ•°ä¿¡æ¯*/
 	public Boolean DeleteTotalStation(int id) {
 		boolean result = false;
 		String sql = "delete from TotalStationIndex where id =?";
@@ -150,7 +150,7 @@ public class TotalStationDaoImpl implements TotalStationDao{
 		return result;
 	}
 
-	/**±à¼­È«Õ¾ÒÇÁ¬½Ó²ÎÊıĞÅÏ¢*/
+	/**ç¼–è¾‘å…¨ç«™ä»ªè¿æ¥å‚æ•°ä¿¡æ¯*/
 	public Boolean UpdateTotalStation(TotalStationInfo s) {
 		boolean result = false;
 		if(s == null){

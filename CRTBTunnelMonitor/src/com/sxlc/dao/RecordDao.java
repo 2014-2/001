@@ -6,22 +6,22 @@ import java.util.List;
 import com.sxlc.entity.RecordInfo;
 import com.sxlc.entity.WorkInfos;
 /**
- * ¼ÇÂ¼µ¥µÄ½Ó¿Ú
- *´´½¨Ê±¼ä£º2014-3-21ÏÂÎç1:56:59
- *@author ÕÅÌÎ
+ * è®°å½•å•çš„æ¥å£
+ *åˆ›å»ºæ—¶é—´ï¼š2014-3-21ä¸‹åˆ1:56:59
+ *@author å¼ æ¶›
  *@since JDK1.6
  *@version 1.0
  */
 public interface RecordDao{
-	/**²éÑ¯È«²¿*/
+	/**æŸ¥è¯¢å…¨éƒ¨*/
 	public List<RecordInfo> RecordAll(int type);
-	/**ĞÂ½¨¼ÇÂ¼µ¥*/
+	/**æ–°å»ºè®°å½•å•*/
 	public Boolean AddRecord(String type ,RecordInfo r);
-	/**²éÑ¯¼ÇÂ¼µ¥*/
+	/**æŸ¥è¯¢è®°å½•å•*/
 	public void SelectRecord(RecordInfo r);
-	/**É¾³ı¼ÇÂ¼µ¥*/
+	/**åˆ é™¤è®°å½•å•*/
 	public void DeleteRecord(String name);
-	/**±à¼­¼ÇÂ¼µ¥*/
+	/**ç¼–è¾‘è®°å½•å•*/
 	public void CompileRecord(RecordInfo r);
 	public void GetRecordList(int type,WorkInfos w,List<RecordInfo> list);
 	RecordInfo SelectRecord(int id);

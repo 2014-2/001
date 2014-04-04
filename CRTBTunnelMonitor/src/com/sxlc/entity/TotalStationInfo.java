@@ -6,23 +6,23 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 /**
- * È«Õ¾ÒÇÁ¬½Ó²ÎÊıĞÅÏ¢
- *´´½¨Ê±¼ä£º2014-3-24ÏÂÎç13:50:00
- *@author ÕÅÓÑ
+ * å…¨ç«™ä»ªè¿æ¥å‚æ•°ä¿¡æ¯
+ *åˆ›å»ºæ—¶é—´ï¼š2014-3-24ä¸‹åˆ13:50:00
+ *@author å¼ å‹
  *@since JDK1.6
  *@version 1.0
  */
 public class TotalStationInfo implements Parcelable{
 	private int id;						//id
-	private String Name;				//ÒÇÆ÷Ãû³Æ
-	private String TotalstationType;	//È«Õ¾ÒÇÆ·ÅÆ
-	private int BaudRate;				//²¨ÌØÂÊ
-	private int Port;					//¶Ë¿ÚºÅ
-	private int Parity;					//ÆæÅ¼Ğ£Ñé
-	private int Databits;				//Êı¾İÎ»
-	private int Stopbits;				//Í£Ö¹Î»
-	private String Info;				//±¸×¢
-	private String Cmd;                 //´®¿Ú
+	private String Name;				//ä»ªå™¨åç§°
+	private String TotalstationType;	//å…¨ç«™ä»ªå“ç‰Œ
+	private int BaudRate;				//æ³¢ç‰¹ç‡
+	private int Port;					//ç«¯å£å·
+	private int Parity;					//å¥‡å¶æ ¡éªŒ
+	private int Databits;				//æ•°æ®ä½
+	private int Stopbits;				//åœæ­¢ä½
+	private String Info;				//å¤‡æ³¨
+	private String Cmd;                 //ä¸²å£
 	private boolean bUse;
 	private boolean bCheck;
 	
@@ -119,8 +119,8 @@ public class TotalStationInfo implements Parcelable{
 		dest.writeBooleanArray(new boolean[]{bUse,bCheck});
 	}
 	
-    // ÊµÏÖParcelable½Ó¿ÚµÄÀàĞÍÖĞ£¬±ØĞëÓĞÒ»¸öÊµÏÖÁËParcelable.Creator½Ó¿ÚµÄ¾²Ì¬³£Á¿³ÉÔ±×Ö¶Î£¬
-    // ²¢ÇÒËüµÄÃû×Ö±ØĞëÎªCREATORµÄ
+    // å®ç°Parcelableæ¥å£çš„ç±»å‹ä¸­ï¼Œå¿…é¡»æœ‰ä¸€ä¸ªå®ç°äº†Parcelable.Creatoræ¥å£çš„é™æ€å¸¸é‡æˆå‘˜å­—æ®µï¼Œ
+    // å¹¶ä¸”å®ƒçš„åå­—å¿…é¡»ä¸ºCREATORçš„
     public static final Parcelable.Creator<TotalStationInfo> CREATOR 
             = new Parcelable.Creator<TotalStationInfo>()
     {
@@ -130,7 +130,7 @@ public class TotalStationInfo implements Parcelable{
         {
         	TotalStationInfo brief = new TotalStationInfo();
             
-            // ´Ó°ü¹üÖĞ¶Á³öÊı¾İ
+            // ä»åŒ…è£¹ä¸­è¯»å‡ºæ•°æ®
         	brief.id = in.readInt();
         	brief.Name = in.readString();
         	brief.TotalstationType = in.readString();

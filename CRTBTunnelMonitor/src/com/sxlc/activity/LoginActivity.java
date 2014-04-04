@@ -24,25 +24,25 @@ import android.widget.Toast;
 import com.sxlc.common.Constant;
 
 /**
- * ·şÎñÆ÷µÇÂ¼½çÃæ ´´½¨Ê±¼ä£º2014-3-18ÏÂÎç4:11:55
+ * æœåŠ¡å™¨ç™»å½•ç•Œé¢ åˆ›å»ºæ—¶é—´ï¼š2014-3-18ä¸‹åˆ4:11:55
  * 
- * @author ÕÅÌÎ
+ * @author å¼ æ¶›
  * @since JDK1.6
  * @version 1.0
  */
 public class LoginActivity extends Activity implements OnClickListener {
 
-	/**µÇÂ¼°´Å¥ */
+	/**ç™»å½•æŒ‰é’® */
 	private Button login_btn;
-	/** ÒâÍ¼Ìø×ª½çÃæ */
+	/** æ„å›¾è·³è½¬ç•Œé¢ */
 	private Intent intent;
-	/**µÇÂ¼ÓÃ»§ĞÅÏ¢ÁĞ±í*/
+	/**ç™»å½•ç”¨æˆ·ä¿¡æ¯åˆ—è¡¨*/
 	private RelativeLayout login_rl_listview;
-	//ÓÃ»§ÃûÊäÈë¿ò
+	//ç”¨æˆ·åè¾“å…¥æ¡†
 	private EditText et_username;
-	//ÃÜÂëÊäÈë¿ò
+	//å¯†ç è¾“å…¥æ¡†
 	private EditText et_password;
-	//APPÊµÀı
+	//APPå®ä¾‹
 	private CRTBTunnelMonitor CurApp;
 	private String veri;
 	private String rsal;
@@ -56,7 +56,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 		initView();
 	}
 
-	/** ³õÊ¼»¯¿Ø¼ş */
+	/** åˆå§‹åŒ–æ§ä»¶ */
 	private void initView() {
 		login_btn = (Button) findViewById(R.id.login_btn);
 		login_rl_listview = (RelativeLayout) findViewById(R.id.login_rl_listview);
@@ -65,7 +65,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 		CurApp = ((CRTBTunnelMonitor)getApplicationContext());
 		//
 		login_rl_listview.setVisibility(View.GONE);
-		// µã»÷ÊÂ¼ş
+		// ç‚¹å‡»äº‹ä»¶
 		login_btn.setOnClickListener(this);
 	}
 
@@ -73,24 +73,24 @@ public class LoginActivity extends Activity implements OnClickListener {
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.login_btn:
-			//»ñÈ¡ÓÃ»§ÃûºÍÃÜÂë
+			//è·å–ç”¨æˆ·åå’Œå¯†ç 
 			String name = et_username.getText().toString().trim();
 			String pwd = et_password.getText().toString().trim();
 			String verify = "0";
-			//ÓÃ»§ÑéÖ¤
+			//ç”¨æˆ·éªŒè¯
 			if(name==null||pwd==null){
 				verify = loginTest(Constant.testUsername,Constant.testPassword);
 			}else{
 				verify = loginTest(name,pwd);
 			}
-			//ÑéÖ¤Ê§°ÜÊ±ÌáÊ¾²¢·µ»Ø
+			//éªŒè¯å¤±è´¥æ—¶æç¤ºå¹¶è¿”å›
 			if("0".equals(verify)){
-				Toast.makeText(LoginActivity.this, "ÓÃ»§ÑéÖ¤Ê§°Ü£¡", Toast.LENGTH_LONG).show();
+				Toast.makeText(LoginActivity.this, "ç”¨æˆ·éªŒè¯å¤±è´¥ï¼", Toast.LENGTH_LONG).show();
 				break;
 			}else if("-1".equals(verify)){
 				break;
 			}
-			//ÑéÖ¤³É¹¦ÔòÌø×ªµ½Ö÷½çÃæ
+			//éªŒè¯æˆåŠŸåˆ™è·³è½¬åˆ°ä¸»ç•Œé¢
 			CurApp.setVerify(verify);
 			intent = new Intent(LoginActivity.this, MainActivity.class);
 			intent.putExtra("name", 2);
@@ -104,15 +104,15 @@ public class LoginActivity extends Activity implements OnClickListener {
 
 	private String loginTest(String username, String password) {
 		String ver = String.valueOf(0);
-		//»ñÈ¡¹«Ô¿
+		//è·å–å…¬é’¥
 		String publicKey = getPub(username,Constant.testPhysical);
 		if("0".equals(publicKey)){
-			//»ñÈ¡Ê§°ÜÊ±ÌáÊ¾²¢·µ»Ø0
-			Toast.makeText(LoginActivity.this, "»ñÈ¡¹«Ô¿Ê§°Ü£¡", Toast.LENGTH_LONG).show();
+			//è·å–å¤±è´¥æ—¶æç¤ºå¹¶è¿”å›0
+			Toast.makeText(LoginActivity.this, "è·å–å…¬é’¥å¤±è´¥ï¼", Toast.LENGTH_LONG).show();
 			ver = String.valueOf(-1);
 			return ver;
 		}
-		//³É¹¦ÔòÍ¨¹ıË½Ô¿¼ÓÃÜ
+		//æˆåŠŸåˆ™é€šè¿‡ç§é’¥åŠ å¯†
 		CurApp.setPublickey(publicKey);
 		ver = loginSelect(username,password);
 		return ver;
@@ -120,24 +120,24 @@ public class LoginActivity extends Activity implements OnClickListener {
 
 	private String loginSelect(final String username, String password) {
 		veri = String.valueOf(0);
-		//ÃÜÂë¼ÓÃÜ
+		//å¯†ç åŠ å¯†
 		final String pwd = RSACoder.encnryptDes(password, Constant.testDeskey);
 		new Thread(){
 			public void run() {
-				//´´½¨HttpTransportSe¶ÔÏó
+				//åˆ›å»ºHttpTransportSeå¯¹è±¡
 				HttpTransportSE ht=new HttpTransportSE(Constant.UserSelect);
 				ht.debug=true;
 				SoapSerializationEnvelope envelope=new SoapSerializationEnvelope(SoapEnvelope.VER12);
-				//ÊµÀı»¯SoapObject¶ÔÏó
+				//å®ä¾‹åŒ–SoapObjectå¯¹è±¡
 				SoapObject soapObject = new SoapObject(Constant.NameSpace,"/verifyAppUser");
-				soapObject.addProperty("µÇÂ½ÕËºÅ", username);
-				soapObject.addProperty("µÇÂ½ÃÜÂë", pwd);
-				soapObject.addProperty("Éè±¸ÎïÀíµØÖ·", Constant.testPhysical);
-				soapObject.addProperty("¼ÓÃÜºóÃÜÔ¿", CurApp.getPublickey());
+				soapObject.addProperty("ç™»é™†è´¦å·", username);
+				soapObject.addProperty("ç™»é™†å¯†ç ", pwd);
+				soapObject.addProperty("è®¾å¤‡ç‰©ç†åœ°å€", Constant.testPhysical);
+				soapObject.addProperty("åŠ å¯†åå¯†é’¥", CurApp.getPublickey());
 
 				envelope.bodyOut = soapObject;
 				try {
-					//µ÷ÓÃ web Service	
+					//è°ƒç”¨ web Service	
 					ht.call(Constant.NameSpace+"verifyAppUser",envelope);
 					if(envelope.getResponse()!=null){
 						SoapObject result=(SoapObject)envelope.bodyIn;
@@ -154,17 +154,17 @@ public class LoginActivity extends Activity implements OnClickListener {
 
 	private String getPub(final String username,final String testShebei) {
 		rsal = String.valueOf(0);
-		//µ÷ÓÃ web Service
+		//è°ƒç”¨ web Service
 		new Thread(){
 			public void run() {
-				//´´½¨HttpTransportSe¶ÔÏó
+				//åˆ›å»ºHttpTransportSeå¯¹è±¡
 				HttpTransportSE ht=new HttpTransportSE(Constant.UserSelect);
 				ht.debug=true;
 				SoapSerializationEnvelope envelope=new SoapSerializationEnvelope(SoapEnvelope.VER11);
-				//ÊµÀı»¯SoapObject¶ÔÏó
+				//å®ä¾‹åŒ–SoapObjectå¯¹è±¡
 				SoapObject soapObject = new SoapObject(Constant.NameSpace,"getPublicKey");
-				soapObject.addProperty("µÇÂ½ÕËºÅ", username);
-				soapObject.addProperty("ÎïÀíµØÖ·", testShebei);
+				soapObject.addProperty("ç™»é™†è´¦å·", username);
+				soapObject.addProperty("ç‰©ç†åœ°å€", testShebei);
 				envelope.bodyOut = soapObject;
 
 				try {
@@ -184,22 +184,22 @@ public class LoginActivity extends Activity implements OnClickListener {
 		return rsal;
 	}
 	
-	//»ñÈ¡¹¤Çø¹¤µãĞòÁĞ
+	//è·å–å·¥åŒºå·¥ç‚¹åºåˆ—
 	public String[] getZoneAndSiteCode(final String Randomcode){
 		sZoneAndSiteCode = null;
 		new Thread(){
 			public void run() {
-				//´´½¨HttpTransportSe¶ÔÏó
+				//åˆ›å»ºHttpTransportSeå¯¹è±¡
 				HttpTransportSE ht=new HttpTransportSE(Constant.UserSelect);
 				ht.debug=true;
 				SoapSerializationEnvelope envelope=new SoapSerializationEnvelope(SoapEnvelope.VER12);
-				//ÊµÀı»¯SoapObject¶ÔÏó
+				//å®ä¾‹åŒ–SoapObjectå¯¹è±¡
 				SoapObject soapObject = new SoapObject(Constant.NameSpace,"/getZoneAndSiteCode");
-				soapObject.addProperty("Ëæ»úÂë", Randomcode);
+				soapObject.addProperty("éšæœºç ", Randomcode);
 
 				envelope.bodyOut = soapObject;
 				try {
-					//µ÷ÓÃ web Service	
+					//è°ƒç”¨ web Service	
 					ht.call(Constant.NameSpace+"getZoneAndSiteCode",envelope);
 					if(envelope.getResponse()!=null){
 						SoapObject result=(SoapObject)envelope.bodyIn;
@@ -216,7 +216,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 		return sZoneAndSiteCode;
 	}
 	
-	//ÉèÖÃÁ¿²â¶ÏÃæ¼°²âµã½Ó¿Ú
+	//è®¾ç½®é‡æµ‹æ–­é¢åŠæµ‹ç‚¹æ¥å£
 	public int getSectionPointInfo(final String zonecode,final String Sitecode,final String Sectname,final String Sectcode,final String Sectkilo,
 			final String Sectmethod,final float Sectwidth,final float Movevalueuo,final String Updatetime,final String Uoremark,final int Rocklevel,
 			final String Testcodes,final String Objlaytime,final String Remark,final String Randomcode){
@@ -224,13 +224,13 @@ public class LoginActivity extends Activity implements OnClickListener {
 		
 		new Thread(){
 			public void run() {
-				//´´½¨HttpTransportSe¶ÔÏó
+				//åˆ›å»ºHttpTransportSeå¯¹è±¡
 				HttpTransportSE ht=new HttpTransportSE(Constant.UserSelect);
 				ht.debug=true;
 				SoapSerializationEnvelope envelope=new SoapSerializationEnvelope(SoapEnvelope.VER12);
-				//ÊµÀı»¯SoapObject¶ÔÏó
+				//å®ä¾‹åŒ–SoapObjectå¯¹è±¡
 				SoapObject soapObject = new SoapObject(Constant.NameSpace,"/getZoneAndSiteCode");
-				soapObject.addProperty("¹¤Çø±àÂë", zonecode);
+				soapObject.addProperty("å·¥åŒºç¼–ç ", zonecode);
 				soapObject.addProperty("",Sitecode);
 				soapObject.addProperty("",Sectname);
 				soapObject.addProperty("",Sectcode);
@@ -248,7 +248,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 
 				envelope.bodyOut = soapObject;
 				try {
-					//µ÷ÓÃ web Service	
+					//è°ƒç”¨ web Service	
 					ht.call(Constant.NameSpace+"getZoneAndSiteCode",envelope);
 					if(envelope.getResponse()!=null){
 						SoapObject result=(SoapObject)envelope.bodyIn;

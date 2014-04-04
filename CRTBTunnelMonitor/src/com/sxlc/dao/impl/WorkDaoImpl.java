@@ -13,9 +13,9 @@ import com.sxlc.db.SqliteHelperDTMS;
 import com.sxlc.entity.WorkInfos;
 import com.sxlc.entity.list_infos;
 /**
- * ¹¤×÷ÃæÊı¾İ¿âÊµÏÖ
- *´´½¨Ê±¼ä£º2014-3-21ÏÂÎç10:15:09
- *@author ÕÅÌÎ
+ * å·¥ä½œé¢æ•°æ®åº“å®ç°
+ *åˆ›å»ºæ—¶é—´ï¼š2014-3-21ä¸‹åˆ10:15:09
+ *@author å¼ æ¶›
  *@since JDK1.6
  *@version 1.0  
  */

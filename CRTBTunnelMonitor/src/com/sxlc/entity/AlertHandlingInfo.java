@@ -3,20 +3,20 @@ package com.sxlc.entity;
 import java.sql.Timestamp;
 
 /**
- * Ô¤¾¯ÈÕÖ¾ÊµÌå
- *´´½¨Ê±¼ä£º2014-3-24ÏÂÎç13:50:00
- *@author ÕÅÓÑ
+ * é¢„è­¦æ—¥å¿—å®ä½“
+ *åˆ›å»ºæ—¶é—´ï¼š2014-3-24ä¸‹åˆ13:50:00
+ *@author å¼ å‹
  *@since JDK1.6
  *@version 1.0
  */
 public class AlertHandlingInfo {
 	private int id;						//id
-	private int AlertID;				//Ô¤¾¯id
-	private int Handling;				//´¦ÀíÄÚÈİ
-	private Timestamp HandlingTime;		//´¦ÀíÊ±¼ä
-	private String DuePerson;			//´¦ÀíÈË
-	private int AlertStatus;			//Ô¤¾¯ĞÅÏ¢×´Ì¬
-	private int HandlingInfo;		//±¸×¢
+	private int AlertID;				//é¢„è­¦id
+	private int Handling;				//å¤„ç†å†…å®¹
+	private Timestamp HandlingTime;		//å¤„ç†æ—¶é—´
+	private String DuePerson;			//å¤„ç†äºº
+	private int AlertStatus;			//é¢„è­¦ä¿¡æ¯çŠ¶æ€
+	private int HandlingInfo;		//å¤‡æ³¨
 	public int getId() {
 		return id;
 	}

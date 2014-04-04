@@ -4,34 +4,34 @@ import java.util.List;
 
 import com.sxlc.entity.TunnelCrossSectionInfo;
 /**
- * ¶ÏÃæ½Ó¿Ú
- *´´½¨Ê±¼ä£º2014-3-21ÏÂÎç9:53:52
- *@author ÕÅÌÎ
+ * æ–­é¢æ¥å£
+ *åˆ›å»ºæ—¶é—´ï¼š2014-3-21ä¸‹åˆ9:53:52
+ *@author å¼ æ¶›
  *@since JDK1.6
  *@version 1.0
  */
 public interface TunnelCrossSectionDao {
-	/**²éÑ¯È«²¿*/
+	/**æŸ¥è¯¢å…¨éƒ¨*/
 	public List<TunnelCrossSectionInfo> SectionAll();
-	/**ĞÂ½¨¼ÇÂ¼µ¥*/
+	/**æ–°å»ºè®°å½•å•*/
 	public Boolean InsertSection(TunnelCrossSectionInfo s);
-	/**²éÑ¯¼ÇÂ¼µ¥*/
+	/**æŸ¥è¯¢è®°å½•å•*/
 	public TunnelCrossSectionInfo SelectSection();
-	/**É¾³ı¼ÇÂ¼µ¥*/
+	/**åˆ é™¤è®°å½•å•*/
 	public int DeleteSection(int id);
-	/**±à¼­¼ÇÂ¼µ¥*/
+	/**ç¼–è¾‘è®°å½•å•*/
 	public void UpdateSection(TunnelCrossSectionInfo s);
 	
 	
-	/**²éÑ¯È«²¿*/
+	/**æŸ¥è¯¢å…¨éƒ¨*/
 	public List<TunnelCrossSectionInfo> SectiondibiaoAll();
-	/**ĞÂ½¨¼ÇÂ¼µ¥*/
+	/**æ–°å»ºè®°å½•å•*/
 	public Boolean InsertSectiondibiao(TunnelCrossSectionInfo s);
-	/**²éÑ¯¼ÇÂ¼µ¥*/
+	/**æŸ¥è¯¢è®°å½•å•*/
 	public TunnelCrossSectionInfo SelectSectiondibiao(TunnelCrossSectionInfo s);
-	/**É¾³ı¼ÇÂ¼µ¥*/
+	/**åˆ é™¤è®°å½•å•*/
 	public void DeleteSectiondibiao(Double d);
-	/**±à¼­¼ÇÂ¼µ¥*/
+	/**ç¼–è¾‘è®°å½•å•*/
 	public void UpdateSectiondibiao(TunnelCrossSectionInfo s);
 	void GetTunnelCrossSectionList(List<TunnelCrossSectionInfo> lt);
 }

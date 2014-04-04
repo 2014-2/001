@@ -12,9 +12,9 @@ import com.sxlc.dao.SubsidenceTotalDataDao;
 import com.sxlc.db.SqliteHelperDTMS;
 import com.sxlc.entity.SubsidenceTotalDataInfo;
 /**
- * ¶ÏÃæ²âÁ¿¼ÇÂ¼µ¥Êı¾İ¿â½Ó¿ÚÊµÏÖ
- *´´½¨Ê±¼ä£º2014-3-24ÏÂÎç13:50:00
- *@author ÕÅÓÑ
+ * æ–­é¢æµ‹é‡è®°å½•å•æ•°æ®åº“æ¥å£å®ç°
+ *åˆ›å»ºæ—¶é—´ï¼š2014-3-24ä¸‹åˆ13:50:00
+ *@author å¼ å‹
  *@since JDK1.6
  *@version 1.0
  */
@@ -25,8 +25,8 @@ public class SubsidenceTotalDataDaoImpl implements SubsidenceTotalDataDao{
 		helper = new SqliteHelperDTMS(c, name,null,0);
 		db = helper.getReadableDatabase();
 	}
-	//Ìõ¼ş²éÑ¯¼ÇÂ¼µ¥
-	// stationId ÉèÕ¾id£¬sectionId¶ÏÃæid£¬rawsheetId¼ÇÂ¼id£¬type:ÀàĞÍ  0£º¶ÏÃæ¼ÇÂ¼µ¥  1£ºµØ±íÏÂ³Á¼ÇÂ¼µ¥
+	//æ¡ä»¶æŸ¥è¯¢è®°å½•å•
+	// stationId è®¾ç«™idï¼ŒsectionIdæ–­é¢idï¼ŒrawsheetIdè®°å½•idï¼Œtype:ç±»å‹  0ï¼šæ–­é¢è®°å½•å•  1ï¼šåœ°è¡¨ä¸‹æ²‰è®°å½•å•
 	public List<SubsidenceTotalDataInfo> GetAllSubsidenceTotalData(
 			int stationId, int sectionId, int rawsheetId,int type) {
 		List<SubsidenceTotalDataInfo> list = null;
@@ -90,7 +90,7 @@ public class SubsidenceTotalDataDaoImpl implements SubsidenceTotalDataDao{
 		return list;
 	}
 
-	//Ìí¼Ó¼ÇÂ¼µ¥
+	//æ·»åŠ è®°å½•å•
 	public Boolean InsertSubsidenceTotalData(SubsidenceTotalDataInfo s) {
 		boolean result = false;
 		if(s == null){
@@ -128,7 +128,7 @@ public class SubsidenceTotalDataDaoImpl implements SubsidenceTotalDataDao{
 		return result;
 	}
 
-	//¸üĞÂ¼ÇÂ¼µ¥ĞÅÏ¢
+	//æ›´æ–°è®°å½•å•ä¿¡æ¯
 	public Boolean UpdateSubsidenceTotalData(SubsidenceTotalDataInfo s) {
 		boolean result = false;
 		if(s == null){
@@ -167,7 +167,7 @@ public class SubsidenceTotalDataDaoImpl implements SubsidenceTotalDataDao{
 		return result;
 	}
 
-	//É¾³ı¼ÇÂ¼µ¥ĞÅÏ¢
+	//åˆ é™¤è®°å½•å•ä¿¡æ¯
 	public Boolean DeleteSubsidenceTotalData(int id, int level,int type) {
 		boolean result = false;
 		String table ="";
@@ -199,7 +199,7 @@ public class SubsidenceTotalDataDaoImpl implements SubsidenceTotalDataDao{
 		return result;
 	}
 
-	//¸ù¾İid»ñÈ¡µ¥Ìõ¼ÇÂ¼µ¥
+	//æ ¹æ®idè·å–å•æ¡è®°å½•å•
 	public SubsidenceTotalDataInfo GetSubsidenceTotalData(int id,int type) {
 		SubsidenceTotalDataInfo entity = null;
 		String table ="";

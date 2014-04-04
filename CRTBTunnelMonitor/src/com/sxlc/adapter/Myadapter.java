@@ -87,11 +87,11 @@ public class Myadapter extends BaseAdapter {
 			TextView xinghao=(TextView) view.findViewById(R.id.xinghao);
 			xinghao.setText(list.get(pos).getXinghao());
 			TextView dianhao=(TextView) view.findViewById(R.id.dianhao);
-			dianhao.setText("µ„∫≈£∫"+list.get(pos).getDianhao());
+			dianhao.setText("ÁÇπÂè∑Ôºö"+list.get(pos).getDianhao());
 			TextView chushi=(TextView) view.findViewById(R.id.chulifangshi);
-			chushi.setText("¥¶¿Ì∑Ω Ω£∫"+list.get(pos).getChuliFangshi());
+			chushi.setText("Â§ÑÁêÜÊñπÂºèÔºö"+list.get(pos).getChuliFangshi());
 			TextView state=(TextView) view.findViewById(R.id.state);
-			state.setText("◊¥Ã¨£∫"+list.get(pos).getState());
+			state.setText("Áä∂ÊÄÅÔºö"+list.get(pos).getState());
 			TextView message=(TextView) view.findViewById(R.id.message);
 			message.setText(list.get(pos).getMessage());
 			EditText edtstate=(EditText) view.findViewById(R.id.edtstate);

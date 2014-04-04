@@ -26,9 +26,9 @@ import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
 /**
- * ²Ëµ¥
- *´´½¨Ê±¼ä£º2014-3-19ÉÏÎç11:45:46
- *@author µËÃÏ
+ * èœå•
+ *åˆ›å»ºæ—¶é—´ï¼š2014-3-19ä¸Šåˆ11:45:46
+ *@author é‚“å­Ÿ
  *@since JDK1.6
  *@version 1.0
  */
@@ -107,13 +107,13 @@ public class SelectPicPopupWindow extends PopupWindow {
 		this.setContentView(mMenuView);
 		this.setWidth(LayoutParams.FILL_PARENT);
 		this.setHeight(LayoutParams.WRAP_CONTENT);
-		// ÉèÖÃSelectPicPopupWindowµ¯³ö´°Ìå¿Éµã»÷
+		// è®¾ç½®SelectPicPopupWindowå¼¹å‡ºçª—ä½“å¯ç‚¹å‡»
 		this.setFocusable(true);
-		// ÊµÀı»¯Ò»¸öColorDrawableÑÕÉ«Îª°ëÍ¸Ã÷
+		// å®ä¾‹åŒ–ä¸€ä¸ªColorDrawableé¢œè‰²ä¸ºåŠé€æ˜
 		ColorDrawable dw = new ColorDrawable(0xFF000000);
-		// ÉèÖÃSelectPicPopupWindowµ¯³ö´°ÌåµÄ±³¾°
+		// è®¾ç½®SelectPicPopupWindowå¼¹å‡ºçª—ä½“çš„èƒŒæ™¯
 		this.setBackgroundDrawable(dw);
-		// mMenuViewÌí¼ÓOnTouchListener¼àÌıÅĞ¶Ï»ñÈ¡´¥ÆÁÎ»ÖÃÈç¹ûÔÚÑ¡Ôñ¿òÍâÃæÔòÏú»Ùµ¯³ö¿ò
+		// mMenuViewæ·»åŠ OnTouchListenerç›‘å¬åˆ¤æ–­è·å–è§¦å±ä½ç½®å¦‚æœåœ¨é€‰æ‹©æ¡†å¤–é¢åˆ™é”€æ¯å¼¹å‡ºæ¡†
 		mMenuView.setOnTouchListener(new OnTouchListener() {
 
 			public boolean onTouch(View v, MotionEvent event) {

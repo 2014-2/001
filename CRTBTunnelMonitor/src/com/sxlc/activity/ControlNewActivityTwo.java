@@ -37,9 +37,9 @@ public class ControlNewActivityTwo extends Activity implements OnClickListener {
 	
 	private EditText point_name, point_x, point_y, point_z, point_info;
 	private ControlPointsInfo editInfo = null;
-	/** È·¶¨°´Å¥ */
+	/** ç¡®å®šæŒ‰é’® */
 	private Button section_btn_queding;
-	/** È¡Ïû°´Å¥ */
+	/** å–æ¶ˆæŒ‰é’® */
 	private Button section_btn_quxiao;
 
 	private CRTBTunnelMonitor CurApp = null;
@@ -70,7 +70,7 @@ public class ControlNewActivityTwo extends Activity implements OnClickListener {
 		section_btn_queding.setOnClickListener(this);
 		section_btn_quxiao.setOnClickListener(this);
     }
-	// µã»÷ÊÂ¼ş
+	// ç‚¹å‡»äº‹ä»¶
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
@@ -78,12 +78,12 @@ public class ControlNewActivityTwo extends Activity implements OnClickListener {
 			Intent IntentCancel = new Intent();
 			IntentCancel.putExtra(Constant.Select_ControlPointsRowClickItemsName_Data,"");
 			setResult(RESULT_CANCELED, IntentCancel);
-			this.finish();// ¹Ø±Õµ±Ç°½çÃæ
+			this.finish();// å…³é—­å½“å‰ç•Œé¢
 			break;
-		case R.id.work_btn_queding: // Êı¾İ¿â
+		case R.id.work_btn_queding: // æ•°æ®åº“
 			if(point_name.getText().toString().trim().length() <= 0)
 			{
-				Toast.makeText(this, "ÇëÊäÈëÍêÕûĞÅÏ¢", 3000).show();
+				Toast.makeText(this, "è¯·è¾“å…¥å®Œæ•´ä¿¡æ¯", 3000).show();
 				return;
 			}
 			WorkInfos Curw = CurApp.GetCurWork();
@@ -99,14 +99,14 @@ public class ControlNewActivityTwo extends Activity implements OnClickListener {
 
 			if(!CurApp.IsValidControlPointInfo(ts))
 			{
-				Toast.makeText(this, "ÇëÊäÈëÍêÕûĞÅÏ¢", 3000).show();
+				Toast.makeText(this, "è¯·è¾“å…¥å®Œæ•´ä¿¡æ¯", 3000).show();
 				return;
 			}
 			List<ControlPointsInfo> cpinfos = null;
 			cpinfos = Curw.getCpList();
 			if(cpinfos == null)
 			{
-				Toast.makeText(this, "Ìí¼ÓÊ§°Ü", 3000).show();
+				Toast.makeText(this, "æ·»åŠ å¤±è´¥", 3000).show();
 			}
 			else
 			{
@@ -117,11 +117,11 @@ public class ControlNewActivityTwo extends Activity implements OnClickListener {
 					{
 						cpinfos.add(ts);
 						CurApp.UpdateWork(Curw);
-						Toast.makeText(this, "Ìí¼Ó³É¹¦", 3000).show();
+						Toast.makeText(this, "æ·»åŠ æˆåŠŸ", 3000).show();
 					}
 					else
 					{
-						Toast.makeText(this, "Ìí¼ÓÊ§°Ü", 3000).show();
+						Toast.makeText(this, "æ·»åŠ å¤±è´¥", 3000).show();
 					}
 				}
 				else
@@ -130,7 +130,7 @@ public class ControlNewActivityTwo extends Activity implements OnClickListener {
 					impl.UpdateStationInfo(ts);
 					Curw.UpdateContrlPointsInfo(ts);
 					CurApp.UpdateWork(Curw);
-					Toast.makeText(this, "±à¼­³É¹¦", 3000).show();
+					Toast.makeText(this, "ç¼–è¾‘æˆåŠŸ", 3000).show();
 				}
 			}
 			Intent IntentOk = new Intent();
@@ -146,7 +146,7 @@ public class ControlNewActivityTwo extends Activity implements OnClickListener {
 
 	private void initData() {
 		if (editInfo != null) {
-			cp_new_tv_header.setText("±à¼­¿ØÖÆµã");
+			cp_new_tv_header.setText("ç¼–è¾‘æ§åˆ¶ç‚¹");
 			
 			point_name.setFocusableInTouchMode(false);
 			point_x.setFocusableInTouchMode(false);
@@ -160,7 +160,7 @@ public class ControlNewActivityTwo extends Activity implements OnClickListener {
 			point_info.setText(editInfo.getInfo());
 		}
 		else {
-			cp_new_tv_header.setText("ĞÂ½¨¿ØÖÆµã");
+			cp_new_tv_header.setText("æ–°å»ºæ§åˆ¶ç‚¹");
 			point_x.setText("0");
 			point_y.setText("0");
 			point_z.setText("0");

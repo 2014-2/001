@@ -26,7 +26,7 @@ public class db_util {
 	}
 
 	/*
-	 * table ±íÃû columns ¸ÃÕÅ±íµÄËùÓĞ¼üÖµ key ¼üÖµ value Êı¾İ ²éÕÒ¸Ã±íµÄ¸Ã¼üÖµÆ¥ÅäµÄÊı¾İ
+	 * table è¡¨å columns è¯¥å¼ è¡¨çš„æ‰€æœ‰é”®å€¼ key é”®å€¼ value æ•°æ® æŸ¥æ‰¾è¯¥è¡¨çš„è¯¥é”®å€¼åŒ¹é…çš„æ•°æ®
 	 */
 	static public String search(SQLiteOpenHelper Database, String table,
 			String[] columns, String key, String value, String result_key) {
@@ -34,7 +34,7 @@ public class db_util {
 		Cursor cursor = database.query(table, columns, key + "?",
 				new String[] { value }, null, null, null);
 		String s = "null";
-		while (cursor.moveToNext()) { // ÖğÌõ¶ÁÈ¡»ñÈ¡µÄÃ¿ÌõnameĞÅÏ¢
+		while (cursor.moveToNext()) { // é€æ¡è¯»å–è·å–çš„æ¯æ¡nameä¿¡æ¯
 			s = cursor.getString(cursor.getColumnIndex(result_key));
 		}
 		Database.close();
@@ -42,7 +42,7 @@ public class db_util {
 	}
 
 	/*
-	 * table ±íÃû columns ¸ÃÕÅ±íµÄËùÓĞ¼üÖµ key ¼üÖµ value Êı¾İ É¾³ı¸Ã±íµÄºÍ¸Ã¼üÖµÆ¥ÅäµÄÊı¾İ
+	 * table è¡¨å columns è¯¥å¼ è¡¨çš„æ‰€æœ‰é”®å€¼ key é”®å€¼ value æ•°æ® åˆ é™¤è¯¥è¡¨çš„å’Œè¯¥é”®å€¼åŒ¹é…çš„æ•°æ®
 	 */
 	static public void detel(SQLiteOpenHelper Database, String table,
 			String[] columns, String key, String value) {

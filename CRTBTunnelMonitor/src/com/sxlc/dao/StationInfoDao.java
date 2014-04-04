@@ -5,23 +5,23 @@ import java.util.List;
 //import com.sxlc.entity.StationInfo;
 
 /**
- * иХу╬пео╒йЩ╬щ©Б╫с©з
- *╢╢╫╗й╠╪Дё╨2014-3-24обнГ13:50:00
- *@author уеся
+ * Х╝╬Г╚≥Д©║Ф│╞Ф∙╟Ф█╝Е╨⌠Ф▌╔Е▐ё
+ *Е┬⌡Е╩╨Ф≈╤И≈╢О╪ 2014-3-24Д╦▀Е█┬13:50:00
+ *@author Е╪═Е▐▀
  *@since JDK1.6
  *@version 1.0
  */
 public interface StationInfoDao {
 
-//	/* ╡И©╢кЫспиХу╬пео╒ */
+//	/* Ф÷╔Г°▀Ф┴─Ф°┴Х╝╬Г╚≥Д©║Ф│╞ */
 //	public List<StationInfo> GetAllStation();
 //	
-//	/* лМ╪сиХу╬пео╒ */
+//	/* Ф╥╩Е┼═Х╝╬Г╚≥Д©║Ф│╞ */
 //	public boolean InsertStationInfo(StationInfo s);
 //	
-//	/* пч╦диХу╬пео╒ */
+//	/* Д©╝Ф■╧Х╝╬Г╚≥Д©║Ф│╞ */
 //	public boolean UpdateStationInfo(StationInfo s);
 //	
-//	/* и╬ЁЩиХу╬пео╒ */
+//	/* Е┬═И≥╓Х╝╬Г╚≥Д©║Ф│╞ */
 //	public boolean DeleteStationInfo(int id);
 }

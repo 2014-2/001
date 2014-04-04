@@ -29,7 +29,7 @@ import android.widget.Toast;
 import android.widget.RelativeLayout.LayoutParams;
 
 public class ConPopuWindow extends PopupWindow {
-	private RelativeLayout xinjian,bianji,delete;//Èı‚€°´âo
+	private RelativeLayout xinjian,bianji,delete;//ä¸‰å€‹æŒ‰éˆ•
 	private View mMenuView;
 	public Context c;
 	AlertDialog dlg = null;
@@ -63,7 +63,7 @@ public class ConPopuWindow extends PopupWindow {
 				List<ControlPointsInfo> tmpList = ((ControlPointsActivity)c).list;
 				ControlPointsInfo tmp = null;
 				if (tmpList == null) {
-					Toast.makeText((Activity) c, "ÇëÑ¡ÔñĞèÒª±à¼­µÄ¿ØÖÆµã", 3000).show();
+					Toast.makeText((Activity) c, "è¯·é€‰æ‹©éœ€è¦ç¼–è¾‘çš„æ§åˆ¶ç‚¹", 3000).show();
 				}
 				else {
 					for (int i = 0; i < tmpList.size(); i++) {
@@ -74,7 +74,7 @@ public class ConPopuWindow extends PopupWindow {
 					}
 				}
 				if (tmp == null) {
-					Toast.makeText((Activity) c, "ÇëÑ¡ÔñĞèÒª±à¼­µÄ¿ØÖÆµã", 3000).show();
+					Toast.makeText((Activity) c, "è¯·é€‰æ‹©éœ€è¦ç¼–è¾‘çš„æ§åˆ¶ç‚¹", 3000).show();
 				}
 				Intent intent = new Intent(c, ControlNewActivityTwo.class);
 				Bundle mBundle = new Bundle();  
@@ -94,13 +94,13 @@ public class ConPopuWindow extends PopupWindow {
 		this.setContentView(mMenuView);
 		this.setWidth(LayoutParams.FILL_PARENT);
 		this.setHeight(LayoutParams.WRAP_CONTENT);
-		// ÉèÖÃSelectPicPopupWindowµ¯³ö´°Ìå¿Éµã»÷
+		// è®¾ç½®SelectPicPopupWindowå¼¹å‡ºçª—ä½“å¯ç‚¹å‡»
 		this.setFocusable(true);
-		// ÊµÀı»¯Ò»¸öColorDrawableÑÕÉ«Îª°ëÍ¸Ã÷
+		// å®ä¾‹åŒ–ä¸€ä¸ªColorDrawableé¢œè‰²ä¸ºåŠé€æ˜
 		ColorDrawable dw = new ColorDrawable(0xFF000000);
-		// ÉèÖÃSelectPicPopupWindowµ¯³ö´°ÌåµÄ±³¾°
+		// è®¾ç½®SelectPicPopupWindowå¼¹å‡ºçª—ä½“çš„èƒŒæ™¯
 		this.setBackgroundDrawable(dw);
-		// mMenuViewÌí¼ÓOnTouchListener¼àÌıÅĞ¶Ï»ñÈ¡´¥ÆÁÎ»ÖÃÈç¹ûÔÚÑ¡Ôñ¿òÍâÃæÔòÏú»Ùµ¯³ö¿ò
+		// mMenuViewæ·»åŠ OnTouchListenerç›‘å¬åˆ¤æ–­è·å–è§¦å±ä½ç½®å¦‚æœåœ¨é€‰æ‹©æ¡†å¤–é¢åˆ™é”€æ¯å¼¹å‡ºæ¡†
 		mMenuView.setOnTouchListener(new OnTouchListener() {
 
 			public boolean onTouch(View v, MotionEvent event) {

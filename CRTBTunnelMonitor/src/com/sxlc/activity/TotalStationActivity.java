@@ -9,11 +9,11 @@ import android.widget.RelativeLayout;
 
 public class TotalStationActivity extends Activity {
 	/**
-	 * È«Õ¾ÒÇÁ¬½Ó¹ÜÀí
+	 * å…¨ç«™ä»ªè¿æ¥ç®¡ç†
 	 */
 	private RelativeLayout total;
 	/**
-	 * ¿Øµã¹ÜÀí
+	 * æ§ç‚¹ç®¡ç†
 	 */
 	private RelativeLayout conter;
 	protected void onCreate(Bundle savedInstanceState) {
@@ -33,11 +33,11 @@ public class TotalStationActivity extends Activity {
 		public void onClick(View v) {
 			Intent intent;
 			switch(v.getId()){
-				case R.id.total_qzy://È«Õ¾ÒÇÁ¬½Ó¹ÜÀí
+				case R.id.total_qzy://å…¨ç«™ä»ªè¿æ¥ç®¡ç†
 					intent = new Intent(TotalStationActivity.this,StationActivity.class);
 					startActivity(intent);
 					break;
-				case R.id.total_kd://¿Øµã¹ÜÀí¹ÜÀí
+				case R.id.total_kd://æ§ç‚¹ç®¡ç†ç®¡ç†
 					intent = new Intent(TotalStationActivity.this,ControlPointsActivity.class);
 					startActivity(intent);
 					break;

@@ -13,9 +13,9 @@ import com.sxlc.db.SqliteHelperDTMS;
 import com.sxlc.entity.RecordInfo;
 import com.sxlc.entity.TunnelCrossSectionInfo;
 import com.sxlc.entity.WorkInfos;/**
- * ¶ÏÃæÊı¾İ¿âÊµÏÖ
- *´´½¨Ê±¼ä£º2014-3-21ÏÂÎç6:43:15
- *@author ÕÅÌÎ
+ * æ–­é¢æ•°æ®åº“å®ç°
+ *åˆ›å»ºæ—¶é—´ï¼š2014-3-21ä¸‹åˆ6:43:15
+ *@author å¼ æ¶›
  *@since JDK1.6
  *@version 1.0
  */
@@ -66,25 +66,25 @@ public class TunnelCrossSectionDaoImpl implements TunnelCrossSectionDao{
 		switch (Value.getExcavateMethod()) {
 		case 0:
 		{
-			sRet = "È«¶ÏÃæ·¨";
+			sRet = "å…¨æ–­é¢æ³•";
 		}
 			break;
 
 		case 1:
 		{
-			sRet = "Ë«²à±Úµ¼¿Ó·¨";
+			sRet = "åŒä¾§å£å¯¼å‘æ³•";
 		}
 			break;
 
 		case 2:
 		{
-			sRet = "Ì¨½×·¨";
+			sRet = "å°é˜¶æ³•";
 		}
 			break;
 
 		default:
 		{
-			sRet = "Ì¨½×·¨";
+			sRet = "å°é˜¶æ³•";
 		}
 			break;
 		} 
@@ -235,7 +235,7 @@ public class TunnelCrossSectionDaoImpl implements TunnelCrossSectionDao{
 		return list;
 	}
 
-//Ìí¼ÓËíµÀÄÚ¶ÏÃæ£¬×¢£ºÊÔÓÃ°æ±¾×î¶àÌí¼Ó10¸ö¶ÏÃæ	
+//æ·»åŠ éš§é“å†…æ–­é¢ï¼Œæ³¨ï¼šè¯•ç”¨ç‰ˆæœ¬æœ€å¤šæ·»åŠ 10ä¸ªæ–­é¢	
 @Override
 public Boolean InsertSectiondibiao(TunnelCrossSectionInfo s) {
 		try {
@@ -260,7 +260,7 @@ public Boolean InsertSectiondibiao(TunnelCrossSectionInfo s) {
 	}
 
 	
-	/**²éÑ¯ËíµÀÄÚ¶ÏÃæ¸öÊı*/
+	/**æŸ¥è¯¢éš§é“å†…æ–­é¢ä¸ªæ•°*/
 	public int GetTunnelCrossSectionCount(){
 		int iResult = 0;
 		String sql = "select count(*) as count from TunnelCrossSectionIndex";
@@ -285,7 +285,7 @@ public Boolean InsertSectiondibiao(TunnelCrossSectionInfo s) {
 	}
 
 	@Override
-	// 0:Ê§°Ü 1£º³É¹¦ -1£º´æÔÚ¼ÇÂ¼Êı¾İ²»ÄÜÉ¾³ı
+	// 0:å¤±è´¥ 1ï¼šæˆåŠŸ -1ï¼šå­˜åœ¨è®°å½•æ•°æ®ä¸èƒ½åˆ é™¤
 	public int DeleteSection(int id) {
 		int iResult = 0;
 		String sql = "select count(*) as count from RawSheetIndex where CrossSectionType=1" +

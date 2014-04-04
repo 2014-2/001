@@ -1,18 +1,18 @@
 package com.sxlc.entity;
 /**
- *²âÁ¿ÈËÔ±ĞÅÏ¢ÊµÌå
- *´´½¨Ê±¼ä£º2014-3-24ÏÂÎç13:50:00
- *@author ÕÅÓÑ
+ *æµ‹é‡äººå‘˜ä¿¡æ¯å®ä½“
+ *åˆ›å»ºæ—¶é—´ï¼š2014-3-24ä¸‹åˆ13:50:00
+ *@author å¼ å‹
  *@since JDK1.6
  *@version 1.0
  */
 public class SurveyerInformation {
 	private int id;
-	private String SurveyerName;			//²âÁ¿Ô±Ãû
-	private String CertificateID;			//Éí·İÖ¤id
-	private String Password;				//ÃÜÂë
-	private String Info;					//±¸×¢
-	private int ProjectID;					//¹¤×÷Ãæid
+	private String SurveyerName;			//æµ‹é‡å‘˜å
+	private String CertificateID;			//èº«ä»½è¯id
+	private String Password;				//å¯†ç 
+	private String Info;					//å¤‡æ³¨
+	private int ProjectID;					//å·¥ä½œé¢id
 	public int getId() {
 		return id;
 	}

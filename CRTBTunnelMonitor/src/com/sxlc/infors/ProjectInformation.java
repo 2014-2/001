@@ -1,17 +1,17 @@
 package com.sxlc.infors;
 
-//¹¤³ÌµÄÊµÌåÀà
+//å·¥ç¨‹çš„å®ä½“ç±»
 public class ProjectInformation {
 
-	public String ProjectName;// ¹¤³ÌÃû³Æ
-	public int YMDFormat;// ´´½¨Ê±¼äÄêÔÂÈÕ¸ñÊ½
-	public int HMSFormat;// ´´½¨Ê±¼äÊ±·ÖÃë¸ñÊ½
-	public String ChainagePrefix;// Àï³ÌÇ°×º
-	public int MaxDeformation;// ×î´óÎ»ÒÆ£¨µ¥Î»ÎªºÁÃ×£©
-	public String Info;// ±¸×¢
-	public	String	CreateTime;//½¨Á¢Ê±¼ä
-	public	double  StartChainage;//ÆğÊ¼Àï³Ì
-	public	double EndChainage;//ÖÕÖ¹Àï³Ì
-	public	String ConstructionFirm;//Ê©¹¤µ¥Î»Ãû
+	public String ProjectName;// å·¥ç¨‹åç§°
+	public int YMDFormat;// åˆ›å»ºæ—¶é—´å¹´æœˆæ—¥æ ¼å¼
+	public int HMSFormat;// åˆ›å»ºæ—¶é—´æ—¶åˆ†ç§’æ ¼å¼
+	public String ChainagePrefix;// é‡Œç¨‹å‰ç¼€
+	public int MaxDeformation;// æœ€å¤§ä½ç§»ï¼ˆå•ä½ä¸ºæ¯«ç±³ï¼‰
+	public String Info;// å¤‡æ³¨
+	public	String	CreateTime;//å»ºç«‹æ—¶é—´
+	public	double  StartChainage;//èµ·å§‹é‡Œç¨‹
+	public	double EndChainage;//ç»ˆæ­¢é‡Œç¨‹
+	public	String ConstructionFirm;//æ–½å·¥å•ä½å
 	
 }

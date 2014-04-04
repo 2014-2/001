@@ -19,34 +19,34 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 /**
- * Ö÷½çÃæ ´´½¨Ê±¼ä£º2014-3-18ÏÂÎç3:52:30
+ * ä¸»ç•Œé¢ åˆ›å»ºæ—¶é—´ï¼š2014-3-18ä¸‹åˆ3:52:30
  * 
- * @author ÕÅÌÎ
+ * @author å¼ æ¶›
  * @since JDK1.6
  * @version 1.0
  */
 public class MainActivity extends Activity implements OnClickListener {
 
-	/** ¹¤×÷Ãæ */
+	/** å·¥ä½œé¢ */
 	private RelativeLayout main_rl_work;
-	/** ¶ÏÃæ */
+	/** æ–­é¢ */
 	private RelativeLayout main_rl_fracturesurface;
-	/** ¼ÇÂ¼µ¥ */
+	/** è®°å½•å• */
 	private RelativeLayout main_rl_record;
-	/** È«Õ¾ÒÇ */
+	/** å…¨ç«™ä»ª */
 	private RelativeLayout main_rl_total;
-	/** ²âÁ¿ */
+	/** æµ‹é‡ */
 	private RelativeLayout main_rl_measure;
-	/** Ô¤¾¯ */
+	/** é¢„è­¦ */
 	private RelativeLayout main_rl_warning;
-	/** ·şÎñÆ÷ */
+	/** æœåŠ¡å™¨ */
 	private RelativeLayout main_rl_servers;
-	/** ¹ØÓÚ */
+	/** å…³äº */
 	private RelativeLayout main_rl_asregards;
-	/** ÒâÍ¼ */
+	/** æ„å›¾ */
 	private Intent intent;
 	/**
-	 * ÓÃ»§ÃûºÍÑ¡ÖĞ×´Ì¬
+	 * ç”¨æˆ·åå’Œé€‰ä¸­çŠ¶æ€
 	 */
 	public static List<TotalStationInfo> list = new ArrayList<TotalStationInfo>();
 	private TotalStationInfo info = new TotalStationInfo();
@@ -54,9 +54,9 @@ public class MainActivity extends Activity implements OnClickListener {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		initView();
-		//²âÊÔ
+		//æµ‹è¯•
 		info.setName("leon0");
-		info.setInfo("Î´Ñ¡ÖĞ");
+		info.setInfo("æœªé€‰ä¸­");
 		info.setBaudRate(1);
 		info.setDatabits(1);
 		info.setId(1);
@@ -67,7 +67,7 @@ public class MainActivity extends Activity implements OnClickListener {
 		list.add(info);
 		info = new TotalStationInfo();
 		info.setName("leon2");
-		info.setInfo("Î´Ñ¡ÖĞ");
+		info.setInfo("æœªé€‰ä¸­");
 		info.setBaudRate(12);
 		info.setDatabits(12);
 		info.setId(12);
@@ -78,7 +78,7 @@ public class MainActivity extends Activity implements OnClickListener {
 		list.add(info);
 	}
 
-	/** ³õÊ¼»¯¿Ø¼ş */
+	/** åˆå§‹åŒ–æ§ä»¶ */
 	private void initView() {
 		main_rl_work = (RelativeLayout) findViewById(R.id.main_rl_work);
 		main_rl_fracturesurface = (RelativeLayout) findViewById(R.id.main_rl_fracturesurface);
@@ -88,13 +88,13 @@ public class MainActivity extends Activity implements OnClickListener {
 		main_rl_warning = (RelativeLayout) findViewById(R.id.main_rl_warning);
 		main_rl_servers = (RelativeLayout) findViewById(R.id.main_rl_servers);
 		main_rl_asregards = (RelativeLayout) findViewById(R.id.main_rl_asregards);
-		// ÅĞ¶ÏÊÇ·ñÏÔÊ¾·şÎñÆ÷Í¼±ê
+		// åˆ¤æ–­æ˜¯å¦æ˜¾ç¤ºæœåŠ¡å™¨å›¾æ ‡
 		int num = getIntent().getExtras().getInt(Constant.Select_LoginName_Name);
 		if (num == Constant.Select_LoginValue_Local) {
-			// Ó°²Ø¿Ø¼ş
+			// å½±è—æ§ä»¶
 			main_rl_servers.setVisibility(View.GONE);
 		}
-		// µã»÷ÊÂ¼ş
+		// ç‚¹å‡»äº‹ä»¶
 		main_rl_work.setOnClickListener(this);
 		main_rl_fracturesurface.setOnClickListener(this);
 		main_rl_record.setOnClickListener(this);
@@ -108,84 +108,84 @@ public class MainActivity extends Activity implements OnClickListener {
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
-		 case R.id.main_rl_work://¹¤×÷Ãæ
+		 case R.id.main_rl_work://å·¥ä½œé¢
 		 {
 			 intent = new Intent(MainActivity.this,WorkActivity.class);
 			 startActivity(intent);
 		 }
 		 break;
-		 case R.id.main_rl_fracturesurface: // ¶ÏÃæ
+		 case R.id.main_rl_fracturesurface: // æ–­é¢
 		 {
 			CRTBTunnelMonitor CurApp = ((CRTBTunnelMonitor)getApplicationContext());
 			WorkInfos CurW = CurApp.GetCurWork();
 			if(CurW == null)
 			{
-				Toast.makeText(MainActivity.this, "ÇëÏÈ´ò¿ª¹¤×÷Ãæ", 3000).show();
+				Toast.makeText(MainActivity.this, "è¯·å…ˆæ‰“å¼€å·¥ä½œé¢", 3000).show();
 				return;
 			}
 			intent = new Intent(MainActivity.this,SectionActivity.class);
 			startActivity(intent);
 		 }
 		 break;
-		 case R.id.main_rl_record: // ¼ÇÂ¼µ¥
+		 case R.id.main_rl_record: // è®°å½•å•
 		 {
 				CRTBTunnelMonitor CurApp = ((CRTBTunnelMonitor)getApplicationContext());
 				WorkInfos CurW = CurApp.GetCurWork();
 				if(CurW == null)
 				{
-					Toast.makeText(MainActivity.this, "ÇëÏÈ´ò¿ª¹¤×÷Ãæ", 3000).show();
+					Toast.makeText(MainActivity.this, "è¯·å…ˆæ‰“å¼€å·¥ä½œé¢", 3000).show();
 					return;
 				}
     			intent = new Intent(MainActivity.this,RecordActivity.class);
 				startActivity(intent);
 		 }
 		 break;
-		 case R.id.main_rl_total: // È«Õ¾ÒÇ
+		 case R.id.main_rl_total: // å…¨ç«™ä»ª
 		 {
 			CRTBTunnelMonitor CurApp = ((CRTBTunnelMonitor)getApplicationContext());
 			WorkInfos CurW = CurApp.GetCurWork();
 			if(CurW == null)
 			{
-				Toast.makeText(MainActivity.this, "ÇëÏÈ´ò¿ª¹¤×÷Ãæ", 3000).show();
+				Toast.makeText(MainActivity.this, "è¯·å…ˆæ‰“å¼€å·¥ä½œé¢", 3000).show();
 				return;
 			}
 			 intent = new Intent(MainActivity.this,TotalStationActivity.class);
 			 startActivity(intent);
 		 }
 		 break;
-		 case R.id.main_rl_measure: // ²âÁ¿
+		 case R.id.main_rl_measure: // æµ‹é‡
 		 {
 			CRTBTunnelMonitor CurApp = ((CRTBTunnelMonitor)getApplicationContext());
 			WorkInfos CurW = CurApp.GetCurWork();
 			if(CurW == null)
 			{
-				Toast.makeText(MainActivity.this, "ÇëÏÈ´ò¿ª¹¤×÷Ãæ", 3000).show();
+				Toast.makeText(MainActivity.this, "è¯·å…ˆæ‰“å¼€å·¥ä½œé¢", 3000).show();
 				return;
 			}
 			 intent = new Intent(MainActivity.this,TestRecordActivity.class);
 			 startActivity(intent);
 		 }
 		 break;
-		 case R.id.main_rl_warning: // Ô¤¾¯
+		 case R.id.main_rl_warning: // é¢„è­¦
 		 {
 			CRTBTunnelMonitor CurApp = ((CRTBTunnelMonitor)getApplicationContext());
 			WorkInfos CurW = CurApp.GetCurWork();
 			if(CurW == null)
 			{
-				Toast.makeText(MainActivity.this, "ÇëÏÈ´ò¿ª¹¤×÷Ãæ", 3000).show();
+				Toast.makeText(MainActivity.this, "è¯·å…ˆæ‰“å¼€å·¥ä½œé¢", 3000).show();
 				return;
 			}
 			intent = new Intent(MainActivity.this,WarningActivity.class);
 			startActivity(intent);
 		 }
 		 break;
-		 case R.id.main_rl_servers: // ·şÎñÆ÷
+		 case R.id.main_rl_servers: // æœåŠ¡å™¨
 		 {
 			 intent = new Intent(MainActivity.this,ServersActivity.class);
 			 startActivity(intent);
 		 }
 		 break;
-		 case R.id.main_rl_asregards: // ¹ØÓÚ
+		 case R.id.main_rl_asregards: // å…³äº
 		 {
 			 intent = new Intent(MainActivity.this,AsregardsActivity.class);
 			 startActivity(intent);

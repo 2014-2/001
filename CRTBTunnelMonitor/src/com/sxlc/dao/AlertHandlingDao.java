@@ -6,15 +6,15 @@ import com.sxlc.entity.AlertHandlingInfo;
 
 
 /**
- * Ô¤¾¯ÈÕÖ¾Êı¾İ¿â½Ó¿Ú
- *´´½¨Ê±¼ä£º2014-3-24ÏÂÎç13:50:00
- *@author ÕÅÓÑ
+ * é¢„è­¦æ—¥å¿—æ•°æ®åº“æ¥å£
+ *åˆ›å»ºæ—¶é—´ï¼š2014-3-24ä¸‹åˆ13:50:00
+ *@author å¼ å‹
  *@since JDK1.6
  *@version 1.0
  */
 public interface AlertHandlingDao {
-	/**²éÑ¯È«²¿*/
+	/**æŸ¥è¯¢å…¨éƒ¨*/
 	public List<AlertHandlingInfo> SelectAllAlertHandling();
-	/**ĞÂ½¨Ô¤¾¯*/
+	/**æ–°å»ºé¢„è­¦*/
 	public Boolean InsertAlertHandling(AlertHandlingInfo s);
 }

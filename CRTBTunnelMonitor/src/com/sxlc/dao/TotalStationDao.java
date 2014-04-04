@@ -6,22 +6,22 @@ import com.sxlc.entity.TotalStationInfo;
 import com.sxlc.entity.WorkInfos;
 
 /**
- * х╚у╬рга╛╫с╡нйЩпео╒йЩ╬щ©Б╫с©з
- *╢╢╫╗й╠╪Дё╨2014-3-24обнГ13:50:00
- *@author уеся
+ * Е┘╗Г╚≥Д╩╙Х©·Ф▌╔Е▐┌Ф∙╟Д©║Ф│╞Ф∙╟Ф█╝Е╨⌠Ф▌╔Е▐ё
+ *Е┬⌡Е╩╨Ф≈╤И≈╢О╪ 2014-3-24Д╦▀Е█┬13:50:00
+ *@author Е╪═Е▐▀
  *@since JDK1.6
  *@version 1.0
  */
 public interface TotalStationDao {
-	/**╡Ия╞х╚╡©х╚у╬рга╛╫с╡нйЩпео╒*/
+	/**Ф÷╔Х╞╒Е┘╗И┐╗Е┘╗Г╚≥Д╩╙Х©·Ф▌╔Е▐┌Ф∙╟Д©║Ф│╞*/
 	public List<TotalStationInfo> SelectAllTotalStation();
-	/**пб╫╗х╚у╬рга╛╫с╡нйЩпео╒*/
+	/**Ф√╟Е╩╨Е┘╗Г╚≥Д╩╙Х©·Ф▌╔Е▐┌Ф∙╟Д©║Ф│╞*/
 	public Boolean InsertTotalStation(TotalStationInfo s);
-	/**╡Ия╞х╚у╬рга╛╫с╡нйЩпео╒*/
+	/**Ф÷╔Х╞╒Е┘╗Г╚≥Д╩╙Х©·Ф▌╔Е▐┌Ф∙╟Д©║Ф│╞*/
 	public TotalStationInfo SelectTotalStation(int id);
-	/**и╬ЁЩх╚у╬рга╛╫с╡нйЩпео╒*/
+	/**Е┬═И≥╓Е┘╗Г╚≥Д╩╙Х©·Ф▌╔Е▐┌Ф∙╟Д©║Ф│╞*/
 	public Boolean DeleteTotalStation(int id);
-	/**╠Ю╪╜х╚у╬рга╛╫с╡нйЩпео╒*/
+	/**Г╪√Х╬▒Е┘╗Г╚≥Д╩╙Х©·Ф▌╔Е▐┌Ф∙╟Д©║Ф│╞*/
 	public Boolean UpdateTotalStation(TotalStationInfo s);
 	void GetTotalStationList(List<TotalStationInfo> list);
 }

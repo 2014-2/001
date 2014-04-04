@@ -3,9 +3,9 @@ package com.sxlc.activity;
 import android.app.Activity;
 import android.os.Bundle;
 /**
- * ╧ьсз
- *╢╢╫╗й╠╪Дё╨2014-3-16ионГ10:28:08
- *@author уелн
+ * Е┘ЁД╨▌
+ *Е┬⌡Е╩╨Ф≈╤И≈╢О╪ 2014-3-16Д╦┼Е█┬10:28:08
+ *@author Е╪═Ф╤⌡
  *@since JDK1.6
  *@version 1.0
  */

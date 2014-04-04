@@ -5,17 +5,17 @@ import java.util.Date;
 
 
 /**
- * »ñÈ¡ÊÖ»úµ±Ç°Ê±¼ä
- *´´½¨Ê±¼ä£º2013-11-1ÏÂÎç3:46:32
- *@author ÕÅÌÎ
+ * è·å–æ‰‹æœºå½“å‰æ—¶é—´
+ *åˆ›å»ºæ—¶é—´ï¼š2013-11-1ä¸‹åˆ3:46:32
+ *@author å¼ æ¶›
  *@since JDK1.6
  *@version 1.0
  */
 public class Time {
 	public static String getDateCN() {
-		SimpleDateFormat format = new SimpleDateFormat("yyyyÄêMMÔÂddÈÕ  HH:mm:ss");
+		SimpleDateFormat format = new SimpleDateFormat("yyyyå¹´MMæœˆddæ—¥  HH:mm:ss");
 		String date = format.format(new Date(System.currentTimeMillis()));
-		return date;// 2012Äê10ÔÂ03ÈÕ 23:41:31
+		return date;// 2012å¹´10æœˆ03æ—¥ 23:41:31
 	}
 
 	public static String getDateEN() {

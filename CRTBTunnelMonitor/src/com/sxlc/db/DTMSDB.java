@@ -18,16 +18,16 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class DTMSDB extends SQLiteOpenHelper {
 
 	/**
-	 * ´ø²Î¹¹Ôì·½·¨
+	 * å¸¦å‚æ„é€ æ–¹æ³•
 	 * 
 	 * @param context
-	 *            ÉÏÏÂÎÄ
+	 *            ä¸Šä¸‹æ–‡
 	 * @param name
-	 *            Êı¾İ¿â
+	 *            æ•°æ®åº“
 	 * @param factory
-	 *            ¹¤³§
+	 *            å·¥å‚
 	 * @param version
-	 *            °æ±¾ºÅ
+	 *            ç‰ˆæœ¬å·
    */
 	public DTMSDB(Context context, String name, CursorFactory factory,
 			int version) {
@@ -49,14 +49,14 @@ public class DTMSDB extends SQLiteOpenHelper {
 	public void onCreate(SQLiteDatabase db) {
 		// TODO Auto-generated method stub
 
-		// ´´½¨ProjectIndex±í --±¾»úËùÓĞ¹¤³ÌĞÅÏ¢ÁĞ±í£¨¹¤³Ì¹ÜÀí¡¢µ¼Èë¡¢µ¼³öÊ¹ÓÃ£©
+		// åˆ›å»ºProjectIndexè¡¨ --æœ¬æœºæ‰€æœ‰å·¥ç¨‹ä¿¡æ¯åˆ—è¡¨ï¼ˆå·¥ç¨‹ç®¡ç†ã€å¯¼å…¥ã€å¯¼å‡ºä½¿ç”¨ï¼‰
 		db.execSQL("create table if not exists ProjectIndex(id INTEGER PRIMARY KEY AUTOINCREMENT ,ProjectName varchar(255),"
 				+ "CreateTime text,StartChainage double,EndChainage double,"
 				+ "LastOpenTime text,Info text, ChainagePrefix varchar(255),"
 				+ "GDLimitVelocity float,GDLimitTotalSettlement float,SLLimitVelocity float,"
 				+ "SLLimitTotalSettlement float,DBLimitVelocity float,DBLimitTotalSettlement float"
 				+ ",ConstructionFirm varchar(255),LimitedTotalSubsidenceTime text)");
-		// ´´½¨SurveyerIndex±í --±¾»úÉÏËùÓĞ²âÁ¿ÈËÔ±ĞÅÏ¢
+		// åˆ›å»ºSurveyerIndexè¡¨ --æœ¬æœºä¸Šæ‰€æœ‰æµ‹é‡äººå‘˜ä¿¡æ¯
 		db.execSQL("create table if not exists SurveyerIndex(Id INTEGER PRIMARY KEY AUTOINCREMENT,SurveyerName VARCHAR(100),"
 				+ "CertificateID VARCHAR(20),Password VARCHAR(64),Info text,"
 				+ "ProjectID INTEGER)");

@@ -13,19 +13,19 @@ import android.widget.ImageView;
 import com.sxlc.common.Constant;
 import com.sxlc.entity.SurveyerInformation;
 /**
- * ÓÃ»§Ñ¡Ôñ ½çÃæ
- *´´½¨Ê±¼ä£º2014-3-18ÏÂÎç4:12:05
- *@author ÕÅÌÎ
+ * ç”¨æˆ·é€‰æ‹© ç•Œé¢
+ *åˆ›å»ºæ—¶é—´ï¼š2014-3-18ä¸‹åˆ4:12:05
+ *@author å¼ æ¶›
  *@since JDK1.6
  *@version 1.0
  */
 public class SelecActivity extends Activity implements OnClickListener{
 
-	/**±¾µØÓÃ»§µã»÷*/
+	/**æœ¬åœ°ç”¨æˆ·ç‚¹å‡»*/
 	private ImageView select_img_place;
-	/**·şÎñÆ÷ÓÃ»§µã»÷*/
+	/**æœåŠ¡å™¨ç”¨æˆ·ç‚¹å‡»*/
 	private ImageView select_img_service;
-	/** ÒâÍ¼ */
+	/** æ„å›¾ */
 	private Intent intent;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -34,25 +34,25 @@ public class SelecActivity extends Activity implements OnClickListener{
 		initView();
 		CRTBTunnelMonitor CurApp = ((CRTBTunnelMonitor)getApplicationContext());
 		CurApp.GetDB().ConnectDB();
-		/*²âÊÔ´úÂë*/
+		/*æµ‹è¯•ä»£ç */
 		List<SurveyerInformation> testList = new ArrayList<SurveyerInformation>();
 		SurveyerInformation test = new SurveyerInformation();
 		test.setCertificateID("511325197812155213");
 		test.setId(1);
-		test.setInfo("²âÊÔ");
+		test.setInfo("æµ‹è¯•");
 		test.setProjectID(1);
-		test.setSurveyerName("²âÊÔÔ±");
+		test.setSurveyerName("æµ‹è¯•å‘˜");
 		testList.add(test);
 		CurApp.setPersonList(testList);
 		CurApp.setCurPerson(test);
-		/*²âÊÔ´úÂë*/
+		/*æµ‹è¯•ä»£ç */
 	}
 
-	/** ³õÊ¼»¯¿Ø¼ş */
+	/** åˆå§‹åŒ–æ§ä»¶ */
 	private void initView() {
 		select_img_place = (ImageView) findViewById(R.id.select_img_place);
 		select_img_service = (ImageView) findViewById(R.id.select_img_service);
-		// µã»÷ÊÂ¼ş
+		// ç‚¹å‡»äº‹ä»¶
 		select_img_place.setOnClickListener(this);
 		select_img_service.setOnClickListener(this);
 	}
@@ -61,12 +61,12 @@ public class SelecActivity extends Activity implements OnClickListener{
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
-		case R.id.select_img_place:// Ö±½ÓÌø×ªÖ÷½çÃæ
+		case R.id.select_img_place:// ç›´æ¥è·³è½¬ä¸»ç•Œé¢
 			intent = new Intent(SelecActivity.this,MainActivity.class);
 			intent.putExtra(Constant.Select_LoginName_Name, Constant.Select_LoginValue_Local);
 			startActivity(intent);
 			break;
-		case R.id.select_img_service: // Ìø×ª·şÎñµÄµÇÂ¼½çÃæ
+		case R.id.select_img_service: // è·³è½¬æœåŠ¡çš„ç™»å½•ç•Œé¢
 			intent = new Intent(SelecActivity.this,LoginActivity.class);
 			startActivity(intent);
 			break;

@@ -4,19 +4,19 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 /**
- * ¿ØÖÆµãÊµÌå
- *´´½¨Ê±¼ä£º2014-3-24ÏÂÎç13:50:00
- *@author ÕÅÓÑ
+ * æ§åˆ¶ç‚¹å®ä½“
+ *åˆ›å»ºæ—¶é—´ï¼š2014-3-24ä¸‹åˆ13:50:00
+ *@author å¼ å‹
  *@since JDK1.6
  *@version 1.0
  */
 public class ControlPointsInfo implements Parcelable{
-	private int id;				//±êÊ¶
-	private String Name;		//µãÃû
-	private double x;			//±±×ø±ê
-	private double y;			//¶«×ø±ê
-	private double z;			//¸ß³Ì
-	private String Info;		//±¸×¢
+	private int id;				//æ ‡è¯†
+	private String Name;		//ç‚¹å
+	private double x;			//åŒ—åæ ‡
+	private double y;			//ä¸œåæ ‡
+	private double z;			//é«˜ç¨‹
+	private String Info;		//å¤‡æ³¨
 	private boolean bUse;
 	private boolean bCheck;
 	
@@ -84,8 +84,8 @@ public class ControlPointsInfo implements Parcelable{
 		dest.writeString(Info);
 		dest.writeBooleanArray(new boolean[]{bUse,bCheck});
 	}
-    // ÊµÏÖParcelable½Ó¿ÚµÄÀàĞÍÖĞ£¬±ØĞëÓĞÒ»¸öÊµÏÖÁËParcelable.Creator½Ó¿ÚµÄ¾²Ì¬³£Á¿³ÉÔ±×Ö¶Î£¬
-    // ²¢ÇÒËüµÄÃû×Ö±ØĞëÎªCREATORµÄ
+    // å®ç°Parcelableæ¥å£çš„ç±»å‹ä¸­ï¼Œå¿…é¡»æœ‰ä¸€ä¸ªå®ç°äº†Parcelable.Creatoræ¥å£çš„é™æ€å¸¸é‡æˆå‘˜å­—æ®µï¼Œ
+    // å¹¶ä¸”å®ƒçš„åå­—å¿…é¡»ä¸ºCREATORçš„
     public static final Parcelable.Creator<ControlPointsInfo> CREATOR 
             = new Parcelable.Creator<ControlPointsInfo>()
     {
@@ -95,7 +95,7 @@ public class ControlPointsInfo implements Parcelable{
         {
         	ControlPointsInfo brief = new ControlPointsInfo();
             
-            // ´Ó°ü¹üÖĞ¶Á³öÊı¾İ
+            // ä»åŒ…è£¹ä¸­è¯»å‡ºæ•°æ®
         	brief.id = in.readInt();
         	brief.Name = in.readString();
         	brief.x = in.readDouble();

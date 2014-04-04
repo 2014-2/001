@@ -70,7 +70,7 @@ public class SonPopupWindow extends PopupWindow {
 				List<TotalStationInfo> tmpList = ((StationActivity)c).list;
 				TotalStationInfo tmp = null;
 				if (tmpList == null) {
-					Toast.makeText((Activity) c, "ÇëÑ¡ÔñĞèÒª±à¼­µÄÈ«Õ¾ÒÇ", 3000).show();
+					Toast.makeText((Activity) c, "è¯·é€‰æ‹©éœ€è¦ç¼–è¾‘çš„å…¨ç«™ä»ª", 3000).show();
 				}
 				else {
 					for (int i = 0; i < tmpList.size(); i++) {
@@ -81,7 +81,7 @@ public class SonPopupWindow extends PopupWindow {
 					}
 				}
 				if (tmp == null) {
-					Toast.makeText((Activity) c, "ÇëÑ¡ÔñĞèÒª±à¼­µÄÈ«Õ¾ÒÇ", 3000).show();
+					Toast.makeText((Activity) c, "è¯·é€‰æ‹©éœ€è¦ç¼–è¾‘çš„å…¨ç«™ä»ª", 3000).show();
 				}
 				Intent intent = new Intent(c, ControlNewActivity.class);
 				Bundle mBundle = new Bundle();  
@@ -100,13 +100,13 @@ public class SonPopupWindow extends PopupWindow {
 		this.setContentView(mMenuView);
 		this.setWidth(LayoutParams.FILL_PARENT);
 		this.setHeight(LayoutParams.WRAP_CONTENT);
-		// ÉèÖÃSelectPicPopupWindowµ¯³ö´°Ìå¿Éµã»÷
+		// è®¾ç½®SelectPicPopupWindowå¼¹å‡ºçª—ä½“å¯ç‚¹å‡»
 		this.setFocusable(true);
-		// ÊµÀı»¯Ò»¸öColorDrawableÑÕÉ«Îª°ëÍ¸Ã÷
+		// å®ä¾‹åŒ–ä¸€ä¸ªColorDrawableé¢œè‰²ä¸ºåŠé€æ˜
 		ColorDrawable dw = new ColorDrawable(0xFF000000);
-		// ÉèÖÃSelectPicPopupWindowµ¯³ö´°ÌåµÄ±³¾°
+		// è®¾ç½®SelectPicPopupWindowå¼¹å‡ºçª—ä½“çš„èƒŒæ™¯
 		this.setBackgroundDrawable(dw);
-		// mMenuViewÌí¼ÓOnTouchListener¼àÌıÅĞ¶Ï»ñÈ¡´¥ÆÁÎ»ÖÃÈç¹ûÔÚÑ¡Ôñ¿òÍâÃæÔòÏú»Ùµ¯³ö¿ò
+		// mMenuViewæ·»åŠ OnTouchListenerç›‘å¬åˆ¤æ–­è·å–è§¦å±ä½ç½®å¦‚æœåœ¨é€‰æ‹©æ¡†å¤–é¢åˆ™é”€æ¯å¼¹å‡ºæ¡†
 		mMenuView.setOnTouchListener(new OnTouchListener() {
 
 			public boolean onTouch(View v, MotionEvent event) {
@@ -127,9 +127,9 @@ public class SonPopupWindow extends PopupWindow {
 		dismiss();
 		dlg.show();
 		Window window = dlg.getWindow();
-		// *** Ö÷Òª¾ÍÊÇÔÚÕâÀïÊµÏÖÕâÖÖĞ§¹ûµÄ.
+		// *** ä¸»è¦å°±æ˜¯åœ¨è¿™é‡Œå®ç°è¿™ç§æ•ˆæœçš„.
 		window.setContentView(R.layout.dialog);
-		// ÎªÈ·ÈÏ°´Å¥Ìí¼ÓÊÂ¼ş,Ö´ĞĞÍË³öÓ¦ÓÃ²Ù×÷
+		// ä¸ºç¡®è®¤æŒ‰é’®æ·»åŠ äº‹ä»¶,æ‰§è¡Œé€€å‡ºåº”ç”¨æ“ä½œ
 		ImageButton delete2 = (ImageButton) window.findViewById(R.id.delete2);
 		Button qd = (Button) window.findViewById(R.id.qd);
 		Button qx = (Button) window.findViewById(R.id.qx);
@@ -149,9 +149,9 @@ public class SonPopupWindow extends PopupWindow {
 				
 				break;
 			case R.id.qd:
-				// ²âÊÔ
+				// æµ‹è¯•
 				for (int i = 0; i < MainActivity.list.size(); i++) {
-					if (MainActivity.list.get(i).getInfo().equals("Ñ¡ÖĞ")) {
+					if (MainActivity.list.get(i).getInfo().equals("é€‰ä¸­")) {
 						MainActivity.list.remove(i);
 						StationActivity.adapter.notifyDataSetChanged();
 					}

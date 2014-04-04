@@ -6,21 +6,21 @@ import com.sxlc.entity.SubsidenceCrossSectionInfo;
 import com.sxlc.entity.SurveyerInformation;
 
 /**
- *²âÁ¿ÈËÔ±ĞÅÏ¢Êı¾İ¿â½Ó¿Ú
- *´´½¨Ê±¼ä£º2014-3-24ÏÂÎç13:50:00
- *@author ÕÅÓÑ
+ *æµ‹é‡äººå‘˜ä¿¡æ¯æ•°æ®åº“æ¥å£
+ *åˆ›å»ºæ—¶é—´ï¼š2014-3-24ä¸‹åˆ13:50:00
+ *@author å¼ å‹
  *@since JDK1.6
  *@version 1.0
  */
 public interface SurveyerInformationDao {
-	/**²éÑ¯È«²¿*/
+	/**æŸ¥è¯¢å…¨éƒ¨*/
 	public List<SurveyerInformation> SelectAllSurveyerInfo();
-	/**ĞÂ½¨²âÁ¿ÈËÔ±*/
+	/**æ–°å»ºæµ‹é‡äººå‘˜*/
 	public Boolean InsertSurveyerInfo(SurveyerInformation s);
-	/**²éÑ¯²âÁ¿ÈËÔ±*/
+	/**æŸ¥è¯¢æµ‹é‡äººå‘˜*/
 	public SurveyerInformation SelectSurveyerInfo(int id);
-	/**É¾³ı²âÁ¿ÈËÔ±*/
+	/**åˆ é™¤æµ‹é‡äººå‘˜*/
 	public Boolean DeleteSurveyerInfo(int id);
-	/**±à¼­²âÁ¿ÈËÔ±*/
+	/**ç¼–è¾‘æµ‹é‡äººå‘˜*/
 	public Boolean UpdateSurveyerInfo(SurveyerInformation s);
 }

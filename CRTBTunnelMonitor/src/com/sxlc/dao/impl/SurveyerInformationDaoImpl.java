@@ -11,9 +11,9 @@ import com.sxlc.dao.SurveyerInformationDao;
 import com.sxlc.db.SqliteHelperDTMS;
 import com.sxlc.entity.SurveyerInformation;
 /**
- *²âÁ¿ÈËÔ±ĞÅÏ¢Êı¾İ¿â½Ó¿ÚÊµÏÖ
- *´´½¨Ê±¼ä£º2014-3-24ÏÂÎç13:50:00
- *@author ÕÅÓÑ
+ *æµ‹é‡äººå‘˜ä¿¡æ¯æ•°æ®åº“æ¥å£å®ç°
+ *åˆ›å»ºæ—¶é—´ï¼š2014-3-24ä¸‹åˆ13:50:00
+ *@author å¼ å‹
  *@since JDK1.6
  *@version 1.0
  */
@@ -26,7 +26,7 @@ public class SurveyerInformationDaoImpl implements SurveyerInformationDao{
 		db = helper.getReadableDatabase();
 
 	}
-	/**²éÑ¯È«²¿*/
+	/**æŸ¥è¯¢å…¨éƒ¨*/
 	public List<SurveyerInformation> SelectAllSurveyerInfo() {
 		List<SurveyerInformation> list = null;
 		SurveyerInformation entity = null;
@@ -62,7 +62,7 @@ public class SurveyerInformationDaoImpl implements SurveyerInformationDao{
 		return list;
 	}
 
-	/**ĞÂ½¨²âÁ¿ÈËÔ±*/
+	/**æ–°å»ºæµ‹é‡äººå‘˜*/
 	public Boolean InsertSurveyerInfo(SurveyerInformation s) {
 		boolean result = false;
 		if(s == null){
@@ -82,7 +82,7 @@ public class SurveyerInformationDaoImpl implements SurveyerInformationDao{
 		return result;
 	}
 
-	/**²éÑ¯²âÁ¿ÈËÔ±*/
+	/**æŸ¥è¯¢æµ‹é‡äººå‘˜*/
 	public SurveyerInformation SelectSurveyerInfo(int id) {
 		SurveyerInformation entity = null;
 		String sql = "select * from SurveyerInformation where id=" + Integer.toString(id);
@@ -115,7 +115,7 @@ public class SurveyerInformationDaoImpl implements SurveyerInformationDao{
 		return entity;
 	}
 
-	/**É¾³ı²âÁ¿ÈËÔ±*/
+	/**åˆ é™¤æµ‹é‡äººå‘˜*/
 	public Boolean DeleteSurveyerInfo(int id) {
 		boolean result = false;
 		String sql = "delete from SurveyerInformation where id=?" ;
@@ -131,7 +131,7 @@ public class SurveyerInformationDaoImpl implements SurveyerInformationDao{
 		return result;
 	}
 
-	/**±à¼­²âÁ¿ÈËÔ±*/
+	/**ç¼–è¾‘æµ‹é‡äººå‘˜*/
 	public Boolean UpdateSurveyerInfo(SurveyerInformation s) {
 		boolean result = false;
 		if(s ==  null){

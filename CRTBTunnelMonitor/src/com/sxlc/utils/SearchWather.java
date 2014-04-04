@@ -10,11 +10,11 @@ import android.widget.EditText;
 
 public class SearchWather implements TextWatcher{
 
-	//¼àÌı¸Ä±äµÄÎÄ±¾¿ò   
+	//ç›‘å¬æ”¹å˜çš„æ–‡æœ¬æ¡†   
     private EditText editText;   
  
     /** 
-     * ¹¹Ôìº¯Êı 
+     * æ„é€ å‡½æ•° 
      */   
     public SearchWather(EditText editText){   
         this.editText = editText;   
@@ -26,7 +26,7 @@ public class SearchWather implements TextWatcher{
         String str = stringFilter(editable.toString()); 
         if(!editable.equals(str)){ 
             editText.setText(str); 
-            //ÉèÖÃĞÂµÄ¹â±êËùÔÚÎ»ÖÃ www.2cto.com    
+            //è®¾ç½®æ–°çš„å…‰æ ‡æ‰€åœ¨ä½ç½® www.2cto.com    
             editText.setSelection(str.length()); 
         } 
     }   
@@ -43,7 +43,7 @@ public class SearchWather implements TextWatcher{
  
  
 public static String stringFilter(String str)throws PatternSyntaxException{      
-    // Ö»ÔÊĞí×ÖÄ¸ºÍÊı×Ö  ºÍºº×Ö    
+    // åªå…è®¸å­—æ¯å’Œæ•°å­—  å’Œæ±‰å­—    
     String   regEx  =  "^([\u4e00-\u9fa5]+|[a-zA-Z0-9]+)$";                      
     Pattern   p   =   Pattern.compile(regEx);      
     Matcher   m   =   p.matcher(str);      

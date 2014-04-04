@@ -1,34 +1,34 @@
 package com.sxlc.entity;
 /**
- * ËíµÀÄÚ¶ÏÃæËíµÀ
- *´´½¨Ê±¼ä£º2014-3-21ÏÂÎç6:16:22
- *@author ÕÅÌÎ
+ * éš§é“å†…æ–­é¢éš§é“
+ *åˆ›å»ºæ—¶é—´ï¼š2014-3-21ä¸‹åˆ6:16:22
+ *@author å¼ æ¶›
  *@since JDK1.6
  *@version 1.0
  */
 public class TunnelCrossSectionInfo {
 
-	private String ChainageName;		//¶ÏÃæÃû³Æ
-	private String sExcavateMethod;			//Ê©¹¤·½·¨
-	private int id;						//Ë÷Òı
-	private Double Chainage;			//¶ÏÃæÀï³ÌÖµ
-	private String InBuiltTime;			//ÂñÉèÊ±¼ä
-	private Float Width;				//¶ÏÃæ¿í¶È
-	private int ExcavateMethod;			//Ê©¹¤·½·¨
-	private String SurveyPntName;		//²âµã±àºÅ
-	private String Info;				//±¸×¢
-	private String ChainagePrefix;		//Àï³ÌÇ°×º
-	private Float GDU0;					//¹°¶¥uoÖµ
-	private Float GDVelocity;			//¹°¶¥±¾´ÎÏÂ³ÁËÙÂÊ
-	private String GDU0Time;			//¹°¶¥ÏŞ²îĞŞ¸ÄÊ±¼ä
-	private String GDU0Description;		//¹°¶¥¼«ÏŞ±¸×¢
-	private Float SLU0;					//ÊÕÁ²uoÖµ
-	private Float SLLimitVelocity;		//ÊÕÁ²±¾´ÎÏÂ³ÁËÙÂÊ
-	private String SLU0Time;			//ÊÕÁ²ÏŞ²îĞŞ¸ÄÊ±¼ä
-	private String SLU0Description;		//ÊÕÁ²¼«ÏŞ±¸×¢
-	private String Lithologic;			//ÑÒĞÔ
-	private Float LAYVALUE;				//ÂñÉîÖµ
-	private String ROCKGRADE;			//Î§ÑÒ¼¶±ğ
+	private String ChainageName;		//æ–­é¢åç§°
+	private String sExcavateMethod;			//æ–½å·¥æ–¹æ³•
+	private int id;						//ç´¢å¼•
+	private Double Chainage;			//æ–­é¢é‡Œç¨‹å€¼
+	private String InBuiltTime;			//åŸ‹è®¾æ—¶é—´
+	private Float Width;				//æ–­é¢å®½åº¦
+	private int ExcavateMethod;			//æ–½å·¥æ–¹æ³•
+	private String SurveyPntName;		//æµ‹ç‚¹ç¼–å·
+	private String Info;				//å¤‡æ³¨
+	private String ChainagePrefix;		//é‡Œç¨‹å‰ç¼€
+	private Float GDU0;					//æ‹±é¡¶uoå€¼
+	private Float GDVelocity;			//æ‹±é¡¶æœ¬æ¬¡ä¸‹æ²‰é€Ÿç‡
+	private String GDU0Time;			//æ‹±é¡¶é™å·®ä¿®æ”¹æ—¶é—´
+	private String GDU0Description;		//æ‹±é¡¶æé™å¤‡æ³¨
+	private Float SLU0;					//æ”¶æ•›uoå€¼
+	private Float SLLimitVelocity;		//æ”¶æ•›æœ¬æ¬¡ä¸‹æ²‰é€Ÿç‡
+	private String SLU0Time;			//æ”¶æ•›é™å·®ä¿®æ”¹æ—¶é—´
+	private String SLU0Description;		//æ”¶æ•›æé™å¤‡æ³¨
+	private String Lithologic;			//å²©æ€§
+	private Float LAYVALUE;				//åŸ‹æ·±å€¼
+	private String ROCKGRADE;			//å›´å²©çº§åˆ«
 	private boolean bUse = false;
 	public boolean isbUse() {
 		return bUse;

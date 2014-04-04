@@ -15,17 +15,17 @@ public class Data {
 		values.put("time", time);
 	//	values.put("age",42 );
 		MydataBases= new MyData(ct, "my_db",version);  
-		//»ñÈ¡Êı¾İ¿â¶ÔÏó
+		//è·å–æ•°æ®åº“å¯¹è±¡
 		db= MydataBases.getReadableDatabase();
 		db.insert("user", null, values);
 		db.close();
 	}
 	public String  search(Context ct,int version ,String[] columns,int id){
-		String name="Ã»ÓĞ²éÕÒµ½¸ÃÊı¾İ";
+		String name="æ²¡æœ‰æŸ¥æ‰¾åˆ°è¯¥æ•°æ®";
 		MydataBases= new MyData(ct, "my_db",version);  
 		db= MydataBases.getReadableDatabase();
 		Cursor cursor= db.query("user", columns, "id=?", new String[]{String.valueOf(id)}, null, null, null);
-		while (cursor.moveToNext()) { //ÖğÌõ¶ÁÈ¡»ñÈ¡µÄÃ¿ÌõnameĞÅÏ¢
+		while (cursor.moveToNext()) { //é€æ¡è¯»å–è·å–çš„æ¯æ¡nameä¿¡æ¯
 			name= cursor.getString(cursor.getColumnIndex("name"));
 		}
 		db.close();
@@ -56,7 +56,7 @@ public class Data {
 		db.close();
 	}
 	
-	public void revamped_data(Context ct,int version,int id,String data){//ĞŞ¸ÄÊı¾İ    Èç¹û¸ÃÊı¾İ²»´æÔÚÒ²²»»á°Ñ¸ÃÌõÊı¾İÌí¼Ó½øÈ¥
+	public void revamped_data(Context ct,int version,int id,String data){//ä¿®æ”¹æ•°æ®    å¦‚æœè¯¥æ•°æ®ä¸å­˜åœ¨ä¹Ÿä¸ä¼šæŠŠè¯¥æ¡æ•°æ®æ·»åŠ è¿›å»
 		ContentValues values= new ContentValues();
 		values.put("name",data);
 		MydataBases= new MyData(ct, "my_db",version);  
@@ -65,10 +65,10 @@ public class Data {
 		db.close();
 	}
 	
-	public void update_SQL(Context ct,int version){//¸üĞÂÊı¾İ¿â
+	public void update_SQL(Context ct,int version){//æ›´æ–°æ•°æ®åº“
 		MydataBases= new MyData(ct, "my_db",version);  
 		db= MydataBases.getReadableDatabase();
-		System.out.println("¸üĞÂµ½°æ±¾"+db.getVersion());
+		System.out.println("æ›´æ–°åˆ°ç‰ˆæœ¬"+db.getVersion());
 		db.close();	
 	}
 }

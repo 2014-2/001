@@ -4,22 +4,22 @@ import java.util.List;
 import com.sxlc.entity.SubsidenceCrossSectionInfo;
 
 /**
- * µØ±íÏÂ³Á¶ÏÃæDao
- *´´½¨Ê±¼ä£º2014-3-24ÉÏÎç11:50:00
- *@author ÕÅÓÑ
+ * åœ°è¡¨ä¸‹æ²‰æ–­é¢Dao
+ *åˆ›å»ºæ—¶é—´ï¼š2014-3-24ä¸Šåˆ11:50:00
+ *@author å¼ å‹
  *@since JDK1.6
  *@version 1.0
  */
 public interface SubsidenceCrossSectionDao {
-	/**²éÑ¯È«²¿*/
+	/**æŸ¥è¯¢å…¨éƒ¨*/
 	public List<SubsidenceCrossSectionInfo> SelectAllSection();
-	/**ĞÂ½¨¼ÇÂ¼µ¥*/
+	/**æ–°å»ºè®°å½•å•*/
 	public Boolean InsertSubsidenceCrossSection(SubsidenceCrossSectionInfo s);
-	/**²éÑ¯¼ÇÂ¼µ¥*/
+	/**æŸ¥è¯¢è®°å½•å•*/
 	public SubsidenceCrossSectionInfo SelectSubsidenceCrossSection(int id);
-	/**É¾³ı¼ÇÂ¼µ¥*/
+	/**åˆ é™¤è®°å½•å•*/
 	public int DeleteSubsidenceCrossSection(int id);
-	/**±à¼­¼ÇÂ¼µ¥*/
+	/**ç¼–è¾‘è®°å½•å•*/
 	public Boolean UpdateSubsidenceCrossSection(SubsidenceCrossSectionInfo s);
 	public void GetSubsidenceCrossSectionList(List<SubsidenceCrossSectionInfo> lt);
 }

@@ -5,23 +5,23 @@ import java.util.List;
 import com.sxlc.entity.WorkInfos;
 import com.sxlc.entity.list_infos;
 /**
- * ¹¤×÷ÃæµÄ½Ó¿Ú
- *´´½¨Ê±¼ä£º2014-3-21ÏÂÎç9:23:23
- *@author ÕÅÌÎ
+ * å·¥ä½œé¢çš„æ¥å£
+ *åˆ›å»ºæ—¶é—´ï¼š2014-3-21ä¸‹åˆ9:23:23
+ *@author å¼ æ¶›
  *@since JDK1.6
  *@version 1.0
  */
 public interface WorkDao {
 
-	/**²éÑ¯È«²¿¹¤×÷Ãæ*/
+	/**æŸ¥è¯¢å…¨éƒ¨å·¥ä½œé¢*/
 	public List<list_infos> SelectWork();
 	public void GetWorkList(List<WorkInfos> lt);
-	/**²éÑ¯È«²¿¹¤×÷ÃæĞÅÏ¢*/
+	/**æŸ¥è¯¢å…¨éƒ¨å·¥ä½œé¢ä¿¡æ¯*/
 	public WorkInfos SelectWorkMsg();
-	/**ĞÂ½¨¹¤×÷*/
+	/**æ–°å»ºå·¥ä½œ*/
 	public Boolean InsertWork(WorkInfos W);
-	/**É¾³ı¹¤×÷*/
+	/**åˆ é™¤å·¥ä½œ*/
 	public void DeleteWork(String name);
-	/**É¾³ı¹¤×÷*/
+	/**åˆ é™¤å·¥ä½œ*/
 	public void UpdateWork(WorkInfos w);
 }

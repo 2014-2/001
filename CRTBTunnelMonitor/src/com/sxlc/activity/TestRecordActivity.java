@@ -49,13 +49,13 @@ public class TestRecordActivity extends Activity implements OnPageChangeListener
 	private View vie;
 	
 	private ListView listView,listView1;
-	private ViewPager mPager;// Ò³¿¨ÄÚÈİ
-	private List<View> listViews; // TabÒ³ÃæÁĞ±í
-	private ImageView cursor;// ¶¯»­Í¼Æ¬
-	private TextView t1, t2;// Ò³¿¨Í·±ê
-	private int offset = 0;// ¶¯»­Í¼Æ¬Æ«ÒÆÁ¿
-	private int currIndex = 0;// µ±Ç°Ò³¿¨±àºÅ
-	private int bmpW;// ¶¯»­Í¼Æ¬¿í¶È
+	private ViewPager mPager;// é¡µå¡å†…å®¹
+	private List<View> listViews; // Tabé¡µé¢åˆ—è¡¨
+	private ImageView cursor;// åŠ¨ç”»å›¾ç‰‡
+	private TextView t1, t2;// é¡µå¡å¤´æ ‡
+	private int offset = 0;// åŠ¨ç”»å›¾ç‰‡åç§»é‡
+	private int currIndex = 0;// å½“å‰é¡µå¡ç¼–å·
+	private int bmpW;// åŠ¨ç”»å›¾ç‰‡å®½åº¦
 	double disPlayWidth, offSet;
 	Bitmap b;
 	ArrayList<View> list = null;
@@ -128,7 +128,7 @@ public class TestRecordActivity extends Activity implements OnPageChangeListener
 			CurApp.UpdateWork(CurW);
 		}
 	}
-	// ³õÊ¼»¯
+	// åˆå§‹åŒ–
 	public void initUI() {
 		t1 = (TextView) findViewById(R.id.text1);
 		t2 = (TextView) findViewById(R.id.text2);
@@ -202,9 +202,9 @@ public class TestRecordActivity extends Activity implements OnPageChangeListener
 		mPager.setAdapter(pa);
 		mPager.setCurrentItem(0);
 		mPager.setOnPageChangeListener(this);
-		/** ËíµÀÄÚ¶ÏÃæ */
+		/** éš§é“å†…æ–­é¢ */
 		Layout1();
-		/** µØ±íÏÂ³Á¶ÏÃæ */
+		/** åœ°è¡¨ä¸‹æ²‰æ–­é¢ */
 		Layout2();
 	}
 
@@ -264,22 +264,22 @@ public class TestRecordActivity extends Activity implements OnPageChangeListener
 	};
 
 	public void Layout1() {
-		/** ËíµÀÄÚ¶ÏÃæ½çÃæµÄ¿Ø¼ş */
-		/** List¼¯ºÏÖĞ´æƒ¦µÄÊÇView,»ñÈ¡½çÃæÉÏµÄ¿Ø¼ş,¾ÍList.get(0),0¾ÍÊÇ¼¯ºÏÖĞµÚÒ»¸ö½çÃæ,1¾ÍÊÇ¼¯ºÏÖĞµÚ¶ş¸ö½çÃæ */
+		/** éš§é“å†…æ–­é¢ç•Œé¢çš„æ§ä»¶ */
+		/** Listé›†åˆä¸­å­˜å„²çš„æ˜¯View,è·å–ç•Œé¢ä¸Šçš„æ§ä»¶,å°±List.get(0),0å°±æ˜¯é›†åˆä¸­ç¬¬ä¸€ä¸ªç•Œé¢,1å°±æ˜¯é›†åˆä¸­ç¬¬äºŒä¸ªç•Œé¢ */
 		listView = (ListView) list.get(0).findViewById(R.id.record_lv_dibiao);
 
 		adapter = new TestRecordAdapter(TestRecordActivity.this, infos);
 		listView.setAdapter(adapter);
-		// listviewµÄĞĞµã»÷
+		// listviewçš„è¡Œç‚¹å‡»
 //		listView.setOnItemLongClickListener(new OnItemLongClickListener() {
 //
 //			@Override
 //			public boolean onItemLongClick(AdapterView<?> parent, View view,
 //					int position, long id) {
 //				iListPos1 = position;
-//				// ¶Ô»°¿òµÄÑ¡Ïî
-//				//CharSequence items[] = { "´ò¿ª", "±à¼­", "µ¼³ö", "É¾³ı" };
-//				// ÊµÀı»¯¶Ô»°
+//				// å¯¹è¯æ¡†çš„é€‰é¡¹
+//				//CharSequence items[] = { "æ‰“å¼€", "ç¼–è¾‘", "å¯¼å‡º", "åˆ é™¤" };
+//				// å®ä¾‹åŒ–å¯¹è¯
 //				new AlertDialog.Builder(TestRecordActivity.this)
 //						.setItems(/*items*/Constant.RecordRowClickItems, new DialogInterface.OnClickListener() {
 //
@@ -289,7 +289,7 @@ public class TestRecordActivity extends Activity implements OnPageChangeListener
 //								CRTBTunnelMonitor CurApp = ((CRTBTunnelMonitor)getApplicationContext());
 //								RecordInfo item = (RecordInfo)listView.getItemAtPosition(iListPos1);
 //								switch (which) {
-//								case 0:// ±à¼­
+//								case 0:// ç¼–è¾‘
 //									Intent intent = new Intent(TestRecordActivity.this,
 //											RecordNewActivity.class);
 //									Bundle mBundle = new Bundle();  
@@ -299,22 +299,22 @@ public class TestRecordActivity extends Activity implements OnPageChangeListener
 //							        TestRecordActivity.this.startActivityForResult(intent,0);
 //									//startActivity(intent);
 //									break;
-//								case 1:// É¾³ı
+//								case 1:// åˆ é™¤
 ////									WorkInfos Curw = CurApp.GetCurWork();
 ////									TunnelCrossSectionDaoImpl impl = new TunnelCrossSectionDaoImpl(RecordActivity.this,Curw.getProjectName());
 ////									int iRet = impl.DeleteSection(item.getId());
 ////									switch (iRet) {
 ////									case 0:
-////										Toast.makeText(RecordActivity.this, "É¾³ıÊ§°Ü", 3000).show();
+////										Toast.makeText(RecordActivity.this, "åˆ é™¤å¤±è´¥", 3000).show();
 ////										break;
 ////									case 1:
 ////										Curw.DelTunnelCrossSectionInfo(item);
 ////										CurApp.UpdateWork(Curw);
 ////										adapter.notifyDataSetChanged();
-////										Toast.makeText(RecordActivity.this, "É¾³ı³É¹¦", 3000).show();
+////										Toast.makeText(RecordActivity.this, "åˆ é™¤æˆåŠŸ", 3000).show();
 ////										break;
 ////									case -1:
-////										Toast.makeText(RecordActivity.this, "É¾³ıµÄ¶ÏÃæÖĞ´æÔÚÊı¾İ,²»¿ÉÉ¾³ı", 3000).show();
+////										Toast.makeText(RecordActivity.this, "åˆ é™¤çš„æ–­é¢ä¸­å­˜åœ¨æ•°æ®,ä¸å¯åˆ é™¤", 3000).show();
 ////										break;
 ////									default:
 ////										break;
@@ -327,7 +327,7 @@ public class TestRecordActivity extends Activity implements OnPageChangeListener
 //							}
 //						})
 //						.setCancelable(false)
-//						.show().setCanceledOnTouchOutside(true);// ÏÔÊ¾¶Ô»°¿ò
+//						.show().setCanceledOnTouchOutside(true);// æ˜¾ç¤ºå¯¹è¯æ¡†
 //				return true;
 //			}
 //		});
@@ -335,13 +335,13 @@ public class TestRecordActivity extends Activity implements OnPageChangeListener
 	}
 
 	public void Layout2() {
-		/** ËíµÀÄÚ¶ÏÃæ½çÃæµÄ¿Ø¼ş */
-		/** List¼¯ºÏÖĞ´æƒ¦µÄÊÇView,»ñÈ¡½çÃæÉÏµÄ¿Ø¼ş,¾ÍList.get(0),0¾ÍÊÇ¼¯ºÏÖĞµÚÒ»¸ö½çÃæ,1¾ÍÊÇ¼¯ºÏÖĞµÚ¶ş¸ö½çÃæ */
+		/** éš§é“å†…æ–­é¢ç•Œé¢çš„æ§ä»¶ */
+		/** Listé›†åˆä¸­å­˜å„²çš„æ˜¯View,è·å–ç•Œé¢ä¸Šçš„æ§ä»¶,å°±List.get(0),0å°±æ˜¯é›†åˆä¸­ç¬¬ä¸€ä¸ªç•Œé¢,1å°±æ˜¯é›†åˆä¸­ç¬¬äºŒä¸ªç•Œé¢ */
 		listView1 = (ListView) list.get(1).findViewById(R.id.record_lv_dibiao);
 
 		adapter1 = new TestRecordAdapter(TestRecordActivity.this, infos1);
 		listView1.setAdapter(adapter1);
-//		// listviewµÄĞĞµã»÷
+//		// listviewçš„è¡Œç‚¹å‡»
 //		listView1.setOnItemLongClickListener(new OnItemLongClickListener() {
 //
 //			@Override
@@ -357,7 +357,7 @@ public class TestRecordActivity extends Activity implements OnPageChangeListener
 //								CRTBTunnelMonitor CurApp = ((CRTBTunnelMonitor)getApplicationContext());
 //								RecordInfo item = (RecordInfo)listView1.getItemAtPosition(iListPos2);
 //								switch (which) {
-//								case 0:// ±à¼­
+//								case 0:// ç¼–è¾‘
 //									Intent intent = new Intent(TestRecordActivity.this,
 //											RecordNewActivity.class);
 //									Bundle mBundle = new Bundle();  
@@ -367,22 +367,22 @@ public class TestRecordActivity extends Activity implements OnPageChangeListener
 //									TestRecordActivity.this.startActivityForResult(intent,0);
 //									//startActivity(intent);
 //									break;
-//								case 1:// É¾³ı
+//								case 1:// åˆ é™¤
 ////									WorkInfos Curw = CurApp.GetCurWork();
 ////									SubsidenceCrossSectionDaoImpl impl = new SubsidenceCrossSectionDaoImpl(TestRecordActivity.this,Curw.getProjectName());
 ////									int iRet = impl.DeleteSubsidenceCrossSection(item.getId());
 ////									switch (iRet) {
 ////									case 0:
-////										Toast.makeText(TestRecordActivity.this, "É¾³ıÊ§°Ü", 3000).show();
+////										Toast.makeText(TestRecordActivity.this, "åˆ é™¤å¤±è´¥", 3000).show();
 ////										break;
 ////									case 1:
 ////										Curw.DelSubsidenceCrossSectionInfo(item);
 ////										CurApp.UpdateWork(Curw);
 ////										adapter1.notifyDataSetChanged();
-////										Toast.makeText(TestRecordActivity.this, "É¾³ı³É¹¦", 3000).show();
+////										Toast.makeText(TestRecordActivity.this, "åˆ é™¤æˆåŠŸ", 3000).show();
 ////										break;
 ////									case -1:
-////										Toast.makeText(TestRecordActivity.this, "É¾³ıµÄ¶ÏÃæÖĞ´æÔÚÊı¾İ,²»¿ÉÉ¾³ı", 3000).show();
+////										Toast.makeText(TestRecordActivity.this, "åˆ é™¤çš„æ–­é¢ä¸­å­˜åœ¨æ•°æ®,ä¸å¯åˆ é™¤", 3000).show();
 ////										break;
 ////									default:
 ////										break;
@@ -395,7 +395,7 @@ public class TestRecordActivity extends Activity implements OnPageChangeListener
 //							}
 //						})
 //						.setCancelable(false)
-//						.show().setCanceledOnTouchOutside(true);// ÏÔÊ¾¶Ô»°¿ò
+//						.show().setCanceledOnTouchOutside(true);// æ˜¾ç¤ºå¯¹è¯æ¡†
 //				return true;
 //			}
 //		});

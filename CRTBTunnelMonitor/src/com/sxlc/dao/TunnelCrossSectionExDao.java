@@ -5,26 +5,26 @@ import java.util.List;
 import com.sxlc.entity.TunnelCrossSectionExInfo;
 
 /**
- * ¶ÏÃæ²âÁ¿Êı¾İ¿â½Ó¿Ú
- *´´½¨Ê±¼ä£º2014-3-24ÏÂÎç13:50:00
- *@author ÕÅÓÑ
+ * æ–­é¢æµ‹é‡æ•°æ®åº“æ¥å£
+ *åˆ›å»ºæ—¶é—´ï¼š2014-3-24ä¸‹åˆ13:50:00
+ *@author å¼ å‹
  *@since JDK1.6
  *@version 1.0
  */
 
 public interface TunnelCrossSectionExDao {
-	/* ²é¿´ËùÓĞ  */
+	/* æŸ¥çœ‹æ‰€æœ‰  */
 	public List<TunnelCrossSectionExInfo> GetAllTunnelCrossSection();
 	
-	/* Ôö¼Ó²âÁ¿¼ÇÂ¼ */
+	/* å¢åŠ æµ‹é‡è®°å½• */
 	public Boolean InsertTunnelCrossSection(TunnelCrossSectionExInfo t);
 	
-	/* ĞŞ¸Ä²âÁ¿¼ÇÂ¼ */
+	/* ä¿®æ”¹æµ‹é‡è®°å½• */
 	public Boolean UpdateTunnelCrossSection(TunnelCrossSectionExInfo t);
 	
-	/* É¾³ı²âÁ¿¼ÇÂ¼ */
+	/* åˆ é™¤æµ‹é‡è®°å½• */
 	public Boolean DeleteTunnelCrossSection(int id);
 	
-	/* ²é¿´µ¥Ìõ¼ÇÂ¼ */
+	/* æŸ¥çœ‹å•æ¡è®°å½• */
 	public TunnelCrossSectionExInfo GetTunnelCrossSectionExInfo(int id);
 }

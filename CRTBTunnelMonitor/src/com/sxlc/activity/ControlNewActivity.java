@@ -30,9 +30,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 /**
- * ĞÂ½¨È«Õ¾ÒÇ´®¿Ú
+ * æ–°å»ºå…¨ç«™ä»ªä¸²å£
  * 
- * @author Åí·²
+ * @author å½­å‡¡
  * 
  */
 public class ControlNewActivity extends Activity implements OnClickListener {
@@ -46,9 +46,9 @@ public class ControlNewActivity extends Activity implements OnClickListener {
 	private List<String> btllist = null;
 	private List<String> cklist = null;
 	private TotalStationInfo editInfo = null;
-	/** È·¶¨°´Å¥ */
+	/** ç¡®å®šæŒ‰é’® */
 	private Button section_btn_queding;
-	/** È¡Ïû°´Å¥ */
+	/** å–æ¶ˆæŒ‰é’® */
 	private Button section_btn_quxiao;
 
 	private CRTBTunnelMonitor CurApp = null;
@@ -72,7 +72,7 @@ public class ControlNewActivity extends Activity implements OnClickListener {
 			@Override
 			public void onFocusChange(View v, boolean hasFocus) {
 				 EditText _v=(EditText)v;
-			        if (!hasFocus) {// Ê§È¥½¹µã
+			        if (!hasFocus) {// å¤±å»ç„¦ç‚¹
 			            _v.setHint(_v.getTag().toString());
 			        } else {
 			            String hint=_v.getHint().toString();
@@ -128,7 +128,7 @@ public class ControlNewActivity extends Activity implements OnClickListener {
 		section_btn_queding.setOnClickListener(this);
 		section_btn_quxiao.setOnClickListener(this);
     }
-	// µã»÷ÊÂ¼ş
+	// ç‚¹å‡»äº‹ä»¶
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
@@ -136,17 +136,17 @@ public class ControlNewActivity extends Activity implements OnClickListener {
 			Intent IntentCancel = new Intent();
 			IntentCancel.putExtra(Constant.Select_TotalStationRowClickItemsName_Name,"");
 			setResult(RESULT_CANCELED, IntentCancel);
-			this.finish();// ¹Ø±Õµ±Ç°½çÃæ
+			this.finish();// å…³é—­å½“å‰ç•Œé¢
 			break;
-		case R.id.work_btn_queding: // Êı¾İ¿â
+		case R.id.work_btn_queding: // æ•°æ®åº“
 			if(pp.getText().toString().trim().length() <= 0)
 			{
-				Toast.makeText(this, "ÇëÊäÈëÍêÕûĞÅÏ¢", 3000).show();
+				Toast.makeText(this, "è¯·è¾“å…¥å®Œæ•´ä¿¡æ¯", 3000).show();
 				return;
 			}
 			if(name.getText().toString().trim().length() <= 0)
 			{
-				Toast.makeText(this, "ÇëÊäÈëÍêÕûĞÅÏ¢", 3000).show();
+				Toast.makeText(this, "è¯·è¾“å…¥å®Œæ•´ä¿¡æ¯", 3000).show();
 				return;
 			}
 			WorkInfos Curw = CurApp.GetCurWork();
@@ -170,14 +170,14 @@ public class ControlNewActivity extends Activity implements OnClickListener {
 
 			if(!CurApp.IsValidTotalStationInfo(ts))
 			{
-				Toast.makeText(this, "ÇëÊäÈëÍêÕûĞÅÏ¢", 3000).show();
+				Toast.makeText(this, "è¯·è¾“å…¥å®Œæ•´ä¿¡æ¯", 3000).show();
 				return;
 			}
 			List<TotalStationInfo> tsinfos = null;
 			tsinfos = Curw.getTsList();
 			if(tsinfos == null)
 			{
-				Toast.makeText(this, "Ìí¼ÓÊ§°Ü", 3000).show();
+				Toast.makeText(this, "æ·»åŠ å¤±è´¥", 3000).show();
 			}
 			else
 			{
@@ -188,11 +188,11 @@ public class ControlNewActivity extends Activity implements OnClickListener {
 					{
 						tsinfos.add(ts);
 						CurApp.UpdateWork(Curw);
-						Toast.makeText(this, "Ìí¼Ó³É¹¦", 3000).show();
+						Toast.makeText(this, "æ·»åŠ æˆåŠŸ", 3000).show();
 					}
 					else
 					{
-						Toast.makeText(this, "Ìí¼ÓÊ§°Ü", 3000).show();
+						Toast.makeText(this, "æ·»åŠ å¤±è´¥", 3000).show();
 					}
 				}
 				else
@@ -201,7 +201,7 @@ public class ControlNewActivity extends Activity implements OnClickListener {
 					impl.UpdateTotalStation(ts);
 					Curw.UpdateTotalStationInfo(ts);
 					CurApp.UpdateWork(Curw);
-					Toast.makeText(this, "±à¼­³É¹¦", 3000).show();
+					Toast.makeText(this, "ç¼–è¾‘æˆåŠŸ", 3000).show();
 				}
 			}
 			Intent IntentOk = new Intent();
@@ -217,7 +217,7 @@ public class ControlNewActivity extends Activity implements OnClickListener {
 
 	private void initData() {
 		if (editInfo != null) {
-			ts_new_tv_header.setText("±à¼­È«Õ¾ÒÇ");
+			ts_new_tv_header.setText("ç¼–è¾‘å…¨ç«™ä»ª");
 			for (TotalStationType type : TotalStationType.values()){
 				if(type.name().equals(editInfo.getTotalstationType()))
 				{
@@ -233,7 +233,7 @@ public class ControlNewActivity extends Activity implements OnClickListener {
 			tzw.setText(Integer.toString(editInfo.getStopbits()));
 		}
 		else {
-			ts_new_tv_header.setText("ĞÂ½¨È«Õ¾ÒÇ");
+			ts_new_tv_header.setText("æ–°å»ºå…¨ç«™ä»ª");
 			xyws.setSelection(xylist.indexOf("1"));
 			btls.setSelection(btllist.indexOf("19200"));
 			cks.setSelection(0);
@@ -243,16 +243,16 @@ public class ControlNewActivity extends Activity implements OnClickListener {
 	}
 	
 	private void adap(Spinner spinner, List<String> list) {
-		// ½«¿ÉÑ¡ÄÚÈİÓëArrayAdapterÁ¬½ÓÆğÀ´
+		// å°†å¯é€‰å†…å®¹ä¸ArrayAdapterè¿æ¥èµ·æ¥
 		adapter = new ArrayAdapter<String>(this,
 				android.R.layout.simple_spinner_item, list);
-		// ÉèÖÃÏÂÀ­ÁĞ±íµÄ·ç¸ñ
+		// è®¾ç½®ä¸‹æ‹‰åˆ—è¡¨çš„é£æ ¼
 		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		spinner.setAdapter(adapter);
 	}
 
 	private void onCli() {
-		// Ìí¼ÓÊÂ¼şSpinnerÊÂ¼ş¼àÌı
+		// æ·»åŠ äº‹ä»¶Spinneräº‹ä»¶ç›‘å¬
 		pps.setOnItemSelectedListener(new OnItemSelectedListener() {
 
 			@Override
@@ -265,7 +265,7 @@ public class ControlNewActivity extends Activity implements OnClickListener {
 		});
 		pps.setVisibility(View.VISIBLE);
 
-		// Ìí¼ÓÊÂ¼şSpinnerÊÂ¼ş¼àÌı
+		// æ·»åŠ äº‹ä»¶Spinneräº‹ä»¶ç›‘å¬
 		xyws.setOnItemSelectedListener(new OnItemSelectedListener() {
 
 			@Override
@@ -278,7 +278,7 @@ public class ControlNewActivity extends Activity implements OnClickListener {
 			}
 		});
 
-		// Ìí¼ÓÊÂ¼şSpinnerÊÂ¼ş¼àÌı
+		// æ·»åŠ äº‹ä»¶Spinneräº‹ä»¶ç›‘å¬
 		btls.setOnItemSelectedListener(new OnItemSelectedListener() {
 
 			@Override
@@ -292,7 +292,7 @@ public class ControlNewActivity extends Activity implements OnClickListener {
 		});
 		btls.setVisibility(View.VISIBLE);
 
-		// Ìí¼ÓÊÂ¼şSpinnerÊÂ¼ş¼àÌı
+		// æ·»åŠ äº‹ä»¶Spinneräº‹ä»¶ç›‘å¬
 		cks.setOnItemSelectedListener(new OnItemSelectedListener() {
 
 			@Override

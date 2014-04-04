@@ -31,9 +31,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 /**
- * ¹¤×÷Ãæ ´´½¨Ê±¼ä£º2014-3-19ÉÏÎç9:45:02
+ * å·¥ä½œé¢ åˆ›å»ºæ—¶é—´ï¼š2014-3-19ä¸Šåˆ9:45:02
  * 
- * @author µËÃÏ
+ * @author é‚“å­Ÿ
  * @since JDK1.6
  * @version 1.0
  */
@@ -56,26 +56,26 @@ public class WorkActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_work);
-		// ³õÊ¼»¯¿Õ¼ä
+		// åˆå§‹åŒ–ç©ºé—´
 		layout = (RelativeLayout) findViewById(R.layout.alert_dialog);
 		list = (ListView) findViewById(R.id.listView1);
-		// ·Ö²¼Ïß¸ß¶È
+		// åˆ†å¸ƒçº¿é«˜åº¦
 		list.setDividerHeight(0);
 		setdata();
-		// ÊµÀı»¯ÊÊÅäÆ÷
+		// å®ä¾‹åŒ–é€‚é…å™¨
 		adapter = new WorkListAdapter(WorkActivity.this, infos);
-		// list¼ÓÔØÊÊÅäÆ÷
+		// liståŠ è½½é€‚é…å™¨
 		list.setAdapter(adapter);
-		// listviewµÄĞĞµã»÷
+		// listviewçš„è¡Œç‚¹å‡»
 		list.setOnItemLongClickListener(new OnItemLongClickListener() {
 
 			@Override
 			public boolean onItemLongClick(AdapterView<?> parent, View view,
 					int position, long id) {
 				iListPos = position;
-				// ¶Ô»°¿òµÄÑ¡Ïî
-				//CharSequence items[] = { "´ò¿ª", "±à¼­", "µ¼³ö", "É¾³ı" };
-				// ÊµÀı»¯¶Ô»°
+				// å¯¹è¯æ¡†çš„é€‰é¡¹
+				//CharSequence items[] = { "æ‰“å¼€", "ç¼–è¾‘", "å¯¼å‡º", "åˆ é™¤" };
+				// å®ä¾‹åŒ–å¯¹è¯
 				new AlertDialog.Builder(WorkActivity.this)
 						.setItems(/*items*/Constant.WorkRowClickItems, new DialogInterface.OnClickListener() {
 
@@ -85,7 +85,7 @@ public class WorkActivity extends Activity {
 								CRTBTunnelMonitor CurApp = ((CRTBTunnelMonitor)getApplicationContext());
 								WorkInfos item = (WorkInfos)list.getItemAtPosition(iListPos);
 								switch (which) {
-								case 0: // ´ò¿ª
+								case 0: // æ‰“å¼€
 									CurApp.SetCurWork(WorkActivity.this,item);
 									intent = new Intent(WorkActivity.this,
 											MainActivity.class);
@@ -93,7 +93,7 @@ public class WorkActivity extends Activity {
 											Constant.Select_WorkRowClickItemsValue_Open);
 									startActivity(intent);
 									break;
-								case 1:// ±à¼­
+								case 1:// ç¼–è¾‘
 									intent = new Intent(WorkActivity.this,
 											WorkNewActivity.class);
 									intent.putExtra(Constant.Select_WorkRowClickItemsName_Name,
@@ -103,7 +103,7 @@ public class WorkActivity extends Activity {
 									break;
 								case 2:
 									break;
-								case 3:// É¾³ı
+								case 3:// åˆ é™¤
 									boolean bDel = true;
 									WorkInfos CurW = CurApp.GetCurWork();
 									if(CurW != null)
@@ -115,14 +115,14 @@ public class WorkActivity extends Activity {
 									}
 									if(!bDel)
 									{
-										Toast.makeText(WorkActivity.this, "µ±Ç°¹¤×÷ÃæÕıÔÚÊ¹ÓÃ£¬²»ÄÜÉ¾³ı", 3000).show();
+										Toast.makeText(WorkActivity.this, "å½“å‰å·¥ä½œé¢æ­£åœ¨ä½¿ç”¨ï¼Œä¸èƒ½åˆ é™¤", 3000).show();
 									}
 									else
 									{
 										CurApp.GetDB().DeleteWork(item.getProjectName());
 										CurApp.DelWork(item);
 										adapter.notifyDataSetChanged();
-										Toast.makeText(WorkActivity.this, "É¾³ı³É¹¦", 3000).show();
+										Toast.makeText(WorkActivity.this, "åˆ é™¤æˆåŠŸ", 3000).show();
 									}
 								default:
 									break;
@@ -131,7 +131,7 @@ public class WorkActivity extends Activity {
 							}
 						})
 						.setCancelable(false)
-						.show().setCanceledOnTouchOutside(true);// ÏÔÊ¾¶Ô»°¿ò
+						.show().setCanceledOnTouchOutside(true);// æ˜¾ç¤ºå¯¹è¯æ¡†
 				return true;
 			}
 		});
@@ -152,7 +152,7 @@ public class WorkActivity extends Activity {
 		}
 	}
 
-	// listviewÊı¾İ
+	// listviewæ•°æ®
 	/**
 	 * 
 	 */

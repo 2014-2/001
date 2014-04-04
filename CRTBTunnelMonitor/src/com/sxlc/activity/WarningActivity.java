@@ -30,10 +30,10 @@ public class WarningActivity extends Activity {
 	private	Myadapter adapter;
 	private	Random ran = new Random();
 	private	String s[] = new String[20];
-	private	String ss[] = { "¹°¶¥", "²âÊÔs1", "²âÊÔs2" };
-	private	String sss[] = { "ÒÑÏû¾¯", "ÕıÔÚ´¦Àí" };
+	private	String ss[] = { "æ‹±é¡¶", "æµ‹è¯•s1", "æµ‹è¯•s2" };
+	private	String sss[] = { "å·²æ¶ˆè­¦", "æ­£åœ¨å¤„ç†" };
 	private	String ssss[] = { "", "", "", "" };
-	private	String s2[] = { "XXX³¬ÏŞ", "AAA³¬ÏŞ", "CCC³¬ÏŞ", "YYY³¬ÏŞ" };
+	private	String s2[] = { "XXXè¶…é™", "AAAè¶…é™", "CCCè¶…é™", "YYYè¶…é™" };
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -47,9 +47,9 @@ public class WarningActivity extends Activity {
 		initB();
 		listviewInit();
 		baojing = (TextView) findViewById(R.id.rizhi);
-		baojing.setText("±¨¾¯ÈÕÖ¾£º(" + yujingInfors.count + ")" + ",");
+		baojing.setText("æŠ¥è­¦æ—¥å¿—ï¼š(" + yujingInfors.count + ")" + ",");
 		yixiao = (TextView) findViewById(R.id.yixiaojing);
-		yixiao.setText("ÒÑÏû¾¯£º(" + yujingInfors.yixiao + ")");
+		yixiao.setText("å·²æ¶ˆè­¦ï¼š(" + yujingInfors.yixiao + ")");
 	}
 
 	public void checkListen(final CheckBox check) {
@@ -63,7 +63,7 @@ public class WarningActivity extends Activity {
 					if (isChecked) {
 						// check2.setChecked(false);
 						for (int i = 0; i < listt.size(); i++) {
-							if (listt.get(i).getState().equals("ÒÑÏû¾¯")) {
+							if (listt.get(i).getState().equals("å·²æ¶ˆè­¦")) {
 								System.out.println(listt.get(i).getState()
 										+ listt.size());
 								listt.get(i).setState1(false);
@@ -79,7 +79,7 @@ public class WarningActivity extends Activity {
 					if (isChecked) {
 						// check1.setChecked(false);
 						for (int i = 0; i < listt.size(); i++) {
-							if (!listt.get(i).getState().equals("ÒÑÏû¾¯")) {
+							if (!listt.get(i).getState().equals("å·²æ¶ˆè­¦")) {
 								System.out.println(listt.get(i).getState()
 										+ listt.size());
 								listt.get(i).setState1(false);
@@ -126,12 +126,12 @@ public class WarningActivity extends Activity {
 			infor.setDate(getdate());
 			infor.setXinghao(s[i]);
 			infor.setDianhao(ss[ran.nextInt(3)]);
-			infor.setChuliFangshi("×ÔÓÉ´¦Àí");
+			infor.setChuliFangshi("è‡ªç”±å¤„ç†");
 			infor.setState(sss[ran.nextInt(2)]);
 			infor.setMessage(s2[ran.nextInt(4)]);
 			infor.setEdtState(ssss[ran.nextInt(4)]);
 			infor.setState1(true);
-			if (infor.getState().equals("ÒÑÏû¾¯")) {
+			if (infor.getState().equals("å·²æ¶ˆè­¦")) {
 				yujingInfors.yixiao = yujingInfors.yixiao + 1;
 				System.out.println(yujingInfors.yixiao);
 

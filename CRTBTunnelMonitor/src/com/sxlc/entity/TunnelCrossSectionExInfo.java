@@ -3,31 +3,31 @@ package com.sxlc.entity;
 import java.sql.Timestamp;
 
 /**
- * ¶ÏÃæ²âÁ¿ĞÅÏ¢
- *´´½¨Ê±¼ä£º2014-3-24ÏÂÎç13:50:00
- *@author ÕÅÓÑ
+ * æ–­é¢æµ‹é‡ä¿¡æ¯
+ *åˆ›å»ºæ—¶é—´ï¼š2014-3-24ä¸‹åˆ13:50:00
+ *@author å¼ å‹
  *@since JDK1.6
  *@version 1.0
  */
 
 public class TunnelCrossSectionExInfo {
 	private int id;
-	private String zonecode;		// ZONECODE ¹¤Çø´úÂë
-	private String sitecode;		// SITECODE ¹¤µã´úÂë
-	private String sectname;		// SECTNAME ¶ÏÃæÃû
-	private String sectcode;		// SECTCODE ¶ÏÃæ´úÂë
-	private String sectkilo;		// SECTKILO ¶ÏÃæÀï³ÌÖµ
-	private String method;			// METHOD ¿ªÍÚ·½·¨
-	private float width;			// ¿í¶È
-	private float movevalue_uo;		// MOVEVALUE_U0 uoÖµ
-	private Timestamp updateDate;	// UPDATEDATE uo¸üĞÂÊ±¼ä
-	private String remark_uo;		// REMARK_U0 uo±¸×¢
-	private String holename;		// HOLENAME ¹¤×÷ÃæÃû
-	private String holestartkilo;	// HOLESTARTKILO ¹¤×÷ÃæÀï³Ì
-	private String innercode;		// INNERCODES ²âµã¼¯ºÏ
-	private Timestamp layDate;		// LAYTIME ÂñÉèÊ±¼ä
-	private int upload;				// UPLOAD ÉÏ´«±êÊ¶
-	private String description;		// DESCRIPTION ±¸×¢
+	private String zonecode;		// ZONECODE å·¥åŒºä»£ç 
+	private String sitecode;		// SITECODE å·¥ç‚¹ä»£ç 
+	private String sectname;		// SECTNAME æ–­é¢å
+	private String sectcode;		// SECTCODE æ–­é¢ä»£ç 
+	private String sectkilo;		// SECTKILO æ–­é¢é‡Œç¨‹å€¼
+	private String method;			// METHOD å¼€æŒ–æ–¹æ³•
+	private float width;			// å®½åº¦
+	private float movevalue_uo;		// MOVEVALUE_U0 uoå€¼
+	private Timestamp updateDate;	// UPDATEDATE uoæ›´æ–°æ—¶é—´
+	private String remark_uo;		// REMARK_U0 uoå¤‡æ³¨
+	private String holename;		// HOLENAME å·¥ä½œé¢å
+	private String holestartkilo;	// HOLESTARTKILO å·¥ä½œé¢é‡Œç¨‹
+	private String innercode;		// INNERCODES æµ‹ç‚¹é›†åˆ
+	private Timestamp layDate;		// LAYTIME åŸ‹è®¾æ—¶é—´
+	private int upload;				// UPLOAD ä¸Šä¼ æ ‡è¯†
+	private String description;		// DESCRIPTION å¤‡æ³¨
 	public int getId() {
 		return id;
 	}

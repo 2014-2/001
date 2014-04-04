@@ -5,26 +5,26 @@ import java.util.List;
 import com.sxlc.entity.ControlPointsInfo;
 
 /**
- * ¿ØÖÆµãÊı¾İ¿â½Ó¿Ú
- *´´½¨Ê±¼ä£º2014-3-24ÏÂÎç13:50:00
- *@author ÕÅÓÑ
+ * æ§åˆ¶ç‚¹æ•°æ®åº“æ¥å£
+ *åˆ›å»ºæ—¶é—´ï¼š2014-3-24ä¸‹åˆ13:50:00
+ *@author å¼ å‹
  *@since JDK1.6
  *@version 1.0
  */
 public interface ControlPointsDao {
-	/* ²é¿´ËùÓĞÉèÕ¾ĞÅÏ¢ */
+	/* æŸ¥çœ‹æ‰€æœ‰è®¾ç«™ä¿¡æ¯ */
 	public List<ControlPointsInfo> GetAllStation();
 	
-	/* Ìí¼ÓÉèÕ¾ĞÅÏ¢ */
+	/* æ·»åŠ è®¾ç«™ä¿¡æ¯ */
 	public boolean InsertStationInfo(ControlPointsInfo s);
 	
-	/* ĞŞ¸ÄÉèÕ¾ĞÅÏ¢ */
+	/* ä¿®æ”¹è®¾ç«™ä¿¡æ¯ */
 	public boolean UpdateStationInfo(ControlPointsInfo s);
 	
-	/* »ñÈ¡µ¥¸öÉèÕ¾ĞÅÏ¢ */
+	/* è·å–å•ä¸ªè®¾ç«™ä¿¡æ¯ */
 	public ControlPointsInfo GetControlPoints(int id);
 	
-	/* É¾³ıÉèÕ¾ĞÅÏ¢ */
+	/* åˆ é™¤è®¾ç«™ä¿¡æ¯ */
 	public boolean DeleteStationInfo(int id);
 
 	void GetControlPointsList(List<ControlPointsInfo> list);

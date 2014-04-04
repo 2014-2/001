@@ -3,23 +3,23 @@ package com.sxlc.entity;
 import java.sql.Timestamp;
 
 /**
- * Ô¤¾¯ÄÚÈİÊµÌå
- *´´½¨Ê±¼ä£º2014-3-24ÏÂÎç13:50:00
- *@author ÕÅÓÑ
+ * é¢„è­¦å†…å®¹å®ä½“
+ *åˆ›å»ºæ—¶é—´ï¼š2014-3-24ä¸‹åˆ13:50:00
+ *@author å¼ å‹
  *@since JDK1.6
  *@version 1.0
  */
 public class AlertInfo {
 	private int id;						//id
-	private Timestamp SheetID;			//¼ÇÂ¼µ¥id
-	private String CrossSectionID;		//¶ÏÃæÎ¨Ò»id
-	private int PntType;				//²âµãÀàĞÍ
-	private Timestamp AlertTime;		//Ô¤¾¯Ê±¼ä
-	private int AlertLeverl;			//Ô¤¾¯µÈ¼¶
-	private int Utype;					//³¬ÏŞÀàĞÍ
-	private double UValue;				//³¬ÏŞÊıÖµ
-	private double UMax;				//³¬ÏŞÀàĞÍãĞÖµ
-	private String OriginalDataID;		//Ô­Ê¼Êı¾İid
+	private Timestamp SheetID;			//è®°å½•å•id
+	private String CrossSectionID;		//æ–­é¢å”¯ä¸€id
+	private int PntType;				//æµ‹ç‚¹ç±»å‹
+	private Timestamp AlertTime;		//é¢„è­¦æ—¶é—´
+	private int AlertLeverl;			//é¢„è­¦ç­‰çº§
+	private int Utype;					//è¶…é™ç±»å‹
+	private double UValue;				//è¶…é™æ•°å€¼
+	private double UMax;				//è¶…é™ç±»å‹é˜ˆå€¼
+	private String OriginalDataID;		//åŸå§‹æ•°æ®id
 	public int getId() {
 		return id;
 	}

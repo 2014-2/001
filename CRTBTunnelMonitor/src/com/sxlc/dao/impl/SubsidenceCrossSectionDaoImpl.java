@@ -12,9 +12,9 @@ import com.sxlc.dao.SubsidenceCrossSectionDao;
 import com.sxlc.db.SqliteHelperDTMS;
 import com.sxlc.entity.SubsidenceCrossSectionInfo;
 /**
- * µØ±íÏÂ³Á¶ÏÃæÊı¾İ¿âÊµÏÖ
- *´´½¨Ê±¼ä£º2014-3-24ÏÂÎç2:43:15
- *@author ÕÅÓÑ
+ * åœ°è¡¨ä¸‹æ²‰æ–­é¢æ•°æ®åº“å®ç°
+ *åˆ›å»ºæ—¶é—´ï¼š2014-3-24ä¸‹åˆ2:43:15
+ *@author å¼ å‹
  *@since JDK1.6
  *@version 1.0
  */
@@ -28,7 +28,7 @@ public class SubsidenceCrossSectionDaoImpl implements SubsidenceCrossSectionDao{
 	}
 	
 	@Override
-	//²éÕÒËùÓĞµÄµØ±íÏÂ³Á¶ÏÃæ
+	//æŸ¥æ‰¾æ‰€æœ‰çš„åœ°è¡¨ä¸‹æ²‰æ–­é¢
 	public List<SubsidenceCrossSectionInfo> SelectAllSection() {
 		List<SubsidenceCrossSectionInfo> list = null;
 		String sql = "select * from SubsidenceCrossSectionIndex";
@@ -79,7 +79,7 @@ public class SubsidenceCrossSectionDaoImpl implements SubsidenceCrossSectionDao{
 	}
 
 	@Override
-	//Ìí¼ÓµØ±íÏÂ³Á¶ÏÃæ
+	//æ·»åŠ åœ°è¡¨ä¸‹æ²‰æ–­é¢
 	public Boolean InsertSubsidenceCrossSection(SubsidenceCrossSectionInfo s) {
 		boolean result = false;
 		if(s == null){
@@ -118,7 +118,7 @@ public class SubsidenceCrossSectionDaoImpl implements SubsidenceCrossSectionDao{
 	}
 
 	@Override
-	//ĞŞ¸ÄµØ±íÏÂ³Á¶ÏÃæ
+	//ä¿®æ”¹åœ°è¡¨ä¸‹æ²‰æ–­é¢
 	public SubsidenceCrossSectionInfo SelectSubsidenceCrossSection(int id) {
 		SubsidenceCrossSectionInfo entity = null;
 		String sql = "select * from SubsidenceCrossSectionIndex where ID=" + Integer.toString(id);
@@ -166,8 +166,8 @@ public class SubsidenceCrossSectionDaoImpl implements SubsidenceCrossSectionDao{
 	}
 
 	@Override
-	//É¾³ıµØ±íÏÂ³Á¶ÏÃæ
-	// 0:Ê§°Ü 1£º³É¹¦ -1£º´æÔÚ²âÁ¿Êı¾İ²»ÄÜÉ¾³ı
+	//åˆ é™¤åœ°è¡¨ä¸‹æ²‰æ–­é¢
+	// 0:å¤±è´¥ 1ï¼šæˆåŠŸ -1ï¼šå­˜åœ¨æµ‹é‡æ•°æ®ä¸èƒ½åˆ é™¤
 	public int DeleteSubsidenceCrossSection(int id) {
 		int iResult = 0;
 		String sql = "select count(*) as count from RawSheetIndex where CrossSectionType=2" +
@@ -204,7 +204,7 @@ public class SubsidenceCrossSectionDaoImpl implements SubsidenceCrossSectionDao{
 	}
 
 	@Override
-	//»ñÈ¡µ¥¸öµØ±íÏÂ³Á¶ÏÃæ
+	//è·å–å•ä¸ªåœ°è¡¨ä¸‹æ²‰æ–­é¢
 	public Boolean UpdateSubsidenceCrossSection(SubsidenceCrossSectionInfo s) {
 		boolean result = false;
 		if(s == null){

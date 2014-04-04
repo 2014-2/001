@@ -29,7 +29,7 @@ import android.widget.AdapterView.OnItemLongClickListener;
 
 public class ControlPointsActivity extends Activity {
 	/**
-	 * ÏÔÊ¾ÓÃ»§ÃûºÍÑ¡ÖĞ×´Ì¬
+	 * æ˜¾ç¤ºç”¨æˆ·åå’Œé€‰ä¸­çŠ¶æ€
 	 */
 	private ListView listview;
 	private int iItemPos = -1;
@@ -45,22 +45,22 @@ public class ControlPointsActivity extends Activity {
 		CurApp = ((CRTBTunnelMonitor)getApplicationContext());
 		listview=(ListView) findViewById(R.id.control_sonlist);
 		getadapter();
-		/** ³¤°´ */
+		/** é•¿æŒ‰ */
 		listview.setOnItemLongClickListener(new OnItemLongClickListener() {
 			@Override
 			public boolean onItemLongClick(AdapterView<?> parent, View view,
 					int position, long id) {
 				iItemPos = position; 
-				// ÊµÀı»¯¶Ô»°
+				// å®ä¾‹åŒ–å¯¹è¯
 				new AlertDialog.Builder(ControlPointsActivity.this)
-						.setItems(/* items */new String[]{"Ê¹ÓÃ¸Ãµã"},
+						.setItems(/* items */new String[]{"ä½¿ç”¨è¯¥ç‚¹"},
 								new DialogInterface.OnClickListener() {
 
 									@Override
 									public void onClick(DialogInterface dialog,
 											int which) {
 										switch (which) {
-										case 0: // À¶ÑÀÁ¬½Ó
+										case 0: // è“ç‰™è¿æ¥
 											ControlPointsInfo item = list.get(iItemPos);
 											item.setbUse(true);
 											list.set(iItemPos, item);
@@ -75,7 +75,7 @@ public class ControlPointsActivity extends Activity {
 										}
 									}
 								}).setCancelable(false).show()
-						.setCanceledOnTouchOutside(true);// ÏÔÊ¾¶Ô»°¿ò
+						.setCanceledOnTouchOutside(true);// æ˜¾ç¤ºå¯¹è¯æ¡†
 				return true;
 			}
 		});

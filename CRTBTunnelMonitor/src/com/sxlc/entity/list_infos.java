@@ -1,16 +1,16 @@
 package com.sxlc.entity;
 /**
  * 
- *´´½¨Ê±¼ä£º2014-3-21ÏÂÎç4:27:50
- *@author µËÃÏ
+ *åˆ›å»ºæ—¶é—´ï¼š2014-3-21ä¸‹åˆ4:27:50
+ *@author é‚“å­Ÿ
  *@since JDK1.6
  *@version 1.0
  */
 public class list_infos {
 	
-	private String workpagename;//¹¤×÷ÃæÃû
-	private String start;//¿ªÊ¼Àï³Ì
-	private String end;//½áÊøÀï³Ì
+	private String workpagename;//å·¥ä½œé¢å
+	private String start;//å¼€å§‹é‡Œç¨‹
+	private String end;//ç»“æŸé‡Œç¨‹
 	
 	public String getWorkpagename() {
 		return workpagename;

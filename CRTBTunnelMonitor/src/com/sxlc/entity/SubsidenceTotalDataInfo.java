@@ -5,26 +5,26 @@ import java.sql.Timestamp;
 import android.R.string;
 
 /**
- * ¶ÏÃæ²âÁ¿¼ÇÂ¼µ¥ÊµÌå
- *´´½¨Ê±¼ä£º2014-3-24ÏÂÎç13:50:00
- *@author ÕÅÓÑ
+ * æ–­é¢æµ‹é‡è®°å½•å•å®ä½“
+ *åˆ›å»ºæ—¶é—´ï¼š2014-3-24ä¸‹åˆ13:50:00
+ *@author å¼ å‹
  *@since JDK1.6
  *@version 1.0
  */
 public class SubsidenceTotalDataInfo {
-	private int type;			//ÀàĞÍ 0£º¶ÏÃæ¼ÇÂ¼µ¥  1£ºµØ±íÏÂ³Á¼ÇÂ¼µ¥
+	private int type;			//ç±»å‹ 0ï¼šæ–­é¢è®°å½•å•  1ï¼šåœ°è¡¨ä¸‹æ²‰è®°å½•å•
 	private int id;				//id
-	private int StationId;		//ÉèÕ¾id
-	private int ChainageId;		//¶ÏÃæÀï³Ìid
-	private int SheetId;		//¼ÇÂ¼µ¥id
-	private String Coordinate;	//²âµã×ø±ê
-	private String PntType;		//²âµãÀàĞÍ
-	private Timestamp SurveyTime;	//²âÁ¿Ê±¼ä
-	private String Info;		//±¸×¢
-	private short MEASNo;		//µÚ¼¸´Î²âÁ¿
-	private int SurveyorID;		//²âÁ¿ÈËÔ±id
-	private short DataStatus;	//Òì³£Êı¾İ±êÊ¶
-	private float DataCorrection;	//Òì³£Êı¾İĞŞÕıÖµ
+	private int StationId;		//è®¾ç«™id
+	private int ChainageId;		//æ–­é¢é‡Œç¨‹id
+	private int SheetId;		//è®°å½•å•id
+	private String Coordinate;	//æµ‹ç‚¹åæ ‡
+	private String PntType;		//æµ‹ç‚¹ç±»å‹
+	private Timestamp SurveyTime;	//æµ‹é‡æ—¶é—´
+	private String Info;		//å¤‡æ³¨
+	private short MEASNo;		//ç¬¬å‡ æ¬¡æµ‹é‡
+	private int SurveyorID;		//æµ‹é‡äººå‘˜id
+	private short DataStatus;	//å¼‚å¸¸æ•°æ®æ ‡è¯†
+	private float DataCorrection;	//å¼‚å¸¸æ•°æ®ä¿®æ­£å€¼
 	public int getType() {
 		return type;
 	}

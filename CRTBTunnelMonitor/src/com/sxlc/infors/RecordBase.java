@@ -1,37 +1,37 @@
 package com.sxlc.infors;
 
 /*
- * ¼ÇÂ¼µ¥ÊµÌåÀà
+ * è®°å½•å•å®ä½“ç±»
  */
 public class RecordBase {
 	
-	public int StationId;// ;ÉèÕ¾ID
-	public int ChainageId;// ;¶ÏÃæÀï³ÌID
-	public int SheetId;// ¼ÇÂ¼µ¥ID
-	public String Coordinate;// ²âµã×ø±ê
-	public String PntType;// ²âµãÀàĞÍ
-	public String SurveyTime;// ²âÁ¿Ê±¼ä
-	public String Info;// ±¸×¢
-	public int MEASNo;// µÚ¼¸´Î
-	public int SurveyorID;// ²âÁ¿ÈËÔ±ID
-	public int DataStatus;// Òì³£Êı¾İ±êÊ¶
-	public float DataCorrection;// Òì³£Êı¾İĞŞÕıÖµ
+	public int StationId;// ;è®¾ç«™ID
+	public int ChainageId;// ;æ–­é¢é‡Œç¨‹ID
+	public int SheetId;// è®°å½•å•ID
+	public String Coordinate;// æµ‹ç‚¹åæ ‡
+	public String PntType;// æµ‹ç‚¹ç±»å‹
+	public String SurveyTime;// æµ‹é‡æ—¶é—´
+	public String Info;// å¤‡æ³¨
+	public int MEASNo;// ç¬¬å‡ æ¬¡
+	public int SurveyorID;// æµ‹é‡äººå‘˜ID
+	public int DataStatus;// å¼‚å¸¸æ•°æ®æ ‡è¯†
+	public float DataCorrection;// å¼‚å¸¸æ•°æ®ä¿®æ­£å€¼
 	
-	public int CrossSectionType;//¶ÏÃæÀàĞÍ
-	public String CreateTime;//´´±íÊ±¼ä
-	//String Info;//±¸×¢
-	public Double FACEDK;//¿ªÍÚÃæÀï³ÌÖµ
-	public String FACEDESCRIPTION;//Ê©¹¤¹¤Ğò
-	public Double TEMPERATURE;//ÎÂ¶ÈÖµ
-	public String CrossSectionIDs;//¶ÏÃæIDĞòÁĞ
-	public  int  Width ;//¶ÏÃæ¿í¶È
-	public  String SurveyPnts = null;//²âµã±àºÅ
-	public  String InbuiltTime = null;//ÂñÉèÊ±¼ä
-	public String ChainagePrefix;//Àï³ÌÇ°×º
-	public String DBU0;//µØ±íU0Öµ
-	public String DBU0Description;//¹°¶¥¼«ÏŞ±¸×¢
-	public float Lithologic=5;//µØ±íÏÂ²ãËÙÂÊ
-	public float LAYVALUE;//ÂñÉîÖµ
-	public String ROCKGRADE;//Î§ÑÒ¼¶±ğ
+	public int CrossSectionType;//æ–­é¢ç±»å‹
+	public String CreateTime;//åˆ›è¡¨æ—¶é—´
+	//String Info;//å¤‡æ³¨
+	public Double FACEDK;//å¼€æŒ–é¢é‡Œç¨‹å€¼
+	public String FACEDESCRIPTION;//æ–½å·¥å·¥åº
+	public Double TEMPERATURE;//æ¸©åº¦å€¼
+	public String CrossSectionIDs;//æ–­é¢IDåºåˆ—
+	public  int  Width ;//æ–­é¢å®½åº¦
+	public  String SurveyPnts = null;//æµ‹ç‚¹ç¼–å·
+	public  String InbuiltTime = null;//åŸ‹è®¾æ—¶é—´
+	public String ChainagePrefix;//é‡Œç¨‹å‰ç¼€
+	public String DBU0;//åœ°è¡¨U0å€¼
+	public String DBU0Description;//æ‹±é¡¶æé™å¤‡æ³¨
+	public float Lithologic=5;//åœ°è¡¨ä¸‹å±‚é€Ÿç‡
+	public float LAYVALUE;//åŸ‹æ·±å€¼
+	public String ROCKGRADE;//å›´å²©çº§åˆ«
 	
 }

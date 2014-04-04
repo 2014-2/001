@@ -36,7 +36,7 @@ import android.widget.TextView;
 
 public class StationActivity extends Activity {
 	/**
-	 * ÏÔÊ¾ÓÃ»§ÃûºÍÑ¡ÖĞ×´Ì¬
+	 * æ˜¾ç¤ºç”¨æˆ·åå’Œé€‰ä¸­çŠ¶æ€
 	 */
 	private ListView listview;
 	private Intent intent;
@@ -57,14 +57,14 @@ public class StationActivity extends Activity {
 		CurApp = ((CRTBTunnelMonitor)getApplicationContext());
 		init();
 		getadapter();
-		/** ³¤°´ */
+		/** é•¿æŒ‰ */
 		listview.setOnItemLongClickListener(new OnItemLongClickListener() {
 
 			@Override
 			public boolean onItemLongClick(AdapterView<?> parent, View view,
 					int position, long id) {
 				iListPos = position;
-				// ÊµÀı»¯¶Ô»°
+				// å®ä¾‹åŒ–å¯¹è¯
 				new AlertDialog.Builder(StationActivity.this)
 						.setItems(/* items */Constant.ControlPointsItems,
 								new DialogInterface.OnClickListener() {
@@ -74,20 +74,20 @@ public class StationActivity extends Activity {
 											int which) {
 										iConnectType = which;
 										switch (which) {
-										case 0: // À¶ÑÀÁ¬½Ó
+										case 0: // è“ç‰™è¿æ¥
 											diagolyes();
 											break;
-										case 1:// ´®¿ÚÁ¬½Ó
+										case 1:// ä¸²å£è¿æ¥
 											diagolyes();
 											break;
-										case 2:// ¶Ï¿ªÁ¬½Ó
+										case 2:// æ–­å¼€è¿æ¥
 											diagolduanyes();
 										default:
 											break;
 										}
 									}
 								}).setCancelable(false).show()
-						.setCanceledOnTouchOutside(true);// ÏÔÊ¾¶Ô»°¿ò
+						.setCanceledOnTouchOutside(true);// æ˜¾ç¤ºå¯¹è¯æ¡†
 				return true;
 			}
 		});
@@ -194,7 +194,7 @@ public class StationActivity extends Activity {
 		return true;
 	}
 
-	/** Á¬½ÓÈ«Õ¾ÒÇÊ§°Ü */
+	/** è¿æ¥å…¨ç«™ä»ªå¤±è´¥ */
 	private void diagolno() {
 		AlertDialog dlg = new AlertDialog.Builder(StationActivity.this)
 				.create();
@@ -202,10 +202,10 @@ public class StationActivity extends Activity {
 		Window window = dlg.getWindow();
 		window.setContentView(R.layout.connectdialog);
 		TextView text = (TextView) window.findViewById(R.id.connertexr);
-		text.setText("Á¬½Ó" + list.get(iListPos).getName() + "È«Õ¾ÒÇ³É¹¦");
+		text.setText("è¿æ¥" + list.get(iListPos).getName() + "å…¨ç«™ä»ªæˆåŠŸ");
 	}
 
-	/** Á¬½ÓÈ«Õ¾ÒÇ³É¹¦ */
+	/** è¿æ¥å…¨ç«™ä»ªæˆåŠŸ */
 	private void diagolyes() {
 
 		bConnect = Connect();
@@ -218,15 +218,15 @@ public class StationActivity extends Activity {
 		TextView text = (TextView) window.findViewById(R.id.connertexryes);
 		String sTmp;
 		if (bConnect) {
-			sTmp = "³É¹¦";
+			sTmp = "æˆåŠŸ";
 		}
 		else {
-			sTmp = "Ê§°Ü";
+			sTmp = "å¤±è´¥";
 		}
-		text.setText("Á¬½Ó" + list.get(iListPos).getName() + "È«Õ¾ÒÇ"+sTmp);
+		text.setText("è¿æ¥" + list.get(iListPos).getName() + "å…¨ç«™ä»ª"+sTmp);
 	}
 
-	/** ¶Ï¿ªÈ«Õ¾ÒÇ³É¹¦ */
+	/** æ–­å¼€å…¨ç«™ä»ªæˆåŠŸ */
 	private void diagolduanyes() {
 		DisConnect();
 		AlertDialog dlg = new AlertDialog.Builder(StationActivity.this)
@@ -235,7 +235,7 @@ public class StationActivity extends Activity {
 		Window window = dlg.getWindow();
 		window.setContentView(R.layout.connectyesdialog);
 		TextView text = (TextView) window.findViewById(R.id.connertexryes);
-		text.setText("¶Ï¿ªÁ¬½Ó" + list.get(iListPos).getName() + "È«Õ¾ÒÇ³É¹¦");
+		text.setText("æ–­å¼€è¿æ¥" + list.get(iListPos).getName() + "å…¨ç«™ä»ªæˆåŠŸ");
 	}
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data)

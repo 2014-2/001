@@ -2,9 +2,9 @@
 package com.sxlc.common;
 
 /**
- * ³£Á¿¶¨Òå
+ * å¸¸é‡å®šä¹‰
  * 
- * @author ÎÄ¾ı
+ * @author æ–‡å›
  * @since JDK1.6
  * @version 1.0
  *
@@ -14,47 +14,47 @@ public class Constant {
 	/**
 	 * 
 	 */
-	/*DTMSDBÊı¾İ¿â°æ±¾ĞÅÏ¢*/
+	/*DTMSDBæ•°æ®åº“ç‰ˆæœ¬ä¿¡æ¯*/
 	public static final int DB_VERSION_DTMSDB = 1;
-	/*DTMSDBÊı¾İ¿âÃû³Æ*/
+	/*DTMSDBæ•°æ®åº“åç§°*/
 	public static final String DB_NAME_DTMSDB = "DTMSDB";
-	/*µÇÂ¼Ñ¡ÔñnameºÍvalue*/
+	/*ç™»å½•é€‰æ‹©nameå’Œvalue*/
 	public static final String Select_LoginName_Name = "name";
 	public static final int Select_LoginValue_Local = 1;
 	public static final int Select_LoginValue_Server = 2;
 	
-	/*¹¤×÷ÃæĞĞµã»÷²Ëµ¥Ïî*/
-	public static final CharSequence WorkRowClickItems[] = { "´ò¿ª", "±à¼­", "µ¼³ö", "É¾³ı" };
-	public static final CharSequence SectionRowClickItems[] = {"±à¼­","É¾³ı" };
-	public static final CharSequence RecordRowClickItems[] = {"±à¼­","É¾³ı" };
-	/**È«Õ¾ÒÇ¹ÜÀí²Ëµ¥Ïî*/
+	/*å·¥ä½œé¢è¡Œç‚¹å‡»èœå•é¡¹*/
+	public static final CharSequence WorkRowClickItems[] = { "æ‰“å¼€", "ç¼–è¾‘", "å¯¼å‡º", "åˆ é™¤" };
+	public static final CharSequence SectionRowClickItems[] = {"ç¼–è¾‘","åˆ é™¤" };
+	public static final CharSequence RecordRowClickItems[] = {"ç¼–è¾‘","åˆ é™¤" };
+	/**å…¨ç«™ä»ªç®¡ç†èœå•é¡¹*/
 	public static final CharSequence TotalStationItems[] = { "Leica", "Trimble", "LeicaTPS",
 		"Topcon","Pentax","Sokkia",
 		"Nikon","South","South302",
 		"KTS","SanDing","RuiDe",
 		"Foif","GeMax","Kovan"};
-	public static final CharSequence TotalStationNameItems[] = { "áâ¿¨", "Ìì±¦", "áâ¿¨TPS",
-		"ÍØÆÕ¿µ","±öµÃ","Ë÷¼Ñ",
-		"Äá¿µ","ÄÏ·½","ÄÏ·½302",
-		"¿ÆÁ¦´ï","Èı¶¦","ÈğµÃ",
-		"ËÕÒ»¹â","ÖĞÎ³","¿ÆÎ¬"};
+	public static final CharSequence TotalStationNameItems[] = { "å¾•å¡", "å¤©å®", "å¾•å¡TPS",
+		"æ‹“æ™®åº·","å®¾å¾—","ç´¢ä½³",
+		"å°¼åº·","å—æ–¹","å—æ–¹302",
+		"ç§‘åŠ›è¾¾","ä¸‰é¼","ç‘å¾—",
+		"è‹ä¸€å…‰","ä¸­çº¬","ç§‘ç»´"};
 	public enum TotalStationType
 	{
-		Leica("áâ¿¨"),	
-		Trimble("Ìì±¦"),
-		LeicaTPS("áâ¿¨TPS"),
-		Topcon("ÍØÆÕ¿µ"),
-		Pentax("±öµÃ"),
-		Sokkia("Ë÷¼Ñ"),
-		Nikon("Äá¿µ"),
-		South("ÄÏ·½"),
-		South302("ÄÏ·½302"),
-		KTS("¿ÆÁ¦´ï"),
-		SanDing("Èı¶¦"),
-		RuiDe("ÈğµÃ"),
-		Foif("ËÕÒ»¹â"),
-		GeMax("ÖĞÎ³"),
-		Kovan("¿ÆÎ¬");
+		Leica("å¾•å¡"),	
+		Trimble("å¤©å®"),
+		LeicaTPS("å¾•å¡TPS"),
+		Topcon("æ‹“æ™®åº·"),
+		Pentax("å®¾å¾—"),
+		Sokkia("ç´¢ä½³"),
+		Nikon("å°¼åº·"),
+		South("å—æ–¹"),
+		South302("å—æ–¹302"),
+		KTS("ç§‘åŠ›è¾¾"),
+		SanDing("ä¸‰é¼"),
+		RuiDe("ç‘å¾—"),
+		Foif("è‹ä¸€å…‰"),
+		GeMax("ä¸­çº¬"),
+		Kovan("ç§‘ç»´");
 		private final String desc; 
 
         private TotalStationType(String desc) { 
@@ -65,8 +65,8 @@ public class Constant {
                 return desc; 
         }	
     }
-	public static final CharSequence ControlPointsItems[] = { "À¶ÑÀÁ¬½Ó", "´®¿ÚÁ¬½Ó", "¶Ï¿ªÁ¬½Ó"};
-	/*¹¤×÷ÃæĞĞµã»÷²Ëµ¥ÏîÑ¡ÔñnameºÍvalue*/
+	public static final CharSequence ControlPointsItems[] = { "è“ç‰™è¿æ¥", "ä¸²å£è¿æ¥", "æ–­å¼€è¿æ¥"};
+	/*å·¥ä½œé¢è¡Œç‚¹å‡»èœå•é¡¹é€‰æ‹©nameå’Œvalue*/
 	public static final String Select_WorkRowClickItemsName_Name = "name";
 	public static final String Select_SectionRowClickItemsName_Name = "name";
 	public static final String Select_RecordRowClickItemsName_Name = "name";
@@ -75,18 +75,18 @@ public class Constant {
 	public static final String Select_TotalStationRowClickItemsName_Data = "data";
 	public static final String Select_ControlPointsRowClickItemsName_Name = "name";
 	public static final String Select_ControlPointsRowClickItemsName_Data = "data";
-	public static final String Select_WorkRowClickItemsValue_Open = "Êı¾İ¿âÃû³Æ";
-	public static final String Select_WorkRowClickItemsValue_Edit = "±à¼­";
+	public static final String Select_WorkRowClickItemsValue_Open = "æ•°æ®åº“åç§°";
+	public static final String Select_WorkRowClickItemsValue_Edit = "ç¼–è¾‘";
 	
 
-	//ÃüÃû¿Õ¼ä
+	//å‘½åç©ºé—´
 	public static final String NameSpace="webservice.riskcontrol.com";
-	//ÓÃ»§ÑéÖ¤
+	//ç”¨æˆ·éªŒè¯
 	public static final String UserSelect = "http://61.237.239.144/fxkz/basedown";
-	//ÉÏ´«
+	//ä¸Šä¼ 
 	public static final String Update = "http://61.237.239.144/fxkz/testdata";
 	
-	//²âÊÔÓÃ
+	//æµ‹è¯•ç”¨
 	public static final String testUsername = "cl19h1";
 	public static final String testPassword = "123";
 	public static final String testPhysical= "04:4b:ff:07:de:23";

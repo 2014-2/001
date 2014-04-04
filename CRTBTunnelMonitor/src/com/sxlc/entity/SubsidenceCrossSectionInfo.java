@@ -4,28 +4,28 @@ import java.sql.Timestamp;
 
 
 /**
- * µØ±íÏÂ³Á¶ÏÃæ
- *´´½¨Ê±¼ä£º2014-3-24ÉÏÎç11:50:00
- *@author ÕÅÓÑ
+ * åœ°è¡¨ä¸‹æ²‰æ–­é¢
+ *åˆ›å»ºæ—¶é—´ï¼š2014-3-24ä¸Šåˆ11:50:00
+ *@author å¼ å‹
  *@since JDK1.6
  *@version 1.0
  */
 public class SubsidenceCrossSectionInfo {
-	private String ChainageName;		//¶ÏÃæÃû³Æ
-	private int id;				//¼ÇÂ¼id
-	private Double Chainage;	//¶ÏÃæÀú³ÌÖµ
-	private Timestamp InbuiltTime;		//ÂñÉèÊ±¼ä
-	private int Width;					//¿í¶È
-	private String SurveyPnts;			//²âµã±àºÅ
-	private String Info;				//±¸×¢
-	private String ChainagePrefix;		//Àú³ÌÇ°×º
-	private float DBU0;					//µØ±íuoÖµ
-	private Timestamp DBU0Time;			//ÏŞ²îĞŞ¸ÄÊ±¼ä
-	private String DBU0Description;		//¹°¶¥¼«ÏŞ±¸×¢
-	private float DBLimitVelocity;		//µØ±íÏÂ³ÁËÙÂÊ
-	private String Lithologic;			//ÑÒĞÔ
-	private float Layvalue;				//ÂñÉîÖµ
-	private String Rockgrade;			//Î§ÑÒ¼¶±ğ
+	private String ChainageName;		//æ–­é¢åç§°
+	private int id;				//è®°å½•id
+	private Double Chainage;	//æ–­é¢å†ç¨‹å€¼
+	private Timestamp InbuiltTime;		//åŸ‹è®¾æ—¶é—´
+	private int Width;					//å®½åº¦
+	private String SurveyPnts;			//æµ‹ç‚¹ç¼–å·
+	private String Info;				//å¤‡æ³¨
+	private String ChainagePrefix;		//å†ç¨‹å‰ç¼€
+	private float DBU0;					//åœ°è¡¨uoå€¼
+	private Timestamp DBU0Time;			//é™å·®ä¿®æ”¹æ—¶é—´
+	private String DBU0Description;		//æ‹±é¡¶æé™å¤‡æ³¨
+	private float DBLimitVelocity;		//åœ°è¡¨ä¸‹æ²‰é€Ÿç‡
+	private String Lithologic;			//å²©æ€§
+	private float Layvalue;				//åŸ‹æ·±å€¼
+	private String Rockgrade;			//å›´å²©çº§åˆ«
 	private boolean bUse;
 	
 	public boolean isbUse() {

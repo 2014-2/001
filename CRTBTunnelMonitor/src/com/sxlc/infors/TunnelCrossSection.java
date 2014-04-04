@@ -5,19 +5,19 @@ import java.util.List;
 import android.R.integer;
 
 /*
- *ËíµÀÄÚ¶ÏÃæ»ù´¡ĞÅÏ¢Àà
+ *éš§é“å†…æ–­é¢åŸºç¡€ä¿¡æ¯ç±»
  */
 public class TunnelCrossSection {
 	  public int Id ;
-	public String ExcavateMethod;// Ê©¹¤·½·¨
+	public String ExcavateMethod;// æ–½å·¥æ–¹æ³•
 	   public String Chainage ;
-	    //ÂñÉèÊ±¼ä
+	    //åŸ‹è®¾æ—¶é—´
 	    public String InBuiltTime ;
 	    public String SurveyPntNames ;
 	    public double Width ;
-	    public int ConstructionType;//¶ÏÃæÀàĞÍ±àºÅ1ÎªSubsidenceCrossSectionIndex±í  2£¬ÎªTunnelCrossSectionIndex±í
+	    public int ConstructionType;//æ–­é¢ç±»å‹ç¼–å·1ä¸ºSubsidenceCrossSectionIndexè¡¨  2ï¼Œä¸ºTunnelCrossSectionIndexè¡¨
 	    public String Info;
-	    // ĞÂ¼ÓµÄÊôĞÔ
+	    // æ–°åŠ çš„å±æ€§
 	    public String Lithologic ;
 	    public float LAYVALUE ;
 	    public String ROCKGRADE ;

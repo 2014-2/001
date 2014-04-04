@@ -46,81 +46,81 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 /**
- * ĞÂ½¨¹¤×÷ÃæºÍ±à¼­¹¤×÷½çÃæ
+ * æ–°å»ºå·¥ä½œé¢å’Œç¼–è¾‘å·¥ä½œç•Œé¢
  * 
- * @author ´úÊÀÃ÷ ´´½¨Ê±¼ä: 2014-3-16 ÉÏÎç9:48:03
+ * @author ä»£ä¸–æ˜ åˆ›å»ºæ—¶é—´: 2014-3-16 ä¸Šåˆ9:48:03
  * @version 1.0
  * @since JDK 1.6
  * 
  */
 public class WorkNewActivity extends Activity implements OnClickListener {
-	/** Ò³¿¨ÄÚÈİ */
+	/** é¡µå¡å†…å®¹ */
 	private ViewPager mPager;
-	/** TabÒ³ÃæÁĞ±í */
+	/** Tabé¡µé¢åˆ—è¡¨ */
 	private List<View> listViews;
-	/** ¶¯»­Í¼Æ¬ */
+	/** åŠ¨ç”»å›¾ç‰‡ */
 	private ImageView cursor;
-	/** Ò³¿¨Í·±ê */
+	/** é¡µå¡å¤´æ ‡ */
 	private TextView t1, t2;
-	/** ¶¯»­Í¼Æ¬Æ«ÒÆÁ¿ */
+	/** åŠ¨ç”»å›¾ç‰‡åç§»é‡ */
 	private int offset = 0;
-	/** µ±Ç°Ò³¿¨±àºÅ */
+	/** å½“å‰é¡µå¡ç¼–å· */
 	private int currIndex = 0;
-	/** ¶¯»­Í¼Æ¬¿í¶È */
+	/** åŠ¨ç”»å›¾ç‰‡å®½åº¦ */
 	private int bmpW;
-	/** ÊÓÍ¼ */
+	/** è§†å›¾ */
 	private View View3;
-	/** »ñÈ¡µ±Ç°Ê±¼ä°´Å¥ */
-	/** ĞÂ½¨¹¤×÷ÃæĞÅÏ¢ */
+	/** è·å–å½“å‰æ—¶é—´æŒ‰é’® */
+	/** æ–°å»ºå·¥ä½œé¢ä¿¡æ¯ */
 	private ImageView img_calendar;
-	/** ¹¤×÷Ãæ */
+	/** å·¥ä½œé¢ */
 	private EditText work_new_et_name;
-	/** ÉèÖÃÊ±¼ä */
+	/** è®¾ç½®æ—¶é—´ */
 	private EditText work_new_et_calendar;
-	/** Ê©¹¤µ¥Î» */
+	/** æ–½å·¥å•ä½ */
 	private EditText work_new_et_unit;
-	/** Ç°×º */
+	/** å‰ç¼€ */
 	private EditText work_new_et_prefix;
-	/** ÆğÊ¼Àï³Ì */
+	/** èµ·å§‹é‡Œç¨‹ */
 	private EditText work_new_et_start;
-	/** ÖÕÖ¹Àï³Ì */
+	/** ç»ˆæ­¢é‡Œç¨‹ */
 	private EditText work_new_et_end;
-	// ãĞÖµ
-	/** ±äĞÎËÙÂÊ¼«ÏŞÖµ */
+	// é˜ˆå€¼
+	/** å˜å½¢é€Ÿç‡æé™å€¼ */
 	private EditText work_new_gongding1;
-	/** ÀÛ¼Æ±äĞÎ¼«ÏŞÖµ */
+	/** ç´¯è®¡å˜å½¢æé™å€¼ */
 	private EditText work_new_gongding2;
-	/** ÉèÖÃÊ±¼ä */
+	/** è®¾ç½®æ—¶é—´ */
 	private EditText work_new_gongding3;
-	/** ±¸×¢ */
+	/** å¤‡æ³¨ */
 	private EditText work_new_gongding4;
 	//
-	/** ±äĞÎËÙÂÊ¼«ÏŞÖµ */
+	/** å˜å½¢é€Ÿç‡æé™å€¼ */
 	private EditText work_new_zhoubian1;
-	/** ÀÛ¼Æ±äĞÎ¼«ÏŞÖµ */
+	/** ç´¯è®¡å˜å½¢æé™å€¼ */
 	private EditText work_new_zhoubian2;
-	/** ÉèÖÃÊ±¼ä */
+	/** è®¾ç½®æ—¶é—´ */
 	private EditText work_new_zhoubian3;
-	/** ±¸×¢ */
+	/** å¤‡æ³¨ */
 	private EditText work_new_zhoubian4;
 	//
-	/** ±äĞÎËÙÂÊ¼«ÏŞÖµ */
+	/** å˜å½¢é€Ÿç‡æé™å€¼ */
 	private EditText work_new_dibiao1;
-	/** ÀÛ¼Æ±äĞÎ¼«ÏŞÖµ */
+	/** ç´¯è®¡å˜å½¢æé™å€¼ */
 	private EditText work_new_dibiao2;
-	/** ÉèÖÃÊ±¼ä */
+	/** è®¾ç½®æ—¶é—´ */
 	private EditText work_new_dibiao3;
-	/** ±¸×¢ */
+	/** å¤‡æ³¨ */
 	private EditText work_new_dibiao4;
 
-	/** µ±Ç°±êÌâ */
+	/** å½“å‰æ ‡é¢˜ */
 	private TextView work_new_tv_header;
-	/** È·¶¨°´Å¥ */
+	/** ç¡®å®šæŒ‰é’® */
 	private Button work_btn_queding;
-	/** È¡Ïû°´Å¥ */
+	/** å–æ¶ˆæŒ‰é’® */
 	private Button work_btn_quxiao;
 
-	// »ñÈ¡´«À´µÄÖµ
+	// è·å–ä¼ æ¥çš„å€¼
 	private String workName = null;
 	private WorkInfos editWork = null;
 	//
@@ -130,7 +130,7 @@ public class WorkNewActivity extends Activity implements OnClickListener {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_work_new);
-		// »ñÈ¡´Ó¹¤×÷½çÃæ´«À´µÄÖµ
+		// è·å–ä»å·¥ä½œç•Œé¢ä¼ æ¥çš„å€¼
 		workName = getIntent().getExtras().getString(Constant.Select_WorkRowClickItemsName_Name);
 		if(workName.length() > 0)
 		{
@@ -153,7 +153,7 @@ public class WorkNewActivity extends Activity implements OnClickListener {
 
 	}
 
-	/** ³õÊ¼»¯ViewPager */
+	/** åˆå§‹åŒ–ViewPager */
 	private void InitViewPager() {
 		mPager = (ViewPager) findViewById(R.id.vPager);
 		listViews = new ArrayList<View>();
@@ -166,7 +166,7 @@ public class WorkNewActivity extends Activity implements OnClickListener {
 
 	}
 
-	/** ³õÊ¼»¯ */
+	/** åˆå§‹åŒ– */
 	private void initView() {
 		t1 = (TextView) findViewById(R.id.text1);
 		t2 = (TextView) findViewById(R.id.text2);
@@ -174,7 +174,7 @@ public class WorkNewActivity extends Activity implements OnClickListener {
 		work_new_tv_header = (TextView) findViewById(R.id.work_new_tv_header);
 		work_btn_quxiao = (Button) findViewById(R.id.work_btn_quxiao);
 
-		// µã»÷ÊÂ¼ş
+		// ç‚¹å‡»äº‹ä»¶
 		t1.setOnClickListener(new MyOnClickListener(0));
 		t2.setOnClickListener(new MyOnClickListener(1));
 		work_btn_queding.setOnClickListener(this);
@@ -182,24 +182,24 @@ public class WorkNewActivity extends Activity implements OnClickListener {
 
 	}
 
-	// µã»÷ÊÂ¼ş
+	// ç‚¹å‡»äº‹ä»¶
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.work_btn_quxiao:
 			Intent IntentCancel = new Intent();
 			setResult(RESULT_CANCELED, IntentCancel);
-			this.finish();// ¹Ø±Õµ±Ç°½çÃæ
+			this.finish();// å…³é—­å½“å‰ç•Œé¢
 			break;
-		case R.id.work_btn_queding: // Êı¾İ¿â
+		case R.id.work_btn_queding: // æ•°æ®åº“
 			if(work_new_et_start.getText().toString().trim().length() <= 0)
 			{
-				Toast.makeText(WorkNewActivity.this, "ÇëÊäÈëÍêÕûĞÅÏ¢", 3000).show();
+				Toast.makeText(WorkNewActivity.this, "è¯·è¾“å…¥å®Œæ•´ä¿¡æ¯", 3000).show();
 				return;
 			}
 			if(work_new_et_end.getText().toString().trim().length() <= 0)
 			{
-				Toast.makeText(WorkNewActivity.this, "ÇëÊäÈëÍêÕûĞÅÏ¢", 3000).show();
+				Toast.makeText(WorkNewActivity.this, "è¯·è¾“å…¥å®Œæ•´ä¿¡æ¯", 3000).show();
 				return;
 			}
 
@@ -221,13 +221,13 @@ public class WorkNewActivity extends Activity implements OnClickListener {
 			CRTBTunnelMonitor CurApp = ((CRTBTunnelMonitor)getApplicationContext());
 			if(!CurApp.IsValidWork(w))
 			{
-				Toast.makeText(WorkNewActivity.this, "ÇëÊäÈëÍêÕûĞÅÏ¢", 3000).show();
+				Toast.makeText(WorkNewActivity.this, "è¯·è¾“å…¥å®Œæ•´ä¿¡æ¯", 3000).show();
 				return;
 			}
 			List<WorkInfos> infos = CurApp.GetWorkList();
 			if(infos == null)
 			{
-				Toast.makeText(WorkNewActivity.this, "Ìí¼ÓÊ§°Ü", 3000).show();
+				Toast.makeText(WorkNewActivity.this, "æ·»åŠ å¤±è´¥", 3000).show();
 			}
 			else
 			{
@@ -244,7 +244,7 @@ public class WorkNewActivity extends Activity implements OnClickListener {
 				{
 					if(editWork == null)
 					{
-						Toast.makeText(WorkNewActivity.this, "ÒÑ´æÔÚ", 3000).show();
+						Toast.makeText(WorkNewActivity.this, "å·²å­˜åœ¨", 3000).show();
 					}
 					else
 					{
@@ -252,7 +252,7 @@ public class WorkNewActivity extends Activity implements OnClickListener {
 						WorkDaoImpl d = new WorkDaoImpl(WorkNewActivity.this, w.getProjectName());
 						d.UpdateWork(w);
 						CurApp.UpdateWork(w);
-						Toast.makeText(WorkNewActivity.this, "±à¼­³É¹¦", 3000).show();
+						Toast.makeText(WorkNewActivity.this, "ç¼–è¾‘æˆåŠŸ", 3000).show();
 					}
 				}
 				else
@@ -262,11 +262,11 @@ public class WorkNewActivity extends Activity implements OnClickListener {
 						infos.add(w);
 						WorkDaoImpl d = new WorkDaoImpl(WorkNewActivity.this, w.getProjectName());
 						d.InsertWork(w);
-						Toast.makeText(WorkNewActivity.this, "Ìí¼Ó³É¹¦", 3000).show();
+						Toast.makeText(WorkNewActivity.this, "æ·»åŠ æˆåŠŸ", 3000).show();
 					}
 					else
 					{
-						Toast.makeText(WorkNewActivity.this, "Ìí¼ÓÊ§°Ü", 3000).show();
+						Toast.makeText(WorkNewActivity.this, "æ·»åŠ å¤±è´¥", 3000).show();
 					}
 				}
 			}
@@ -280,23 +280,23 @@ public class WorkNewActivity extends Activity implements OnClickListener {
 
 	}
 
-	/** »¬¶¯Ğ§¹û */
+	/** æ»‘åŠ¨æ•ˆæœ */
 	private void InitImageView() {
 		cursor = (ImageView) findViewById(R.id.cursor);
 		bmpW = BitmapFactory.decodeResource(getResources(), R.drawable.heng)
-				.getWidth();// »ñÈ¡Í¼Æ¬¿í¶È
+				.getWidth();// è·å–å›¾ç‰‡å®½åº¦
 		DisplayMetrics dm = new DisplayMetrics();
 		getWindowManager().getDefaultDisplay().getMetrics(dm);
-		int screenW = dm.widthPixels;// »ñÈ¡·Ö±æÂÊ¿í¶È
-		offset = (screenW / 2 - bmpW) / 2;// ¼ÆËãÆ«ÒÆÁ¿
+		int screenW = dm.widthPixels;// è·å–åˆ†è¾¨ç‡å®½åº¦
+		offset = (screenW / 2 - bmpW) / 2;// è®¡ç®—åç§»é‡
 		Matrix matrix = new Matrix();
 		matrix.postTranslate(offset, 0);
-		cursor.setImageMatrix(matrix);// ÉèÖÃ¶¯»­³õÊ¼Î»ÖÃ
+		cursor.setImageMatrix(matrix);// è®¾ç½®åŠ¨ç”»åˆå§‹ä½ç½®
 
 	}
 
 	/**
-	 * ViewPagerÊÊÅäÆ÷
+	 * ViewPageré€‚é…å™¨
 	 */
 	public class MyPagerAdapter extends PagerAdapter {
 		public List<View> mListViews;
@@ -323,7 +323,7 @@ public class WorkNewActivity extends Activity implements OnClickListener {
 		public Object instantiateItem(View arg0, int arg1) {
 			((ViewPager) arg0).addView(mListViews.get(arg1));
 
-			// ³õÊ¼»¯
+			// åˆå§‹åŒ–
 			img_calendar = (ImageView) findViewById(R.id.img_calendar);
 			work_new_et_calendar = (EditText) findViewById(R.id.work_new_et_calendar);
 			img_calendar = (ImageView) findViewById(R.id.img_calendar);
@@ -367,17 +367,17 @@ public class WorkNewActivity extends Activity implements OnClickListener {
 			work_new_et_prefix.setFilters(new InputFilter[]{new InputFilter.LengthFilter(20)});
 			work_new_et_start.setFilters(new InputFilter[]{new InputFilter.LengthFilter(10)});
 			work_new_et_end.setFilters(new InputFilter[]{new InputFilter.LengthFilter(10)});
-			// »ñÈ¡ÊÖ»úµÄµ±Ç°Ê±¼ä
+			// è·å–æ‰‹æœºçš„å½“å‰æ—¶é—´
 			final String time = Time.getDateEN();
 			if (arg1 == 0) {
-				// ÉèÖÃÎÄ±¾¿òÀïÃæµÄ×ÖÌå´óĞ¡
+				// è®¾ç½®æ–‡æœ¬æ¡†é‡Œé¢çš„å­—ä½“å¤§å°
 				work_new_et_calendar.setTextSize(11);
 				
-				// ÅĞ¶Ï´«¹ıÀ´µÄÊÇ²»ÊÇ±à¼­£¬ÉèÖÃÎÄ±¾¿òµÄÊÇ·ñ¿ÉÓÃ
+				// åˆ¤æ–­ä¼ è¿‡æ¥çš„æ˜¯ä¸æ˜¯ç¼–è¾‘ï¼Œè®¾ç½®æ–‡æœ¬æ¡†çš„æ˜¯å¦å¯ç”¨
 				if(editWork != null) {
-					// ¸ü¸Ä±êÌâ
-					work_new_tv_header.setText("±à¼­¹¤×÷Ãæ");
-					// ÉèÖÃÎÄ±¾¿ò²»¿É¸ü¸Ä
+					// æ›´æ”¹æ ‡é¢˜
+					work_new_tv_header.setText("ç¼–è¾‘å·¥ä½œé¢");
+					// è®¾ç½®æ–‡æœ¬æ¡†ä¸å¯æ›´æ”¹
 					work_new_et_name.setFocusableInTouchMode(false);
 					work_new_et_calendar.setFocusableInTouchMode(false);
 					work_new_et_prefix.setFocusableInTouchMode(false);
@@ -393,14 +393,14 @@ public class WorkNewActivity extends Activity implements OnClickListener {
 
 				}
 				else {
-					// ¸ú¸ÄÎÄ±¾¿ò¸³ÖµÊ±¼ä
+					// è·Ÿæ”¹æ–‡æœ¬æ¡†èµ‹å€¼æ—¶é—´
 					work_new_et_calendar.setText(time);
 				}
 			}
 			else
 			if (arg1 == 1) {
-				// ÉèÖÃÎÄ±¾¿òµÄ±¯¾çÎª»ÒÉ«
-				// ĞÂ½¨ÊÇãĞÖµÀïÃæµÄÇ°Èı¸öÎÄ±¾¿ò²»ÄÜ¸ü¸Ä
+				// è®¾ç½®æ–‡æœ¬æ¡†çš„æ‚²å‰§ä¸ºç°è‰²
+				// æ–°å»ºæ˜¯é˜ˆå€¼é‡Œé¢çš„å‰ä¸‰ä¸ªæ–‡æœ¬æ¡†ä¸èƒ½æ›´æ”¹
 				work_new_gongding1.setFocusableInTouchMode(false);
 				work_new_gongding2.setFocusableInTouchMode(false);
 				work_new_gongding3.setFocusableInTouchMode(false);
@@ -447,7 +447,7 @@ public class WorkNewActivity extends Activity implements OnClickListener {
 	}
 
 	/**
-	 * Í·±êµã»÷¼àÌı
+	 * å¤´æ ‡ç‚¹å‡»ç›‘å¬
 	 */
 	public class MyOnClickListener implements View.OnClickListener {
 		private int index = 0;
@@ -463,12 +463,12 @@ public class WorkNewActivity extends Activity implements OnClickListener {
 	};
 
 	/**
-	 * Ò³¿¨ÇĞ»»¼àÌı
+	 * é¡µå¡åˆ‡æ¢ç›‘å¬
 	 */
 	public class MyOnPageChangeListener implements OnPageChangeListener {
 
-		int one = offset * 2 + bmpW;// Ò³¿¨1 -> Ò³¿¨2 Æ«ÒÆÁ¿
-		int two = one * 2; // Ò³¿¨1 -> Ò³¿¨3 Æ«ÒÆÁ¿
+		int one = offset * 2 + bmpW;// é¡µå¡1 -> é¡µå¡2 åç§»é‡
+		int two = one * 2; // é¡µå¡1 -> é¡µå¡3 åç§»é‡
 
 		@Override
 		public void onPageSelected(int arg0) {
@@ -491,7 +491,7 @@ public class WorkNewActivity extends Activity implements OnClickListener {
 
 			}
 			currIndex = arg0;
-			animation.setFillAfter(true);// True:Í¼Æ¬Í£ÔÚ¶¯»­½áÊøÎ»ÖÃ
+			animation.setFillAfter(true);// True:å›¾ç‰‡åœåœ¨åŠ¨ç”»ç»“æŸä½ç½®
 			animation.setDuration(300);
 			cursor.startAnimation(animation);
 		}

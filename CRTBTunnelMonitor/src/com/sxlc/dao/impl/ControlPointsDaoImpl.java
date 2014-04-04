@@ -12,9 +12,9 @@ import com.sxlc.db.SqliteHelperDTMS;
 import com.sxlc.entity.ControlPointsInfo;
 import com.sxlc.entity.TotalStationInfo;
 /**
- * ¿ØÖÆµãÊı¾İ¿â½Ó¿ÚÊµÏÖ
- *´´½¨Ê±¼ä£º2014-3-24ÏÂÎç13:50:00
- *@author ÕÅÓÑ
+ * æ§åˆ¶ç‚¹æ•°æ®åº“æ¥å£å®ç°
+ *åˆ›å»ºæ—¶é—´ï¼š2014-3-24ä¸‹åˆ13:50:00
+ *@author å¼ å‹
  *@since JDK1.6
  *@version 1.0
  */
@@ -27,7 +27,7 @@ public class ControlPointsDaoImpl implements ControlPointsDao{
 	}
 	
 	@Override
-	//²éÑ¯ËùÓĞ¿ØÖÆµã
+	//æŸ¥è¯¢æ‰€æœ‰æ§åˆ¶ç‚¹
 	public List<ControlPointsInfo> GetAllStation() {
 		List<ControlPointsInfo> list = null;
 		ControlPointsInfo entity = null;
@@ -64,7 +64,7 @@ public class ControlPointsDaoImpl implements ControlPointsDao{
 	}
 
 	@Override
-	//Ìí¼Ó¿ØÖÆµã
+	//æ·»åŠ æ§åˆ¶ç‚¹
 	public boolean InsertStationInfo(ControlPointsInfo s) {
 		boolean result = false;
 		if(s == null){
@@ -90,7 +90,7 @@ public class ControlPointsDaoImpl implements ControlPointsDao{
 	}
 
 	@Override
-	//¸üĞÂ¿ØÖÆµã
+	//æ›´æ–°æ§åˆ¶ç‚¹
 	public boolean UpdateStationInfo(ControlPointsInfo s) {
 		boolean result = false;
 		if(s == null){
@@ -117,7 +117,7 @@ public class ControlPointsDaoImpl implements ControlPointsDao{
 	}
 
 	@Override
-	// »ñÈ¡µ¥¸ö¿ØÖÆµã
+	// è·å–å•ä¸ªæ§åˆ¶ç‚¹
 	public ControlPointsInfo GetControlPoints(int id) {
 		ControlPointsInfo entity = null;
 		String sql = "select * from ControlPointsIndex where id=" + Integer.toString(id);
@@ -150,7 +150,7 @@ public class ControlPointsDaoImpl implements ControlPointsDao{
 	}
 
 	@Override
-	//É¾³ı¿ØÖÆµã
+	//åˆ é™¤æ§åˆ¶ç‚¹
 	public boolean DeleteStationInfo(int id) {
 		boolean result = false;
 		String sql = "delete from ControlPointsIndex where id = ?";

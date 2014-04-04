@@ -5,25 +5,25 @@ import java.util.List;
 import com.sxlc.entity.SubsidenceTotalDataInfo;
 
 /**
- * ¶ÏÃæ²âÁ¿¼ÇÂ¼µ¥Êı¾İ¿â½Ó¿Ú
- *´´½¨Ê±¼ä£º2014-3-24ÏÂÎç13:50:00
- *@author ÕÅÓÑ
+ * æ–­é¢æµ‹é‡è®°å½•å•æ•°æ®åº“æ¥å£
+ *åˆ›å»ºæ—¶é—´ï¼š2014-3-24ä¸‹åˆ13:50:00
+ *@author å¼ å‹
  *@since JDK1.6
  *@version 1.0
  */
 public interface SubsidenceTotalDataDao {
-	/*Ìõ¼ş²éÑ¯¼ÇÂ¼µ¥*/
+	/*æ¡ä»¶æŸ¥è¯¢è®°å½•å•*/
 	public List<SubsidenceTotalDataInfo> GetAllSubsidenceTotalData(int stationId,int sectionId,int rawsheetId,int type);
 	
-	/* Ìí¼Ó²âÁ¿¼ÇÂ¼µ¥ */
+	/* æ·»åŠ æµ‹é‡è®°å½•å• */
 	public Boolean InsertSubsidenceTotalData(SubsidenceTotalDataInfo s);
 	
-	/*ĞŞ¸Ä²âÁ¿¼ÇÂ¼µ¥*/
+	/*ä¿®æ”¹æµ‹é‡è®°å½•å•*/
 	public Boolean UpdateSubsidenceTotalData(SubsidenceTotalDataInfo s);
 	
-	/* É¾³ı²âÁ¿¼ÇÂ¼µ¥ */
+	/* åˆ é™¤æµ‹é‡è®°å½•å• */
 	public Boolean DeleteSubsidenceTotalData(int id,int level,int type);
 	
-	/* ¸ù¾İid»ñÈ¡µ¥Ìõ²âÁ¿¼ÇÂ¼ */
+	/* æ ¹æ®idè·å–å•æ¡æµ‹é‡è®°å½• */
 	public SubsidenceTotalDataInfo GetSubsidenceTotalData(int id,int type);
 }

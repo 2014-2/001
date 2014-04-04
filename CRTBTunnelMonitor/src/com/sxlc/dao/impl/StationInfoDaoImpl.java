@@ -7,9 +7,9 @@ import com.sxlc.dao.StationInfoDao;
 import com.sxlc.db.SqliteHelperDTMS;
 
 /**
- * ÉèÕ¾ĞÅÏ¢Êı¾İ¿â½Ó¿ÚÊµÏÖ
- *´´½¨Ê±¼ä£º2014-3-24ÏÂÎç13:50:00
- *@author ÕÅÓÑ
+ * è®¾ç«™ä¿¡æ¯æ•°æ®åº“æ¥å£å®ç°
+ *åˆ›å»ºæ—¶é—´ï¼š2014-3-24ä¸‹åˆ13:50:00
+ *@author å¼ å‹
  *@since JDK1.6
  *@version 1.0
  */
@@ -22,7 +22,7 @@ public class StationInfoDaoImpl implements StationInfoDao{
 		db = helper.getReadableDatabase();
 	}
 //	
-//	//²é¿´ËùÓĞÉèÕ¾ĞÅÏ¢
+//	//æŸ¥çœ‹æ‰€æœ‰è®¾ç«™ä¿¡æ¯
 //	public List<StationInfo> GetAllStation() {
 //		List<StationInfo> list = null;
 //		String sql = "select * from StationInfoIndex";
@@ -59,7 +59,7 @@ public class StationInfoDaoImpl implements StationInfoDao{
 //	}
 //
 //	@Override
-//	// Ìí¼ÓÉèÕ¾ĞÅÏ¢
+//	// æ·»åŠ è®¾ç«™ä¿¡æ¯
 //	public boolean InsertStationInfo(StationInfo s) {
 //		boolean result = false;
 //		if(s == null){
@@ -87,7 +87,7 @@ public class StationInfoDaoImpl implements StationInfoDao{
 //	}
 //
 //	@Override
-//	//¸üĞÂÉèÕ¾ĞÅÏ¢
+//	//æ›´æ–°è®¾ç«™ä¿¡æ¯
 //	public boolean UpdateStationInfo(StationInfo s) {
 //		boolean result = false;
 //		if(s == null){
@@ -116,7 +116,7 @@ public class StationInfoDaoImpl implements StationInfoDao{
 //	}
 //
 //	@Override
-//	//É¾³ıÉèÕ¾ĞÅÏ¢
+//	//åˆ é™¤è®¾ç«™ä¿¡æ¯
 //	public boolean DeleteStationInfo(int id) {
 //		boolean result = false;
 //		String sql = "delete from StationInfoIndex where id=?";

@@ -12,9 +12,9 @@ import com.sxlc.db.SqliteHelperDTMS;
 import com.sxlc.entity.TunnelCrossSectionExInfo;
 
 /**
- * ¶ÏÃæ²âÁ¿Êı¾İ¿â½Ó¿ÚÊµÏÖ
- *´´½¨Ê±¼ä£º2014-3-24ÏÂÎç13:50:00
- *@author ÕÅÓÑ
+ * æ–­é¢æµ‹é‡æ•°æ®åº“æ¥å£å®ç°
+ *åˆ›å»ºæ—¶é—´ï¼š2014-3-24ä¸‹åˆ13:50:00
+ *@author å¼ å‹
  *@since JDK1.6
  *@version 1.0
  */
@@ -28,7 +28,7 @@ public class TunnelCrossSectionExDaoImpl implements TunnelCrossSectionExDao{
 		db = helper.getReadableDatabase();
 	}
 	
-	//²éÑ¯ËùÓĞ²âÁ¿Êı¾İ
+	//æŸ¥è¯¢æ‰€æœ‰æµ‹é‡æ•°æ®
 	public List<TunnelCrossSectionExInfo> GetAllTunnelCrossSection() {
 		List<TunnelCrossSectionExInfo> list = null;
 		String sql = "select * from TunnelCrossSectionExIndex";
@@ -84,7 +84,7 @@ public class TunnelCrossSectionExDaoImpl implements TunnelCrossSectionExDao{
 		return list;
 	}
 
-	//Ìí¼Ó²âÁ¿Êı¾İ
+	//æ·»åŠ æµ‹é‡æ•°æ®
 	public Boolean InsertTunnelCrossSection(TunnelCrossSectionExInfo t) {
 		boolean result = false;
 		if(t== null){
@@ -122,7 +122,7 @@ public class TunnelCrossSectionExDaoImpl implements TunnelCrossSectionExDao{
 		return result;
 	}
 	
-	//ĞŞ¸Ä²âÁ¿ĞÅÏ¢
+	//ä¿®æ”¹æµ‹é‡ä¿¡æ¯
 	public Boolean UpdateTunnelCrossSection(TunnelCrossSectionExInfo t) {
 		boolean result = false;
 		if(t== null){
@@ -162,7 +162,7 @@ public class TunnelCrossSectionExDaoImpl implements TunnelCrossSectionExDao{
 	}
 
 	@Override
-	//É¾³ı²âÁ¿ĞÅÏ¢
+	//åˆ é™¤æµ‹é‡ä¿¡æ¯
 	public Boolean DeleteTunnelCrossSection(int id) {
 		boolean result = false;
 		String sql = "delete from TunnelCrossSectionExIndex where id = ?";
@@ -181,7 +181,7 @@ public class TunnelCrossSectionExDaoImpl implements TunnelCrossSectionExDao{
 	}
 
 	@Override
-	//²é¿´²âÁ¿ĞÅÏ¢
+	//æŸ¥çœ‹æµ‹é‡ä¿¡æ¯
 	public TunnelCrossSectionExInfo GetTunnelCrossSectionExInfo(int id) {
 		TunnelCrossSectionExInfo entity = null;
 		String sql = "select * from DeleteTunnelCrossSection where id=" + Integer.toString(id);

@@ -1,15 +1,15 @@
 package com.sxlc.infors;
-//µØ±íÏÂ³Á¶ÏÃæ»ù´¡ĞÅÏ¢Àà
+//åœ°è¡¨ä¸‹æ²‰æ–­é¢åŸºç¡€ä¿¡æ¯ç±»
 public class SubsidenceCrossSection {
 	  public String Chainage;
-	    //ÂñÉèÊ±¼ä
+	    //åŸ‹è®¾æ—¶é—´
 	    public String InBuiltTime ;
 
 	    public double Width ;
 
 	    public String SurveyPntNames ;
 
-	    //Ê©¹¤·½·¨
+	    //æ–½å·¥æ–¹æ³•
 	    public int SurveyPointsNumnber;
 	    public String Info ;
 

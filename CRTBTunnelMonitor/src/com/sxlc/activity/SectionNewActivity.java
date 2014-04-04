@@ -43,31 +43,31 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 /**
- * ĞÂ½¨¶ÏÃæ
+ * æ–°å»ºæ–­é¢
  * 
- * @author ´úÊÀÃ÷ ´´½¨Ê±¼ä: 2014-3-16 ÏÂÎç4:49:04
+ * @author ä»£ä¸–æ˜ åˆ›å»ºæ—¶é—´: 2014-3-16 ä¸‹åˆ4:49:04
  * @version 1.0
  * @since JDK 1.6
  * 
  */
 public class SectionNewActivity extends Activity implements OnClickListener {
-	private ViewPager mPager;// Ò³¿¨ÄÚÈİ
+	private ViewPager mPager;// é¡µå¡å†…å®¹
 
-	private List<View> listViews; // TabÒ³ÃæÁĞ±í
+	private List<View> listViews; // Tabé¡µé¢åˆ—è¡¨
 
-	private ImageView cursor;// ¶¯»­Í¼Æ¬
+	private ImageView cursor;// åŠ¨ç”»å›¾ç‰‡
 
-	private TextView t1, t2;// Ò³¿¨Í·±ê
+	private TextView t1, t2;// é¡µå¡å¤´æ ‡
 
-	private int offset = 0;// ¶¯»­Í¼Æ¬Æ«ÒÆÁ¿
+	private int offset = 0;// åŠ¨ç”»å›¾ç‰‡åç§»é‡
 
-	private int currIndex = 0;// µ±Ç°Ò³¿¨±àºÅ
+	private int currIndex = 0;// å½“å‰é¡µå¡ç¼–å·
 
-	private int bmpW;// ¶¯»­Í¼Æ¬¿í¶È
+	private int bmpW;// åŠ¨ç”»å›¾ç‰‡å®½åº¦
 
 	/***/
 	private int num;
-	// ¿Ø¼şÃû
+	// æ§ä»¶å
 	/***/
 	private TextView section_new_tv_header;
 	private EditText section_new_et_Chainage;
@@ -94,9 +94,9 @@ public class SectionNewActivity extends Activity implements OnClickListener {
 	
 	private ImageView img_fangfa;
 	private EditText et_a;
-	/** È·¶¨°´Å¥ */
+	/** ç¡®å®šæŒ‰é’® */
 	private Button section_btn_queding;
-	/** È¡Ïû°´Å¥ */
+	/** å–æ¶ˆæŒ‰é’® */
 	private Button section_btn_quxiao;
 	private String sChainage = null;
 	private TunnelCrossSectionInfo Edittsci = null;
@@ -114,7 +114,7 @@ public class SectionNewActivity extends Activity implements OnClickListener {
 		InitMyTextView();
 
 		if (sChainage.length() > 0) {
-			section_new_tv_header.setText("±à¼­ËíµÀÄÚ¶ÏÃæ");
+			section_new_tv_header.setText("ç¼–è¾‘éš§é“å†…æ–­é¢");
 			CRTBTunnelMonitor CurApp = ((CRTBTunnelMonitor)getApplicationContext());
 			WorkInfos Curw = CurApp.GetCurWork();
 			List<TunnelCrossSectionInfo> infos = Curw.GetTunnelCrossSectionInfoList();
@@ -148,7 +148,7 @@ public class SectionNewActivity extends Activity implements OnClickListener {
 		mPager.setOnPageChangeListener(new MyOnPageChangeListener());
 	}
 
-	// ³õÊ¼»¯Í·±ê
+	// åˆå§‹åŒ–å¤´æ ‡
 	private void InitTextView() {
 		t1 = (TextView) findViewById(R.id.text1);
 		t2 = (TextView) findViewById(R.id.text2);
@@ -163,7 +163,7 @@ public class SectionNewActivity extends Activity implements OnClickListener {
 		section_btn_quxiao.setOnClickListener(this);
 		
 	}
-	// µã»÷ÊÂ¼ş
+	// ç‚¹å‡»äº‹ä»¶
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
@@ -171,17 +171,17 @@ public class SectionNewActivity extends Activity implements OnClickListener {
 			Intent IntentCancel = new Intent();
 			IntentCancel.putExtra(Constant.Select_SectionRowClickItemsName_Name,1);
 			setResult(RESULT_CANCELED, IntentCancel);
-			this.finish();// ¹Ø±Õµ±Ç°½çÃæ
+			this.finish();// å…³é—­å½“å‰ç•Œé¢
 			break;
-		case R.id.work_btn_queding: // Êı¾İ¿â
+		case R.id.work_btn_queding: // æ•°æ®åº“
 			if(section_new_et_Chainage.getText().toString().trim().length() <= 0)
 			{
-				Toast.makeText(this, "ÇëÊäÈëÍêÕûĞÅÏ¢", 3000).show();
+				Toast.makeText(this, "è¯·è¾“å…¥å®Œæ•´ä¿¡æ¯", 3000).show();
 				return;
 			}
 			if(section_new_et_width.getText().toString().trim().length() <= 0)
 			{
-				Toast.makeText(this, "ÇëÊäÈëÍêÕûĞÅÏ¢", 3000).show();
+				Toast.makeText(this, "è¯·è¾“å…¥å®Œæ•´ä¿¡æ¯", 3000).show();
 				return;
 			}
 
@@ -239,21 +239,21 @@ public class SectionNewActivity extends Activity implements OnClickListener {
 			ts.setChainageName(section_new_et_name.getText().toString().trim());
 			if(!CurApp.IsValidTunnelCrossSectionInfo(ts))
 			{
-				Toast.makeText(this, "ÇëÊäÈëÍêÕûĞÅÏ¢", 3000).show();
+				Toast.makeText(this, "è¯·è¾“å…¥å®Œæ•´ä¿¡æ¯", 3000).show();
 				return;
 			}
 			if ((ts.getChainage().doubleValue() < Curw.getStartChainage().doubleValue()) ||
 					(ts.getChainage().doubleValue() > Curw.getEndChainage().doubleValue())){
 				String sStart = CurApp.GetSectionName(Curw.getStartChainage().doubleValue());
 				String sEnd = CurApp.GetSectionName(Curw.getEndChainage().doubleValue());
-				String sMsg = "ÇëÊäÈëÀï³ÌÎª"+sStart+"µ½"+sEnd+"Ö®¼äµÄÀï³Ì";
+				String sMsg = "è¯·è¾“å…¥é‡Œç¨‹ä¸º"+sStart+"åˆ°"+sEnd+"ä¹‹é—´çš„é‡Œç¨‹";
 				Toast.makeText(this, sMsg, 3000).show();
 				return;
 			}
 			List<TunnelCrossSectionInfo> infos = Curw.GetTunnelCrossSectionInfoList();
 			if(infos == null)
 			{
-				Toast.makeText(this, "Ìí¼ÓÊ§°Ü", 3000).show();
+				Toast.makeText(this, "æ·»åŠ å¤±è´¥", 3000).show();
 			}
 			else
 			{
@@ -271,7 +271,7 @@ public class SectionNewActivity extends Activity implements OnClickListener {
 				{
 					if(Edittsci == null)
 					{
-						Toast.makeText(this, "ÒÑ´æÔÚ", 3000).show();
+						Toast.makeText(this, "å·²å­˜åœ¨", 3000).show();
 						return;
 					}
 					else
@@ -280,7 +280,7 @@ public class SectionNewActivity extends Activity implements OnClickListener {
 						impl.UpdateSection(ts);
 						Curw.UpdateTunnelCrossSectionInfo(ts);
 						CurApp.UpdateWork(Curw);
-						Toast.makeText(this, "±à¼­³É¹¦", 3000).show();
+						Toast.makeText(this, "ç¼–è¾‘æˆåŠŸ", 3000).show();
 					}
 				}
 				else
@@ -290,11 +290,11 @@ public class SectionNewActivity extends Activity implements OnClickListener {
 					{
 						infos.add(ts);
 						CurApp.UpdateWork(Curw);
-						Toast.makeText(this, "Ìí¼Ó³É¹¦", 3000).show();
+						Toast.makeText(this, "æ·»åŠ æˆåŠŸ", 3000).show();
 					}
 					else
 					{
-						Toast.makeText(this, "Ìí¼ÓÊ§°Ü", 3000).show();
+						Toast.makeText(this, "æ·»åŠ å¤±è´¥", 3000).show();
 					}
 				}
 			}
@@ -313,19 +313,19 @@ public class SectionNewActivity extends Activity implements OnClickListener {
 
 		cursor = (ImageView) findViewById(R.id.cursor);
 		bmpW = BitmapFactory.decodeResource(getResources(), R.drawable.heng)
-				.getWidth();// »ñÈ¡Í¼Æ¬¿í¶È
+				.getWidth();// è·å–å›¾ç‰‡å®½åº¦
 		DisplayMetrics dm = new DisplayMetrics();
 		getWindowManager().getDefaultDisplay().getMetrics(dm);
-		int screenW = dm.widthPixels;// »ñÈ¡·Ö±æÂÊ¿í¶È
-		offset = (screenW / 3 - bmpW) / 2;// ¼ÆËãÆ«ÒÆÁ¿
+		int screenW = dm.widthPixels;// è·å–åˆ†è¾¨ç‡å®½åº¦
+		offset = (screenW / 3 - bmpW) / 2;// è®¡ç®—åç§»é‡
 		Matrix matrix = new Matrix();
 		matrix.postTranslate(offset, 0);
-		cursor.setImageMatrix(matrix);// ÉèÖÃ¶¯»­³õÊ¼Î»ÖÃ
+		cursor.setImageMatrix(matrix);// è®¾ç½®åŠ¨ç”»åˆå§‹ä½ç½®
 
 	}
 
 	/**
-	 * ViewPagerÊÊÅäÆ÷
+	 * ViewPageré€‚é…å™¨
 	 */
 	public class MyPagerAdapter extends PagerAdapter {
 		public List<View> mListViews;
@@ -398,18 +398,18 @@ public class SectionNewActivity extends Activity implements OnClickListener {
 				}
 			});
 			List<String> testList = new ArrayList<String>();
-			testList.add("Ì¨½×·¨");
-			testList.add("È«¶ÏÃæ·¨");
-			testList.add("Ë«²à±Úµ¼¿Ó·¨");
+			testList.add("å°é˜¶æ³•");
+			testList.add("å…¨æ–­é¢æ³•");
+			testList.add("åŒä¾§å£å¯¼å‘æ³•");
 			section_new_sp = (Spinner) findViewById(R.id.section_new_sp);
 			ArrayAdapter<String> adapter = new ArrayAdapter<String>(
 					SectionNewActivity.this,
 					android.R.layout.simple_spinner_item, testList);
 			adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 			if (arg1 == 0) {
-				// »ñÈ¡ÊÖ»úµÄµ±Ç°Ê±¼ä
+				// è·å–æ‰‹æœºçš„å½“å‰æ—¶é—´
 				final String time = Time.getDateEN();
-				// ÉèÖÃÎÄ±¾¿òÀïÃæµÄ×ÖÌå´óĞ¡
+				// è®¾ç½®æ–‡æœ¬æ¡†é‡Œé¢çš„å­—ä½“å¤§å°
 				section_new_et_calendar.setTextSize(11);
 				if (Edittsci != null) {
 					section_new_et_Chainage.setFocusable(false);
@@ -424,7 +424,7 @@ public class SectionNewActivity extends Activity implements OnClickListener {
 				}
 				else
 				{
-					// ¸ú¸ÄÎÄ±¾¿ò¸³ÖµÊ±¼ä
+					// è·Ÿæ”¹æ–‡æœ¬æ¡†èµ‹å€¼æ—¶é—´
 					section_new_et_calendar.setText(time);
 				}
 			}
@@ -523,7 +523,7 @@ public class SectionNewActivity extends Activity implements OnClickListener {
 	}
 
 	/**
-	 * Í·±êµã»÷¼àÌı
+	 * å¤´æ ‡ç‚¹å‡»ç›‘å¬
 	 */
 	public class MyOnClickListener implements View.OnClickListener {
 		private int index = 0;
@@ -539,12 +539,12 @@ public class SectionNewActivity extends Activity implements OnClickListener {
 	};
 
 	/**
-	 * Ò³¿¨ÇĞ»»¼àÌı
+	 * é¡µå¡åˆ‡æ¢ç›‘å¬
 	 */
 	public class MyOnPageChangeListener implements OnPageChangeListener {
 
-		int one = offset * 2 + bmpW;// Ò³¿¨1 -> Ò³¿¨2 Æ«ÒÆÁ¿
-		int two = one * 2;// Ò³¿¨1 -> Ò³¿¨3 Æ«ÒÆÁ¿
+		int one = offset * 2 + bmpW;// é¡µå¡1 -> é¡µå¡2 åç§»é‡
+		int two = one * 2;// é¡µå¡1 -> é¡µå¡3 åç§»é‡
 
 		@Override
 		public void onPageSelected(int arg0) {
@@ -573,7 +573,7 @@ public class SectionNewActivity extends Activity implements OnClickListener {
 				break;
 			}
 			currIndex = arg0;
-			animation.setFillAfter(true);// True:Í¼Æ¬Í£ÔÚ¶¯»­½áÊøÎ»ÖÃ
+			animation.setFillAfter(true);// True:å›¾ç‰‡åœåœ¨åŠ¨ç”»ç»“æŸä½ç½®
 			animation.setDuration(300);
 			cursor.startAnimation(animation);
 		}

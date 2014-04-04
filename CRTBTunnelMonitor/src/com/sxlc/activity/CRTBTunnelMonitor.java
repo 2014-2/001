@@ -20,9 +20,9 @@ import com.sxlc.entity.TunnelCrossSectionInfo;
 import com.sxlc.entity.WorkInfos;
 
 /**
- * ¹«¹²±äÁ¿/È«¾Ö±äÁ¿¶¨Òå
+ * å…¬å…±å˜é‡/å…¨å±€å˜é‡å®šä¹‰
  * 
- * @author ÎÄ¾ı
+ * @author æ–‡å›
  * @since JDK1.6
  * @version 1.0
  *
@@ -32,12 +32,12 @@ public class CRTBTunnelMonitor extends Application {
 	 * 
 	 */
 	private DTMSDBDaoImpl dtmsdb = null;
-	private List<WorkInfos> WorkList = null;//¹¤×÷ÃæÁĞ±í
-	private WorkInfos CurWork = null;//µ±Ç°¹¤×÷Ãæ
-	private Object CurTotalStation = null;//ÕıÔÚÊ¹ÓÃµÄÈ«Õ¾ÒÇ
+	private List<WorkInfos> WorkList = null;//å·¥ä½œé¢åˆ—è¡¨
+	private WorkInfos CurWork = null;//å½“å‰å·¥ä½œé¢
+	private Object CurTotalStation = null;//æ­£åœ¨ä½¿ç”¨çš„å…¨ç«™ä»ª
 	
-	private String verify;//13Î»Ëæ»úÂë
-	private String publickey;//¼ÓÃÜ¹«Ô¿
+	private String verify;//13ä½éšæœºç 
+	private String publickey;//åŠ å¯†å…¬é’¥
 	private List<SurveyerInformation> personList = null;
 	private SurveyerInformation CurPerson = null;
 

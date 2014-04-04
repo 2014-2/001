@@ -12,9 +12,9 @@ import com.sxlc.dao.AlertDao;
 import com.sxlc.db.SqliteHelperDTMS;
 import com.sxlc.entity.AlertInfo;
 /**
- * Ô¤¾¯ÄÚÈİÊı¾İ¿â½Ó¿ÚÊµÏÖ
- *´´½¨Ê±¼ä£º2014-3-24ÏÂÎç13:50:00
- *@author ÕÅÓÑ
+ * é¢„è­¦å†…å®¹æ•°æ®åº“æ¥å£å®ç°
+ *åˆ›å»ºæ—¶é—´ï¼š2014-3-24ä¸‹åˆ13:50:00
+ *@author å¼ å‹
  *@since JDK1.6
  *@version 1.0
  */
@@ -27,7 +27,7 @@ public class AlertDaoImpl implements AlertDao{
 		db = helper.getReadableDatabase();
 
 	}
-	/**²éÑ¯È«²¿*/
+	/**æŸ¥è¯¢å…¨éƒ¨*/
 	public List<AlertInfo> SelectAllAlert() {
 		List<AlertInfo> list = null;
 		String sql = "select * from AlertList";
@@ -71,7 +71,7 @@ public class AlertDaoImpl implements AlertDao{
 		return list;
 	}
 
-	/**ĞÂ½¨Ô¤¾¯*/
+	/**æ–°å»ºé¢„è­¦*/
 	public Boolean InsertAlert(AlertInfo s) {
 		boolean result = false;
 		if(s == null){
@@ -101,7 +101,7 @@ public class AlertDaoImpl implements AlertDao{
 		return result;
 	}
 
-	/**²éÑ¯Ô¤¾¯*/
+	/**æŸ¥è¯¢é¢„è­¦*/
 	public AlertInfo SelectAlert(int id) {
 		AlertInfo entity = null;
 		String sql = "select * from AlertList where id = " + Integer.toString(id);
@@ -142,7 +142,7 @@ public class AlertDaoImpl implements AlertDao{
 		return null;
 	}
 
-	/**É¾³ıÔ¤¾¯*/
+	/**åˆ é™¤é¢„è­¦*/
 	public Boolean DeleteAlert(int id) {
 		boolean result = false;
 		String sql = "delete from AlertList where id=?";
@@ -158,7 +158,7 @@ public class AlertDaoImpl implements AlertDao{
 		return result;
 	}
 
-	/**±à¼­Ô¤¾¯*/
+	/**ç¼–è¾‘é¢„è­¦*/
 	public Boolean UpdateAlert(AlertInfo s) {
 		boolean result = false;
 		if(s==null){

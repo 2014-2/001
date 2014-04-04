@@ -5,21 +5,21 @@ import java.util.List;
 import com.sxlc.entity.AlertInfo;
 
 /**
- * Ô¤¾¯ÄÚÈİÊı¾İ¿â½Ó¿Ú
- *´´½¨Ê±¼ä£º2014-3-24ÏÂÎç13:50:00
- *@author ÕÅÓÑ
+ * é¢„è­¦å†…å®¹æ•°æ®åº“æ¥å£
+ *åˆ›å»ºæ—¶é—´ï¼š2014-3-24ä¸‹åˆ13:50:00
+ *@author å¼ å‹
  *@since JDK1.6
  *@version 1.0
  */
 public interface AlertDao {
-	/**²éÑ¯È«²¿*/
+	/**æŸ¥è¯¢å…¨éƒ¨*/
 	public List<AlertInfo> SelectAllAlert();
-	/**ĞÂ½¨Ô¤¾¯*/
+	/**æ–°å»ºé¢„è­¦*/
 	public Boolean InsertAlert(AlertInfo s);
-	/**²éÑ¯Ô¤¾¯*/
+	/**æŸ¥è¯¢é¢„è­¦*/
 	public AlertInfo SelectAlert(int id);
-	/**É¾³ıÔ¤¾¯*/
+	/**åˆ é™¤é¢„è­¦*/
 	public Boolean DeleteAlert(int id);
-	/**±à¼­Ô¤¾¯*/
+	/**ç¼–è¾‘é¢„è­¦*/
 	public Boolean UpdateAlert(AlertInfo s);
 }

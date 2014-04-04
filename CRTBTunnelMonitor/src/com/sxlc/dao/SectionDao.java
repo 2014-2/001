@@ -4,35 +4,35 @@ import java.util.List;
 
 import com.sxlc.entity.SectionInfo;
 /**
- * ¶ÏÃæ½Ó¿Ú
- *´´½¨Ê±¼ä£º2014-3-21ÏÂÎç9:53:52
- *@author ÕÅÌÎ
+ * æ–­é¢æ¥å£
+ *åˆ›å»ºæ—¶é—´ï¼š2014-3-21ä¸‹åˆ9:53:52
+ *@author å¼ æ¶›
  *@since JDK1.6
  *@version 1.0
  */
 public interface SectionDao {
 
-	/**²éÑ¯È«²¿*/
+	/**æŸ¥è¯¢å…¨éƒ¨*/
 	public List<SectionInfo> SectionAll();
-	/**ĞÂ½¨¼ÇÂ¼µ¥*/
+	/**æ–°å»ºè®°å½•å•*/
 	public Boolean InsertSection(SectionInfo s);
-	/**²éÑ¯¼ÇÂ¼µ¥*/
+	/**æŸ¥è¯¢è®°å½•å•*/
 	public SectionInfo SelectSection();
-	/**É¾³ı¼ÇÂ¼µ¥*/
+	/**åˆ é™¤è®°å½•å•*/
 	public void DeleteSection(Double d);
-	/**±à¼­¼ÇÂ¼µ¥*/
+	/**ç¼–è¾‘è®°å½•å•*/
 	public void UpdateSection(SectionInfo s);
 	
 	
-	/**²éÑ¯È«²¿*/
+	/**æŸ¥è¯¢å…¨éƒ¨*/
 	public List<SectionInfo> SectiondibiaoAll();
-	/**ĞÂ½¨¼ÇÂ¼µ¥*/
+	/**æ–°å»ºè®°å½•å•*/
 	public Boolean InsertSectiondibiao(SectionInfo s);
-	/**²éÑ¯¼ÇÂ¼µ¥*/
+	/**æŸ¥è¯¢è®°å½•å•*/
 	public SectionInfo SelectSectiondibiao(SectionInfo s);
-	/**É¾³ı¼ÇÂ¼µ¥*/
+	/**åˆ é™¤è®°å½•å•*/
 	public void DeleteSectiondibiao(Double d);
-	/**±à¼­¼ÇÂ¼µ¥*/
+	/**ç¼–è¾‘è®°å½•å•*/
 	public void UpdateSectiondibiao(SectionInfo s);
 	
 	

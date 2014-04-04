@@ -7,23 +7,23 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.RelativeLayout;
 /**
- * ·şÎñÆ÷
- *´´½¨Ê±¼ä£º2014-3-16ÉÏÎç10:38:01
- *@author ÕÅÌÎ
+ * æœåŠ¡å™¨
+ *åˆ›å»ºæ—¶é—´ï¼š2014-3-16ä¸Šåˆ10:38:01
+ *@author å¼ æ¶›
  *@since JDK1.6
  *@version 1.0
  */
 public class ServersActivity extends Activity implements OnClickListener{
 
-	/**ÒâÍ¼*/
+	/**æ„å›¾*/
 	private Intent intent;
-	/**²ÎÊıÉèÖÃ"*/
+	/**å‚æ•°è®¾ç½®"*/
 	private RelativeLayout rl_parameter;
-	/**Êı¾İÉÏ´«"*/
+	/**æ•°æ®ä¸Šä¼ "*/
 	private RelativeLayout rl_datauploading;
-	/**Ô¤¾¯ÉÏ´«"*/
+	/**é¢„è­¦ä¸Šä¼ "*/
 	private RelativeLayout rl_warninguploading;
-	/**ÏÂÔØ¹¤×÷Ãæ"*/
+	/**ä¸‹è½½å·¥ä½œé¢"*/
 	private RelativeLayout rl_downloadwork;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -31,7 +31,7 @@ public class ServersActivity extends Activity implements OnClickListener{
 	    setContentView(R.layout.activity_servers);
 	    initView();
 	}
-	/** ³õÊ¼»¯¿Ø¼ş */
+	/** åˆå§‹åŒ–æ§ä»¶ */
 	private void initView() {
 		rl_parameter = (RelativeLayout) findViewById(R.id.rl_parameter);
 		rl_datauploading = (RelativeLayout) findViewById(R.id.rl_datauploading);

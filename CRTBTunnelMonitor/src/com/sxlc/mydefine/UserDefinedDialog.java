@@ -17,30 +17,30 @@ import android.widget.Button;
 import android.widget.TextView;
 
 /**
- * ×Ô¶¨Òå¶Ô»°¿ò
- * @author   ´úÊÀÃ÷
- * ´´½¨Ê±¼ä  2013-12-7   ÏÂÎç1:58:09
+ * è‡ªå®šä¹‰å¯¹è¯æ¡†
+ * @author   ä»£ä¸–æ˜
+ * åˆ›å»ºæ—¶é—´  2013-12-7   ä¸‹åˆ1:58:09
  * @version  1.0
  * @since     JDK  1.6
  */
 public class UserDefinedDialog extends Dialog implements android.view.View.OnClickListener {
-	/**ÉÏÏÂÎÄ*/
+	/**ä¸Šä¸‹æ–‡*/
 	private Context ctx;
-	/**ĞÅÏ¢*/
+	/**ä¿¡æ¯*/
 	private String msg;
-	// °´Å¥
+	// æŒ‰é’®
 	private Button btnleft;
 	private Button btncenter;
 	private Button btnright;
-	/**ÅĞ¶Ï*/
+	/**åˆ¤æ–­*/
 	private boolean IsTwoButton = false;
-	/**È·¶¨°´Å¥*/
+	/**ç¡®å®šæŒ‰é’®*/
 	private View.OnClickListener okListener;
-	/**È¡Ïû°´Å¥*/
+	/**å–æ¶ˆæŒ‰é’®*/
 	private View.OnClickListener cancelListener;
-	/**¶Ô»°¿ò±êÌâ*/
+	/**å¯¹è¯æ¡†æ ‡é¢˜*/
 	private TextView tvtitle;
-	/**¶Ô»°¿òÄÚÈİ*/
+	/**å¯¹è¯æ¡†å†…å®¹*/
 	private TextView tvcontent;
 
 	public UserDefinedDialog(Context context, String message,View.OnClickListener onclicklistener,View.OnClickListener cancelListener) {
@@ -79,7 +79,7 @@ public class UserDefinedDialog extends Dialog implements android.view.View.OnCli
 			btnright.setVisibility(View.VISIBLE);
 			btncenter.setVisibility(View.GONE);
 		}
-		tvtitle.setText("ÌáÊ¾");
+		tvtitle.setText("æç¤º");
 		tvcontent.setText(msg);
 
 		WindowManager m = (WindowManager) ctx.getSystemService(Context.WINDOW_SERVICE);

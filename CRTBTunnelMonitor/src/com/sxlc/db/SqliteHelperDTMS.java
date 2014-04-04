@@ -7,20 +7,20 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class SqliteHelperDTMS extends SQLiteOpenHelper {
 
-	/** °æ±¾ºÅ */
+	/** ç‰ˆæœ¬å· */
 	private static final int VERSION = 1;
 
 	/**
-	 * ´ø²Î¹¹Ôì·½·¨
+	 * å¸¦å‚æ„é€ æ–¹æ³•
 	 * 
 	 * @param context
-	 *            ÉÏÏÂÎÄ
+	 *            ä¸Šä¸‹æ–‡
 	 * @param name
-	 *            Êı¾İ¿â
+	 *            æ•°æ®åº“
 	 * @param factory
-	 *            ¹¤³§
+	 *            å·¥å‚
 	 * @param version
-	 *            °æ±¾ºÅ
+	 *            ç‰ˆæœ¬å·
 	 */
 	public SqliteHelperDTMS(Context context, String name,
 			CursorFactory factory, int version) {
@@ -30,21 +30,21 @@ public class SqliteHelperDTMS extends SQLiteOpenHelper {
 	@Override
 	public void onCreate(SQLiteDatabase db) {
 
-		// ´´½¨ProjectIndex±í
+		// åˆ›å»ºProjectIndexè¡¨
 		db.execSQL("create table if not exists ProjectIndex(id INTEGER PRIMARY KEY AUTOINCREMENT ,ProjectName varchar(255),"
 				+ "CreateTime text,StartChainage double,EndChainage double,"
 				+ "LastOpenTime text,Info text, ChainagePrefix varchar(255),"
 				+ "GDLimitVelocity float,GDLimitTotalSettlement float,SLLimitVelocity float,"
 				+ "SLLimitTotalSettlement float,DBLimitVelocity float,DBLimitTotalSettlement float"
 				+ ",ConstructionFirm varchar(255),LimitedTotalSubsidenceTime text)");
-		//´´½¨ProjectManage±í
+		//åˆ›å»ºProjectManageè¡¨
 		String sql = "create table if not exists ProjectManage(Id INTEGER PRIMARY KEY AUTOINCREMENT ," +
 				"CurrentProject integer," +
 				"LastOpenProject integer," +
 				"Info text)";
 		db.execSQL(sql);
 		
-		//´´½¨ ProjectSettingIndex ±í
+		//åˆ›å»º ProjectSettingIndex è¡¨
 		sql = "create table if not exists ProjectSettingIndex(Id INTEGER PRIMARY KEY AUTOINCREMENT ," +
 				"ProjectName VARCHAR(255)," +
 				"ProjectID INTEGER," +
@@ -55,7 +55,7 @@ public class SqliteHelperDTMS extends SQLiteOpenHelper {
 				"Info TEXT)";
 		db.execSQL(sql);
 		
-		//´´½¨TotalStationSettingIndex±í
+		//åˆ›å»ºTotalStationSettingIndexè¡¨
 		sql = "create table if not exists TotalStationSettingIndex(Id INTEGER PRIMARY KEY AUTOINCREMENT ," +
 				"Name varchar(255)," +
 				"Port INTEGER," +
@@ -67,14 +67,14 @@ public class SqliteHelperDTMS extends SQLiteOpenHelper {
 				"Info TEXT)";
 		db.execSQL(sql);
 		
-		//´´½¨DTMSVersion±í
+		//åˆ›å»ºDTMSVersionè¡¨
 		sql = "create table if not exists DTMSVersion(Id INTEGER PRIMARY KEY AUTOINCREMENT ," +
 				"AppVer varchar(255)," +
 				"DBVer INTEGER," +
 				"Info TEXT)";
 		db.execSQL(sql);
 		
-		// ´´½¨TunnelCrossSectionIndex±í ËùÓĞËíµÀÄÚ¶ÏÃæ»ù´¡ĞÅÏ¢±í		
+		// åˆ›å»ºTunnelCrossSectionIndexè¡¨ æ‰€æœ‰éš§é“å†…æ–­é¢åŸºç¡€ä¿¡æ¯è¡¨		
 		db.execSQL("create table if not exists TunnelCrossSectionIndex(Id INTEGER PRIMARY KEY AUTOINCREMENT,Chainage double,"
 				+ "InbuiltTime text,Width float,ExcavateMethod integer,"
 				+ "SurveyPntName VARCHAR(255),Info text,ChainagePrefix varchar(255),"
@@ -89,7 +89,7 @@ public class SqliteHelperDTMS extends SQLiteOpenHelper {
 				+ "Lithologic varchar(255),"
 				+ "LAYVALUE FLOAT," + "ROCKGRADE varchar(255))");
 
-		// ´´½¨SubsidenceCrossSectionIndex±í ËùÓĞµØ±íÏÂ³Á¶ÏÃæ»ù´¡ĞÅÏ¢±í
+		// åˆ›å»ºSubsidenceCrossSectionIndexè¡¨ æ‰€æœ‰åœ°è¡¨ä¸‹æ²‰æ–­é¢åŸºç¡€ä¿¡æ¯è¡¨
 		sql = "create table if not exists SubsidenceCrossSectionIndex("
 				+ "Id INTEGER PRIMARY KEY AUTOINCREMENT,Chainage DOUBLE,InbuiltTime DateTime,"
 				+ "Width DOUBLE,SurveyPnts varchar(255),Info TEXT,"
@@ -98,7 +98,7 @@ public class SqliteHelperDTMS extends SQLiteOpenHelper {
 				+ "LAYVALUE FLOAT,ROCKGRADE VARCHAR(255))";
 		db.execSQL(sql);
 
-		// ´´½¨ TunnelCrossSectionExIndex±í Âú×ãÌú¿ÆÔºÉÏ´«½Ó¿ÚÒªÇóµÄ¶ÏÃæ»ù´¡ĞÅÏ¢±í
+		// åˆ›å»º TunnelCrossSectionExIndexè¡¨ æ»¡è¶³é“ç§‘é™¢ä¸Šä¼ æ¥å£è¦æ±‚çš„æ–­é¢åŸºç¡€ä¿¡æ¯è¡¨
 		db.execSQL("create table if not exists TunnelCrossSectionExIndex(Id INTEGER PRIMARY KEY AUTOINCREMENT"
 				+ ",ZONECODE  varchar(64),"
 				+ "SITECODE  varchar(64),"
@@ -118,7 +118,7 @@ public class SqliteHelperDTMS extends SQLiteOpenHelper {
 				+ "UPLOAD  INTEGER,"
 				+ "DESCRIPTION  TEXT)");
 
-		// ´´½¨RawSheetIndex±í ËíµÀÄÚ¶ÏÃæ¼ÇÂ¼µ¥ºÍµØ±íÏÂ³Á¼ÇÂ¼µ¥µÄË÷Òı
+		// åˆ›å»ºRawSheetIndexè¡¨ éš§é“å†…æ–­é¢è®°å½•å•å’Œåœ°è¡¨ä¸‹æ²‰è®°å½•å•çš„ç´¢å¼•
 		db.execSQL("create table if not exists RawSheetIndex(Id INTEGER PRIMARY KEY AUTOINCREMENT"
 				+ ",CrossSectionType  INTEGER,"
 				+ "CreateTime  DateTime,"
@@ -127,7 +127,7 @@ public class SqliteHelperDTMS extends SQLiteOpenHelper {
 				+ "FACEDESCRIPTION  TEXT,"
 				+ "TEMPERATURE  Double," + "CrossSectionIDs  TEXT)");
 
-		// ´´½¨SubsidenceTotalData±í µØ±íÏÂ³Á¶ÏÃæ¼ÇÂ¼µ¥µÄËùÓĞÊı¾İ
+		// åˆ›å»ºSubsidenceTotalDataè¡¨ åœ°è¡¨ä¸‹æ²‰æ–­é¢è®°å½•å•çš„æ‰€æœ‰æ•°æ®
 		db.execSQL("create table if not exists SubsidenceTotalData(id integer primary key AUTOINCREMENT,"
 				+ "StationId  INTEGER,"
 				+ "ChainageId  INTEGER,"
@@ -140,7 +140,7 @@ public class SqliteHelperDTMS extends SQLiteOpenHelper {
 				+ "DataStatus  INTEGER,"
 				+ "DataCorrection  FLOAT," + "Info  TEXT" + ")");
 
-		// ´´½¨ TunnelSettlementTotalData±í ËíµÀÄÚ¶ÏÃæ¼ÇÂ¼µ¥µÄËùÓĞÊı¾İ
+		// åˆ›å»º TunnelSettlementTotalDataè¡¨ éš§é“å†…æ–­é¢è®°å½•å•çš„æ‰€æœ‰æ•°æ®
 		db.execSQL("create table if not exists TunnelSettlementTotalData(id integer primary key AUTOINCREMENT,"
 				+ "StationId  INTEGER,"
 				+ "ChainageId  INTEGER,"
@@ -153,7 +153,7 @@ public class SqliteHelperDTMS extends SQLiteOpenHelper {
 				+ "DataStatus  INTEGER,"
 				+ "DataCorrection  FLOAT," + "Info  TEXT" + ")");
 		
-		//´´½¨SubsidenceRecord ±í
+		//åˆ›å»ºSubsidenceRecord è¡¨
 		sql = "create table if not exists SubsidenceRecord(Id integer primary key AUTOINCREMENT," +
 				"StationId INTEGER," +
 				"ChainageId INTEGER," +
@@ -167,7 +167,7 @@ public class SqliteHelperDTMS extends SQLiteOpenHelper {
 				"Info TEXT)";
 		db.execSQL(sql);
 		
-		//´´½¨TunnelCrossSectionRecord±í
+		//åˆ›å»ºTunnelCrossSectionRecordè¡¨
 		sql = "create table if not exists TunnelCrossSectionRecord(Id integer primary key AUTOINCREMENT," +
 				"StationId INTEGER," +
 				"ChainageId INTEGER," +
@@ -181,7 +181,7 @@ public class SqliteHelperDTMS extends SQLiteOpenHelper {
 				"Info TEXT)";
 		db.execSQL(sql);
 		
-		//´´½¨TotalStationIndex±í
+		//åˆ›å»ºTotalStationIndexè¡¨
 		sql = "create table if not exists TotalStationIndex(Id integer primary key AUTOINCREMENT," +
 				"Name varchar(255)," +
 				"TotalstationType TEXT," +
@@ -193,7 +193,7 @@ public class SqliteHelperDTMS extends SQLiteOpenHelper {
 				"Info TEXT)";
 		db.execSQL(sql);
 		
-		//´´½¨StationInfoIndex±í
+		//åˆ›å»ºStationInfoIndexè¡¨
 		sql = "create table if not exists StationInfoIndex(Id integer primary key AUTOINCREMENT," +
 				"StationPointIndex INTEGER," +
 				"StationHeight DOUBLE," +
@@ -203,7 +203,7 @@ public class SqliteHelperDTMS extends SQLiteOpenHelper {
 				"Info TEXT)";
 		db.execSQL(sql);
 		
-		//´´½¨ ControlPointsIndex ±í
+		//åˆ›å»º ControlPointsIndex è¡¨
 		sql = "create table if not exists ControlPointsIndex(Id integer primary key AUTOINCREMENT," +
 				"Name varchar(255)," +
 				"X double," +
@@ -212,14 +212,14 @@ public class SqliteHelperDTMS extends SQLiteOpenHelper {
 				"Info TEXT)";
 		db.execSQL(sql);
 		
-		//´´½¨ DTMSProjectVersion ±í
+		//åˆ›å»º DTMSProjectVersion è¡¨
 		sql = "create table if not exists DTMSProjectVersion(Id integer primary key AUTOINCREMENT," +
 				"AppVer varchar(255)," +
 				"DBVer INTEGER," +
 				"Info TEXT)";
 		db.execSQL(sql);
 		
-		//´´½¨ CrownSettlementArching ±í
+		//åˆ›å»º CrownSettlementArching è¡¨
 		sql = "create table if not exists CrownSettlementArching(Id integer primary key AUTOINCREMENT," +
 				"OriginalDataId INTEGER," +
 				"SheetId INTEGER," +
@@ -234,7 +234,7 @@ public class SqliteHelperDTMS extends SQLiteOpenHelper {
 				"Info TEXT)";
 		db.execSQL(sql);
 		
-		// ´´½¨ SubsidenceSettlementArching ±í
+		// åˆ›å»º SubsidenceSettlementArching è¡¨
 		sql = "create table if not exists SubsidenceSettlementArching(Id integer primary key AUTOINCREMENT," +
 				"OriginalDataId INTEGER," +
 				"SheetId INTEGER," +
@@ -249,7 +249,7 @@ public class SqliteHelperDTMS extends SQLiteOpenHelper {
 				"Info TEXT)";
 		db.execSQL(sql);
 		
-		//´´½¨ ConvergenceSettlementArching ±í
+		//åˆ›å»º ConvergenceSettlementArching è¡¨
 		sql = "create table if not exists ConvergenceSettlementArching(Id integer primary key AUTOINCREMENT," +
 				"OriginalDataId_One INTEGER," +
 				"OriginalDataId_Two INTEGER," +
@@ -266,7 +266,7 @@ public class SqliteHelperDTMS extends SQLiteOpenHelper {
 				"Info TEXT)";
 		db.execSQL(sql);
 		
-		//´´½¨ SurveyerInformation ±í
+		//åˆ›å»º SurveyerInformation è¡¨
 		sql = "create table if not exists SurveyerInformation(Id integer primary key AUTOINCREMENT," +
 				"SurveyerName varchar(100)," +
 				"CertificateID varchar(20)," +
@@ -275,23 +275,23 @@ public class SqliteHelperDTMS extends SQLiteOpenHelper {
 				"Info TEXT)";
 		db.execSQL(sql);
 		
-		//´´½¨RawSheetIndex_Index±í
+		//åˆ›å»ºRawSheetIndex_Indexè¡¨
 		sql = "create table if not exists RawSheetIndex_Index(Id integer primary key AUTOINCREMENT," +
 				"CrossSectionType INTEGER," +
 				"CreateTime DateTime)";
 		db.execSQL(sql);
 		
-		//´´½¨ TunnelCrossSectionIndex_Index ±í
+		//åˆ›å»º TunnelCrossSectionIndex_Index è¡¨
 		sql = "create table if not exists TunnelCrossSectionIndex_Index(Id integer primary key AUTOINCREMENT," +
 				"Chainage DOUBLE)";
 		db.execSQL(sql);
 		
-		//´´½¨SubsidenceCrossSectionIndex_Index±í
+		//åˆ›å»ºSubsidenceCrossSectionIndex_Indexè¡¨
 		sql = "create table if not exists SubsidenceCrossSectionIndex_Index(Id integer primary key AUTOINCREMENT," +
 		"Chainage DOUBLE)";
 		db.execSQL(sql);
 		
-		//´´½¨TunnelSettlementTotalData_Index±í
+		//åˆ›å»ºTunnelSettlementTotalData_Indexè¡¨
 		sql = "create table if not exists TunnelSettlementTotalData_Index(Id INTEGER primary key AUTOINCREMENT," +
 				"StationId INTEGER," +
 				"ChainageId INTEGER," +
@@ -299,36 +299,36 @@ public class SqliteHelperDTMS extends SQLiteOpenHelper {
 				"Coordinate TEXT)";
 		db.execSQL(sql);
 		
-		//´´½¨SubsidenceTotalData_Index±í
+		//åˆ›å»ºSubsidenceTotalData_Indexè¡¨
 		sql = "create table if not exists SubsidenceTotalData_Index(Id INTEGER primary key AUTOINCREMENT," +
 				"StationId INTEGER," +
 				"ChainageId INTEGER," +
 				"SheetId INTEGER)";
 		db.execSQL(sql);
 		
-		//´´½¨StationInfoIndex_Index±í
+		//åˆ›å»ºStationInfoIndex_Indexè¡¨
 		sql = "create table if not exists StationInfoIndex_Index(Id INTEGER primary key AUTOINCREMENT," +
 				"CreateTime DateTime)";
 		db.execSQL(sql);
 		
-		//´´½¨ ControlPointsIndex_Index±í
+		//åˆ›å»º ControlPointsIndex_Indexè¡¨
 		sql = "create table if not exists ControlPointsIndex_Index(Id INTEGER primary key AUTOINCREMENT," +
 				"Name varchar(255))";
 		db.execSQL(sql);
 		
-		//´´½¨ CrownSettlementArching_Index ±í
+		//åˆ›å»º CrownSettlementArching_Index è¡¨
 		sql = "create table if not exists CrownSettlementArching_Index(Id INTEGER primary key AUTOINCREMENT," +
 				"OriginalDataId INTEGER," +
 				"SheetId INTEGER)";
 		db.execSQL(sql);
 		
-		//´´½¨ SubsidenceSettlementArching_Index ±í
+		//åˆ›å»º SubsidenceSettlementArching_Index è¡¨
 		sql = "create table if not exists SubsidenceSettlementArching_Index(Id INTEGER primary key AUTOINCREMENT," +
 				"OriginalDataId INTEGER," +
 				"SheetId INTEGER)";
 		db.execSQL(sql);
 		
-		//´´½¨ ConvergenceSettlementArching_Index ±í
+		//åˆ›å»º ConvergenceSettlementArching_Index è¡¨
 		sql = "create table if not exists ConvergenceSettlementArching_Index(Id INTEGER primary key AUTOINCREMENT," +
 				"SheetId INTEGER," +
 				"OriginalDataId_One INTEGER," +
@@ -336,20 +336,20 @@ public class SqliteHelperDTMS extends SQLiteOpenHelper {
 				"ChainageId INTEGER)";
 		db.execSQL(sql);
 		
-		// ´´½¨ StationInfoIndex±í ÉèÕ¾ĞÅÏ¢±í
+		// åˆ›å»º StationInfoIndexè¡¨ è®¾ç«™ä¿¡æ¯è¡¨
 		db.execSQL("create table if not exists TunnelSettlementTotalData(id integer primary key,StationPointId integer,"
 				+ "StationHeight double,BackSightPointIds text,BackeSightHeight text,"
 				+ "CreateTime text," + "Info text)");
-		// ´´½¨ ControlPointsIndex±í ¿ØÖÆµã¹ÜÀí
+		// åˆ›å»º ControlPointsIndexè¡¨ æ§åˆ¶ç‚¹ç®¡ç†
 		db.execSQL("create table if not exists TunnelSettlementTotalData(id integer primary key,Name varchar(255),"
 				+ "x double,y double,z double,Info text)");
-		// ´´½¨ TotalStationIndex±í È«Õ¾ÒÇÁ¬½Ó²ÎÊıĞÅÏ¢
+		// åˆ›å»º TotalStationIndexè¡¨ å…¨ç«™ä»ªè¿æ¥å‚æ•°ä¿¡æ¯
 		db.execSQL("create table if not exists TunnelSettlementTotalData(id integer primary key,Name varchar(255),"
 				+ "BaudRate integer,Port integer,Parity integer,Databits integer,Stopbits integer,Info text)");
 	}
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-		// Êı¾İ¿â¸üĞÂÊÇ×öµÃ²Ù×÷
+		// æ•°æ®åº“æ›´æ–°æ˜¯åšå¾—æ“ä½œ
 	}
 }

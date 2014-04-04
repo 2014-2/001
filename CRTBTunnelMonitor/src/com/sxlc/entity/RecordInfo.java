@@ -8,22 +8,22 @@ import android.os.Parcelable;
 import com.sxlc.db.DTMSDataCateGory;
 
 /**
- * ¼ÇÂ¼µ¥ËíµÀÊµÌåÀà
- *´´½¨Ê±¼ä£º2014-3-21ÏÂÎç1:05:21
- *@author ÕÅÌÎ
+ * è®°å½•å•éš§é“å®ä½“ç±»
+ *åˆ›å»ºæ—¶é—´ï¼š2014-3-21ä¸‹åˆ1:05:21
+ *@author å¼ æ¶›
  *@since JDK1.6
  *@version 1.0
  */
 public class RecordInfo implements Parcelable{
-	private String ChainageName;		//¶ÏÃæÃû³Æ
+	private String ChainageName;		//æ–­é¢åç§°
 	private int id;
-	private int CrossSectionType;					/**ÖÖÀà*/
-	private Timestamp CreateTime;					/**Ä¬ÈÏµ±Ç°Ê±¼ä*/
-	private String Info;							/**ĞÅÏ¢*/
-	private Double Facedk;							/**ËíµÀ¼ÇÂ¼µ¥µÄÀï³Ì*/
-	private String Facedescription;					/**Ê©¹¤ĞòºÅ*/
-	private double Temperature;						/**ÎÂ¶ÈÖµ*/
-	private String CrossSectionIDs;					/**¶ÏÃæidĞòÁĞ*/
+	private int CrossSectionType;					/**ç§ç±»*/
+	private Timestamp CreateTime;					/**é»˜è®¤å½“å‰æ—¶é—´*/
+	private String Info;							/**ä¿¡æ¯*/
+	private Double Facedk;							/**éš§é“è®°å½•å•çš„é‡Œç¨‹*/
+	private String Facedescription;					/**æ–½å·¥åºå·*/
+	private double Temperature;						/**æ¸©åº¦å€¼*/
+	private String CrossSectionIDs;					/**æ–­é¢idåºåˆ—*/
 	//private List<SubsidenceTotalDataInfo> sectionlist=null;
 	private boolean bUse;
 	
@@ -146,8 +146,8 @@ public class RecordInfo implements Parcelable{
 		//arg0.writeList(sectionlist);
 		arg0.writeBooleanArray(new boolean[]{bUse});
 	}	
-    // ÊµÏÖParcelable½Ó¿ÚµÄÀàĞÍÖĞ£¬±ØĞëÓĞÒ»¸öÊµÏÖÁËParcelable.Creator½Ó¿ÚµÄ¾²Ì¬³£Á¿³ÉÔ±×Ö¶Î£¬
-    // ²¢ÇÒËüµÄÃû×Ö±ØĞëÎªCREATORµÄ
+    // å®ç°Parcelableæ¥å£çš„ç±»å‹ä¸­ï¼Œå¿…é¡»æœ‰ä¸€ä¸ªå®ç°äº†Parcelable.Creatoræ¥å£çš„é™æ€å¸¸é‡æˆå‘˜å­—æ®µï¼Œ
+    // å¹¶ä¸”å®ƒçš„åå­—å¿…é¡»ä¸ºCREATORçš„
     public static final Parcelable.Creator<RecordInfo> CREATOR 
             = new Parcelable.Creator<RecordInfo>()
     {
@@ -157,7 +157,7 @@ public class RecordInfo implements Parcelable{
         {
         	RecordInfo brief = new RecordInfo();
             
-            // ´Ó°ü¹üÖĞ¶Á³öÊı¾İ
+            // ä»åŒ…è£¹ä¸­è¯»å‡ºæ•°æ®
         	brief.ChainageName = in.readString();
         	brief.id = in.readInt();
         	brief.CrossSectionType = in.readInt();

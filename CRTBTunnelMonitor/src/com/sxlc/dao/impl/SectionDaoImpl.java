@@ -11,9 +11,9 @@ import com.sxlc.dao.SectionDao;
 import com.sxlc.db.SqliteHelperDTMS;
 import com.sxlc.entity.SectionInfo;
 /**
- * ╤оцФйЩ╬щ©Бй╣ож
- *╢╢╫╗й╠╪Дё╨2014-3-21обнГ6:43:15
- *@author уелн
+ * Ф√╜И²╒Ф∙╟Ф█╝Е╨⌠Е╝·Г▌╟
+ *Е┬⌡Е╩╨Ф≈╤И≈╢О╪ 2014-3-21Д╦▀Е█┬6:43:15
+ *@author Е╪═Ф╤⌡
  *@since JDK1.6
  *@version 1.0
  */

@@ -3,20 +3,20 @@ package com.sxlc.entity;
 import java.sql.Timestamp;
 
 /**
- * ÉèÕ¾ĞÅÏ¢ÊµÌå
- *´´½¨Ê±¼ä£º2014-3-24ÏÂÎç13:50:00
- *@author ÕÅÓÑ
+ * è®¾ç«™ä¿¡æ¯å®ä½“
+ *åˆ›å»ºæ—¶é—´ï¼š2014-3-24ä¸‹åˆ13:50:00
+ *@author å¼ å‹
  *@since JDK1.6
  *@version 1.0
  */
 public class StationInfo {
 	private int id;						//id
-	private int StationPointId;			// ²âÕ¾µãid
-	private double StationHeight;		// ²âÕ¾¸ß¶ÈÖµ
-	private String BackSightPointIds;	// ºóÊÓµãid
-	private double BackeSightHeight;	// ºóÊÓ¸ß¶ÈÖµ
-	private Timestamp CreateTime;		// ÉèÕ¾ÒÇÆ÷
-	private String Info;				// ±¸×¢
+	private int StationPointId;			// æµ‹ç«™ç‚¹id
+	private double StationHeight;		// æµ‹ç«™é«˜åº¦å€¼
+	private String BackSightPointIds;	// åè§†ç‚¹id
+	private double BackeSightHeight;	// åè§†é«˜åº¦å€¼
+	private Timestamp CreateTime;		// è®¾ç«™ä»ªå™¨
+	private String Info;				// å¤‡æ³¨
 	public int getId() {
 		return id;
 	}

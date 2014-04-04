@@ -17,9 +17,9 @@ import com.sxlc.entity.SubsidenceTotalDataInfo;
 import com.sxlc.entity.TunnelCrossSectionInfo;
 import com.sxlc.entity.WorkInfos;
 /**
- * ¼ÇÂ¼µ¥Êı¾İ¿âÊµÏÖ
- *´´½¨Ê±¼ä£º2014-3-21ÏÂÎç10:14:28
- *@author ÕÅÌÎ
+ * è®°å½•å•æ•°æ®åº“å®ç°
+ *åˆ›å»ºæ—¶é—´ï¼š2014-3-21ä¸‹åˆ10:14:28
+ *@author å¼ æ¶›
  *@since JDK1.6
  *@version 1.0
  */
@@ -160,8 +160,8 @@ public class RecordDaoImpl implements RecordDao {
 		}
 		return result;
 	}
-	//Ìõ¼ş²éÑ¯¼ÇÂ¼µ¥
-	// stationId ÉèÕ¾id£¬sectionId¶ÏÃæid£¬rawsheetId¼ÇÂ¼id£¬type:ÀàĞÍ  0£º¶ÏÃæ¼ÇÂ¼µ¥  1£ºµØ±íÏÂ³Á¼ÇÂ¼µ¥
+	//æ¡ä»¶æŸ¥è¯¢è®°å½•å•
+	// stationId è®¾ç«™idï¼ŒsectionIdæ–­é¢idï¼ŒrawsheetIdè®°å½•idï¼Œtype:ç±»å‹  0ï¼šæ–­é¢è®°å½•å•  1ï¼šåœ°è¡¨ä¸‹æ²‰è®°å½•å•
 	public List<SubsidenceTotalDataInfo> GetAllSubsidenceTotalData(
 			int stationId, int sectionId, int rawsheetId,int type) {
 		List<SubsidenceTotalDataInfo> list = null;
