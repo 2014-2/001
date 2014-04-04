@@ -3,36 +3,37 @@ package com.sxlc.activity;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.crtb.tssurveyprovider.Coordinate3D;
-import com.crtb.tssurveyprovider.TSConnectType;
-import com.crtb.tssurveyprovider.TSSurveyProvider;
-import com.sxlc.adapter.ControlPonitsListAdapter;
-import com.sxlc.common.Constant;
-import com.sxlc.dao.impl.RecordDaoImpl;
-import com.sxlc.dao.impl.TotalStationDaoImpl;
-import com.sxlc.entity.RecordInfo;
-import com.sxlc.entity.SubsidenceCrossSectionInfo;
-import com.sxlc.entity.TotalStationInfo;
-import com.sxlc.entity.TunnelCrossSectionInfo;
-import com.sxlc.entity.WorkInfos;
-import com.sxlc.utils.SonPopupWindow;
-
-import android.R.integer;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup.LayoutParams;
 import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.PopupWindow;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.sxlc.adapter.ControlPonitsListAdapter;
+import com.sxlc.common.Constant;
+import com.sxlc.dao.impl.TotalStationDaoImpl;
+import com.sxlc.entity.TotalStationInfo;
+import com.sxlc.entity.WorkInfos;
 
 public class StationActivity extends Activity {
 	/**
@@ -179,8 +180,7 @@ public class StationActivity extends Activity {
 
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (event.getAction() == KeyEvent.ACTION_DOWN) {
-			// TODO Auto-generated method stub
-			if (keyCode == 82) {
+			if (keyCode == KeyEvent.KEYCODE_MENU) {
 				vie = new View(this);
 				int num = 1;
 				menuWindow = new SonPopupWindow(this, itemsOnClick, 1, 0);
@@ -248,5 +248,173 @@ public class StationActivity extends Activity {
 		default:
 			break;
 		}
+	}
+	
+
+	class SonPopupWindow extends PopupWindow {
+		private RelativeLayout xinjian;
+		public RelativeLayout bianji;
+		public RelativeLayout delete;
+		private View mMenuView;
+		private Intent intent;
+		public Context c;
+		AlertDialog dlg = null;
+
+		public SonPopupWindow(Activity context, OnClickListener itemsOnClick,
+				final int num, final int currIndex) {
+			super(context);
+			this.c = context;
+			dlg = new AlertDialog.Builder(c).create();
+			LayoutInflater inflater = (LayoutInflater) context
+					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+			mMenuView = inflater.inflate(R.layout.son_dialog, null);
+			xinjian = (RelativeLayout) mMenuView.findViewById(R.id.cr1);
+			bianji = (RelativeLayout) mMenuView.findViewById(R.id.cr2);
+			delete = (RelativeLayout) mMenuView.findViewById(R.id.cr3);
+
+			xinjian.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					Intent intent = new Intent(c, ControlNewActivity.class);
+					Bundle mBundle = new Bundle();
+					mBundle.putParcelable(
+							Constant.Select_TotalStationRowClickItemsName_Data,
+							null);
+
+					intent.putExtras(mBundle);
+					((Activity) c).startActivityForResult(intent, 0);
+				}
+			});
+			bianji.setOnClickListener(new OnClickListener() {
+
+				// @SuppressLint("ShowToast")
+				@Override
+				public void onClick(View v) {
+					List<TotalStationInfo> tmpList = ((StationActivity) c).list;
+					TotalStationInfo tmp = null;
+					if (tmpList == null) {
+						Toast.makeText((Activity) c, "请选择需要编辑的全站仪", 3000)
+								.show();
+					} else {
+						for (int i = 0; i < tmpList.size(); i++) {
+							if (tmpList.get(i).isbCheck()) {
+								tmp = tmpList.get(i);
+								break;
+							}
+						}
+					}
+					if (tmp == null) {
+						Toast.makeText((Activity) c, "请选择需要编辑的全站仪", 3000)
+								.show();
+					}
+					Intent intent = new Intent(c, ControlNewActivity.class);
+					Bundle mBundle = new Bundle();
+					mBundle.putParcelable(
+							Constant.Select_TotalStationRowClickItemsName_Data,
+							tmp);
+					mBundle.putBoolean("edit", true);
+					intent.putExtras(mBundle);
+					((Activity) c).startActivityForResult(intent, 0);
+				}
+			});
+			delete.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					showExitGameAlert();
+				}
+			});
+			setContentView(mMenuView);
+			setWidth(LayoutParams.FILL_PARENT);
+			setHeight(LayoutParams.WRAP_CONTENT);
+			// 设置SelectPicPopupWindow弹出窗体可点击
+			setFocusable(true);
+			// 实例化一个ColorDrawable颜色为半透明
+			ColorDrawable dw = new ColorDrawable(0xFF000000);
+			// 设置SelectPicPopupWindow弹出窗体的背景
+			setBackgroundDrawable(dw);
+			setOutsideTouchable(true);
+		};
+
+		private void showExitGameAlert() {
+			dismiss();
+			dlg.show();
+			Window window = dlg.getWindow();
+			// *** 主要就是在这里实现这种效果的.
+			window.setContentView(R.layout.dialog);
+
+			ImageButton delete2 = (ImageButton) window
+					.findViewById(R.id.delete2);
+			Button qd = (Button) window.findViewById(R.id.qd);
+			Button qx = (Button) window.findViewById(R.id.qx);
+			delete2.setOnClickListener(listener);
+			qd.setOnClickListener(listener);
+			qx.setOnClickListener(listener);
+
+		}
+
+		private OnClickListener listener = new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				switch (v.getId()) {
+				case R.id.delete2:
+					dlg.cancel();
+
+					break;
+				case R.id.qd:
+					// 测试
+
+					CRTBTunnelMonitor app = (CRTBTunnelMonitor) SonPopupWindow.this.c
+							.getApplicationContext();
+					WorkInfos curWork = app.GetCurWork();
+					if (curWork != null && curWork.getTsList() != null) {
+						List<TotalStationInfo> list = curWork.getTsList();
+						boolean hasSelected=false;
+						for (int i = 0; i < list.size(); i++) {
+							if (list.get(i).isbCheck()) {
+								hasSelected=true;
+								if (!list.get(i).isbUse()) {
+									TotalStationDaoImpl impl = new TotalStationDaoImpl(
+											SonPopupWindow.this.c,
+											curWork.getProjectName());
+									impl.DeleteTotalStation(list.get(i).getId());
+									list.remove(i);
+									StationActivity.adapter
+											.notifyDataSetChanged();
+								} else {
+									showDialog("当前全站仪正在使用中，无法删除");
+								}
+								break;
+							}
+						}
+						if(!hasSelected){
+							showDialog("请先选择要删除的全站仪");
+						}
+					}
+					/*
+					 * for(int i=0;i<.size();i++) if
+					 * (MainActivity.list.get(i).getInfo().equals("选中")) {
+					 * MainActivity.list.remove(i);
+					 * 
+					 * }
+					 */
+					dlg.cancel();
+					break;
+				case R.id.qx:
+					dlg.cancel();
+					break;
+				}
+
+			}
+		};
+	}
+
+	private void showDialog(String text) {
+		AlertDialog.Builder builder = new Builder(StationActivity.this);
+		builder.setTitle("提示");
+		builder.setMessage(text);
+		builder.setPositiveButton("确定", null);
+		builder.create().show();
 	}
 }
