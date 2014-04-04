@@ -29,6 +29,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.crtb.tssurveyprovider.Coordinate3D;
+import com.crtb.tssurveyprovider.TSConnectType;
+import com.crtb.tssurveyprovider.TSSurveyProvider;
 import com.sxlc.adapter.ControlPonitsListAdapter;
 import com.sxlc.common.Constant;
 import com.sxlc.dao.impl.TotalStationDaoImpl;
@@ -63,7 +66,8 @@ public class StationActivity extends Activity {
 
 			@Override
 			public boolean onItemLongClick(AdapterView<?> parent, View view,
-					int position, long id) {
+					final int position, long id) {
+				
 				iListPos = position;
 				// 实例化对话
 				new AlertDialog.Builder(StationActivity.this)
@@ -76,13 +80,13 @@ public class StationActivity extends Activity {
 										iConnectType = which;
 										switch (which) {
 										case 0: // 蓝牙连接
-											diagolyes();
+											connect(TSConnectType.Bluetooth,list.get(position).getBaudRate());
 											break;
 										case 1:// 串口连接
-											diagolyes();
+											connect(TSConnectType.RS232,list.get(position).getBaudRate());
 											break;
 										case 2:// 断开连接
-											diagolduanyes();
+											disconnect();
 										default:
 											break;
 										}
@@ -206,37 +210,31 @@ public class StationActivity extends Activity {
 	}
 
 	/** 连接全站仪成功 */
-	private void diagolyes() {
-
-		bConnect = Connect();
-		
+	private void connect(TSConnectType type,int baudRate) {
+        String [] tsParams = new String[] {String.valueOf(baudRate)};
+        int nret = TSSurveyProvider.getDefaultAdapter().BeginConnection(type,tsParams );
+        nret=TSSurveyProvider.getDefaultAdapter().TestConnection();
 		AlertDialog dlg = new AlertDialog.Builder(StationActivity.this)
 				.create();
-		dlg.show();
 		Window window = dlg.getWindow();
 		window.setContentView(R.layout.connectyesdialog);
 		TextView text = (TextView) window.findViewById(R.id.connertexryes);
-		String sTmp;
-		if (bConnect) {
-			sTmp = "成功";
-		}
-		else {
-			sTmp = "失败";
-		}
-		text.setText("连接" + list.get(iListPos).getName() + "全站仪"+sTmp);
+		text.setText("连接" + list.get(iListPos).getName() + "全站仪");
+		dlg.show();
 	}
 
 	/** 断开全站仪成功 */
-	private void diagolduanyes() {
-		DisConnect();
+	private void disconnect() {
+		int res=TSSurveyProvider.getDefaultAdapter().EndConnection();
 		AlertDialog dlg = new AlertDialog.Builder(StationActivity.this)
 				.create();
-		dlg.show();
 		Window window = dlg.getWindow();
 		window.setContentView(R.layout.connectyesdialog);
 		TextView text = (TextView) window.findViewById(R.id.connertexryes);
 		text.setText("断开连接" + list.get(iListPos).getName() + "全站仪成功");
+		dlg.show();
 	}
+	
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data)
 	{
@@ -306,6 +304,7 @@ public class StationActivity extends Activity {
 					if (tmp == null) {
 						Toast.makeText((Activity) c, "请选择需要编辑的全站仪", 3000)
 								.show();
+						return;
 					}
 					Intent intent = new Intent(c, ControlNewActivity.class);
 					Bundle mBundle = new Bundle();

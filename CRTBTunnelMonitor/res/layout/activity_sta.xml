@@ -25,40 +25,29 @@
 
         <LinearLayout
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent" >
+            android:layout_height="fill_parent" 
+            android:gravity="center_vertical">
 
-            <RelativeLayout
-                android:id="@+id/conname"
-                android:layout_width="154dp"
-                android:layout_height="fill_parent" >
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="名称"
+                android:gravity="center"
+                android:textSize="20sp" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:text="名称"
-                    android:textSize="20dp" />
-
-                <ImageView
-                    android:layout_width="1dip"
-                    android:layout_height="fill_parent"
-                    android:layout_alignParentRight="true"
-                    android:background="@color/gray" />
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:id="@+id/conname"
-                android:layout_width="fill_parent"
+            <ImageView
+                android:layout_width="1dip"
                 android:layout_height="fill_parent"
-                android:layout_weight="2" >
+                android:background="@color/gray" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:text="选中"
-                    android:textSize="20dp" />
-            </RelativeLayout>
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="选中"
+                android:textSize="20sp" />
         </LinearLayout>
     </RelativeLayout>
 
@@ -68,8 +57,7 @@
         android:layout_height="fill_parent"
         android:layout_below="@id/conre1"
         android:layout_marginLeft="10dip"
-        android:layout_marginRight="10dip" 
-        android:descendantFocusability="blocksDescendants"/>
-
+        android:layout_marginRight="10dip"
+        android:descendantFocusability="blocksDescendants" />
 
 </RelativeLayout>
