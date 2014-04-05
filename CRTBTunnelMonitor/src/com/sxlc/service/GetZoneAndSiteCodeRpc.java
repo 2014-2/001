@@ -10,17 +10,15 @@ import android.util.Log;
 
 public class GetZoneAndSiteCodeRpc extends AbstractRpc {
 	private static final String LOG_TAG = "GetZoneAndSiteCodeRpc";
-	private static final String KEY_NAME = "uname";
-	private static final String KEY_PASSWORD = "upassword";
+	private static final String KEY_RANDOM_CODE = "随机码";
 	private static final String KEY_ACTION = "getZoneAndSiteCode";
 	private static final String KEY_RESULT = "getZoneAndSiteCodeResult";
 	
 	private Map<String, String> mParameters = new HashMap<String, String>();
 	private RpcCallback mCallback;
 	
-	public GetZoneAndSiteCodeRpc(String userName, String password, RpcCallback callback) {
-		mParameters.put(KEY_NAME, userName);
-		mParameters.put(KEY_PASSWORD, password);
+	public GetZoneAndSiteCodeRpc(String randomCode, RpcCallback callback) {
+		mParameters.put(KEY_RANDOM_CODE, randomCode);
 		mCallback = callback;
 	}
 	
