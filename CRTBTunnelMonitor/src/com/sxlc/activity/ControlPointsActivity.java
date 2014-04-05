@@ -35,7 +35,7 @@ public class ControlPointsActivity extends Activity {
 	private int iItemPos = -1;
 	public List<ControlPointsInfo> list = null;
 	public static ControlPonitsListAdapter2 adapter;
-	private OnClickListener itemsOnClick;
+	private DialogInterface.OnClickListener itemsOnClick;
 	private View vie;
 	private ConPopuWindow menuWindow;
 	private CRTBTunnelMonitor CurApp = null;
@@ -143,7 +143,7 @@ public class ControlPointsActivity extends Activity {
 			if (keyCode == KeyEvent.KEYCODE_MENU) {
 				vie = new View(this);
 				int num = 1;
-				menuWindow = new ConPopuWindow(this, itemsOnClick, 1, 0);
+				menuWindow = new ConPopuWindow(ControlPointsActivity.this, itemsOnClick, 1, 0);
 				menuWindow.showAtLocation(vie, Gravity.BOTTOM
 						| Gravity.CENTER_HORIZONTAL, 0, 0);
 			}

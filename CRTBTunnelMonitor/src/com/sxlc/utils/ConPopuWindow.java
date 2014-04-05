@@ -18,13 +18,14 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
@@ -36,6 +37,8 @@ public class ConPopuWindow extends PopupWindow {
 	private View mMenuView;
 	public Context c;
 	AlertDialog dlg = null;
+	private ControlPointsInfo mInfo;
+	
 	public ConPopuWindow(Activity context, OnClickListener itemsOnClick,
 			final int num, final int currIndex) {
 		super(context);
@@ -48,7 +51,7 @@ public class ConPopuWindow extends PopupWindow {
 		bianji = (RelativeLayout) mMenuView.findViewById(R.id.kd_bj);
 		delete = (RelativeLayout) mMenuView.findViewById(R.id.kd_sc);
 
-		xinjian.setOnClickListener(new OnClickListener() {
+		xinjian.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				Intent intent = new Intent(c, ControlNewActivityTwo.class);
@@ -58,7 +61,7 @@ public class ConPopuWindow extends PopupWindow {
 				((Activity) c).startActivityForResult(intent,0);
 			}
 		});
-		bianji.setOnClickListener(new OnClickListener() {
+		bianji.setOnClickListener(new View.OnClickListener() {
 
 			//@SuppressLint("ShowToast")
 			@Override
@@ -81,14 +84,18 @@ public class ConPopuWindow extends PopupWindow {
 					Toast.makeText((Activity) c, "请选择需要编辑的控制点", 3000).show();
 				    return;
 				}
+				if(tmp.isbUse()){
+					showDialog("该控制点正在使用中，无法编辑");
+					return;
+				}
 				Intent intent = new Intent(c, ControlNewActivityTwo.class);
 				Bundle mBundle = new Bundle();  
 		        mBundle.putParcelable(Constant.Select_ControlPointsRowClickItemsName_Data,tmp);
 		        intent.putExtras(mBundle);
-				((Activity) c).startActivityForResult(intent,0);
+		        ((Activity)c).startActivityForResult(intent,0);
 			}
 		});
-		delete.setOnClickListener(new OnClickListener() {
+		delete.setOnClickListener(new View.OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
@@ -96,15 +103,15 @@ public class ConPopuWindow extends PopupWindow {
 				List<ControlPointsInfo> tmpList = ((ControlPointsActivity)c).list;
 				if(tmpList!=null){
 				CRTBTunnelMonitor app=(CRTBTunnelMonitor) c.getApplicationContext();
-				ControlPointsDaoImpl impl = new ControlPointsDaoImpl(c, app.GetCurWork().getProjectName());
-				ControlPointsInfo info=null;
+				final ControlPointsDaoImpl impl = new ControlPointsDaoImpl(c, app.GetCurWork().getProjectName());
+				mInfo=null;
 				boolean bCheck=false;
 				for(int i=0;i<tmpList.size();i++){
 					if(tmpList.get(i).isbCheck()){
 						
 						bCheck=true;
 						if(!tmpList.get(i).isbUse()){
-							info=tmpList.get(i);
+							mInfo=tmpList.get(i);
 						}
 						break;
 					}
@@ -113,13 +120,22 @@ public class ConPopuWindow extends PopupWindow {
 					 showDialog("请先选择要删除的控制点");
 					 return;
 				}
-				if(info==null){
+				if(mInfo==null){
 					showDialog("控制点正在使用中，无法删除");
 					return;
 				}
-				impl.DeleteStationInfo(info.getId());
-				((ControlPointsActivity)c).list.remove(info);
-				((ControlPointsActivity)c).adapter.notifyDataSetChanged();
+				new AlertDialog.Builder(c).setTitle("提示").setMessage("删除后数据无法恢复，确定删除？").setPositiveButton("确定", new DialogInterface.OnClickListener() {
+					
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						impl.DeleteStationInfo(mInfo.getId());
+						((ControlPointsActivity)c).list.remove(mInfo);
+						((ControlPointsActivity)c).adapter.notifyDataSetChanged();
+						new AlertDialog.Builder(c).setTitle("提示").setMessage("操作已成功").setPositiveButton("确定", null).create().show();
+					}
+
+				}).create().show();;
+				
 				}
 			}
 		});
