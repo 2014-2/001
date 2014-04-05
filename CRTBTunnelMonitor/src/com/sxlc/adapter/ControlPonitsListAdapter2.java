@@ -20,18 +20,23 @@ import android.widget.TextView;
 
 /**
  * @author Administrator
- *
+ * 
  */
 public class ControlPonitsListAdapter2 extends BaseAdapter {
-	private List<ControlPointsInfo>listinfos;
+	private List<ControlPointsInfo> listinfos;
 	private Context context;
-	public ControlPonitsListAdapter2(Context ct,List<ControlPointsInfo> lis){
-		context=ct;
-		listinfos=lis;
+
+	public ControlPonitsListAdapter2(Context ct, List<ControlPointsInfo> lis) {
+		context = ct;
+		listinfos = lis;
 	}
+
 	@Override
 	public int getCount() {
-		return listinfos.size();
+		if (listinfos != null) {
+			return listinfos.size();
+		}
+		return 0;
 	}
 
 	@Override
@@ -43,23 +48,23 @@ public class ControlPonitsListAdapter2 extends BaseAdapter {
 	public long getItemId(int position) {
 		return position;
 	}
+
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		LayoutInflater lay;
-		if(convertView==null){
-			lay=LayoutInflater.from(context);
-			convertView=lay.inflate(R.layout.listinfos_pic, null);
+		if (convertView == null) {
+			lay = LayoutInflater.from(context);
+			convertView = lay.inflate(R.layout.listinfos_pic, null);
 		}
-		TextView name=(TextView) convertView.findViewById(R.id.t1);
-		ImageView start=(ImageView) convertView.findViewById(R.id.t2);
+		TextView name = (TextView) convertView.findViewById(R.id.t1);
+		ImageView start = (ImageView) convertView.findViewById(R.id.t2);
 		name.setTextColor(Color.BLACK);
-		//start.setTextColor(Color.BLACK);
+		// start.setTextColor(Color.BLACK);
 		name.setText(listinfos.get(position).getName());
 		if (listinfos.get(position).isbCheck()) {
-			start.setBackgroundResource(R.drawable.use);
-		}
-		else {
-			start.setBackgroundResource(R.drawable.nouse);
+			start.setImageResource(R.drawable.yes);
+		} else {
+			start.setImageResource(R.drawable.no);
 		}
 		return convertView;
 	}

@@ -3,17 +3,20 @@ package com.sxlc.utils;
 
 import java.util.List;
 
+import com.sxlc.activity.CRTBTunnelMonitor;
 import com.sxlc.activity.ControlNewActivity;
 import com.sxlc.activity.ControlNewActivityTwo;
 import com.sxlc.activity.ControlPointsActivity;
 import com.sxlc.activity.R;
 import com.sxlc.activity.StationActivity;
 import com.sxlc.common.Constant;
+import com.sxlc.dao.impl.ControlPointsDaoImpl;
 import com.sxlc.entity.ControlPointsInfo;
 import com.sxlc.entity.TotalStationInfo;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
@@ -64,6 +67,7 @@ public class ConPopuWindow extends PopupWindow {
 				ControlPointsInfo tmp = null;
 				if (tmpList == null) {
 					Toast.makeText((Activity) c, "请选择需要编辑的控制点", 3000).show();
+				    return;
 				}
 				else {
 					for (int i = 0; i < tmpList.size(); i++) {
@@ -75,6 +79,7 @@ public class ConPopuWindow extends PopupWindow {
 				}
 				if (tmp == null) {
 					Toast.makeText((Activity) c, "请选择需要编辑的控制点", 3000).show();
+				    return;
 				}
 				Intent intent = new Intent(c, ControlNewActivityTwo.class);
 				Bundle mBundle = new Bundle();  
@@ -87,7 +92,35 @@ public class ConPopuWindow extends PopupWindow {
 
 			@Override
 			public void onClick(View v) {
-				//showExitGameAlert();
+				
+				List<ControlPointsInfo> tmpList = ((ControlPointsActivity)c).list;
+				if(tmpList!=null){
+				CRTBTunnelMonitor app=(CRTBTunnelMonitor) c.getApplicationContext();
+				ControlPointsDaoImpl impl = new ControlPointsDaoImpl(c, app.GetCurWork().getProjectName());
+				ControlPointsInfo info=null;
+				boolean bCheck=false;
+				for(int i=0;i<tmpList.size();i++){
+					if(tmpList.get(i).isbCheck()){
+						
+						bCheck=true;
+						if(!tmpList.get(i).isbUse()){
+							info=tmpList.get(i);
+						}
+						break;
+					}
+				}
+				if(!bCheck){
+					 showDialog("请先选择要删除的控制点");
+					 return;
+				}
+				if(info==null){
+					showDialog("控制点正在使用中，无法删除");
+					return;
+				}
+				impl.DeleteStationInfo(info.getId());
+				((ControlPointsActivity)c).list.remove(info);
+				((ControlPointsActivity)c).adapter.notifyDataSetChanged();
+				}
 			}
 		});
 
@@ -101,19 +134,14 @@ public class ConPopuWindow extends PopupWindow {
 		// 设置SelectPicPopupWindow弹出窗体的背景
 		this.setBackgroundDrawable(dw);
 		// mMenuView添加OnTouchListener监听判断获取触屏位置如果在选择框外面则销毁弹出框
-		mMenuView.setOnTouchListener(new OnTouchListener() {
-
-			public boolean onTouch(View v, MotionEvent event) {
-
-				int height = mMenuView.findViewById(R.id.kd_layout).getTop();
-				int y = (int) event.getY();
-				if (event.getAction() == MotionEvent.ACTION_UP) {
-					if (y < height) {
-						dismiss();
-					}
-				}
-				return true;
-			}
-		});
+		setOutsideTouchable(true);
+	}
+	
+	private void showDialog(String text) {
+		AlertDialog.Builder builder = new Builder(c);
+		builder.setTitle("提示");
+		builder.setMessage(text);
+		builder.setPositiveButton("确定", null);
+		builder.create().show();
 	}
 }

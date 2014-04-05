@@ -54,11 +54,12 @@ public class StationActivity extends Activity {
 	private CRTBTunnelMonitor CurApp = null;
 	private int iConnectType = 0;
 	private boolean bConnect = false;
+
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_sta);
-		CurApp = ((CRTBTunnelMonitor)getApplicationContext());
+		CurApp = ((CRTBTunnelMonitor) getApplicationContext());
 		init();
 		getadapter();
 		/** 长按 */
@@ -67,7 +68,7 @@ public class StationActivity extends Activity {
 			@Override
 			public boolean onItemLongClick(AdapterView<?> parent, View view,
 					final int position, long id) {
-				
+
 				iListPos = position;
 				// 实例化对话
 				new AlertDialog.Builder(StationActivity.this)
@@ -80,10 +81,14 @@ public class StationActivity extends Activity {
 										iConnectType = which;
 										switch (which) {
 										case 0: // 蓝牙连接
-											connect(TSConnectType.Bluetooth,list.get(position).getBaudRate());
+											connect(TSConnectType.Bluetooth,
+													list.get(position)
+															.getBaudRate());
 											break;
 										case 1:// 串口连接
-											connect(TSConnectType.RS232,list.get(position).getBaudRate());
+											connect(TSConnectType.RS232, list
+													.get(position)
+													.getBaudRate());
 											break;
 										case 2:// 断开连接
 											disconnect();
@@ -99,10 +104,10 @@ public class StationActivity extends Activity {
 		listview.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
-			public void onItemClick(AdapterView<?> arg0, View arg1,
-					int arg2, long arg3) {
+			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
+					long arg3) {
 				// TODO Auto-generated method stub
-				TotalStationInfo item = list.get(arg2);	
+				TotalStationInfo item = list.get(arg2);
 				boolean bCheck = !item.isbCheck();
 				item.setbCheck(!item.isbCheck());
 				list.set(arg2, item);
@@ -117,53 +122,53 @@ public class StationActivity extends Activity {
 			}
 		});
 	}
-	
+
 	public boolean Connect() {
-//		TSConnectType tstype = TSConnectType.Bluetooth;
-//        String [] tsParams = new String[] {"9600"};
-//        
-//        int nret = TSSurveyProvider.getDefaultAdapter().BeginConnection(tstype,tsParams );
-//     
-//        Coordinate3D point = new Coordinate3D();
-//        try {
-//        	nret = TSSurveyProvider.getDefaultAdapter().GetCoord(0, 0, point);
-//        	String text = String.format("%1$s,%2$s,%3$s", point.x,point.y,point.z);
-//        	tv.setText(text);
-//				}
-//				catch (InterruptedException e) {
-//					e.printStackTrace();
-//				}
-//	        nret = TSSurveyProvider.getDefaultAdapter().EndConnection();
-//	        TSSurveyProvider.getDefaultAdapter().TestConnection();
-//	  		}
+		// TSConnectType tstype = TSConnectType.Bluetooth;
+		// String [] tsParams = new String[] {"9600"};
+		//
+		// int nret =
+		// TSSurveyProvider.getDefaultAdapter().BeginConnection(tstype,tsParams
+		// );
+		//
+		// Coordinate3D point = new Coordinate3D();
+		// try {
+		// nret = TSSurveyProvider.getDefaultAdapter().GetCoord(0, 0, point);
+		// String text = String.format("%1$s,%2$s,%3$s",
+		// point.x,point.y,point.z);
+		// tv.setText(text);
+		// }
+		// catch (InterruptedException e) {
+		// e.printStackTrace();
+		// }
+		// nret = TSSurveyProvider.getDefaultAdapter().EndConnection();
+		// TSSurveyProvider.getDefaultAdapter().TestConnection();
+		// }
 		return true;
 	}
-	
+
 	public boolean DisConnect() {
 		return true;
 	}
+
 	public void setdata() {
 		WorkInfos CurW = CurApp.GetCurWork();
-		if(CurW == null)
-		{
+		if (CurW == null) {
 			return;
 		}
 		list = CurW.getTsList();
 		boolean bLoadDB = true;
-		if(list!=null)
-		{
-			if(list.size()>0)
-			{
+		if (list != null) {
+			if (list.size() > 0) {
 				bLoadDB = false;
 			}
 		}
-		if(bLoadDB)
-		{
-			if(list == null)
-			{
+		if (bLoadDB) {
+			if (list == null) {
 				list = new ArrayList<TotalStationInfo>();
 			}
-			TotalStationDaoImpl impl = new TotalStationDaoImpl(this, CurW.getProjectName());
+			TotalStationDaoImpl impl = new TotalStationDaoImpl(this,
+					CurW.getProjectName());
 			impl.GetTotalStationList(list);
 			CurW.setTsList(list);
 			CurApp.UpdateWork(CurW);
@@ -175,8 +180,8 @@ public class StationActivity extends Activity {
 	}
 
 	public void getadapter() {
-//		list = new ArrayList<TotalStationInfo>();
-//		list = MainActivity.list;
+		// list = new ArrayList<TotalStationInfo>();
+		// list = MainActivity.list;
 		setdata();
 		adapter = new ControlPonitsListAdapter(StationActivity.this, list);
 		listview.setAdapter(adapter);
@@ -210,10 +215,11 @@ public class StationActivity extends Activity {
 	}
 
 	/** 连接全站仪成功 */
-	private void connect(TSConnectType type,int baudRate) {
-        String [] tsParams = new String[] {String.valueOf(baudRate)};
-        int nret = TSSurveyProvider.getDefaultAdapter().BeginConnection(type,tsParams );
-        nret=TSSurveyProvider.getDefaultAdapter().TestConnection();
+	private void connect(TSConnectType type, int baudRate) {
+		String[] tsParams = new String[] { String.valueOf(baudRate) };
+		int nret = TSSurveyProvider.getDefaultAdapter().BeginConnection(type,
+				tsParams);
+		nret = TSSurveyProvider.getDefaultAdapter().TestConnection();
 		AlertDialog dlg = new AlertDialog.Builder(StationActivity.this)
 				.create();
 		Window window = dlg.getWindow();
@@ -225,7 +231,11 @@ public class StationActivity extends Activity {
 
 	/** 断开全站仪成功 */
 	private void disconnect() {
-		int res=TSSurveyProvider.getDefaultAdapter().EndConnection();
+		try {
+			int res = TSSurveyProvider.getDefaultAdapter().EndConnection();
+		} catch (Exception e) {
+
+		}
 		AlertDialog dlg = new AlertDialog.Builder(StationActivity.this)
 				.create();
 		Window window = dlg.getWindow();
@@ -234,10 +244,9 @@ public class StationActivity extends Activity {
 		text.setText("断开连接" + list.get(iListPos).getName() + "全站仪成功");
 		dlg.show();
 	}
-	
+
 	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data)
-	{
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		switch (resultCode) {
 		case RESULT_OK:
 			adapter.notifyDataSetChanged();
@@ -247,7 +256,6 @@ public class StationActivity extends Activity {
 			break;
 		}
 	}
-	
 
 	class SonPopupWindow extends PopupWindow {
 		private RelativeLayout xinjian;
@@ -369,10 +377,10 @@ public class StationActivity extends Activity {
 					WorkInfos curWork = app.GetCurWork();
 					if (curWork != null && curWork.getTsList() != null) {
 						List<TotalStationInfo> list = curWork.getTsList();
-						boolean hasSelected=false;
+						boolean hasSelected = false;
 						for (int i = 0; i < list.size(); i++) {
 							if (list.get(i).isbCheck()) {
-								hasSelected=true;
+								hasSelected = true;
 								if (!list.get(i).isbUse()) {
 									TotalStationDaoImpl impl = new TotalStationDaoImpl(
 											SonPopupWindow.this.c,
@@ -387,7 +395,7 @@ public class StationActivity extends Activity {
 								break;
 							}
 						}
-						if(!hasSelected){
+						if (!hasSelected) {
 							showDialog("请先选择要删除的全站仪");
 						}
 					}

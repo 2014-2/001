@@ -53,24 +53,27 @@ public class ControlPointsActivity extends Activity {
 				iItemPos = position; 
 				// 实例化对话
 				new AlertDialog.Builder(ControlPointsActivity.this)
-						.setItems(/* items */new String[]{"使用该点"},
+						.setItems(new String[]{"使用该点"},
 								new DialogInterface.OnClickListener() {
 
 									@Override
 									public void onClick(DialogInterface dialog,
 											int which) {
 										switch (which) {
-										case 0: // 蓝牙连接
+										case 0: 
 											ControlPointsInfo item = list.get(iItemPos);
 											item.setbUse(true);
+											item.setbCheck(true);
 											list.set(iItemPos, item);
 											for (int i = 0; i < list.size(); i++) {
 												if (i != iItemPos) {
 													list.get(i).setbUse(false);
+													list.get(i).setbCheck(false);
 												}
+											}
 											WorkInfos curW = CurApp.GetCurWork();
 											curW.setCpList(list);
-											}
+											adapter.notifyDataSetChanged();
 											break;
 										}
 									}
@@ -137,7 +140,7 @@ public class ControlPointsActivity extends Activity {
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (event.getAction() == KeyEvent.ACTION_DOWN) {
 			// TODO Auto-generated method stub
-			if (keyCode == 82) {
+			if (keyCode == KeyEvent.KEYCODE_MENU) {
 				vie = new View(this);
 				int num = 1;
 				menuWindow = new ConPopuWindow(this, itemsOnClick, 1, 0);

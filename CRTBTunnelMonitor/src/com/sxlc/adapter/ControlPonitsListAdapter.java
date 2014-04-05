@@ -52,10 +52,10 @@ public class ControlPonitsListAdapter extends BaseAdapter {
 		//start.setTextColor(Color.BLACK);
 		name.setText(listinfos.get(position).getName());
 		if (listinfos.get(position).isbCheck()) {
-			start.setImageResource(R.drawable.use);
+			start.setImageResource(R.drawable.yes);
 		}
 		else {
-			start.setImageResource(R.drawable.nouse);
+			start.setImageResource(R.drawable.no);
 		}
 		return convertView;
 	}

@@ -58,6 +58,7 @@
         android:layout_below="@id/conre1"
         android:layout_marginLeft="10dip"
         android:layout_marginRight="10dip"
+        android:divider="@null"
         android:descendantFocusability="blocksDescendants" />
 
 </RelativeLayout>

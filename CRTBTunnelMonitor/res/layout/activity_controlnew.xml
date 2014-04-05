@@ -226,6 +226,7 @@
             android:id="@+id/tzw"
             android:layout_width="0dp"
             android:layout_height="50dip"
+            android:inputType="number"
             android:layout_marginLeft="10dip"
             android:layout_weight="5" />
 
