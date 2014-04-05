@@ -134,6 +134,7 @@ public final class CrtbWebService {
 			} catch (Exception e) {
 				e.printStackTrace();
 			} 
+	        Log.d(TAG, "received response: " + soapEnvelope.bodyIn);
 	        mRpc.onResponse(soapEnvelope.bodyIn);
 			return null;
 		}
