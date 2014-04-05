@@ -301,6 +301,7 @@ public class StationActivity extends Activity {
 					if (tmpList == null) {
 						Toast.makeText((Activity) c, "请选择需要编辑的全站仪", 3000)
 								.show();
+						return;
 					} else {
 						for (int i = 0; i < tmpList.size(); i++) {
 							if (tmpList.get(i).isbCheck()) {
@@ -352,11 +353,11 @@ public class StationActivity extends Activity {
 
 			ImageButton delete2 = (ImageButton) window
 					.findViewById(R.id.delete2);
-			Button qd = (Button) window.findViewById(R.id.qd);
-			Button qx = (Button) window.findViewById(R.id.qx);
+			Button ok = (Button) window.findViewById(R.id.ok);
+			Button cancel = (Button) window.findViewById(R.id.cancel);
 			delete2.setOnClickListener(listener);
-			qd.setOnClickListener(listener);
-			qx.setOnClickListener(listener);
+			ok.setOnClickListener(listener);
+			cancel.setOnClickListener(listener);
 
 		}
 
@@ -369,7 +370,7 @@ public class StationActivity extends Activity {
 					dlg.cancel();
 
 					break;
-				case R.id.qd:
+				case R.id.ok:
 					// 测试
 
 					CRTBTunnelMonitor app = (CRTBTunnelMonitor) SonPopupWindow.this.c
@@ -408,7 +409,7 @@ public class StationActivity extends Activity {
 					 */
 					dlg.cancel();
 					break;
-				case R.id.qx:
+				case R.id.cancel:
 					dlg.cancel();
 					break;
 				}

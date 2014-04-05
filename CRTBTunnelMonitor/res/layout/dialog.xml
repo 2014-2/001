@@ -31,10 +31,12 @@
 	    <ImageView 
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
+	        android:id="@+id/icon"
 	        android:background="@drawable/js"/>
 	    <TextView 
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
+	        android:id="@+id/message"
 	        android:text="是否删除全站仪连接的信息,删除后将无法恢复!"
 	        android:textSize="20dip"/>
 	    
@@ -45,12 +47,12 @@
 	    android:layout_below="@id/dialin1"
 	    android:layout_alignParentRight="true">
 	    <Button 
-	        android:id="@+id/qd"
+	        android:id="@+id/ok"
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
 	        android:text="确定"/>
 	    <Button 
-	        android:id="@+id/qx"
+	        android:id="@+id/cancel"
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
 	        android:layout_marginLeft="20dip"

@@ -3,16 +3,6 @@ package com.sxlc.activity;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.sxlc.adapter.ControlPonitsListAdapter;
-import com.sxlc.adapter.ControlPonitsListAdapter2;
-import com.sxlc.common.Constant;
-import com.sxlc.dao.impl.ControlPointsDaoImpl;
-import com.sxlc.dao.impl.TotalStationDaoImpl;
-import com.sxlc.entity.ControlPointsInfo;
-import com.sxlc.entity.TotalStationInfo;
-import com.sxlc.entity.WorkInfos;
-import com.sxlc.utils.ConPopuWindow;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -21,12 +11,22 @@ import android.os.Bundle;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.AdapterView;
-import android.widget.ListView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
+import android.widget.ListView;
 
+import com.sxlc.adapter.ControlPonitsListAdapter2;
+import com.sxlc.dao.impl.ControlPointsDaoImpl;
+import com.sxlc.entity.ControlPointsInfo;
+import com.sxlc.entity.WorkInfos;
+import com.sxlc.utils.ConPopuWindow;
+/**
+ * 
+ * @author edison.xiao
+ * 
+ * @since 2014.4.5
+ */
 public class ControlPointsActivity extends Activity {
 	/**
 	 * 显示用户名和选中状态

@@ -3,17 +3,6 @@ package com.sxlc.utils;
 
 import java.util.List;
 
-import com.sxlc.activity.CRTBTunnelMonitor;
-import com.sxlc.activity.ControlNewActivity;
-import com.sxlc.activity.ControlNewActivityTwo;
-import com.sxlc.activity.ControlPointsActivity;
-import com.sxlc.activity.R;
-import com.sxlc.activity.StationActivity;
-import com.sxlc.common.Constant;
-import com.sxlc.dao.impl.ControlPointsDaoImpl;
-import com.sxlc.entity.ControlPointsInfo;
-import com.sxlc.entity.TotalStationInfo;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
@@ -24,19 +13,32 @@ import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnTouchListener;
+import android.view.Window;
+import android.widget.Button;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 import android.widget.RelativeLayout.LayoutParams;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.sxlc.activity.CRTBTunnelMonitor;
+import com.sxlc.activity.ControlNewActivityTwo;
+import com.sxlc.activity.ControlPointsActivity;
+import com.sxlc.activity.R;
+import com.sxlc.common.Constant;
+import com.sxlc.dao.impl.ControlPointsDaoImpl;
+import com.sxlc.entity.ControlPointsInfo;
 
 public class ConPopuWindow extends PopupWindow {
 	private RelativeLayout xinjian,bianji,delete;//三個按鈕
+	
 	private View mMenuView;
+	
 	public Context c;
+	
 	AlertDialog dlg = null;
+	
 	private ControlPointsInfo mInfo;
 	
 	public ConPopuWindow(Activity context, OnClickListener itemsOnClick,
@@ -85,8 +87,8 @@ public class ConPopuWindow extends PopupWindow {
 				    return;
 				}
 				if(tmp.isbUse()){
-					showDialog("该控制点正在使用中，无法编辑");
-					return;
+					showDialog("该控制点正在使用中，无法编辑",null);
+					return; 
 				}
 				Intent intent = new Intent(c, ControlNewActivityTwo.class);
 				Bundle mBundle = new Bundle();  
@@ -117,25 +119,24 @@ public class ConPopuWindow extends PopupWindow {
 					}
 				}
 				if(!bCheck){
-					 showDialog("请先选择要删除的控制点");
+					 showDialog("请先选择要删除的控制点",null);
 					 return;
 				}
 				if(mInfo==null){
-					showDialog("控制点正在使用中，无法删除");
+					showDialog("控制点正在使用中，无法删除",null);
 					return;
 				}
-				new AlertDialog.Builder(c).setTitle("提示").setMessage("删除后数据无法恢复，确定删除？").setPositiveButton("确定", new DialogInterface.OnClickListener() {
+				showDialog("删除后数据无法恢复，确定删除？", new dialogListener() {
 					
 					@Override
-					public void onClick(DialogInterface dialog, int which) {
+					public void onClickOk() {
 						impl.DeleteStationInfo(mInfo.getId());
 						((ControlPointsActivity)c).list.remove(mInfo);
 						((ControlPointsActivity)c).adapter.notifyDataSetChanged();
-						new AlertDialog.Builder(c).setTitle("提示").setMessage("操作已成功").setPositiveButton("确定", null).create().show();
+						showDialog("操作已成功",null);
 					}
-
-				}).create().show();;
-				
+				});						
+										
 				}
 			}
 		});
@@ -153,11 +154,41 @@ public class ConPopuWindow extends PopupWindow {
 		setOutsideTouchable(true);
 	}
 	
-	private void showDialog(String text) {
+	private void showDialog(String text,final dialogListener listener) {
 		AlertDialog.Builder builder = new Builder(c);
-		builder.setTitle("提示");
-		builder.setMessage(text);
-		builder.setPositiveButton("确定", null);
-		builder.create().show();
+		View view=LayoutInflater.from(c).inflate(R.layout.dialog, null);
+		view.findViewById(R.id.cancel).setVisibility(View.GONE);
+		view.findViewById(R.id.delete2).setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+			if(dlg!=null){
+				dlg.dismiss();
+			}
+			}
+		});
+		TextView message=(TextView) view.findViewById(R.id.message);
+		message.setText(text);
+		dlg=builder.create();
+		dlg.show();
+		Window window=dlg.getWindow();
+		window.setContentView(view);
+		Button ok=(Button) view.findViewById(R.id.ok);
+		ok.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+			if(dlg!=null){
+			dlg.dismiss();
+			}
+			if(listener!=null){
+				listener.onClickOk();
+			}
+			}
+		});
+	}
+	
+	public interface dialogListener{
+		public void onClickOk();
 	}
 }
