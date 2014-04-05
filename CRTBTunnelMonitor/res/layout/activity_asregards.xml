@@ -26,7 +26,7 @@
 	    
 	    >
 	    <RelativeLayout 
-	        android:id="@+id/rl_work"
+	        android:id="@+id/regist"
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
 	        android:orientation="vertical"
@@ -51,7 +51,7 @@
 	            />
 	    </RelativeLayout>
 	    <RelativeLayout 
-	        android:id="@+id/rl_fracturesurface"
+	        android:id="@+id/update"
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
 	        android:orientation="vertical"
@@ -76,7 +76,7 @@
 	            />
 	    </RelativeLayout>
 	    <RelativeLayout 
-	        android:id="@+id/rl_record"
+	        android:id="@+id/user_book"
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
 	        android:orientation="vertical"
@@ -110,7 +110,7 @@
 	    
 	    >
 	    <RelativeLayout 
-	        android:id="@+id/rl_total"
+	        android:id="@+id/soft_info"
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
 	        android:orientation="vertical"
@@ -134,7 +134,7 @@
 	            />
 	    </RelativeLayout>
 	    <RelativeLayout 
-	        android:id="@+id/rl_measure"
+	        android:id="@+id/user_info"
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
 	        android:orientation="vertical"

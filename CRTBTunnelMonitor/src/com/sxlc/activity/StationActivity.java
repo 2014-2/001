@@ -23,13 +23,13 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.crtb.tssurveyprovider.Coordinate3D;
 import com.crtb.tssurveyprovider.TSConnectType;
 import com.crtb.tssurveyprovider.TSSurveyProvider;
 import com.sxlc.adapter.ControlPonitsListAdapter;
@@ -54,6 +54,8 @@ public class StationActivity extends Activity {
 	private CRTBTunnelMonitor CurApp = null;
 	private int iConnectType = 0;
 	private boolean bConnect = false;
+
+	private AlertDialog dlg;
 
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -147,10 +149,6 @@ public class StationActivity extends Activity {
 		return true;
 	}
 
-	public boolean DisConnect() {
-		return true;
-	}
-
 	public void setdata() {
 		WorkInfos CurW = CurApp.GetCurWork();
 		if (CurW == null) {
@@ -216,23 +214,18 @@ public class StationActivity extends Activity {
 
 	/** 连接全站仪成功 */
 	private void connect(TSConnectType type, int baudRate) {
-		String[] tsParams = new String[] { String.valueOf(baudRate) };
-		int nret = TSSurveyProvider.getDefaultAdapter().BeginConnection(type,
-				tsParams);
-		nret = TSSurveyProvider.getDefaultAdapter().TestConnection();
-		AlertDialog dlg = new AlertDialog.Builder(StationActivity.this)
-				.create();
-		Window window = dlg.getWindow();
-		window.setContentView(R.layout.connectyesdialog);
-		TextView text = (TextView) window.findViewById(R.id.connertexryes);
-		text.setText("连接" + list.get(iListPos).getName() + "全站仪");
-		dlg.show();
-	}
-
-	/** 断开全站仪成功 */
-	private void disconnect() {
+		String result = null;
 		try {
-			int res = TSSurveyProvider.getDefaultAdapter().EndConnection();
+			String[] tsParams = new String[] { String.valueOf(baudRate) };
+			int ret = TSSurveyProvider.getDefaultAdapter().BeginConnection(
+					type, tsParams);
+			if (ret == 1) {
+				result = "成功";
+			} else {
+				result = "失败";
+			}
+			// nret = TSSurveyProvider.getDefaultAdapter().TestConnection();
+
 		} catch (Exception e) {
 
 		}
@@ -241,7 +234,34 @@ public class StationActivity extends Activity {
 		Window window = dlg.getWindow();
 		window.setContentView(R.layout.connectyesdialog);
 		TextView text = (TextView) window.findViewById(R.id.connertexryes);
-		text.setText("断开连接" + list.get(iListPos).getName() + "全站仪成功");
+		text.setText("连接" + list.get(iListPos).getName() + result);
+		dlg.show();
+	}
+
+	/** 断开全站仪成功 */
+	private void disconnect() {
+		int ret=-1;
+		String result;
+		try {
+			ret = TSSurveyProvider.getDefaultAdapter().EndConnection();
+		} catch (Exception e) {
+
+		}
+		
+		AlertDialog dlg = new AlertDialog.Builder(StationActivity.this)
+				.create();
+		Window window = dlg.getWindow();
+		window.setContentView(R.layout.connectyesdialog);
+		
+		ImageView icon=(ImageView) window.findViewById(R.id.icon);
+		if(ret==1){
+			result="成功";
+		}else{
+			result="失败";
+			icon.setImageResource(R.drawable.failred);
+		}
+		TextView text = (TextView) window.findViewById(R.id.connertexryes);
+		text.setText("断开连接" + list.get(iListPos).getName() + result);
 		dlg.show();
 	}
 
@@ -419,10 +439,35 @@ public class StationActivity extends Activity {
 	}
 
 	private void showDialog(String text) {
-		AlertDialog.Builder builder = new Builder(StationActivity.this);
-		builder.setTitle("提示");
-		builder.setMessage(text);
-		builder.setPositiveButton("确定", null);
-		builder.create().show();
+		Builder builder = new Builder(this);
+		View view = LayoutInflater.from(this).inflate(R.layout.dialog, null);
+		view.findViewById(R.id.cancel).setVisibility(View.GONE);
+		view.findViewById(R.id.delete2).setOnClickListener(
+				new View.OnClickListener() {
+
+					@Override
+					public void onClick(View v) {
+						if (dlg != null) {
+							dlg.dismiss();
+						}
+					}
+				});
+		TextView message = (TextView) view.findViewById(R.id.message);
+		message.setText(text);
+		dlg = builder.create();
+		dlg.show();
+		Window window = dlg.getWindow();
+		window.setContentView(view);
+		Button ok = (Button) view.findViewById(R.id.ok);
+		ok.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				if (dlg != null) {
+					dlg.dismiss();
+				}
+
+			}
+		});
 	}
 }

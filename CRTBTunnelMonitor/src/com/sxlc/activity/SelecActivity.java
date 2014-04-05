@@ -14,8 +14,7 @@ import com.sxlc.common.Constant;
 import com.sxlc.entity.SurveyerInformation;
 /**
  * 用户选择 界面
- *创建时间：2014-3-18下午4:12:05
- *@author 张涛
+ *@author edison.xiao
  *@since JDK1.6
  *@version 1.0
  */
@@ -27,13 +26,15 @@ public class SelecActivity extends Activity implements OnClickListener{
 	private ImageView select_img_service;
 	/** 意图 */
 	private Intent intent;
+	
+	private CRTBTunnelMonitor mApp;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_select);
 		initView();
-		CRTBTunnelMonitor CurApp = ((CRTBTunnelMonitor)getApplicationContext());
-		CurApp.GetDB().ConnectDB();
+		mApp = ((CRTBTunnelMonitor)getApplicationContext());
+		mApp.GetDB().ConnectDB();
 		/*测试代码*/
 		List<SurveyerInformation> testList = new ArrayList<SurveyerInformation>();
 		SurveyerInformation test = new SurveyerInformation();
@@ -43,8 +44,8 @@ public class SelecActivity extends Activity implements OnClickListener{
 		test.setProjectID(1);
 		test.setSurveyerName("测试员");
 		testList.add(test);
-		CurApp.setPersonList(testList);
-		CurApp.setCurPerson(test);
+		mApp.setPersonList(testList);
+		mApp.setCurPerson(test);
 		/*测试代码*/
 	}
 
@@ -62,6 +63,7 @@ public class SelecActivity extends Activity implements OnClickListener{
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.select_img_place:// 直接跳转主界面
+			mApp.setbLocaUser(true);
 			intent = new Intent(SelecActivity.this,MainActivity.class);
 			intent.putExtra(Constant.Select_LoginName_Name, Constant.Select_LoginValue_Local);
 			startActivity(intent);
@@ -69,11 +71,12 @@ public class SelecActivity extends Activity implements OnClickListener{
 		case R.id.select_img_service: // 跳转服务的登录界面
 			intent = new Intent(SelecActivity.this,LoginActivity.class);
 			startActivity(intent);
+			mApp.setbLocaUser(false);
 			break;
 		default:
 			break;
 		}
-		
+		SelecActivity.this.finish();
 	}
 
 }
