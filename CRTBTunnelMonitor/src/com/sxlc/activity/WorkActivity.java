@@ -3,9 +3,11 @@ package com.sxlc.activity;
 import java.util.ArrayList;
 import java.util.List;
 
+
 //import com.sxlc.adapter.listAdapter;
 import com.sxlc.adapter.WorkListAdapter;
 import com.sxlc.common.Constant;
+import com.sxlc.dao.impl.DTMSDBDaoImpl;
 import com.sxlc.dao.impl.WorkDaoImpl;
 //import com.sxlc.entity.list_infos;
 import com.sxlc.entity.*;
@@ -175,14 +177,16 @@ public class WorkActivity extends Activity {
 				infos = new ArrayList<WorkInfos>();
 				
 			}
-			CurApp.GetDB().GetWorkList(infos);
+			DTMSDBDaoImpl dao=CurApp.GetDB();
+			if(dao!=null){
+			dao.GetWorkList(infos);
 			CurApp.SetWorkList(infos);
+			}
 		}
 	}
 		
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (event.getAction() == KeyEvent.ACTION_DOWN) {
-			// TODO Auto-generated method stub
 			if (keyCode == 82) {
 				vie = new View(this);
 				int num = 1;

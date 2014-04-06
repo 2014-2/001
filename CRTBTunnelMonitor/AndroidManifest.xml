@@ -49,6 +49,7 @@
         
 
         <activity android:name="com.sxlc.activity.StationActivity"/>
+        <activity android:name="com.sxlc.activity.SoftwareInfoActivity"></activity>
         <activity android:name="com.sxlc.activity.RegisterActivity"></activity>
         <activity android:name="com.sxlc.activity.UserInfoActivity"></activity>
 

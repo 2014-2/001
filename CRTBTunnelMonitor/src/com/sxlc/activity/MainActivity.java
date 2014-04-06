@@ -103,6 +103,10 @@ public class MainActivity extends Activity implements OnClickListener {
 		main_rl_warning.setOnClickListener(this);
 		main_rl_servers.setOnClickListener(this);
 		main_rl_asregards.setOnClickListener(this);
+		CRTBTunnelMonitor app=(CRTBTunnelMonitor)getApplicationContext();
+		if(app.isbLocaUser()){
+			main_rl_servers.setVisibility(View.GONE);
+		}
 	}
 
 	@Override

@@ -41,6 +41,18 @@ public class CRTBTunnelMonitor extends Application {
 	private List<SurveyerInformation> personList = null;
 	private SurveyerInformation CurPerson = null;
 
+	private boolean bLocaUser;
+	
+	
+	
+	public boolean isbLocaUser() {
+		return bLocaUser;
+	}
+
+	public void setbLocaUser(boolean bLocaUser) {
+		this.bLocaUser = bLocaUser;
+	}
+
 	public CRTBTunnelMonitor() {
 		// TODO Auto-generated constructor stub
 		dtmsdb = new DTMSDBDaoImpl(this,null);

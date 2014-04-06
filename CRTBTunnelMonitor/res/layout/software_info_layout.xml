@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" 
+    android:background="#e7e7e7">
+    <TextView android:layout_width="wrap_content"
+        android:layout_height="80dp"
+        android:id="@+id/title"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:text="隧道围岩监测采集终端系统"
+        android:gravity="center"
+        android:textSize="24sp"/>
+   
+    <View android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:id="@+id/down"
+        android:layout_height="60dp"/>
+     <RelativeLayout android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/content"
+        android:layout_below="@id/title"
+        android:layout_above="@id/down"
+        android:background="#ffffff"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp">
+        
+         <!-- <ImageView android:layout_width="65dp"
+             android:layout_height="65dp"
+             android:id="@+id/work"
+             android:background="@raw/work"
+             android:layout_marginTop="40dp"
+             android:layout_marginLeft="40dp"/> -->
+         <TextView android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:id="@+id/work"
+             android:text="中铁二院数字隧道监测方案"
+             android:layout_marginTop="30dp"
+             android:drawablePadding="10dp"
+             android:textSize="16sp"
+             android:layout_centerHorizontal="true"
+             android:gravity="center_vertical"
+             android:drawableLeft="@raw/work"/>
+         <TextView android:layout_below="@id/work"
+             android:layout_marginTop="20dp"
+             android:layout_marginLeft="60dp"
+             android:lineSpacingExtra="10dp"
+             android:id="@+id/version"
+             android:text="适用于:隧道围岩测量  \n Version:1.1.87.0"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"/>
+         
+         <TextView android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:layout_marginLeft="60dp"
+             android:id="@+id/copyright"
+             android:layout_below="@id/version"
+             android:drawablePadding="3dp"
+             android:layout_marginRight="30dp"
+             android:lineSpacingExtra="5dp"
+             android:text="Copyright2014©中国中铁二院工程集团有限责任公司。\nAll Rights Reserved"
+             android:drawableLeft="@drawable/crtb"/>
+         <TextView android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:textSize="18sp"
+             android:layout_marginLeft="40dp"
+             android:layout_marginTop="30dp"
+             android:layout_marginRight="30dp"
+             
+             android:layout_below="@id/copyright"
+             android:textStyle="bold"
+             android:text="数字化监测方案（Digtal Tunnel Mornitoring Solution 简称DTMS）,实现了沉降信息的自动化测量及电子化管理，同时能在现场直接查看报表和分析曲线，并将数据直接上传至中心服务器"/>
+     </RelativeLayout>
+</RelativeLayout>

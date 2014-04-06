@@ -57,7 +57,8 @@ public class ConPopuWindow extends PopupWindow {
 			@Override
 			public void onClick(View v) {
 				Intent intent = new Intent(c, ControlNewActivityTwo.class);
-				Bundle mBundle = new Bundle();  
+				Bundle mBundle = new Bundle();
+				mBundle.putBoolean("bEdit", false);
 		        mBundle.putParcelable(Constant.Select_ControlPointsRowClickItemsName_Data,null);
 		        intent.putExtras(mBundle);
 				((Activity) c).startActivityForResult(intent,0);
@@ -91,7 +92,8 @@ public class ConPopuWindow extends PopupWindow {
 					return; 
 				}
 				Intent intent = new Intent(c, ControlNewActivityTwo.class);
-				Bundle mBundle = new Bundle();  
+				Bundle mBundle = new Bundle();
+				mBundle.putBoolean("bEdit", true);
 		        mBundle.putParcelable(Constant.Select_ControlPointsRowClickItemsName_Data,tmp);
 		        intent.putExtras(mBundle);
 		        ((Activity)c).startActivityForResult(intent,0);

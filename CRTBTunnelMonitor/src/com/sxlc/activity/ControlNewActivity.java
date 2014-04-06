@@ -1,22 +1,11 @@
 package com.sxlc.activity;
 
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
-
-import com.sxlc.common.Constant;
-import com.sxlc.common.Constant.TotalStationType;
-import com.sxlc.dao.impl.RecordDaoImpl;
-import com.sxlc.dao.impl.TotalStationDaoImpl;
-import com.sxlc.entity.RecordInfo;
-import com.sxlc.entity.TotalStationInfo;
-import com.sxlc.entity.WorkInfos;
-import com.sxlc.utils.Time;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnFocusChangeListener;
@@ -28,6 +17,12 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.sxlc.common.Constant;
+import com.sxlc.common.Constant.TotalStationType;
+import com.sxlc.dao.impl.TotalStationDaoImpl;
+import com.sxlc.entity.TotalStationInfo;
+import com.sxlc.entity.WorkInfos;
 
 /**
  * 新建全站仪串口
@@ -53,6 +48,8 @@ public class ControlNewActivity extends Activity implements OnClickListener {
 
 	private CRTBTunnelMonitor CurApp = null;
 	
+	private boolean bEdit=false;
+	
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_controlnew);
@@ -63,9 +60,9 @@ public class ControlNewActivity extends Activity implements OnClickListener {
 		xylist = new ArrayList<String>();
 		btllist = new ArrayList<String>();
 		cklist = new ArrayList<String>();
-
-		editInfo = (TotalStationInfo)getIntent().getExtras().getParcelable(Constant.Select_TotalStationRowClickItemsName_Data);
-		
+        Bundle bundle=getIntent().getExtras();
+		editInfo = (TotalStationInfo)bundle.getParcelable(Constant.Select_TotalStationRowClickItemsName_Data);
+		bEdit=bundle.getBoolean("bEdit");
 		initUI();
 		name.setOnFocusChangeListener(new OnFocusChangeListener() {
 			
@@ -146,7 +143,7 @@ public class ControlNewActivity extends Activity implements OnClickListener {
 			}
 			if(name.getText().toString().trim().length() <= 0)
 			{
-				Toast.makeText(this, "请输入完整信息", 3000).show();
+				Toast.makeText(this, "请输入控制点名", 3000).show();
 				return;
 			}
 			WorkInfos Curw = CurApp.GetCurWork();
