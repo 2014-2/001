@@ -2,7 +2,6 @@ package com.sxlc.service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import org.ksoap2.HeaderProperty;
 import org.ksoap2.SoapEnvelope;
@@ -23,8 +22,6 @@ public final class CrtbWebService {
 	private static final String USRE_AUTH_URL = "http://61.237.239.144/fxkz/basedown";
 	private static final String DATA_UPLOAD_URL = "http://61.237.239.144/fxkz/testdata";
 	
-	private static final String TRAFFIC_SERVICE_URI_GET  = "https://lccs.cr-tb.com/DTMS/ictrcp/basedown.asmx";
-	private static final String TRAFFIC_SERVICE_URI_POST = "https://lccs.cr-tb.com/DTMS/ictrcp/testdata.asmx";
 	private static final int CONNECITON_TIME_OUT = 10000;
 	
 	private static CrtbWebService sInstance;
@@ -72,6 +69,13 @@ public final class CrtbWebService {
 		task.execute();
 	}
 	
+	/**
+	 * 
+	 * @param account
+	 * @param password
+	 * @param macAddress
+	 * @param callback
+	 */
 	public void verifyAppUser(String account, String password, String macAddress, RpcCallback callback) {
 		String publicKey = getPublicKey();
 		if (TextUtils.isEmpty(publicKey)) {
@@ -93,19 +97,8 @@ public final class CrtbWebService {
 			throw new IllegalStateException("getZoneAndSiteCode: random code is invalid.");
 		}
 		GetZoneAndSiteCodeRpc rpc = new GetZoneAndSiteCodeRpc(randomCode, new RpcCallbackWrapper(callback));
-		RpcSendTask task = new RpcSendTask(rpc, TRAFFIC_SERVICE_URI_GET);
+		RpcSendTask task = new RpcSendTask(rpc, USRE_AUTH_URL);
 		task.execute();
-	}
-
-	private static SoapObject createMessage(String action, Map<String, String> parameters) {
-		if (TextUtils.isEmpty(action)) {
-			throw new IllegalArgumentException("createMessage: action is NULL." );
-		}
-		SoapObject message = new SoapObject(NAMESPACE, action);
-		for(String key : parameters.keySet()) {
-			message.addProperty(key, parameters.get(key));
-		}
-		return message;
 	}
 	
 	private class RpcSendTask extends AsyncTask<Void, Void, Void> {

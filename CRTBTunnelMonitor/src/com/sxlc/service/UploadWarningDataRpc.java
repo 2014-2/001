@@ -8,36 +8,36 @@ import org.ksoap2.serialization.SoapObject;
 import android.text.TextUtils;
 import android.util.Log;
 
-class UploadTestResultDataRpc extends AbstractRpc {
-	private static final String LOG_TAG = "UploadTestResultDataRpc";
+class UploadWarningDataRpc extends AbstractRpc {
+	private static final String LOG_TAG = "UploadWarningDataRpc";
 	private static final String KEY_SECTION_CODE = "断面编号";
-	private static final String KEY_POINT_CODE_LIST = "测点的编号序列";
-	private static final String KEY_TUNNEL_FACE_DISTANCE = "该断面到掌子面的距离";
-	private static final String KEY_PROCEDURE = "当前开挖段施工工序";
-	private static final String KEY_MONITOR_MODEL = "量测仪器及型号";
-	private static final String KEY_MEASURE_DATE = "测点的量测时间";
-	private static final String KEY_POINT_VALUE_LIST = "测点的量测值序列";
-	private static final String KEY_POINT_COORDINATE_LIST = "测点的量测坐标序列";
-	private static final String KEY_SURVEYOR_NAME = "量测人员姓名";
-	private static final String KEY_SURVEYOR_ID = "量测人员身份证";
+	private static final String KEY_POINT_CODE = "测点编码或收敛测点编码对";
+	private static final String KEY_WARNING_LEVEL = "预警级别";
+	private static final String KEY_TRANSFORM_SPEED = "变形速度值";
+	private static final String KEY_WARNING_POINT_VALUE = "预警测点的量测值";
+	private static final String KEY_WARNING_TIME = "预警时间";
+	private static final String KEY_WARNING_PERSON = "预警处理责任人";
+	private static final String KEY_WARNING_DESCRIPTION = "预警处理过程描述";
+	private static final String KEY_WARNING_END_TIME = "预警处理完成时间";
+	private static final String KEY_WARNING_RESULT = "预警处理结果";
 	private static final String KEY_REMARK = "备注";
 	private static final String KEY_RANDOM_CODE = "随机码";
-	private static final String KEY_ACTION = "getTestResultData";
+	private static final String KEY_ACTION = "getWarningData";
 	
 	private Map<String, String> mParameters = new HashMap<String, String>();
 	private RpcCallback mCallback;
 	
-	UploadTestResultDataRpc(RpcCallback callback) {
+	UploadWarningDataRpc(RpcCallback callback) {
 		mParameters.put(KEY_SECTION_CODE, "");
-		mParameters.put(KEY_POINT_CODE_LIST, "");
-		mParameters.put(KEY_TUNNEL_FACE_DISTANCE, "");
-		mParameters.put(KEY_PROCEDURE, "");
-		mParameters.put(KEY_MONITOR_MODEL, "");
-		mParameters.put(KEY_MEASURE_DATE, "");
-		mParameters.put(KEY_POINT_VALUE_LIST, "");
-		mParameters.put(KEY_POINT_COORDINATE_LIST, "");
-		mParameters.put(KEY_SURVEYOR_NAME, "");
-		mParameters.put(KEY_SURVEYOR_ID, "");
+		mParameters.put(KEY_POINT_CODE, "");
+		mParameters.put(KEY_WARNING_LEVEL, "");
+		mParameters.put(KEY_TRANSFORM_SPEED, "");
+		mParameters.put(KEY_WARNING_POINT_VALUE, "");
+		mParameters.put(KEY_WARNING_TIME, "");
+		mParameters.put(KEY_WARNING_PERSON, "");
+		mParameters.put(KEY_WARNING_DESCRIPTION, "");
+		mParameters.put(KEY_WARNING_END_TIME, "");
+		mParameters.put(KEY_WARNING_RESULT, "");
 		mParameters.put(KEY_REMARK, "");
 		mParameters.put(KEY_RANDOM_CODE, "");
 		mCallback = callback;
@@ -70,6 +70,7 @@ class UploadTestResultDataRpc extends AbstractRpc {
 			notifyFailed("Exception: " + e.getMessage());
 			e.printStackTrace();
 		}
+		
 	}
 
 	private void notifySuccess(Object[] data) {
@@ -83,4 +84,5 @@ class UploadTestResultDataRpc extends AbstractRpc {
 			mCallback.onFailed();
 		}
 	}
+
 }

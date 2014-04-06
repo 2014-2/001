@@ -8,36 +8,24 @@ import org.ksoap2.serialization.SoapObject;
 import android.text.TextUtils;
 import android.util.Log;
 
-class UploadTestResultDataRpc extends AbstractRpc {
-	private static final String LOG_TAG = "UploadTestResultDataRpc";
-	private static final String KEY_SECTION_CODE = "断面编号";
-	private static final String KEY_POINT_CODE_LIST = "测点的编号序列";
-	private static final String KEY_TUNNEL_FACE_DISTANCE = "该断面到掌子面的距离";
-	private static final String KEY_PROCEDURE = "当前开挖段施工工序";
-	private static final String KEY_MONITOR_MODEL = "量测仪器及型号";
-	private static final String KEY_MEASURE_DATE = "测点的量测时间";
-	private static final String KEY_POINT_VALUE_LIST = "测点的量测值序列";
-	private static final String KEY_POINT_COORDINATE_LIST = "测点的量测坐标序列";
-	private static final String KEY_SURVEYOR_NAME = "量测人员姓名";
-	private static final String KEY_SURVEYOR_ID = "量测人员身份证";
+class UploadRemoveSectionTestDataRpc extends AbstractRpc {
+	private static final String LOG_TAG = "UploadRemoveSectionTestDataRpc";
+	private static final String KEY_ZONE_CODE = "工区编号";
+	private static final String KEY_SITE_CODE = "隧道工点编号";
+	private static final String KEY_SECTION_OR_POINT_STATUS = "断面或测点状态";
+	private static final String KEY_SECTION_OR_POINT_CODE = "断面编码或测点编码";
 	private static final String KEY_REMARK = "备注";
 	private static final String KEY_RANDOM_CODE = "随机码";
-	private static final String KEY_ACTION = "getTestResultData";
+	private static final String KEY_ACTION = "getRemoveSectionTestData";
 	
 	private Map<String, String> mParameters = new HashMap<String, String>();
 	private RpcCallback mCallback;
 	
-	UploadTestResultDataRpc(RpcCallback callback) {
-		mParameters.put(KEY_SECTION_CODE, "");
-		mParameters.put(KEY_POINT_CODE_LIST, "");
-		mParameters.put(KEY_TUNNEL_FACE_DISTANCE, "");
-		mParameters.put(KEY_PROCEDURE, "");
-		mParameters.put(KEY_MONITOR_MODEL, "");
-		mParameters.put(KEY_MEASURE_DATE, "");
-		mParameters.put(KEY_POINT_VALUE_LIST, "");
-		mParameters.put(KEY_POINT_COORDINATE_LIST, "");
-		mParameters.put(KEY_SURVEYOR_NAME, "");
-		mParameters.put(KEY_SURVEYOR_ID, "");
+	UploadRemoveSectionTestDataRpc(RpcCallback callback) {
+		mParameters.put(KEY_ZONE_CODE, "");
+		mParameters.put(KEY_SITE_CODE, "");
+		mParameters.put(KEY_SECTION_OR_POINT_STATUS, "");
+		mParameters.put(KEY_SECTION_OR_POINT_CODE, "");
 		mParameters.put(KEY_REMARK, "");
 		mParameters.put(KEY_RANDOM_CODE, "");
 		mCallback = callback;
@@ -70,6 +58,7 @@ class UploadTestResultDataRpc extends AbstractRpc {
 			notifyFailed("Exception: " + e.getMessage());
 			e.printStackTrace();
 		}
+		
 	}
 
 	private void notifySuccess(Object[] data) {
@@ -83,4 +72,6 @@ class UploadTestResultDataRpc extends AbstractRpc {
 			mCallback.onFailed();
 		}
 	}
+
+
 }
