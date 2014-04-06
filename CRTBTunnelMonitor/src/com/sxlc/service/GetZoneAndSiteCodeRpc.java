@@ -8,7 +8,7 @@ import org.ksoap2.serialization.SoapObject;
 import android.os.Message;
 import android.util.Log;
 
-public class GetZoneAndSiteCodeRpc extends AbstractRpc {
+class GetZoneAndSiteCodeRpc extends AbstractRpc {
 	private static final String LOG_TAG = "GetZoneAndSiteCodeRpc";
 	private static final String KEY_RANDOM_CODE = "随机码";
 	private static final String KEY_ACTION = "getZoneAndSiteCode";
@@ -17,7 +17,7 @@ public class GetZoneAndSiteCodeRpc extends AbstractRpc {
 	private Map<String, String> mParameters = new HashMap<String, String>();
 	private RpcCallback mCallback;
 	
-	public GetZoneAndSiteCodeRpc(String randomCode, RpcCallback callback) {
+	GetZoneAndSiteCodeRpc(String randomCode, RpcCallback callback) {
 		mParameters.put(KEY_RANDOM_CODE, randomCode);
 		mCallback = callback;
 	}

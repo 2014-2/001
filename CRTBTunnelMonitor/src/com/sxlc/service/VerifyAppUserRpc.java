@@ -8,7 +8,7 @@ import org.ksoap2.serialization.SoapObject;
 import android.text.TextUtils;
 import android.util.Log;
 
-public class VerifyAppUserRpc extends AbstractRpc {
+class VerifyAppUserRpc extends AbstractRpc {
 	private static final String LOG_TAG = "VerifyAppUserRpc";
 	private static final String KEY_ACCOUNT = "登陆账号";
 	private static final String KEY_PASSWORD = "登陆密码";
@@ -19,7 +19,7 @@ public class VerifyAppUserRpc extends AbstractRpc {
 	private Map<String, String> mParameters = new HashMap<String, String>();
 	private RpcCallback mCallback;
 	
-	public VerifyAppUserRpc(String account, String password, String macAddress, String publicKey, RpcCallback callback) {
+	VerifyAppUserRpc(String account, String password, String macAddress, String publicKey, RpcCallback callback) {
 		mParameters.put(KEY_ACCOUNT, account);
 		mParameters.put(KEY_PASSWORD, password);
 		mParameters.put(KEY_MAC_ADDRESS, macAddress);
