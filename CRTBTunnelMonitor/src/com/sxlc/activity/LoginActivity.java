@@ -1,8 +1,6 @@
 package com.sxlc.activity;
 
 
-import java.sql.Timestamp;
-
 import org.ksoap2.SoapEnvelope;
 import org.ksoap2.serialization.SoapObject;
 import org.ksoap2.serialization.SoapSerializationEnvelope;
@@ -12,7 +10,7 @@ import ICT.utils.RSACoder;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
 //import android.webkit.WebView.FindListener;
@@ -78,7 +76,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 			String pwd = et_password.getText().toString().trim();
 			String verify = "0";
 			//用户验证
-			if(name==null||pwd==null){
+			if(TextUtils.isEmpty(name)||TextUtils.isEmpty(pwd)){
 				verify = loginTest(Constant.testUsername,Constant.testPassword);
 			}else{
 				verify = loginTest(name,pwd);
