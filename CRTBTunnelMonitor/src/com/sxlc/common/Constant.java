@@ -11,13 +11,6 @@ package com.sxlc.common;
  */
 public class Constant {
 
-	/**
-	 * 
-	 */
-	/*DTMSDB数据库版本信息*/
-	public static final int DB_VERSION_DTMSDB = 1;
-	/*DTMSDB数据库名称*/
-	public static final String DB_NAME_DTMSDB = "DTMSDB";
 	/*登录选择name和value*/
 	public static final String Select_LoginName_Name = "name";
 	public static final int Select_LoginValue_Local = 1;

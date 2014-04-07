@@ -54,8 +54,7 @@ public class CRTBTunnelMonitor extends Application {
 	}
 
 	public CRTBTunnelMonitor() {
-		// TODO Auto-generated constructor stub
-		dtmsdb = new DTMSDBDaoImpl(this,null);
+		dtmsdb = new DTMSDBDaoImpl(this);
 	}
 
 	/**

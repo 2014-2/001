@@ -1,54 +1,19 @@
-/**
- * 
- */
 package com.sxlc.db;
 
-import com.sxlc.common.Constant;
-
 import android.content.Context;
-import android.database.DatabaseErrorHandler;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.database.sqlite.SQLiteOpenHelper;
 
-/**
- * @author Administrator
- *
- */
 public class DTMSDB extends SQLiteOpenHelper {
+	private static final String DB_NAME = "DTMSDB.db";
+	private static final int DB_VERSION = 1;
 
-	/**
-	 * 带参构造方法
-	 * 
-	 * @param context
-	 *            上下文
-	 * @param name
-	 *            数据库
-	 * @param factory
-	 *            工厂
-	 * @param version
-	 *            版本号
-   */
-	public DTMSDB(Context context, String name, CursorFactory factory,
-			int version) {
-		super(context, Constant.DB_NAME_DTMSDB+".db", null, Constant.DB_VERSION_DTMSDB);
-		// TODO Auto-generated constructor stub
+	public DTMSDB(Context context) {
+		super(context, DB_NAME, null, DB_VERSION);
 	}
 
-	/**
-	 * @param context
-	 * @param name
-	 * @param factory
-	 * @param version
-	 * @param errorHandler
-	 */
-	/* (non-Javadoc)
-	 * @see android.database.sqlite.SQLiteOpenHelper#onCreate(android.database.sqlite.SQLiteDatabase)
-	 */
 	@Override
 	public void onCreate(SQLiteDatabase db) {
-		// TODO Auto-generated method stub
-
 		// 创建ProjectIndex表 --本机所有工程信息列表（工程管理、导入、导出使用）
 		db.execSQL("create table if not exists ProjectIndex(id INTEGER PRIMARY KEY AUTOINCREMENT ,ProjectName varchar(255),"
 				+ "CreateTime text,StartChainage double,EndChainage double,"
@@ -65,21 +30,10 @@ public class DTMSDB extends SQLiteOpenHelper {
 				+ "Info TEXT)");
 	}
 
-	/* (non-Javadoc)
-	 * @see android.database.sqlite.SQLiteOpenHelper#onUpgrade(android.database.sqlite.SQLiteDatabase, int, int)
-	 */
+
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-		// TODO Auto-generated method stub
-
-	}
-
-	/**
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-
+		//TODO: drop the tables
 	}
 
 }

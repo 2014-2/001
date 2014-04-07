@@ -24,9 +24,8 @@ public class DTMSDBDaoImpl {
 	private DTMSDB helper = null;
 	private SQLiteDatabase db = null;
 
-	public DTMSDBDaoImpl(Context c, String name) {
-		// TODO Auto-generated constructor stub
-		helper = new DTMSDB(c, name, null, 0);
+	public DTMSDBDaoImpl(Context c) {
+		helper = new DTMSDB(c);
 	}
 
 	/**
