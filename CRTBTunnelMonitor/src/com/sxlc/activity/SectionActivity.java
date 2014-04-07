@@ -327,7 +327,7 @@ public class SectionActivity extends Activity implements OnPageChangeListener {
 								CRTBTunnelMonitor CurApp = ((CRTBTunnelMonitor)getApplicationContext());
 								TunnelCrossSectionInfo item = (TunnelCrossSectionInfo)listView.getItemAtPosition(iListPos1);
 								switch (which) {
-								case 0:// 编辑
+								case 0:// 编辑 
 									intent = new Intent(SectionActivity.this,
 											SectionNewActivity.class);
 									intent.putExtra(Constant.Select_SectionRowClickItemsName_Name,

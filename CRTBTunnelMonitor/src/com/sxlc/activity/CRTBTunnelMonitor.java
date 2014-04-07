@@ -22,7 +22,6 @@ import com.sxlc.entity.WorkInfos;
 /**
  * 公共变量/全局变量定义
  * 
- * @author 文君
  * @since JDK1.6
  * @version 1.0
  *
@@ -31,7 +30,9 @@ public class CRTBTunnelMonitor extends Application {
 	/**
 	 * 
 	 */
-	private DTMSDBDaoImpl dtmsdb = null;
+	private static CRTBTunnelMonitor instance;
+	
+	private DTMSDBDaoImpl mDaoImpl = null;
 	private List<WorkInfos> WorkList = null;//工作面列表
 	private WorkInfos CurWork = null;//当前工作面
 	private Object CurTotalStation = null;//正在使用的全站仪
@@ -53,18 +54,16 @@ public class CRTBTunnelMonitor extends Application {
 		this.bLocaUser = bLocaUser;
 	}
 
-	public CRTBTunnelMonitor() {
-		dtmsdb = new DTMSDBDaoImpl(this);
+	public static CRTBTunnelMonitor getInstance() {
+	   return instance;
 	}
 
-	/**
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-
+	@Override
+	public void onCreate() {
+		instance=this;
+		mDaoImpl=new DTMSDBDaoImpl(this);
+		super.onCreate();
 	}
-	
 	
 	
 	public List<SurveyerInformation> getPersonList() {
@@ -166,15 +165,19 @@ public class CRTBTunnelMonitor extends Application {
 		
 		return true;
 	}
-	public DTMSDBDaoImpl GetDB()
+	
+	public DTMSDBDaoImpl getDatabase()
 	{
-		return dtmsdb;
+		return mDaoImpl;
 	}
+	
+	
 	public void SetCurWork(Context c,WorkInfos Value)
 	{
 		CurWork = Value;
 		CurWork.InitData(c);
 	}
+	
 	public WorkInfos GetCurWork()
 	{
 		return CurWork;

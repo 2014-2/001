@@ -248,7 +248,7 @@ public class WorkNewActivity extends Activity implements OnClickListener {
 					}
 					else
 					{
-						CurApp.GetDB().UpdateWork(w);
+						CurApp.getDatabase().UpdateWork(w);
 						WorkDaoImpl d = new WorkDaoImpl(WorkNewActivity.this, w.getProjectName());
 						d.UpdateWork(w);
 						CurApp.UpdateWork(w);
@@ -257,7 +257,7 @@ public class WorkNewActivity extends Activity implements OnClickListener {
 				}
 				else
 				{
-					if(CurApp.GetDB().InsertWork(w))
+					if(CurApp.getDatabase().InsertWork(w))
 					{
 						infos.add(w);
 						WorkDaoImpl d = new WorkDaoImpl(WorkNewActivity.this, w.getProjectName());

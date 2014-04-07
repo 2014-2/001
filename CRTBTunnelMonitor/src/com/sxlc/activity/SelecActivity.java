@@ -9,21 +9,21 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import com.sxlc.common.Constant;
 import com.sxlc.entity.SurveyerInformation;
 /**
  * 用户选择 界面
  *@author edison.xiao
- *@since JDK1.6
  *@version 1.0
  */
 public class SelecActivity extends Activity implements OnClickListener{
 
 	/**本地用户点击*/
-	private ImageView select_img_place;
+	private LinearLayout mLocalLayout;
 	/**服务器用户点击*/
-	private ImageView select_img_service;
+	private LinearLayout mServerLayout;
 	/** 意图 */
 	private Intent intent;
 	
@@ -33,8 +33,8 @@ public class SelecActivity extends Activity implements OnClickListener{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_select);
 		initView();
-		mApp = ((CRTBTunnelMonitor)getApplicationContext());
-		mApp.GetDB().ConnectDB();
+		mApp = CRTBTunnelMonitor.getInstance();
+		mApp.getDatabase().ConnectDB();
 		/*测试代码*/
 		List<SurveyerInformation> testList = new ArrayList<SurveyerInformation>();
 		SurveyerInformation test = new SurveyerInformation();
@@ -51,24 +51,24 @@ public class SelecActivity extends Activity implements OnClickListener{
 
 	/** 初始化控件 */
 	private void initView() {
-		select_img_place = (ImageView) findViewById(R.id.select_img_place);
-		select_img_service = (ImageView) findViewById(R.id.select_img_service);
+		mLocalLayout = (LinearLayout) findViewById(R.id.local_layout);
+		mServerLayout = (LinearLayout) findViewById(R.id.server_layout);
 		// 点击事件
-		select_img_place.setOnClickListener(this);
-		select_img_service.setOnClickListener(this);
+		mLocalLayout.setOnClickListener(this);
+		mServerLayout.setOnClickListener(this);
 	}
 	
 	
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
-		case R.id.select_img_place:// 直接跳转主界面
+		case R.id.local_layout:// 直接跳转主界面
 			mApp.setbLocaUser(true);
 			intent = new Intent(SelecActivity.this,MainActivity.class);
 			intent.putExtra(Constant.Select_LoginName_Name, Constant.Select_LoginValue_Local);
 			startActivity(intent);
 			break;
-		case R.id.select_img_service: // 跳转服务的登录界面
+		case R.id.server_layout:
 			intent = new Intent(SelecActivity.this,LoginActivity.class);
 			startActivity(intent);
 			mApp.setbLocaUser(false);

@@ -121,7 +121,7 @@ public class WorkActivity extends Activity {
 									}
 									else
 									{
-										CurApp.GetDB().DeleteWork(item.getProjectName());
+										CurApp.getDatabase().DeleteWork(item.getProjectName());
 										CurApp.DelWork(item);
 										adapter.notifyDataSetChanged();
 										Toast.makeText(WorkActivity.this, "删除成功", 3000).show();
@@ -177,7 +177,7 @@ public class WorkActivity extends Activity {
 				infos = new ArrayList<WorkInfos>();
 				
 			}
-			DTMSDBDaoImpl dao=CurApp.GetDB();
+			DTMSDBDaoImpl dao=CurApp.getDatabase();
 			if(dao!=null){
 			dao.GetWorkList(infos);
 			CurApp.SetWorkList(infos);

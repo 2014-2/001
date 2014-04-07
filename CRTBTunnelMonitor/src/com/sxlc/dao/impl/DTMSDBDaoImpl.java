@@ -35,6 +35,7 @@ public class DTMSDBDaoImpl {
 		// TODO Auto-generated method stub
 
 	}
+	
 	public void ConnectDB()
 	{
 		if(db == null)
@@ -42,6 +43,8 @@ public class DTMSDBDaoImpl {
 			db = helper.getReadableDatabase();
 		}
 	}
+	
+	
 	public void GetWorkList(List<WorkInfos> lt) {
 
 		if(lt == null)
