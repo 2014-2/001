@@ -5,8 +5,6 @@ import java.sql.Timestamp;import java.util.List;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.sxlc.db.DTMSDataCateGory;
-
 /**
  * 记录单隧道实体类
  *创建时间：2014-3-21下午1:05:21
