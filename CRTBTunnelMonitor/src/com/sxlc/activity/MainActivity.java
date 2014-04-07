@@ -3,20 +3,19 @@ package com.sxlc.activity;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.sxlc.common.Constant;
-import com.sxlc.entity.TotalStationInfo;
-import com.sxlc.entity.WorkInfos;
-
-
-import com.sxlc.infors.ProjectInformation;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.RelativeLayout;
+import android.widget.LinearLayout;
+import android.widget.LinearLayout.LayoutParams;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import com.sxlc.common.Constant;
+import com.sxlc.entity.TotalStationInfo;
+import com.sxlc.entity.WorkInfos;
 
 /**
  * 主界面 创建时间：2014-3-18下午3:52:30
@@ -28,21 +27,21 @@ import android.widget.Toast;
 public class MainActivity extends Activity implements OnClickListener {
 
 	/** 工作面 */
-	private RelativeLayout main_rl_work;
+	private TextView mWorkSection;
 	/** 断面 */
-	private RelativeLayout main_rl_fracturesurface;
+	private TextView mCrossSection;
 	/** 记录单 */
-	private RelativeLayout main_rl_record;
+	private TextView mSheet;
 	/** 全站仪 */
-	private RelativeLayout main_rl_total;
+	private TextView mStation;
 	/** 测量 */
-	private RelativeLayout main_rl_measure;
+	private TextView mMeasure;
 	/** 预警 */
-	private RelativeLayout main_rl_warning;
+	private TextView mWarn;
 	/** 服务器 */
-	private RelativeLayout main_rl_servers;
+	private TextView mServer;
 	/** 关于 */
-	private RelativeLayout main_rl_asregards;
+	private TextView mAbout;
 	/** 意图 */
 	private Intent intent;
 	/**
@@ -80,45 +79,48 @@ public class MainActivity extends Activity implements OnClickListener {
 
 	/** 初始化控件 */
 	private void initView() {
-		main_rl_work = (RelativeLayout) findViewById(R.id.main_rl_work);
-		main_rl_fracturesurface = (RelativeLayout) findViewById(R.id.main_rl_fracturesurface);
-		main_rl_record = (RelativeLayout) findViewById(R.id.main_rl_record);
-		main_rl_total = (RelativeLayout) findViewById(R.id.main_rl_total);
-		main_rl_measure = (RelativeLayout) findViewById(R.id.main_rl_measure);
-		main_rl_warning = (RelativeLayout) findViewById(R.id.main_rl_warning);
-		main_rl_servers = (RelativeLayout) findViewById(R.id.main_rl_servers);
-		main_rl_asregards = (RelativeLayout) findViewById(R.id.main_rl_asregards);
+		mWorkSection = (TextView) findViewById(R.id.worksection);
+		mCrossSection = (TextView) findViewById(R.id.crosssection);
+		mSheet = (TextView) findViewById(R.id.sheet);
+		mStation = (TextView) findViewById(R.id.station);
+		mMeasure = (TextView) findViewById(R.id.measure);
+		mWarn = (TextView) findViewById(R.id.warn);
+		mServer = (TextView) findViewById(R.id.server);
+		mAbout = (TextView) findViewById(R.id.about);
 		// 判断是否显示服务器图标
 		int num = getIntent().getExtras().getInt(Constant.Select_LoginName_Name);
 		if (num == Constant.Select_LoginValue_Local) {
 			// 影藏控件
-			main_rl_servers.setVisibility(View.GONE);
+			mServer.setVisibility(View.INVISIBLE);
+			LinearLayout.LayoutParams param=(LayoutParams) mAbout.getLayoutParams();
+		    //param.width=
 		}
 		// 点击事件
-		main_rl_work.setOnClickListener(this);
-		main_rl_fracturesurface.setOnClickListener(this);
-		main_rl_record.setOnClickListener(this);
-		main_rl_total.setOnClickListener(this);
-		main_rl_measure.setOnClickListener(this);
-		main_rl_warning.setOnClickListener(this);
-		main_rl_servers.setOnClickListener(this);
-		main_rl_asregards.setOnClickListener(this);
+		mWorkSection.setOnClickListener(this);
+		mCrossSection.setOnClickListener(this);
+		mSheet.setOnClickListener(this);
+		mStation.setOnClickListener(this);
+		mMeasure.setOnClickListener(this);
+		mWarn.setOnClickListener(this);
+		mServer.setOnClickListener(this);
+		mAbout.setOnClickListener(this);
 		CRTBTunnelMonitor app=(CRTBTunnelMonitor)getApplicationContext();
 		if(app.isbLocaUser()){
-			main_rl_servers.setVisibility(View.GONE);
+			mServer.setVisibility(View.INVISIBLE);
+			
 		}
 	}
 
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
-		 case R.id.main_rl_work://工作面
+		 case R.id.worksection://工作面
 		 {
 			 intent = new Intent(MainActivity.this,WorkActivity.class);
 			 startActivity(intent);
 		 }
 		 break;
-		 case R.id.main_rl_fracturesurface: // 断面
+		 case R.id.crosssection: // 断面
 		 {
 			CRTBTunnelMonitor CurApp = ((CRTBTunnelMonitor)getApplicationContext());
 			WorkInfos CurW = CurApp.GetCurWork();
@@ -131,7 +133,7 @@ public class MainActivity extends Activity implements OnClickListener {
 			startActivity(intent);
 		 }
 		 break;
-		 case R.id.main_rl_record: // 记录单
+		 case R.id.sheet: // 记录单
 		 {
 				CRTBTunnelMonitor CurApp = ((CRTBTunnelMonitor)getApplicationContext());
 				WorkInfos CurW = CurApp.GetCurWork();
@@ -144,7 +146,7 @@ public class MainActivity extends Activity implements OnClickListener {
 				startActivity(intent);
 		 }
 		 break;
-		 case R.id.main_rl_total: // 全站仪
+		 case R.id.station: // 全站仪
 		 {
 			CRTBTunnelMonitor CurApp = ((CRTBTunnelMonitor)getApplicationContext());
 			WorkInfos CurW = CurApp.GetCurWork();
@@ -157,7 +159,7 @@ public class MainActivity extends Activity implements OnClickListener {
 			 startActivity(intent);
 		 }
 		 break;
-		 case R.id.main_rl_measure: // 测量
+		 case R.id.measure: // 测量
 		 {
 			CRTBTunnelMonitor CurApp = ((CRTBTunnelMonitor)getApplicationContext());
 			WorkInfos CurW = CurApp.GetCurWork();
@@ -170,7 +172,7 @@ public class MainActivity extends Activity implements OnClickListener {
 			 startActivity(intent);
 		 }
 		 break;
-		 case R.id.main_rl_warning: // 预警
+		 case R.id.warn: // 预警
 		 {
 			CRTBTunnelMonitor CurApp = ((CRTBTunnelMonitor)getApplicationContext());
 			WorkInfos CurW = CurApp.GetCurWork();
@@ -183,13 +185,13 @@ public class MainActivity extends Activity implements OnClickListener {
 			startActivity(intent);
 		 }
 		 break;
-		 case R.id.main_rl_servers: // 服务器
+		 case R.id.server: // 服务器
 		 {
 			 intent = new Intent(MainActivity.this,ServersActivity.class);
 			 startActivity(intent);
 		 }
 		 break;
-		 case R.id.main_rl_asregards: // 关于
+		 case R.id.about: // 关于
 		 {
 			 intent = new Intent(MainActivity.this,AsregardsActivity.class);
 			 startActivity(intent);
