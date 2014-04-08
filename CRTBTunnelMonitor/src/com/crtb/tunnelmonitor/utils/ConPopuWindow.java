@@ -22,7 +22,7 @@ import android.widget.RelativeLayout.LayoutParams;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.crtb.tunnelmonitor.activity.CRTBTunnelMonitor;
+import com.crtb.tunnelmonitor.CRTBTunnelMonitor;
 import com.crtb.tunnelmonitor.activity.ControlNewActivityTwo;
 import com.crtb.tunnelmonitor.activity.ControlPointsActivity;
 import com.crtb.tunnelmonitor.common.Constant;

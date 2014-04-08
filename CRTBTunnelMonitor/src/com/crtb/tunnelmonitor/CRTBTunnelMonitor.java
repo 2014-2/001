@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.crtb.tunnelmonitor.activity;
+package com.crtb.tunnelmonitor;
 
 import java.util.ArrayList;
 import java.util.List;
