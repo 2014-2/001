@@ -6,7 +6,7 @@ package com.crtb.tunnelmonitor.activity;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.crtb.tunnelmonitor.CRTBTunnelMonitor;
+import com.crtb.tunnelmonitor.AppCRTBApplication;
 import com.crtb.tunnelmonitor.adapter.RecordAdapter;
 import com.crtb.tunnelmonitor.adapter.TestRecordAdapter;
 import com.crtb.tunnelmonitor.common.Constant;
@@ -78,7 +78,7 @@ public class TestRecordActivity extends Activity implements OnPageChangeListener
 	}
 
 	public void setdata() {
-		CRTBTunnelMonitor CurApp = ((CRTBTunnelMonitor)getApplicationContext());
+		AppCRTBApplication CurApp = ((AppCRTBApplication)getApplicationContext());
 		WorkInfos CurW = CurApp.GetCurWork();
 		if(CurW == null)
 		{

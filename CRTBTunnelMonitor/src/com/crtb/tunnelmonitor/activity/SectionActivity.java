@@ -30,7 +30,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemLongClickListener;
 
-import com.crtb.tunnelmonitor.CRTBTunnelMonitor;
+import com.crtb.tunnelmonitor.AppCRTBApplication;
 import com.crtb.tunnelmonitor.activity.WorkNewActivity.MyOnClickListener;
 import com.crtb.tunnelmonitor.adapter.SubsidenceCrossSectionInfoAdapter;
 import com.crtb.tunnelmonitor.adapter.TunnelCrossSectionInfoAdapter;
@@ -88,7 +88,7 @@ public class SectionActivity extends Activity implements OnPageChangeListener {
 
 	// 初始数据
 	public void setdata1() {
-		CRTBTunnelMonitor CurApp = ((CRTBTunnelMonitor)getApplicationContext());
+		AppCRTBApplication CurApp = ((AppCRTBApplication)getApplicationContext());
 		WorkInfos CurW = CurApp.GetCurWork();
 		if(CurW == null)
 		{
@@ -117,7 +117,7 @@ public class SectionActivity extends Activity implements OnPageChangeListener {
 	}
 
 	public void setdata2() {
-		CRTBTunnelMonitor CurApp = ((CRTBTunnelMonitor)getApplicationContext());
+		AppCRTBApplication CurApp = ((AppCRTBApplication)getApplicationContext());
 		WorkInfos CurW = CurApp.GetCurWork();
 		if(CurW == null)
 		{
@@ -322,7 +322,7 @@ public class SectionActivity extends Activity implements OnPageChangeListener {
 							@Override
 							public void onClick(DialogInterface dialog,
 									int which) {
-								CRTBTunnelMonitor CurApp = ((CRTBTunnelMonitor)getApplicationContext());
+								AppCRTBApplication CurApp = ((AppCRTBApplication)getApplicationContext());
 								TunnelCrossSectionInfo item = (TunnelCrossSectionInfo)listView.getItemAtPosition(iListPos1);
 								switch (which) {
 								case 0:// 编辑 
@@ -388,7 +388,7 @@ public class SectionActivity extends Activity implements OnPageChangeListener {
 							@Override
 							public void onClick(DialogInterface dialog,
 									int which) {
-								CRTBTunnelMonitor CurApp = ((CRTBTunnelMonitor)getApplicationContext());
+								AppCRTBApplication CurApp = ((AppCRTBApplication)getApplicationContext());
 								SubsidenceCrossSectionInfo item = (SubsidenceCrossSectionInfo)listView1.getItemAtPosition(iListPos2);
 								switch (which) {
 								case 0:// 编辑

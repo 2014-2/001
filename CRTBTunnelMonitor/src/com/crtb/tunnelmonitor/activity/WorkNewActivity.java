@@ -3,7 +3,7 @@ package com.crtb.tunnelmonitor.activity;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.crtb.tunnelmonitor.CRTBTunnelMonitor;
+import com.crtb.tunnelmonitor.AppCRTBApplication;
 import com.crtb.tunnelmonitor.common.Constant;
 import com.crtb.tunnelmonitor.dao.impl.WorkDaoImpl;
 import com.crtb.tunnelmonitor.db.SqliteHelperDTMS;
@@ -132,7 +132,7 @@ public class WorkNewActivity extends Activity implements OnClickListener {
 		workName = getIntent().getExtras().getString(Constant.Select_WorkRowClickItemsName_Name);
 		if(workName.length() > 0)
 		{
-			CRTBTunnelMonitor CurApp = ((CRTBTunnelMonitor)getApplicationContext());
+			AppCRTBApplication CurApp = ((AppCRTBApplication)getApplicationContext());
 			List<WorkInfos> infos = CurApp.GetWorkList();
 			for(int i=0;i<infos.size();i++)
 			{
@@ -216,7 +216,7 @@ public class WorkNewActivity extends Activity implements OnClickListener {
 			w.setDBLimitTotalSettlement(work_new_dibiao1.getText().toString().trim());
 			w.setInfo(work_new_dibiao4.getText().toString().trim());
 			w.setLimitedTotalSubsidenceTime(work_new_dibiao3.getText().toString().trim());
-			CRTBTunnelMonitor CurApp = ((CRTBTunnelMonitor)getApplicationContext());
+			AppCRTBApplication CurApp = ((AppCRTBApplication)getApplicationContext());
 			if(!CurApp.IsValidWork(w))
 			{
 				Toast.makeText(WorkNewActivity.this, "请输入完整信息", 3000).show();

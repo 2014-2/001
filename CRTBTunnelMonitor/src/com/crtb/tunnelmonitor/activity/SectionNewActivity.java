@@ -3,7 +3,7 @@ package com.crtb.tunnelmonitor.activity;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.crtb.tunnelmonitor.CRTBTunnelMonitor;
+import com.crtb.tunnelmonitor.AppCRTBApplication;
 import com.crtb.tunnelmonitor.activity.WorkNewActivity.MyOnClickListener;
 import com.crtb.tunnelmonitor.common.Constant;
 import com.crtb.tunnelmonitor.dao.impl.TunnelCrossSectionDaoImpl;
@@ -105,7 +105,7 @@ public class SectionNewActivity extends Activity implements OnClickListener {
 
 		setContentView(R.layout.activity_section_new);
 		sChainage = getIntent().getExtras().getString(Constant.Select_SectionRowClickItemsName_Name);
-		double dChainage = CRTBTunnelMonitor.StrToDouble(sChainage, -1);
+		double dChainage = AppCRTBApplication.StrToDouble(sChainage, -1);
 		InitImageView();
 		InitTextView();
 		InitViewPager();
@@ -113,7 +113,7 @@ public class SectionNewActivity extends Activity implements OnClickListener {
 
 		if (sChainage.length() > 0) {
 			section_new_tv_header.setText("编辑隧道内断面");
-			CRTBTunnelMonitor CurApp = ((CRTBTunnelMonitor)getApplicationContext());
+			AppCRTBApplication CurApp = ((AppCRTBApplication)getApplicationContext());
 			WorkInfos Curw = CurApp.GetCurWork();
 			List<TunnelCrossSectionInfo> infos = Curw.GetTunnelCrossSectionInfoList();
 			for(int i=0;i<infos.size();i++)
@@ -183,7 +183,7 @@ public class SectionNewActivity extends Activity implements OnClickListener {
 				return;
 			}
 
-			CRTBTunnelMonitor CurApp = ((CRTBTunnelMonitor)getApplicationContext());
+			AppCRTBApplication CurApp = ((AppCRTBApplication)getApplicationContext());
 			WorkInfos Curw = CurApp.GetCurWork();
 			TunnelCrossSectionInfo ts = new TunnelCrossSectionInfo();
 			if (Edittsci != null) {
@@ -221,7 +221,7 @@ public class SectionNewActivity extends Activity implements OnClickListener {
 			strAS.add(strS1);
 			strAS.add(strS2);
 			strAS.add(strS3);
-			String sMix = CRTBTunnelMonitor.GetExcavateMethodPoint(strAS);
+			String sMix = AppCRTBApplication.GetExcavateMethodPoint(strAS);
 			ts.setSurveyPntName(sMix);		
 			if (section_new_info1 == null) {
 				if (Edittsci == null) {
@@ -350,7 +350,7 @@ public class SectionNewActivity extends Activity implements OnClickListener {
 		public Object instantiateItem(View arg0, int arg1) {
 			((ViewPager) arg0).addView(mListViews.get(arg1), 0);
 
-			CRTBTunnelMonitor CurApp = ((CRTBTunnelMonitor)getApplicationContext());
+			AppCRTBApplication CurApp = ((AppCRTBApplication)getApplicationContext());
 			WorkInfos Curw = CurApp.GetCurWork();
 			
 			section_new_et_Chainage = (EditText) findViewById(R.id.section_new_et_Chainage);
@@ -386,7 +386,7 @@ public class SectionNewActivity extends Activity implements OnClickListener {
 					{
 						String sChainage = section_new_et_Chainage.getText().toString().trim();
 						if (sChainage.length() > 0) {
-							CRTBTunnelMonitor CurApp = ((CRTBTunnelMonitor)getApplicationContext());
+							AppCRTBApplication CurApp = ((AppCRTBApplication)getApplicationContext());
 							section_new_et_name.setText(CurApp.GetSectionName(Double.valueOf(sChainage).doubleValue()));
 						}
 						else {
@@ -472,7 +472,7 @@ public class SectionNewActivity extends Activity implements OnClickListener {
 				if (Edittsci != null) {
 					section_new_sp.setSelection(TunnelCrossSectionDaoImpl.GetExcavateMethodUi(Edittsci.getExcavateMethod()));
 					section_new_sp.setSelected(false);
-					List<String> strAS = CRTBTunnelMonitor.GetExcavateMethodPointArray(Edittsci.getSurveyPntName());
+					List<String> strAS = AppCRTBApplication.GetExcavateMethodPointArray(Edittsci.getSurveyPntName());
 					section_new_et_a.setText(strAS.get(0));
 					section_new_et_s1.setText(strAS.get(1));
 					section_new_et_s2.setText(strAS.get(2));

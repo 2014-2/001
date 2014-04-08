@@ -4,7 +4,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.crtb.tunnelmonitor.CRTBTunnelMonitor;
+import com.crtb.tunnelmonitor.AppCRTBApplication;
 import com.crtb.tunnelmonitor.common.Constant;
 import com.crtb.tunnelmonitor.dao.impl.SubsidenceCrossSectionDaoImpl;
 import com.crtb.tunnelmonitor.dao.impl.TunnelCrossSectionDaoImpl;
@@ -82,7 +82,7 @@ public class SectionEditActivity extends Activity implements OnClickListener
         InitMyTextView();
         
 		sChainage = getIntent().getExtras().getString(Constant.Select_SectionRowClickItemsName_Name);
-		double dChainage = CRTBTunnelMonitor.StrToDouble(sChainage, -1);
+		double dChainage = AppCRTBApplication.StrToDouble(sChainage, -1);
 		InitImageView();
 		InitTextView();
 		InitViewPager();
@@ -90,7 +90,7 @@ public class SectionEditActivity extends Activity implements OnClickListener
 
 		if (sChainage.length() > 0) {
         	section_new_tv_diheader.setText("编辑地表下层断面");
-			CRTBTunnelMonitor CurApp = ((CRTBTunnelMonitor)getApplicationContext());
+			AppCRTBApplication CurApp = ((AppCRTBApplication)getApplicationContext());
 			WorkInfos Curw = CurApp.GetCurWork();
 			List<SubsidenceCrossSectionInfo> infos = Curw.getScsiList();
 			for(int i=0;i<infos.size();i++)
@@ -164,7 +164,7 @@ public class SectionEditActivity extends Activity implements OnClickListener
 				return;
 			}
 
-			CRTBTunnelMonitor CurApp = ((CRTBTunnelMonitor)getApplicationContext());
+			AppCRTBApplication CurApp = ((AppCRTBApplication)getApplicationContext());
 			WorkInfos Curw = CurApp.GetCurWork();
 			SubsidenceCrossSectionInfo ts = new SubsidenceCrossSectionInfo();
 			if (editInfo != null) {
@@ -298,7 +298,7 @@ public class SectionEditActivity extends Activity implements OnClickListener
         public Object instantiateItem(View arg0, int arg1) {
             ((ViewPager) arg0).addView(mListViews.get(arg1), 0);
 
-			CRTBTunnelMonitor CurApp = ((CRTBTunnelMonitor)getApplicationContext());
+			AppCRTBApplication CurApp = ((AppCRTBApplication)getApplicationContext());
 			WorkInfos Curw = CurApp.GetCurWork();
 			
 			DSection_Chainage = (EditText) findViewById(R.id.DSection_Chainage);
@@ -321,7 +321,7 @@ public class SectionEditActivity extends Activity implements OnClickListener
 					{
 						String sChainage = DSection_Chainage.getText().toString().trim();
 						if (sChainage.length() > 0) {
-							CRTBTunnelMonitor CurApp = ((CRTBTunnelMonitor)getApplicationContext());
+							AppCRTBApplication CurApp = ((AppCRTBApplication)getApplicationContext());
 							DSection_name.setText(CurApp.GetSectionName(Double.valueOf(sChainage).doubleValue()));
 						}
 						else {

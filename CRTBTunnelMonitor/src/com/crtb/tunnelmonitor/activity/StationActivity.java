@@ -32,7 +32,7 @@ import android.widget.Toast;
 
 import com.crtb.tssurveyprovider.TSConnectType;
 import com.crtb.tssurveyprovider.TSSurveyProvider;
-import com.crtb.tunnelmonitor.CRTBTunnelMonitor;
+import com.crtb.tunnelmonitor.AppCRTBApplication;
 import com.crtb.tunnelmonitor.adapter.ControlPonitsListAdapter;
 import com.crtb.tunnelmonitor.common.Constant;
 import com.crtb.tunnelmonitor.dao.impl.TotalStationDaoImpl;
@@ -53,7 +53,7 @@ public class StationActivity extends Activity {
 
 	private SonPopupWindow menuWindow;
 	public List<TotalStationInfo> list = null;
-	private CRTBTunnelMonitor CurApp = null;
+	private AppCRTBApplication CurApp = null;
 	private int iConnectType = 0;
 	private boolean bConnect = false;
 
@@ -63,7 +63,7 @@ public class StationActivity extends Activity {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_sta);
-		CurApp = ((CRTBTunnelMonitor) getApplicationContext());
+		CurApp = ((AppCRTBApplication) getApplicationContext());
 		init();
 		getadapter();
 		/** 长按 */
@@ -395,7 +395,7 @@ public class StationActivity extends Activity {
 				case R.id.ok:
 					// 测试
 
-					CRTBTunnelMonitor app = (CRTBTunnelMonitor) SonPopupWindow.this.c
+					AppCRTBApplication app = (AppCRTBApplication) SonPopupWindow.this.c
 							.getApplicationContext();
 					WorkInfos curWork = app.GetCurWork();
 					if (curWork != null && curWork.getTsList() != null) {

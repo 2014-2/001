@@ -13,7 +13,7 @@ import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.crtb.tunnelmonitor.CRTBTunnelMonitor;
+import com.crtb.tunnelmonitor.AppCRTBApplication;
 import com.crtb.tunnelmonitor.common.Constant;
 import com.crtb.tunnelmonitor.entity.TotalStationInfo;
 import com.crtb.tunnelmonitor.entity.WorkInfos;
@@ -103,7 +103,7 @@ public class MainActivity extends Activity implements OnClickListener {
 		mWarn.setOnClickListener(this);
 		mServer.setOnClickListener(this);
 		mAbout.setOnClickListener(this);
-		CRTBTunnelMonitor app=(CRTBTunnelMonitor)getApplicationContext();
+		AppCRTBApplication app=(AppCRTBApplication)getApplicationContext();
 		if(app.isbLocaUser()){
 			mServer.setVisibility(View.INVISIBLE);
 			
@@ -121,7 +121,7 @@ public class MainActivity extends Activity implements OnClickListener {
 		 break;
 		 case R.id.crosssection: // 断面
 		 {
-			CRTBTunnelMonitor CurApp = ((CRTBTunnelMonitor)getApplicationContext());
+			AppCRTBApplication CurApp = ((AppCRTBApplication)getApplicationContext());
 			WorkInfos CurW = CurApp.GetCurWork();
 			if(CurW == null)
 			{
@@ -134,7 +134,7 @@ public class MainActivity extends Activity implements OnClickListener {
 		 break;
 		 case R.id.sheet: // 记录单
 		 {
-				CRTBTunnelMonitor CurApp = ((CRTBTunnelMonitor)getApplicationContext());
+				AppCRTBApplication CurApp = ((AppCRTBApplication)getApplicationContext());
 				WorkInfos CurW = CurApp.GetCurWork();
 				if(CurW == null)
 				{
@@ -147,7 +147,7 @@ public class MainActivity extends Activity implements OnClickListener {
 		 break;
 		 case R.id.station: // 全站仪
 		 {
-			CRTBTunnelMonitor CurApp = ((CRTBTunnelMonitor)getApplicationContext());
+			AppCRTBApplication CurApp = ((AppCRTBApplication)getApplicationContext());
 			WorkInfos CurW = CurApp.GetCurWork();
 			if(CurW == null)
 			{
@@ -160,7 +160,7 @@ public class MainActivity extends Activity implements OnClickListener {
 		 break;
 		 case R.id.measure: // 测量
 		 {
-			CRTBTunnelMonitor CurApp = ((CRTBTunnelMonitor)getApplicationContext());
+			AppCRTBApplication CurApp = ((AppCRTBApplication)getApplicationContext());
 			WorkInfos CurW = CurApp.GetCurWork();
 			if(CurW == null)
 			{
@@ -173,7 +173,7 @@ public class MainActivity extends Activity implements OnClickListener {
 		 break;
 		 case R.id.warn: // 预警
 		 {
-			CRTBTunnelMonitor CurApp = ((CRTBTunnelMonitor)getApplicationContext());
+			AppCRTBApplication CurApp = ((AppCRTBApplication)getApplicationContext());
 			WorkInfos CurW = CurApp.GetCurWork();
 			if(CurW == null)
 			{

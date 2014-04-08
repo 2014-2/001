@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-import com.crtb.tunnelmonitor.CRTBTunnelMonitor;
+import com.crtb.tunnelmonitor.AppCRTBApplication;
 import com.crtb.tunnelmonitor.adapter.WorkListAdapter;
 import com.crtb.tunnelmonitor.common.Constant;
 import com.crtb.tunnelmonitor.dao.impl.DTMSDBDaoImpl;
@@ -82,7 +82,7 @@ public class WorkActivity extends Activity {
 							@Override
 							public void onClick(DialogInterface dialog,
 									int which) {
-								CRTBTunnelMonitor CurApp = ((CRTBTunnelMonitor)getApplicationContext());
+								AppCRTBApplication CurApp = ((AppCRTBApplication)getApplicationContext());
 								WorkInfos item = (WorkInfos)list.getItemAtPosition(iListPos);
 								switch (which) {
 								case 0: // 打开
@@ -158,7 +158,7 @@ public class WorkActivity extends Activity {
 	 */
 	public void setdata() {
 		//WorkDaoImpl d = new WorkDaoImpl(WorkActivity.this, "yy");
-		CRTBTunnelMonitor CurApp = ((CRTBTunnelMonitor)getApplicationContext());
+		AppCRTBApplication CurApp = ((AppCRTBApplication)getApplicationContext());
 		infos = CurApp.GetWorkList();
 		boolean bLoadDB = true;
 		if(infos!=null)

@@ -22,18 +22,9 @@ import com.crtb.tunnelmonitor.entity.TotalStationInfo;
 import com.crtb.tunnelmonitor.entity.TunnelCrossSectionInfo;
 import com.crtb.tunnelmonitor.entity.WorkInfos;
 
-/**
- * 公共变量/全局变量定义
- * 
- * @since JDK1.6
- * @version 1.0
- *
- */
-public class CRTBTunnelMonitor extends Application {
-	/**
-	 * 
-	 */
-	private static CRTBTunnelMonitor instance;
+public class AppCRTBApplication extends Application {
+	
+	private static AppCRTBApplication instance;
 	
 	private DTMSDBDaoImpl mDaoImpl = null;
 	private List<WorkInfos> WorkList = null;//工作面列表
@@ -58,7 +49,7 @@ public class CRTBTunnelMonitor extends Application {
 		this.bLocaUser = bLocaUser;
 	}
 
-	public static CRTBTunnelMonitor getInstance() {
+	public static AppCRTBApplication getInstance() {
 	   return instance;
 	}
 

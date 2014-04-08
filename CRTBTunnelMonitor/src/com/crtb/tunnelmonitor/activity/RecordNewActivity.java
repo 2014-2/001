@@ -4,7 +4,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.crtb.tunnelmonitor.CRTBTunnelMonitor;
+import com.crtb.tunnelmonitor.AppCRTBApplication;
 import com.crtb.tunnelmonitor.adapter.RecordSectionAdapter;
 import com.crtb.tunnelmonitor.adapter.RecordSubsidenceCrossSectionInfoAdapter;
 import com.crtb.tunnelmonitor.adapter.RecordTunnelCrossSectionInfoAdapter;
@@ -84,7 +84,7 @@ public class RecordNewActivity extends Activity implements OnPageChangeListener,
 	private Button section_btn_quxiao;
 	
 	private RecordInfo editInfo = null;
-	private CRTBTunnelMonitor CurApp = null;
+	private AppCRTBApplication CurApp = null;
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,7 +107,7 @@ public class RecordNewActivity extends Activity implements OnPageChangeListener,
         initUI();
         InitImageView();
         initPager();
-        CurApp = ((CRTBTunnelMonitor)getApplicationContext());
+        CurApp = ((AppCRTBApplication)getApplicationContext());
         if (num == 2) {
         	record_new_tv_header.setText("编辑隧道内断面记录单");
 		}
@@ -166,10 +166,10 @@ public class RecordNewActivity extends Activity implements OnPageChangeListener,
 			ts.setTemperature(Double.valueOf(record_C.getText().toString().trim()));
 			ts.setInfo("");
 			if (itype == 1) {
-				ts.setCrossSectionIDs(CRTBTunnelMonitor.GetSectionIDArrayForTunnelCrossArray(infos));
+				ts.setCrossSectionIDs(AppCRTBApplication.GetSectionIDArrayForTunnelCrossArray(infos));
 			}
 			else {
-				ts.setCrossSectionIDs(CRTBTunnelMonitor.GetSectionIDArrayForSubCrossArray(infos1));
+				ts.setCrossSectionIDs(AppCRTBApplication.GetSectionIDArrayForSubCrossArray(infos1));
 			}
 			ts.setChainageName(CurApp.GetSectionName(ts.getFacedk().doubleValue()));
 			if(!CurApp.IsValidRecordInfo(ts))
@@ -244,7 +244,7 @@ public class RecordNewActivity extends Activity implements OnPageChangeListener,
         list.add(li.inflate(R.layout.record_new_xinxi, null));
     }
     public void setdata(int type) {
-    	CRTBTunnelMonitor CurApp = ((CRTBTunnelMonitor)getApplicationContext());
+    	AppCRTBApplication CurApp = ((AppCRTBApplication)getApplicationContext());
 		WorkInfos CurW = CurApp.GetCurWork();
 		if(CurW == null)
 		{
@@ -259,7 +259,7 @@ public class RecordNewActivity extends Activity implements OnPageChangeListener,
 			impl.GetTunnelCrossSectionList(infos);
 			if (editInfo != null) {
 				String sSels = editInfo.getCrossSectionIDs();
-				List<Integer> iSels = CRTBTunnelMonitor.GetSectionIDArray(sSels);
+				List<Integer> iSels = AppCRTBApplication.GetSectionIDArray(sSels);
 				for (int i = 0; i < infos.size(); i++) {
 					for (int j = 0; j < iSels.size(); j++) {
 						if (infos.get(i).getId() == iSels.get(j)) {
@@ -279,7 +279,7 @@ public class RecordNewActivity extends Activity implements OnPageChangeListener,
 			impl.GetSubsidenceCrossSectionList(infos1);
 			if (editInfo != null) {
 				String sSels = editInfo.getCrossSectionIDs();
-				List<Integer> iSels = CRTBTunnelMonitor.GetSectionIDArray(sSels);
+				List<Integer> iSels = AppCRTBApplication.GetSectionIDArray(sSels);
 				for (int i = 0; i < infos1.size(); i++) {
 					for (int j = 0; j < iSels.size(); j++) {
 						if (infos1.get(i).getId() == iSels.get(j)) {

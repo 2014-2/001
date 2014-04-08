@@ -16,7 +16,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
 
-import com.crtb.tunnelmonitor.CRTBTunnelMonitor;
+import com.crtb.tunnelmonitor.AppCRTBApplication;
 import com.crtb.tunnelmonitor.adapter.ControlPonitsListAdapter2;
 import com.crtb.tunnelmonitor.dao.impl.ControlPointsDaoImpl;
 import com.crtb.tunnelmonitor.entity.ControlPointsInfo;
@@ -40,11 +40,11 @@ public class ControlPointsActivity extends Activity {
 	private DialogInterface.OnClickListener itemsOnClick;
 	private View vie;
 	private ConPopuWindow menuWindow;
-	private CRTBTunnelMonitor CurApp = null;
+	private AppCRTBApplication CurApp = null;
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_controlpoints);
-		CurApp = ((CRTBTunnelMonitor)getApplicationContext());
+		CurApp = ((AppCRTBApplication)getApplicationContext());
 		listview=(ListView) findViewById(R.id.control_sonlist);
 		getadapter();
 		/** 长按 */

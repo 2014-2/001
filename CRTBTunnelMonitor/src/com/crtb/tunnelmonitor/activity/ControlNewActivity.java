@@ -18,7 +18,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.crtb.tunnelmonitor.CRTBTunnelMonitor;
+import com.crtb.tunnelmonitor.AppCRTBApplication;
 import com.crtb.tunnelmonitor.common.Constant;
 import com.crtb.tunnelmonitor.common.Constant.TotalStationType;
 import com.crtb.tunnelmonitor.dao.impl.TotalStationDaoImpl;
@@ -46,7 +46,7 @@ public class ControlNewActivity extends Activity implements OnClickListener {
 	/** 取消按钮 */
 	private Button section_btn_quxiao;
 
-	private CRTBTunnelMonitor CurApp = null;
+	private AppCRTBApplication CurApp = null;
 	
 	private boolean bEdit=false;
 	
@@ -54,7 +54,7 @@ public class ControlNewActivity extends Activity implements OnClickListener {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_controlnew);
 		
-		CurApp = ((CRTBTunnelMonitor)getApplicationContext());
+		CurApp = ((AppCRTBApplication)getApplicationContext());
 		
 		pplist = new ArrayList<String>();
 		xylist = new ArrayList<String>();

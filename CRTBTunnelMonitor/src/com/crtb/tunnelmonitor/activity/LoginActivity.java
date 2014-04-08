@@ -19,7 +19,7 @@ import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
-import com.crtb.tunnelmonitor.CRTBTunnelMonitor;
+import com.crtb.tunnelmonitor.AppCRTBApplication;
 import com.crtb.tunnelmonitor.common.Constant;
 import com.crtb.tunnelmonitor.activity.R;
 
@@ -39,7 +39,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 	//密码输入框
 	private EditText et_password;
 	//APP实例
-	private CRTBTunnelMonitor CurApp;
+	private AppCRTBApplication CurApp;
 	private String veri;
 	private String rsal;
 	private String[] sZoneAndSiteCode = null;
@@ -58,7 +58,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 		login_rl_listview = (RelativeLayout) findViewById(R.id.login_rl_listview);
 		et_username = (EditText) findViewById(R.id.et_username);
 		et_password = (EditText) findViewById(R.id.et_password);
-		CurApp = ((CRTBTunnelMonitor)getApplicationContext());
+		CurApp = ((AppCRTBApplication)getApplicationContext());
 		//
 		login_rl_listview.setVisibility(View.GONE);
 		// 点击事件

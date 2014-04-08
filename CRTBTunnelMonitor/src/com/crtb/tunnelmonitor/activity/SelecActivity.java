@@ -11,7 +11,7 @@ import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
-import com.crtb.tunnelmonitor.CRTBTunnelMonitor;
+import com.crtb.tunnelmonitor.AppCRTBApplication;
 import com.crtb.tunnelmonitor.common.Constant;
 import com.crtb.tunnelmonitor.entity.SurveyerInformation;
 import com.crtb.tunnelmonitor.activity.R;
@@ -29,13 +29,13 @@ public class SelecActivity extends Activity implements OnClickListener{
 	/** 意图 */
 	private Intent intent;
 	
-	private CRTBTunnelMonitor mApp;
+	private AppCRTBApplication mApp;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_select);
 		initView();
-		mApp = CRTBTunnelMonitor.getInstance();
+		mApp = AppCRTBApplication.getInstance();
 		mApp.getDatabase().ConnectDB();
 		/*测试代码*/
 		List<SurveyerInformation> testList = new ArrayList<SurveyerInformation>();

@@ -22,7 +22,7 @@ import android.widget.RelativeLayout.LayoutParams;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.crtb.tunnelmonitor.CRTBTunnelMonitor;
+import com.crtb.tunnelmonitor.AppCRTBApplication;
 import com.crtb.tunnelmonitor.activity.ControlNewActivityTwo;
 import com.crtb.tunnelmonitor.activity.ControlPointsActivity;
 import com.crtb.tunnelmonitor.common.Constant;
@@ -106,7 +106,7 @@ public class ConPopuWindow extends PopupWindow {
 				
 				List<ControlPointsInfo> tmpList = ((ControlPointsActivity)c).list;
 				if(tmpList!=null){
-				CRTBTunnelMonitor app=(CRTBTunnelMonitor) c.getApplicationContext();
+				AppCRTBApplication app=(AppCRTBApplication) c.getApplicationContext();
 				final ControlPointsDaoImpl impl = new ControlPointsDaoImpl(c, app.GetCurWork().getProjectName());
 				mInfo=null;
 				boolean bCheck=false;

@@ -7,7 +7,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.crtb.tunnelmonitor.CRTBTunnelMonitor;
+import com.crtb.tunnelmonitor.AppCRTBApplication;
 import com.crtb.tunnelmonitor.dao.TunnelCrossSectionDao;
 import com.crtb.tunnelmonitor.db.SqliteHelperDTMS;
 import com.crtb.tunnelmonitor.entity.RecordInfo;

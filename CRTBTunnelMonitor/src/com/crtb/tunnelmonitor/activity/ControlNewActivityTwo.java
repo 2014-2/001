@@ -22,7 +22,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.crtb.tunnelmonitor.CRTBTunnelMonitor;
+import com.crtb.tunnelmonitor.AppCRTBApplication;
 import com.crtb.tunnelmonitor.common.Constant;
 import com.crtb.tunnelmonitor.dao.impl.ControlPointsDaoImpl;
 import com.crtb.tunnelmonitor.entity.ControlPointsInfo;
@@ -41,7 +41,7 @@ public class ControlNewActivityTwo extends Activity implements OnClickListener {
 	/** 取消按钮 */
 	private Button mCancel;
 
-	private CRTBTunnelMonitor CurApp = null;
+	private AppCRTBApplication CurApp = null;
 
 	private Dialog dlg;
 
@@ -51,7 +51,7 @@ public class ControlNewActivityTwo extends Activity implements OnClickListener {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_controlnewtwo);
 
-		CurApp = ((CRTBTunnelMonitor) getApplicationContext());
+		CurApp = ((AppCRTBApplication) getApplicationContext());
 		Bundle bundle = getIntent().getExtras();
 		info = (ControlPointsInfo) bundle
 				.getParcelable(Constant.Select_ControlPointsRowClickItemsName_Data);

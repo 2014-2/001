@@ -1,6 +1,6 @@
 package com.crtb.tunnelmonitor.activity;
 
-import com.crtb.tunnelmonitor.CRTBTunnelMonitor;
+import com.crtb.tunnelmonitor.AppCRTBApplication;
 import com.crtb.tunnelmonitor.activity.R;
 
 import android.app.Activity;
@@ -23,7 +23,7 @@ public class AsregardsActivity extends Activity implements OnClickListener{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_asregards);
 		mUserInfo=(RelativeLayout) findViewById(R.id.user_info);
-		CRTBTunnelMonitor app=(CRTBTunnelMonitor)getApplicationContext();
+		AppCRTBApplication app=(AppCRTBApplication)getApplicationContext();
 		if(app.isbLocaUser()){
 			mUserInfo.setVisibility(View.GONE);
 		}
