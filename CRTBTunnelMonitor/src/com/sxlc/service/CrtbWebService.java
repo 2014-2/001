@@ -1,14 +1,13 @@
 package com.sxlc.service;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.ksoap2.HeaderProperty;
 import org.ksoap2.SoapEnvelope;
 import org.ksoap2.serialization.SoapObject;
 import org.ksoap2.serialization.SoapSerializationEnvelope;
 import org.ksoap2.transport.HttpTransportSE;
 
+import com.sxlc.common.Constant;
+
+import ICT.utils.RSACoder;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Looper;
@@ -57,6 +56,44 @@ public final class CrtbWebService {
 		mRandomCode = randomCode;
 	}
 
+	public void login(final String account, final String password, final RpcCallback callback) {
+		GetPublicKeyRpc rpc = new GetPublicKeyRpc(Constant.testUsername, Constant.testPhysical, new RpcCallbackWrapper(new RpcCallback() {
+			@Override
+			public void onSuccess(Object[] data) {
+				String publicKey = (String)data[0];
+				String encnryptPublicKey = RSACoder.encnryptRSA(Constant.testDeskey, publicKey);
+				String encnryptPassword = RSACoder.encnryptDes(Constant.testPassword, Constant.testDeskey);
+				verifyAppUser(Constant.testUsername, encnryptPassword, encnryptPublicKey, new RpcCallbackWrapper(new RpcCallback() {
+
+					@Override
+					public void onSuccess(Object[] data) {
+						String randomCode = (String) data[0];
+						setRandomCode(randomCode);
+						if (callback != null) {
+							callback.onSuccess(null);
+						}
+					}
+					
+					@Override
+					public void onFailed() {
+						if (callback != null) {
+							callback.onFailed();
+						}
+					}
+				}));
+				
+			}
+			
+			@Override
+			public void onFailed() {
+				if (callback != null) {
+					callback.onFailed();
+				}
+			}
+		}));
+		RpcSendTask task = new RpcSendTask(rpc, USRE_AUTH_URL);
+		task.execute();
+	}
 	/**
 	 * 
 	 * @param account
@@ -76,12 +113,8 @@ public final class CrtbWebService {
 	 * @param macAddress
 	 * @param callback
 	 */
-	public void verifyAppUser(String account, String password, String macAddress, RpcCallback callback) {
-		String publicKey = getPublicKey();
-		if (TextUtils.isEmpty(publicKey)) {
-			throw new IllegalStateException("verifyAppUser: public key is invalid.");
-		}
-		VerifyAppUserRpc rpc = new VerifyAppUserRpc(account, password, macAddress, publicKey, new RpcCallbackWrapper(callback));
+	public void verifyAppUser(String account, String encnryptPassword, String encnryptPublicKey, RpcCallback callback) {
+		VerifyAppUserRpc rpc = new VerifyAppUserRpc(account, encnryptPassword, Constant.testPhysical, encnryptPublicKey, new RpcCallbackWrapper(callback));
 		RpcSendTask task = new RpcSendTask(rpc, USRE_AUTH_URL);
 		task.execute();
 	}
@@ -116,14 +149,11 @@ public final class CrtbWebService {
 			Log.d(TAG, "sending request: " + rpcMessage.toString());
 	        SoapSerializationEnvelope soapEnvelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
 	        soapEnvelope.bodyOut = rpcMessage;
-	        soapEnvelope.dotNet  = true;
+	        //soapEnvelope.dotNet  = true;
 	        soapEnvelope.encodingStyle = "UTF-8";
 	        HttpTransportSE localHttpTransportSE = new HttpTransportSE(mUrl, CONNECITON_TIME_OUT);
-	        List<HeaderProperty> headerList = new ArrayList<HeaderProperty>();
-	        headerList.add(new HeaderProperty("Content-Type", "text/xml; charset=utf-8"));
-	       // headerList.add(new HeaderProperty("SoapAction", "url/name"));
 	        try {
-				localHttpTransportSE.call(NAMESPACE + rpcMessage.getName(), soapEnvelope, headerList);
+				localHttpTransportSE.call(NAMESPACE + rpcMessage.getName(), soapEnvelope);
 			} catch (Exception e) {
 				e.printStackTrace();
 			} 
