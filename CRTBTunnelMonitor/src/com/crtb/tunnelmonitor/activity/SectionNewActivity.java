@@ -46,10 +46,6 @@ import android.widget.Toast;
 /**
  * 新建断面
  * 
- * @author 代世明 创建时间: 2014-3-16 下午4:49:04
- * @version 1.0
- * @since JDK 1.6
- * 
  */
 public class SectionNewActivity extends Activity implements OnClickListener {
 	private ViewPager mPager;// 页卡内容

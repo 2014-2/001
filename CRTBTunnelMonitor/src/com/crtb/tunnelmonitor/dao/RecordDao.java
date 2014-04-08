@@ -7,10 +7,6 @@ import com.crtb.tunnelmonitor.entity.RecordInfo;
 import com.crtb.tunnelmonitor.entity.WorkInfos;
 /**
  * 记录单的接口
- *创建时间：2014-3-21下午1:56:59
- *@author 张涛
- *@since JDK1.6
- *@version 1.0
  */
 public interface RecordDao{
 	/**查询全部*/

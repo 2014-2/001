@@ -50,10 +50,6 @@ import android.widget.AdapterView.OnItemLongClickListener;
 /**
  * 记录单
  * 
- * @author 代世明 创建时间: 2014-3-16 下午4:49:04
- * @version 1.0
- * @since JDK 1.6
- * 
  */
 public class RecordActivity extends Activity implements OnPageChangeListener {
 	private OnClickListener itemsOnClick;

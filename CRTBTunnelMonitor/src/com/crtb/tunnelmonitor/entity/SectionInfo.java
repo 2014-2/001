@@ -1,10 +1,6 @@
 package com.crtb.tunnelmonitor.entity;
 /**
  * 新建断面隧道
- *创建时间：2014-3-21下午6:16:22
- *@author 张涛
- *@since JDK1.6
- *@version 1.0
  */
 public class SectionInfo {
 

@@ -13,10 +13,6 @@ import com.crtb.tunnelmonitor.db.SqliteHelperDTMS;
 import com.crtb.tunnelmonitor.entity.SubsidenceCrossSectionInfo;
 /**
  * 地表下沉断面数据库实现
- *创建时间：2014-3-24下午2:43:15
- *@author 张友
- *@since JDK1.6
- *@version 1.0
  */
 public class SubsidenceCrossSectionDaoImpl implements SubsidenceCrossSectionDao{
 	private SqliteHelperDTMS helper = null;

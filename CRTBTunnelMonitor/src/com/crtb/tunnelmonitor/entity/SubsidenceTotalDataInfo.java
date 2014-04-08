@@ -6,10 +6,6 @@ import android.R.string;
 
 /**
  * 断面测量记录单实体
- *创建时间：2014-3-24下午13:50:00
- *@author 张友
- *@since JDK1.6
- *@version 1.0
  */
 public class SubsidenceTotalDataInfo {
 	private int type;			//类型 0：断面记录单  1：地表下沉记录单

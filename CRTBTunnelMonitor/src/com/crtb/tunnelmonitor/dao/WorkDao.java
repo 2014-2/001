@@ -6,10 +6,6 @@ import com.crtb.tunnelmonitor.entity.WorkInfos;
 import com.crtb.tunnelmonitor.entity.list_infos;
 /**
  * 工作面的接口
- *创建时间：2014-3-21下午9:23:23
- *@author 张涛
- *@since JDK1.6
- *@version 1.0
  */
 public interface WorkDao {
 

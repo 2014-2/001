@@ -18,10 +18,6 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-/**
- * @author Administrator
- * 
- */
 public class ControlPonitsListAdapter2 extends BaseAdapter {
 	private List<ControlPointsInfo> listinfos;
 	private Context context;

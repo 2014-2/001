@@ -47,10 +47,6 @@ import com.crtb.tunnelmonitor.activity.R;
 /**
  * 断面主页
  * 
- * @author 代世明 创建时间: 2014-3-20 上午9:44:18
- * @version 1.0
- * @since JDK 1.6
- * 
  */
 public class SectionActivity extends Activity implements OnPageChangeListener {
 	

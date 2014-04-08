@@ -35,10 +35,6 @@ import android.widget.Toast;
 
 /**
  * 工作面 创建时间：2014-3-19上午9:45:02
- * 
- * @author 邓孟
- * @since JDK1.6
- * @version 1.0
  */
 public class WorkActivity extends Activity {
 	private ListView list;

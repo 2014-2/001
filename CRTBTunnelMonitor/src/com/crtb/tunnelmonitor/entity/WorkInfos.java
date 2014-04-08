@@ -14,11 +14,6 @@ import android.content.Context;
 
 /**
  * 创建工作面实体类
- * 创建时间：2014-3-21下午2:55:32
- * 
- * @author 张涛
- * @since JDK1.6
- * @version 1.0
  */
 public class WorkInfos {
 

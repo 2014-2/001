@@ -5,10 +5,6 @@ package com.crtb.tunnelmonitor.activity;
 
 import android.app.Activity;
 
-/**
- * @author Administrator
- *
- */
 public class TestSectionActivity extends Activity {
 
 	/**

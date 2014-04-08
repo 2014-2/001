@@ -28,8 +28,6 @@ import com.crtb.tunnelmonitor.activity.R;
 /**
  * 新建全站仪串口
  * 
- * @author 彭凡
- * 
  */
 public class ControlNewActivity extends Activity implements OnClickListener {
 	private TextView ts_new_tv_header;

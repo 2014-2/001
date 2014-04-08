@@ -15,10 +15,6 @@ import com.crtb.tunnelmonitor.entity.TunnelCrossSectionInfo;
 import com.crtb.tunnelmonitor.entity.WorkInfos;
 /**
  * 断面数据库实现
- *创建时间：2014-3-21下午6:43:15
- *@author 张涛
- *@since JDK1.6
- *@version 1.0
  */
 public class TunnelCrossSectionDaoImpl implements TunnelCrossSectionDao{
 

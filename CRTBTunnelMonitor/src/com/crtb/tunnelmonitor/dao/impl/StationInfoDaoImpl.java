@@ -8,10 +8,6 @@ import com.crtb.tunnelmonitor.db.SqliteHelperDTMS;
 
 /**
  * 设站信息数据库接口实现
- *创建时间：2014-3-24下午13:50:00
- *@author 张友
- *@since JDK1.6
- *@version 1.0
  */
 
 public class StationInfoDaoImpl implements StationInfoDao{

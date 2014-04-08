@@ -12,10 +12,6 @@ import com.crtb.tunnelmonitor.db.SqliteHelperDTMS;
 import com.crtb.tunnelmonitor.entity.SurveyerInformation;
 /**
  *测量人员信息数据库接口实现
- *创建时间：2014-3-24下午13:50:00
- *@author 张友
- *@since JDK1.6
- *@version 1.0
  */
 public class SurveyerInformationDaoImpl implements SurveyerInformationDao{
 	private SqliteHelperDTMS helper = null;

@@ -14,10 +14,6 @@ import com.crtb.tunnelmonitor.entity.WorkInfos;
 import com.crtb.tunnelmonitor.entity.list_infos;
 /**
  * 工作面数据库实现
- *创建时间：2014-3-21下午10:15:09
- *@author 张涛
- *@since JDK1.6
- *@version 1.0  
  */
 public class WorkDaoImpl implements WorkDao {
 

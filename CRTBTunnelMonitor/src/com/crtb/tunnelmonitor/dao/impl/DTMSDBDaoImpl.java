@@ -13,10 +13,6 @@ import android.database.sqlite.SQLiteDatabase;
 import com.crtb.tunnelmonitor.db.DTMSDB;
 import com.crtb.tunnelmonitor.entity.WorkInfos;
 
-/**
- * @author Administrator
- *
- */
 public class DTMSDBDaoImpl {
 	/**
 	 * 

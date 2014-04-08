@@ -7,10 +7,6 @@ import com.crtb.tunnelmonitor.entity.SurveyerInformation;
 
 /**
  *测量人员信息数据库接口
- *创建时间：2014-3-24下午13:50:00
- *@author 张友
- *@since JDK1.6
- *@version 1.0
  */
 public interface SurveyerInformationDao {
 	/**查询全部*/

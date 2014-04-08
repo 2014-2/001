@@ -27,10 +27,6 @@ import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
 /**
  * 菜单
- *创建时间：2014-3-19上午11:45:46
- *@author 邓孟
- *@since JDK1.6
- *@version 1.0
  */
 public class SelectPicPopupWindow extends PopupWindow {
 	private RelativeLayout xinjian;

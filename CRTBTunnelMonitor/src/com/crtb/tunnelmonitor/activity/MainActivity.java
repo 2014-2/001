@@ -20,10 +20,7 @@ import com.crtb.tunnelmonitor.activity.R;
 
 /**
  * 主界面 创建时间：2014-3-18下午3:52:30
- * 
- * @author 张涛
- * @since JDK1.6
- * @version 1.0
+
  */
 public class MainActivity extends Activity implements OnClickListener {
 

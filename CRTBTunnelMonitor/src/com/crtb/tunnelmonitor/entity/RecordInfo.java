@@ -7,10 +7,6 @@ import android.os.Parcelable;
 
 /**
  * 记录单隧道实体类
- *创建时间：2014-3-21下午1:05:21
- *@author 张涛
- *@since JDK1.6
- *@version 1.0
  */
 public class RecordInfo implements Parcelable{
 	private String ChainageName;		//断面名称

@@ -49,10 +49,6 @@ import android.widget.Toast;
 /**
  * 新建工作面和编辑工作界面
  * 
- * @author 代世明 创建时间: 2014-3-16 上午9:48:03
- * @version 1.0
- * @since JDK 1.6
- * 
  */
 public class WorkNewActivity extends Activity implements OnClickListener {
 	/** 页卡内容 */

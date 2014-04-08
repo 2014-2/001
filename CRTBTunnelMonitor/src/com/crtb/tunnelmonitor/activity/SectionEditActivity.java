@@ -37,10 +37,6 @@ import android.widget.Toast;
 
 /**
  * 编辑地表下层断面
- * @author   代世明
- * 创建时间:    2014-3-20   下午2:28:10
- * @version   1.0
- * @since       JDK  1.6
  *
  */
 public class SectionEditActivity extends Activity implements OnClickListener

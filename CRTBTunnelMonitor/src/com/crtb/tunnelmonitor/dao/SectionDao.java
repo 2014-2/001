@@ -5,10 +5,6 @@ import java.util.List;
 import com.crtb.tunnelmonitor.entity.SectionInfo;
 /**
  * 断面接口
- *创建时间：2014-3-21下午9:53:52
- *@author 张涛
- *@since JDK1.6
- *@version 1.0
  */
 public interface SectionDao {
 

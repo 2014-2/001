@@ -40,10 +40,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.AdapterView.OnItemLongClickListener;
 
-/**
- * @author Administrator
- *
- */
 public class TestRecordActivity extends Activity implements OnPageChangeListener{
 	private OnClickListener itemsOnClick;
 	private SelectPicPopupWindow menuWindow;

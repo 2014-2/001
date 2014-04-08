@@ -10,10 +10,6 @@ import android.view.View.OnClickListener;
 import android.widget.RelativeLayout;
 /**
  * 服务器
- *创建时间：2014-3-16上午10:38:01
- *@author 张涛
- *@since JDK1.6
- *@version 1.0
  */
 public class ServersActivity extends Activity implements OnClickListener{
 

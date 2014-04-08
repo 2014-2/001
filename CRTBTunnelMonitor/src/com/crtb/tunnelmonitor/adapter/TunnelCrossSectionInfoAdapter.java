@@ -16,10 +16,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-/**
- * @author Administrator
- *
- */
+
 public class TunnelCrossSectionInfoAdapter extends BaseAdapter {
 	private List<TunnelCrossSectionInfo>listinfos;
 	private Context context;

@@ -6,10 +6,6 @@ import java.util.Date;
 
 /**
  * 获取手机当前时间
- *创建时间：2013-11-1下午3:46:32
- *@author 张涛
- *@since JDK1.6
- *@version 1.0
  */
 public class Time {
 	public static String getDateCN() {

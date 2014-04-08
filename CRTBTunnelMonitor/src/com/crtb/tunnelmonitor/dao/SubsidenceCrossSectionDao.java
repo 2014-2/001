@@ -5,10 +5,6 @@ import com.crtb.tunnelmonitor.entity.SubsidenceCrossSectionInfo;
 
 /**
  * 地表下沉断面Dao
- *创建时间：2014-3-24上午11:50:00
- *@author 张友
- *@since JDK1.6
- *@version 1.0
  */
 public interface SubsidenceCrossSectionDao {
 	/**查询全部*/

@@ -2,9 +2,6 @@ package com.crtb.tunnelmonitor.entity;
 /**
  * 
  *创建时间：2014-3-21下午4:27:50
- *@author 邓孟
- *@since JDK1.6
- *@version 1.0
  */
 public class list_infos {
 	

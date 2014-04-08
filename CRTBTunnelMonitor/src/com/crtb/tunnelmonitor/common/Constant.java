@@ -3,11 +3,6 @@ package com.crtb.tunnelmonitor.common;
 
 /**
  * 常量定义
- * 
- * @author 文君
- * @since JDK1.6
- * @version 1.0
- *
  */
 public class Constant {
 

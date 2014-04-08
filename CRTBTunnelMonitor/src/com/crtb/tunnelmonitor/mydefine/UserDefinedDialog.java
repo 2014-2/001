@@ -18,10 +18,6 @@ import android.widget.TextView;
 
 /**
  * 自定义对话框
- * @author   代世明
- * 创建时间  2013-12-7   下午1:58:09
- * @version  1.0
- * @since     JDK  1.6
  */
 public class UserDefinedDialog extends Dialog implements android.view.View.OnClickListener {
 	/**上下文*/

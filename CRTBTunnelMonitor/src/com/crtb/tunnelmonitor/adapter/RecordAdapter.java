@@ -17,10 +17,6 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-/**
- * @author Administrator
- *
- */
 public class RecordAdapter extends BaseAdapter {
 
 	private List<RecordInfo>listinfos;

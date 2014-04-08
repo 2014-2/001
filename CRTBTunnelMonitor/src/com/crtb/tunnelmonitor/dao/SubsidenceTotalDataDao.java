@@ -6,10 +6,6 @@ import com.crtb.tunnelmonitor.entity.SubsidenceTotalDataInfo;
 
 /**
  * 断面测量记录单数据库接口
- *创建时间：2014-3-24下午13:50:00
- *@author 张友
- *@since JDK1.6
- *@version 1.0
  */
 public interface SubsidenceTotalDataDao {
 	/*条件查询记录单*/

@@ -7,10 +7,6 @@ import android.os.Parcelable;
 
 /**
  * 全站仪连接参数信息
- *创建时间：2014-3-24下午13:50:00
- *@author 张友
- *@since JDK1.6
- *@version 1.0
  */
 public class TotalStationInfo implements Parcelable{
 	private int id;						//id

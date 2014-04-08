@@ -29,10 +29,6 @@ import com.crtb.tunnelmonitor.entity.WorkInfos;
 import com.crtb.tunnelmonitor.utils.ConPopuWindow.dialogListener;
 import com.crtb.tunnelmonitor.activity.R;
 
-/**
- * @author Administrator
- * 
- */
 public class ControlNewActivityTwo extends Activity implements OnClickListener {
 
 	private TextView cp_new_tv_header;

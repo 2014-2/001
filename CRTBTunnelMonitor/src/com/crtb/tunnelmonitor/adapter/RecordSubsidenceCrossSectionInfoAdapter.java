@@ -17,10 +17,6 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-/**
- * @author Administrator
- *
- */
 public class RecordSubsidenceCrossSectionInfoAdapter extends BaseAdapter {
 
 	private List<SubsidenceCrossSectionInfo>listinfos;
