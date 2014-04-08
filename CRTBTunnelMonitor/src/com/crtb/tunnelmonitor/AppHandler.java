@@ -10,7 +10,7 @@ import android.os.Message;
  * @author zhouwei
  *
  */
-public abstract class AppHandler extends Handler {
+public class AppHandler extends Handler {
 	
 	static String TAG 		= "AppHandler" ;
 	
@@ -48,6 +48,9 @@ public abstract class AppHandler extends Handler {
 		dispose(msg);
 	}
 	
-	protected abstract void dispose(Message msg) ;
+	// please override the method
+	protected void dispose(Message msg){
+		
+	}
 	
 }
