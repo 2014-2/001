@@ -6,8 +6,11 @@ package com.sxlc.activity;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.zw.android.framework.IFrameworkFacade;
+import org.zw.android.framework.impl.FrameworkConfig;
+import org.zw.android.framework.impl.FrameworkFacade;
+
 import android.app.Application;
-import android.app.ListActivity;
 import android.content.Context;
 
 import com.sxlc.dao.impl.DTMSDBDaoImpl;
@@ -44,7 +47,8 @@ public class CRTBTunnelMonitor extends Application {
 
 	private boolean bLocaUser;
 	
-	
+	/** framework */ 
+	private IFrameworkFacade mFramework ;
 	
 	public boolean isbLocaUser() {
 		return bLocaUser;
@@ -60,11 +64,20 @@ public class CRTBTunnelMonitor extends Application {
 
 	@Override
 	public void onCreate() {
+		super.onCreate();
+		
 		instance=this;
 		mDaoImpl=new DTMSDBDaoImpl(this);
-		super.onCreate();
+		
+		// init framework. add by wei.zhou 2014.04.08
+		FrameworkFacade.create(FrameworkConfig.defaultConfig(this));
+		mFramework	= FrameworkFacade.getFrameworkFacade() ;
+		
 	}
 	
+	public IFrameworkFacade getFrameworkFacade(){
+		return mFramework ;
+	}
 	
 	public List<SurveyerInformation> getPersonList() {
 		return personList;
