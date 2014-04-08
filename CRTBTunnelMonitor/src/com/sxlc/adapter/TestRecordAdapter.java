@@ -5,10 +5,6 @@ package com.sxlc.adapter;
 
 import java.util.List;
 
-import com.sxlc.activity.R;
-import com.sxlc.entity.RecordInfo;
-import com.sxlc.entity.TunnelCrossSectionInfo;
-
 import android.content.Context;
 import android.graphics.Color;
 import android.view.LayoutInflater;
@@ -18,13 +14,14 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-/**
- * @author Administrator
- *
- */
+import com.sxlc.activity.R;
+import com.sxlc.entity.RecordInfo;
+
 public class TestRecordAdapter extends BaseAdapter {
+	
 	private List<RecordInfo>listinfos;
 	private Context context;
+	
 	public TestRecordAdapter(Context ct,List<RecordInfo> lis){
 		context=ct;
 		listinfos=lis;
@@ -57,12 +54,17 @@ public class TestRecordAdapter extends BaseAdapter {
 		name1.setTextColor(Color.BLACK);
 		name.setText(Integer.toString(position));
 		name1.setText(listinfos.get(position).getCreateTime().toString());
-		if (listinfos.get(position).isbUse()) {
-			start.setBackgroundResource(R.drawable.use);
+		
+		if(start != null){
+			
+			if (listinfos.get(position).isbUse()) {
+				start.setBackgroundResource(R.drawable.use);
+			}
+			else {
+				start.setBackgroundResource(R.drawable.nouse);
+			}
 		}
-		else {
-			start.setBackgroundResource(R.drawable.nouse);
-		}
+		
 		return convertView;
 	}
 }
