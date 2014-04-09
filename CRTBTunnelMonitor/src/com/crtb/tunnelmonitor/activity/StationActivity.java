@@ -60,7 +60,6 @@ public class StationActivity extends Activity {
 	private AlertDialog dlg;
 
 	protected void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_sta);
 		CurApp = ((AppCRTBApplication) getApplicationContext());
@@ -72,30 +71,39 @@ public class StationActivity extends Activity {
 			@Override
 			public boolean onItemLongClick(AdapterView<?> parent, View view,
 					final int position, long id) {
-
 				iListPos = position;
 				// 实例化对话
 				new AlertDialog.Builder(StationActivity.this)
-						.setItems(/* items */Constant.ControlPointsItems,
+						.setItems(Constant.ControlPointsItems,
 								new DialogInterface.OnClickListener() {
 
 									@Override
 									public void onClick(DialogInterface dialog,
 											int which) {
 										iConnectType = which;
+										int ret;
 										switch (which) {
 										case 0: // 蓝牙连接
-											connect(TSConnectType.Bluetooth,
+											ret=connect(TSConnectType.Bluetooth,
 													list.get(position)
 															.getBaudRate());
+											if(ret==1){
+												list.get(position).setbUse(true);
+											}
 											break;
 										case 1:// 串口连接
-											connect(TSConnectType.RS232, list
+											ret=connect(TSConnectType.RS232, list
 													.get(position)
 													.getBaudRate());
+											if(ret==1){
+												list.get(position).setbUse(true);
+											}
 											break;
 										case 2:// 断开连接
-											disconnect();
+											ret=disconnect();
+											if(ret==1){
+												list.get(position).setbUse(false);
+											}
 										default:
 											break;
 										}
@@ -215,11 +223,12 @@ public class StationActivity extends Activity {
 	}
 
 	/** 连接全站仪成功 */
-	private void connect(TSConnectType type, int baudRate) {
+	private int connect(TSConnectType type, int baudRate) {
 		String result = null;
+		int ret = 0;
 		try {
 			String[] tsParams = new String[] { String.valueOf(baudRate) };
-			int ret = TSSurveyProvider.getDefaultAdapter().BeginConnection(
+			 ret= TSSurveyProvider.getDefaultAdapter().BeginConnection(
 					type, tsParams);
 			if (ret == 1) {
 				result = "成功";
@@ -233,15 +242,16 @@ public class StationActivity extends Activity {
 		}
 		AlertDialog dlg = new AlertDialog.Builder(StationActivity.this)
 				.create();
+		dlg.show();
 		Window window = dlg.getWindow();
 		window.setContentView(R.layout.connectyesdialog);
 		TextView text = (TextView) window.findViewById(R.id.connertexryes);
-		text.setText("连接" + list.get(iListPos).getName() + result);
-		dlg.show();
+		text.setText("连接全站仪" + list.get(iListPos).getName() + result);
+		return ret;
 	}
 
-	/** 断开全站仪成功 */
-	private void disconnect() {
+	/** 断开全站仪 */
+	private int disconnect() {
 		int ret=-1;
 		String result;
 		try {
@@ -252,9 +262,9 @@ public class StationActivity extends Activity {
 		
 		AlertDialog dlg = new AlertDialog.Builder(StationActivity.this)
 				.create();
+		dlg.show();
 		Window window = dlg.getWindow();
 		window.setContentView(R.layout.connectyesdialog);
-		
 		ImageView icon=(ImageView) window.findViewById(R.id.icon);
 		if(ret==1){
 			result="成功";
@@ -264,7 +274,7 @@ public class StationActivity extends Activity {
 		}
 		TextView text = (TextView) window.findViewById(R.id.connertexryes);
 		text.setText("断开连接" + list.get(iListPos).getName() + result);
-		dlg.show();
+		return ret;
 	}
 
 	@Override
