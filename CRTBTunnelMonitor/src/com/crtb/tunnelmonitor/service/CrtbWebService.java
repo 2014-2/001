@@ -5,14 +5,13 @@ import org.ksoap2.serialization.SoapObject;
 import org.ksoap2.serialization.SoapSerializationEnvelope;
 import org.ksoap2.transport.HttpTransportSE;
 
-import com.crtb.tunnelmonitor.common.Constant;
-
 import ICT.utils.RSACoder;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Looper;
-import android.text.TextUtils;
 import android.util.Log;
+
+import com.crtb.tunnelmonitor.common.Constant;
 
 public final class CrtbWebService {
 	private static final String TAG = "CrtbWebService";
@@ -26,8 +25,7 @@ public final class CrtbWebService {
 	private static CrtbWebService sInstance;
 	private Handler mHandler;
 	
-	private String mPublicKey;
-	private String mRandomCode;
+	private long mRandomCode;
 	
 	private CrtbWebService() {
 		mHandler = new Handler(Looper.getMainLooper());
@@ -40,35 +38,19 @@ public final class CrtbWebService {
 		return sInstance;
 	}
 	
-	public synchronized String getPublicKey() {
-		return mPublicKey;
-	}
-
-	public synchronized void setPublicKey(String publicKey) {
-		mPublicKey = publicKey;
-	}
-
-	public synchronized String getRandomCode() {
-		return mRandomCode;
-	}
-
-	public synchronized void setRandomCode(String randomCode) {
-		mRandomCode = randomCode;
-	}
-
 	public void login(final String account, final String password, final RpcCallback callback) {
-		GetPublicKeyRpc rpc = new GetPublicKeyRpc(Constant.testUsername, Constant.testPhysical, new RpcCallbackWrapper(new RpcCallback() {
+		GetPublicKeyRpc rpc = new GetPublicKeyRpc(account, Constant.testPhysical, new RpcCallbackWrapper(new RpcCallback() {
 			@Override
 			public void onSuccess(Object[] data) {
 				String publicKey = (String)data[0];
 				String encnryptPublicKey = RSACoder.encnryptRSA(Constant.testDeskey, publicKey);
-				String encnryptPassword = RSACoder.encnryptDes(Constant.testPassword, Constant.testDeskey);
-				verifyAppUser(Constant.testUsername, encnryptPassword, encnryptPublicKey, new RpcCallbackWrapper(new RpcCallback() {
+				String encnryptPassword = RSACoder.encnryptDes(password, Constant.testDeskey);
+				verifyAppUser(account, encnryptPassword, encnryptPublicKey, new RpcCallbackWrapper(new RpcCallback() {
 
 					@Override
 					public void onSuccess(Object[] data) {
 						String randomCode = (String) data[0];
-						setRandomCode(randomCode);
+						setRandomCode(Long.parseLong(randomCode));
 						if (callback != null) {
 							callback.onSuccess(null);
 						}
@@ -125,11 +107,21 @@ public final class CrtbWebService {
 	 * @param callback
 	 */
 	public void getZoneAndSiteCode(RpcCallback callback) {
-		String randomCode = getRandomCode();
-		if (TextUtils.isEmpty(randomCode)) {
-			throw new IllegalStateException("getZoneAndSiteCode: random code is invalid.");
+		long randomCode = getRandomCode();
+		if (randomCode == 0) {
+			throw new IllegalStateException("invalid random code.");
 		}
 		GetZoneAndSiteCodeRpc rpc = new GetZoneAndSiteCodeRpc(randomCode, new RpcCallbackWrapper(callback));
+		RpcSendTask task = new RpcSendTask(rpc, USRE_AUTH_URL);
+		task.execute();
+	}
+	
+	public void getSurveyors(String zoneCode, RpcCallback callback) {
+		long randomCode = getRandomCode();
+		if (randomCode == 0) {
+			throw new IllegalStateException("invalid random code.");
+		}
+		GetSurveyorsRpc rpc = new GetSurveyorsRpc(zoneCode, randomCode, new RpcCallbackWrapper(callback));
 		RpcSendTask task = new RpcSendTask(rpc, USRE_AUTH_URL);
 		task.execute();
 	}
@@ -193,6 +185,14 @@ public final class CrtbWebService {
 				}
 			});
 		}
+	}
+	
+	private long getRandomCode() {
+		return mRandomCode;
+	}
+
+	private void setRandomCode(long randomCode) {
+		mRandomCode = randomCode;
 	}
 	
 }

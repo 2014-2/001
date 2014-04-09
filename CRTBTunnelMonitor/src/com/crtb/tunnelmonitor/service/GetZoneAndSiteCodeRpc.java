@@ -5,19 +5,17 @@ import java.util.Map;
 
 import org.ksoap2.serialization.SoapObject;
 
-import android.os.Message;
 import android.util.Log;
 
 class GetZoneAndSiteCodeRpc extends AbstractRpc {
 	private static final String LOG_TAG = "GetZoneAndSiteCodeRpc";
 	private static final String KEY_RANDOM_CODE = "随机码";
 	private static final String KEY_ACTION = "getZoneAndSiteCode";
-	private static final String KEY_RESULT = "getZoneAndSiteCodeResult";
 	
-	private Map<String, String> mParameters = new HashMap<String, String>();
+	private Map<String, Long> mParameters = new HashMap<String, Long>();
 	private RpcCallback mCallback;
 	
-	GetZoneAndSiteCodeRpc(String randomCode, RpcCallback callback) {
+	GetZoneAndSiteCodeRpc(long randomCode, RpcCallback callback) {
 		mParameters.put(KEY_RANDOM_CODE, randomCode);
 		mCallback = callback;
 	}
@@ -43,33 +41,26 @@ class GetZoneAndSiteCodeRpc extends AbstractRpc {
 		}
 		Log.d(LOG_TAG, "response: " + response);
 		try {
+			//getZoneAndSiteCodeResponse{return=anyType{item=XPCL01SG05GQ01#一工区; item=XPCL01SD0001#跃龙门隧道; }; }
 			SoapObject result = (SoapObject) response;
-			Object data = result.getProperty(KEY_RESULT);
-			if (data == null) {
-				notifyFailed("Result data is NULL.");
-				return;
+			SoapObject data = (SoapObject) result.getProperty(0);
+			final int count = data.getPropertyCount();
+			String[][] zoneAndSiteCodes = new String[count][2];
+			for(int i = 0 ; i < count; i++) {
+				String[] codes = data.getPropertyAsString(i).split("#");
+				zoneAndSiteCodes[i][0] = codes[0];
+				zoneAndSiteCodes[i][1] = codes[1];
 			}
-			//XKSJ01BD03SD01#第三工区/XKSJ01SD0001#某某隧道名称
-			if ("getZoneAndSiteCodeResponse".equals(result.getName())) {
-				final String[] temp = ((SoapObject)data).getPropertyAsString(0).split("/");
-				final String zone_code = temp[0].split("#")[0];
-				final String site_code = temp[1].split("#")[0];
-				Message msg = Message.obtain();
-				//msg.what = IWebService.MSG_GET_ZONE_AND_SITE_CODE_DONE;
-				msg.obj = zone_code + "," + site_code;
-				notifySuccess();
-				//mUiHandler.sendMessage(msg);
-				//Log.d(TAG, "zone_code: " + zone_code + ", " + "site_code: " + site_code);
-			} 
+			notifySuccess(zoneAndSiteCodes);
 		} catch (Exception e) {
 			notifyFailed("Exception: " + e.getMessage());
 			e.printStackTrace();
 		}
 	}
 	
-	private void notifySuccess() {
+	private void notifySuccess(Object[] data) {
 		if (mCallback != null) {
-			//mCallback.onSuccess();
+			mCallback.onSuccess(data);
 		}
 	}
 	

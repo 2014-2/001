@@ -13,10 +13,10 @@ class GetSurveyorsRpc extends AbstractRpc {
 	private static final String KEY_RANDOM_CODE = "随机码";
 	private static final String KEY_ACTION = "getSurveyors";
 	
-	private Map<String, String> mParameters = new HashMap<String, String>();
+	private Map<String, Object> mParameters = new HashMap<String, Object>();
 	private RpcCallback mCallback;
 	
-	GetSurveyorsRpc(String zoneCode, String randomCode, RpcCallback callback) {
+	GetSurveyorsRpc(String zoneCode, long randomCode, RpcCallback callback) {
 		mParameters.put(KEY_ZONE_CODE, zoneCode);
 		mParameters.put(KEY_RANDOM_CODE, randomCode);
 		mCallback = callback;
@@ -41,15 +41,21 @@ class GetSurveyorsRpc extends AbstractRpc {
 			notifyFailed("Unknown reponse type: " + response.getClass().getName());
 			return;
 		}
+		Log.d(LOG_TAG, "response: " + response);
 		try {
-			Log.d(LOG_TAG, "response: " + response);
+			//getSurveyorsResponse{return=anyType{item=杨工#102190198805012891; item=石工#310501199001021657; }; }
 			SoapObject result = (SoapObject) response;
-			//TODO: Parse the response
+			SoapObject data = (SoapObject) result.getProperty(0);
+			final int count = data.getPropertyCount();
+			for(int i = 0 ; i < count; i++) {
+				String[] surveyorInfo = data.getPropertyAsString(i).split("#");
+				Log.d(LOG_TAG, "name: " + surveyorInfo[0] + ", ID: " + surveyorInfo[1]);
+			}
+			notifySuccess(null);
 		} catch (Exception e) {
 			notifyFailed("Exception: " + e.getMessage());
 			e.printStackTrace();
 		}
-		
 	}
 
 	private void notifySuccess(Object[] data) {
