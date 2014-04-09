@@ -220,6 +220,7 @@ public class AudioPlayerActivity extends BaseActivity {
             mPlayingSong = AudioPlayerManager.getInstance().getSongAtPosition(mSongPosition);
             if (null == mPlayingSong) {
                 finish();
+                return;
             }
         }
         String lrcPath = LrcUtils.replaceExtensionToLrc(songPath);
