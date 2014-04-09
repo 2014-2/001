@@ -6,4 +6,7 @@
     <string name="hello_world">Hello world!</string>
     <string name="total">全站仪</string>
 
+    <!-- 工作面模块 -->
+    <string name="work_plan_title">工作面管理</string>
+    
 </resources>
