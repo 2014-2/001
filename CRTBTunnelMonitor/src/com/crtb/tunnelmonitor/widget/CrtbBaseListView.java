@@ -1,6 +1,7 @@
 package com.crtb.tunnelmonitor.widget;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.util.AttributeSet;
 import android.widget.ListView;
 
@@ -36,5 +37,22 @@ public abstract class CrtbBaseListView extends ListView {
 
 	protected AppHandler getAppHandler(){
 		return new AppHandler(getContext());
+	}
+	
+	protected final void clearCacheColor(){
+		setCacheColorHint(Color.TRANSPARENT);
+		setDivider(null);
+	}
+	
+	public void onResume(){
+		
+	}
+	
+	public void onReload(){
+		
+	}
+	
+	public void onDestory(){
+		
 	}
 }

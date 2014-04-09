@@ -3,25 +3,8 @@ package com.crtb.tunnelmonitor.activity;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.crtb.tunnelmonitor.AppCRTBApplication;
-import com.crtb.tunnelmonitor.adapter.RecordAdapter;
-import com.crtb.tunnelmonitor.adapter.SubsidenceCrossSectionInfoAdapter;
-import com.crtb.tunnelmonitor.adapter.TunnelCrossSectionInfoAdapter;
-import com.crtb.tunnelmonitor.adapter.WorkListAdapter;
-import com.crtb.tunnelmonitor.common.Constant;
-import com.crtb.tunnelmonitor.dao.impl.RecordDaoImpl;
-import com.crtb.tunnelmonitor.dao.impl.SubsidenceCrossSectionDaoImpl;
-import com.crtb.tunnelmonitor.dao.impl.TunnelCrossSectionDaoImpl;
-import com.crtb.tunnelmonitor.entity.RecordInfo;
-import com.crtb.tunnelmonitor.entity.SubsidenceCrossSectionInfo;
-import com.crtb.tunnelmonitor.entity.TunnelCrossSectionInfo;
-import com.crtb.tunnelmonitor.entity.WorkInfos;
-import com.crtb.tunnelmonitor.utils.SelectPicPopupWindow;
-import com.crtb.tunnelmonitor.activity.R;
-
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -31,7 +14,6 @@ import android.os.Parcelable;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
-import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -40,13 +22,19 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.animation.TranslateAnimation;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
-import android.widget.AdapterView.OnItemLongClickListener;
+
+import com.crtb.tunnelmonitor.AppCRTBApplication;
+import com.crtb.tunnelmonitor.adapter.RecordAdapter;
+import com.crtb.tunnelmonitor.common.Constant;
+import com.crtb.tunnelmonitor.dao.impl.RecordDaoImpl;
+import com.crtb.tunnelmonitor.entity.RecordInfo;
+import com.crtb.tunnelmonitor.entity.WorkInfos;
+import com.crtb.tunnelmonitor.utils.SelectPicPopupWindow;
 
 /**
  * 记录单

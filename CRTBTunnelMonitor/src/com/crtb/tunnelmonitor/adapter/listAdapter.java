@@ -45,11 +45,11 @@ public class listAdapter extends BaseAdapter
 		LayoutInflater lay;
 		if(convertView==null){
 			lay=LayoutInflater.from(context);
-			convertView=lay.inflate(R.layout.listinfos_main, null);
+			convertView=lay.inflate(R.layout.item_workplan_layout, null);
 		}
 		TextView name=(TextView) convertView.findViewById(R.id.t1);
 		TextView start=(TextView) convertView.findViewById(R.id.t2);
-		TextView end=(TextView) convertView.findViewById(R.id.t3);
+		TextView end=(TextView) convertView.findViewById(R.id.tv_workplan_end_mileage);
 		name.setTextColor(Color.BLACK);
 		start.setTextColor(Color.BLACK);
 		end.setTextColor(Color.BLACK);

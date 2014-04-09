@@ -51,7 +51,7 @@ public class TestRecordAdapter extends BaseAdapter {
 		}
 		TextView name=(TextView) convertView.findViewById(R.id.t1);
 		TextView name1=(TextView) convertView.findViewById(R.id.t2);
-		ImageView start=(ImageView) convertView.findViewById(R.id.t3);
+		ImageView start=(ImageView) convertView.findViewById(R.id.tv_workplan_end_mileage);
 		name.setTextColor(Color.BLACK);
 		name1.setTextColor(Color.BLACK);
 		name.setText(Integer.toString(position));

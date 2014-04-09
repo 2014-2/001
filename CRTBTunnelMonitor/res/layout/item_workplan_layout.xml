@@ -13,6 +13,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1" >
+
             <View
                 android:layout_width="1dp"
                 android:layout_height="fill_parent"
@@ -30,6 +31,7 @@
                 android:layout_height="fill_parent"
                 android:layout_alignParentRight="true"
                 android:background="#FF000000" />
+
             <View
                 android:layout_width="fill_parent"
                 android:layout_height="1dp"
@@ -37,11 +39,12 @@
                 android:background="#FF000000" />
 
             <TextView
-                android:id="@+id/t1"
+                android:id="@+id/tv_workplan_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
-                android:layout_centerInParent="true" />
+                android:layout_centerInParent="true"
+                android:textColor="@color/black" />
         </RelativeLayout>
 
         <RelativeLayout
@@ -60,19 +63,20 @@
                 android:layout_height="fill_parent"
                 android:layout_alignParentRight="true"
                 android:background="#FF000000" />
+
             <View
                 android:layout_width="fill_parent"
                 android:layout_height="1dp"
                 android:layout_alignParentTop="true"
                 android:background="#FF000000" />
-            
 
             <TextView
-                android:id="@+id/t2"
+                android:id="@+id/tv_workplan_start_mileage"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
-                android:layout_centerInParent="true" />
+                android:layout_centerInParent="true"
+                android:textColor="@color/black" />
         </RelativeLayout>
 
         <RelativeLayout
@@ -91,6 +95,7 @@
                 android:layout_height="fill_parent"
                 android:layout_alignParentRight="true"
                 android:background="#FF000000" />
+
             <View
                 android:layout_width="fill_parent"
                 android:layout_height="1dp"
@@ -98,11 +103,12 @@
                 android:background="#FF000000" />
 
             <TextView
-                android:id="@+id/t3"
+                android:id="@+id/tv_workplan_end_mileage"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
-                android:layout_centerInParent="true" />
+                android:layout_centerInParent="true"
+                android:textColor="@color/black" />
         </RelativeLayout>
     </LinearLayout>
 

@@ -40,33 +40,33 @@ public class WorkPlan implements Serializable {
 	private String mileagePrefix;
 
 	@ColumnFloat
-	private double startMileage;
+	private float startMileage;
 
 	@ColumnFloat
-	private double endMileage;
+	private float endMileage;
 
 	// /////////////////deflection info /////////////////////
 
 	// vault
 	@ColumnFloat
-	private double vaultLimitVelocity;
+	private float vaultLimitVelocity;
 
 	@ColumnFloat
-	private double vaultLimitTotalSettlement;
+	private float vaultLimitTotalSettlement;
 
 	// restrain
 	@ColumnFloat
-	private double restrainLimitVelocity;
+	private float restrainLimitVelocity;
 
 	@ColumnFloat
-	private double restrainLimitTotalSettlement;
+	private float restrainLimitTotalSettlement;
 
 	// surface
 	@ColumnFloat
-	private double surfaceLimitVelocity;
+	private float surfaceLimitVelocity;
 
 	@ColumnFloat
-	private double surfaceLimitTotalSettlement;
+	private float surfaceLimitTotalSettlement;
 
 	@ColumnString(length = 1024)
 	private String remark;
@@ -118,69 +118,67 @@ public class WorkPlan implements Serializable {
 		this.mileagePrefix = mileagePrefix;
 	}
 
-	public double getStartMileage() {
+	public float getStartMileage() {
 		return startMileage;
 	}
 
-	public void setStartMileage(double startMileage) {
+	public void setStartMileage(float startMileage) {
 		this.startMileage = startMileage;
 	}
 
-	public double getEndMileage() {
+	public float getEndMileage() {
 		return endMileage;
 	}
 
-	public void setEndMileage(double endMileage) {
+	public void setEndMileage(float endMileage) {
 		this.endMileage = endMileage;
 	}
 
-	public double getVaultLimitVelocity() {
+	public float getVaultLimitVelocity() {
 		return vaultLimitVelocity;
 	}
 
-	public void setVaultLimitVelocity(double vaultLimitVelocity) {
+	public void setVaultLimitVelocity(float vaultLimitVelocity) {
 		this.vaultLimitVelocity = vaultLimitVelocity;
 	}
 
-	public double getVaultLimitTotalSettlement() {
+	public float getVaultLimitTotalSettlement() {
 		return vaultLimitTotalSettlement;
 	}
 
-	public void setVaultLimitTotalSettlement(double vaultLimitTotalSettlement) {
+	public void setVaultLimitTotalSettlement(float vaultLimitTotalSettlement) {
 		this.vaultLimitTotalSettlement = vaultLimitTotalSettlement;
 	}
 
-	public double getRestrainLimitVelocity() {
+	public float getRestrainLimitVelocity() {
 		return restrainLimitVelocity;
 	}
 
-	public void setRestrainLimitVelocity(double restrainLimitVelocity) {
+	public void setRestrainLimitVelocity(float restrainLimitVelocity) {
 		this.restrainLimitVelocity = restrainLimitVelocity;
 	}
 
-	public double getRestrainLimitTotalSettlement() {
+	public float getRestrainLimitTotalSettlement() {
 		return restrainLimitTotalSettlement;
 	}
 
-	public void setRestrainLimitTotalSettlement(
-			double restrainLimitTotalSettlement) {
+	public void setRestrainLimitTotalSettlement(float restrainLimitTotalSettlement) {
 		this.restrainLimitTotalSettlement = restrainLimitTotalSettlement;
 	}
 
-	public double getSurfaceLimitVelocity() {
+	public float getSurfaceLimitVelocity() {
 		return surfaceLimitVelocity;
 	}
 
-	public void setSurfaceLimitVelocity(double surfaceLimitVelocity) {
+	public void setSurfaceLimitVelocity(float surfaceLimitVelocity) {
 		this.surfaceLimitVelocity = surfaceLimitVelocity;
 	}
 
-	public double getSurfaceLimitTotalSettlement() {
+	public float getSurfaceLimitTotalSettlement() {
 		return surfaceLimitTotalSettlement;
 	}
 
-	public void setSurfaceLimitTotalSettlement(
-			double surfaceLimitTotalSettlement) {
+	public void setSurfaceLimitTotalSettlement(float surfaceLimitTotalSettlement) {
 		this.surfaceLimitTotalSettlement = surfaceLimitTotalSettlement;
 	}
 
