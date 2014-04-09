@@ -116,14 +116,32 @@ public final class CrtbWebService {
 		task.execute();
 	}
 	
-	public void getSurveyors(String zoneCode, RpcCallback callback) {
-		long randomCode = getRandomCode();
+	public void getSurveyors(final RpcCallback callback) {
+		final long randomCode = getRandomCode();
 		if (randomCode == 0) {
 			throw new IllegalStateException("invalid random code.");
 		}
-		GetSurveyorsRpc rpc = new GetSurveyorsRpc(zoneCode, randomCode, new RpcCallbackWrapper(callback));
+		GetZoneAndSiteCodeRpc rpc = new GetZoneAndSiteCodeRpc(randomCode, new RpcCallbackWrapper(new RpcCallback() {
+			
+			@Override
+			public void onSuccess(Object[] data) {
+				String zoneCode = (String) data[0];
+				//String siteCode = (String) data[1];
+				GetSurveyorsRpc rpc = new GetSurveyorsRpc(zoneCode, randomCode, new RpcCallbackWrapper(callback));
+				RpcSendTask task = new RpcSendTask(rpc, USRE_AUTH_URL);
+				task.execute();
+			}
+			
+			@Override
+			public void onFailed(String reason) {
+				if (callback != null) {
+					callback.onFailed(reason);
+				}
+			}
+		}));
 		RpcSendTask task = new RpcSendTask(rpc, USRE_AUTH_URL);
 		task.execute();
+		
 	}
 	
 	private class RpcSendTask extends AsyncTask<Void, Void, Void> {
