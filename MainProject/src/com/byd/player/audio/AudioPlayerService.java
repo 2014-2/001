@@ -405,7 +405,14 @@ public class AudioPlayerService extends Service {
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
             if ("com.canbus.action.CAR_SETTING".equals(action)) {
-                int value = intent.getIntExtra("value", 0);
+                int value = 0;
+                try {
+                    value = intent.getIntExtra("value", 0);
+                } catch (ClassCastException ex) {
+                    ex.printStackTrace();
+                    String valueStr = intent.getStringExtra("value");
+                    value = Integer.parseInt(valueStr);
+                }
                 switch (value) {
                     case Canbus.WHEEL_KEY_SEEK_UP_SHORT:
                         forceChangeToPrevious();
