@@ -237,9 +237,11 @@ public class AudioPlayerActivity extends BaseActivity {
             mAlbumName = (TextView)findViewById(R.id.album_name);
             mSingerName = (TextView)findViewById(R.id.singer_name);
             mMusicName = (TextView)findViewById(R.id.music_name);
-            mAlbumName.setText(mPlayingSong.getAlbum());
-            mSingerName.setText(mPlayingSong.getSinger());
-            mMusicName.setText(mPlayingSong.getFileTitle());
+            if (mPlayingSong != null) {
+                mAlbumName.setText(mPlayingSong.getAlbum());
+                mSingerName.setText(mPlayingSong.getSinger());
+                mMusicName.setText(mPlayingSong.getFileTitle());
+            }
         }
 
         if (null == mTotalTime) {
