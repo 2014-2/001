@@ -1,12 +1,10 @@
-package com.crtb.tunnelmonitor.activity;
+package com.crtb.tunnelmonitor;
 
 import org.zw.android.framework.IFrameworkFacade;
 
 import android.app.Activity;
 import android.os.Bundle;
 
-import com.crtb.tunnelmonitor.AppCRTBApplication;
-import com.crtb.tunnelmonitor.AppHandler;
 
 /**
  * Base Activity

@@ -1,6 +1,5 @@
-package com.crtb.tunnelmonitor.activity;
+package com.crtb.tunnelmonitor;
 
-import com.crtb.tunnelmonitor.AppActivityManager;
 
 import android.os.Bundle;
 
