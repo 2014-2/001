@@ -43,6 +43,7 @@ class GetSurveyorsRpc extends AbstractRpc {
 		}
 		Log.d(LOG_TAG, "response: " + response);
 		try {
+			//zone_code: 
 			//getSurveyorsResponse{return=anyType{item=杨工#102190198805012891; item=石工#310501199001021657; }; }
 			SoapObject result = (SoapObject) response;
 			SoapObject data = (SoapObject) result.getProperty(0);
