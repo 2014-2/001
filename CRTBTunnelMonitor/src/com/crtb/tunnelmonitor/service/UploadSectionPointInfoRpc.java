@@ -86,7 +86,7 @@ class UploadSectionPointInfoRpc extends AbstractRpc {
 	
 	private void notifyFailed(String reason) {
 		if (mCallback != null) {
-			mCallback.onFailed();
+			mCallback.onFailed(reason);
 		}
 	}
 

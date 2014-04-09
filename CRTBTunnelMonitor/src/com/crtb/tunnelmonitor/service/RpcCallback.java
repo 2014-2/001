@@ -10,5 +10,5 @@ public interface RpcCallback {
 	/**
 	 * Called when the remote process call is failed.
 	 */
-	public void onFailed();
+	public void onFailed(String reason);
 }

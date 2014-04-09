@@ -75,9 +75,9 @@ public final class CrtbWebService {
 					}
 					
 					@Override
-					public void onFailed() {
+					public void onFailed(String reason) {
 						if (callback != null) {
-							callback.onFailed();
+							callback.onFailed(reason);
 						}
 					}
 				}));
@@ -85,9 +85,9 @@ public final class CrtbWebService {
 			}
 			
 			@Override
-			public void onFailed() {
+			public void onFailed(String reason) {
 				if (callback != null) {
-					callback.onFailed();
+					callback.onFailed(reason);
 				}
 			}
 		}));
@@ -183,12 +183,12 @@ public final class CrtbWebService {
 		}
 
 		@Override
-		public void onFailed() {
+		public void onFailed(final String reason) {
 			mHandler.post(new Runnable() {
 				@Override
 				public void run() {
 					if (mCallback != null) {
-						mCallback.onFailed();
+						mCallback.onFailed(reason);
 					}
 				}
 			});
