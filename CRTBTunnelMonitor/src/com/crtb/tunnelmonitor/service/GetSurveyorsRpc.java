@@ -1,11 +1,17 @@
 package com.crtb.tunnelmonitor.service;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.ksoap2.serialization.SoapObject;
 
+import com.crtb.tunnelmonitor.entity.SurveyerInformation;
+
 import android.util.Log;
+import android.widget.ArrayAdapter;
 
 class GetSurveyorsRpc extends AbstractRpc {
 	private static final String LOG_TAG = "GetSurveyorsRpc";
@@ -48,11 +54,15 @@ class GetSurveyorsRpc extends AbstractRpc {
 			SoapObject result = (SoapObject) response;
 			SoapObject data = (SoapObject) result.getProperty(0);
 			final int count = data.getPropertyCount();
+		    SurveyerInformation[] surveyors = new SurveyerInformation[count];
 			for(int i = 0 ; i < count; i++) {
 				String[] surveyorInfo = data.getPropertyAsString(i).split("#");
-				Log.d(LOG_TAG, "name: " + surveyorInfo[0] + ", ID: " + surveyorInfo[1]);
+				SurveyerInformation surveyor = new SurveyerInformation();
+				surveyor.setSurveyerName(surveyorInfo[0]);
+				surveyor.setCertificateID(surveyorInfo[1]);
+				surveyors[i] = surveyor;
 			}
-			notifySuccess(null);
+			notifySuccess(surveyors);
 		} catch (Exception e) {
 			notifyFailed("Exception: " + e.getMessage());
 			e.printStackTrace();
