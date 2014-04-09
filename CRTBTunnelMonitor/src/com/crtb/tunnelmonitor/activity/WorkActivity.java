@@ -26,7 +26,13 @@ import com.crtb.tunnelmonitor.dao.impl.DTMSDBDaoImpl;
 import com.crtb.tunnelmonitor.entity.WorkInfos;
 import com.crtb.tunnelmonitor.utils.SelectPicPopupWindow;
 
-public class WorkActivity extends WorkFlowActivity {
+/**
+ * work plan
+ * 
+ * @author zhouwei
+ *
+ */
+public final class WorkActivity extends WorkFlowActivity {
 
 	private ListView list;
 	private WorkListAdapter adapter;
@@ -44,6 +50,9 @@ public class WorkActivity extends WorkFlowActivity {
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.activity_work);
+		
+		// title
+		setTopbarTitle(getString(R.string.work_plan_title));
 
 		// 初始化空间
 		layout = (RelativeLayout) findViewById(R.layout.alert_dialog);

@@ -29,18 +29,23 @@ public class WorkInfos {
 	private Double EndChainage;
 	/** 施工单位名称 */
 	private String ConstructionFirm;
+	
+	
 	/** 拱顶单次速率限差 */
 	private Float GDLimitVelocity;
 	/** 拱顶 累计沉降量限差*/
 	private Float GDLimitTotalSettlement;
+	
 	/** 收敛 单次变形速率*/
 	private Float SLLimitVelocity;
 	/** 收敛 累计变形限差*/
 	private Float SLLimitTotalSettlement;
+	
 	/** 地表下沉 单次速率*/
 	private Float DBLimitVelocity;
 	/**地表下沉 累计下沉限差*/
 	private String DBLimitTotalSettlement;
+	
 	/** 备注 */
 	private String info;
 	private String LastOpenTime;

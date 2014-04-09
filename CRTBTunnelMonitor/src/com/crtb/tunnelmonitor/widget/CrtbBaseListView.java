@@ -1,10 +1,10 @@
 package com.crtb.tunnelmonitor.widget;
 
-import com.crtb.tunnelmonitor.AppHandler;
-
 import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.ListView;
+
+import com.crtb.tunnelmonitor.AppHandler;
 
 /**
  * Base ListView
@@ -22,13 +22,15 @@ public abstract class CrtbBaseListView extends ListView {
 
 	public CrtbBaseListView(Context context, AttributeSet attrs) {
 		super(context, attrs);
-		
-		mHandler	= getAppHandler() ;
+		init() ;
 	}
 
 	public CrtbBaseListView(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs,defStyle);
-		
+		init() ;
+	}
+	
+	private void init(){
 		mHandler	= getAppHandler() ;
 	}
 
