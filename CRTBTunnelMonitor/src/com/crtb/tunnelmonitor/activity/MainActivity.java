@@ -87,8 +87,8 @@ public class MainActivity extends Activity implements OnClickListener {
 		mServer = (TextView) findViewById(R.id.server);
 		mAbout = (TextView) findViewById(R.id.about);
 		// 判断是否显示服务器图标
-		int num = getIntent().getExtras().getInt(Constant.Select_LoginName_Name);
-		if (num == Constant.Select_LoginValue_Local) {
+		int num = getIntent().getExtras().getInt(Constant.LOGIN_TYPE);
+		if (num == Constant.LOCAL_USER) {
 			// 影藏控件
 			mServer.setVisibility(View.INVISIBLE);
 			LinearLayout.LayoutParams param=(LayoutParams) mAbout.getLayoutParams();

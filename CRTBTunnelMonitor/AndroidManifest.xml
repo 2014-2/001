@@ -53,6 +53,7 @@
         <activity android:name="com.crtb.tunnelmonitor.activity.SoftwareInfoActivity"></activity>
         <activity android:name="com.crtb.tunnelmonitor.activity.RegisterActivity"></activity>
         <activity android:name="com.crtb.tunnelmonitor.activity.UserInfoActivity"></activity>
+        <activity android:name="com.crtb.tunnelmonitor.activity.TesterLoadActivity"></activity>
 
     </application>
 

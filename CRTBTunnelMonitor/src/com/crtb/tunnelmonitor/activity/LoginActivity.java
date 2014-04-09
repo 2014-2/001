@@ -9,6 +9,7 @@ import org.ksoap2.transport.HttpTransportSE;
 import ICT.utils.RSACoder;
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -16,12 +17,13 @@ import android.view.View.OnClickListener;
 //import android.webkit.WebView.FindListener;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.crtb.tunnelmonitor.AppCRTBApplication;
 import com.crtb.tunnelmonitor.common.Constant;
-import com.crtb.tunnelmonitor.activity.R;
+import com.crtb.tunnelmonitor.service.CrtbWebService;
+import com.crtb.tunnelmonitor.service.RpcCallback;
 
 /**
  * 服务器登录界面 创建时间：2014-3-18下午4:11:55
@@ -30,14 +32,18 @@ public class LoginActivity extends Activity implements OnClickListener {
 
 	/**登录按钮 */
 	private Button login_btn;
-	/** 意图跳转界面 */
-	private Intent intent;
+
 	/**登录用户信息列表*/
-	private RelativeLayout login_rl_listview;
+	//private RelativeLayout login_rl_listview;
 	//用户名输入框
-	private EditText et_username;
+	private EditText mUserName;
 	//密码输入框
-	private EditText et_password;
+	private EditText mPassword;
+	
+	private EditText mServerIp;
+	
+	private TextView mDownload;
+	
 	//APP实例
 	private AppCRTBApplication CurApp;
 	private String veri;
@@ -55,12 +61,15 @@ public class LoginActivity extends Activity implements OnClickListener {
 	/** 初始化控件 */
 	private void initView() {
 		login_btn = (Button) findViewById(R.id.login_btn);
-		login_rl_listview = (RelativeLayout) findViewById(R.id.login_rl_listview);
-		et_username = (EditText) findViewById(R.id.et_username);
-		et_password = (EditText) findViewById(R.id.et_password);
+		//login_rl_listview = (RelativeLayout) findViewById(R.id.login_rl_listview);
+		mServerIp=(EditText)findViewById(R.id.server_ip);
+		
+		mUserName = (EditText) findViewById(R.id.username);
+		mPassword = (EditText) findViewById(R.id.password);
 		CurApp = ((AppCRTBApplication)getApplicationContext());
-		//
-		login_rl_listview.setVisibility(View.GONE);
+	    mDownload=(TextView) findViewById(R.id.load_teser);
+	    mDownload.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG);
+	    mDownload.setOnClickListener(this);
 		// 点击事件
 		login_btn.setOnClickListener(this);
 	}
@@ -70,50 +79,67 @@ public class LoginActivity extends Activity implements OnClickListener {
 		switch (v.getId()) {
 		case R.id.login_btn:
 			//获取用户名和密码
-			String name = et_username.getText().toString().trim();
-			String pwd = et_password.getText().toString().trim();
-			String verify = "0";
+			String name = mUserName.getText().toString().trim();
+			String pwd = mPassword.getText().toString().trim();
+
 			//用户验证
 			if(TextUtils.isEmpty(name)||TextUtils.isEmpty(pwd)){
-				verify = loginTest(Constant.testUsername,Constant.testPassword);
+				login(Constant.testUsername,Constant.testPassword);
 			}else{
-				verify = loginTest(name,pwd);
+				login(Constant.testUsername,Constant.testPassword);
 			}
 			//验证失败时提示并返回
-			if("0".equals(verify)){
-				Toast.makeText(LoginActivity.this, "用户验证失败！", Toast.LENGTH_LONG).show();
-				break;
-			}else if("-1".equals(verify)){
-				break;
-			}
-			//验证成功则跳转到主界面
-			CurApp.setVerify(verify);
-			intent = new Intent(LoginActivity.this, MainActivity.class);
-			intent.putExtra("name", 2);
-			startActivity(intent);
+//			if("0".equals(verify)){
+//				Toast.makeText(LoginActivity.this, "用户验证失败！", Toast.LENGTH_LONG).show();
+//				break;
+//			}else if("-1".equals(verify)){
+//				break;
+//			}
+			
 			break;
-
+		case R.id.load_teser:
+			Intent intent=new Intent(this,TesterLoadActivity.class);
+			startActivity(intent);
 		default:
 			break;
 		}
 	}
 
-	private String loginTest(String username, String password) {
-		String ver = String.valueOf(0);
-		//获取公钥
-		String publicKey = getPub(username,Constant.testPhysical);
-		if("0".equals(publicKey)){
-			//获取失败时提示并返回0
-			Toast.makeText(LoginActivity.this, "获取公钥失败！", Toast.LENGTH_LONG).show();
-			ver = String.valueOf(-1);
-			return ver;
-		}
-		//成功则通过私钥加密
-		CurApp.setPublickey(publicKey);
-		ver = loginSelect(username,password);
-		return ver;
-	}
+//	private String loginTest(String username, String password) {
+//		String ver = String.valueOf(0);
+//		//获取公钥
+//		String publicKey = getPub(username,Constant.testPhysical);
+//		if("0".equals(publicKey)){
+//			//获取失败时提示并返回0
+//			Toast.makeText(LoginActivity.this, "获取公钥失败！", Toast.LENGTH_LONG).show();
+//			ver = String.valueOf(-1);
+//			return ver;
+//		}
+//		//成功则通过私钥加密
+//		CurApp.setPublickey(publicKey);
+//		ver = loginSelect(username,password);
+//		return ver;
+//	}
+    private void login(String username,String password){
+    	CrtbWebService.getInstance().login(username, password, new RpcCallback() {
 
+    		@Override
+    		public void onSuccess(Object[] data) {
+    			Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+    			intent.putExtra(Constant.LOGIN_TYPE
+    					, Constant.SERVER_USER);
+    			startActivity(intent);
+    		}
+
+    		
+
+			@Override
+			public void onFailed(String reason) {
+				Toast.makeText(LoginActivity.this, "用户名或密码错误", Toast.LENGTH_LONG).show();
+			}
+    		});
+    }
+	
 	private String loginSelect(final String username, String password) {
 		veri = String.valueOf(0);
 		//密码加密
