@@ -3,27 +3,13 @@ package com.crtb.tunnelmonitor.activity;
 import java.util.ArrayList;
 import java.util.List;
 
-
-import com.crtb.tunnelmonitor.AppCRTBApplication;
-import com.crtb.tunnelmonitor.adapter.WorkListAdapter;
-import com.crtb.tunnelmonitor.common.Constant;
-import com.crtb.tunnelmonitor.dao.impl.DTMSDBDaoImpl;
-import com.crtb.tunnelmonitor.dao.impl.WorkDaoImpl;
-import com.crtb.tunnelmonitor.entity.*;
-import com.crtb.tunnelmonitor.utils.SelectPicPopupWindow;
-import com.crtb.tunnelmonitor.activity.R;
-//import com.crtb.tunnelmonitor.adapter.listAdapter;
-//import com.crtb.tunnelmonitor.entity.list_infos;
-
-import android.os.Bundle;
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Bundle;
 import android.view.Gravity;
 import android.view.KeyEvent;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
@@ -31,8 +17,16 @@ import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.Toast;
+
+import com.crtb.tunnelmonitor.AppCRTBApplication;
+import com.crtb.tunnelmonitor.adapter.WorkListAdapter;
+import com.crtb.tunnelmonitor.common.Constant;
+import com.crtb.tunnelmonitor.dao.impl.DTMSDBDaoImpl;
+import com.crtb.tunnelmonitor.entity.WorkInfos;
+import com.crtb.tunnelmonitor.utils.SelectPicPopupWindow;
+//import com.crtb.tunnelmonitor.adapter.listAdapter;
+//import com.crtb.tunnelmonitor.entity.list_infos;
 
 /**
  * 工作面 创建时间：2014-3-19上午9:45:02
