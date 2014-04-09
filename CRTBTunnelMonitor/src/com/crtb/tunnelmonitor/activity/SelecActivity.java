@@ -67,7 +67,7 @@ public class SelecActivity extends Activity implements OnClickListener{
 		case R.id.local_layout:// 直接跳转主界面
 			mApp.setbLocaUser(true);
 			intent = new Intent(SelecActivity.this,MainActivity.class);
-			intent.putExtra(Constant.Select_LoginName_Name, Constant.Select_LoginValue_Local);
+			intent.putExtra(Constant.LOGIN_TYPE, Constant.LOCAL_USER);
 			startActivity(intent);
 			break;
 		case R.id.server_layout:

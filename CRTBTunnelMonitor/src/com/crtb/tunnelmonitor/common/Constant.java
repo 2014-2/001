@@ -7,9 +7,9 @@ package com.crtb.tunnelmonitor.common;
 public class Constant {
 
 	/*登录选择name和value*/
-	public static final String Select_LoginName_Name = "name";
-	public static final int Select_LoginValue_Local = 1;
-	public static final int Select_LoginValue_Server = 2;
+	public static final String LOGIN_TYPE = "name";
+	public static final int LOCAL_USER = 1;
+	public static final int SERVER_USER= 2;
 	
 	/*工作面行点击菜单项*/
 	public static final CharSequence WorkRowClickItems[] = { "打开", "编辑", "导出", "删除" };
