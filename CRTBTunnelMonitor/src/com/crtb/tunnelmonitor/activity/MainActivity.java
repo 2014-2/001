@@ -103,7 +103,7 @@ public class MainActivity extends Activity implements OnClickListener {
 		mWarn.setOnClickListener(this);
 		mServer.setOnClickListener(this);
 		mAbout.setOnClickListener(this);
-		AppCRTBApplication app=(AppCRTBApplication)getApplicationContext();
+		AppCRTBApplication app=AppCRTBApplication.getInstance();
 		if(app.isbLocaUser()){
 			mServer.setVisibility(View.INVISIBLE);
 			
@@ -121,7 +121,7 @@ public class MainActivity extends Activity implements OnClickListener {
 		 break;
 		 case R.id.crosssection: // 断面
 		 {
-			AppCRTBApplication CurApp = ((AppCRTBApplication)getApplicationContext());
+			AppCRTBApplication CurApp = AppCRTBApplication.getInstance();
 			WorkInfos CurW = CurApp.GetCurWork();
 			if(CurW == null)
 			{

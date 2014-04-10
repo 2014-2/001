@@ -138,7 +138,8 @@
             android:id="@+id/tv_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" 
-            android:background="#e3ad00">
+            android:background="#e3ad00"
+            android:visibility="gone">
 
             <TextView
                 android:id="@+id/tv"
@@ -162,11 +163,12 @@
         </RelativeLayout>
 
         <ListView
-            android:id="@+id/login_lv_msg"
+            android:id="@+id/listview"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/tv_layout"
-            android:layout_marginTop="3dip" >
+            android:layout_marginTop="3dip" 
+            android:cacheColorHint="#000000">
         </ListView>
     </RelativeLayout>
 

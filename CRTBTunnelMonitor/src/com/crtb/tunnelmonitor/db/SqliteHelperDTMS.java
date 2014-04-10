@@ -9,22 +9,26 @@ public class SqliteHelperDTMS extends SQLiteOpenHelper {
 
 	/** 版本号 */
 	private static final int VERSION = 1;
+	
+	private static final String DB_NAME="tunnel.db";
 
 	/**
 	 * 带参构造方法
 	 * 
 	 * @param context
 	 *            上下文
-	 * @param name
-	 *            数据库
 	 * @param factory
 	 *            工厂
 	 * @param version
 	 *            版本号
 	 */
-	public SqliteHelperDTMS(Context context, String name,
-			CursorFactory factory, int version) {
-		super(context, name.concat(".db"), null, VERSION);
+	public SqliteHelperDTMS(Context context, CursorFactory factory,
+			int version) {
+		super(context, DB_NAME, null, VERSION);
+	}
+	
+	public SqliteHelperDTMS(Context context){
+		this(context,null,VERSION);
 	}
 
 	@Override

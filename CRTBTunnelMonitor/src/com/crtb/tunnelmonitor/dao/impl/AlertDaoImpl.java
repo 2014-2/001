@@ -19,7 +19,7 @@ public class AlertDaoImpl implements AlertDao{
 	private SQLiteDatabase db = null;
 
 	public AlertDaoImpl(Context c,String name) {
-		helper = new SqliteHelperDTMS(c, name,null,0);
+		helper = new SqliteHelperDTMS(c, null,0);
 		db = helper.getReadableDatabase();
 
 	}

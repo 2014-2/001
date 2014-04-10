@@ -7,6 +7,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.crtb.tunnelmonitor.AppCRTBApplication;
 import com.crtb.tunnelmonitor.dao.SurveyerInformationDao;
 import com.crtb.tunnelmonitor.db.SqliteHelperDTMS;
 import com.crtb.tunnelmonitor.entity.SurveyerInformation;
@@ -17,8 +18,17 @@ public class SurveyerInformationDaoImpl implements SurveyerInformationDao{
 	private SqliteHelperDTMS helper = null;
 	private SQLiteDatabase db = null;
 
-	public SurveyerInformationDaoImpl(Context c,String name) {
-		helper = new SqliteHelperDTMS(c, name,null,0);
+	public static SurveyerInformationDaoImpl instance;
+	
+	public static SurveyerInformationDaoImpl getInstance(){
+	   if(instance==null){
+		   instance=new SurveyerInformationDaoImpl(AppCRTBApplication.getInstance());
+	   }
+	   return instance;
+	}
+	
+	private SurveyerInformationDaoImpl(Context c) {
+		helper = new SqliteHelperDTMS(c);
 		db = helper.getReadableDatabase();
 
 	}
@@ -33,7 +43,7 @@ public class SurveyerInformationDaoImpl implements SurveyerInformationDao{
 			if(c!=null){
 				while(c.moveToNext()){
 					entity = new SurveyerInformation();
-					iIndex = c.getColumnIndex("ID");
+					iIndex = c.getColumnIndexOrThrow("Id");
 					entity.setId(c.getInt(iIndex));
 					iIndex = c.getColumnIndex("SurveyerName");
 					entity.setSurveyerName(c.getString(iIndex));

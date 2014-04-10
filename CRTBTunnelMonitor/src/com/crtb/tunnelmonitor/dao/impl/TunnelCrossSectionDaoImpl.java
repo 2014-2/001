@@ -22,7 +22,7 @@ public class TunnelCrossSectionDaoImpl implements TunnelCrossSectionDao{
 	private SQLiteDatabase db = null;
 
 	public TunnelCrossSectionDaoImpl(Context c,String name) {
-		helper = new SqliteHelperDTMS(c, name,null,0);
+		helper = new SqliteHelperDTMS(c, null,0);
 		db = helper.getReadableDatabase();
 
 	}

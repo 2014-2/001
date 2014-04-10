@@ -20,7 +20,7 @@ public class TunnelCrossSectionExDaoImpl implements TunnelCrossSectionExDao{
 	private SqliteHelperDTMS helper = null;
 	private SQLiteDatabase db = null;
 	public TunnelCrossSectionExDaoImpl(Context c,String name){
-		helper = new SqliteHelperDTMS(c, name,null,0);
+		helper = new SqliteHelperDTMS(c, null,0);
 		db = helper.getReadableDatabase();
 	}
 	
