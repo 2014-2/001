@@ -67,6 +67,7 @@ public final class WorkActivity extends WorkFlowActivity {
 		
 		// load workplan list
 		loadWorkPlanList();
+		
 	}
 	
 	private void loadWorkPlanMenu(){
