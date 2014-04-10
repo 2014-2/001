@@ -405,11 +405,9 @@ public class AudioPlayerService extends Service {
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
             if ("com.canbus.action.CAR_SETTING".equals(action)) {
-                int value = 0;
-                try {
-                    value = intent.getIntExtra("value", 0);
-                } catch (ClassCastException ex) {
-                    ex.printStackTrace();
+                int value = intent.getIntExtra("value", -1);
+                if (-1 == value) {
+                    // if the value is not int type
                     String valueStr = intent.getStringExtra("value");
                     value = Integer.parseInt(valueStr);
                 }
