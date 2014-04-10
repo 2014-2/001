@@ -68,14 +68,16 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="20dp"
-                        android:text="用户名  "
+                        android:text="用户名"
                         android:textSize="19sp" />
 
                     <EditText
                         android:id="@+id/username"
-                        android:layout_width="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginRight="20dp"
+                        android:hint="请输入用户名"
                         android:layout_weight="1" />
                 </LinearLayout>
             </RelativeLayout>
@@ -87,9 +89,10 @@
                 android:layout_marginBottom="5dp"
                 android:background="#d9d9d9" />
 
-            <RelativeLayout
+                  <RelativeLayout
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content" >
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dip" >
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -100,15 +103,18 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="20dp"
-                        android:text="密     码 "
+                        android:text="身份证"
                         android:textSize="19sp" />
 
                     <EditText
-                        android:id="@+id/password"
-                        android:layout_width="match_parent"
+                        android:id="@+id/idcard"
+                        android:layout_marginLeft="10dp"
+                        android:layout_width="0dp"
+                        android:text="10290198805012891"
                         android:layout_height="wrap_content"
                         android:layout_marginRight="20dp"
-                        android:password="true" />
+                        android:hint="请输入身份证"
+                        android:layout_weight="1" />
                 </LinearLayout>
             </RelativeLayout>
         </LinearLayout>

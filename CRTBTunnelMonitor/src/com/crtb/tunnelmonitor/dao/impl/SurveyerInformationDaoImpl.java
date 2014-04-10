@@ -15,6 +15,8 @@ import com.crtb.tunnelmonitor.entity.SurveyerInformation;
  *测量人员信息数据库接口实现
  */
 public class SurveyerInformationDaoImpl implements SurveyerInformationDao{
+	private final String TABLE="SurveyerInformation";
+	
 	private SqliteHelperDTMS helper = null;
 	private SQLiteDatabase db = null;
 
@@ -88,6 +90,15 @@ public class SurveyerInformationDaoImpl implements SurveyerInformationDao{
 		return result;
 	}
 
+	public String getIdCardByName(String card){
+		Cursor cursor=db.query(TABLE, new String[]{"SurveyerName"}, null, null, null, null, null);
+		//Cursor cursor=db.query(TABLE, new String[]{"SurveyerName"}, "CertificateID='"+card+"'", null, null, null, null);
+	    if(cursor!=null&& cursor.getCount()>0&& cursor.moveToFirst()){
+	    	return cursor.getString(cursor.getColumnIndex("SurveyerName"));
+	    }
+	    return null;
+	}
+	
 	/**查询测量人员*/
 	public SurveyerInformation SelectSurveyerInfo(int id) {
 		SurveyerInformation entity = null;
