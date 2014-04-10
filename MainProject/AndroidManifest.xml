@@ -72,5 +72,7 @@
             android:screenOrientation="landscape" >
         </activity>
 
+        <service android:name="com.byd.player.audio.AudioPlayerService" />
+        
     </application>
 </manifest>
