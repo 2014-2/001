@@ -21,7 +21,7 @@ public class WorkDaoImpl implements WorkDao {
 	private SQLiteDatabase db = null;
 
 	public WorkDaoImpl(Context c, String name) {
-		helper = new SqliteHelperDTMS(c, name, null, 0);
+		helper = new SqliteHelperDTMS(c, null, 0);
 		db = helper.getReadableDatabase();
 	}
 

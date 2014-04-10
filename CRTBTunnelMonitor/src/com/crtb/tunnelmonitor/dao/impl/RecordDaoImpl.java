@@ -25,7 +25,7 @@ public class RecordDaoImpl implements RecordDao {
 	private SQLiteDatabase db = null;
 
 	public RecordDaoImpl(Context c,String name) {
-		helper = new SqliteHelperDTMS(c, name,null,0);
+		helper = new SqliteHelperDTMS(c, null,0);
 		db = helper.getReadableDatabase();
 
 	}

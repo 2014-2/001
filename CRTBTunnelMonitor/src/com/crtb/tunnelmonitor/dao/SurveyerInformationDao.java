@@ -2,7 +2,6 @@ package com.crtb.tunnelmonitor.dao;
 
 import java.util.List;
 
-import com.crtb.tunnelmonitor.entity.SubsidenceCrossSectionInfo;
 import com.crtb.tunnelmonitor.entity.SurveyerInformation;
 
 /**
