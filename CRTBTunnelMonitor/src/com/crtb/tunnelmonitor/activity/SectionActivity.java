@@ -436,7 +436,7 @@ public class SectionActivity extends Activity implements OnPageChangeListener {
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (event.getAction() == KeyEvent.ACTION_DOWN) {
-			// TODO Auto-generated method stub
+			
 			if (keyCode == 82) {
 				vie = new View(this);
 				int num = 2;

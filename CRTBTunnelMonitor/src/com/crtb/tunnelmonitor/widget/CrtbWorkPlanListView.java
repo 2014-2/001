@@ -2,12 +2,11 @@ package com.crtb.tunnelmonitor.widget;
 
 import java.util.List;
 
-import com.crtb.tunnelmonitor.dao.impl.v2.WorkPlanDao;
-import com.crtb.tunnelmonitor.entity.WorkPlan;
-import com.crtb.tunnelmonitor.utils.DateUtils;
-
 import android.content.Context;
 import android.util.AttributeSet;
+
+import com.crtb.tunnelmonitor.dao.impl.v2.WorkPlanDao;
+import com.crtb.tunnelmonitor.entity.WorkPlan;
 
 /**
  * 
@@ -22,7 +21,7 @@ public final class CrtbWorkPlanListView extends CrtbBaseListView {
 		this(context, null);
 	}
 
-	public CrtbWorkPlanListView(Context context, AttributeSet attrs) {
+	public CrtbWorkPlanListView(final Context context, AttributeSet attrs) {
 		super(context, attrs);
 		
 		mAdapter	= new CrtbWorkPlanAdapter(context);
@@ -36,19 +35,13 @@ public final class CrtbWorkPlanListView extends CrtbBaseListView {
 		List<WorkPlan> list = WorkPlanDao.defaultWorkPlanDao().queryAllWorkPlan() ;
 		mAdapter.loadEntityDatas(list);
 	}
+	
+	public WorkPlan getItem(int position){
+		return mAdapter.getItem(position);
+	}
 
 	@Override
 	public void onResume() {
-		
-//		WorkPlan wp = new WorkPlan() ;
-//		wp.setWorkPlanName("成都红星路隧道1#");
-//		wp.setMileagePrefix("CDHX");
-//		wp.setCreationTime(DateUtils.toDateString(DateUtils.getCurrtentTimes()));
-//		wp.setStartMileage(0.0f);
-//		wp.setEndMileage(100.0f);
-//		wp.setConstructionOrganization("成都路桥建设工程有限公司");
-//		
-//		WorkPlanDao.defaultWorkPlanDao().insert(wp);
 		
 		if(mAdapter.isEmpty()){
 			onReload();

@@ -3,37 +3,17 @@ package com.crtb.tunnelmonitor.activity;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.crtb.tunnelmonitor.AppCRTBApplication;
-import com.crtb.tunnelmonitor.common.Constant;
-import com.crtb.tunnelmonitor.dao.impl.WorkDaoImpl;
-import com.crtb.tunnelmonitor.db.SqliteHelperDTMS;
-import com.crtb.tunnelmonitor.entity.WorkInfos;
-import com.crtb.tunnelmonitor.infors.ProjectInformation;
-import com.crtb.tunnelmonitor.utils.Time;
-import com.crtb.tunnelmonitor.activity.R;
-import com.crtb.tunnelmonitor.activity.R.color;
-
-import android.R.integer;
-import android.app.Activity;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
-import android.text.Editable;
 import android.text.InputFilter;
-import android.text.SpannableString;
-import android.text.Spanned;
-import android.text.method.KeyListener;
-import android.text.method.LinkMovementMethod;
 import android.text.method.NumberKeyListener;
-import android.text.style.ClickableSpan;
 import android.util.DisplayMetrics;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -42,16 +22,22 @@ import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.crtb.tunnelmonitor.AppCRTBApplication;
+import com.crtb.tunnelmonitor.WorkFlowActivity;
+import com.crtb.tunnelmonitor.common.Constant;
+import com.crtb.tunnelmonitor.dao.impl.WorkDaoImpl;
+import com.crtb.tunnelmonitor.entity.WorkInfos;
+import com.crtb.tunnelmonitor.utils.Time;
 
 /**
  * 新建工作面和编辑工作界面
  * 
  */
-public class WorkNewActivity extends Activity implements OnClickListener {
+public class WorkNewActivity extends WorkFlowActivity implements OnClickListener {
+	
 	/** 页卡内容 */
 	private ViewPager mPager;
 	/** Tab页面列表 */
@@ -111,8 +97,6 @@ public class WorkNewActivity extends Activity implements OnClickListener {
 	/** 备注 */
 	private EditText work_new_dibiao4;
 
-	/** 当前标题 */
-	private TextView work_new_tv_header;
 	/** 确定按钮 */
 	private Button work_btn_queding;
 	/** 取消按钮 */
@@ -129,7 +113,7 @@ public class WorkNewActivity extends Activity implements OnClickListener {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_work_new);
 		// 获取从工作界面传来的值
-		workName = getIntent().getExtras().getString(Constant.Select_WorkRowClickItemsName_Name);
+		workName = "" ;//getIntent().getExtras().getString(Constant.Select_WorkRowClickItemsName_Name);
 		if(workName.length() > 0)
 		{
 			AppCRTBApplication CurApp = ((AppCRTBApplication)getApplicationContext());
@@ -149,6 +133,7 @@ public class WorkNewActivity extends Activity implements OnClickListener {
 		InitImageView();
 		InitViewPager();
 
+		setTopbarTitle("新建工作面");
 	}
 
 	/** 初始化ViewPager */
@@ -169,7 +154,6 @@ public class WorkNewActivity extends Activity implements OnClickListener {
 		t1 = (TextView) findViewById(R.id.text1);
 		t2 = (TextView) findViewById(R.id.text2);
 		work_btn_queding = (Button) findViewById(R.id.work_btn_queding);
-		work_new_tv_header = (TextView) findViewById(R.id.work_new_tv_header);
 		work_btn_quxiao = (Button) findViewById(R.id.work_btn_quxiao);
 
 		// 点击事件
@@ -373,8 +357,10 @@ public class WorkNewActivity extends Activity implements OnClickListener {
 				
 				// 判断传过来的是不是编辑，设置文本框的是否可用
 				if(editWork != null) {
+					
 					// 更改标题
-					work_new_tv_header.setText("编辑工作面");
+					setTopbarTitle("编辑工作面");
+					
 					// 设置文本框不可更改
 					work_new_et_name.setFocusableInTouchMode(false);
 					work_new_et_calendar.setFocusableInTouchMode(false);

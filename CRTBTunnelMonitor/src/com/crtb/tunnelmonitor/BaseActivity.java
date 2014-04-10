@@ -6,6 +6,7 @@ import com.crtb.tunnelmonitor.activity.R;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.widget.TextView;
 
 
@@ -25,6 +26,9 @@ public abstract class BaseActivity extends Activity {
 	
 	// topbar title
 	private TextView				mTopbarTitle ;
+	
+	//
+	protected DisplayMetrics 		mDisplayMetrics ;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +36,9 @@ public abstract class BaseActivity extends Activity {
 		
 		mFramework	= ((AppCRTBApplication)getApplication()).getFrameworkFacade();
 		mHanlder 	= getHandler() ;
+		
+		mDisplayMetrics = new DisplayMetrics();
+		getWindowManager().getDefaultDisplay().getMetrics(mDisplayMetrics);
 	}
 	
 	protected AppHandler getHandler(){

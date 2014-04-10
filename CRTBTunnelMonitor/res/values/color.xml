@@ -18,5 +18,8 @@
     <color name="deepyellow">#FF6600</color>
     <color name="huise">#CCCCCC</color>
     <color name="header">#006E8C</color>
+    <color name="item_menu_select">#00CCFF</color>
+    <color name="item_menu_normal">#B5B5B5</color>
+    <color name="system_menu_bg">#E4E4E4</color>
 
 </resources>

@@ -6,7 +6,21 @@
     <string name="hello_world">Hello world!</string>
     <string name="total">全站仪</string>
 
+    <!-- common -->
+    <string name="common_create_new">新建</string>
+    <string name="common_export">导出</string>
+    <string name="common_inport">导入</string>
+    <string name="common_open">打开</string>
+    <string name="common_edit">编辑</string>
+    <string name="common_delete">删除</string>
+
     <!-- 工作面模块 -->
     <string name="work_plan_title">工作面管理</string>
-    
+
+    <string-array name="work_plan_item_menus">
+        <item>打开</item>
+        <item>编辑</item>
+        <item>删除</item>
+    </string-array>
+
 </resources>
