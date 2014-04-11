@@ -7,7 +7,7 @@
     <dimen name="bottom_tab_font_size">12.0dip</dimen>
     <dimen name="bottom_tab_padding_up">5.0dip</dimen>
     <dimen name="bottom_tab_padding_drawable">2.0dip</dimen>
-    
+    <dimen name="bottom_button_height">50dip</dimen>
 
     <!-- dialog -->
     <dimen name="dialog_marginleft">10dip</dimen>
@@ -18,5 +18,5 @@
     <dimen name="dialog_content_textsize">16sp</dimen>
     <dimen name="dialog_btn_width">150dip</dimen>
     <dimen name="dialog_btn_height">45dip</dimen>
-    
+
 </resources>

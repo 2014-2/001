@@ -16,6 +16,7 @@
 
     <!-- 工作面模块 -->
     <string name="work_plan_title">工作面管理</string>
+    <string name="work_plan_create_title">新建工作面</string>
 
     <string-array name="work_plan_item_menus">
         <item>打开</item>
