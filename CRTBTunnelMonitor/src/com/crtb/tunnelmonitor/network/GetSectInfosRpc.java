@@ -1,4 +1,4 @@
-package com.crtb.tunnelmonitor.service;
+package com.crtb.tunnelmonitor.network;
 
 import java.util.HashMap;
 import java.util.Map;

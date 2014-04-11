@@ -1,4 +1,4 @@
-package com.crtb.tunnelmonitor.service;
+package com.crtb.tunnelmonitor.network;
 
 public enum SectionStatus {
 	VALID(1), SEALED(2);

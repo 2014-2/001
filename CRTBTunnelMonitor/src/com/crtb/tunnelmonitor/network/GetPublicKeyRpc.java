@@ -1,4 +1,4 @@
-package com.crtb.tunnelmonitor.service;
+package com.crtb.tunnelmonitor.network;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -8,16 +8,18 @@ import org.ksoap2.serialization.SoapObject;
 import android.text.TextUtils;
 import android.util.Log;
 
-class ConfirmSubmitDataRpc extends AbstractRpc {
-	private static final String LOG_TAG = "ConfirmSubmitDataRpc";
-	private static final String KEY_RANDOM_CODE = "随机码";
-	private static final String KEY_ACTION = "confirmSubmitData";
+class GetPublicKeyRpc extends AbstractRpc {
+	private static final String LOG_TAG = "GetPublicKeyRpc";
+	private static final String KEY_ACCOUNT = "登陆账号";
+	private static final String KEY_MAC_ADDRESS = "设备物理地址";
+	private static final String KEY_ACTION = "getPublicKey";
 	
 	private Map<String, String> mParameters = new HashMap<String, String>();
 	private RpcCallback mCallback;
 	
-	ConfirmSubmitDataRpc(String randomCode, RpcCallback callback) {
-		mParameters.put(KEY_RANDOM_CODE, randomCode);
+	GetPublicKeyRpc(String account, String macAddress, RpcCallback callback) {
+		mParameters.put(KEY_ACCOUNT, account);
+		mParameters.put(KEY_MAC_ADDRESS, macAddress);
 		mCallback = callback;
 	}
 	
@@ -43,17 +45,21 @@ class ConfirmSubmitDataRpc extends AbstractRpc {
 		try {
 			Log.d(LOG_TAG, "response: " + response);
 			SoapObject result = (SoapObject) response;
-			//TODO: Parse the response
+			String publicKey = result.getPropertyAsString(0);
+			if (TextUtils.isEmpty(publicKey)) {
+				notifyFailed("Invalid public key");
+			} else {
+				notifySuccess(publicKey);
+			}
 		} catch (Exception e) {
 			notifyFailed("Exception: " + e.getMessage());
 			e.printStackTrace();
 		}
-		
 	}
 	
-	private void notifySuccess(Object[] data) {
+	private void notifySuccess(String publicKey) {
 		if (mCallback != null) {
-			mCallback.onSuccess(data);
+			mCallback.onSuccess(new String[] { publicKey });
 		}
 	}
 	
@@ -62,6 +68,4 @@ class ConfirmSubmitDataRpc extends AbstractRpc {
 			mCallback.onFailed(reason);
 		}
 	}
-
-
 }

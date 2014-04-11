@@ -1,4 +1,4 @@
-package com.crtb.tunnelmonitor.service;
+package com.crtb.tunnelmonitor.network;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -7,19 +7,15 @@ import org.ksoap2.serialization.SoapObject;
 
 import android.util.Log;
 
-class GetTestCodesRpc extends AbstractRpc {
-	private static final String LOG_TAG = "GetTestCodesRpc";
-	private static final String KEY_SECTION_CODE = "断面编号";
-	private static final String KEY_POINT_STATUS = "测点状态";
+class GetZoneAndSiteCodeRpc extends AbstractRpc {
+	private static final String LOG_TAG = "GetZoneAndSiteCodeRpc";
 	private static final String KEY_RANDOM_CODE = "随机码";
-	private static final String KEY_ACTION = "getTestCodes";
+	private static final String KEY_ACTION = "getZoneAndSiteCode";
 	
-	private Map<String, Object> mParameters = new HashMap<String, Object>();
+	private Map<String, Long> mParameters = new HashMap<String, Long>();
 	private RpcCallback mCallback;
 	
-	GetTestCodesRpc(String sectionCode, int pointStatus, long randomCode, RpcCallback callback) {
-		mParameters.put(KEY_SECTION_CODE, sectionCode);
-		mParameters.put(KEY_POINT_STATUS, pointStatus);
+	GetZoneAndSiteCodeRpc(long randomCode, RpcCallback callback) {
 		mParameters.put(KEY_RANDOM_CODE, randomCode);
 		mCallback = callback;
 	}
@@ -43,28 +39,21 @@ class GetTestCodesRpc extends AbstractRpc {
 			notifyFailed("Unknown reponse type: " + response.getClass().getName());
 			return;
 		}
+		Log.d(LOG_TAG, "response: " + response);
 		try {
-			/**
-			 * getTestCodesResponse{return=anyType{
-			 * item=XPCL01SD00010001GD01#GD01; item=XPCL01SD00010001SL01#SL01; 
-			 * item=XPCL01SD00010001SL02#SL02; item=XPCL01SD00010001SL03#SL03; 
-			 * item=XPCL01SD00010001SL04#SL04; }; }
-			 */
+			//getZoneAndSiteCodeResponse{return=anyType{item=XPCL01SG05GQ01#一工区; item=XPCL01SD0001#跃龙门隧道; }; }
 			SoapObject result = (SoapObject) response;
 			SoapObject data = (SoapObject) result.getProperty(0);
-			final int count = data.getPropertyCount();
-			for(int i = 0; i < count; i++) {
-				String[] pointInfo =  data.getPropertyAsString(i).split("#");
-				Log.d(LOG_TAG, "test point: " + pointInfo[0]);
-			}
-			notifySuccess(null);
+			String[] zoneAndSiteCode = new String[2];
+			zoneAndSiteCode[0] = data.getPropertyAsString(0).split("#")[0];
+			zoneAndSiteCode[1] = data.getPropertyAsString(1).split("#")[0];
+			notifySuccess(zoneAndSiteCode);
 		} catch (Exception e) {
 			notifyFailed("Exception: " + e.getMessage());
 			e.printStackTrace();
 		}
-		
 	}
-
+	
 	private void notifySuccess(Object[] data) {
 		if (mCallback != null) {
 			mCallback.onSuccess(data);
@@ -76,5 +65,4 @@ class GetTestCodesRpc extends AbstractRpc {
 			mCallback.onFailed(reason);
 		}
 	}
-
 }

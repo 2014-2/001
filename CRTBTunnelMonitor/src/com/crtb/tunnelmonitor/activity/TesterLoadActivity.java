@@ -23,8 +23,8 @@ import com.crtb.tunnelmonitor.AppCRTBApplication;
 import com.crtb.tunnelmonitor.dao.SurveyerInformationDao;
 import com.crtb.tunnelmonitor.dao.impl.SurveyerInformationDaoImpl;
 import com.crtb.tunnelmonitor.entity.SurveyerInformation;
-import com.crtb.tunnelmonitor.service.CrtbWebService;
-import com.crtb.tunnelmonitor.service.RpcCallback;
+import com.crtb.tunnelmonitor.network.CrtbWebService;
+import com.crtb.tunnelmonitor.network.RpcCallback;
 
 public class TesterLoadActivity extends Activity implements OnClickListener {
 

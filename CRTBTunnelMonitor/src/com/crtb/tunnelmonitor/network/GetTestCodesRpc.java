@@ -1,27 +1,25 @@
-package com.crtb.tunnelmonitor.service;
+package com.crtb.tunnelmonitor.network;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import org.ksoap2.serialization.SoapObject;
 
-import com.crtb.tunnelmonitor.common.Constant;
-
-import ICT.utils.RSACoder;
 import android.util.Log;
 
-class GetMonitorValueInfoRpc extends AbstractRpc {
-	private static final String LOG_TAG = "GetMonitorValueInfoRpc";
-	private static final String KEY_POINT_CODE = "测点编码";
+class GetTestCodesRpc extends AbstractRpc {
+	private static final String LOG_TAG = "GetTestCodesRpc";
+	private static final String KEY_SECTION_CODE = "断面编号";
+	private static final String KEY_POINT_STATUS = "测点状态";
 	private static final String KEY_RANDOM_CODE = "随机码";
-	private static final String KEY_ACTION = "getMonitorValueInfo";
+	private static final String KEY_ACTION = "getTestCodes";
 	
 	private Map<String, Object> mParameters = new HashMap<String, Object>();
 	private RpcCallback mCallback;
 	
-	//point code: XPCL01SD00010001SL01#XPCL01SD00010001SL02
-	GetMonitorValueInfoRpc(String pointCode, long randomCode, RpcCallback callback) {
-		mParameters.put(KEY_POINT_CODE, pointCode);
+	GetTestCodesRpc(String sectionCode, int pointStatus, long randomCode, RpcCallback callback) {
+		mParameters.put(KEY_SECTION_CODE, sectionCode);
+		mParameters.put(KEY_POINT_STATUS, pointStatus);
 		mParameters.put(KEY_RANDOM_CODE, randomCode);
 		mCallback = callback;
 	}
@@ -47,25 +45,19 @@ class GetMonitorValueInfoRpc extends AbstractRpc {
 		}
 		try {
 			/**
-			 * getMonitorValueInfoResponse{return=anyType{ item=
-			 * 6.6701/u3lcHq4AGrpbJ3OUATdW0ETYULVy2qhZjNDijM5hZh112cDSGKzw2fnkkMOHcjMqcZm4cT2cIPS8/
-			 * TUvYb3igAVZoKTONlH9/2014-01-03 11:48:36.0/瑞/19/nullnull;
+			 * getTestCodesResponse{return=anyType{
+			 * item=XPCL01SD00010001GD01#GD01; item=XPCL01SD00010001SL01#SL01; 
+			 * item=XPCL01SD00010001SL02#SL02; item=XPCL01SD00010001SL03#SL03; 
+			 * item=XPCL01SD00010001SL04#SL04; }; }
 			 */
-			Log.d(LOG_TAG, "response: " + response);
 			SoapObject result = (SoapObject) response;
 			SoapObject data = (SoapObject) result.getProperty(0);
 			final int count = data.getPropertyCount();
 			for(int i = 0; i < count; i++) {
-				String[] pointInfo = data.getPropertyAsString(i).split("/");
-				String value = pointInfo[0];
-				String xyz = RSACoder.decnryptDes(Constant.testDeskey, pointInfo[1]);
-				String deformation = RSACoder.decnryptDes(Constant.testDeskey, pointInfo[2]);
-				String time = pointInfo[3];
-				String name = pointInfo[4];
-				String distance = pointInfo[5];
-				String procedure = pointInfo[6];
-				Log.d(LOG_TAG, "xyz: " + xyz);
+				String[] pointInfo =  data.getPropertyAsString(i).split("#");
+				Log.d(LOG_TAG, "test point: " + pointInfo[0]);
 			}
+			notifySuccess(null);
 		} catch (Exception e) {
 			notifyFailed("Exception: " + e.getMessage());
 			e.printStackTrace();
