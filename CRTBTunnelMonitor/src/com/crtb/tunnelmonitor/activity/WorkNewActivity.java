@@ -32,10 +32,6 @@ import com.crtb.tunnelmonitor.dao.impl.WorkDaoImpl;
 import com.crtb.tunnelmonitor.entity.WorkInfos;
 import com.crtb.tunnelmonitor.utils.Time;
 
-/**
- * 新建工作面和编辑工作界面
- * 
- */
 public class WorkNewActivity extends WorkFlowActivity implements OnClickListener {
 	
 	/** 页卡内容 */
@@ -427,6 +423,7 @@ public class WorkNewActivity extends WorkFlowActivity implements OnClickListener
 
 		@Override
 		public void startUpdate(View arg0) {
+			
 		}
 	}
 
@@ -446,18 +443,17 @@ public class WorkNewActivity extends WorkFlowActivity implements OnClickListener
 		}
 	};
 
-	/**
-	 * 页卡切换监听
-	 */
 	public class MyOnPageChangeListener implements OnPageChangeListener {
 
-		int one = offset * 2 + bmpW;// 页卡1 -> 页卡2 偏移量
-		int two = one * 2; // 页卡1 -> 页卡3 偏移量
+		int one = offset * 2 + bmpW;
+		int two = one * 2;
 
 		@Override
-		public void onPageSelected(int arg0) {
+		public void onPageSelected(int id) {
+			
 			Animation animation = null;
-			switch (arg0) {
+			
+			switch (id) {
 			case 0:
 				if (currIndex == 1) {
 					animation = new TranslateAnimation(one, 0, 0, 0);
@@ -474,7 +470,8 @@ public class WorkNewActivity extends WorkFlowActivity implements OnClickListener
 				break;
 
 			}
-			currIndex = arg0;
+			
+			currIndex = id;
 			animation.setFillAfter(true);// True:图片停在动画结束位置
 			animation.setDuration(300);
 			cursor.startAnimation(animation);
@@ -482,12 +479,12 @@ public class WorkNewActivity extends WorkFlowActivity implements OnClickListener
 
 		@Override
 		public void onPageScrolled(int arg0, float arg1, int arg2) {
+			
 		}
 
 		@Override
 		public void onPageScrollStateChanged(int arg0) {
+			
 		}
 	}
-
-	
 }

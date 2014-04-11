@@ -18,6 +18,13 @@ import android.widget.TextView;
 
 import com.crtb.tunnelmonitor.activity.R;
 
+/**
+ * Item menu
+ * 
+ * @author zhouwei
+ *
+ * @param <T>
+ */
 @SuppressLint("ViewConstructor")
 public final class CrtbItemPopMenu<T> extends PopupWindow {
 
@@ -26,8 +33,7 @@ public final class CrtbItemPopMenu<T> extends PopupWindow {
 	private T mTag;
 	private IMenuOnclick<T> mListener ;
 
-	public CrtbItemPopMenu(Context context, int width, int height,
-			String[] menus) {
+	public CrtbItemPopMenu(Context context, int width, int height,String[] menus) {
 		super(width, height);
 
 		if (menus == null) {

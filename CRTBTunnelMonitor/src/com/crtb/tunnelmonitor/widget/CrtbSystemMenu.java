@@ -19,6 +19,12 @@ import android.widget.TextView;
 import com.crtb.tunnelmonitor.activity.R;
 import com.crtb.tunnelmonitor.entity.MenuSystemItem;
 
+/**
+ * System Menu
+ * 
+ * @author zhouwei
+ *
+ */
 @SuppressLint("ViewConstructor")
 public final class CrtbSystemMenu extends PopupWindow {
 	
