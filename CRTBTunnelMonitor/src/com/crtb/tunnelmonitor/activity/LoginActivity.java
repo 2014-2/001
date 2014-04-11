@@ -22,6 +22,7 @@ import android.widget.Toast;
 
 import com.crtb.tunnelmonitor.AppCRTBApplication;
 import com.crtb.tunnelmonitor.common.Constant;
+import com.crtb.tunnelmonitor.dao.impl.SurveyerInformationDaoImpl;
 import com.crtb.tunnelmonitor.service.CrtbWebService;
 import com.crtb.tunnelmonitor.service.RpcCallback;
 
@@ -37,8 +38,8 @@ public class LoginActivity extends Activity implements OnClickListener {
 	//private RelativeLayout login_rl_listview;
 	//用户名输入框
 	private EditText mUserName;
-	//密码输入框
-	private EditText mPassword;
+
+	private EditText mCard;
 	
 	private EditText mServerIp;
 	
@@ -65,7 +66,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 		mServerIp=(EditText)findViewById(R.id.server_ip);
 		
 		mUserName = (EditText) findViewById(R.id.username);
-		mPassword = (EditText) findViewById(R.id.password);
+		mCard = (EditText) findViewById(R.id.idcard);
 		CurApp = ((AppCRTBApplication)getApplicationContext());
 	    mDownload=(TextView) findViewById(R.id.load_teser);
 	    mDownload.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG);
@@ -80,13 +81,19 @@ public class LoginActivity extends Activity implements OnClickListener {
 		case R.id.login_btn:
 			//获取用户名和密码
 			String name = mUserName.getText().toString().trim();
-			String pwd = mPassword.getText().toString().trim();
-
+			String card = mCard.getText().toString().trim();
+            
 			//用户验证
-			if(TextUtils.isEmpty(name)||TextUtils.isEmpty(pwd)){
-				login(Constant.testUsername,Constant.testPassword);
+			if(TextUtils.isEmpty(name)||TextUtils.isEmpty(card)){
+				Toast.makeText(this, "请输入用户名和密码", Toast.LENGTH_SHORT).show();
 			}else{
-				login(Constant.testUsername,Constant.testPassword);
+				//login(Constant.testUsername,Constant.testPassword);
+				SurveyerInformationDaoImpl dao=SurveyerInformationDaoImpl.getInstance();
+	            if(name.equals(dao.getIdCardByName(card))){
+	            	Intent intent=new Intent(LoginActivity.this,MainActivity.class);
+	            	intent.putExtra(Constant.LOGIN_TYPE, Constant.SERVER_USER);
+	            	startActivity(intent);
+	            }
 			}
 			//验证失败时提示并返回
 //			if("0".equals(verify)){
