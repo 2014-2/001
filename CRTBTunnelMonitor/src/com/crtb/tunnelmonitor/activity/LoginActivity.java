@@ -1,6 +1,8 @@
 package com.crtb.tunnelmonitor.activity;
 
 
+import java.util.List;
+
 import org.ksoap2.SoapEnvelope;
 import org.ksoap2.serialization.SoapObject;
 import org.ksoap2.serialization.SoapSerializationEnvelope;
@@ -10,18 +12,31 @@ import ICT.utils.RSACoder;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Paint;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 //import android.webkit.WebView.FindListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout.LayoutParams;
+import android.widget.ListView;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.crtb.tunnelmonitor.AppCRTBApplication;
 import com.crtb.tunnelmonitor.common.Constant;
+import com.crtb.tunnelmonitor.dao.SurveyerInformationDao;
 import com.crtb.tunnelmonitor.dao.impl.SurveyerInformationDaoImpl;
 import com.crtb.tunnelmonitor.network.CrtbWebService;
 import com.crtb.tunnelmonitor.network.RpcCallback;
@@ -41,17 +56,29 @@ public class LoginActivity extends Activity implements OnClickListener {
 
 	private EditText mCard;
 	
-	private EditText mServerIp;
+	private EditText mNote;
 	
 	private TextView mDownload;
 	
 	//APP实例
 	private AppCRTBApplication CurApp;
+	
 	private String veri;
+	
 	private String rsal;
+	
 	private String[] sZoneAndSiteCode = null;
+	
 	private int Result = 0;
 
+	private ImageView mArrow,mNotesArrow;
+	
+	private PopupWindow mPop;
+	
+	private List<String> mNames;
+	
+	private List<String> mNotes;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -63,8 +90,9 @@ public class LoginActivity extends Activity implements OnClickListener {
 	private void initView() {
 		login_btn = (Button) findViewById(R.id.login_btn);
 		//login_rl_listview = (RelativeLayout) findViewById(R.id.login_rl_listview);
-		mServerIp=(EditText)findViewById(R.id.server_ip);
-		
+		mNote=(EditText)findViewById(R.id.note);
+		mArrow=(ImageView) findViewById(R.id.img);
+		mNotesArrow=(ImageView) findViewById(R.id.note_arrow);
 		mUserName = (EditText) findViewById(R.id.username);
 		mCard = (EditText) findViewById(R.id.idcard);
 		CurApp = ((AppCRTBApplication)getApplicationContext());
@@ -73,6 +101,80 @@ public class LoginActivity extends Activity implements OnClickListener {
 	    mDownload.setOnClickListener(this);
 		// 点击事件
 		login_btn.setOnClickListener(this);
+	    
+	    mPop=new PopupWindow();
+	    SurveyerInformationDao dao=SurveyerInformationDaoImpl.getInstance();
+        mNames=dao.getFieldsByName(SurveyerInformationDaoImpl.NAME);
+        mNotes=dao.getFieldsByName(SurveyerInformationDaoImpl.NOTE);
+	    //ArrayAdapter adapter=new ArrayAdapter(this,android.R.layout.simple_list_item_1,names);
+	   
+	    mArrow.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				if(mPop!=null && mPop.isShowing()){
+					return;
+				}
+				View view=LayoutInflater.from(LoginActivity.this).inflate(R.layout.username_popup_layout, null);
+			    ListView list=(ListView) view.findViewById(R.id.list);
+			    final NameAdapter adapter=new NameAdapter(mNames);
+			    list.setAdapter(adapter);
+		        list.setOnItemClickListener(new OnItemClickListener() {
+ 
+					@Override
+					public void onItemClick(AdapterView<?> arg0, View arg1,
+							int pos, long arg3) {
+					 mUserName.setText((String)adapter.getItem(pos));
+					 if(mPop!=null){
+						 mPop.dismiss();
+					 }
+					}
+		        	
+				});
+			    mPop.setContentView(view);
+			    mPop.setFocusable(true);
+		        mPop.setWidth(mUserName.getWidth());
+		        mPop.setHeight(LayoutParams.WRAP_CONTENT);
+			    mPop.setOutsideTouchable(true);
+			    mPop.setBackgroundDrawable(new ColorDrawable());
+				mPop.showAsDropDown(mUserName,0,0);
+				//mPop.showAtLocation(mUserName,Gravity.BOTTOM, 0, 0);
+			    //mPop.showAtLocation(mUserName, Gravity.TOP, 0, 0);
+			}
+		});
+	    
+	    mNotesArrow.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View arg0) {
+				if(mPop!=null && mPop.isShowing()){
+					return;
+				}
+				View view=LayoutInflater.from(LoginActivity.this).inflate(R.layout.username_popup_layout, null);
+			    ListView list=(ListView) view.findViewById(R.id.list);
+			    final NameAdapter adapter=new NameAdapter(mNotes);
+			    list.setAdapter(adapter);
+		        list.setOnItemClickListener(new OnItemClickListener() {
+ 
+					@Override
+					public void onItemClick(AdapterView<?> arg0, View arg1,
+							int pos, long arg3) {
+					 mNote.setText((String)adapter.getItem(pos));
+					 if(mPop!=null){
+						 mPop.dismiss();
+					 }
+					}
+		        	
+				});
+			    mPop.setContentView(view);
+			    mPop.setFocusable(true);
+		        mPop.setWidth(mNote.getWidth());
+		        mPop.setHeight(LayoutParams.WRAP_CONTENT);
+			    mPop.setOutsideTouchable(true);
+			    mPop.setBackgroundDrawable(new ColorDrawable());
+				mPop.showAsDropDown(mNote,0,0);
+			}
+		});
 	}
 
 	@Override
@@ -292,5 +394,40 @@ public class LoginActivity extends Activity implements OnClickListener {
 		}.start();
 		iResult = Result;
 		return iResult;
+	}
+	
+	class NameAdapter extends BaseAdapter{
+		private List<String> strs;
+		
+        public NameAdapter(List<String> list){
+           strs=list;	
+        }
+		
+		@Override
+		public int getCount() {
+			return strs.size();
+		}
+
+		@Override
+		public Object getItem(int arg0) {
+			return strs.get(arg0);
+		}
+
+		@Override
+		public long getItemId(int arg0) {
+			return arg0;
+		}
+
+		@Override
+		public View getView(int pos, View view, ViewGroup arg2) {
+			if(view==null){
+				view=LayoutInflater.from(LoginActivity.this).inflate(R.layout.name_item_layout, null);
+			}
+			TextView text=(TextView) view.findViewById(R.id.text);
+			text.setText(strs.get(pos));
+			
+			return view;
+		}
+		
 	}
 }

@@ -18,4 +18,6 @@ public interface SurveyerInformationDao {
 	public Boolean DeleteSurveyerInfo(int id);
 	/**编辑测量人员*/
 	public Boolean UpdateSurveyerInfo(SurveyerInformation s);
+	
+	public List<String> getFieldsByName(String fieldName);
 }
