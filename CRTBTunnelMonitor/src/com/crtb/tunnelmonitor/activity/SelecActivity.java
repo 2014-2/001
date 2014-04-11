@@ -8,13 +8,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.crtb.tunnelmonitor.AppCRTBApplication;
 import com.crtb.tunnelmonitor.common.Constant;
 import com.crtb.tunnelmonitor.entity.SurveyerInformation;
-import com.crtb.tunnelmonitor.activity.R;
 /**
  * 用户选择 界面
  *@author edison.xiao
@@ -78,7 +76,7 @@ public class SelecActivity extends Activity implements OnClickListener{
 		default:
 			break;
 		}
-		SelecActivity.this.finish();
+		//SelecActivity.this.finish();
 	}
 
 }
