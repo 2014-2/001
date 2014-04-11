@@ -49,7 +49,7 @@ public class AuxAudioPlayActivity extends BaseActivity {
         mTvAuxStatus = (TextView)findViewById(R.id.aux_status);
 
         // because of the fail of receiving aux device event, open the aux channel directly.
-        Toast.makeText(this, "已切换至aux声道", Toast.LENGTH_LONG).show();
+        Toast.makeText(this, R.string.aux_connected, Toast.LENGTH_LONG).show();
 
         //mAudioChannelIntent = new Intent(this, AudioChannelService.class);
         //startService(mAudioChannelIntent);
