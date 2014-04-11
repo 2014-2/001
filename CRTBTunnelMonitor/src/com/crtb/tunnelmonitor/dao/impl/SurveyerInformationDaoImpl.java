@@ -17,6 +17,10 @@ import com.crtb.tunnelmonitor.entity.SurveyerInformation;
 public class SurveyerInformationDaoImpl implements SurveyerInformationDao{
 	private final String TABLE="SurveyerInformation";
 	
+	public static final String NAME="SurveyerName";
+	
+	public static final String NOTE="Info";
+	
 	private SqliteHelperDTMS helper = null;
 	private SQLiteDatabase db = null;
 
@@ -70,6 +74,20 @@ public class SurveyerInformationDaoImpl implements SurveyerInformationDao{
 		return list;
 	}
 
+	public List<String> getFieldsByName(String fieldName){
+		Cursor cursor=db.query(TABLE, new String[]{fieldName}, null, null, null, null, null);
+		if(cursor!=null &&cursor.getCount()>0 && cursor.moveToFirst()){
+			List<String> list=new ArrayList<String>();
+			do{
+				String name=cursor.getString(cursor.getColumnIndex(fieldName));
+				list.add(name);
+			}while(cursor.moveToNext());
+			cursor.close();
+		return list;
+		}
+		return null;
+	}
+	
 	/**新建测量人员*/
 	public Boolean InsertSurveyerInfo(SurveyerInformation s) {
 		boolean result = false;

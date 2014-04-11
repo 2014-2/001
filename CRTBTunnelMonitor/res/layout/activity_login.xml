@@ -10,7 +10,7 @@
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="80dp"
-            android:background="@drawable/login_header" />
+            android:background="@drawable/banner" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -22,74 +22,50 @@
             android:orientation="vertical" >
 
             <RelativeLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content" 
-                android:layout_marginTop="10dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true" >
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="20dp"
-                        android:text="服务器  "
-                        android:textSize="19sp" />
-
-                    <EditText
-                        android:id="@+id/server_ip"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginRight="20dp"
-                        android:layout_weight="1" />
-                </LinearLayout>
-            </RelativeLayout>
-
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginTop="5dp"
-                android:layout_marginBottom="5dp"
-                android:background="#d9d9d9" />
-
-            <RelativeLayout
+                android:id="@+id/namelayout"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dip" >
 
-                <LinearLayout
+                <TextView
+                    android:id="@+id/name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="20dp"
+                    android:text="用户名"
+                    android:textSize="19sp" />
+
+                <EditText
+                    android:id="@+id/username"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true" >
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_toRightOf="@id/name"
+                    android:layout_weight="1"
+                    android:hint="请选择用户名"
+                    android:paddingRight="20dp" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="20dp"
-                        android:text="用户名"
-                        android:textSize="19sp" />
-
-                    <EditText
-                        android:id="@+id/username"
-                        android:layout_marginLeft="10dp"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginRight="20dp"
-                        android:hint="请输入用户名"
-                        android:layout_weight="1" />
-                </LinearLayout>
+                <ImageView
+                    android:id="@+id/img"
+                    android:layout_width="15dp"
+                    android:layout_height="10dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="26dp"
+                    android:background="@drawable/arrow_down"
+                    android:contentDescription="@null" />
             </RelativeLayout>
 
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:layout_marginTop="5dp"
                 android:layout_marginBottom="5dp"
+                android:layout_marginTop="5dp"
                 android:background="#d9d9d9" />
 
-                  <RelativeLayout
+            <RelativeLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dip" >
@@ -108,14 +84,61 @@
 
                     <EditText
                         android:id="@+id/idcard"
-                        android:layout_marginLeft="10dp"
                         android:layout_width="0dp"
-                        android:text="10290198805012891"
                         android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
                         android:layout_marginRight="20dp"
+                        android:layout_weight="1"
                         android:hint="请输入身份证"
-                        android:layout_weight="1" />
+                        android:text="10290198805012891" />
                 </LinearLayout>
+            </RelativeLayout>
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="5dp"
+                android:background="#d9d9d9" />
+
+            <RelativeLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp" >
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true" >
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="20dp"
+                        android:id="@+id/notetitle"
+                        android:text="备    注"
+                        android:layout_centerVertical="true"
+                        android:textSize="19sp" />
+
+                    <EditText
+                        android:id="@+id/note"
+                        android:layout_toRightOf="@id/notetitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:paddingRight="26dp"
+                        android:layout_marginRight="20dp"
+                         />
+                    <ImageView
+                    android:id="@+id/note_arrow"
+                    android:layout_width="15dp"
+                    android:layout_height="10dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="26dp"
+                    android:background="@drawable/arrow_down"
+                    android:contentDescription="@null" />
+                </RelativeLayout>
             </RelativeLayout>
         </LinearLayout>
 
