@@ -10,19 +10,20 @@ import org.ksoap2.transport.HttpTransportSE;
 
 import ICT.utils.RSACoder;
 import android.app.Activity;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Paint;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 //import android.webkit.WebView.FindListener;
 import android.widget.Button;
@@ -79,6 +80,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 	
 	private List<String> mNotes;
 	
+	private Dialog dlg;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -192,9 +194,19 @@ public class LoginActivity extends Activity implements OnClickListener {
 				//login(Constant.testUsername,Constant.testPassword);
 				SurveyerInformationDaoImpl dao=SurveyerInformationDaoImpl.getInstance();
 	            if(name.equals(dao.getIdCardByName(card))){
-	            	Intent intent=new Intent(LoginActivity.this,MainActivity.class);
-	            	intent.putExtra(Constant.LOGIN_TYPE, Constant.SERVER_USER);
-	            	startActivity(intent);
+	            	OnClickListener listener=new OnClickListener() {
+						
+						@Override
+						public void onClick(View v) {
+							Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+			    			intent.putExtra(Constant.LOGIN_TYPE
+			    					, Constant.SERVER_USER);
+			    			startActivity(intent);
+						}
+					};
+					showDialog(true,listener);
+	            }else{
+	            	showDialog(false,null);
 	            }
 			}
 			//验证失败时提示并返回
@@ -229,25 +241,22 @@ public class LoginActivity extends Activity implements OnClickListener {
 //		ver = loginSelect(username,password);
 //		return ver;
 //	}
-    private void login(String username,String password){
-    	CrtbWebService.getInstance().login(username, password, new RpcCallback() {
-
-    		@Override
-    		public void onSuccess(Object[] data) {
-    			Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-    			intent.putExtra(Constant.LOGIN_TYPE
-    					, Constant.SERVER_USER);
-    			startActivity(intent);
-    		}
-
-    		
-
-			@Override
-			public void onFailed(String reason) {
-				Toast.makeText(LoginActivity.this, "用户名或密码错误", Toast.LENGTH_LONG).show();
-			}
-    		});
-    }
+//    private void login(String username,String password){
+//    	CrtbWebService.getInstance().login(username, password, new RpcCallback() {
+//
+//    		@Override
+//    		public void onSuccess(Object[] data) {
+//    			 
+//    		}
+//
+//    		
+//
+//			@Override
+//			public void onFailed(String reason) {
+//				Toast.makeText(LoginActivity.this, "用户名或密码错误", Toast.LENGTH_LONG).show();
+//			}
+//    		});
+//    }
 	
 	private String loginSelect(final String username, String password) {
 		veri = String.valueOf(0);
@@ -428,6 +437,38 @@ public class LoginActivity extends Activity implements OnClickListener {
 			
 			return view;
 		}
-		
 	}
+	
+	private void showDialog(boolean bSuccess,final OnClickListener listener){
+		if(dlg!=null && dlg.isShowing()){
+			return ;
+		}
+		dlg=new Dialog(this,R.style.custom_dlg);
+		View view=LayoutInflater.from(this).inflate(R.layout.success_dialog_layout, null);		
+		dlg.setContentView(view);
+		TextView text=(TextView) dlg.findViewById(R.id.text);
+		if(!bSuccess){
+			text.setText("用户名和身份证不匹配");
+			text.setCompoundDrawablesWithIntrinsicBounds(R.drawable.fail,0, 0, 0);
+		}
+		Button bt=(Button) dlg.findViewById(R.id.bt);
+		bt.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+			   if(listener!=null){
+				   listener.onClick(v);
+			   }
+			   if(dlg!=null){
+				   dlg.dismiss();
+			   }
+			}
+		});
+		dlg.show();
+		WindowManager.LayoutParams param=dlg.getWindow().getAttributes();
+		param.width=getWindowManager().getDefaultDisplay().getWidth()*3/4;
+		dlg.getWindow().setAttributes(param);
+	}
+	
+	
 }
