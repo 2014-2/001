@@ -100,17 +100,20 @@ public final class WorkActivity extends WorkFlowActivity {
 		List<MenuSystemItem> systems = new ArrayList<MenuSystemItem>();
 		
 		MenuSystemItem item = new MenuSystemItem() ;
-		item.setIcon(R.drawable.jia);
+		item.setIcon(R.drawable.ic_menu_create);
 		item.setName(getString(R.string.common_create_new));
 		systems.add(item);
 		
-		item = new MenuSystemItem() ;
-		item.setIcon(R.drawable.s);
-		item.setName(getString(R.string.common_export));
-		systems.add(item);
+		// 
+		if(WorkPlanDao.defaultWorkPlanDao().hasWorkPlan()){
+			item = new MenuSystemItem() ;
+			item.setIcon(R.drawable.ic_menu_export);
+			item.setName(getString(R.string.common_export));
+			systems.add(item);
+		}
 		
 		item = new MenuSystemItem() ;
-		item.setIcon(R.drawable.xia);
+		item.setIcon(R.drawable.ic_menu_inport);
 		item.setName(getString(R.string.common_inport));
 		systems.add(item);
 		

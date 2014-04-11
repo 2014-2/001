@@ -42,5 +42,11 @@ public final class WorkPlanDao extends AbstractDao {
 		return mDatabase.queryObject(sql,param , WorkPlan.class);
 	}
 	
+	public boolean hasWorkPlan(){
+		
+		List<WorkPlan> list = queryAllWorkPlan() ;
+		
+		return list != null && list.size() > 0 ;
+	}
 	
 }

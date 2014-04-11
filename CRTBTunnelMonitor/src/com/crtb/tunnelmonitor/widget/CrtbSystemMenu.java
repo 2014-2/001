@@ -28,7 +28,7 @@ import com.crtb.tunnelmonitor.entity.MenuSystemItem;
 @SuppressLint("ViewConstructor")
 public final class CrtbSystemMenu extends PopupWindow {
 	
-	static final int MaxRow = 3 ;
+	private static int MaxRow = 3 ;
 	
 	private Activity mToken ;
 	private LayoutInflater mLayoutInflater;
@@ -42,6 +42,10 @@ public final class CrtbSystemMenu extends PopupWindow {
 		
 		LinearLayout root = (LinearLayout) mLayoutInflater.inflate(R.layout.menu_system_container, null);
 		LinearLayout row  = null ;
+		
+		if(menus.size() <= 2){
+			MaxRow	= menus.size() ; 
+		}
 		
 		for(int index = 0 , size = menus.size(); index < size ; index++){
 			
@@ -70,7 +74,7 @@ public final class CrtbSystemMenu extends PopupWindow {
 			
 			ImageView icon = (ImageView)menu.findViewById(R.id.system_item_icon);
 			TextView label = (TextView)menu.findViewById(R.id.system_item_name);
-			icon.setImageResource(item.getIcon());
+			icon.setBackgroundResource(item.getIcon());
 			label.setText(item.getName());
 			
 			LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT);
