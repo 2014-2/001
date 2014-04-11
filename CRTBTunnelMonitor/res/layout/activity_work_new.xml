@@ -1,15 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical" >
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
 
-    <include layout="@layout/activity_topbar_layout" />
+    <include
+        android:id="@+id/layout_one"
+        layout="@layout/activity_topbar_layout" />
 
     <LinearLayout
-        android:id="@+id/linearLayout1"
+        android:id="@+id/layout_two"
         android:layout_width="fill_parent"
-        android:layout_height="40.0dip"
+        android:layout_height="40dip"
+        android:layout_below="@id/layout_one"
         android:background="@color/huise" >
 
         <TextView
@@ -36,54 +38,26 @@
     <ImageView
         android:id="@+id/cursor"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="4dp"
+        android:layout_below="@id/layout_two"
         android:scaleType="matrix"
         android:src="@drawable/heng" />
+
+    <include
+        android:id="@+id/bottom_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="40dp"
+        android:layout_alignParentBottom="true"
+        layout="@layout/activity_bottom_layout" />
 
     <android.support.v4.view.ViewPager
         android:id="@+id/vPager"
         android:layout_width="fill_parent"
-        android:layout_height="340dp"
-        android:layout_gravity="center"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/bottom_layout"
+        android:layout_below="@id/cursor"
         android:background="#ffffff"
         android:flipInterval="30"
         android:persistentDrawingCache="animation" />
 
-    <RelativeLayout
-        android:id="@+id/main"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent" >
-
-        <LinearLayout
-            android:id="@+id/bottom_panel"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:orientation="horizontal" >
-
-            <Button
-                android:id="@+id/work_btn_quxiao"
-                android:layout_width="0dp"
-                android:layout_height="40dip"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="1"
-                android:background="@color/green"
-                android:text="取消" />
-
-            <ImageView
-                android:layout_width="2dip"
-                android:layout_height="fill_parent"
-                android:background="@color/black" />
-
-            <Button
-                android:id="@+id/work_btn_queding"
-                android:layout_width="0dp"
-                android:layout_height="40dip"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="1"
-                android:background="@color/green"
-                android:text="确定" />
-        </LinearLayout>
-    </RelativeLayout>
-
-</LinearLayout>
+</RelativeLayout>
