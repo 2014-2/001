@@ -6,6 +6,8 @@ import java.util.List;
 import org.zw.android.framework.ioc.InjectCore;
 import org.zw.android.framework.ioc.InjectLayout;
 import org.zw.android.framework.ioc.InjectView;
+import org.zw.android.framework.util.DateUtils;
+import org.zw.android.framework.util.StringUtils;
 
 import android.content.Intent;
 import android.graphics.BitmapFactory;
@@ -29,6 +31,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.crtb.tunnelmonitor.WorkFlowActivity;
+import com.crtb.tunnelmonitor.dao.impl.v2.WorkPlanDao;
+import com.crtb.tunnelmonitor.entity.WorkPlan;
 
 @InjectLayout(layout=R.layout.activity_work_new)
 public class WorkNewActivity extends WorkFlowActivity implements OnClickListener {
@@ -125,6 +129,13 @@ public class WorkNewActivity extends WorkFlowActivity implements OnClickListener
 		InitImageView();
 		
 		InitViewPager();
+		
+		// default 
+		String date = DateUtils.toDateString(DateUtils.getCurrtentTimes(), DateUtils.DATE_TIME_FORMAT) ;
+		mWorkPlanCalendar.setText(date);
+		mVaultTransDate.setText(date);
+		mAstringeDate.setText(date);
+		
 	}
 
 	private void InitViewPager() {
@@ -160,6 +171,104 @@ public class WorkNewActivity extends WorkFlowActivity implements OnClickListener
 			break;
 		case R.id.work_btn_queding:
 			
+			// base
+			String name 		= mWorkPlanName.getEditableText().toString().trim() ;
+			String date 		= mWorkPlanCalendar.getEditableText().toString().trim() ;
+			String unit 		= mWorkPlanUnit.getEditableText().toString().trim() ;
+			String pref 		= mWorkPlanPrefix.getEditableText().toString().trim() ;
+			String start 		= mWorkPlanStart.getEditableText().toString().trim() ;
+			String end 			= mWorkPlanEnd.getEditableText().toString().trim() ;
+			
+			if(StringUtils.isEmpty(name)){
+				showText("工作面名称不能为空");
+				return ;
+			}
+			
+			if(StringUtils.isEmpty(date)){
+				showText("日期不能为空");
+				return ;
+			}
+			
+			if(StringUtils.isEmpty(unit)){
+				showText("施工单位不能为空");
+				return ;
+			}
+			
+			if(StringUtils.isEmpty(pref)){
+				showText("前缀不能为空");
+				return ;
+			}
+			
+			if(StringUtils.isEmpty(start)){
+				showText("开始里程不能为空");
+				return ;
+			}
+			
+			if(StringUtils.isEmpty(end)){
+				showText("开始里程不能为空");
+				return ;
+			}
+			
+			float sm	= Float.valueOf(start);
+			float em	= Float.valueOf(end);
+			
+			if(em <= sm){
+				showText("结束里程必须大于开始里程");
+				return ;
+			}
+			
+			// Vault
+			String vaultMax 	= mVaultTransMax.getEditableText().toString().trim() ;
+			String vaultVel 	= mVaultTransVelocity.getEditableText().toString().trim() ;
+			String vaultDate 	= mVaultTransDate.getEditableText().toString().trim() ;
+			String vaultRemark 	= mVaultTransRemark.getEditableText().toString().trim() ;
+			
+			if(StringUtils.isEmpty(vaultMax)){
+				showText("拱顶累计变形极限值不能为空");
+				return ;
+			}
+			
+			if(StringUtils.isEmpty(vaultVel)){
+				showText("拱顶变形速率极限值不能为空");
+				return ;
+			}
+			
+			// circum astringe
+			String circumMax 	= mAstringeMax.getEditableText().toString().trim() ;
+			String circumVel 	= mAstringevelocity.getEditableText().toString().trim() ;
+			String circumDate 	= mAstringeDate.getEditableText().toString().trim() ;
+			String circumRemark = mAstringeRemark.getEditableText().toString().trim() ;
+			
+			if(StringUtils.isEmpty(circumMax)){
+				showText("周边累计收敛极限值不能为空");
+				return ;
+			}
+			
+			if(StringUtils.isEmpty(circumVel)){
+				showText("周边收敛速率极限值不能为空");
+				return ;
+			}
+			
+			// surface
+			String surfaceMax	= mSurfaceSinkMax.getEditableText().toString().trim() ;
+			
+			if(StringUtils.isEmpty(circumVel)){
+				showText("地表累计收敛极限值不能为空");
+				return ;
+			}
+			
+			WorkPlan info = new WorkPlan() ;
+			info.setWorkPlanName(name);
+			info.setCreationTime(date);
+			info.setConstructionOrganization(unit);
+			info.setMileagePrefix(pref);
+			info.setStartMileage(sm);
+			info.setEndMileage(em);
+			
+			WorkPlanDao.defaultWorkPlanDao().insert(info);
+			
+			setResult(RESULT_CANCELED);
+			finish();
 			
 			break;
 		}

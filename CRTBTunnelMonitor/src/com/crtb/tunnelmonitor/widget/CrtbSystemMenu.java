@@ -45,6 +45,8 @@ public final class CrtbSystemMenu extends PopupWindow {
 		
 		if(menus.size() <= 2){
 			MaxRow	= menus.size() ; 
+		} else {
+			MaxRow	= 3 ;
 		}
 		
 		for(int index = 0 , size = menus.size(); index < size ; index++){

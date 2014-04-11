@@ -193,7 +193,8 @@ public final class WorkActivity extends WorkFlowActivity {
 	protected void onResume() {
 		super.onResume();
 		
-		mListView.onResume() ;
+		mListView.onReload() ;
+		
 		workplanItemMenu.dismiss() ;
 		systemMenu.dismiss() ;
 	}

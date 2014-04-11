@@ -6,7 +6,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="75dp"
+        android:layout_height="60dp"
         android:orientation="horizontal" >
 
         <RelativeLayout
@@ -15,28 +15,10 @@
             android:layout_weight="1" >
 
             <View
-                android:layout_width="1dp"
-                android:layout_height="fill_parent"
-                android:layout_alignParentLeft="true"
-                android:background="#FF000000" />
-
-            <View
                 android:layout_width="fill_parent"
                 android:layout_height="0.5dp"
                 android:layout_alignParentBottom="true"
-                android:background="#FF000000" />
-
-            <View
-                android:layout_width="1dp"
-                android:layout_height="fill_parent"
-                android:layout_alignParentRight="true"
-                android:background="#FF000000" />
-
-            <View
-                android:layout_width="fill_parent"
-                android:layout_height="1dp"
-                android:layout_alignParentTop="true"
-                android:background="#FF000000" />
+                android:background="#FF838383" />
 
             <TextView
                 android:id="@+id/tv_workplan_name"
@@ -44,6 +26,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:layout_centerInParent="true"
+                android:text="隧道"
                 android:textColor="@color/black" />
         </RelativeLayout>
 
@@ -56,19 +39,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="0.5dp"
                 android:layout_alignParentBottom="true"
-                android:background="#FF000000" />
-
-            <View
-                android:layout_width="1dp"
-                android:layout_height="fill_parent"
-                android:layout_alignParentRight="true"
-                android:background="#FF000000" />
-
-            <View
-                android:layout_width="fill_parent"
-                android:layout_height="1dp"
-                android:layout_alignParentTop="true"
-                android:background="#FF000000" />
+                android:background="#FF838383" />
 
             <TextView
                 android:id="@+id/tv_workplan_start_mileage"
@@ -88,19 +59,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="0.5dp"
                 android:layout_alignParentBottom="true"
-                android:background="#FF000000" />
-
-            <View
-                android:layout_width="2dp"
-                android:layout_height="fill_parent"
-                android:layout_alignParentRight="true"
-                android:background="#FF000000" />
-
-            <View
-                android:layout_width="fill_parent"
-                android:layout_height="1dp"
-                android:layout_alignParentTop="true"
-                android:background="#FF000000" />
+                android:background="#FF838383" />
 
             <TextView
                 android:id="@+id/tv_workplan_end_mileage"

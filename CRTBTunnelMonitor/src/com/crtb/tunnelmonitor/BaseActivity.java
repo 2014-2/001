@@ -8,6 +8,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 /**
@@ -43,6 +44,10 @@ public abstract class BaseActivity extends Activity {
 	
 	protected AppHandler getHandler(){
 		return new AppHandler(this) ;
+	}
+	
+	protected void showText(String msg){
+		Toast.makeText(this, msg, Toast.LENGTH_LONG).show() ;
 	}
 	
 	/**
