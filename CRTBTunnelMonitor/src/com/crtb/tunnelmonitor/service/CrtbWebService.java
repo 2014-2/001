@@ -26,6 +26,8 @@ public final class CrtbWebService {
 	private Handler mHandler;
 	
 	private long mRandomCode;
+	private String mZoneCode;
+	private String mSiteCode;
 	
 	private CrtbWebService() {
 		mHandler = new Handler(Looper.getMainLooper());
@@ -106,18 +108,8 @@ public final class CrtbWebService {
 	 * @param password
 	 * @param callback
 	 */
-	public void getZoneAndSiteCode(RpcCallback callback) {
+	public void getZoneAndSiteCode(final RpcCallback callback) {
 		long randomCode = getRandomCode();
-		if (randomCode == 0) {
-			throw new IllegalStateException("invalid random code.");
-		}
-		GetZoneAndSiteCodeRpc rpc = new GetZoneAndSiteCodeRpc(randomCode, new RpcCallbackWrapper(callback));
-		RpcSendTask task = new RpcSendTask(rpc, USRE_AUTH_URL);
-		task.execute();
-	}
-	
-	public void getSurveyors(final RpcCallback callback) {
-		final long randomCode = getRandomCode();
 		if (randomCode == 0) {
 			throw new IllegalStateException("invalid random code.");
 		}
@@ -126,10 +118,12 @@ public final class CrtbWebService {
 			@Override
 			public void onSuccess(Object[] data) {
 				String zoneCode = (String) data[0];
-				//String siteCode = (String) data[1];
-				GetSurveyorsRpc rpc = new GetSurveyorsRpc(zoneCode, randomCode, new RpcCallbackWrapper(callback));
-				RpcSendTask task = new RpcSendTask(rpc, USRE_AUTH_URL);
-				task.execute();
+				String siteCode = (String) data[1];
+				setZoneCode(zoneCode);
+				setSiteCode(siteCode);
+				if (callback != null) {
+					callback.onSuccess(data);
+				}
 			}
 			
 			@Override
@@ -141,7 +135,37 @@ public final class CrtbWebService {
 		}));
 		RpcSendTask task = new RpcSendTask(rpc, USRE_AUTH_URL);
 		task.execute();
-		
+	}
+	
+	/**
+	 * 下载测量人员信息
+	 * 
+	 * @param callback
+	 */
+	public void getSurveyors(final RpcCallback callback) {
+		getZoneAndSiteCode(new RpcCallback() {
+			
+			@Override
+			public void onSuccess(Object[] data) {
+				String zoneCode = (String) data[0];
+				GetSurveyorsRpc rpc = new GetSurveyorsRpc(zoneCode, getRandomCode(), new RpcCallbackWrapper(callback));
+				RpcSendTask task = new RpcSendTask(rpc, USRE_AUTH_URL);
+				task.execute();
+			}
+			
+			@Override
+			public void onFailed(String reason) {
+				if (callback != null) {
+					callback.onFailed(reason);
+				}
+			}
+		});
+	}
+	
+	public void getSections(SectionStatus status, RpcCallback callback) {
+		GetSectInfosRpc rpc = new GetSectInfosRpc(getSiteCode(), status.value(), getRandomCode(), new RpcCallbackWrapper(callback));
+		RpcSendTask task = new RpcSendTask(rpc, USRE_AUTH_URL);
+		task.execute();
 	}
 	
 	private class RpcSendTask extends AsyncTask<Void, Void, Void> {
@@ -211,6 +235,22 @@ public final class CrtbWebService {
 
 	private void setRandomCode(long randomCode) {
 		mRandomCode = randomCode;
+	}
+	
+	private String getZoneCode() {
+		return mZoneCode;
+	}
+	
+	private void setZoneCode(String zoneCode) {
+		mZoneCode = zoneCode;
+	}
+	
+	private String getSiteCode() {
+		return mSiteCode;
+	}
+	
+	private void setSiteCode(String siteCode) {
+		mSiteCode = siteCode;
 	}
 	
 }
