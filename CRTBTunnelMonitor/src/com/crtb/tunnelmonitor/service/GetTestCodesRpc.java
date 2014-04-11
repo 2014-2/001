@@ -14,10 +14,10 @@ class GetTestCodesRpc extends AbstractRpc {
 	private static final String KEY_RANDOM_CODE = "随机码";
 	private static final String KEY_ACTION = "getTestCodes";
 	
-	private Map<String, String> mParameters = new HashMap<String, String>();
+	private Map<String, Object> mParameters = new HashMap<String, Object>();
 	private RpcCallback mCallback;
 	
-	GetTestCodesRpc(String sectionCode, String pointStatus, String randomCode, RpcCallback callback) {
+	GetTestCodesRpc(String sectionCode, int pointStatus, long randomCode, RpcCallback callback) {
 		mParameters.put(KEY_SECTION_CODE, sectionCode);
 		mParameters.put(KEY_POINT_STATUS, pointStatus);
 		mParameters.put(KEY_RANDOM_CODE, randomCode);
@@ -44,8 +44,20 @@ class GetTestCodesRpc extends AbstractRpc {
 			return;
 		}
 		try {
-			Log.d(LOG_TAG, "response: " + response);
-			//TODO: parse the response
+			/**
+			 * getTestCodesResponse{return=anyType{
+			 * item=XPCL01SD00010001GD01#GD01; item=XPCL01SD00010001SL01#SL01; 
+			 * item=XPCL01SD00010001SL02#SL02; item=XPCL01SD00010001SL03#SL03; 
+			 * item=XPCL01SD00010001SL04#SL04; }; }
+			 */
+			SoapObject result = (SoapObject) response;
+			SoapObject data = (SoapObject) result.getProperty(0);
+			final int count = data.getPropertyCount();
+			for(int i = 0; i < count; i++) {
+				String[] pointInfo =  data.getPropertyAsString(i).split("#");
+				Log.d(LOG_TAG, "test point: " + pointInfo[0]);
+			}
+			notifySuccess(null);
 		} catch (Exception e) {
 			notifyFailed("Exception: " + e.getMessage());
 			e.printStackTrace();

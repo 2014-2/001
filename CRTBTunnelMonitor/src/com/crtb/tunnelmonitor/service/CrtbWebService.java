@@ -162,8 +162,49 @@ public final class CrtbWebService {
 		});
 	}
 	
-	public void getSections(SectionStatus status, RpcCallback callback) {
+	/**
+	 * 获取断面的编号列表
+	 * 
+	 * @param status
+	 * @param callback
+	 */
+	public void getSectionCodeList(SectionStatus status, RpcCallback callback) {
 		GetSectInfosRpc rpc = new GetSectInfosRpc(getSiteCode(), status.value(), getRandomCode(), new RpcCallbackWrapper(callback));
+		RpcSendTask task = new RpcSendTask(rpc, USRE_AUTH_URL);
+		task.execute();
+	}
+	
+	/**
+	 * 获取断面的信息
+	 * 
+	 * @param sectionCode
+	 * @param callback
+	 */
+	public void getSectionInfo(String sectionCode, RpcCallback callback) {
+		GetSectInfoByCodeRpc rpc = new GetSectInfoByCodeRpc(sectionCode, getRandomCode(), new RpcCallbackWrapper(callback));
+		RpcSendTask task = new RpcSendTask(rpc, USRE_AUTH_URL);
+		task.execute();
+	}
+	
+	/**
+	 * 获取的测点编号列表
+	 * 
+	 * @param status
+	 * @param callback
+	 */
+	public void getPointCodeList(String sectionCode, PointStatus status, RpcCallback callback) {
+		GetTestCodesRpc rpc = new GetTestCodesRpc(sectionCode, status.value(), getRandomCode(), new RpcCallbackWrapper(callback));
+		RpcSendTask task = new RpcSendTask(rpc, USRE_AUTH_URL);
+		task.execute();
+	}
+	/**
+	 * 获取测量信息
+	 * 
+	 * @param pointCode
+	 * @param callback
+	 */
+	public void getPointInfo(String pointCode, RpcCallback callback) {
+		GetMonitorValueInfoRpc rpc = new GetMonitorValueInfoRpc(pointCode, getRandomCode(), new RpcCallbackWrapper(callback));
 		RpcSendTask task = new RpcSendTask(rpc, USRE_AUTH_URL);
 		task.execute();
 	}

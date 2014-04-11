@@ -5,7 +5,9 @@ import java.util.Map;
 
 import org.ksoap2.serialization.SoapObject;
 
-import android.text.TextUtils;
+import com.crtb.tunnelmonitor.common.Constant;
+
+import ICT.utils.RSACoder;
 import android.util.Log;
 
 class GetMonitorValueInfoRpc extends AbstractRpc {
@@ -14,10 +16,11 @@ class GetMonitorValueInfoRpc extends AbstractRpc {
 	private static final String KEY_RANDOM_CODE = "随机码";
 	private static final String KEY_ACTION = "getMonitorValueInfo";
 	
-	private Map<String, String> mParameters = new HashMap<String, String>();
+	private Map<String, Object> mParameters = new HashMap<String, Object>();
 	private RpcCallback mCallback;
 	
-	GetMonitorValueInfoRpc(String pointCode, String randomCode, RpcCallback callback) {
+	//point code: XPCL01SD00010001SL01#XPCL01SD00010001SL02
+	GetMonitorValueInfoRpc(String pointCode, long randomCode, RpcCallback callback) {
 		mParameters.put(KEY_POINT_CODE, pointCode);
 		mParameters.put(KEY_RANDOM_CODE, randomCode);
 		mCallback = callback;
@@ -43,9 +46,26 @@ class GetMonitorValueInfoRpc extends AbstractRpc {
 			return;
 		}
 		try {
+			/**
+			 * getMonitorValueInfoResponse{return=anyType{ item=
+			 * 6.6701/u3lcHq4AGrpbJ3OUATdW0ETYULVy2qhZjNDijM5hZh112cDSGKzw2fnkkMOHcjMqcZm4cT2cIPS8/
+			 * TUvYb3igAVZoKTONlH9/2014-01-03 11:48:36.0/瑞/19/nullnull;
+			 */
 			Log.d(LOG_TAG, "response: " + response);
 			SoapObject result = (SoapObject) response;
-			//TODO: Parse the response
+			SoapObject data = (SoapObject) result.getProperty(0);
+			final int count = data.getPropertyCount();
+			for(int i = 0; i < count; i++) {
+				String[] pointInfo = data.getPropertyAsString(i).split("/");
+				String value = pointInfo[0];
+				String xyz = RSACoder.decnryptDes(Constant.testDeskey, pointInfo[1]);
+				String deformation = RSACoder.decnryptDes(Constant.testDeskey, pointInfo[2]);
+				String time = pointInfo[3];
+				String name = pointInfo[4];
+				String distance = pointInfo[5];
+				String procedure = pointInfo[6];
+				Log.d(LOG_TAG, "xyz: " + xyz);
+			}
 		} catch (Exception e) {
 			notifyFailed("Exception: " + e.getMessage());
 			e.printStackTrace();
