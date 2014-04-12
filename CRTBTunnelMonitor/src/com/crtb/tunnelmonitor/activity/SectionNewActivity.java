@@ -102,30 +102,30 @@ public class SectionNewActivity extends Activity implements OnClickListener {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
 		setContentView(R.layout.activity_section_new);
-		sChainage = getIntent().getExtras().getString(Constant.Select_SectionRowClickItemsName_Name);
-		double dChainage = AppCRTBApplication.StrToDouble(sChainage, -1);
-		InitImageView();
-		InitTextView();
-		InitViewPager();
-		InitMyTextView();
-
-		if (sChainage.length() > 0) {
-			section_new_tv_header.setText("编辑隧道内断面");
-			AppCRTBApplication CurApp = ((AppCRTBApplication)getApplicationContext());
-			WorkInfos Curw = CurApp.GetCurWork();
-			List<TunnelCrossSectionInfo> infos = Curw.GetTunnelCrossSectionInfoList();
-			for(int i=0;i<infos.size();i++)
-			{
-				TunnelCrossSectionInfo tmp = infos.get(i);
-				if(tmp.getChainage().equals(dChainage))
-				{
-					Edittsci = tmp;
-					break;
-				}
-			}
-		}
+		
+		// sChainage = getIntent().getExtras().getString(Constant.Select_SectionRowClickItemsName_Name);
+		//double dChainage = AppCRTBApplication.StrToDouble(sChainage, -1);
+//		InitImageView();
+//		InitTextView();
+//		InitViewPager();
+//		InitMyTextView();
+//
+//		if (sChainage.length() > 0) {
+//			section_new_tv_header.setText("编辑隧道内断面");
+//			AppCRTBApplication CurApp = ((AppCRTBApplication)getApplicationContext());
+//			WorkInfos Curw = CurApp.GetCurWork();
+//			List<TunnelCrossSectionInfo> infos = Curw.GetTunnelCrossSectionInfoList();
+//			for(int i=0;i<infos.size();i++)
+//			{
+//				TunnelCrossSectionInfo tmp = infos.get(i);
+//				if(tmp.getChainage().equals(dChainage))
+//				{
+//					Edittsci = tmp;
+//					break;
+//				}
+//			}
+//		}
 
 	}
 

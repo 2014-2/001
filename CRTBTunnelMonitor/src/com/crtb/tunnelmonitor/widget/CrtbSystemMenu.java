@@ -38,8 +38,6 @@ public final class CrtbSystemMenu extends PopupWindow {
 	public CrtbSystemMenu(Activity owner,ViewGroup root,int width,int height,List<MenuSystemItem> menus) {
 		super(root,width, height);
 		
-		// LinearLayout root = (LinearLayout) mLayoutInflater.inflate(R.layout.menu_system_container, null);
-
 		mLayoutInflater = LayoutInflater.from(owner);
 		mToken			= owner ;
 		

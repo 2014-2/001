@@ -7,6 +7,7 @@ import java.sql.Timestamp;
  * 地表下沉断面
  */
 public class SubsidenceCrossSectionInfo {
+	
 	private String ChainageName;		//断面名称
 	private int id;				//记录id
 	private Double Chainage;	//断面历程值

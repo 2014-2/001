@@ -2,7 +2,7 @@ package com.crtb.tunnelmonitor.utils;
 
 
 import com.crtb.tunnelmonitor.activity.RecordNewActivity;
-import com.crtb.tunnelmonitor.activity.SectionEditActivity;
+import com.crtb.tunnelmonitor.activity.SectionNewSubsidenceActivity;
 import com.crtb.tunnelmonitor.activity.SectionNewActivity;
 import com.crtb.tunnelmonitor.activity.WorkActivity;
 import com.crtb.tunnelmonitor.activity.WorkNewActivity;
@@ -56,7 +56,7 @@ public class SelectPicPopupWindow extends PopupWindow {
 				}else if (num == 2) {
 					if (currIndex == 1) {
 						intent = new Intent(c,
-								SectionEditActivity.class);
+								SectionNewSubsidenceActivity.class);
 						intent.putExtra(Constant.Select_SectionRowClickItemsName_Name,"");
 						((Activity)c).startActivityForResult(intent,0);
 						//c.startActivity(intent);

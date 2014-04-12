@@ -1,137 +1,230 @@
 package com.crtb.tunnelmonitor.entity;
-/**
- * 新建断面隧道
- */
-public class SectionInfo {
 
-	
-	private Double Chainage;
-	private String InBuiltTime;
-	private Float Width;
-	private int ExcavateMethod;
-	private String SurveyPntName;
-	private String Info;
-	private String ChainagePrefix;
-	private Float GDU0;
-	private Float GDVelocity;
+import java.io.Serializable;
+
+import org.zw.android.framework.db.ColumnFloat;
+import org.zw.android.framework.db.ColumnInt;
+import org.zw.android.framework.db.ColumnString;
+import org.zw.android.framework.db.Table;
+import org.zw.android.framework.db.core.ColumnPrimaryKey;
+import org.zw.android.framework.db.core.ColumnPrimaryKey.PrimaryKeyType;
+
+/**
+ * 
+ * @author zhouwei
+ * 
+ */
+@Table(TableName = "SectionInfo")
+public class SectionInfo implements Serializable {
+
+	@ColumnPrimaryKey(Type = PrimaryKeyType.AUTO)
+	@ColumnInt
+	private int id;
+
+	@ColumnFloat
+	private float chainage;
+
+	@ColumnString(length = 32)
+	private String inBuiltTime;
+
+	@ColumnFloat
+	private float width;
+
+	@ColumnInt
+	private int excavateMethod;
+
+	@ColumnString(length = 32)
+	private String surveyPntName;
+
+	@ColumnString(length = 32)
+	private String info;
+
+	@ColumnString(length = 16)
+	private String chainagePrefix;
+
+	@ColumnFloat
+	private float GDU0;
+
+	@ColumnFloat
+	private float GDVelocity;
+
+	@ColumnString(length = 32)
 	private String GDU0Time;
+
+	@ColumnString(length = 32)
 	private String GDU0Description;
-	private Float SLU0;
-	private Float SLLimitVelocity;
+
+	@ColumnFloat
+	private float SLU0;
+
+	@ColumnFloat
+	private float SLLimitVelocity;
+
+	@ColumnString(length = 32)
 	private String SLU0Time;
+
+	@ColumnString(length = 32)
 	private String SLU0Description;
+
+	@ColumnString(length = 32)
 	private String Lithologic;
-	private Float LAYVALUE;
+
+	@ColumnFloat
+	private float LAYVALUE;
+
+	@ColumnString(length = 32)
 	private String ROCKGRADE;
-	
-	public Double getChainage() {
-		return Chainage;
+
+	public int getId() {
+		return id;
 	}
-	public void setChainage(Double chainage) {
-		Chainage = chainage;
+
+	public void setId(int id) {
+		this.id = id;
 	}
+
+	public float getChainage() {
+		return chainage;
+	}
+
+	public void setChainage(float chainage) {
+		this.chainage = chainage;
+	}
+
 	public String getInBuiltTime() {
-		return InBuiltTime;
+		return inBuiltTime;
 	}
+
 	public void setInBuiltTime(String inBuiltTime) {
-		InBuiltTime = inBuiltTime;
+		this.inBuiltTime = inBuiltTime;
 	}
-	public Float getWidth() {
-		return Width;
+
+	public float getWidth() {
+		return width;
 	}
-	public void setWidth(Float width) {
-		Width = width;
+
+	public void setWidth(float width) {
+		this.width = width;
 	}
+
 	public int getExcavateMethod() {
-		return ExcavateMethod;
+		return excavateMethod;
 	}
+
 	public void setExcavateMethod(int excavateMethod) {
-		ExcavateMethod = excavateMethod;
+		this.excavateMethod = excavateMethod;
 	}
+
 	public String getSurveyPntName() {
-		return SurveyPntName;
+		return surveyPntName;
 	}
+
 	public void setSurveyPntName(String surveyPntName) {
-		SurveyPntName = surveyPntName;
+		this.surveyPntName = surveyPntName;
 	}
+
 	public String getInfo() {
-		return Info;
+		return info;
 	}
+
 	public void setInfo(String info) {
-		Info = info;
+		this.info = info;
 	}
+
 	public String getChainagePrefix() {
-		return ChainagePrefix;
+		return chainagePrefix;
 	}
+
 	public void setChainagePrefix(String chainagePrefix) {
-		ChainagePrefix = chainagePrefix;
+		this.chainagePrefix = chainagePrefix;
 	}
-	public Float getGDU0() {
+
+	public float getGDU0() {
 		return GDU0;
 	}
-	public void setGDU0(Float gDU0) {
+
+	public void setGDU0(float gDU0) {
 		GDU0 = gDU0;
 	}
-	public Float getGDVelocity() {
+
+	public float getGDVelocity() {
 		return GDVelocity;
 	}
-	public void setGDVelocity(Float gDVelocity) {
+
+	public void setGDVelocity(float gDVelocity) {
 		GDVelocity = gDVelocity;
 	}
+
 	public String getGDU0Time() {
 		return GDU0Time;
 	}
+
 	public void setGDU0Time(String gDU0Time) {
 		GDU0Time = gDU0Time;
 	}
+
 	public String getGDU0Description() {
 		return GDU0Description;
 	}
+
 	public void setGDU0Description(String gDU0Description) {
 		GDU0Description = gDU0Description;
 	}
-	public Float getSLU0() {
+
+	public float getSLU0() {
 		return SLU0;
 	}
-	public void setSLU0(Float sLU0) {
+
+	public void setSLU0(float sLU0) {
 		SLU0 = sLU0;
 	}
-	public Float getSLLimitVelocity() {
+
+	public float getSLLimitVelocity() {
 		return SLLimitVelocity;
 	}
-	public void setSLLimitVelocity(Float sLLimitVelocity) {
+
+	public void setSLLimitVelocity(float sLLimitVelocity) {
 		SLLimitVelocity = sLLimitVelocity;
 	}
+
 	public String getSLU0Time() {
 		return SLU0Time;
 	}
+
 	public void setSLU0Time(String sLU0Time) {
 		SLU0Time = sLU0Time;
 	}
+
 	public String getSLU0Description() {
 		return SLU0Description;
 	}
+
 	public void setSLU0Description(String sLU0Description) {
 		SLU0Description = sLU0Description;
 	}
+
 	public String getLithologic() {
 		return Lithologic;
 	}
+
 	public void setLithologic(String lithologic) {
 		Lithologic = lithologic;
 	}
-	public Float getLAYVALUE() {
+
+	public float getLAYVALUE() {
 		return LAYVALUE;
 	}
-	public void setLAYVALUE(Float lAYVALUE) {
+
+	public void setLAYVALUE(float lAYVALUE) {
 		LAYVALUE = lAYVALUE;
 	}
+
 	public String getROCKGRADE() {
 		return ROCKGRADE;
 	}
+
 	public void setROCKGRADE(String rOCKGRADE) {
 		ROCKGRADE = rOCKGRADE;
 	}
-	
-	
+
 }

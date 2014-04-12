@@ -352,9 +352,9 @@ public class WorkNewActivity extends WorkFlowActivity implements OnClickListener
 		}
 
 		@Override
-		public Object instantiateItem(View arg0, int arg1) {
-			((ViewPager) arg0).addView(mListViews.get(arg1));
-			return mListViews.get(arg1);
+		public Object instantiateItem(View arg0, int index) {
+			((ViewPager) arg0).addView(mListViews.get(index));
+			return mListViews.get(index);
 		}
 
 		@Override

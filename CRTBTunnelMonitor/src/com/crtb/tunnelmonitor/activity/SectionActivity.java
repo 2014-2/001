@@ -3,9 +3,10 @@ package com.crtb.tunnelmonitor.activity;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
+import org.zw.android.framework.ioc.InjectCore;
+import org.zw.android.framework.ioc.InjectLayout;
+import org.zw.android.framework.ioc.InjectView;
+
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -14,163 +15,101 @@ import android.os.Parcelable;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
-import android.view.Display;
-import android.view.Gravity;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.animation.Animation;
+import android.view.ViewGroup;
 import android.view.animation.TranslateAnimation;
-import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
-import android.widget.AdapterView.OnItemLongClickListener;
 
-import com.crtb.tunnelmonitor.AppCRTBApplication;
-import com.crtb.tunnelmonitor.activity.WorkNewActivity.MyOnClickListener;
-import com.crtb.tunnelmonitor.adapter.SubsidenceCrossSectionInfoAdapter;
-import com.crtb.tunnelmonitor.adapter.TunnelCrossSectionInfoAdapter;
-import com.crtb.tunnelmonitor.adapter.WorkAdapter;
-import com.crtb.tunnelmonitor.common.Constant;
-import com.crtb.tunnelmonitor.dao.impl.SubsidenceCrossSectionDaoImpl;
-import com.crtb.tunnelmonitor.dao.impl.TunnelCrossSectionDaoImpl;
-import com.crtb.tunnelmonitor.entity.SubsidenceCrossSectionInfo;
-import com.crtb.tunnelmonitor.entity.TunnelCrossSectionInfo;
-import com.crtb.tunnelmonitor.entity.WorkInfos;
-import com.crtb.tunnelmonitor.entity.list_infos;
-import com.crtb.tunnelmonitor.utils.SelectPicPopupWindow;
-import com.crtb.tunnelmonitor.activity.R;
+import com.crtb.tunnelmonitor.WorkFlowActivity;
+import com.crtb.tunnelmonitor.entity.MenuSystemItem;
+import com.crtb.tunnelmonitor.widget.CrtbSystemMenu;
+import com.crtb.tunnelmonitor.widget.CrtbSystemMenu.ISystemMenuOnclick;
+import com.crtb.tunnelmonitor.widget.SectionSubsidenceListView;
+import com.crtb.tunnelmonitor.widget.SectionTunnelListView;
 
 /**
- * 断面主页
  * 
+ * @author zhouwei
+ *
  */
-public class SectionActivity extends Activity implements OnPageChangeListener {
+@InjectLayout(layout=R.layout.activity_section)
+public class SectionActivity extends WorkFlowActivity implements OnPageChangeListener {
 	
-	private OnClickListener itemsOnClick;
-	private SelectPicPopupWindow menuWindow;
-	private View vie;
-	private ListView listView,listView1;
-	private List<TunnelCrossSectionInfo> infos;
-	private List<SubsidenceCrossSectionInfo> infos1;
-	private ViewPager mPager;// 页卡内容
-	private List<View> listViews; // Tab页面列表
-	private ImageView cursor;// 动画图片
-	private TextView t1, t2;// 页卡头标
+	public static final int TAB_SECTION			= 0 ;
+	public static final int TAB_SUBSIDENCE		= 1 ;
+	
+	@InjectView(id=R.id.vPager)
+	private ViewPager mPager;
+	
+	@InjectView(id=R.id.cursor)
+	private ImageView cursor;
+	
+	private ArrayList<View> list = new ArrayList<View>();
+	
+	private TextView tabLeft, tabRight;// 页卡头标
+	
+	@InjectView(layout=R.layout.layout_3)
+	private LinearLayout leftLayout ;
+	
+	@InjectView(id=R.id.listView4,parent="leftLayout")
+	private SectionTunnelListView mSectionTunnelList ;
+	
+	@InjectView(layout=R.layout.layout_5)
+	private LinearLayout rightLayout ;
+	
+	@InjectView(id=R.id.listView4,parent="rightLayout")
+	private SectionSubsidenceListView mSectionSubsidenceList ;
+	
 	private int offset = 0;// 动画图片偏移量
 	private int currIndex = 0;// 当前页卡编号
-	private int bmpW;// 动画图片宽度
-	double disPlayWidth, offSet;
+	int disPlayWidth, offSet;
 	Bitmap b;
-	ArrayList<View> list = null;
-	private LinearLayout fil;
-	private LinearLayout fil2;
-	/***/
-	private Intent intent;
-	/***/
-	private int yemian;
-	private TunnelCrossSectionInfoAdapter adapter;
-	private SubsidenceCrossSectionInfoAdapter adapter1;
-	private int iListPos1 = -1,iListPos2 = -1;
-
+	
+	// system menu
+	private CrtbSystemMenu	systemMenu ;
+		
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_section);
-//		initUI();
-//		InitImageView();
-//		initPager();
-	}
+		
+		// add by wei.zhou
+		InjectCore.injectUIProperty(this);
 
-	// 初始数据
-	public void setdata1() {
-		AppCRTBApplication CurApp = ((AppCRTBApplication)getApplicationContext());
-		WorkInfos CurW = CurApp.GetCurWork();
-		if(CurW == null)
-		{
-			return;
-		}
-		infos = CurW.GetTunnelCrossSectionInfoList();
-		boolean bLoadDB = true;
-		if(infos!=null)
-		{
-			if(infos.size()>0)
-			{
-				bLoadDB = false;
-			}
-		}
-		if(bLoadDB)
-		{
-			if(infos == null)
-			{
-				infos = new ArrayList<TunnelCrossSectionInfo>();
-			}
-			TunnelCrossSectionDaoImpl impl = new TunnelCrossSectionDaoImpl(this,CurW.getProjectName());
-			impl.GetTunnelCrossSectionList(infos);
-			CurW.SetTunnelCrossSectionInfoList(infos);
-			CurApp.UpdateWork(CurW);
-		}
+		// title
+		setTopbarTitle(getString(R.string.section_title));
+		
+		// view pager
+		loadViewPager();
+		
+		// system menu
+		loadSystemMenu();
 	}
-
-	public void setdata2() {
-		AppCRTBApplication CurApp = ((AppCRTBApplication)getApplicationContext());
-		WorkInfos CurW = CurApp.GetCurWork();
-		if(CurW == null)
-		{
-			return;
-		}
-		infos1 = CurW.getScsiList();
-		boolean bLoadDB = true;
-		if(infos1!=null)
-		{
-			if(infos1.size()>0)
-			{
-				bLoadDB = false;
-			}
-		}
-		if(bLoadDB)
-		{
-			if(infos1 == null)
-			{
-				infos1 = new ArrayList<SubsidenceCrossSectionInfo>();
-			}
-			SubsidenceCrossSectionDaoImpl impl1 = new SubsidenceCrossSectionDaoImpl(this, CurW.getProjectName());
-			impl1.GetSubsidenceCrossSectionList(infos1);
-			CurW.setScsiList(infos1);
-			CurApp.UpdateWork(CurW);
-		}
-	}
-	// 初始化
-	public void initUI() {
-		t1 = (TextView) findViewById(R.id.text1);
-		t2 = (TextView) findViewById(R.id.text2);
-//		fil = (LinearLayout) findViewById(R.id.fil);
-//		fil2 = (LinearLayout) findViewById(R.id.fil2);
-		cursor = (ImageView) findViewById(R.id.cursor);
-		mPager = (ViewPager) findViewById(R.id.vPager);
-		// 点击事件
-		t1.setOnClickListener(new MyOnClickListener(0));
-		t2.setOnClickListener(new MyOnClickListener(1));
-		t1.setOnClickListener(tv_Listener);
-		t2.setOnClickListener(tv_Listener);
-	}
-
-	public void InitImageView() {
-		Display dis = this.getWindowManager().getDefaultDisplay();
-		disPlayWidth = dis.getWidth();
+	
+	private void loadViewPager(){
+		
+		tabLeft 	= (TextView) findViewById(R.id.text1);
+		tabRight 	= (TextView) findViewById(R.id.text2);
+		
+		disPlayWidth = mDisplayMetrics.widthPixels ;
 		b = BitmapFactory.decodeResource(this.getResources(), R.drawable.heng);
 		offSet = ((disPlayWidth / 4) - b.getWidth() / 2);
-		list = new ArrayList<View>();
-		LayoutInflater li = LayoutInflater.from(SectionActivity.this);
-		list.add(li.inflate(R.layout.layout_3, null));
-		list.add(li.inflate(R.layout.layout_5, null));
-	}
-
-	public void initPager() {
+		
+		ViewGroup.LayoutParams lp = cursor.getLayoutParams() ;
+		lp.width = disPlayWidth >> 1 ;
+		lp.height = 4 ;
+		cursor.setLayoutParams(lp);
+		
+		//
+		list.add(leftLayout);
+		list.add(rightLayout);
+		
+		tabLeft.setOnClickListener(new MyOnClickListener(TAB_SECTION));
+		tabRight.setOnClickListener(new MyOnClickListener(TAB_SUBSIDENCE));
+		
 		PagerAdapter pa = new PagerAdapter() {
 
 			@Override
@@ -190,12 +129,9 @@ public class SectionActivity extends Activity implements OnPageChangeListener {
 			}
 
 			@Override
-			public Object instantiateItem(View arg0, int arg1) {
-				((ViewPager) arg0).addView((View) list.get(arg1), 0);
-				if (arg1 == 2) {
-					yemian = 2;
-				}
-				return (View) list.get(arg1);
+			public Object instantiateItem(View views, int index) {
+				((ViewPager) views).addView((View) list.get(index));
+				return (View) list.get(index);
 			}
 
 			@Override
@@ -218,15 +154,49 @@ public class SectionActivity extends Activity implements OnPageChangeListener {
 
 			}
 		};
+		
 		mPager.setAdapter(pa);
-		mPager.setCurrentItem(0);
+		mPager.setCurrentItem(TAB_SECTION);
 		mPager.setOnPageChangeListener(this);
-		/** 隧道内断面 */
-		Layout1();
-		/** 地表下沉断面 */
-		Layout2();
 	}
-
+	
+	public void loadSystemMenu(){
+		
+		List<MenuSystemItem> systems = new ArrayList<MenuSystemItem>();
+		
+		MenuSystemItem item = new MenuSystemItem() ;
+		item.setIcon(R.drawable.ic_menu_create);
+		item.setName(getString(R.string.common_create_new));
+		systems.add(item);
+		
+		LinearLayout root = (LinearLayout) getLayoutInflater().inflate(R.layout.menu_system_container, null);
+		
+		systemMenu	= new CrtbSystemMenu(this,root, mDisplayMetrics.widthPixels, 
+				android.view.ViewGroup.LayoutParams.WRAP_CONTENT, systems);
+		
+		systemMenu.setMenuOnclick(new ISystemMenuOnclick() {
+			
+			@Override
+			public void onclick(MenuSystemItem menu) {
+				
+				String name = menu.getName() ;
+				
+				if(name.equals(getString(R.string.common_create_new))){
+					
+					Intent intent = new Intent() ;
+					
+					if(mPager.getCurrentItem() == TAB_SECTION){
+						intent.setClass(SectionActivity.this, SectionNewActivity.class);
+					} else {
+						intent.setClass(SectionActivity.this, SectionNewSubsidenceActivity.class);
+					}
+					
+					startActivity(intent);
+				}
+			}
+		}) ;
+	}
+	
 	@Override
 	public void onPageScrollStateChanged(int arg0) {
 
@@ -248,10 +218,8 @@ public class SectionActivity extends Activity implements OnPageChangeListener {
 		currIndex = arg0;
 	}
 	
-	/**
-	 * 头标点击监听
-	 */
 	public class MyOnClickListener implements View.OnClickListener {
+		
 		private int index = 0;
 
 		public MyOnClickListener(int i) {
@@ -268,9 +236,12 @@ public class SectionActivity extends Activity implements OnPageChangeListener {
 
 		@Override
 		public void onClick(View v) {
+			
 			int single = (int) (b.getWidth() + offSet * 2);
+			
 			switch (v.getId()) {
 			case R.id.t1:
+				
 				mPager.setCurrentItem(0);
 				if (currIndex != 0) {
 					TranslateAnimation ta = new TranslateAnimation(
@@ -279,10 +250,13 @@ public class SectionActivity extends Activity implements OnPageChangeListener {
 					ta.setDuration(200);
 					cursor.startAnimation(ta);
 				}
+				
 				currIndex = 0;
+				
 				break;
 			case R.id.t2:
 				mPager.setCurrentItem(1);
+				
 				if (currIndex != 1) {
 					TranslateAnimation ta = new TranslateAnimation(currIndex
 							* single, single, 0, 0);
@@ -290,191 +264,160 @@ public class SectionActivity extends Activity implements OnPageChangeListener {
 					ta.setDuration(200);
 					cursor.startAnimation(ta);
 				}
+				
 				currIndex = 1;
-				break;
-			default:
 				break;
 			}
 		}
 	};
 
-	public void Layout1() {
-		/** 隧道内断面界面的控件 */
-		/** List集合中存儲的是View,获取界面上的控件,就List.get(0),0就是集合中第一个界面,1就是集合中第二个界面 */
-		listView = (ListView) list.get(0).findViewById(R.id.listView4);
-
-		setdata1();
-		adapter = new TunnelCrossSectionInfoAdapter(SectionActivity.this, infos);
-		listView.setAdapter(adapter);
-		// listview的行点击
-		listView.setOnItemLongClickListener(new OnItemLongClickListener() {
-
-			@Override
-			public boolean onItemLongClick(AdapterView<?> parent, View view,
-					int position, long id) {
-				iListPos1 = position;
-				// 对话框的选项
-				//CharSequence items[] = { "打开", "编辑", "导出", "删除" };
-				// 实例化对话
-				new AlertDialog.Builder(SectionActivity.this)
-						.setItems(/*items*/Constant.SectionRowClickItems, new DialogInterface.OnClickListener() {
-
-							@Override
-							public void onClick(DialogInterface dialog,
-									int which) {
-								AppCRTBApplication CurApp = ((AppCRTBApplication)getApplicationContext());
-								TunnelCrossSectionInfo item = (TunnelCrossSectionInfo)listView.getItemAtPosition(iListPos1);
-								switch (which) {
-								case 0:// 编辑 
-									intent = new Intent(SectionActivity.this,
-											SectionNewActivity.class);
-									intent.putExtra(Constant.Select_SectionRowClickItemsName_Name,
-											Double.toString(item.getChainage()));
-									SectionActivity.this.startActivityForResult(intent,0);
-									//startActivity(intent);
-									break;
-								case 1:// 删除
-									WorkInfos Curw = CurApp.GetCurWork();
-									TunnelCrossSectionDaoImpl impl = new TunnelCrossSectionDaoImpl(SectionActivity.this,Curw.getProjectName());
-									int iRet = impl.DeleteSection(item.getId());
-									switch (iRet) {
-									case 0:
-										Toast.makeText(SectionActivity.this, "删除失败", 3000).show();
-										break;
-									case 1:
-										Curw.DelTunnelCrossSectionInfo(item);
-										CurApp.UpdateWork(Curw);
-										adapter.notifyDataSetChanged();
-										Toast.makeText(SectionActivity.this, "删除成功", 3000).show();
-										break;
-									case -1:
-										Toast.makeText(SectionActivity.this, "删除的断面中存在数据,不可删除", 3000).show();
-										break;
-									default:
-										break;
-									}
-									break;
-								default:
-									break;
-								}
-
-							}
-						})
-						.setCancelable(false)
-						.show().setCanceledOnTouchOutside(true);// 显示对话框
-				return true;
-			}
-		});
-	}
-
-	public void Layout2() {
-		/** 隧道内断面界面的控件 */
-		/** List集合中存儲的是View,获取界面上的控件,就List.get(1),0就是集合中第一个界面,1就是集合中第二个界面 */
-		listView1 = (ListView) list.get(1).findViewById(R.id.listView4);
-
-		setdata2();
-		adapter1 = new SubsidenceCrossSectionInfoAdapter(SectionActivity.this, infos1);
-		listView1.setAdapter(adapter1);
-		// listview的行点击
-		listView1.setOnItemLongClickListener(new OnItemLongClickListener() {
-
-			@Override
-			public boolean onItemLongClick(AdapterView<?> parent, View view,
-					int position, long id) {
-				iListPos2 = position;
-				new AlertDialog.Builder(SectionActivity.this)
-						.setItems(/*items*/Constant.SectionRowClickItems, new DialogInterface.OnClickListener() {
-
-							@Override
-							public void onClick(DialogInterface dialog,
-									int which) {
-								AppCRTBApplication CurApp = ((AppCRTBApplication)getApplicationContext());
-								SubsidenceCrossSectionInfo item = (SubsidenceCrossSectionInfo)listView1.getItemAtPosition(iListPos2);
-								switch (which) {
-								case 0:// 编辑
-									intent = new Intent(SectionActivity.this,
-											SectionEditActivity.class);
-									intent.putExtra(Constant.Select_SectionRowClickItemsName_Name,
-											Double.toString(item.getChainage()));
-									SectionActivity.this.startActivityForResult(intent,0);
-									//startActivity(intent);
-									break;
-								case 1:// 删除
-									WorkInfos Curw = CurApp.GetCurWork();
-									SubsidenceCrossSectionDaoImpl impl = new SubsidenceCrossSectionDaoImpl(SectionActivity.this,Curw.getProjectName());
-									int iRet = impl.DeleteSubsidenceCrossSection(item.getId());
-									switch (iRet) {
-									case 0:
-										Toast.makeText(SectionActivity.this, "删除失败", 3000).show();
-										break;
-									case 1:
-										Curw.DelSubsidenceCrossSectionInfo(item);
-										CurApp.UpdateWork(Curw);
-										adapter1.notifyDataSetChanged();
-										Toast.makeText(SectionActivity.this, "删除成功", 3000).show();
-										break;
-									case -1:
-										Toast.makeText(SectionActivity.this, "删除的断面中存在数据,不可删除", 3000).show();
-										break;
-									default:
-										break;
-									}
-									break;
-								default:
-									break;
-								}
-
-							}
-						})
-						.setCancelable(false)
-						.show().setCanceledOnTouchOutside(true);// 显示对话框
-				return true;
-			}
-		});
-	}
+//	public void Layout1() {
+//		/** 隧道内断面界面的控件 */
+//		/** List集合中存儲的是View,获取界面上的控件,就List.get(0),0就是集合中第一个界面,1就是集合中第二个界面 */
+//		listView = (ListView) list.get(0).findViewById(R.id.listView4);
+//
+//		setdata1();
+//		adapter = new TunnelCrossSectionInfoAdapter(SectionActivity.this, infos);
+//		listView.setAdapter(adapter);
+//		// listview的行点击
+//		listView.setOnItemLongClickListener(new OnItemLongClickListener() {
+//
+//			@Override
+//			public boolean onItemLongClick(AdapterView<?> parent, View view,
+//					int position, long id) {
+//				iListPos1 = position;
+//				// 对话框的选项
+//				//CharSequence items[] = { "打开", "编辑", "导出", "删除" };
+//				// 实例化对话
+//				new AlertDialog.Builder(SectionActivity.this)
+//						.setItems(/*items*/Constant.SectionRowClickItems, new DialogInterface.OnClickListener() {
+//
+//							@Override
+//							public void onClick(DialogInterface dialog,
+//									int which) {
+//								AppCRTBApplication CurApp = ((AppCRTBApplication)getApplicationContext());
+//								TunnelCrossSectionInfo item = (TunnelCrossSectionInfo)listView.getItemAtPosition(iListPos1);
+//								switch (which) {
+//								case 0:// 编辑 
+//									intent = new Intent(SectionActivity.this,
+//											SectionNewActivity.class);
+//									intent.putExtra(Constant.Select_SectionRowClickItemsName_Name,
+//											Double.toString(item.getChainage()));
+//									SectionActivity.this.startActivityForResult(intent,0);
+//									//startActivity(intent);
+//									break;
+//								case 1:// 删除
+//									WorkInfos Curw = CurApp.GetCurWork();
+//									TunnelCrossSectionDaoImpl impl = new TunnelCrossSectionDaoImpl(SectionActivity.this,Curw.getProjectName());
+//									int iRet = impl.DeleteSection(item.getId());
+//									switch (iRet) {
+//									case 0:
+//										Toast.makeText(SectionActivity.this, "删除失败", 3000).show();
+//										break;
+//									case 1:
+//										Curw.DelTunnelCrossSectionInfo(item);
+//										CurApp.UpdateWork(Curw);
+//										adapter.notifyDataSetChanged();
+//										Toast.makeText(SectionActivity.this, "删除成功", 3000).show();
+//										break;
+//									case -1:
+//										Toast.makeText(SectionActivity.this, "删除的断面中存在数据,不可删除", 3000).show();
+//										break;
+//									default:
+//										break;
+//									}
+//									break;
+//								default:
+//									break;
+//								}
+//
+//							}
+//						})
+//						.setCancelable(false)
+//						.show().setCanceledOnTouchOutside(true);// 显示对话框
+//				return true;
+//			}
+//		});
+//	}
+//
+//	public void Layout2() {
+//		/** 隧道内断面界面的控件 */
+//		/** List集合中存儲的是View,获取界面上的控件,就List.get(1),0就是集合中第一个界面,1就是集合中第二个界面 */
+//		listView1 = (ListView) list.get(1).findViewById(R.id.listView4);
+//
+//		setdata2();
+//		adapter1 = new SubsidenceCrossSectionInfoAdapter(SectionActivity.this, infos1);
+//		listView1.setAdapter(adapter1);
+//		// listview的行点击
+//		listView1.setOnItemLongClickListener(new OnItemLongClickListener() {
+//
+//			@Override
+//			public boolean onItemLongClick(AdapterView<?> parent, View view,
+//					int position, long id) {
+//				iListPos2 = position;
+//				new AlertDialog.Builder(SectionActivity.this)
+//						.setItems(/*items*/Constant.SectionRowClickItems, new DialogInterface.OnClickListener() {
+//
+//							@Override
+//							public void onClick(DialogInterface dialog,
+//									int which) {
+//								AppCRTBApplication CurApp = ((AppCRTBApplication)getApplicationContext());
+//								SubsidenceCrossSectionInfo item = (SubsidenceCrossSectionInfo)listView1.getItemAtPosition(iListPos2);
+//								switch (which) {
+//								case 0:// 编辑
+//									intent = new Intent(SectionActivity.this,
+//											SectionEditActivity.class);
+//									intent.putExtra(Constant.Select_SectionRowClickItemsName_Name,
+//											Double.toString(item.getChainage()));
+//									SectionActivity.this.startActivityForResult(intent,0);
+//									//startActivity(intent);
+//									break;
+//								case 1:// 删除
+//									WorkInfos Curw = CurApp.GetCurWork();
+//									SubsidenceCrossSectionDaoImpl impl = new SubsidenceCrossSectionDaoImpl(SectionActivity.this,Curw.getProjectName());
+//									int iRet = impl.DeleteSubsidenceCrossSection(item.getId());
+//									switch (iRet) {
+//									case 0:
+//										Toast.makeText(SectionActivity.this, "删除失败", 3000).show();
+//										break;
+//									case 1:
+//										Curw.DelSubsidenceCrossSectionInfo(item);
+//										CurApp.UpdateWork(Curw);
+//										adapter1.notifyDataSetChanged();
+//										Toast.makeText(SectionActivity.this, "删除成功", 3000).show();
+//										break;
+//									case -1:
+//										Toast.makeText(SectionActivity.this, "删除的断面中存在数据,不可删除", 3000).show();
+//										break;
+//									default:
+//										break;
+//									}
+//									break;
+//								default:
+//									break;
+//								}
+//
+//							}
+//						})
+//						.setCancelable(false)
+//						.show().setCanceledOnTouchOutside(true);// 显示对话框
+//				return true;
+//			}
+//		});
+//	}
 	
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		
 		if (event.getAction() == KeyEvent.ACTION_DOWN) {
 			
-			if (keyCode == 82) {
-				vie = new View(this);
-				int num = 2;
-				menuWindow = new SelectPicPopupWindow(this, itemsOnClick,2,currIndex);
-				menuWindow.showAtLocation(vie, Gravity.BOTTOM
-						| Gravity.CENTER_HORIZONTAL, 0, 0);
-			}
-			if (keyCode == KeyEvent.KEYCODE_BACK) {
-				this.finish();
+			if (keyCode == KeyEvent.KEYCODE_MENU) {
+				systemMenu.show();
+				return true ;
 			}
 		}
-		return true;
-	}
-	
-	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data)
-	{
-		switch (resultCode) {
-		case RESULT_OK:
-		{
-			int iSel = data.getExtras().getInt(Constant.Select_SectionRowClickItemsName_Name);
-			switch (iSel) {
-			case 1:
-				adapter.notifyDataSetChanged();
-				break;
-			case 2:
-				adapter1.notifyDataSetChanged();
-				break;
-
-			default:
-				break;
-			}
-		}
-			break;
-
-		default:
-			break;
-		}
+		
+		return super.onKeyDown(keyCode, event);
 	}
 
 }

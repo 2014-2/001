@@ -40,7 +40,7 @@ import android.widget.Toast;
  * 编辑地表下层断面
  *
  */
-public class SectionEditActivity extends Activity implements OnClickListener
+public class SectionNewSubsidenceActivity extends Activity implements OnClickListener
  {
     private ViewPager mPager;// 页卡内容
     private List<View> listViews; // Tab页面列表
@@ -75,34 +75,34 @@ public class SectionEditActivity extends Activity implements OnClickListener
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sectionedit);
-        num = getIntent().getExtras().getInt("name");
-        InitImageView();
-        InitTextView();
-        InitViewPager();
-        InitMyTextView();
-        
-		sChainage = getIntent().getExtras().getString(Constant.Select_SectionRowClickItemsName_Name);
-		double dChainage = AppCRTBApplication.StrToDouble(sChainage, -1);
-		InitImageView();
-		InitTextView();
-		InitViewPager();
-		InitMyTextView();
-
-		if (sChainage.length() > 0) {
-        	section_new_tv_diheader.setText("编辑地表下层断面");
-			AppCRTBApplication CurApp = ((AppCRTBApplication)getApplicationContext());
-			WorkInfos Curw = CurApp.GetCurWork();
-			List<SubsidenceCrossSectionInfo> infos = Curw.getScsiList();
-			for(int i=0;i<infos.size();i++)
-			{
-				SubsidenceCrossSectionInfo tmp = infos.get(i);
-				if(tmp.getChainage().equals(dChainage))
-				{
-					editInfo = tmp;
-					break;
-				}
-			}
-		}
+//        num = getIntent().getExtras().getInt("name");
+//        InitImageView();
+//        InitTextView();
+//        InitViewPager();
+//        InitMyTextView();
+//        
+//		sChainage = getIntent().getExtras().getString(Constant.Select_SectionRowClickItemsName_Name);
+//		double dChainage = AppCRTBApplication.StrToDouble(sChainage, -1);
+//		InitImageView();
+//		InitTextView();
+//		InitViewPager();
+//		InitMyTextView();
+//
+//		if (sChainage.length() > 0) {
+//        	section_new_tv_diheader.setText("编辑地表下层断面");
+//			AppCRTBApplication CurApp = ((AppCRTBApplication)getApplicationContext());
+//			WorkInfos Curw = CurApp.GetCurWork();
+//			List<SubsidenceCrossSectionInfo> infos = Curw.getScsiList();
+//			for(int i=0;i<infos.size();i++)
+//			{
+//				SubsidenceCrossSectionInfo tmp = infos.get(i);
+//				if(tmp.getChainage().equals(dChainage))
+//				{
+//					editInfo = tmp;
+//					break;
+//				}
+//			}
+//		}
     }
 
     /**

@@ -30,7 +30,7 @@ public class SectionDaoImpl implements SectionDao{
 		Cursor c = db.rawQuery("select Chainage,ChainagePrefix from TunnelCrossSectionIndex", null);
 		while (c.moveToNext()) {
 			SectionInfo s =new SectionInfo();
-			s.setChainage(Double.valueOf(c.getString(c.getColumnIndex("Chainage"))));
+			// s.setChainage(Double.valueOf(c.getString(c.getColumnIndex("Chainage"))));
 			s.setChainagePrefix(c.getString(c.getColumnIndex("ChainagePrefix")));
 			list.add(s);
 		}
@@ -69,7 +69,7 @@ public class SectionDaoImpl implements SectionDao{
 		Cursor c = db.rawQuery("select Chainage from SubsidenceCrossSectionIndex", null);
 		while (c.moveToNext()) {
 			SectionInfo s =new SectionInfo();
-			s.setChainage(Double.valueOf(c.getString(c.getColumnIndex("Chainage"))));
+			// s.setchainage(Double.valueOf(c.getString(c.getColumnIndex("Chainage"))));
 			list.add(s);
 		}
 		return list;

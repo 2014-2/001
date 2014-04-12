@@ -23,5 +23,8 @@
         <item>编辑</item>
         <item>删除</item>
     </string-array>
+    
+     <!-- 工作面模块 -->
+    <string name="section_title">断面管理</string>
 
 </resources>

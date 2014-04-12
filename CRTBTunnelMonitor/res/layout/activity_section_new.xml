@@ -3,10 +3,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
-     <RelativeLayout
+
+    <RelativeLayout
         android:layout_width="fill_parent"
-        android:layout_height="26dp" 
-        >
+        android:layout_height="26dp" >
+
         <include
             android:id="@+id/header"
             layout="@layout/header" >
@@ -17,6 +18,7 @@
             style="@style/header"
             android:text="新建隧道内段面" />
     </RelativeLayout>
+
     <LinearLayout
         android:id="@+id/linearLayout1"
         android:layout_width="fill_parent"
@@ -42,6 +44,7 @@
             android:text="开挖方法"
             android:textColor="#000000"
             android:textSize="22.0dip" />
+
         <TextView
             android:id="@+id/text2"
             android:layout_width="fill_parent"
@@ -52,14 +55,14 @@
             android:textColor="#000000"
             android:textSize="22.0dip" />
     </LinearLayout>
-       <ImageView
+
+    <ImageView
         android:id="@+id/cursor"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:scaleType="matrix"
         android:src="@drawable/heng" />
-       
-       
+
     <android.support.v4.view.ViewPager
         android:id="@+id/vPager"
         android:layout_width="fill_parent"
@@ -68,7 +71,7 @@
         android:background="#ffffff"
         android:flipInterval="30"
         android:persistentDrawingCache="animation" />
-    
+
     <RelativeLayout
         android:id="@+id/main"
         android:layout_width="fill_parent"
@@ -93,14 +96,14 @@
                 android:layout_height="40dip"
                 android:layout_gravity="center_vertical"
                 android:layout_weight="1"
-                android:text="取消" 
                 android:background="@color/green"
-                />
-<ImageView 
-    android:layout_width="2dip"
-    android:layout_height="fill_parent"
-    android:background="@color/black"
-    />
+                android:text="取消" />
+
+            <ImageView
+                android:layout_width="2dip"
+                android:layout_height="fill_parent"
+                android:background="@color/black" />
+
             <Button
                 android:id="@+id/work_btn_queding"
                 android:layout_width="0dp"
@@ -111,5 +114,5 @@
                 android:text="确定" />
         </LinearLayout>
     </RelativeLayout>
-    
+
 </LinearLayout>
