@@ -1,135 +1,87 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
     <include
-        android:id="@+id/header"
-        layout="@layout/header" >
-	
-	</include>
-	<TextView 
-	    android:layout_width="wrap_content"
-	    android:layout_height="wrap_content"
-	    android:text="服务器交互"
-	    android:textColor="@color/white"
-	    android:layout_marginTop="3dip"
-	    android:textSize="16sp"
-	    android:layout_centerHorizontal="true"
-	    /> 
-	<RelativeLayout 
-	    android:id="@+id/rl1"
-	    android:layout_below="@id/header"
-	    android:layout_width="fill_parent"
-	    android:layout_height="wrap_content"
-	    
-	    >
-	    <RelativeLayout 
-	        android:id="@+id/rl_parameter"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:orientation="vertical"
-	        android:layout_marginLeft="10dip"
-	        android:layout_marginTop="10dip"
-	        >
-	        <ImageView 
-	            android:id="@+id/img1"
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:background="@raw/parameter"
-	            />
-	        <TextView 
-	            android:layout_below="@id/img1"
-	            android:layout_centerHorizontal="true"
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:text="参数设置"
-	            android:layout_marginTop="5dip"
-	            android:layout_marginLeft="20dip"
-	            android:textSize="19sp"
-	            />
-	    </RelativeLayout>
-	    <RelativeLayout 
-	        android:id="@+id/rl_datauploading"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:orientation="vertical"
-	        android:layout_marginTop="10dip"
-	        android:layout_centerHorizontal="true"
-	        >
-	        <ImageView 
-	             android:id="@+id/img2"
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:background="@raw/datauploading"
-	            />
-	        <TextView 
-	            android:layout_below="@id/img2"
-	            android:layout_centerHorizontal="true"
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:text="数据上传"
-	            android:layout_marginTop="5dip"
-	            android:layout_marginLeft="10dip"
-	            android:textSize="19sp"
-	            />
-	    </RelativeLayout>
-	    <RelativeLayout 
-	        android:id="@+id/rl_warninguploading"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:orientation="vertical"
-	        android:layout_marginTop="10dip"
-	        android:layout_alignParentRight="true"
-	        android:layout_marginRight="10dip"
-	        >
-	        <ImageView 
-	             android:id="@+id/img3"
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:background="@raw/warninguploading"
-	            />
-	        <TextView 
-	            android:layout_below="@id/img3"
-	            android:layout_centerHorizontal="true"
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:text="预警上传"
-	            android:layout_marginTop="5dip"
-	            android:layout_marginLeft="10dip"
-	            android:textSize="19sp"
-	            />
-	    </RelativeLayout>
-	</RelativeLayout>
-	<RelativeLayout 
-	    android:id="@+id/rl2"
-	    android:layout_below="@id/rl1"
-	    android:layout_width="fill_parent"
-	    android:layout_height="wrap_content"
-	    
-	    >
-	    <RelativeLayout 
-	        android:id="@+id/rl_downloadwork"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:orientation="vertical"
-	        android:layout_marginLeft="10dip"
-	        android:layout_marginTop="10dip"
-	        >
-	        <ImageView 
-	            android:id="@+id/img1"
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:background="@raw/downloadwork"
-	            />
-	        <TextView 
-	            android:layout_below="@id/img1"
-	            android:layout_centerHorizontal="true"
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:text="下载工作面"
-	            android:layout_marginTop="5dip"
-	            android:textSize="19sp"
-	            />
-	    </RelativeLayout>
-	</RelativeLayout>
-</RelativeLayout>
+        layout="@layout/activity_topbar_layout" />
+
+
+    <TextView
+        android:id="@+id/parameter"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginLeft="20dip"
+        android:layout_marginTop="5dip"
+        android:drawableLeft="@drawable/parameter"
+        android:drawablePadding="10dp"
+        android:gravity="left|center_vertical"
+        android:text="参数设置"
+        android:textSize="19sp" />
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:background="#d0d0d0" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginLeft="20dip"
+        android:layout_marginTop="5dip"
+        android:id="@+id/data_upload"
+        android:drawableLeft="@drawable/upload"
+        android:drawablePadding="10dp"
+        android:gravity="left|center_vertical"
+        android:text="数据上传"
+        android:textSize="19sp" />
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:background="#d0d0d0" />
+
+    <TextView
+        android:id="@+id/warn_upload"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginLeft="20dip"
+        android:layout_marginTop="5dip"
+        android:drawableLeft="@drawable/parameter"
+        android:drawablePadding="10dp"
+        android:gravity="left|center_vertical"
+        android:text="预警上传"
+        android:textSize="19sp" />
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:background="#d0d0d0" />
+
+    <TextView
+        android:id="@+id/workinfo_download"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginLeft="20dip"
+        android:layout_marginTop="5dip"
+        android:drawableLeft="@drawable/parameter"
+        android:drawablePadding="10dp"
+        android:gravity="left|center_vertical"
+        android:text="工作面下载"
+        android:textSize="19sp" />
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:background="#d0d0d0" />
+
+</LinearLayout>

@@ -49,12 +49,12 @@
         <activity android:name="com.crtb.tunnelmonitor.activity.ControlxgActivity"/>
         
 
-        <activity android:name="com.crtb.tunnelmonitor.activity.StationActivity"/>
-        <activity android:name="com.crtb.tunnelmonitor.activity.SoftwareInfoActivity"></activity>
+       <activity android:name="com.crtb.tunnelmonitor.activity.SoftwareInfoActivity"></activity>
         <activity android:name="com.crtb.tunnelmonitor.activity.RegisterActivity"></activity>
         <activity android:name="com.crtb.tunnelmonitor.activity.UserInfoActivity"></activity>
         <activity android:name="com.crtb.tunnelmonitor.activity.TesterLoadActivity"></activity>
-
+        <activity android:name="com.crtb.tunnelmonitor.activity.UserBookActivity"></activity>
+        <activity android:name="com.crtb.tunnelmonitor.activity.ServerSettingActivity"></activity>
     </application>
 
 </manifest>

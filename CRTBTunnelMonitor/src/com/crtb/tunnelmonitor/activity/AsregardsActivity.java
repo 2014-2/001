@@ -1,14 +1,13 @@
 package com.crtb.tunnelmonitor.activity;
 
-import com.crtb.tunnelmonitor.AppCRTBApplication;
-import com.crtb.tunnelmonitor.activity.R;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.RelativeLayout;
+import android.widget.TextView;
+
+import com.crtb.tunnelmonitor.AppCRTBApplication;
 /**
  * 关于
  *@author edison.xiao
@@ -16,25 +15,35 @@ import android.widget.RelativeLayout;
  *@version 1.0
  */
 public class AsregardsActivity extends Activity implements OnClickListener{
-	private RelativeLayout mUserInfo,mRegist,mUpdate,mUserBook,mSoftwareInfo;
+	private TextView mUserInfo;
+	private TextView mRegister;
+	private TextView mUpdate;
+	private TextView mUserBook;
+	private TextView mSoftwareInfo;
+	
+	
+	private AppCRTBApplication app;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_asregards);
-		mUserInfo=(RelativeLayout) findViewById(R.id.user_info);
-		AppCRTBApplication app=(AppCRTBApplication)getApplicationContext();
+		TextView title=(TextView) findViewById(R.id.tv_topbar_title);
+		title.setText(R.string.about);
+		
+		mUserInfo=(TextView) findViewById(R.id.userinfo);
+		app=AppCRTBApplication.getInstance();
 		if(app.isbLocaUser()){
 			mUserInfo.setVisibility(View.GONE);
 		}
 		mUserInfo.setOnClickListener(this);
-		mRegist=(RelativeLayout) findViewById(R.id.regist);
-		mRegist.setOnClickListener(this);
-		mUpdate=(RelativeLayout) findViewById(R.id.update);
+		mRegister=(TextView) findViewById(R.id.register);
+		mRegister.setOnClickListener(this);
+		mUpdate=(TextView) findViewById(R.id.update);
 		mUpdate.setOnClickListener(this);
-		mUserBook=(RelativeLayout) findViewById(R.id.user_book);
+		mUserBook=(TextView) findViewById(R.id.userbook);
 		mUserBook.setOnClickListener(this);
-		mSoftwareInfo=(RelativeLayout) findViewById(R.id.soft_info);
+		mSoftwareInfo=(TextView) findViewById(R.id.software_info);
 		mSoftwareInfo.setOnClickListener(this);
 	}
 
@@ -42,18 +51,18 @@ public class AsregardsActivity extends Activity implements OnClickListener{
 	public void onClick(View view) {
 		switch(view.getId()){
 		case R.id.update:
-			
+			JumpUpdate();
 			break;
-		case R.id.user_book:
+		case R.id.userbook:
 			JumpUserBook();
 			break;
-		case R.id.user_info:
+		case R.id.userinfo:
 			JumpUserInfo();
 			break;
-		case R.id.soft_info:
+		case R.id.software_info:
 			JumpSoftwareInfo();
 			break;
-		case R.id.regist:
+		case R.id.register:
 			JumpRegister();
 			break;
 		}
@@ -75,6 +84,14 @@ public class AsregardsActivity extends Activity implements OnClickListener{
 	}
 	
 	private void JumpUserBook(){
-		
+		Intent intent=new Intent(this,UserBookActivity.class);
+		startActivity(intent);
+
+	}
+	
+	private void JumpUpdate(){
+		Intent intent=new Intent(this,UserBookActivity.class);
+		startActivity(intent);
+
 	}
 }

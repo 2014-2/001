@@ -24,4 +24,9 @@
         <item>删除</item>
     </string-array>
 
+    <string name="system_name">隧道围岩监测采集终端系统</string>
+    <string name="about">关于</string>
+    <string name="server_interact">服务器交互</string>
+    <string name="cancel">取消</string>
+    <string name="ok">确定</string>
 </resources>
