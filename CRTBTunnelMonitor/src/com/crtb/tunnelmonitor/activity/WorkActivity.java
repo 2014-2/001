@@ -11,12 +11,9 @@ import org.zw.android.framework.ioc.InjectView;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.view.KeyEvent;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.LinearLayout;
 
 import com.crtb.tunnelmonitor.CommonObject;
 import com.crtb.tunnelmonitor.WorkFlowActivity;
@@ -29,8 +26,6 @@ import com.crtb.tunnelmonitor.mydefine.CrtbDialogDelete.IButtonOnClick;
 import com.crtb.tunnelmonitor.mydefine.CrtbDialogHint;
 import com.crtb.tunnelmonitor.mydefine.CrtbDialogList;
 import com.crtb.tunnelmonitor.mydefine.CrtbDialogList.OnMenuItemClick;
-import com.crtb.tunnelmonitor.widget.CrtbSystemMenu;
-import com.crtb.tunnelmonitor.widget.CrtbSystemMenu.ISystemMenuOnclick;
 import com.crtb.tunnelmonitor.widget.CrtbWorkPlanListView;
 
 /**
@@ -47,9 +42,6 @@ public final class WorkActivity extends WorkFlowActivity {
 	
 	@InjectResource(stringArray=R.array.work_plan_item_menus)
 	private String[] workpalnItemMenu ;
-	
-	// system menu
-	private CrtbSystemMenu	systemMenu ;
 	
 	// list item menu
 	private CrtbDialogList<WorkPlan>  itemDialog ;
@@ -155,38 +147,25 @@ public final class WorkActivity extends WorkFlowActivity {
 		item.setName(getString(R.string.common_inport));
 		systems.add(item);
 		
-		LinearLayout root = (LinearLayout) getLayoutInflater().inflate(R.layout.menu_system_container, null);
-		
-		systemMenu	= new CrtbSystemMenu(this,root, mDisplayMetrics.widthPixels, 
-				android.view.ViewGroup.LayoutParams.WRAP_CONTENT, systems);
-		
-		systemMenu.setMenuOnclick(new ISystemMenuOnclick() {
-			
-			@Override
-			public void onclick(MenuSystemItem menu) {
-				
-				String name = menu.getName() ;
-				
-				if(name.equals(getString(R.string.common_create_new))){
-					
-					CommonObject.remove(WorkNewActivity.KEY_WORKPLAN_OBJECT);
-					
-					Intent intent = new Intent() ;
-					intent.setClass(WorkActivity.this, WorkNewActivity.class);
-					startActivity(intent);
-					
-				} else if(name.equals(getString(R.string.common_export))){
-					
-				} else if(name.equals(getString(R.string.common_inport))){
-					
-				}
-			}
-		}) ;
+		createSystemMenu(systems);
 		
 		// load data
 		mListView.onReload() ;
 	}
 	
+	@Override
+	protected void onSystemMenuClick(MenuSystemItem menu) {
+		
+		String name = menu.getName() ;
+		
+		if(name.equals(getString(R.string.common_create_new))){
+			
+			Intent intent = new Intent() ;
+			intent.setClass(this, WorkNewActivity.class);
+			startActivity(intent);
+		}
+	}
+
 	private void loadWorkPlanList(){
 		
 		mListView.setOnItemClickListener(new OnItemClickListener() {
@@ -198,41 +177,5 @@ public final class WorkActivity extends WorkFlowActivity {
 		}) ;
 		
 		mListView.setCacheColorHint(Color.TRANSPARENT);
-	}
-	
-	@Override
-	public boolean onTouchEvent(MotionEvent event) {
-		systemMenu.onTouchEvent(event);
-		return super.onTouchEvent(event);
-	}
-	
-	@Override
-	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		
-		if (event.getAction() == KeyEvent.ACTION_DOWN) {
-			
-			if (keyCode == KeyEvent.KEYCODE_MENU) {
-				systemMenu.show();
-				return true ;
-			}
-		}
-		
-		return super.onKeyDown(keyCode, event);
-	}
-	
-	@Override
-	protected void onResume() {
-		super.onResume();
-		
-		mListView.onReload() ;
-		
-		systemMenu.dismiss() ;
-	}
-
-	@Override
-	protected void onDestroy() {
-		super.onDestroy();
-		
-		systemMenu.dismiss() ;
 	}
 }

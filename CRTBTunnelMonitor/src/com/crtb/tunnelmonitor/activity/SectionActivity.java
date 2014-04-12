@@ -15,7 +15,6 @@ import android.os.Parcelable;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -26,8 +25,6 @@ import android.widget.TextView;
 
 import com.crtb.tunnelmonitor.WorkFlowActivity;
 import com.crtb.tunnelmonitor.entity.MenuSystemItem;
-import com.crtb.tunnelmonitor.widget.CrtbSystemMenu;
-import com.crtb.tunnelmonitor.widget.CrtbSystemMenu.ISystemMenuOnclick;
 import com.crtb.tunnelmonitor.widget.SectionSubsidenceListView;
 import com.crtb.tunnelmonitor.widget.SectionTunnelListView;
 
@@ -69,9 +66,6 @@ public class SectionActivity extends WorkFlowActivity implements OnPageChangeLis
 	int disPlayWidth, offSet;
 	Bitmap b;
 	
-	// system menu
-	private CrtbSystemMenu	systemMenu ;
-		
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -169,34 +163,28 @@ public class SectionActivity extends WorkFlowActivity implements OnPageChangeLis
 		item.setName(getString(R.string.common_create_new));
 		systems.add(item);
 		
-		LinearLayout root = (LinearLayout) getLayoutInflater().inflate(R.layout.menu_system_container, null);
-		
-		systemMenu	= new CrtbSystemMenu(this,root, mDisplayMetrics.widthPixels, 
-				android.view.ViewGroup.LayoutParams.WRAP_CONTENT, systems);
-		
-		systemMenu.setMenuOnclick(new ISystemMenuOnclick() {
-			
-			@Override
-			public void onclick(MenuSystemItem menu) {
-				
-				String name = menu.getName() ;
-				
-				if(name.equals(getString(R.string.common_create_new))){
-					
-					Intent intent = new Intent() ;
-					
-					if(mPager.getCurrentItem() == TAB_SECTION){
-						intent.setClass(SectionActivity.this, SectionNewActivity.class);
-					} else {
-						intent.setClass(SectionActivity.this, SectionNewSubsidenceActivity.class);
-					}
-					
-					startActivity(intent);
-				}
-			}
-		}) ;
+		createSystemMenu(systems);
 	}
 	
+	@Override
+	protected void onSystemMenuClick(MenuSystemItem menu) {
+		
+		String name = menu.getName();
+
+		if (name.equals(getString(R.string.common_create_new))) {
+
+			Intent intent = new Intent();
+
+			if (mPager.getCurrentItem() == TAB_SECTION) {
+				intent.setClass(SectionActivity.this, SectionNewActivity.class);
+			} else {
+				intent.setClass(SectionActivity.this,SectionNewSubsidenceActivity.class);
+			}
+
+			startActivity(intent);
+		}
+	}
+
 	@Override
 	public void onPageScrollStateChanged(int arg0) {
 
@@ -405,20 +393,6 @@ public class SectionActivity extends WorkFlowActivity implements OnPageChangeLis
 //			}
 //		});
 //	}
-	
-	@Override
-	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		
-		if (event.getAction() == KeyEvent.ACTION_DOWN) {
-			
-			if (keyCode == KeyEvent.KEYCODE_MENU) {
-				systemMenu.show();
-				return true ;
-			}
-		}
-		
-		return super.onKeyDown(keyCode, event);
-	}
 
 }
 
