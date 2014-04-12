@@ -32,6 +32,7 @@
         <activity android:name="com.crtb.tunnelmonitor.activity.ServersActivity" />
         <activity android:name="com.crtb.tunnelmonitor.activity.RecordActivity" />
         <activity android:name="com.crtb.tunnelmonitor.activity.RecordNewActivity" />
+        <activity android:name="com.crtb.tunnelmonitor.activity.RecordNewSubsidenceActivity" />
         <activity android:name="com.crtb.tunnelmonitor.activity.WarningActivity" />
         <activity android:name="com.crtb.tunnelmonitor.activity.WorkActivity" />
         <activity android:name="com.crtb.tunnelmonitor.activity.WorkNewActivity" />
