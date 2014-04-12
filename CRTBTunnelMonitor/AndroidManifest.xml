@@ -40,6 +40,7 @@
 
         <activity android:name="com.crtb.tunnelmonitor.activity.SectionEditActivity"/>
         <activity android:name="com.crtb.tunnelmonitor.activity.TotalStationActivity"/>
+        <activity android:name="com.crtb.tunnelmonitor.activity.StationActivity"/>
         <activity android:name="com.crtb.tunnelmonitor.activity.ControlPointsActivity"/>
 		<activity android:name="com.crtb.tunnelmonitor.activity.ControlNewActivity"/>
 		<activity android:name="com.crtb.tunnelmonitor.activity.ControlNewActivityTwo"/>

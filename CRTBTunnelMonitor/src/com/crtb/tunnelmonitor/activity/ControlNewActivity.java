@@ -171,7 +171,7 @@ public class ControlNewActivity extends Activity implements OnClickListener {
 				return;
 			}
 			List<TotalStationInfo> tsinfos = null;
-			tsinfos = Curw.getTsList();
+			tsinfos = Curw.getStaionList();
 			if(tsinfos == null)
 			{
 				Toast.makeText(this, "添加失败", 3000).show();

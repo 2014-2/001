@@ -117,10 +117,10 @@ public class WorkInfos {
 	public void setCpList(List<ControlPointsInfo> cpList) {
 		this.cpList = cpList;
 	}
-	public List<TotalStationInfo> getTsList() {
+	public List<TotalStationInfo> getStaionList() {
 		return tsList;
 	}
-	public void setTsList(List<TotalStationInfo> tsList) {
+	public void setStationList(List<TotalStationInfo> tsList) {
 		this.tsList = tsList;
 	}
 	public List<RecordInfo> getTcsirecordList() {
