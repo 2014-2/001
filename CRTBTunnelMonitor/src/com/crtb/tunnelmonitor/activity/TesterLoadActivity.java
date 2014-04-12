@@ -100,6 +100,7 @@ public class TesterLoadActivity extends Activity implements OnClickListener {
 													.asList((SurveyerInformation[]) data);
 											SurveyerInformationDao dao = SurveyerInformationDaoImpl
 													.getInstance();
+											dao.deleteAll();
 											mTvLayout.setVisibility(View.VISIBLE);
                                             mAdapter=new TestorAdapter();
 											mListView.setAdapter(mAdapter);

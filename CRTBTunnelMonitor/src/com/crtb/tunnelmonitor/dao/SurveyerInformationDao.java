@@ -20,4 +20,6 @@ public interface SurveyerInformationDao {
 	public Boolean UpdateSurveyerInfo(SurveyerInformation s);
 	
 	public List<String> getFieldsByName(String fieldName);
+
+	public void deleteAll();
 }
