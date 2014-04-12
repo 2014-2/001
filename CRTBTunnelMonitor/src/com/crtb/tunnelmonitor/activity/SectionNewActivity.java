@@ -42,12 +42,13 @@ import com.crtb.tunnelmonitor.entity.WorkInfos;
 @InjectLayout(layout = R.layout.activity_section_new)
 public class SectionNewActivity extends WorkFlowActivity implements OnClickListener {
 	
-	@InjectView(id=R.id.vPager)
-	private ViewPager mPager;
-
 	private List<View> listViews = new ArrayList<View>();
 
-	private ImageView cursor;// 动画图片
+	@InjectView(id=R.id.vPager)
+	private ViewPager mPager;
+	
+	@InjectView(id=R.id.cursor)
+	private ImageView cursor;
 
 	private TextView t1, t2, t3;// 页卡头标
 
@@ -66,10 +67,6 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 	@InjectView(layout=R.layout.section_new_yuzhi)
 	private LinearLayout mDeformationInfoLayout ;
 
-	/***/
-	private int num;
-	// 控件名
-	/***/
 	private TextView section_new_tv_header;
 	private EditText section_new_et_Chainage;
 	private EditText section_new_et_calendar;
@@ -116,29 +113,6 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 		// init ViewPager
 		initViewPager();
 		
-		// sChainage = getIntent().getExtras().getString(Constant.Select_SectionRowClickItemsName_Name);
-		//double dChainage = AppCRTBApplication.StrToDouble(sChainage, -1);
-//		InitImageView();
-//		InitTextView();
-//		InitViewPager();
-//		InitMyTextView();
-//
-//		if (sChainage.length() > 0) {
-//			section_new_tv_header.setText("编辑隧道内断面");
-//			AppCRTBApplication CurApp = ((AppCRTBApplication)getApplicationContext());
-//			WorkInfos Curw = CurApp.GetCurWork();
-//			List<TunnelCrossSectionInfo> infos = Curw.GetTunnelCrossSectionInfoList();
-//			for(int i=0;i<infos.size();i++)
-//			{
-//				TunnelCrossSectionInfo tmp = infos.get(i);
-//				if(tmp.getChainage().equals(dChainage))
-//				{
-//					Edittsci = tmp;
-//					break;
-//				}
-//			}
-//		}
-
 	}
 
 	private void initViewPager() {
@@ -328,10 +302,7 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 			setResult(RESULT_OK, IntentOk);
 			this.finish();
 			break;
-		default:
-			break;
 		}
-
 	}
 
 	public class MyPagerAdapter extends PagerAdapter {
@@ -347,6 +318,7 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 
 		@Override
 		public void finishUpdate(View arg0) {
+			
 		}
 
 		@Override
@@ -357,151 +329,6 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 		@Override
 		public Object instantiateItem(View arg0, int arg1) {
 			((ViewPager) arg0).addView(listViews.get(arg1), 0);
-
-//			AppCRTBApplication CurApp = ((AppCRTBApplication)getApplicationContext());
-//			WorkInfos Curw = CurApp.GetCurWork();
-//			
-//			section_new_et_Chainage = (EditText) findViewById(R.id.section_new_et_Chainage);
-//			section_new_et_calendar = (EditText) findViewById(R.id.section_new_et_calendar);
-//			section_new_et_name = (EditText) findViewById(R.id.section_new_et_name);
-//			section_new_et_width = (EditText) findViewById(R.id.section_new_et_width);
-//
-//			section_new_sp = (Spinner) findViewById(R.id.section_new_sp);
-//			img_fangfa = (ImageView) findViewById(R.id.img_fangfa);
-//			section_new_et_a = (EditText) findViewById(R.id.section_new_et_a);
-//			section_new_et_s1 = (EditText) findViewById(R.id.section_new_et_s1);
-//			section_new_et_s2 = (EditText) findViewById(R.id.section_new_et_s2);
-//			section_new_et_s3 = (EditText) findViewById(R.id.section_new_et_s3);
-//			
-//			section_new_leiji1 = (EditText) findViewById(R.id.section_new_leiji1);
-//			section_new_leiji2 = (EditText) findViewById(R.id.section_new_leiji2);
-//			section_new_single1 = (EditText) findViewById(R.id.section_new_single1);
-//			section_new_single2 = (EditText) findViewById(R.id.section_new_single2);
-//			section_new_createtime1 = (EditText) findViewById(R.id.section_new_createtime1);
-//			section_new_createtime2 = (EditText) findViewById(R.id.section_new_createtime2);
-//			section_new_info1 = (EditText) findViewById(R.id.section_new_info1);
-//			section_new_info2 = (EditText) findViewById(R.id.section_new_info2);
-//			
-//			section_v_s3 = (TextView)findViewById(R.id.section_v_s3);
-//			
-//			//section_new_info2.setVisibility(View.GONE);
-//			section_new_et_Chainage.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-//				
-//				@Override
-//				public void onFocusChange(View v, boolean hasFocus) {
-//					//if(!hasFocus)
-//					{
-//						String sChainage = section_new_et_Chainage.getText().toString().trim();
-//						if (sChainage.length() > 0) {
-//							AppCRTBApplication CurApp = ((AppCRTBApplication)getApplicationContext());
-//							section_new_et_name.setText(CurApp.GetSectionName(Double.valueOf(sChainage).doubleValue()));
-//						}
-//						else {
-//							section_new_et_name.setText("");
-//						}
-//					}
-//				}
-//			});
-//			List<String> testList = new ArrayList<String>();
-//			testList.add("台阶法");
-//			testList.add("全断面法");
-//			testList.add("双侧壁导坑法");
-//			section_new_sp = (Spinner) findViewById(R.id.section_new_sp);
-//			ArrayAdapter<String> adapter = new ArrayAdapter<String>(
-//					SectionNewActivity.this,
-//					android.R.layout.simple_spinner_item, testList);
-//			adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-//			if (arg1 == 0) {
-//				// 获取手机的当前时间
-//				final String time = Time.getDateEN();
-//				// 设置文本框里面的字体大小
-//				section_new_et_calendar.setTextSize(11);
-//				if (Edittsci != null) {
-//					section_new_et_Chainage.setFocusable(false);
-//					section_new_et_Chainage.setFocusableInTouchMode(false);
-//					section_new_et_name.setFocusableInTouchMode(false);
-//					section_new_et_width.setFocusableInTouchMode(false);
-//					section_new_et_calendar.setFocusableInTouchMode(false);
-//					section_new_et_Chainage.setText(Edittsci.getChainage().toString());
-//					section_new_et_name.setText(CurApp.GetSectionName(Edittsci.getChainage().doubleValue()));
-//					section_new_et_calendar.setText(Edittsci.getInBuiltTime());
-//					section_new_et_width.setText(Float.toString(Edittsci.getWidth()));
-//				}
-//				else
-//				{
-//					// 跟改文本框赋值时间
-//					section_new_et_calendar.setText(time);
-//				}
-//			}
-//			else
-//			if(arg1 == 1)
-//			{
-//				section_new_sp.setAdapter(adapter);
-//				section_new_sp
-//				.setOnItemSelectedListener(new OnItemSelectedListener() {
-//
-//					@Override
-//					public void onItemSelected(AdapterView<?> parent,
-//							View view, int position, long id) {
-//						if (Edittsci != null) {
-//							position = TunnelCrossSectionDaoImpl.GetExcavateMethodInt(Edittsci);
-//						}
-//						if (position == 0) {
-//							img_fangfa
-//									.setBackgroundResource(R.drawable.stepmethod);
-//							section_v_s3.setVisibility(View.GONE);
-//							section_new_et_s3.setVisibility(View.GONE);
-//							System.out.println(section_new_sp
-//									.getSelectedItem().toString());
-//						} else if (position == 1) {
-//							System.out.println(section_new_sp
-//									.getSelectedItem().toString());
-//							img_fangfa
-//									.setBackgroundResource(R.drawable.totalcrosssection);
-//							section_v_s3.setVisibility(View.GONE);
-//							section_new_et_s3.setVisibility(View.GONE);
-//						} else if (position == 2) {
-//							System.out.println(section_new_sp
-//									.getSelectedItem().toString());
-//							img_fangfa
-//									.setBackgroundResource(R.drawable.dualslopemethod);
-//							section_v_s3.setVisibility(View.VISIBLE);
-//							section_new_et_s3.setVisibility(View.VISIBLE);
-//						}
-//					}
-//
-//					@Override
-//					public void onNothingSelected(AdapterView<?> parent) {
-//						
-//					}
-//				});
-//				if (Edittsci != null) {
-//					section_new_sp.setSelection(TunnelCrossSectionDaoImpl.GetExcavateMethodUi(Edittsci.getExcavateMethod()));
-//					section_new_sp.setSelected(false);
-//					List<String> strAS = AppCRTBApplication.GetExcavateMethodPointArray(Edittsci.getSurveyPntName());
-//					section_new_et_a.setText(strAS.get(0));
-//					section_new_et_s1.setText(strAS.get(1));
-//					section_new_et_s2.setText(strAS.get(2));
-//					section_new_et_s3.setText(strAS.get(3));
-//				}
-//			}
-//			else
-//			if (arg1 == 2) {
-//				
-////				section_new_leiji1.setText(Curw.getGDLimitTotalSettlement().toString());
-////				section_new_leiji2.setText(Curw.getSLLimitTotalSettlement().toString());
-////				section_new_single1.setText(Curw.getGDLimitVelocity().toString());
-////				section_new_single2.setText(Curw.getSLLimitVelocity().toString());
-////				section_new_createtime1.setText(section_new_et_calendar.getText().toString().trim());
-////				section_new_createtime2.setText(section_new_et_calendar.getText().toString().trim());
-////
-////				if (Edittsci != null) {
-////					section_new_info1.setText(Edittsci.getInfo());
-////				}
-////				et_a = (EditText) findViewById(R.id.section_new_et_a);
-////				SearchWather s = new SearchWather(et_a);
-//			}
-//			
 			return listViews.get(arg1);
 		}
 		
@@ -525,9 +352,6 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 		}
 	}
 
-	/**
-	 * 头标点击监听
-	 */
 	public class MyOnClickListener implements View.OnClickListener {
 		private int index = 0;
 
@@ -541,13 +365,10 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 		}
 	};
 
-	/**
-	 * 页卡切换监听
-	 */
 	public class MyOnPageChangeListener implements OnPageChangeListener {
 
-		int one = offset * 2 + bmpW;// 页卡1 -> 页卡2 偏移量
-		int two = one * 2;// 页卡1 -> 页卡3 偏移量
+		int one = offset * 2 + bmpW;
+		int two = one * 2;
 
 		@Override
 		public void onPageSelected(int arg0) {

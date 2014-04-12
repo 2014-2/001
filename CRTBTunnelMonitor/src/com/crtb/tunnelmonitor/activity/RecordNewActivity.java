@@ -4,31 +4,32 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.app.Activity;
+import org.zw.android.framework.ioc.InjectCore;
+import org.zw.android.framework.ioc.InjectLayout;
+import org.zw.android.framework.ioc.InjectView;
+
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
-import android.view.Display;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.view.animation.TranslateAnimation;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.crtb.tunnelmonitor.AppCRTBApplication;
+import com.crtb.tunnelmonitor.WorkFlowActivity;
 import com.crtb.tunnelmonitor.adapter.RecordSubsidenceCrossSectionInfoAdapter;
 import com.crtb.tunnelmonitor.adapter.RecordTunnelCrossSectionInfoAdapter;
 import com.crtb.tunnelmonitor.common.Constant;
@@ -45,20 +46,30 @@ import com.crtb.tunnelmonitor.utils.Time;
  * 新建隧道内断面记录单
  *
  */
-public class RecordNewActivity extends Activity implements OnPageChangeListener, OnClickListener {
+@InjectLayout(layout = R.layout.activity_record_new)
+public class RecordNewActivity extends WorkFlowActivity implements OnPageChangeListener, OnClickListener {
    
-	private ListView listView;
-
-    private ViewPager mPager;// 页卡内容
-    private List<View> listViews; // Tab页面列表
-    private ImageView cursor;// 动画图片
-    private TextView t1, t2;// 页卡头标
-    private int offset = 0;// 动画图片偏移量
-    private int currIndex = 0;// 当前页卡编号
-    private int bmpW;// 动画图片宽度
-    double disPlayWidth, offSet;
+	@InjectView(id=R.id.vPager)
+	private ViewPager mPager;
+	
+	@InjectView(id=R.id.cursor)
+	private ImageView cursor;
+	
+    ArrayList<View> list = new ArrayList<View>();
+    
+    private TextView t1, t2;
+    private int offset = 0;
+    private int currIndex = 0;
+    private int bmpW;
+    int disPlayWidth, offSet;
     Bitmap b;
-    ArrayList<View> list = null;
+    
+    @InjectView(layout=R.layout.lrecord_new_xuanze)
+    private LinearLayout mBaseInfoLayout ;
+    
+    @InjectView(layout=R.layout.record_new_xinxi)
+    private LinearLayout mSectionListLayout ;
+   
     LinearLayout xin;
     private int num,itype;
     private TextView record_new_tv_header;
@@ -85,55 +96,19 @@ public class RecordNewActivity extends Activity implements OnPageChangeListener,
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_record_new);
+        // setContentView(R.layout.activity_record_new);
         
-//        itype = 1;
-//        num = getIntent().getExtras().getInt(Constant.Select_RecordRowClickItemsName_Name);
-//        if (num == 2) {
-//        	itype = 1;
-//        	editInfo = (RecordInfo)getIntent().getExtras().getParcelable(Constant.Select_RecordRowClickItemsName_Data);
-//		}
-//        if (num == 3) {
-//        	itype = 2;
-//		}
-//        if (num == 4) {
-//        	itype = 2;
-//        	editInfo = (RecordInfo)getIntent().getExtras().getParcelable(Constant.Select_RecordRowClickItemsName_Data);
-//		}
-//        
-//        initUI();
-//        InitImageView();
-//        initPager();
-//        CurApp = ((AppCRTBApplication)getApplicationContext());
-//        if (num == 2) {
-//        	record_new_tv_header.setText("编辑隧道内断面记录单");
-//		}
-//        if (num == 3) {
-//        	record_new_tv_header.setText("新建地表下沉断面记录单");
-//		}
-//        if (num == 4) {
-//        	record_new_tv_header.setText("编辑地表下沉断面记录单");
-//		}
+		// add by wei.zhou
+		InjectCore.injectUIProperty(this);
+
+		// title
+		setTopbarTitle(getString(R.string.record_new_section_title));
+		
+		// init ViewPager
+		initViewPager();
 
     }
-
-    //初始化
-    public void initUI() {
-        t1 = (TextView) findViewById(R.id.text1);
-        t2 = (TextView) findViewById(R.id.text2);
-        record_new_tv_header = (TextView) findViewById(R.id.record_new_tv_header);
-        cursor = (ImageView) findViewById(R.id.cursor);
-        mPager = (ViewPager) findViewById(R.id.vPager);
-        t1.setOnClickListener(tv_Listener);
-        t2.setOnClickListener(tv_Listener);
-        
-		section_btn_queding = (Button) findViewById(R.id.work_btn_queding);
-		section_btn_quxiao = (Button) findViewById(R.id.work_btn_quxiao);
-
-		section_btn_queding.setOnClickListener(this);
-		section_btn_quxiao.setOnClickListener(this);
-    }
-	// 点击事件
+    
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
@@ -228,19 +203,83 @@ public class RecordNewActivity extends Activity implements OnPageChangeListener,
 		}
 
 	}
+	
+	private void initViewPager(){
+		
+		t1 = (TextView) findViewById(R.id.text1);
+		t2 = (TextView) findViewById(R.id.text2);
 
-  
-    public void InitImageView() {
-        Display dis = this.getWindowManager().getDefaultDisplay();
-        disPlayWidth = dis.getWidth();
-        b = BitmapFactory.decodeResource(this.getResources(), R.drawable.heng);
-        offSet = ((disPlayWidth / 4) - b.getWidth() / 2);
-        list = new ArrayList<View>();
-        LayoutInflater li = LayoutInflater.from(RecordNewActivity.this);
-        list.add(li.inflate(R.layout.lrecord_new_xuanze, null));
-        list.add(li.inflate(R.layout.record_new_xinxi, null));
-    }
-    public void setdata(int type) {
+		t1.setOnClickListener(tv_Listener);
+		t2.setOnClickListener(tv_Listener);
+
+		disPlayWidth	= mDisplayMetrics.widthPixels ;
+		b = BitmapFactory.decodeResource(this.getResources(), R.drawable.heng);
+		offSet = ((disPlayWidth / 4) - b.getWidth() / 2);
+		
+		Matrix matrix = new Matrix();
+		matrix.postTranslate(offset, 0);
+		ViewGroup.LayoutParams lp = cursor.getLayoutParams() ;
+		lp.width = disPlayWidth / 2;
+		lp.height = 4 ;
+		cursor.setLayoutParams(lp);
+		cursor.setImageMatrix(matrix);
+
+		list.add(mBaseInfoLayout);
+		list.add(mSectionListLayout);
+		
+		PagerAdapter pa = new PagerAdapter() {
+
+			@Override
+			public void destroyItem(View arg0, int arg1, Object arg2) {
+				((ViewPager) arg0).removeView((View) list.get(arg1));
+
+			}
+
+			@Override
+			public void finishUpdate(View arg0) {
+
+			}
+
+			@Override
+			public int getCount() {
+				return list.size();
+			}
+
+			@Override
+			public Object instantiateItem(View arg0, int arg1) {
+				((ViewPager) arg0).addView((View) list.get(arg1), 0);
+
+
+				return (View) list.get(arg1);
+			}
+
+			@Override
+			public boolean isViewFromObject(View arg0, Object arg1) {
+				return arg0 == arg1;
+			}
+
+			@Override
+			public void restoreState(Parcelable arg0, ClassLoader arg1) {
+
+			}
+
+			@Override
+			public Parcelable saveState() {
+				return null;
+			}
+
+			@Override
+			public void startUpdate(View arg0) {
+
+			}
+		};
+		
+		mPager.setAdapter(pa);
+		mPager.setCurrentItem(TAB_ONE);
+		mPager.setOnPageChangeListener(this);
+	}
+
+	public void setdata(int type) {
     	AppCRTBApplication CurApp = ((AppCRTBApplication)getApplicationContext());
 		WorkInfos CurW = CurApp.GetCurWork();
 		if(CurW == null)
@@ -289,109 +328,7 @@ public class RecordNewActivity extends Activity implements OnPageChangeListener,
 		}
 	}    
     public void initPager() {
-        PagerAdapter pa = new PagerAdapter() {
-            
-            @Override
-            public void destroyItem(View arg0, int arg1, Object arg2) {
-                ((ViewPager) arg0).removeView((View) list.get(arg1));
-
-            }
-
-            @Override
-            public void finishUpdate(View arg0) {
-
-            }
-
-            @Override
-            public int getCount() {
-                return list.size();
-            }
-
-            @Override
-            public Object instantiateItem(View arg0, int arg1) {
-                ((ViewPager) arg0).addView((View) list.get(arg1), 0);
-                
-               record_Chainage = (EditText) findViewById(R.id.record_Chainage);
-               record_Person = (EditText) findViewById(R.id.record_Person);
-    		   record_Card = (EditText) findViewById(R.id.record_Card);
-    		   record_C = (EditText) findViewById(R.id.record_C);
-    		   record_dotype = (EditText) findViewById(R.id.record_dotype);
-    		   if (arg1 == 0) {
-                   record_Person.setText(CurApp.getCurPerson().getSurveyerName());
-        		   record_Card.setText(CurApp.getCurPerson().getCertificateID());
-        		   if (editInfo != null) {
-        			   record_Chainage.setText(Double.toString(editInfo.getFacedk().doubleValue()));
-        			   record_Chainage.setFocusableInTouchMode(false);
-            		   record_C.setText(Double.toString(editInfo.getTemperature()));
-            		   record_dotype.setText(editInfo.getFacedescription());
-    			}
-			}
-    		   else
-    		   if(arg1 == 1)
-    		   {
-    				listView = (ListView) ((View) list.get(arg1)).findViewById(R.id.section_use_list);
-    				listView.setOnItemClickListener(new OnItemClickListener() {
-
-						@Override
-						public void onItemClick(AdapterView<?> arg0, View arg1,
-								int arg2, long arg3) {
-							if (itype == 1) {
-								TunnelCrossSectionInfo item = infos.get(arg2);	
-								item.setbUse(!item.isbUse());
-								infos.set(arg2, item);
-								adapter.notifyDataSetChanged();
-							}
-							else {
-								SubsidenceCrossSectionInfo item = infos1.get(arg2);
-								item.setbUse(!item.isbUse());
-								infos1.set(arg2, item);
-								adapter1.notifyDataSetChanged();
-							}
-						}
-					});
-//
-    				setdata(itype);
-    				if (itype == 1) {
-        				adapter = new RecordTunnelCrossSectionInfoAdapter(RecordNewActivity.this, infos);
-        				listView.setAdapter(adapter);
-					}
-    				else {
-        				adapter1 = new RecordSubsidenceCrossSectionInfoAdapter(RecordNewActivity.this, infos1);
-        				listView.setAdapter(adapter1);
-					}
-    		   }
-
-                
-                return (View) list.get(arg1);
-            }
-
-            @Override
-            public boolean isViewFromObject(View arg0, Object arg1) {
-                return arg0 == arg1;
-            }
-
-            @Override
-            public void restoreState(Parcelable arg0, ClassLoader arg1) {
-
-            }
-
-            @Override
-            public Parcelable saveState() {
-                return null;
-            }
-
-            @Override
-            public void startUpdate(View arg0) {
-                
-            }
-        };
-        mPager.setAdapter(pa);
-        mPager.setCurrentItem(0);
-        mPager.setOnPageChangeListener(this);
-        /** 隧道内断面 */
-        Layout1();
-        /** 地表下沉断面 */
-        Layout2();
+       
     }
 
     @Override
@@ -421,7 +358,7 @@ public class RecordNewActivity extends Activity implements OnPageChangeListener,
         public void onClick(View v) {
             int single = (int) (b.getWidth() + offSet * 2);
             switch (v.getId()) {
-            case R.id.t1:
+            case R.id.text1:
                 mPager.setCurrentItem(0);
                 if (currIndex != 0) {
                     TranslateAnimation ta = new TranslateAnimation(
@@ -432,7 +369,7 @@ public class RecordNewActivity extends Activity implements OnPageChangeListener,
                 }
                 currIndex = 0;
                 break;
-            case R.id.t2:
+            case R.id.text2:
                 mPager.setCurrentItem(1);
                 if (currIndex != 1) {
                     TranslateAnimation ta = new TranslateAnimation(currIndex
@@ -448,15 +385,4 @@ public class RecordNewActivity extends Activity implements OnPageChangeListener,
             }
         }
     };
-
-    public void Layout1() {
-        /** 隧道内断面界面的控件 */
-        /**List集合中存儲的是View,获取界面上的控件,就List.get(0),0就是集合中第一个界面,1就是集合中第二个界面*/
-    
-
-    }
-
-    public void Layout2() {
-                    
-    }
 }

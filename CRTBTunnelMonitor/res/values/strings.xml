@@ -32,6 +32,8 @@
 
     <!-- 记录单模块 -->
     <string name="record_title">记录单管理</string>
+    <string name="record_new_section_title">新建隧道内断面记录单</string>
+    <string name="record_new_section_subisdence_title">新建地表下沉断面记录单</string>
 
     <!-- 测量模块 -->
     <string name="test_record_title">测量</string>
