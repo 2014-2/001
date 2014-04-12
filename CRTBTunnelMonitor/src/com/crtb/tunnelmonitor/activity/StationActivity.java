@@ -52,7 +52,7 @@ public class StationActivity extends Activity {
 	private View vie;
 
 	private SonPopupWindow menuWindow;
-	public List<TotalStationInfo> list = null;
+	public List<TotalStationInfo> mStations = null;
 	private AppCRTBApplication CurApp = null;
 	private int iConnectType = 0;
 	private boolean bConnect = false;
@@ -84,25 +84,29 @@ public class StationActivity extends Activity {
 										int ret;
 										switch (which) {
 										case 0: // 蓝牙连接
-											ret=connect(TSConnectType.Bluetooth,
-													list.get(position)
+											ret = connect(
+													TSConnectType.Bluetooth,
+													mStations.get(position)
 															.getBaudRate());
-											if(ret==1){
-												list.get(position).setbUse(true);
+											if (ret == 1) {
+												mStations.get(position)
+														.setbUse(true);
 											}
 											break;
 										case 1:// 串口连接
-											ret=connect(TSConnectType.RS232, list
-													.get(position)
-													.getBaudRate());
-											if(ret==1){
-												list.get(position).setbUse(true);
+											ret = connect(TSConnectType.RS232,
+													mStations.get(position)
+															.getBaudRate());
+											if (ret == 1) {
+												mStations.get(position)
+														.setbUse(true);
 											}
 											break;
 										case 2:// 断开连接
-											ret=disconnect();
-											if(ret==1){
-												list.get(position).setbUse(false);
+											ret = disconnect();
+											if (ret == 1) {
+												mStations.get(position)
+														.setbUse(false);
 											}
 										default:
 											break;
@@ -119,14 +123,14 @@ public class StationActivity extends Activity {
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
 					long arg3) {
 				// TODO Auto-generated method stub
-				TotalStationInfo item = list.get(arg2);
+				TotalStationInfo item = mStations.get(arg2);
 				boolean bCheck = !item.isbCheck();
 				item.setbCheck(!item.isbCheck());
-				list.set(arg2, item);
+				mStations.set(arg2, item);
 				if (bCheck) {
-					for (int i = 0; i < list.size(); i++) {
+					for (int i = 0; i < mStations.size(); i++) {
 						if (i != arg2) {
-							list.get(i).setbCheck(false);
+							mStations.get(i).setbCheck(false);
 						}
 					}
 				}
@@ -160,26 +164,26 @@ public class StationActivity extends Activity {
 	}
 
 	public void setdata() {
-		WorkInfos CurW = CurApp.GetCurWork();
-		if (CurW == null) {
+		WorkInfos work = CurApp.GetCurWork();
+		if (work == null) {
 			return;
 		}
-		list = CurW.getTsList();
+		mStations = work.getStaionList();
 		boolean bLoadDB = true;
-		if (list != null) {
-			if (list.size() > 0) {
+		if (mStations != null) {
+			if (mStations.size() > 0) {
 				bLoadDB = false;
 			}
 		}
 		if (bLoadDB) {
-			if (list == null) {
-				list = new ArrayList<TotalStationInfo>();
+			if (mStations == null) {
+				mStations = new ArrayList<TotalStationInfo>();
 			}
-			TotalStationDaoImpl impl = new TotalStationDaoImpl(this,
-					CurW.getProjectName());
-			impl.GetTotalStationList(list);
-			CurW.setTsList(list);
-			CurApp.UpdateWork(CurW);
+			TotalStationDaoImpl dao = new TotalStationDaoImpl(this,
+					work.getProjectName());
+			dao.GetTotalStationList(mStations);
+			work.setStationList(mStations);
+			CurApp.UpdateWork(work);
 		}
 	}
 
@@ -191,8 +195,11 @@ public class StationActivity extends Activity {
 		// list = new ArrayList<TotalStationInfo>();
 		// list = MainActivity.list;
 		setdata();
-		adapter = new ControlPonitsListAdapter(StationActivity.this, list);
-		listview.setAdapter(adapter);
+		if (mStations != null && mStations.size() > 0) {
+			adapter = new ControlPonitsListAdapter(StationActivity.this,
+					mStations);
+			listview.setAdapter(adapter);
+		}
 	}
 
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
@@ -219,7 +226,7 @@ public class StationActivity extends Activity {
 		Window window = dlg.getWindow();
 		window.setContentView(R.layout.connectdialog);
 		TextView text = (TextView) window.findViewById(R.id.connertexr);
-		text.setText("连接" + list.get(iListPos).getName() + "全站仪成功");
+		text.setText("连接" + mStations.get(iListPos).getName() + "全站仪成功");
 	}
 
 	/** 连接全站仪成功 */
@@ -228,8 +235,8 @@ public class StationActivity extends Activity {
 		int ret = 0;
 		try {
 			String[] tsParams = new String[] { String.valueOf(baudRate) };
-			 ret= TSSurveyProvider.getDefaultAdapter().BeginConnection(
-					type, tsParams);
+			ret = TSSurveyProvider.getDefaultAdapter().BeginConnection(type,
+					tsParams);
 			if (ret == 1) {
 				result = "成功";
 			} else {
@@ -246,34 +253,34 @@ public class StationActivity extends Activity {
 		Window window = dlg.getWindow();
 		window.setContentView(R.layout.connectyesdialog);
 		TextView text = (TextView) window.findViewById(R.id.connertexryes);
-		text.setText("连接全站仪" + list.get(iListPos).getName() + result);
+		text.setText("连接全站仪" + mStations.get(iListPos).getName() + result);
 		return ret;
 	}
 
 	/** 断开全站仪 */
 	private int disconnect() {
-		int ret=-1;
+		int ret = -1;
 		String result;
 		try {
 			ret = TSSurveyProvider.getDefaultAdapter().EndConnection();
 		} catch (Exception e) {
 
 		}
-		
+
 		AlertDialog dlg = new AlertDialog.Builder(StationActivity.this)
 				.create();
 		dlg.show();
 		Window window = dlg.getWindow();
 		window.setContentView(R.layout.connectyesdialog);
-		ImageView icon=(ImageView) window.findViewById(R.id.icon);
-		if(ret==1){
-			result="成功";
-		}else{
-			result="失败";
+		ImageView icon = (ImageView) window.findViewById(R.id.icon);
+		if (ret == 1) {
+			result = "成功";
+		} else {
+			result = "失败";
 			icon.setImageResource(R.drawable.failred);
 		}
 		TextView text = (TextView) window.findViewById(R.id.connertexryes);
-		text.setText("断开连接" + list.get(iListPos).getName() + result);
+		text.setText("断开连接" + mStations.get(iListPos).getName() + result);
 		return ret;
 	}
 
@@ -328,7 +335,7 @@ public class StationActivity extends Activity {
 				// @SuppressLint("ShowToast")
 				@Override
 				public void onClick(View v) {
-					List<TotalStationInfo> tmpList = ((StationActivity) c).list;
+					List<TotalStationInfo> tmpList = ((StationActivity) c).mStations;
 					TotalStationInfo tmp = null;
 					if (tmpList == null) {
 						Toast.makeText((Activity) c, "请选择需要编辑的全站仪", 3000)
@@ -408,8 +415,8 @@ public class StationActivity extends Activity {
 					AppCRTBApplication app = (AppCRTBApplication) SonPopupWindow.this.c
 							.getApplicationContext();
 					WorkInfos curWork = app.GetCurWork();
-					if (curWork != null && curWork.getTsList() != null) {
-						List<TotalStationInfo> list = curWork.getTsList();
+					if (curWork != null && curWork.getStaionList() != null) {
+						List<TotalStationInfo> list = curWork.getStaionList();
 						boolean hasSelected = false;
 						for (int i = 0; i < list.size(); i++) {
 							if (list.get(i).isbCheck()) {

@@ -4,7 +4,7 @@
     <string name="app_name">TunnelMonitor</string>
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello world!</string>
-    <string name="total">全站仪</string>
+    <string name="total_station">全站仪</string>
 
     <!-- common -->
     <string name="common_create_new">新建</string>
@@ -27,4 +27,13 @@
      <!-- 工作面模块 -->
     <string name="section_title">断面管理</string>
 
+    <string name="system_name">隧道围岩监测采集终端系统</string>
+    <string name="about">关于</string>
+    <string name="server_interact">服务器交互</string>
+    <string name="cancel">取消</string>
+    <string name="ok">确定</string>
+    <string name="control_point_manage">控制点管理</string>
+    <string name="main_title">隧道进口</string>
+    <string name="server_setting">服务器参数设置</string>
+    <string name="user_book">用户手册</string>
 </resources>

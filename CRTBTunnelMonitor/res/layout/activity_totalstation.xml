@@ -6,52 +6,44 @@
 
     <include
         android:id="@+id/header"
-        layout="@layout/header" >
+        layout="@layout/activity_topbar_layout" >
     </include>
 
-    <TextView
-        style="@style/header"
-        android:text="@string/total" />
-
-    <RelativeLayout
-        android:id="@+id/total_qzy"
-        style="@style/main_rl"
+    <LinearLayout
+        android:id="@+id/station"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
         android:layout_below="@id/header"
-        android:layout_marginLeft="20dip" >
-
-        <ImageView
-            android:id="@+id/totalimg1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/four" />
+        android:layout_marginBottom="40dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="20dp"
+        android:background="@drawable/gray_bg_selector"
+        android:gravity="center" >
 
         <TextView
-            style="@style/main_tv"
-            android:layout_below="@id/totalimg1"
-            android:layout_marginLeft="20dip"
-            android:layout_marginTop="5dip"
-            android:text="全站仪" />
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:id="@+id/total_kd"
-        style="@style/main_rl"
-        android:layout_below="@id/header"
-        android:layout_marginLeft="20dip"
-        android:layout_toRightOf="@id/total_qzy" >
-
-        <ImageView
-            android:id="@+id/totalimg2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/pic2" />
-         <TextView
-            style="@style/main_tv"
-            android:layout_below="@id/totalimg2"
-            android:layout_marginTop="5dip"
-            android:text="控点管理" />
+            android:drawableTop="@drawable/station"
+            android:text="@string/total_station" />
+    </LinearLayout>
 
-       
-    </RelativeLayout>
+    <LinearLayout
+        android:id="@+id/control_point"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="10dp"
+        android:layout_toRightOf="@id/station"
+        android:layout_below="@id/header"
+        android:background="@drawable/gray_bg_selector"
+        android:gravity="center" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableTop="@drawable/controlpoint"
+            android:text="@string/control_point_manage" />
+    </LinearLayout>
 
 </RelativeLayout>

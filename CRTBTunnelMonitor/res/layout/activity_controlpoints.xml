@@ -5,11 +5,9 @@
 
     <include
         android:id="@+id/kd_header"
-        layout="@layout/header" />
+        layout="@layout/activity_topbar_layout" />
 
-    <TextView
-        style="@style/header"
-        android:text="控制点管理" />
+    
 
     <RelativeLayout
         android:id="@+id/conre1"
