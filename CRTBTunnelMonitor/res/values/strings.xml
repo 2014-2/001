@@ -30,4 +30,7 @@
     <string name="cancel">取消</string>
     <string name="ok">确定</string>
     <string name="control_point_manage">控制点管理</string>
+    <string name="main_title">隧道进口</string>
+    <string name="server_setting">服务器参数设置</string>
+    <string name="user_book">用户手册</string>
 </resources>

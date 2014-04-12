@@ -6,7 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 public class TotalStationActivity extends Activity {
 	/**
@@ -23,6 +23,8 @@ public class TotalStationActivity extends Activity {
 		init();
 	}
 	private void init() {
+		TextView title=(TextView) findViewById(R.id.tv_topbar_title);
+		title.setText(R.string.total_station);
 		mStation=(LinearLayout) findViewById(R.id.station);
 		mStation.setOnClickListener(listener);
 		mControlPoint=(LinearLayout) findViewById(R.id.control_point);

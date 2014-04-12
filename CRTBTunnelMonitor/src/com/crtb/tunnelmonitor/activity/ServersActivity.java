@@ -1,13 +1,10 @@
 package com.crtb.tunnelmonitor.activity;
 
-import com.crtb.tunnelmonitor.activity.R;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 /**
  * 服务器

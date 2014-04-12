@@ -18,7 +18,6 @@ import com.crtb.tunnelmonitor.BaseActivity;
 import com.crtb.tunnelmonitor.common.Constant;
 import com.crtb.tunnelmonitor.dao.impl.v2.WorkPlanDao;
 import com.crtb.tunnelmonitor.entity.TotalStationInfo;
-import com.crtb.tunnelmonitor.entity.WorkInfos;
 import com.crtb.tunnelmonitor.entity.WorkPlan;
 
 /**
@@ -89,6 +88,8 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 
 	/** 初始化控件 */
 	private void initView() {
+		TextView title=(TextView) findViewById(R.id.tv_topbar_title);
+		title.setText(R.string.main_title);
 		mWorkSection = (TextView) findViewById(R.id.worksection);
 		mCrossSection = (TextView) findViewById(R.id.crosssection);
 		mSheet = (TextView) findViewById(R.id.sheet);

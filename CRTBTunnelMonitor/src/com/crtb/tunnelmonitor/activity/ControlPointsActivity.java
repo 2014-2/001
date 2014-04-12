@@ -15,6 +15,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.crtb.tunnelmonitor.AppCRTBApplication;
 import com.crtb.tunnelmonitor.adapter.ControlPonitsListAdapter2;
@@ -22,7 +23,6 @@ import com.crtb.tunnelmonitor.dao.impl.ControlPointsDaoImpl;
 import com.crtb.tunnelmonitor.entity.ControlPointsInfo;
 import com.crtb.tunnelmonitor.entity.WorkInfos;
 import com.crtb.tunnelmonitor.utils.ConPopuWindow;
-import com.crtb.tunnelmonitor.activity.R;
 /**
  * 
  * @author edison.xiao
@@ -44,6 +44,8 @@ public class ControlPointsActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_controlpoints);
+		TextView title=(TextView) findViewById(R.id.tv_topbar_title);
+		title.setText(R.string.control_point_manage);
 		CurApp = ((AppCRTBApplication)getApplicationContext());
 		listview=(ListView) findViewById(R.id.control_sonlist);
 		getadapter();
