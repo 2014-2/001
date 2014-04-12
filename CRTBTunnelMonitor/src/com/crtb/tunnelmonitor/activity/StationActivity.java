@@ -63,7 +63,7 @@ public class StationActivity extends Activity {
 		setContentView(R.layout.activity_sta);
 		CurApp = ((AppCRTBApplication) getApplicationContext());
 		TextView title=(TextView) findViewById(R.id.tv_topbar_title);
-		title.setText(R.string.total_station_manage);
+		// title.setText(R.string.total_station_manage);
 		init();
 		getadapter();
 		/** 长按 */

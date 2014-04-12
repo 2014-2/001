@@ -154,6 +154,14 @@ public final class WorkActivity extends WorkFlowActivity {
 	}
 	
 	@Override
+	protected void onResume() {
+		super.onResume();
+		
+		// load data
+		mListView.onReload() ;
+	}
+
+	@Override
 	protected void onSystemMenuClick(MenuSystemItem menu) {
 		
 		String name = menu.getName() ;
