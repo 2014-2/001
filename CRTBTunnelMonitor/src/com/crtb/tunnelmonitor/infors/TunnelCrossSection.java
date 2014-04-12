@@ -1,8 +1,5 @@
 package com.crtb.tunnelmonitor.infors;
 
-import java.util.List;
-
-import android.R.integer;
 
 /*
  *隧道内断面基础信息类

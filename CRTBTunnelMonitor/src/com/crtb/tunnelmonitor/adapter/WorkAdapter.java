@@ -2,10 +2,6 @@ package com.crtb.tunnelmonitor.adapter;
 
 import java.util.List;
 
-import com.crtb.tunnelmonitor.entity.WorkInfos;
-import com.crtb.tunnelmonitor.activity.R;
-
-
 import android.content.Context;
 import android.graphics.Color;
 import android.view.LayoutInflater;
@@ -13,6 +9,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
+
+import com.crtb.tunnelmonitor.activity.R;
+import com.crtb.tunnelmonitor.entity.WorkInfos;
 
 public class WorkAdapter extends BaseAdapter
 {

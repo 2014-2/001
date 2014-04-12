@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.zw.android.framework.ioc.InjectCore;
 import org.zw.android.framework.ioc.InjectLayout;
+import org.zw.android.framework.ioc.InjectView;
 
 import android.content.Intent;
 import android.graphics.BitmapFactory;
@@ -14,18 +15,15 @@ import android.os.Parcelable;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
-import android.util.DisplayMetrics;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemSelectedListener;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -36,7 +34,6 @@ import com.crtb.tunnelmonitor.common.Constant;
 import com.crtb.tunnelmonitor.dao.impl.TunnelCrossSectionDaoImpl;
 import com.crtb.tunnelmonitor.entity.TunnelCrossSectionInfo;
 import com.crtb.tunnelmonitor.entity.WorkInfos;
-import com.crtb.tunnelmonitor.utils.Time;
 
 /**
  * 新建隧道内断面
@@ -45,19 +42,29 @@ import com.crtb.tunnelmonitor.utils.Time;
 @InjectLayout(layout = R.layout.activity_section_new)
 public class SectionNewActivity extends WorkFlowActivity implements OnClickListener {
 	
-	private ViewPager mPager;// 页卡内容
+	@InjectView(id=R.id.vPager)
+	private ViewPager mPager;
 
-	private List<View> listViews; // Tab页面列表
+	private List<View> listViews = new ArrayList<View>();
 
 	private ImageView cursor;// 动画图片
 
-	private TextView t1, t2;// 页卡头标
+	private TextView t1, t2, t3;// 页卡头标
 
 	private int offset = 0;// 动画图片偏移量
 
 	private int currIndex = 0;// 当前页卡编号
 
 	private int bmpW;// 动画图片宽度
+	
+	@InjectView(layout=R.layout.section_new_xinxi)
+	private LinearLayout mBaseInfoLayout ;
+	
+	@InjectView(layout=R.layout.section_new_kaiwa)
+	private LinearLayout mExcavationInfoLayout ;
+	
+	@InjectView(layout=R.layout.section_new_yuzhi)
+	private LinearLayout mDeformationInfoLayout ;
 
 	/***/
 	private int num;
@@ -106,6 +113,9 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 		// title
 		setTopbarTitle(getString(R.string.section_new_title));
 		
+		// init ViewPager
+		initViewPager();
+		
 		// sChainage = getIntent().getExtras().getString(Constant.Select_SectionRowClickItemsName_Name);
 		//double dChainage = AppCRTBApplication.StrToDouble(sChainage, -1);
 //		InitImageView();
@@ -131,38 +141,54 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 
 	}
 
-	private void InitMyTextView() {
-
-	}
-
-	private void InitViewPager() {
-		mPager = (ViewPager) findViewById(R.id.vPager);
-		listViews = new ArrayList<View>();
-		LayoutInflater mInflater = getLayoutInflater();
-
-		listViews.add(mInflater.inflate(R.layout.section_new_xinxi, null));
-		listViews.add(mInflater.inflate(R.layout.section_new_kaiwa, null));
-		listViews.add(mInflater.inflate(R.layout.section_new_yuzhi, null));
-		mPager.setAdapter(new MyPagerAdapter(listViews));
-		mPager.setCurrentItem(0);
+	private void initViewPager() {
+		
+		t1 = (TextView) findViewById(R.id.text1);
+		t2 = (TextView) findViewById(R.id.text2);
+		t3 = (TextView) findViewById(R.id.text3);
+		
+		listViews.add(mBaseInfoLayout);
+		listViews.add(mExcavationInfoLayout);
+		listViews.add(mDeformationInfoLayout);
+		
+		cursor = (ImageView) findViewById(R.id.cursor);
+		bmpW = BitmapFactory.decodeResource(getResources(), R.drawable.heng)
+				.getWidth();
+		int screenW = mDisplayMetrics.widthPixels ;
+		offset = (screenW / 3 - bmpW) / 2;
+		Matrix matrix = new Matrix();
+		matrix.postTranslate(offset, 0);
+		cursor.setImageMatrix(matrix);
+		ViewGroup.LayoutParams lp = cursor.getLayoutParams() ;
+		lp.width = screenW / 3;
+		lp.height = 4 ;
+		cursor.setLayoutParams(lp);
+		cursor.setImageMatrix(matrix);
+		
+		t1.setOnClickListener(new MyOnClickListener(TAB_ONE));
+		t2.setOnClickListener(new MyOnClickListener(TAB_TWO));
+		t3.setOnClickListener(new MyOnClickListener(TAB_THREE));
+		
+		mPager.setAdapter(new MyPagerAdapter());
+		mPager.setCurrentItem(TAB_ONE);
 		mPager.setOnPageChangeListener(new MyOnPageChangeListener());
 	}
 
-	// 初始化头标
-	private void InitTextView() {
-		t1 = (TextView) findViewById(R.id.text1);
-		t2 = (TextView) findViewById(R.id.text2);
-		section_new_tv_header = (TextView) findViewById(R.id.section_new_tv_header);
-		t1.setOnClickListener(new MyOnClickListener(0));
-		t2.setOnClickListener(new MyOnClickListener(1));
-
-		section_btn_queding = (Button) findViewById(R.id.work_btn_queding);
-		section_btn_quxiao = (Button) findViewById(R.id.work_btn_quxiao);
-
-		section_btn_queding.setOnClickListener(this);
-		section_btn_quxiao.setOnClickListener(this);
-		
-	}
+//	// 初始化头标
+//	private void InitTextView() {
+//		t1 = (TextView) findViewById(R.id.text1);
+//		t2 = (TextView) findViewById(R.id.text2);
+////		section_new_tv_header = (TextView) findViewById(R.id.section_new_tv_header);
+//		t1.setOnClickListener(new MyOnClickListener(0));
+//		t2.setOnClickListener(new MyOnClickListener(1));
+//
+//		section_btn_queding = (Button) findViewById(R.id.work_btn_queding);
+//		section_btn_quxiao = (Button) findViewById(R.id.work_btn_quxiao);
+//
+//		section_btn_queding.setOnClickListener(this);
+//		section_btn_quxiao.setOnClickListener(this);
+//		
+//	}
 	// 点击事件
 	@Override
 	public void onClick(View v) {
@@ -309,34 +335,15 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 
 	}
 
-	private void InitImageView() {
-
-		cursor = (ImageView) findViewById(R.id.cursor);
-		bmpW = BitmapFactory.decodeResource(getResources(), R.drawable.heng)
-				.getWidth();// 获取图片宽度
-		DisplayMetrics dm = new DisplayMetrics();
-		getWindowManager().getDefaultDisplay().getMetrics(dm);
-		int screenW = dm.widthPixels;// 获取分辨率宽度
-		offset = (screenW / 3 - bmpW) / 2;// 计算偏移量
-		Matrix matrix = new Matrix();
-		matrix.postTranslate(offset, 0);
-		cursor.setImageMatrix(matrix);// 设置动画初始位置
-
-	}
-
-	/**
-	 * ViewPager适配器
-	 */
 	public class MyPagerAdapter extends PagerAdapter {
-		public List<View> mListViews;
-
-		public MyPagerAdapter(List<View> mListViews) {
-			this.mListViews = mListViews;
+		
+		public MyPagerAdapter() {
+			
 		}
 
 		@Override
 		public void destroyItem(View arg0, int arg1, Object arg2) {
-			((ViewPager) arg0).removeView(mListViews.get(arg1));
+			((ViewPager) arg0).removeView(listViews.get(arg1));
 		}
 
 		@Override
@@ -345,161 +352,158 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 
 		@Override
 		public int getCount() {
-			return mListViews.size();
+			return listViews.size();
 		}
 
 		@Override
 		public Object instantiateItem(View arg0, int arg1) {
-			((ViewPager) arg0).addView(mListViews.get(arg1), 0);
+			((ViewPager) arg0).addView(listViews.get(arg1), 0);
 
-			AppCRTBApplication CurApp = ((AppCRTBApplication)getApplicationContext());
-			WorkInfos Curw = CurApp.GetCurWork();
-			
-			section_new_et_Chainage = (EditText) findViewById(R.id.section_new_et_Chainage);
-			section_new_et_calendar = (EditText) findViewById(R.id.section_new_et_calendar);
-			section_new_et_name = (EditText) findViewById(R.id.section_new_et_name);
-			section_new_et_width = (EditText) findViewById(R.id.section_new_et_width);
-
-			section_new_sp = (Spinner) findViewById(R.id.section_new_sp);
-			img_fangfa = (ImageView) findViewById(R.id.img_fangfa);
-			section_new_et_a = (EditText) findViewById(R.id.section_new_et_a);
-			section_new_et_s1 = (EditText) findViewById(R.id.section_new_et_s1);
-			section_new_et_s2 = (EditText) findViewById(R.id.section_new_et_s2);
-			section_new_et_s3 = (EditText) findViewById(R.id.section_new_et_s3);
-			
-			section_new_leiji1 = (EditText) findViewById(R.id.section_new_leiji1);
-			section_new_leiji2 = (EditText) findViewById(R.id.section_new_leiji2);
-			section_new_single1 = (EditText) findViewById(R.id.section_new_single1);
-			section_new_single2 = (EditText) findViewById(R.id.section_new_single2);
-			section_new_createtime1 = (EditText) findViewById(R.id.section_new_createtime1);
-			section_new_createtime2 = (EditText) findViewById(R.id.section_new_createtime2);
-			section_new_info1 = (EditText) findViewById(R.id.section_new_info1);
-			section_new_info2 = (EditText) findViewById(R.id.section_new_info2);
-			
-			section_v_s3 = (TextView)findViewById(R.id.section_v_s3);
-			
-			//section_new_info2.setVisibility(View.GONE);
-			section_new_et_Chainage.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-				
-				@Override
-				public void onFocusChange(View v, boolean hasFocus) {
-					// TODO Auto-generated method stub
-					//if(!hasFocus)
-					{
-						String sChainage = section_new_et_Chainage.getText().toString().trim();
-						if (sChainage.length() > 0) {
-							AppCRTBApplication CurApp = ((AppCRTBApplication)getApplicationContext());
-							section_new_et_name.setText(CurApp.GetSectionName(Double.valueOf(sChainage).doubleValue()));
-						}
-						else {
-							section_new_et_name.setText("");
-						}
-					}
-				}
-			});
-			List<String> testList = new ArrayList<String>();
-			testList.add("台阶法");
-			testList.add("全断面法");
-			testList.add("双侧壁导坑法");
-			section_new_sp = (Spinner) findViewById(R.id.section_new_sp);
-			ArrayAdapter<String> adapter = new ArrayAdapter<String>(
-					SectionNewActivity.this,
-					android.R.layout.simple_spinner_item, testList);
-			adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-			if (arg1 == 0) {
-				// 获取手机的当前时间
-				final String time = Time.getDateEN();
-				// 设置文本框里面的字体大小
-				section_new_et_calendar.setTextSize(11);
-				if (Edittsci != null) {
-					section_new_et_Chainage.setFocusable(false);
-					section_new_et_Chainage.setFocusableInTouchMode(false);
-					section_new_et_name.setFocusableInTouchMode(false);
-					section_new_et_width.setFocusableInTouchMode(false);
-					section_new_et_calendar.setFocusableInTouchMode(false);
-					section_new_et_Chainage.setText(Edittsci.getChainage().toString());
-					section_new_et_name.setText(CurApp.GetSectionName(Edittsci.getChainage().doubleValue()));
-					section_new_et_calendar.setText(Edittsci.getInBuiltTime());
-					section_new_et_width.setText(Float.toString(Edittsci.getWidth()));
-				}
-				else
-				{
-					// 跟改文本框赋值时间
-					section_new_et_calendar.setText(time);
-				}
-			}
-			else
-			if(arg1 == 1)
-			{
-				section_new_sp.setAdapter(adapter);
-				section_new_sp
-				.setOnItemSelectedListener(new OnItemSelectedListener() {
-
-					@Override
-					public void onItemSelected(AdapterView<?> parent,
-							View view, int position, long id) {
-						if (Edittsci != null) {
-							position = TunnelCrossSectionDaoImpl.GetExcavateMethodInt(Edittsci);
-						}
-						if (position == 0) {
-							img_fangfa
-									.setBackgroundResource(R.drawable.stepmethod);
-							section_v_s3.setVisibility(View.GONE);
-							section_new_et_s3.setVisibility(View.GONE);
-							System.out.println(section_new_sp
-									.getSelectedItem().toString());
-						} else if (position == 1) {
-							System.out.println(section_new_sp
-									.getSelectedItem().toString());
-							img_fangfa
-									.setBackgroundResource(R.drawable.totalcrosssection);
-							section_v_s3.setVisibility(View.GONE);
-							section_new_et_s3.setVisibility(View.GONE);
-						} else if (position == 2) {
-							System.out.println(section_new_sp
-									.getSelectedItem().toString());
-							img_fangfa
-									.setBackgroundResource(R.drawable.dualslopemethod);
-							section_v_s3.setVisibility(View.VISIBLE);
-							section_new_et_s3.setVisibility(View.VISIBLE);
-						}
-					}
-
-					@Override
-					public void onNothingSelected(AdapterView<?> parent) {
-						// TODO Auto-generated method stub
-
-					}
-				});
-				if (Edittsci != null) {
-					section_new_sp.setSelection(TunnelCrossSectionDaoImpl.GetExcavateMethodUi(Edittsci.getExcavateMethod()));
-					section_new_sp.setSelected(false);
-					List<String> strAS = AppCRTBApplication.GetExcavateMethodPointArray(Edittsci.getSurveyPntName());
-					section_new_et_a.setText(strAS.get(0));
-					section_new_et_s1.setText(strAS.get(1));
-					section_new_et_s2.setText(strAS.get(2));
-					section_new_et_s3.setText(strAS.get(3));
-				}
-			}
-			else
-			if (arg1 == 2) {
-				
-				section_new_leiji1.setText(Curw.getGDLimitTotalSettlement().toString());
-				section_new_leiji2.setText(Curw.getSLLimitTotalSettlement().toString());
-				section_new_single1.setText(Curw.getGDLimitVelocity().toString());
-				section_new_single2.setText(Curw.getSLLimitVelocity().toString());
-				section_new_createtime1.setText(section_new_et_calendar.getText().toString().trim());
-				section_new_createtime2.setText(section_new_et_calendar.getText().toString().trim());
-
-				if (Edittsci != null) {
-					section_new_info1.setText(Edittsci.getInfo());
-				}
-//				et_a = (EditText) findViewById(R.id.section_new_et_a);
-//				SearchWather s = new SearchWather(et_a);
-			}
-			
-
-			return mListViews.get(arg1);
+//			AppCRTBApplication CurApp = ((AppCRTBApplication)getApplicationContext());
+//			WorkInfos Curw = CurApp.GetCurWork();
+//			
+//			section_new_et_Chainage = (EditText) findViewById(R.id.section_new_et_Chainage);
+//			section_new_et_calendar = (EditText) findViewById(R.id.section_new_et_calendar);
+//			section_new_et_name = (EditText) findViewById(R.id.section_new_et_name);
+//			section_new_et_width = (EditText) findViewById(R.id.section_new_et_width);
+//
+//			section_new_sp = (Spinner) findViewById(R.id.section_new_sp);
+//			img_fangfa = (ImageView) findViewById(R.id.img_fangfa);
+//			section_new_et_a = (EditText) findViewById(R.id.section_new_et_a);
+//			section_new_et_s1 = (EditText) findViewById(R.id.section_new_et_s1);
+//			section_new_et_s2 = (EditText) findViewById(R.id.section_new_et_s2);
+//			section_new_et_s3 = (EditText) findViewById(R.id.section_new_et_s3);
+//			
+//			section_new_leiji1 = (EditText) findViewById(R.id.section_new_leiji1);
+//			section_new_leiji2 = (EditText) findViewById(R.id.section_new_leiji2);
+//			section_new_single1 = (EditText) findViewById(R.id.section_new_single1);
+//			section_new_single2 = (EditText) findViewById(R.id.section_new_single2);
+//			section_new_createtime1 = (EditText) findViewById(R.id.section_new_createtime1);
+//			section_new_createtime2 = (EditText) findViewById(R.id.section_new_createtime2);
+//			section_new_info1 = (EditText) findViewById(R.id.section_new_info1);
+//			section_new_info2 = (EditText) findViewById(R.id.section_new_info2);
+//			
+//			section_v_s3 = (TextView)findViewById(R.id.section_v_s3);
+//			
+//			//section_new_info2.setVisibility(View.GONE);
+//			section_new_et_Chainage.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+//				
+//				@Override
+//				public void onFocusChange(View v, boolean hasFocus) {
+//					//if(!hasFocus)
+//					{
+//						String sChainage = section_new_et_Chainage.getText().toString().trim();
+//						if (sChainage.length() > 0) {
+//							AppCRTBApplication CurApp = ((AppCRTBApplication)getApplicationContext());
+//							section_new_et_name.setText(CurApp.GetSectionName(Double.valueOf(sChainage).doubleValue()));
+//						}
+//						else {
+//							section_new_et_name.setText("");
+//						}
+//					}
+//				}
+//			});
+//			List<String> testList = new ArrayList<String>();
+//			testList.add("台阶法");
+//			testList.add("全断面法");
+//			testList.add("双侧壁导坑法");
+//			section_new_sp = (Spinner) findViewById(R.id.section_new_sp);
+//			ArrayAdapter<String> adapter = new ArrayAdapter<String>(
+//					SectionNewActivity.this,
+//					android.R.layout.simple_spinner_item, testList);
+//			adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//			if (arg1 == 0) {
+//				// 获取手机的当前时间
+//				final String time = Time.getDateEN();
+//				// 设置文本框里面的字体大小
+//				section_new_et_calendar.setTextSize(11);
+//				if (Edittsci != null) {
+//					section_new_et_Chainage.setFocusable(false);
+//					section_new_et_Chainage.setFocusableInTouchMode(false);
+//					section_new_et_name.setFocusableInTouchMode(false);
+//					section_new_et_width.setFocusableInTouchMode(false);
+//					section_new_et_calendar.setFocusableInTouchMode(false);
+//					section_new_et_Chainage.setText(Edittsci.getChainage().toString());
+//					section_new_et_name.setText(CurApp.GetSectionName(Edittsci.getChainage().doubleValue()));
+//					section_new_et_calendar.setText(Edittsci.getInBuiltTime());
+//					section_new_et_width.setText(Float.toString(Edittsci.getWidth()));
+//				}
+//				else
+//				{
+//					// 跟改文本框赋值时间
+//					section_new_et_calendar.setText(time);
+//				}
+//			}
+//			else
+//			if(arg1 == 1)
+//			{
+//				section_new_sp.setAdapter(adapter);
+//				section_new_sp
+//				.setOnItemSelectedListener(new OnItemSelectedListener() {
+//
+//					@Override
+//					public void onItemSelected(AdapterView<?> parent,
+//							View view, int position, long id) {
+//						if (Edittsci != null) {
+//							position = TunnelCrossSectionDaoImpl.GetExcavateMethodInt(Edittsci);
+//						}
+//						if (position == 0) {
+//							img_fangfa
+//									.setBackgroundResource(R.drawable.stepmethod);
+//							section_v_s3.setVisibility(View.GONE);
+//							section_new_et_s3.setVisibility(View.GONE);
+//							System.out.println(section_new_sp
+//									.getSelectedItem().toString());
+//						} else if (position == 1) {
+//							System.out.println(section_new_sp
+//									.getSelectedItem().toString());
+//							img_fangfa
+//									.setBackgroundResource(R.drawable.totalcrosssection);
+//							section_v_s3.setVisibility(View.GONE);
+//							section_new_et_s3.setVisibility(View.GONE);
+//						} else if (position == 2) {
+//							System.out.println(section_new_sp
+//									.getSelectedItem().toString());
+//							img_fangfa
+//									.setBackgroundResource(R.drawable.dualslopemethod);
+//							section_v_s3.setVisibility(View.VISIBLE);
+//							section_new_et_s3.setVisibility(View.VISIBLE);
+//						}
+//					}
+//
+//					@Override
+//					public void onNothingSelected(AdapterView<?> parent) {
+//						
+//					}
+//				});
+//				if (Edittsci != null) {
+//					section_new_sp.setSelection(TunnelCrossSectionDaoImpl.GetExcavateMethodUi(Edittsci.getExcavateMethod()));
+//					section_new_sp.setSelected(false);
+//					List<String> strAS = AppCRTBApplication.GetExcavateMethodPointArray(Edittsci.getSurveyPntName());
+//					section_new_et_a.setText(strAS.get(0));
+//					section_new_et_s1.setText(strAS.get(1));
+//					section_new_et_s2.setText(strAS.get(2));
+//					section_new_et_s3.setText(strAS.get(3));
+//				}
+//			}
+//			else
+//			if (arg1 == 2) {
+//				
+////				section_new_leiji1.setText(Curw.getGDLimitTotalSettlement().toString());
+////				section_new_leiji2.setText(Curw.getSLLimitTotalSettlement().toString());
+////				section_new_single1.setText(Curw.getGDLimitVelocity().toString());
+////				section_new_single2.setText(Curw.getSLLimitVelocity().toString());
+////				section_new_createtime1.setText(section_new_et_calendar.getText().toString().trim());
+////				section_new_createtime2.setText(section_new_et_calendar.getText().toString().trim());
+////
+////				if (Edittsci != null) {
+////					section_new_info1.setText(Edittsci.getInfo());
+////				}
+////				et_a = (EditText) findViewById(R.id.section_new_et_a);
+////				SearchWather s = new SearchWather(et_a);
+//			}
+//			
+			return listViews.get(arg1);
 		}
 		
 

@@ -4,38 +4,19 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.crtb.tunnelmonitor.AppCRTBApplication;
-import com.crtb.tunnelmonitor.adapter.RecordSectionAdapter;
-import com.crtb.tunnelmonitor.adapter.RecordSubsidenceCrossSectionInfoAdapter;
-import com.crtb.tunnelmonitor.adapter.RecordTunnelCrossSectionInfoAdapter;
-import com.crtb.tunnelmonitor.adapter.TunnelCrossSectionInfoAdapter;
-import com.crtb.tunnelmonitor.common.Constant;
-import com.crtb.tunnelmonitor.dao.impl.RecordDaoImpl;
-import com.crtb.tunnelmonitor.dao.impl.SubsidenceCrossSectionDaoImpl;
-import com.crtb.tunnelmonitor.dao.impl.TunnelCrossSectionDaoImpl;
-import com.crtb.tunnelmonitor.entity.RecordInfo;
-import com.crtb.tunnelmonitor.entity.SubsidenceCrossSectionInfo;
-import com.crtb.tunnelmonitor.entity.TunnelCrossSectionInfo;
-import com.crtb.tunnelmonitor.entity.WorkInfos;
-import com.crtb.tunnelmonitor.utils.Time;
-import com.crtb.tunnelmonitor.activity.R;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Matrix;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
-import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -46,6 +27,19 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.crtb.tunnelmonitor.AppCRTBApplication;
+import com.crtb.tunnelmonitor.adapter.RecordSubsidenceCrossSectionInfoAdapter;
+import com.crtb.tunnelmonitor.adapter.RecordTunnelCrossSectionInfoAdapter;
+import com.crtb.tunnelmonitor.common.Constant;
+import com.crtb.tunnelmonitor.dao.impl.RecordDaoImpl;
+import com.crtb.tunnelmonitor.dao.impl.SubsidenceCrossSectionDaoImpl;
+import com.crtb.tunnelmonitor.dao.impl.TunnelCrossSectionDaoImpl;
+import com.crtb.tunnelmonitor.entity.RecordInfo;
+import com.crtb.tunnelmonitor.entity.SubsidenceCrossSectionInfo;
+import com.crtb.tunnelmonitor.entity.TunnelCrossSectionInfo;
+import com.crtb.tunnelmonitor.entity.WorkInfos;
+import com.crtb.tunnelmonitor.utils.Time;
 /**
  * 新建记录单
  *

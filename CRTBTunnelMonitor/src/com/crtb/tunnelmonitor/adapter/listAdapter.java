@@ -2,11 +2,6 @@ package com.crtb.tunnelmonitor.adapter;
 
 import java.util.List;
 
-import com.crtb.tunnelmonitor.entity.list_infos;
-import com.crtb.tunnelmonitor.activity.R;
-import com.crtb.tunnelmonitor.activity.R.id;
-import com.crtb.tunnelmonitor.activity.R.layout;
-
 import android.content.Context;
 import android.graphics.Color;
 import android.view.LayoutInflater;
@@ -14,6 +9,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
+
+import com.crtb.tunnelmonitor.activity.R;
+import com.crtb.tunnelmonitor.entity.list_infos;
 
 public class listAdapter extends BaseAdapter
 {

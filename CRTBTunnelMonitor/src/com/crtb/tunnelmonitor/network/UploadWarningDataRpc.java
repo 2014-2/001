@@ -5,7 +5,6 @@ import java.util.Map;
 
 import org.ksoap2.serialization.SoapObject;
 
-import android.text.TextUtils;
 import android.util.Log;
 
 class UploadWarningDataRpc extends AbstractRpc {

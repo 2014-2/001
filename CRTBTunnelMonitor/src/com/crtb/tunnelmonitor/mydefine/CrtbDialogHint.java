@@ -1,12 +1,12 @@
 package com.crtb.tunnelmonitor.mydefine;
 
-import com.crtb.tunnelmonitor.activity.R;
-
 import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+
+import com.crtb.tunnelmonitor.activity.R;
 
 public class CrtbDialogHint extends CrtbDialog {
 

@@ -7,7 +7,6 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
@@ -25,10 +24,10 @@ import android.widget.Toast;
 import com.crtb.tunnelmonitor.AppCRTBApplication;
 import com.crtb.tunnelmonitor.activity.ControlNewActivityTwo;
 import com.crtb.tunnelmonitor.activity.ControlPointsActivity;
+import com.crtb.tunnelmonitor.activity.R;
 import com.crtb.tunnelmonitor.common.Constant;
 import com.crtb.tunnelmonitor.dao.impl.ControlPointsDaoImpl;
 import com.crtb.tunnelmonitor.entity.ControlPointsInfo;
-import com.crtb.tunnelmonitor.activity.R;
 
 public class ConPopuWindow extends PopupWindow {
 	private RelativeLayout xinjian,bianji,delete;//三個按鈕

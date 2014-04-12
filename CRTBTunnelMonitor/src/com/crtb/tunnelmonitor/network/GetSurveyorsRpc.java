@@ -1,17 +1,13 @@
 package com.crtb.tunnelmonitor.network;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.ksoap2.serialization.SoapObject;
 
-import com.crtb.tunnelmonitor.entity.SurveyerInformation;
-
 import android.util.Log;
-import android.widget.ArrayAdapter;
+
+import com.crtb.tunnelmonitor.entity.SurveyerInformation;
 
 class GetSurveyorsRpc extends AbstractRpc {
 	private static final String LOG_TAG = "GetSurveyorsRpc";

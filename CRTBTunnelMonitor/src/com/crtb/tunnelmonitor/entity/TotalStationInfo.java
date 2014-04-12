@@ -1,7 +1,5 @@
 package com.crtb.tunnelmonitor.entity;
 
-import java.sql.Timestamp;
-
 import android.os.Parcel;
 import android.os.Parcelable;
 

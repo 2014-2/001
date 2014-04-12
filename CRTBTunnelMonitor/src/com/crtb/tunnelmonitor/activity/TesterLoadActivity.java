@@ -1,7 +1,6 @@
 package com.crtb.tunnelmonitor.activity;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import android.app.Activity;
@@ -19,7 +18,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.crtb.tunnelmonitor.AppCRTBApplication;
 import com.crtb.tunnelmonitor.dao.SurveyerInformationDao;
 import com.crtb.tunnelmonitor.dao.impl.SurveyerInformationDaoImpl;
 import com.crtb.tunnelmonitor.entity.SurveyerInformation;

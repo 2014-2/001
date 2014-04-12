@@ -3,236 +3,236 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
-    <LinearLayout 
-	    android:layout_width="wrap_content"
-	    android:layout_height="wrap_content"
-	    android:orientation="vertical"
-	    >
-      <RelativeLayout 
-        android:layout_width="fill_parent"
-        android:layout_height="40dip"
-        >
-          <TextView 
-            android:layout_marginTop="8dip"
-            android:id="@+id/tv2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="80dip"
-           android:layout_centerVertical="true"
-            android:text="拱顶下沉"
-            android:textSize="19sp"
-            android:textStyle="bold"
-            />
-       <TextView 
-            android:layout_marginTop="8dip"
-            android:id="@+id/tv2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="50dip"
-           android:layout_centerVertical="true"
-            android:text="周边收敛"
-            android:textSize="19sp"
-            android:textStyle="bold"
-            />
-    </RelativeLayout>
-	    
-     <RelativeLayout 
-        android:layout_width="fill_parent"
-        android:layout_height="60dip"
-        >
-          <TextView 
-            android:layout_marginTop="8dip"
-            android:id="@+id/tv2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-           android:layout_marginLeft="10dip"
-            android:text="累计变形"
-            android:textSize="16sp"
-            />
-        <TextView 
-            android:layout_below="@id/tv2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-           android:layout_marginLeft="10dip"
-            android:text="  极限值"
-            android:textSize="16sp"
-            />
-        <EditText 
-            android:id="@+id/section_new_leiji2"
-            android:layout_width="90dip"
-            android:layout_height="42dip"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="50dip"
-            android:editable="false"
-            android:background="@color/huise"
-            />
-         <EditText 
-            android:id="@+id/section_new_leiji1"
-            android:layout_width="90dip"
-            android:layout_height="42dip"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="80dip"
-            android:editable="false"
-            android:background="@color/huise"
-            />
-         <TextView 
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-           android:layout_centerVertical="true"
-           android:layout_marginLeft="10dip"
-            android:text="毫米"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="15dip"
-            android:textSize="16sp"
-            />
-        <ImageView 
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:background="@raw/xing"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="5dip"
-            />
-    </RelativeLayout>
-     <RelativeLayout 
-        android:layout_width="fill_parent"
-        android:layout_height="60dip"
-        >
-        <TextView 
-            android:layout_marginTop="8dip"
-            android:id="@id/tv2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-           android:layout_marginLeft="10dip"
-            android:text="变形急速"
-            android:textSize="16sp"
-            />
-        <TextView 
-            android:layout_below="@id/tv2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-           android:layout_marginLeft="10dip"
-            android:text="  极限值"
-            android:textSize="16sp"
-            />
-       <EditText 
-            android:id="@+id/section_new_single2"
-            android:layout_width="90dip"
-            android:layout_height="42dip"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="50dip"
-            android:editable="false"
-            android:background="@color/huise"
-            />
-         <EditText 
-            android:id="@+id/section_new_single1"
-            android:layout_width="90dip"
-            android:layout_height="42dip"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="80dip"
-            android:editable="false"
-            android:background="@color/huise"
-            />
-        <TextView 
-            android:layout_marginTop="8dip"
-            android:id="@+id/tv3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-           android:layout_marginLeft="10dip"
-            android:text="毫米"
-            android:textSize="16sp"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="15dip"
-            />
-        <TextView 
-            android:layout_below="@id/tv3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-           android:layout_marginLeft="10dip"
-            android:text="/天"
-            android:textSize="16sp"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="15dip"
-            />
-        <ImageView 
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:background="@raw/xing"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="5dip"
-            />
-    </RelativeLayout>
-     <RelativeLayout 
-        android:layout_width="fill_parent"
-        android:layout_height="60dip"
-        >
-        <TextView 
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-           android:layout_centerVertical="true"
-           android:layout_marginLeft="10dip"
-            android:text="设置时间"
-            android:textSize="16sp"
-            />
-        <EditText 
-            android:id="@+id/section_new_createtime2"
-            android:layout_width="90dip"
-            android:layout_height="42dip"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="50dip"
-            android:editable="false"
-            android:background="@color/huise"
-            />
-         <EditText 
-            android:id="@+id/section_new_createtime1"
-            android:layout_width="90dip"
-            android:layout_height="42dip"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="80dip"
-            android:editable="false"
-            android:background="@color/huise"
-            />
-        <ImageView 
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:background="@raw/shiqi"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="5dip"
-            />
-    </RelativeLayout>
-     <RelativeLayout 
-        android:layout_width="fill_parent"
-        android:layout_height="60dip"
-        >
-        <TextView 
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-           android:layout_centerVertical="true"
-           android:layout_marginLeft="10dip"
-            android:text="备     注"
-            android:textSize="16sp"
-            />
-        <EditText 
-            android:id="@+id/section_new_info2"
-            android:layout_width="90dip"
-            android:layout_height="42dip"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="50dip"
-            />
-         <EditText 
-            android:id="@+id/section_new_info1"
-            android:layout_width="90dip"
-            android:layout_height="42dip"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="80dip"
-            />
-    </RelativeLayout>
-</LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="40dip" >
+
+            <TextView
+                android:id="@+id/tv2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="80dip"
+                android:layout_marginTop="8dip"
+                android:text="拱顶下沉"
+                android:textSize="19sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tv2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="50dip"
+                android:layout_marginTop="8dip"
+                android:text="周边收敛"
+                android:textSize="19sp"
+                android:textStyle="bold" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="60dip" >
+
+            <TextView
+                android:id="@+id/tv2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dip"
+                android:layout_marginTop="8dip"
+                android:text="累计变形"
+                android:textSize="16sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tv2"
+                android:layout_marginLeft="10dip"
+                android:text="  极限值"
+                android:textSize="16sp" />
+
+            <EditText
+                android:id="@+id/section_new_leiji2"
+                android:layout_width="90dip"
+                android:layout_height="42dip"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="50dip"
+                android:background="@color/huise"
+                android:editable="false" />
+
+            <EditText
+                android:id="@+id/section_new_leiji1"
+                android:layout_width="90dip"
+                android:layout_height="42dip"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="80dip"
+                android:background="@color/huise"
+                android:editable="false" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10dip"
+                android:layout_marginRight="15dip"
+                android:text="毫米"
+                android:textSize="16sp" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="5dip"
+                android:background="@raw/xing" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="60dip" >
+
+            <TextView
+                android:id="@id/tv2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dip"
+                android:layout_marginTop="8dip"
+                android:text="变形急速"
+                android:textSize="16sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tv2"
+                android:layout_marginLeft="10dip"
+                android:text="  极限值"
+                android:textSize="16sp" />
+
+            <EditText
+                android:id="@+id/section_new_single2"
+                android:layout_width="90dip"
+                android:layout_height="42dip"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="50dip"
+                android:background="@color/huise"
+                android:editable="false" />
+
+            <EditText
+                android:id="@+id/section_new_single1"
+                android:layout_width="90dip"
+                android:layout_height="42dip"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="80dip"
+                android:background="@color/huise"
+                android:editable="false" />
+
+            <TextView
+                android:id="@+id/tv3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_marginLeft="10dip"
+                android:layout_marginRight="15dip"
+                android:layout_marginTop="8dip"
+                android:text="毫米"
+                android:textSize="16sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_below="@id/tv3"
+                android:layout_marginLeft="10dip"
+                android:layout_marginRight="15dip"
+                android:text="/天"
+                android:textSize="16sp" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="5dip"
+                android:background="@raw/xing" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="60dip" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10dip"
+                android:text="设置时间"
+                android:textSize="16sp" />
+
+            <EditText
+                android:id="@+id/section_new_createtime2"
+                android:layout_width="90dip"
+                android:layout_height="42dip"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="50dip"
+                android:background="@color/huise"
+                android:editable="false" />
+
+            <EditText
+                android:id="@+id/section_new_createtime1"
+                android:layout_width="90dip"
+                android:layout_height="42dip"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="80dip"
+                android:background="@color/huise"
+                android:editable="false" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="5dip"
+                android:background="@raw/shiqi" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="60dip" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10dip"
+                android:text="备     注"
+                android:textSize="16sp" />
+
+            <EditText
+                android:id="@+id/section_new_info2"
+                android:layout_width="90dip"
+                android:layout_height="42dip"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="50dip" />
+
+            <EditText
+                android:id="@+id/section_new_info1"
+                android:layout_width="90dip"
+                android:layout_height="42dip"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="80dip" />
+        </RelativeLayout>
+    </LinearLayout>
+
 </LinearLayout>

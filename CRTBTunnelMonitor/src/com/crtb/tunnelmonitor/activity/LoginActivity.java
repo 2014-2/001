@@ -11,7 +11,6 @@ import org.ksoap2.transport.HttpTransportSE;
 import ICT.utils.RSACoder;
 import android.app.Activity;
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Paint;
 import android.graphics.drawable.ColorDrawable;
@@ -25,7 +24,6 @@ import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
-//import android.webkit.WebView.FindListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -39,8 +37,7 @@ import com.crtb.tunnelmonitor.AppCRTBApplication;
 import com.crtb.tunnelmonitor.common.Constant;
 import com.crtb.tunnelmonitor.dao.SurveyerInformationDao;
 import com.crtb.tunnelmonitor.dao.impl.SurveyerInformationDaoImpl;
-import com.crtb.tunnelmonitor.network.CrtbWebService;
-import com.crtb.tunnelmonitor.network.RpcCallback;
+//import android.webkit.WebView.FindListener;
 
 /**
  * 服务器登录界面 创建时间：2014-3-18下午4:11:55

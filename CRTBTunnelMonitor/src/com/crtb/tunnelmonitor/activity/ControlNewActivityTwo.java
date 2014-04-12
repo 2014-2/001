@@ -15,8 +15,8 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.Window;
 import android.view.View.OnClickListener;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -27,8 +27,6 @@ import com.crtb.tunnelmonitor.common.Constant;
 import com.crtb.tunnelmonitor.dao.impl.ControlPointsDaoImpl;
 import com.crtb.tunnelmonitor.entity.ControlPointsInfo;
 import com.crtb.tunnelmonitor.entity.WorkInfos;
-import com.crtb.tunnelmonitor.utils.ConPopuWindow.dialogListener;
-import com.crtb.tunnelmonitor.activity.R;
 
 public class ControlNewActivityTwo extends Activity implements OnClickListener {
 

@@ -2,8 +2,6 @@ package com.crtb.tunnelmonitor.mydefine;
 
 
 
-import com.crtb.tunnelmonitor.activity.R;
-
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
@@ -15,6 +13,8 @@ import android.view.WindowManager;
 import android.view.WindowManager.LayoutParams;
 import android.widget.Button;
 import android.widget.TextView;
+
+import com.crtb.tunnelmonitor.activity.R;
 
 /**
  * 自定义对话框

@@ -2,13 +2,13 @@ package com.crtb.tunnelmonitor;
 
 import org.zw.android.framework.IFrameworkFacade;
 
-import com.crtb.tunnelmonitor.activity.R;
-
 import android.app.Activity;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.crtb.tunnelmonitor.activity.R;
 
 
 /**
@@ -18,6 +18,10 @@ import android.widget.Toast;
  *
  */
 public abstract class BaseActivity extends Activity {
+	
+	protected static final int TAB_ONE			= 0 ;
+	protected static final int TAB_TWO			= 1 ;
+	protected static final int TAB_THREE		= 2 ;
 
 	// base handler
 	protected AppHandler 			mHanlder ;

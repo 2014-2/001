@@ -2,8 +2,6 @@ package com.crtb.tunnelmonitor.entity;
 
 import java.sql.Timestamp;
 
-import android.R.string;
-
 /**
  * 断面测量记录单实体
  */

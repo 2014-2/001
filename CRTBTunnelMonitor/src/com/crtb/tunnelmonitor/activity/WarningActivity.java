@@ -1,26 +1,21 @@
 package com.crtb.tunnelmonitor.activity;
 
 import java.text.SimpleDateFormat;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Random;
 
-import com.crtb.tunnelmonitor.adapter.Myadapter;
-import com.crtb.tunnelmonitor.entity.yujingInfors;
-import com.crtb.tunnelmonitor.activity.R;
-
-import android.os.Bundle;
 import android.app.Activity;
-import android.view.Menu;
+import android.os.Bundle;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
-import android.widget.SimpleAdapter;
 import android.widget.TextView;
+
+import com.crtb.tunnelmonitor.adapter.Myadapter;
+import com.crtb.tunnelmonitor.entity.yujingInfors;
 
 public class WarningActivity extends Activity {
 	

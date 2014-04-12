@@ -38,7 +38,6 @@ import com.crtb.tunnelmonitor.common.Constant;
 import com.crtb.tunnelmonitor.dao.impl.TotalStationDaoImpl;
 import com.crtb.tunnelmonitor.entity.TotalStationInfo;
 import com.crtb.tunnelmonitor.entity.WorkInfos;
-import com.crtb.tunnelmonitor.activity.R;
 
 public class StationActivity extends Activity {
 	/**

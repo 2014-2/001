@@ -24,7 +24,6 @@ import com.crtb.tunnelmonitor.common.Constant.TotalStationType;
 import com.crtb.tunnelmonitor.dao.impl.TotalStationDaoImpl;
 import com.crtb.tunnelmonitor.entity.TotalStationInfo;
 import com.crtb.tunnelmonitor.entity.WorkInfos;
-import com.crtb.tunnelmonitor.activity.R;
 
 /**
  * 新建全站仪串口
