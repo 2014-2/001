@@ -9,7 +9,7 @@
     <LinearLayout
         android:id="@+id/linearLayout1"
         android:layout_width="fill_parent"
-        android:layout_height="50.0dip"
+        android:layout_height="40dip"
         android:background="#e8e8e8" >
 
         <TextView
@@ -19,8 +19,7 @@
             android:layout_weight="1.0"
             android:gravity="center"
             android:text="隧道内断面记录单"
-            android:textColor="#000000"
-            android:textSize="16.0dip" />
+            android:textColor="#000000" />
 
         <TextView
             android:id="@+id/text2"
@@ -29,8 +28,7 @@
             android:layout_weight="1.0"
             android:gravity="center"
             android:text="地表下沉断面记录单"
-            android:textColor="#000000"
-            android:textSize="16.0dip" />
+            android:textColor="#000000" />
     </LinearLayout>
 
     <ImageView

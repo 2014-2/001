@@ -5,12 +5,14 @@ import java.util.List;
 
 import org.zw.android.framework.ioc.InjectCore;
 import org.zw.android.framework.ioc.InjectLayout;
+import org.zw.android.framework.ioc.InjectView;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.view.PagerAdapter;
@@ -21,6 +23,7 @@ import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.view.animation.TranslateAnimation;
 import android.widget.AdapterView;
@@ -50,17 +53,27 @@ public class RecordActivity extends WorkFlowActivity implements OnPageChangeList
 	private SelectPicPopupWindow menuWindow;
 	private View vie;
 	
+	@InjectView(layout=R.layout.record_listview_dibiao)
+	private LinearLayout mSectionRecordLayout ;
+	
+	@InjectView(layout=R.layout.record_listview_suidao)
+	private LinearLayout mSectionSubsidenceRecordLayout ;
+	
 	private ListView listView,listView1;
-	private ViewPager mPager;// 页卡内容
-	private List<View> listViews; // Tab页面列表
+	
+	@InjectView(id=R.id.vPager)
+	private ViewPager mPager;
+	
+	ArrayList<View> list = new ArrayList<View>();
+	
 	private ImageView cursor;// 动画图片
 	private TextView t1, t2;// 页卡头标
 	private int offset = 0;// 动画图片偏移量
 	private int currIndex = 0;// 当前页卡编号
 	private int bmpW;// 动画图片宽度
-	double disPlayWidth, offSet;
+	int disPlayWidth, offSet;
 	Bitmap b;
-	ArrayList<View> list = null;
+	
 	LinearLayout xin;
 	private LinearLayout record_bianji;
 	/***/
@@ -81,6 +94,9 @@ public class RecordActivity extends WorkFlowActivity implements OnPageChangeList
 
 		// title
 		setTopbarTitle(getString(R.string.record_title));
+		
+		// init ViewPager
+		initPager();
 		
 //		initUI();
 //		InitImageView();
@@ -138,29 +154,49 @@ public class RecordActivity extends WorkFlowActivity implements OnPageChangeList
 	}
 	// 初始化
 	public void initUI() {
-		t1 = (TextView) findViewById(R.id.text1);
-		t2 = (TextView) findViewById(R.id.text2);
+		
 //		xin = (LinearLayout) findViewById(R.id.xin);
 //		record_bianji = (LinearLayout) findViewById(R.id.record_bianji);
-		cursor = (ImageView) findViewById(R.id.cursor);
-		mPager = (ViewPager) findViewById(R.id.vPager);
-		t1.setOnClickListener(tv_Listener);
-		t2.setOnClickListener(tv_Listener);
+		
+		//mPager = (ViewPager) findViewById(R.id.vPager);
+		
 	}
 
 	public void InitImageView() {
-		Display dis = this.getWindowManager().getDefaultDisplay();
-		disPlayWidth = dis.getWidth();
-		b = BitmapFactory.decodeResource(this.getResources(), R.drawable.heng);
-		offSet = ((disPlayWidth / 4) - b.getWidth() / 2);
-		setdata();
-		list = new ArrayList<View>();
-		LayoutInflater li = LayoutInflater.from(RecordActivity.this);
-		list.add(li.inflate(R.layout.record_listview_dibiao, null));
-		list.add(li.inflate(R.layout.record_listview_suidao, null));
+		//Display dis = this.getWindowManager().getDefaultDisplay();
+		
+		
+//		setdata();
+//		//list = new ArrayList<View>();
+//		LayoutInflater li = LayoutInflater.from(RecordActivity.this);
+//		list.add(li.inflate(R.layout.record_listview_dibiao, null));
+//		list.add(li.inflate(R.layout.record_listview_suidao, null));
 	}
 
 	public void initPager() {
+		
+		t1 = (TextView) findViewById(R.id.text1);
+		t2 = (TextView) findViewById(R.id.text2);
+		cursor = (ImageView) findViewById(R.id.cursor);
+		
+		t1.setOnClickListener(tv_Listener);
+		t2.setOnClickListener(tv_Listener);
+		
+		disPlayWidth = mDisplayMetrics.widthPixels ;
+		b = BitmapFactory.decodeResource(this.getResources(), R.drawable.heng);
+		offSet = ((disPlayWidth / 4) - b.getWidth() / 2);
+		
+		Matrix matrix = new Matrix();
+		matrix.postTranslate(offset, 0);
+		ViewGroup.LayoutParams lp = cursor.getLayoutParams() ;
+		lp.width = disPlayWidth / 2;
+		lp.height = 4 ;
+		cursor.setLayoutParams(lp);
+		cursor.setImageMatrix(matrix);
+		
+		list.add(mSectionRecordLayout);
+		list.add(mSectionSubsidenceRecordLayout);
+		
 		PagerAdapter pa = new PagerAdapter() {
 
 			@Override
@@ -182,8 +218,6 @@ public class RecordActivity extends WorkFlowActivity implements OnPageChangeList
 			@Override
 			public Object instantiateItem(View arg0, int arg1) {
 				((ViewPager) arg0).addView((View) list.get(arg1), 0);
-				
-
 				return (View) list.get(arg1);
 			}
 
@@ -208,12 +242,13 @@ public class RecordActivity extends WorkFlowActivity implements OnPageChangeList
 			}
 		};
 		mPager.setAdapter(pa);
-		mPager.setCurrentItem(0);
+		mPager.setCurrentItem(TAB_ONE);
 		mPager.setOnPageChangeListener(this);
-		/** 隧道内断面 */
-		Layout1();
-		/** 地表下沉断面 */
-		Layout2();
+		
+//		/** 隧道内断面 */
+//		Layout1();
+//		/** 地表下沉断面 */
+//		Layout2();
 	}
 
 	@Override
@@ -243,7 +278,7 @@ public class RecordActivity extends WorkFlowActivity implements OnPageChangeList
 		public void onClick(View v) {
 			int single = (int) (b.getWidth() + offSet * 2);
 			switch (v.getId()) {
-			case R.id.t1:
+			case R.id.text1:
 				mPager.setCurrentItem(0);
 				if (currIndex != 0) {
 					TranslateAnimation ta = new TranslateAnimation(
@@ -254,7 +289,7 @@ public class RecordActivity extends WorkFlowActivity implements OnPageChangeList
 				}
 				currIndex = 0;
 				break;
-			case R.id.t2:
+			case R.id.text2:
 				mPager.setCurrentItem(1);
 				if (currIndex != 1) {
 					TranslateAnimation ta = new TranslateAnimation(currIndex
@@ -264,8 +299,6 @@ public class RecordActivity extends WorkFlowActivity implements OnPageChangeList
 					cursor.startAnimation(ta);
 				}
 				currIndex = 1;
-				break;
-			default:
 				break;
 			}
 		}
@@ -412,7 +445,6 @@ public class RecordActivity extends WorkFlowActivity implements OnPageChangeList
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (event.getAction() == KeyEvent.ACTION_DOWN) {
-			// TODO Auto-generated method stub
 			if (keyCode == 82) {
 				vie = new View(this);
 				int num = 3;

@@ -158,7 +158,6 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 		offset = (screenW / 3 - bmpW) / 2;
 		Matrix matrix = new Matrix();
 		matrix.postTranslate(offset, 0);
-		cursor.setImageMatrix(matrix);
 		ViewGroup.LayoutParams lp = cursor.getLayoutParams() ;
 		lp.width = screenW / 3;
 		lp.height = 4 ;

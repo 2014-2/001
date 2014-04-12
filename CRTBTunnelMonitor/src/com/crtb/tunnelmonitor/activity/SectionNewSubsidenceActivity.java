@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.zw.android.framework.ioc.InjectCore;
 import org.zw.android.framework.ioc.InjectLayout;
+import org.zw.android.framework.ioc.InjectView;
 
 import android.content.Intent;
 import android.graphics.BitmapFactory;
@@ -18,12 +19,14 @@ import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -42,8 +45,10 @@ import com.crtb.tunnelmonitor.utils.Time;
 @InjectLayout(layout = R.layout.activity_sectionedit)
 public class SectionNewSubsidenceActivity extends WorkFlowActivity implements OnClickListener {
   
-	private ViewPager mPager;// 页卡内容
-    private List<View> listViews; // Tab页面列表
+	@InjectView(id=R.id.vPager)
+	private ViewPager mPager;
+	
+    private List<View> listViews = new ArrayList<View>() ;
     private ImageView cursor;// 动画图片
     private TextView t1, t2, t3, textView1;// 页卡头标
     private int offset = 0;// 动画图片偏移量
@@ -52,6 +57,12 @@ public class SectionNewSubsidenceActivity extends WorkFlowActivity implements On
     private View View3;
     private TextView section_new_tv_diheader;  
     private int num;
+    
+    @InjectView(layout=R.layout.layout_4)
+    private LinearLayout mBaseInfoLayout ;
+    
+    @InjectView(layout=R.layout.layout_2)
+    private LinearLayout mDeformationInfoLayout ;
     
     private EditText DSection_Chainage;
     private EditText DSection_name;
@@ -81,6 +92,9 @@ public class SectionNewSubsidenceActivity extends WorkFlowActivity implements On
 
 		// title
 		setTopbarTitle(getString(R.string.section_new_subsidence_title));
+		
+		// init ViewPager
+		initViewPager() ;
         
 //        num = getIntent().getExtras().getInt("name");
 //        InitImageView();
@@ -116,32 +130,24 @@ public class SectionNewSubsidenceActivity extends WorkFlowActivity implements On
      * 初始化动画
      */
     private void InitImageView() {
-        cursor = (ImageView) findViewById(R.id.cursor);
-        bmpW = BitmapFactory.decodeResource(getResources(), R.drawable.a)
-                .getWidth();// 获取图片宽度
-        DisplayMetrics dm = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(dm);
-        int screenW = dm.widthPixels;// 获取分辨率宽度
-        offset = (screenW / 2 - bmpW) / 2;// 计算偏移量
-        Matrix matrix = new Matrix();
-        matrix.postTranslate(offset, 0);
-        cursor.setImageMatrix(matrix);// 设置动画初始位置
+    	
+    	
     }
 
     /**
      * 初始化头标
      */
     private void InitTextView() {
-        t1 = (TextView) findViewById(R.id.tev);
-        t2 = (TextView) findViewById(R.id.tex);
-        /// section_new_tv_diheader = (TextView) findViewById(R.id.section_new_tv_diheader);
-        t1.setOnClickListener(new MyOnClickListener(0));
-        t2.setOnClickListener(new MyOnClickListener(1));
-		section_btn_queding = (Button) findViewById(R.id.work_btn_queding);
-		section_btn_quxiao = (Button) findViewById(R.id.work_btn_quxiao);
-
-		section_btn_queding.setOnClickListener(this);
-		section_btn_quxiao.setOnClickListener(this);
+//        t1 = (TextView) findViewById(R.id.tev);
+//        t2 = (TextView) findViewById(R.id.tex);
+//        /// section_new_tv_diheader = (TextView) findViewById(R.id.section_new_tv_diheader);
+//        t1.setOnClickListener(new MyOnClickListener(0));
+//        t2.setOnClickListener(new MyOnClickListener(1));
+//		section_btn_queding = (Button) findViewById(R.id.work_btn_queding);
+//		section_btn_quxiao = (Button) findViewById(R.id.work_btn_quxiao);
+//
+//		section_btn_queding.setOnClickListener(this);
+//		section_btn_quxiao.setOnClickListener(this);
 		
 	}
 	// 点击事件
@@ -256,118 +262,126 @@ public class SectionNewSubsidenceActivity extends WorkFlowActivity implements On
 
 	}
 
-    /**
-     * 初始化ViewPager
-     */
-    private void InitViewPager() {
-        mPager = (ViewPager) findViewById(R.id.vPager);
-        listViews = new ArrayList<View>();
-        LayoutInflater mInflater = getLayoutInflater();
-        listViews.add(mInflater.inflate(R.layout.layout_4, null));
-        listViews.add(mInflater.inflate(R.layout.layout_2, null));
-        mPager.setAdapter(new MyPagerAdapter(listViews));
-        mPager.setCurrentItem(0);
-        mPager.setOnPageChangeListener(new MyOnPageChangeListener());
+	private void initViewPager() {
+    	
+		cursor = (ImageView) findViewById(R.id.cursor);
+		bmpW = BitmapFactory.decodeResource(getResources(), R.drawable.a)
+				.getWidth();
+		DisplayMetrics dm = new DisplayMetrics();
+		getWindowManager().getDefaultDisplay().getMetrics(dm);
+		int screenW = dm.widthPixels;
+		offset = (screenW / 2 - bmpW) / 2;
+		Matrix matrix = new Matrix();
+		matrix.postTranslate(offset, 0);
+		ViewGroup.LayoutParams lp = cursor.getLayoutParams() ;
+		lp.width = screenW / 2;
+		lp.height = 4 ;
+		cursor.setLayoutParams(lp);
+		cursor.setImageMatrix(matrix);
+
+		t1 = (TextView) findViewById(R.id.tev);
+		t2 = (TextView) findViewById(R.id.tex);
+
+		t1.setOnClickListener(new MyOnClickListener(TAB_ONE));
+		t2.setOnClickListener(new MyOnClickListener(TAB_TWO));
+
+		listViews.add(mBaseInfoLayout);
+		listViews.add(mDeformationInfoLayout);
+
+		mPager.setAdapter(new MyPagerAdapter());
+		mPager.setCurrentItem(TAB_ONE);
+		mPager.setOnPageChangeListener(new MyOnPageChangeListener());
     }
 
-    /**
-     * 小尛龙
-     */
-    public void InitMyTextView() {
-     
-    }
-
-    /**
-     * ViewPager适配器
-     */
-    public class MyPagerAdapter extends PagerAdapter {
-        public List<View> mListViews;
-
-        public MyPagerAdapter(List<View> mListViews) {
-            this.mListViews = mListViews;
+	
+	public class MyPagerAdapter extends PagerAdapter {
+    	
+        public MyPagerAdapter() {
+        	
         }
 
         @Override
         public void destroyItem(View arg0, int arg1, Object arg2) {
-            ((ViewPager) arg0).removeView(mListViews.get(arg1));
+            ((ViewPager) arg0).removeView(listViews.get(arg1));
         }
 
         @Override
         public void finishUpdate(View arg0) {
+        	
         }
 
         @Override
         public int getCount() {
-            return mListViews.size();
+            return listViews.size();
         }
 
         @Override
         public Object instantiateItem(View arg0, int arg1) {
-            ((ViewPager) arg0).addView(mListViews.get(arg1), 0);
+            ((ViewPager) arg0).addView(listViews.get(arg1), 0);
 
-			AppCRTBApplication CurApp = ((AppCRTBApplication)getApplicationContext());
-			WorkInfos Curw = CurApp.GetCurWork();
-			
-			DSection_Chainage = (EditText) findViewById(R.id.DSection_Chainage);
-			DSection_name = (EditText) findViewById(R.id.DSection_name);
-			DSection_createtime = (EditText) findViewById(R.id.DSection_createtime);
-			DSection_Width = (EditText) findViewById(R.id.DSection_Width);
-			DSection_PointCount = (EditText) findViewById(R.id.DSection_PointCount);
-
-			DSection_Value1 = (EditText) findViewById(R.id.DSection_Value1);
-			DSection_Value2 = (EditText) findViewById(R.id.DSection_Value2);
-			DSection_SetTime = (EditText) findViewById(R.id.DSection_SetTime);
-			DSection_Info = (EditText) findViewById(R.id.DSection_Info);
-			
-			DSection_Chainage.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-				
-				@Override
-				public void onFocusChange(View v, boolean hasFocus) {
-					//if(!hasFocus)
-					{
-						String sChainage = DSection_Chainage.getText().toString().trim();
-						if (sChainage.length() > 0) {
-							AppCRTBApplication CurApp = ((AppCRTBApplication)getApplicationContext());
-							DSection_name.setText(CurApp.GetSectionName(Double.valueOf(sChainage).doubleValue()));
-						}
-						else {
-							DSection_name.setText("");
-						}
-					}
-				}
-			});
-
-			// 获取手机的当前时间
-			final String time = Time.getDateEN();
-			// 设置文本框里面的字体大小
-			DSection_createtime.setTextSize(11);
-			if (arg1 == 0) {
-				if (editInfo != null) {
-					DSection_Chainage.setText(editInfo.getChainage().toString());
-					DSection_Chainage.setFocusableInTouchMode(false);
-					DSection_name.setText(CurApp.GetSectionName(editInfo.getChainage().doubleValue()));
-					DSection_name.setFocusableInTouchMode(false);
-					DSection_createtime.setText(editInfo.getInbuiltTime().toString());
-					DSection_createtime.setFocusableInTouchMode(false);
-					DSection_Width.setText(Integer.toString(editInfo.getWidth()));
-					DSection_Width.setFocusableInTouchMode(false);
-					DSection_PointCount.setText(editInfo.getSurveyPnts());
-					DSection_PointCount.setFocusableInTouchMode(false);
-				}
-				else {
-					// 跟改文本框赋值时间
-					DSection_createtime.setText(time);
-				}
-			}
-			else
-			if (arg1 == 1) {
-				DSection_Value1.setText(Curw.getGDLimitTotalSettlement().toString());
-				DSection_Value2.setText(Curw.getGDLimitVelocity().toString());
-				DSection_SetTime.setTextSize(11);
-				DSection_SetTime.setText(time);
-			}
+//			AppCRTBApplication CurApp = ((AppCRTBApplication)getApplicationContext());
+//			WorkInfos Curw = CurApp.GetCurWork();
+//			
+//			DSection_Chainage = (EditText) findViewById(R.id.DSection_Chainage);
+//			DSection_name = (EditText) findViewById(R.id.DSection_name);
+//			DSection_createtime = (EditText) findViewById(R.id.DSection_createtime);
+//			DSection_Width = (EditText) findViewById(R.id.DSection_Width);
+//			DSection_PointCount = (EditText) findViewById(R.id.DSection_PointCount);
+//
+//			DSection_Value1 = (EditText) findViewById(R.id.DSection_Value1);
+//			DSection_Value2 = (EditText) findViewById(R.id.DSection_Value2);
+//			DSection_SetTime = (EditText) findViewById(R.id.DSection_SetTime);
+//			DSection_Info = (EditText) findViewById(R.id.DSection_Info);
+//			
+//			DSection_Chainage.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+//				
+//				@Override
+//				public void onFocusChange(View v, boolean hasFocus) {
+//					//if(!hasFocus)
+//					{
+//						String sChainage = DSection_Chainage.getText().toString().trim();
+//						if (sChainage.length() > 0) {
+//							AppCRTBApplication CurApp = ((AppCRTBApplication)getApplicationContext());
+//							DSection_name.setText(CurApp.GetSectionName(Double.valueOf(sChainage).doubleValue()));
+//						}
+//						else {
+//							DSection_name.setText("");
+//						}
+//					}
+//				}
+//			});
+//
+//			// 获取手机的当前时间
+//			final String time = Time.getDateEN();
+//			// 设置文本框里面的字体大小
+//			DSection_createtime.setTextSize(11);
+//			if (arg1 == 0) {
+//				if (editInfo != null) {
+//					DSection_Chainage.setText(editInfo.getChainage().toString());
+//					DSection_Chainage.setFocusableInTouchMode(false);
+//					DSection_name.setText(CurApp.GetSectionName(editInfo.getChainage().doubleValue()));
+//					DSection_name.setFocusableInTouchMode(false);
+//					DSection_createtime.setText(editInfo.getInbuiltTime().toString());
+//					DSection_createtime.setFocusableInTouchMode(false);
+//					DSection_Width.setText(Integer.toString(editInfo.getWidth()));
+//					DSection_Width.setFocusableInTouchMode(false);
+//					DSection_PointCount.setText(editInfo.getSurveyPnts());
+//					DSection_PointCount.setFocusableInTouchMode(false);
+//				}
+//				else {
+//					// 跟改文本框赋值时间
+//					DSection_createtime.setText(time);
+//				}
+//			}
+//			else
+//			if (arg1 == 1) {
+//				DSection_Value1.setText(Curw.getGDLimitTotalSettlement().toString());
+//				DSection_Value2.setText(Curw.getGDLimitVelocity().toString());
+//				DSection_SetTime.setTextSize(11);
+//				DSection_SetTime.setText(time);
+//			}
             
-            return mListViews.get(arg1);
+            return listViews.get(arg1);
         }
 
         @Override
