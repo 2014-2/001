@@ -3,20 +3,9 @@ package com.crtb.tunnelmonitor.activity;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.crtb.tunnelmonitor.AppCRTBApplication;
-import com.crtb.tunnelmonitor.activity.WorkNewActivity.MyOnClickListener;
-import com.crtb.tunnelmonitor.common.Constant;
-import com.crtb.tunnelmonitor.dao.impl.TunnelCrossSectionDaoImpl;
-import com.crtb.tunnelmonitor.dao.impl.TunnelCrossSectionExDaoImpl;
-import com.crtb.tunnelmonitor.dao.impl.WorkDaoImpl;
-import com.crtb.tunnelmonitor.entity.TunnelCrossSectionInfo;
-import com.crtb.tunnelmonitor.entity.WorkInfos;
-import com.crtb.tunnelmonitor.utils.SearchWather;
-import com.crtb.tunnelmonitor.utils.Time;
-import com.crtb.tunnelmonitor.activity.R;
-import com.crtb.tunnelmonitor.activity.R.drawable;
+import org.zw.android.framework.ioc.InjectCore;
+import org.zw.android.framework.ioc.InjectLayout;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
@@ -26,15 +15,12 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.DisplayMetrics;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.View.OnKeyListener;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -44,11 +30,21 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.crtb.tunnelmonitor.AppCRTBApplication;
+import com.crtb.tunnelmonitor.WorkFlowActivity;
+import com.crtb.tunnelmonitor.common.Constant;
+import com.crtb.tunnelmonitor.dao.impl.TunnelCrossSectionDaoImpl;
+import com.crtb.tunnelmonitor.entity.TunnelCrossSectionInfo;
+import com.crtb.tunnelmonitor.entity.WorkInfos;
+import com.crtb.tunnelmonitor.utils.Time;
+
 /**
- * 新建断面
+ * 新建隧道内断面
  * 
  */
-public class SectionNewActivity extends Activity implements OnClickListener {
+@InjectLayout(layout = R.layout.activity_section_new)
+public class SectionNewActivity extends WorkFlowActivity implements OnClickListener {
+	
 	private ViewPager mPager;// 页卡内容
 
 	private List<View> listViews; // Tab页面列表
@@ -102,7 +98,13 @@ public class SectionNewActivity extends Activity implements OnClickListener {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_section_new);
+		// setContentView(R.layout.activity_section_new);
+		
+		// add by wei.zhou
+		InjectCore.injectUIProperty(this);
+
+		// title
+		setTopbarTitle(getString(R.string.section_new_title));
 		
 		// sChainage = getIntent().getExtras().getString(Constant.Select_SectionRowClickItemsName_Name);
 		//double dChainage = AppCRTBApplication.StrToDouble(sChainage, -1);

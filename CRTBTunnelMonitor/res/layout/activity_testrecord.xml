@@ -3,12 +3,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
-       
+
+    <include layout="@layout/activity_topbar_layout" />
+
     <LinearLayout
         android:id="@+id/linearLayout1"
         android:layout_width="fill_parent"
-        android:layout_height="50.0dip"
-        android:background="@color/huise" >
+        android:layout_height="40dp"
+        android:background="#e8e8e8" >
 
         <TextView
             android:id="@+id/text1"
@@ -17,8 +19,7 @@
             android:layout_weight="1.0"
             android:gravity="center"
             android:text="隧道内断面记录单"
-            android:textColor="#000000"
-            android:textSize="16.0dip" />
+            android:textColor="#000000" />
 
         <TextView
             android:id="@+id/text2"
@@ -27,18 +28,17 @@
             android:layout_weight="1.0"
             android:gravity="center"
             android:text="地表下沉断面记录单"
-            android:textColor="#000000"
-            android:textSize="16.0dip" />
+            android:textColor="#000000" />
     </LinearLayout>
-       <ImageView
+
+    <ImageView
         android:id="@+id/cursor"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="120dp"
+        android:layout_height="4dp"
+        android:layout_marginTop="-4dp"
         android:scaleType="matrix"
-        android:layout_marginLeft="40dip"
-        android:src="@drawable/heng" />
-       
-       
+        android:src="#2d7b90" />
+
     <android.support.v4.view.ViewPager
         android:id="@+id/vPager"
         android:layout_width="fill_parent"
@@ -47,6 +47,5 @@
         android:background="#ffffff"
         android:flipInterval="30"
         android:persistentDrawingCache="animation" />
-    
-    
+
 </LinearLayout>

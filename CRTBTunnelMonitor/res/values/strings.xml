@@ -23,10 +23,19 @@
         <item>编辑</item>
         <item>删除</item>
     </string-array>
-    
-     <!-- 工作面模块 -->
-    <string name="section_title">断面管理</string>
 
+    <!-- 断面模块 -->
+    <string name="section_title">断面管理</string>
+    <string name="section_new_title">新建隧道内断面</string>
+    <string name="section_new_subsidence_title">新建地表下沉断面</string>
+
+    <!-- 记录单模块 -->
+    <string name="record_title">记录单管理</string>
+
+    <!-- 测量模块 -->
+    <string name="test_record_title">测量</string>
+    
+    
     <string name="system_name">隧道围岩监测采集终端系统</string>
     <string name="about">关于</string>
     <string name="server_interact">服务器交互</string>
@@ -36,4 +45,5 @@
     <string name="main_title">隧道进口</string>
     <string name="server_setting">服务器参数设置</string>
     <string name="user_book">用户手册</string>
+
 </resources>

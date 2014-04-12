@@ -88,7 +88,7 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 
 	/** 初始化控件 */
 	private void initView() {
-		TextView title=(TextView) findViewById(R.id.tv_topbar_title);
+		TextView title = (TextView) findViewById(R.id.tv_topbar_title);
 		title.setText(R.string.main_title);
 		mWorkSection = (TextView) findViewById(R.id.worksection);
 		mCrossSection = (TextView) findViewById(R.id.crosssection);
@@ -133,7 +133,6 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 		}
 			break;
 		case R.id.crosssection: // 断面
-		{
 
 			if (mCurrentWorkPlan == null) {
 				Toast.makeText(MainActivity.this, "请先打开工作面", 3000).show();
@@ -141,108 +140,49 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 				intent = new Intent(MainActivity.this, SectionActivity.class);
 				startActivity(intent);
 			}
-			
-			// AppCRTBApplication CurApp = AppCRTBApplication.getInstance();
-			// WorkInfos CurW = CurApp.GetCurWork();
-			// if(CurW == null)
-			// {
-			// Toast.makeText(MainActivity.this, "请先打开工作面", 3000).show();
-			// return;
-			// }
-			// intent = new Intent(MainActivity.this,SectionActivity.class);
-			// startActivity(intent);
-		}
+
 			break;
 		case R.id.sheet: // 记录单
-		{
 			if (mCurrentWorkPlan == null) {
 				Toast.makeText(MainActivity.this, "请先打开工作面", 3000).show();
 			} else {
 				intent = new Intent(MainActivity.this, RecordActivity.class);
 				startActivity(intent);
 			}
-			// AppCRTBApplication CurApp =
-			// ((AppCRTBApplication)getApplicationContext());
-			// WorkInfos CurW = CurApp.GetCurWork();
-			// if(CurW == null)
-			// {
-			// Toast.makeText(MainActivity.this, "请先打开工作面", 3000).show();
-			// return;
-			// }
-			// intent = new Intent(MainActivity.this,RecordActivity.class);
-			// startActivity(intent);
-		}
 			break;
 		case R.id.station: // 全站仪
-		{
-			
+
 			if (mCurrentWorkPlan == null) {
 				Toast.makeText(MainActivity.this, "请先打开工作面", 3000).show();
 			} else {
-				intent = new Intent(MainActivity.this, TotalStationActivity.class);
+				intent = new Intent(MainActivity.this,
+						TotalStationActivity.class);
 				startActivity(intent);
 			}
-//			AppCRTBApplication CurApp = ((AppCRTBApplication) getApplicationContext());
-//			WorkInfos CurW = CurApp.GetCurWork();
-//			if (CurW == null) {
-//				Toast.makeText(MainActivity.this, "请先打开工作面", 3000).show();
-//				return;
-//			}
-//			intent = new Intent(MainActivity.this, TotalStationActivity.class);
-//			startActivity(intent);
-		}
 			break;
 		case R.id.measure: // 测量
-		{
-
 			if (mCurrentWorkPlan == null) {
 				Toast.makeText(MainActivity.this, "请先打开工作面", 3000).show();
 			} else {
 				intent = new Intent(MainActivity.this, TestRecordActivity.class);
 				startActivity(intent);
 			}
-			// AppCRTBApplication CurApp =
-			// ((AppCRTBApplication)getApplicationContext());
-			// WorkInfos CurW = CurApp.GetCurWork();
-			// if(CurW == null)
-			// {
-			// Toast.makeText(MainActivity.this, "请先打开工作面", 3000).show();
-			// return;
-			// }
-			// intent = new Intent(MainActivity.this,TestRecordActivity.class);
-			// startActivity(intent);
-		}
 			break;
 		case R.id.warn: // 预警
-		{
 			if (mCurrentWorkPlan == null) {
 				Toast.makeText(MainActivity.this, "请先打开工作面", 3000).show();
 			} else {
 				intent = new Intent(MainActivity.this, WarningActivity.class);
 				startActivity(intent);
 			}
-			
-//			AppCRTBApplication CurApp = ((AppCRTBApplication) getApplicationContext());
-//			WorkInfos CurW = CurApp.GetCurWork();
-//			if (CurW == null) {
-//				Toast.makeText(MainActivity.this, "请先打开工作面", 3000).show();
-//				return;
-//			}
-//			intent = new Intent(MainActivity.this, WarningActivity.class);
-//			startActivity(intent);
-		}
 			break;
 		case R.id.server: // 服务器
-		{
 			intent = new Intent(MainActivity.this, ServersActivity.class);
 			startActivity(intent);
-		}
 			break;
 		case R.id.about: // 关于
-		{
 			intent = new Intent(MainActivity.this, AsregardsActivity.class);
 			startActivity(intent);
-		}
 			break;
 		}
 

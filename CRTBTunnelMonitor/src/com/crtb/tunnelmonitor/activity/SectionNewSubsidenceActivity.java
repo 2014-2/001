@@ -4,17 +4,9 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.crtb.tunnelmonitor.AppCRTBApplication;
-import com.crtb.tunnelmonitor.common.Constant;
-import com.crtb.tunnelmonitor.dao.impl.SubsidenceCrossSectionDaoImpl;
-import com.crtb.tunnelmonitor.dao.impl.TunnelCrossSectionDaoImpl;
-import com.crtb.tunnelmonitor.entity.SubsidenceCrossSectionInfo;
-import com.crtb.tunnelmonitor.entity.TunnelCrossSectionInfo;
-import com.crtb.tunnelmonitor.entity.WorkInfos;
-import com.crtb.tunnelmonitor.utils.Time;
-import com.crtb.tunnelmonitor.activity.R;
+import org.zw.android.framework.ioc.InjectCore;
+import org.zw.android.framework.ioc.InjectLayout;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
@@ -32,17 +24,25 @@ import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.crtb.tunnelmonitor.AppCRTBApplication;
+import com.crtb.tunnelmonitor.WorkFlowActivity;
+import com.crtb.tunnelmonitor.common.Constant;
+import com.crtb.tunnelmonitor.dao.impl.SubsidenceCrossSectionDaoImpl;
+import com.crtb.tunnelmonitor.entity.SubsidenceCrossSectionInfo;
+import com.crtb.tunnelmonitor.entity.WorkInfos;
+import com.crtb.tunnelmonitor.utils.Time;
+
 /**
- * 编辑地表下层断面
+ * 新建地表下层断面
  *
  */
-public class SectionNewSubsidenceActivity extends Activity implements OnClickListener
- {
-    private ViewPager mPager;// 页卡内容
+@InjectLayout(layout = R.layout.activity_sectionedit)
+public class SectionNewSubsidenceActivity extends WorkFlowActivity implements OnClickListener {
+  
+	private ViewPager mPager;// 页卡内容
     private List<View> listViews; // Tab页面列表
     private ImageView cursor;// 动画图片
     private TextView t1, t2, t3, textView1;// 页卡头标
@@ -74,7 +74,14 @@ public class SectionNewSubsidenceActivity extends Activity implements OnClickLis
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_sectionedit);
+        //setContentView(R.layout.activity_sectionedit);
+        
+		// add by wei.zhou
+		InjectCore.injectUIProperty(this);
+
+		// title
+		setTopbarTitle(getString(R.string.section_new_subsidence_title));
+        
 //        num = getIntent().getExtras().getInt("name");
 //        InitImageView();
 //        InitTextView();
@@ -127,7 +134,7 @@ public class SectionNewSubsidenceActivity extends Activity implements OnClickLis
     private void InitTextView() {
         t1 = (TextView) findViewById(R.id.tev);
         t2 = (TextView) findViewById(R.id.tex);
-        section_new_tv_diheader = (TextView) findViewById(R.id.section_new_tv_diheader);
+        /// section_new_tv_diheader = (TextView) findViewById(R.id.section_new_tv_diheader);
         t1.setOnClickListener(new MyOnClickListener(0));
         t2.setOnClickListener(new MyOnClickListener(1));
 		section_btn_queding = (Button) findViewById(R.id.work_btn_queding);
@@ -316,7 +323,6 @@ public class SectionNewSubsidenceActivity extends Activity implements OnClickLis
 				
 				@Override
 				public void onFocusChange(View v, boolean hasFocus) {
-					// TODO Auto-generated method stub
 					//if(!hasFocus)
 					{
 						String sChainage = DSection_Chainage.getText().toString().trim();

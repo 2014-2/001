@@ -6,19 +6,9 @@ package com.crtb.tunnelmonitor.activity;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.crtb.tunnelmonitor.AppCRTBApplication;
-import com.crtb.tunnelmonitor.adapter.RecordAdapter;
-import com.crtb.tunnelmonitor.adapter.TestRecordAdapter;
-import com.crtb.tunnelmonitor.common.Constant;
-import com.crtb.tunnelmonitor.dao.impl.RecordDaoImpl;
-import com.crtb.tunnelmonitor.entity.RecordInfo;
-import com.crtb.tunnelmonitor.entity.WorkInfos;
-import com.crtb.tunnelmonitor.utils.SelectPicPopupWindow;
-import com.crtb.tunnelmonitor.activity.R;
+import org.zw.android.framework.ioc.InjectCore;
+import org.zw.android.framework.ioc.InjectLayout;
 
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -34,14 +24,29 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.animation.TranslateAnimation;
-import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.AdapterView.OnItemLongClickListener;
 
-public class TestRecordActivity extends Activity implements OnPageChangeListener{
+import com.crtb.tunnelmonitor.AppCRTBApplication;
+import com.crtb.tunnelmonitor.WorkFlowActivity;
+import com.crtb.tunnelmonitor.adapter.TestRecordAdapter;
+import com.crtb.tunnelmonitor.common.Constant;
+import com.crtb.tunnelmonitor.dao.impl.RecordDaoImpl;
+import com.crtb.tunnelmonitor.entity.RecordInfo;
+import com.crtb.tunnelmonitor.entity.WorkInfos;
+import com.crtb.tunnelmonitor.utils.SelectPicPopupWindow;
+
+/**
+ * 测量模块
+ * 
+ * @author zhouwei
+ *
+ */
+@InjectLayout(layout=R.layout.activity_testrecord)
+public class TestRecordActivity extends WorkFlowActivity implements OnPageChangeListener{
+	
 	private OnClickListener itemsOnClick;
 	private SelectPicPopupWindow menuWindow;
 	private View vie;
@@ -71,7 +76,13 @@ public class TestRecordActivity extends Activity implements OnPageChangeListener
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_testrecord);
+		
+		// add by wei.zhou
+		InjectCore.injectUIProperty(this);
+
+		// title
+		setTopbarTitle(getString(R.string.test_record_title));
+		
 //		initUI();
 //		InitImageView();
 //		initPager();

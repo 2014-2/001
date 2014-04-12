@@ -3,7 +3,9 @@ package com.crtb.tunnelmonitor.activity;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.app.Activity;
+import org.zw.android.framework.ioc.InjectCore;
+import org.zw.android.framework.ioc.InjectLayout;
+
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -29,6 +31,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.crtb.tunnelmonitor.AppCRTBApplication;
+import com.crtb.tunnelmonitor.WorkFlowActivity;
 import com.crtb.tunnelmonitor.adapter.RecordAdapter;
 import com.crtb.tunnelmonitor.common.Constant;
 import com.crtb.tunnelmonitor.dao.impl.RecordDaoImpl;
@@ -40,7 +43,9 @@ import com.crtb.tunnelmonitor.utils.SelectPicPopupWindow;
  * 记录单
  * 
  */
-public class RecordActivity extends Activity implements OnPageChangeListener {
+@InjectLayout(layout=R.layout.activity_record)
+public class RecordActivity extends WorkFlowActivity implements OnPageChangeListener {
+	
 	private OnClickListener itemsOnClick;
 	private SelectPicPopupWindow menuWindow;
 	private View vie;
@@ -70,7 +75,13 @@ public class RecordActivity extends Activity implements OnPageChangeListener {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_record);
+		
+		// add by wei.zhou
+		InjectCore.injectUIProperty(this);
+
+		// title
+		setTopbarTitle(getString(R.string.record_title));
+		
 //		initUI();
 //		InitImageView();
 //		initPager();

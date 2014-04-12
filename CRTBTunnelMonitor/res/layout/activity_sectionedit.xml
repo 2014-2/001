@@ -1,29 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <RelativeLayout
-        android:layout_width="fill_parent"
-        android:layout_height="26dp" >
-
-        <include
-            android:id="@+id/header"
-            layout="@layout/header" >
-        </include>
-
-        <TextView
-            android:id="@+id/section_new_tv_diheader"
-            style="@style/header"
-            android:text="新建地表下层断面" />
-    </RelativeLayout>
+    <include
+        android:id="@+id/layout_one"
+        layout="@layout/activity_topbar_layout" />
 
     <LinearLayout
-        android:id="@+id/linearLayout1"
+        android:id="@+id/layout_two"
         android:layout_width="fill_parent"
-        android:layout_height="50.0dip"
-        android:background="@color/huise" >
+        android:layout_height="40dip"
+        android:layout_below="@id/layout_one"
+        android:background="#e8e8e8" >
 
         <TextView
             android:id="@+id/tev"
@@ -33,7 +23,7 @@
             android:gravity="center"
             android:text="基础信息"
             android:textColor="#000000"
-            android:textSize="22.0dip" />
+            android:textSize="19sp" />
 
         <TextView
             android:id="@+id/tex"
@@ -43,67 +33,33 @@
             android:gravity="center"
             android:text="变形阈值"
             android:textColor="#000000"
-            android:textSize="22.0dip" />
+            android:textSize="19sp" />
     </LinearLayout>
 
     <ImageView
         android:id="@+id/cursor"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="-10dip"
+        android:layout_width="120dp"
+        android:layout_height="4dp"
+        android:layout_below="@id/layout_two"
+        android:layout_marginTop="-4dp"
         android:scaleType="matrix"
-        android:src="@drawable/heng" />
+        android:src="#2d7b90" />
+
+    <include
+        android:id="@+id/bottom_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        layout="@layout/activity_bottom_layout" />
 
     <android.support.v4.view.ViewPager
         android:id="@+id/vPager"
         android:layout_width="fill_parent"
-        android:layout_height="387dp"
-        android:layout_gravity="center"
+        android:layout_height="fill_parent"
+        android:layout_above="@id/bottom_layout"
+        android:layout_below="@id/cursor"
         android:background="#ffffff"
         android:flipInterval="30"
         android:persistentDrawingCache="animation" />
 
-    <RelativeLayout
-        android:id="@+id/main"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent" >
-
-        <LinearLayout
-            android:id="@+id/content"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:orientation="vertical" />
-
-        <LinearLayout
-            android:id="@+id/bottom_panel"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:orientation="horizontal" >
-
-            <Button
-                android:id="@+id/work_btn_quxiao"
-                android:layout_width="0dp"
-                android:layout_height="40dip"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="1"
-                android:background="@color/green"
-                android:text="取消" />
-
-            <ImageView
-                android:layout_width="2dip"
-                android:layout_height="fill_parent"
-                android:background="@color/black" />
-
-            <Button
-                android:id="@+id/work_btn_queding"
-                android:layout_width="0dp"
-                android:layout_height="40dip"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="1"
-                android:background="@color/green"
-                android:text="确定" />
-        </LinearLayout>
-    </RelativeLayout>
-
-</LinearLayout>
+</RelativeLayout>
