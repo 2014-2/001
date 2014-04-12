@@ -42,10 +42,10 @@ import com.crtb.tunnelmonitor.entity.WorkInfos;
 import com.crtb.tunnelmonitor.utils.Time;
 
 /**
- * 新建隧道内断面记录单
+ * 新建地表下沉记录单
  *
  */
-public class RecordNewActivity extends Activity implements OnPageChangeListener, OnClickListener {
+public class RecordNewSubsidenceActivity extends Activity implements OnPageChangeListener, OnClickListener {
    
 	private ListView listView;
 
@@ -236,7 +236,7 @@ public class RecordNewActivity extends Activity implements OnPageChangeListener,
         b = BitmapFactory.decodeResource(this.getResources(), R.drawable.heng);
         offSet = ((disPlayWidth / 4) - b.getWidth() / 2);
         list = new ArrayList<View>();
-        LayoutInflater li = LayoutInflater.from(RecordNewActivity.this);
+        LayoutInflater li = LayoutInflater.from(RecordNewSubsidenceActivity.this);
         list.add(li.inflate(R.layout.lrecord_new_xuanze, null));
         list.add(li.inflate(R.layout.record_new_xinxi, null));
     }
@@ -352,11 +352,11 @@ public class RecordNewActivity extends Activity implements OnPageChangeListener,
 //
     				setdata(itype);
     				if (itype == 1) {
-        				adapter = new RecordTunnelCrossSectionInfoAdapter(RecordNewActivity.this, infos);
+        				adapter = new RecordTunnelCrossSectionInfoAdapter(RecordNewSubsidenceActivity.this, infos);
         				listView.setAdapter(adapter);
 					}
     				else {
-        				adapter1 = new RecordSubsidenceCrossSectionInfoAdapter(RecordNewActivity.this, infos1);
+        				adapter1 = new RecordSubsidenceCrossSectionInfoAdapter(RecordNewSubsidenceActivity.this, infos1);
         				listView.setAdapter(adapter1);
 					}
     		   }

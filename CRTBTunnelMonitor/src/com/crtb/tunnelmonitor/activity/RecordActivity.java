@@ -18,13 +18,9 @@ import android.os.Parcelable;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
-import android.view.Display;
-import android.view.Gravity;
-import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.view.animation.TranslateAnimation;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
@@ -38,6 +34,7 @@ import com.crtb.tunnelmonitor.WorkFlowActivity;
 import com.crtb.tunnelmonitor.adapter.RecordAdapter;
 import com.crtb.tunnelmonitor.common.Constant;
 import com.crtb.tunnelmonitor.dao.impl.RecordDaoImpl;
+import com.crtb.tunnelmonitor.entity.MenuSystemItem;
 import com.crtb.tunnelmonitor.entity.RecordInfo;
 import com.crtb.tunnelmonitor.entity.WorkInfos;
 import com.crtb.tunnelmonitor.utils.SelectPicPopupWindow;
@@ -98,9 +95,43 @@ public class RecordActivity extends WorkFlowActivity implements OnPageChangeList
 		// init ViewPager
 		initPager();
 		
+		// menu
+		loadSystemMenu();
+		
 //		initUI();
 //		InitImageView();
 //		initPager();
+	}
+	
+	public void loadSystemMenu(){
+		
+		List<MenuSystemItem> systems = new ArrayList<MenuSystemItem>();
+		
+		MenuSystemItem item = new MenuSystemItem() ;
+		item.setIcon(R.drawable.ic_menu_create);
+		item.setName(getString(R.string.common_create_new));
+		systems.add(item);
+		
+		createSystemMenu(systems);
+	}
+
+	@Override
+	protected void onSystemMenuClick(MenuSystemItem menu) {
+		
+		String name = menu.getName() ;
+		
+		if(name.equals(getString(R.string.common_create_new))){
+			
+			Intent intent = new Intent() ;
+			
+			if(mPager.getCurrentItem() == TAB_ONE){
+				intent.setClass(RecordActivity.this, RecordNewActivity.class);
+			} else {
+				intent.setClass(RecordActivity.this, RecordNewSubsidenceActivity.class);
+			}
+			
+			startActivity(intent);
+		}
 	}
 
 	public void setdata() {
@@ -443,25 +474,6 @@ public class RecordActivity extends WorkFlowActivity implements OnPageChangeList
 	}
 	
 	@Override
-	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		if (event.getAction() == KeyEvent.ACTION_DOWN) {
-			if (keyCode == 82) {
-				vie = new View(this);
-				int num = 3;
-				
-				menuWindow = new SelectPicPopupWindow(this, itemsOnClick,3,currIndex);
-				menuWindow.showAtLocation(vie, Gravity.BOTTOM
-						| Gravity.CENTER_HORIZONTAL, 0, 0);
-				
-			}
-			if (keyCode == KeyEvent.KEYCODE_BACK) {
-				this.finish();
-			}
-		}
-		return true;
-	}
-	
-	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data)
 	{
 		switch (resultCode) {
@@ -480,9 +492,6 @@ public class RecordActivity extends WorkFlowActivity implements OnPageChangeList
 				break;
 			}
 		}
-			break;
-
-		default:
 			break;
 		}
 	}

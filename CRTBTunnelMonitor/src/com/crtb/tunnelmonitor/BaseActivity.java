@@ -1,14 +1,22 @@
 package com.crtb.tunnelmonitor;
 
+import java.util.List;
+
 import org.zw.android.framework.IFrameworkFacade;
 
 import android.app.Activity;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.view.KeyEvent;
+import android.view.MotionEvent;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.crtb.tunnelmonitor.activity.R;
+import com.crtb.tunnelmonitor.entity.MenuSystemItem;
+import com.crtb.tunnelmonitor.widget.CrtbSystemMenu;
+import com.crtb.tunnelmonitor.widget.CrtbSystemMenu.ISystemMenuOnclick;
 
 
 /**
@@ -32,8 +40,11 @@ public abstract class BaseActivity extends Activity {
 	// topbar title
 	private TextView				mTopbarTitle ;
 	
-	//
+	// window display
 	protected DisplayMetrics 		mDisplayMetrics ;
+	
+	// system menu
+	private CrtbSystemMenu			mSystemMenu ;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -66,5 +77,85 @@ public abstract class BaseActivity extends Activity {
 		}
 		
 		mTopbarTitle.setText(title);
+	}
+	
+	/**
+	 * create system menu
+	 */
+	protected void createSystemMenu(List<MenuSystemItem> menus){
+		
+		if(menus == null || menus.isEmpty()){
+			return ;
+		}
+		
+		if(mSystemMenu != null){
+			return ;
+		}
+		
+		LinearLayout root = (LinearLayout) getLayoutInflater().inflate(R.layout.menu_system_container, null);
+		
+		mSystemMenu	= new CrtbSystemMenu(this,root, mDisplayMetrics.widthPixels, 
+				android.view.ViewGroup.LayoutParams.WRAP_CONTENT, menus);
+		
+		mSystemMenu.setMenuOnclick(new ISystemMenuOnclick() {
+			
+			@Override
+			public void onclick(MenuSystemItem menu) {
+				onSystemMenuClick(menu);
+			}
+		}) ;
+	}
+	
+	/**
+	 * please Override the method
+	 * 
+	 * @param menu
+	 */
+	protected void onSystemMenuClick(MenuSystemItem menu){
+		
+	}
+	
+	@Override
+	public boolean onTouchEvent(MotionEvent event) {
+		
+		if(mSystemMenu != null){
+			mSystemMenu.onTouchEvent(event);
+		}
+		
+		return super.onTouchEvent(event);
+	}
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		
+		if(mSystemMenu != null){
+			mSystemMenu.dismiss() ;
+		}
+	}
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		
+		if(mSystemMenu != null){
+			mSystemMenu.dismiss() ;
+		}
+	}
+	
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		
+		if (event.getAction() == KeyEvent.ACTION_DOWN) {
+			
+			if (keyCode == KeyEvent.KEYCODE_MENU) {
+				if(mSystemMenu != null){
+					mSystemMenu.show();
+				}
+				return true ;
+			}
+		}
+		
+		return super.onKeyDown(keyCode, event);
 	}
 }

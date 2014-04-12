@@ -47,8 +47,6 @@ import com.crtb.tunnelmonitor.utils.SelectPicPopupWindow;
 @InjectLayout(layout=R.layout.activity_testrecord)
 public class TestRecordActivity extends WorkFlowActivity implements OnPageChangeListener{
 	
-	private OnClickListener itemsOnClick;
-	private SelectPicPopupWindow menuWindow;
 	private View vie;
 	
 	private ListView listView,listView1;
@@ -408,26 +406,6 @@ public class TestRecordActivity extends WorkFlowActivity implements OnPageChange
 //				return true;
 //			}
 //		});
-	}
-	
-	@Override
-	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		if (event.getAction() == KeyEvent.ACTION_DOWN) {
-			// TODO Auto-generated method stub
-			if (keyCode == 82) {
-				vie = new View(this);
-				int num = 3;
-				
-				menuWindow = new SelectPicPopupWindow(this, itemsOnClick,3,currIndex);
-				menuWindow.showAtLocation(vie, Gravity.BOTTOM
-						| Gravity.CENTER_HORIZONTAL, 0, 0);
-				
-			}
-			if (keyCode == KeyEvent.KEYCODE_BACK) {
-				this.finish();
-			}
-		}
-		return true;
 	}
 	
 	@Override
