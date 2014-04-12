@@ -81,9 +81,9 @@ public class SectionActivity extends Activity implements OnPageChangeListener {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_section);
-		initUI();
-		InitImageView();
-		initPager();
+//		initUI();
+//		InitImageView();
+//		initPager();
 	}
 
 	// 初始数据

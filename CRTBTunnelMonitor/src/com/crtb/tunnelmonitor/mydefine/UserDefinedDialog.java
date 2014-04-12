@@ -40,7 +40,7 @@ public class UserDefinedDialog extends Dialog implements android.view.View.OnCli
 	private TextView tvcontent;
 
 	public UserDefinedDialog(Context context, String message,View.OnClickListener onclicklistener,View.OnClickListener cancelListener) {
-		super(context,R.style.Theme_Dialog);
+		super(context,R.style.crtb_theme_dialog);
 		this.ctx = context;
 		this.msg = message;
 		if (onclicklistener != null) {

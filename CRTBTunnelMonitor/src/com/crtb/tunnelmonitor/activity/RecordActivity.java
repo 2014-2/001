@@ -71,9 +71,9 @@ public class RecordActivity extends Activity implements OnPageChangeListener {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_record);
-		initUI();
-		InitImageView();
-		initPager();
+//		initUI();
+//		InitImageView();
+//		initPager();
 	}
 
 	public void setdata() {

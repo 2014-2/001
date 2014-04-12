@@ -43,4 +43,8 @@ public abstract class AbstractDao {
 		
 		return mDatabase.deleteObject(bean) > -1 ;
 	} 
+	
+	public final void executeSql(String sql , String[] params){
+		mDatabase.execute(sql, params);
+	}
 }

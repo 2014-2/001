@@ -72,9 +72,9 @@ public class TestRecordActivity extends Activity implements OnPageChangeListener
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_testrecord);
-		initUI();
-		InitImageView();
-		initPager();
+//		initUI();
+//		InitImageView();
+//		initPager();
 	}
 
 	public void setdata() {

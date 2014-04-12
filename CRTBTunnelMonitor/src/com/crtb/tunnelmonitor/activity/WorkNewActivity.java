@@ -30,12 +30,15 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.crtb.tunnelmonitor.CommonObject;
 import com.crtb.tunnelmonitor.WorkFlowActivity;
 import com.crtb.tunnelmonitor.dao.impl.v2.WorkPlanDao;
 import com.crtb.tunnelmonitor.entity.WorkPlan;
 
 @InjectLayout(layout=R.layout.activity_work_new)
 public class WorkNewActivity extends WorkFlowActivity implements OnClickListener {
+	
+	public static final String KEY_WORKPLAN_OBJECT		= "_key_workplan_object" ;
 	
 	@InjectView(id=R.id.vPager)
 	private ViewPager mPager;
@@ -113,6 +116,7 @@ public class WorkNewActivity extends WorkFlowActivity implements OnClickListener
 	private Button mBntCancel;
 	
 	private List<View> listViews = new ArrayList<View>();
+	private WorkPlan mWorkPlanBean ;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -130,12 +134,31 @@ public class WorkNewActivity extends WorkFlowActivity implements OnClickListener
 		
 		InitViewPager();
 		
-		// default 
-		String date = DateUtils.toDateString(DateUtils.getCurrtentTimes(), DateUtils.DATE_TIME_FORMAT) ;
-		mWorkPlanCalendar.setText(date);
-		mVaultTransDate.setText(date);
-		mAstringeDate.setText(date);
+		mWorkPlanBean = CommonObject.findObject(WorkNewActivity.KEY_WORKPLAN_OBJECT);
 		
+		if(mWorkPlanBean != null){
+			loadDefaultData(mWorkPlanBean);
+		} else {
+			// default 
+			String date = DateUtils.toDateString(DateUtils.getCurrtentTimes(), DateUtils.DATE_TIME_FORMAT) ;
+			mWorkPlanCalendar.setText(date);
+			mVaultTransDate.setText(date);
+			mAstringeDate.setText(date);
+		}
+	}
+	
+	private void loadDefaultData(WorkPlan bean){
+		
+		mWorkPlanName.setText(bean.getWorkPlanName());
+		mWorkPlanCalendar.setText(bean.getCreationTime());
+		mWorkPlanUnit.setText(bean.getConstructionOrganization());
+		mWorkPlanPrefix.setText(bean.getMileagePrefix());
+		mWorkPlanStart.setText(String.valueOf(bean.getStartMileage()));
+		mWorkPlanEnd.setText(String.valueOf(bean.getEndMileage()));
+		
+//		String vaultVel 	= mVaultTransVelocity.getEditableText().toString().trim() ;
+//		String vaultDate 	= mVaultTransDate.getEditableText().toString().trim() ;
+//		String vaultRemark 	= mVaultTransRemark.getEditableText().toString().trim() ;
 	}
 
 	private void InitViewPager() {
@@ -257,15 +280,28 @@ public class WorkNewActivity extends WorkFlowActivity implements OnClickListener
 				return ;
 			}
 			
-			WorkPlan info = new WorkPlan() ;
-			info.setWorkPlanName(name);
-			info.setCreationTime(date);
-			info.setConstructionOrganization(unit);
-			info.setMileagePrefix(pref);
-			info.setStartMileage(sm);
-			info.setEndMileage(em);
-			
-			WorkPlanDao.defaultWorkPlanDao().insert(info);
+			if(mWorkPlanBean != null){
+				
+				mWorkPlanBean.setWorkPlanName(name);
+				mWorkPlanBean.setCreationTime(date);
+				mWorkPlanBean.setConstructionOrganization(unit);
+				mWorkPlanBean.setMileagePrefix(pref);
+				mWorkPlanBean.setStartMileage(sm);
+				mWorkPlanBean.setEndMileage(em);
+				
+				WorkPlanDao.defaultWorkPlanDao().update(mWorkPlanBean);
+			} else {
+				
+				WorkPlan info = new WorkPlan() ;
+				info.setWorkPlanName(name);
+				info.setCreationTime(date);
+				info.setConstructionOrganization(unit);
+				info.setMileagePrefix(pref);
+				info.setStartMileage(sm);
+				info.setEndMileage(em);
+				
+				WorkPlanDao.defaultWorkPlanDao().insert(info);
+			}
 			
 			setResult(RESULT_CANCELED);
 			finish();

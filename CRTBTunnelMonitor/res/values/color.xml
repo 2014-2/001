@@ -18,11 +18,14 @@
     <color name="deepyellow">#FF6600</color>
     <color name="huise">#CCCCCC</color>
     <color name="header">#006E8C</color>
-    <color name="item_menu_select">#00CCFF</color>
-    <color name="item_menu_normal">#B5B5B5</color>
+    <color name="item_menu_select">#DDDDDD</color>
+    <color name="item_menu_normal">#FFFFFF</color>
     <color name="system_menu_bg">#E4E4E4</color>
     <color name="bottom_button_normal">#C5C5C5</color>
-    
+    <color name="button_normal">#1d7690</color>
+    <color name="button_select">#c8c8c8</color>
+    <color name="button_select_two">#ae8b1c</color>
+
     <!-- workplan -->
     <color name="workplan_top_color">#a6d4de</color>
     <color name="bottom_menu_bg_color">#2d2d2d</color>

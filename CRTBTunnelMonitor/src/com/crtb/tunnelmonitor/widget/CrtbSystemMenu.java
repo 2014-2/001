@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
@@ -34,13 +35,14 @@ public final class CrtbSystemMenu extends PopupWindow {
 	private LayoutInflater mLayoutInflater;
 	private ISystemMenuOnclick mListener ;
 
-	public CrtbSystemMenu(Activity owner,int width,int height,List<MenuSystemItem> menus) {
-		super(width, height);
+	public CrtbSystemMenu(Activity owner,ViewGroup root,int width,int height,List<MenuSystemItem> menus) {
+		super(root,width, height);
+		
+		// LinearLayout root = (LinearLayout) mLayoutInflater.inflate(R.layout.menu_system_container, null);
 
 		mLayoutInflater = LayoutInflater.from(owner);
 		mToken			= owner ;
 		
-		LinearLayout root = (LinearLayout) mLayoutInflater.inflate(R.layout.menu_system_container, null);
 		LinearLayout row  = null ;
 		
 		if(menus.size() <= 2){
@@ -84,7 +86,7 @@ public final class CrtbSystemMenu extends PopupWindow {
 			row.addView(menu, lp);
 		}
 		
-		setContentView(root);
+		// setContentView(root);
 	}
 	
 	public void setMenuOnclick(ISystemMenuOnclick l){

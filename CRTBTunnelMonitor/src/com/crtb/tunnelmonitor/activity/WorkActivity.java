@@ -9,21 +9,26 @@ import org.zw.android.framework.ioc.InjectResource;
 import org.zw.android.framework.ioc.InjectView;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.AbsListView;
-import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemLongClickListener;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.LinearLayout;
 
+import com.crtb.tunnelmonitor.CommonObject;
 import com.crtb.tunnelmonitor.WorkFlowActivity;
+import com.crtb.tunnelmonitor.common.Constant;
 import com.crtb.tunnelmonitor.dao.impl.v2.WorkPlanDao;
 import com.crtb.tunnelmonitor.entity.MenuSystemItem;
 import com.crtb.tunnelmonitor.entity.WorkPlan;
-import com.crtb.tunnelmonitor.widget.CrtbItemPopMenu;
-import com.crtb.tunnelmonitor.widget.CrtbItemPopMenu.IMenuOnclick;
+import com.crtb.tunnelmonitor.mydefine.CrtbDialogDelete;
+import com.crtb.tunnelmonitor.mydefine.CrtbDialogDelete.IButtonOnClick;
+import com.crtb.tunnelmonitor.mydefine.CrtbDialogHint;
+import com.crtb.tunnelmonitor.mydefine.CrtbDialogList;
+import com.crtb.tunnelmonitor.mydefine.CrtbDialogList.OnMenuItemClick;
 import com.crtb.tunnelmonitor.widget.CrtbSystemMenu;
 import com.crtb.tunnelmonitor.widget.CrtbSystemMenu.ISystemMenuOnclick;
 import com.crtb.tunnelmonitor.widget.CrtbWorkPlanListView;
@@ -43,52 +48,85 @@ public final class WorkActivity extends WorkFlowActivity {
 	@InjectResource(stringArray=R.array.work_plan_item_menus)
 	private String[] workpalnItemMenu ;
 	
-	// workplan item menu
-	private CrtbItemPopMenu<WorkPlan>  workplanItemMenu ;
-	
 	// system menu
 	private CrtbSystemMenu	systemMenu ;
-
+	
+	// list item menu
+	private CrtbDialogList<WorkPlan>  itemDialog ;
+	
+	// delete dialog
+	private CrtbDialogHint 	mWarringDialog ;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
 		// add by wei.zhou
 		InjectCore.injectUIProperty(this);
-
+		
 		// title
 		setTopbarTitle(getString(R.string.work_plan_title));
 		
 		// load workplan item menu
 		loadWorkPlanMenu();
+		
+		// load workplan list
+		loadWorkPlanList();
 
 		// load system menu
 		loadSystemMenu();
 		
-		// load workplan list
-		loadWorkPlanList();
-		
+		mWarringDialog	= new CrtbDialogHint(WorkActivity.this, R.drawable.ic_warnning, "该工作面正在使用无法删除");
 	}
 	
 	private void loadWorkPlanMenu(){
 		
-		workplanItemMenu = new CrtbItemPopMenu<WorkPlan>(WorkActivity.this,
-				mDisplayMetrics.widthPixels >> 1, 
-				android.view.ViewGroup.LayoutParams.WRAP_CONTENT, workpalnItemMenu);
-		
-		workplanItemMenu.setMenuOnclick(new IMenuOnclick<WorkPlan>() {
-
+		itemDialog = new CrtbDialogList<WorkPlan>(this, workpalnItemMenu, getString(R.string.work_plan_title));
+		itemDialog.setMenuItemClick(new OnMenuItemClick<WorkPlan>() {
+			
 			@Override
-			public void onclick(String menu, WorkPlan bean) {
-
-				if(menu.equals(getString(R.string.common_open))){
+			public void onItemClick(final WorkPlan bean, int position, String menu) {
+				
+				if(position == 0){
 					
-				} else if(menu.equals(getString(R.string.common_edit))){
+					WorkPlanDao.defaultWorkPlanDao().updateCurrentWorkPlan(bean) ;
 					
-				} else if(menu.equals(getString(R.string.common_delete))){
+					// start new MainActivity
+					Intent intent = new Intent() ;
+					intent.setClass(WorkActivity.this, MainActivity.class);
+					intent.putExtra(Constant.LOGIN_TYPE, Constant.LOCAL_USER);
+					startActivity(intent);
 					
-					if(WorkPlanDao.defaultWorkPlanDao().delete(bean)){
-						mListView.onReload() ;
+				} else if(position == 1){
+					
+					CommonObject.putObject(WorkNewActivity.KEY_WORKPLAN_OBJECT,bean);
+					Intent intent = new Intent() ;
+					intent.setClass(WorkActivity.this, WorkNewActivity.class);
+					startActivity(intent);
+					
+				} else if(position == 2){
+					
+					if(bean.getWorkPalnStatus() == WorkPlan.STATUS_EDIT){
+						 mWarringDialog.show() ;
+					} else {
+						
+						CrtbDialogDelete delete = new CrtbDialogDelete(WorkActivity.this,R.drawable.ic_warnning,"执行该操作将删除操作面的全部数据,无法恢复!");
+						
+						delete.setButtonClick(new IButtonOnClick() {
+							
+							@Override
+							public void onClick(int id) {
+								
+								if(id == CrtbDialogDelete.BUTTON_ID_CONFIRM){
+									
+									if(WorkPlanDao.defaultWorkPlanDao().delete(bean)){
+										loadSystemMenu();
+									}
+								}
+							}
+						}) ;
+						
+						delete.show(); 
 					}
 				}
 			}
@@ -117,7 +155,9 @@ public final class WorkActivity extends WorkFlowActivity {
 		item.setName(getString(R.string.common_inport));
 		systems.add(item);
 		
-		systemMenu	= new CrtbSystemMenu(this, mDisplayMetrics.widthPixels, 
+		LinearLayout root = (LinearLayout) getLayoutInflater().inflate(R.layout.menu_system_container, null);
+		
+		systemMenu	= new CrtbSystemMenu(this,root, mDisplayMetrics.widthPixels, 
 				android.view.ViewGroup.LayoutParams.WRAP_CONTENT, systems);
 		
 		systemMenu.setMenuOnclick(new ISystemMenuOnclick() {
@@ -128,6 +168,8 @@ public final class WorkActivity extends WorkFlowActivity {
 				String name = menu.getName() ;
 				
 				if(name.equals(getString(R.string.common_create_new))){
+					
+					CommonObject.remove(WorkNewActivity.KEY_WORKPLAN_OBJECT);
 					
 					Intent intent = new Intent() ;
 					intent.setClass(WorkActivity.this, WorkNewActivity.class);
@@ -140,37 +182,26 @@ public final class WorkActivity extends WorkFlowActivity {
 				}
 			}
 		}) ;
+		
+		// load data
+		mListView.onReload() ;
 	}
 	
 	private void loadWorkPlanList(){
 		
-		mListView.setOnItemLongClickListener(new OnItemLongClickListener() {
+		mListView.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
-			public boolean onItemLongClick(AdapterView<?> parent, View view,int position, long id) {
-				workplanItemMenu.show(view,mDisplayMetrics.widthPixels >> 1, mListView.getItem(position));
-				return false;
+			public void onItemClick(AdapterView<?> parent, View view,int position, long id) {
+				itemDialog.showDialog(mListView.getItem(position)) ;
 			}
 		}) ;
 		
-		mListView.setOnScrollListener(new OnScrollListener() {
-			
-			@Override
-			public void onScrollStateChanged(AbsListView view, int scrollState) {
-				
-			}
-			
-			@Override
-			public void onScroll(AbsListView view, int firstVisibleItem,
-					int visibleItemCount, int totalItemCount) {
-				workplanItemMenu.dismiss() ;
-			}
-		}) ;
+		mListView.setCacheColorHint(Color.TRANSPARENT);
 	}
 	
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
-		workplanItemMenu.onTouchEvent(event);
 		systemMenu.onTouchEvent(event);
 		return super.onTouchEvent(event);
 	}
@@ -195,7 +226,6 @@ public final class WorkActivity extends WorkFlowActivity {
 		
 		mListView.onReload() ;
 		
-		workplanItemMenu.dismiss() ;
 		systemMenu.dismiss() ;
 	}
 
@@ -203,7 +233,6 @@ public final class WorkActivity extends WorkFlowActivity {
 	protected void onDestroy() {
 		super.onDestroy();
 		
-		workplanItemMenu.dismiss() ;
 		systemMenu.dismiss() ;
 	}
 }

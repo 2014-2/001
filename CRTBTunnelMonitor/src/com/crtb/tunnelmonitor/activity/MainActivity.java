@@ -3,7 +3,6 @@ package com.crtb.tunnelmonitor.activity;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -13,17 +12,21 @@ import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.crtb.tunnelmonitor.AppActivityManager;
 import com.crtb.tunnelmonitor.AppCRTBApplication;
+import com.crtb.tunnelmonitor.BaseActivity;
 import com.crtb.tunnelmonitor.common.Constant;
+import com.crtb.tunnelmonitor.dao.impl.v2.WorkPlanDao;
 import com.crtb.tunnelmonitor.entity.TotalStationInfo;
 import com.crtb.tunnelmonitor.entity.WorkInfos;
-import com.crtb.tunnelmonitor.activity.R;
+import com.crtb.tunnelmonitor.entity.WorkPlan;
 
 /**
  * 主界面 创建时间：2014-3-18下午3:52:30
-
  */
-public class MainActivity extends Activity implements OnClickListener {
+public class MainActivity extends BaseActivity implements OnClickListener {
+
+	public static final String KEY_CURRENT_WORKPLAN = "_key_current_workplan";
 
 	/** 工作面 */
 	private TextView mWorkSection;
@@ -43,16 +46,24 @@ public class MainActivity extends Activity implements OnClickListener {
 	private TextView mAbout;
 	/** 意图 */
 	private Intent intent;
-	/**
-	 * 用户名和选中状态
-	 */
+
 	public static List<TotalStationInfo> list = new ArrayList<TotalStationInfo>();
 	private TotalStationInfo info = new TotalStationInfo();
+
+	private WorkPlan mCurrentWorkPlan;
+
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		initView();
-		//测试
+
+		// clear all activity
+		AppActivityManager.finishAllActivity();
+
+		// current edit workplan
+		mCurrentWorkPlan = WorkPlanDao.defaultWorkPlanDao().queryEditWorkPlan();
+
+		// 测试
 		info.setName("leon0");
 		info.setInfo("未选中");
 		info.setBaudRate(1);
@@ -91,8 +102,9 @@ public class MainActivity extends Activity implements OnClickListener {
 		if (num == Constant.LOCAL_USER) {
 			// 影藏控件
 			mServer.setVisibility(View.INVISIBLE);
-			LinearLayout.LayoutParams param=(LayoutParams) mAbout.getLayoutParams();
-		    //param.width=
+			LinearLayout.LayoutParams param = (LayoutParams) mAbout
+					.getLayoutParams();
+			// param.width=
 		}
 		// 点击事件
 		mWorkSection.setOnClickListener(this);
@@ -103,99 +115,134 @@ public class MainActivity extends Activity implements OnClickListener {
 		mWarn.setOnClickListener(this);
 		mServer.setOnClickListener(this);
 		mAbout.setOnClickListener(this);
-		AppCRTBApplication app=AppCRTBApplication.getInstance();
-		if(app.isbLocaUser()){
+		AppCRTBApplication app = AppCRTBApplication.getInstance();
+		if (app.isbLocaUser()) {
 			mServer.setVisibility(View.INVISIBLE);
-			
+
 		}
 	}
 
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
-		 case R.id.worksection://工作面
-		 {
-			 intent = new Intent(MainActivity.this,WorkActivity.class);
-			 startActivity(intent);
-		 }
-		 break;
-		 case R.id.crosssection: // 断面
-		 {
-			AppCRTBApplication CurApp = AppCRTBApplication.getInstance();
-			WorkInfos CurW = CurApp.GetCurWork();
-			if(CurW == null)
-			{
-				Toast.makeText(MainActivity.this, "请先打开工作面", 3000).show();
-				return;
-			}
-			intent = new Intent(MainActivity.this,SectionActivity.class);
+		case R.id.worksection:// 工作面
+		{
+			intent = new Intent(MainActivity.this, WorkActivity.class);
 			startActivity(intent);
-		 }
-		 break;
-		 case R.id.sheet: // 记录单
-		 {
-				AppCRTBApplication CurApp = ((AppCRTBApplication)getApplicationContext());
-				WorkInfos CurW = CurApp.GetCurWork();
-				if(CurW == null)
-				{
-					Toast.makeText(MainActivity.this, "请先打开工作面", 3000).show();
-					return;
-				}
-    			intent = new Intent(MainActivity.this,RecordActivity.class);
+		}
+			break;
+		case R.id.crosssection: // 断面
+		{
+
+			if (mCurrentWorkPlan == null) {
+				Toast.makeText(MainActivity.this, "请先打开工作面", 3000).show();
+			} else {
+				intent = new Intent(MainActivity.this, SectionActivity.class);
 				startActivity(intent);
-		 }
-		 break;
-		 case R.id.station: // 全站仪
-		 {
-			AppCRTBApplication CurApp = ((AppCRTBApplication)getApplicationContext());
-			WorkInfos CurW = CurApp.GetCurWork();
-			if(CurW == null)
-			{
-				Toast.makeText(MainActivity.this, "请先打开工作面", 3000).show();
-				return;
 			}
-			 intent = new Intent(MainActivity.this,TotalStationActivity.class);
-			 startActivity(intent);
-		 }
-		 break;
-		 case R.id.measure: // 测量
-		 {
-			AppCRTBApplication CurApp = ((AppCRTBApplication)getApplicationContext());
-			WorkInfos CurW = CurApp.GetCurWork();
-			if(CurW == null)
-			{
+			
+			// AppCRTBApplication CurApp = AppCRTBApplication.getInstance();
+			// WorkInfos CurW = CurApp.GetCurWork();
+			// if(CurW == null)
+			// {
+			// Toast.makeText(MainActivity.this, "请先打开工作面", 3000).show();
+			// return;
+			// }
+			// intent = new Intent(MainActivity.this,SectionActivity.class);
+			// startActivity(intent);
+		}
+			break;
+		case R.id.sheet: // 记录单
+		{
+			if (mCurrentWorkPlan == null) {
 				Toast.makeText(MainActivity.this, "请先打开工作面", 3000).show();
-				return;
+			} else {
+				intent = new Intent(MainActivity.this, RecordActivity.class);
+				startActivity(intent);
 			}
-			 intent = new Intent(MainActivity.this,TestRecordActivity.class);
-			 startActivity(intent);
-		 }
-		 break;
-		 case R.id.warn: // 预警
-		 {
-			AppCRTBApplication CurApp = ((AppCRTBApplication)getApplicationContext());
-			WorkInfos CurW = CurApp.GetCurWork();
-			if(CurW == null)
-			{
+			// AppCRTBApplication CurApp =
+			// ((AppCRTBApplication)getApplicationContext());
+			// WorkInfos CurW = CurApp.GetCurWork();
+			// if(CurW == null)
+			// {
+			// Toast.makeText(MainActivity.this, "请先打开工作面", 3000).show();
+			// return;
+			// }
+			// intent = new Intent(MainActivity.this,RecordActivity.class);
+			// startActivity(intent);
+		}
+			break;
+		case R.id.station: // 全站仪
+		{
+			
+			if (mCurrentWorkPlan == null) {
 				Toast.makeText(MainActivity.this, "请先打开工作面", 3000).show();
-				return;
+			} else {
+				intent = new Intent(MainActivity.this, TotalStationActivity.class);
+				startActivity(intent);
 			}
-			intent = new Intent(MainActivity.this,WarningActivity.class);
+//			AppCRTBApplication CurApp = ((AppCRTBApplication) getApplicationContext());
+//			WorkInfos CurW = CurApp.GetCurWork();
+//			if (CurW == null) {
+//				Toast.makeText(MainActivity.this, "请先打开工作面", 3000).show();
+//				return;
+//			}
+//			intent = new Intent(MainActivity.this, TotalStationActivity.class);
+//			startActivity(intent);
+		}
+			break;
+		case R.id.measure: // 测量
+		{
+
+			if (mCurrentWorkPlan == null) {
+				Toast.makeText(MainActivity.this, "请先打开工作面", 3000).show();
+			} else {
+				intent = new Intent(MainActivity.this, TestRecordActivity.class);
+				startActivity(intent);
+			}
+			// AppCRTBApplication CurApp =
+			// ((AppCRTBApplication)getApplicationContext());
+			// WorkInfos CurW = CurApp.GetCurWork();
+			// if(CurW == null)
+			// {
+			// Toast.makeText(MainActivity.this, "请先打开工作面", 3000).show();
+			// return;
+			// }
+			// intent = new Intent(MainActivity.this,TestRecordActivity.class);
+			// startActivity(intent);
+		}
+			break;
+		case R.id.warn: // 预警
+		{
+			if (mCurrentWorkPlan == null) {
+				Toast.makeText(MainActivity.this, "请先打开工作面", 3000).show();
+			} else {
+				intent = new Intent(MainActivity.this, WarningActivity.class);
+				startActivity(intent);
+			}
+			
+//			AppCRTBApplication CurApp = ((AppCRTBApplication) getApplicationContext());
+//			WorkInfos CurW = CurApp.GetCurWork();
+//			if (CurW == null) {
+//				Toast.makeText(MainActivity.this, "请先打开工作面", 3000).show();
+//				return;
+//			}
+//			intent = new Intent(MainActivity.this, WarningActivity.class);
+//			startActivity(intent);
+		}
+			break;
+		case R.id.server: // 服务器
+		{
+			intent = new Intent(MainActivity.this, ServersActivity.class);
 			startActivity(intent);
-		 }
-		 break;
-		 case R.id.server: // 服务器
-		 {
-			 intent = new Intent(MainActivity.this,ServersActivity.class);
-			 startActivity(intent);
-		 }
-		 break;
-		 case R.id.about: // 关于
-		 {
-			 intent = new Intent(MainActivity.this,AsregardsActivity.class);
-			 startActivity(intent);
-		 }
-		 break;
+		}
+			break;
+		case R.id.about: // 关于
+		{
+			intent = new Intent(MainActivity.this, AsregardsActivity.class);
+			startActivity(intent);
+		}
+			break;
 		}
 
 	}
