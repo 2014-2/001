@@ -3,19 +3,26 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
+    <!--
     <include
         android:id="@+id/conheader"
-        layout="@layout/header" />
+        layout="@layout/header" /> 
 
     <TextView
         style="@style/header"
         android:text="全站仪连接管理" />
+    -->
+
+    <include
+        android:id="@+id/header"
+        layout="@layout/activity_topbar_layout" >
+    </include>
 
     <RelativeLayout
         android:id="@+id/conre1"
         android:layout_width="fill_parent"
         android:layout_height="40dip"
-        android:layout_below="@id/conheader"
+        android:layout_below="@id/header"
         android:layout_marginLeft="10dip"
         android:layout_marginRight="10dip" >
 
