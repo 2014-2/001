@@ -64,7 +64,7 @@ public class SubsidenceCrossSectionInfo {
 	@ColumnString(length = 32)
 	private String Rockgrade;			//围岩级别
 	
-	private boolean bUse;
+	private boolean used;
 
 	public int getId() {
 		return id;
@@ -194,13 +194,12 @@ public class SubsidenceCrossSectionInfo {
 		Rockgrade = rockgrade;
 	}
 
-	public boolean isbUse() {
-		return bUse;
+	public boolean isUsed() {
+		return used;
 	}
 
-	public void setbUse(boolean bUse) {
-		this.bUse = bUse;
+	public void setUsed(boolean used) {
+		this.used = used;
 	}
-	
 	
 }

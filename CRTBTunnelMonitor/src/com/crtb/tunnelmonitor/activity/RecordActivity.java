@@ -26,6 +26,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.crtb.tunnelmonitor.CommonObject;
 import com.crtb.tunnelmonitor.WorkFlowActivity;
 import com.crtb.tunnelmonitor.dao.impl.v2.RecordSubsidenceDao;
 import com.crtb.tunnelmonitor.dao.impl.v2.RecordTunnelSectionDao;
@@ -109,6 +110,10 @@ public class RecordActivity extends WorkFlowActivity implements OnPageChangeList
 				showListActionMenu(getString(R.string.work_plan_title), new String[]{"打开","编辑","删除"}, bean);
 			}
 		}) ;
+		
+		// clear object
+		CommonObject.remove(RecordNewActivity.KEY_RECORD_TUNNEL_OBJECT);
+		CommonObject.remove(RecordNewSubsidenceActivity.KEY_RECORD_SUBSIDENCE_OBJECT);
 	}
 	
 	public void loadSystemMenu(){
@@ -153,6 +158,12 @@ public class RecordActivity extends WorkFlowActivity implements OnPageChangeList
 				
 			} else if(position == 1){
 				
+				CommonObject.putObject(RecordNewActivity.KEY_RECORD_TUNNEL_OBJECT, info);
+				
+				Intent intent = new Intent() ;
+				intent.setClass(RecordActivity.this, RecordNewActivity.class);
+				startActivity(intent);
+				
 			} else if(position == 2){
 				
 				CrtbDialogDelete delete = new CrtbDialogDelete(RecordActivity.this,R.drawable.ic_warnning,"执行该操作将删除操作面的全部数据,不可恢复!");
@@ -181,6 +192,12 @@ public class RecordActivity extends WorkFlowActivity implements OnPageChangeList
 			if(position == 0){
 				
 			} else if(position == 1){
+				
+				CommonObject.putObject(RecordNewSubsidenceActivity.KEY_RECORD_SUBSIDENCE_OBJECT, info);
+				
+				Intent intent = new Intent() ;
+				intent.setClass(RecordActivity.this, RecordNewSubsidenceActivity.class);
+				startActivity(intent);
 				
 			} else if(position == 2){
 				

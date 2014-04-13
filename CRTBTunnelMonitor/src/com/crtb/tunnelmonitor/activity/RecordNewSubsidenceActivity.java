@@ -31,7 +31,9 @@ import com.crtb.tunnelmonitor.CommonObject;
 import com.crtb.tunnelmonitor.WorkFlowActivity;
 import com.crtb.tunnelmonitor.dao.impl.v2.RecordSubsidenceDao;
 import com.crtb.tunnelmonitor.entity.RecordSubsidenceInfo;
+import com.crtb.tunnelmonitor.entity.SubsidenceCrossSectionInfo;
 import com.crtb.tunnelmonitor.entity.WorkPlan;
+import com.crtb.tunnelmonitor.widget.CrtbRecordSubsidenceSectionInfoListView;
 
 /**
  * 新建地表下沉记录单
@@ -40,6 +42,8 @@ import com.crtb.tunnelmonitor.entity.WorkPlan;
 @InjectLayout(layout = R.layout.activity_record_new)
 public class RecordNewSubsidenceActivity extends WorkFlowActivity implements OnPageChangeListener, OnClickListener {
    
+	public static final String KEY_RECORD_SUBSIDENCE_OBJECT		= "_key_record_subsidence_object" ;
+	
 	@InjectView(id=R.id.vPager)
 	private ViewPager mPager;
 	
@@ -51,7 +55,6 @@ public class RecordNewSubsidenceActivity extends WorkFlowActivity implements OnP
     private TextView t1, t2;
     private int offset = 0;
     private int currIndex = 0;
-    private int bmpW;
     int disPlayWidth, offSet;
     Bitmap b;
     
@@ -84,8 +87,11 @@ public class RecordNewSubsidenceActivity extends WorkFlowActivity implements OnP
 	private EditText record_dotype;
 	
 	////////////////////////////section info///////////////////////
-	@InjectView(layout=R.layout.record_new_xinxi)
+	@InjectView(layout=R.layout.record_new_subsidence_layout)
 	private LinearLayout mSectionListLayout ;
+	
+	@InjectView(id = R.id.section_use_list, parent = "mSectionListLayout")
+	private CrtbRecordSubsidenceSectionInfoListView sectionListView;
     
 	private RecordSubsidenceInfo recordInfo = null;
 	
@@ -98,7 +104,10 @@ public class RecordNewSubsidenceActivity extends WorkFlowActivity implements OnP
         
 		// add by wei.zhou
 		InjectCore.injectUIProperty(this);
-
+		
+		// find cache
+		recordInfo = CommonObject.findObject(KEY_RECORD_SUBSIDENCE_OBJECT);
+		
 		// title
 		setTopbarTitle(getString(R.string.record_new_section_subisdence_title));
 		
@@ -109,6 +118,25 @@ public class RecordNewSubsidenceActivity extends WorkFlowActivity implements OnP
 		
 		// prefix
 		section_new_et_prefix.setText(mCurrentWorkPlan.getMileagePrefix());
+		
+		// load default
+		loadDefault();
+    }
+    
+    private void loadDefault(){
+    	
+    	if(recordInfo != null){
+    		
+    		setTopbarTitle("编辑地表下沉断面记录单");
+    		sectionListView.setFristSelected(recordInfo.getChainageName());
+			
+			section_new_et_prefix.setText(recordInfo.getPrefix());
+			record_Chainage.setText(String.valueOf(recordInfo.getFacedk()));
+			record_Person.setText(recordInfo.getMeasure());
+			record_Card.setText(recordInfo.getIdentityCard());
+			record_C.setText(recordInfo.getTemperature());
+			record_dotype.setText(recordInfo.getFacedescription());
+    	}
     }
     
 	@Override
@@ -146,18 +174,43 @@ public class RecordNewSubsidenceActivity extends WorkFlowActivity implements OnP
 				showText("身份证号不能为空");
 				return;
 			}
+			
+			SubsidenceCrossSectionInfo section = sectionListView.getSelectedSection() ;
+			
+			if(section == null){
+				showText("请选择断面");
+				return;
+			}
+			
+			if(recordInfo == null){
+				
+				recordInfo = new RecordSubsidenceInfo();
+				// 基本信息
+				recordInfo.setPrefix(prefix);
+				recordInfo.setFacedk(Float.valueOf(chainage));
+				recordInfo.setCreateTime(currentTime);
+				recordInfo.setChainageName(section.getChainageName());
+				recordInfo.setMeasure(person);
+				recordInfo.setIdentityCard(idcard);
+				recordInfo.setTemperature(temperature);
+				recordInfo.setFacedescription(descr);
 
-			recordInfo = new RecordSubsidenceInfo();
-			// 基本信息
-			recordInfo.setPrefix(prefix);
-			recordInfo.setFacedk(Float.valueOf(chainage));
-			recordInfo.setCreateTime(currentTime);
-			recordInfo.setMeasure(person);
-			recordInfo.setIdentityCard(idcard);
-			recordInfo.setTemperature(temperature);
-			recordInfo.setFacedescription(descr);
+				RecordSubsidenceDao.defaultDao().insert(recordInfo);
+				
+			} else {
+				
+				// 基本信息
+				recordInfo.setPrefix(prefix);
+				recordInfo.setFacedk(Float.valueOf(chainage));
+				recordInfo.setCreateTime(currentTime);
+				recordInfo.setChainageName(section.getChainageName());
+				recordInfo.setMeasure(person);
+				recordInfo.setIdentityCard(idcard);
+				recordInfo.setTemperature(temperature);
+				recordInfo.setFacedescription(descr);
 
-			RecordSubsidenceDao.defaultDao().insert(recordInfo);
+				RecordSubsidenceDao.defaultDao().update(recordInfo);
+			}
 
 			setResult(RESULT_OK);
 			finish();
@@ -209,8 +262,6 @@ public class RecordNewSubsidenceActivity extends WorkFlowActivity implements OnP
 			@Override
 			public Object instantiateItem(View arg0, int arg1) {
 				((ViewPager) arg0).addView((View) list.get(arg1), 0);
-
-
 				return (View) list.get(arg1);
 			}
 
@@ -251,14 +302,18 @@ public class RecordNewSubsidenceActivity extends WorkFlowActivity implements OnP
     }
 
     @Override
-    public void onPageSelected(int arg0) {
+    public void onPageSelected(int index) {
         int single = (int) (b.getWidth() + offSet * 2);
         TranslateAnimation ta = new TranslateAnimation(currIndex * single,
-                single * arg0, 0, 0);
+                single * index, 0, 0);
         ta.setFillAfter(true);
         ta.setDuration(200);
         cursor.startAnimation(ta);
-        currIndex = arg0;
+        currIndex = index;
+        
+        if(index == 1){
+        	sectionListView.onResume() ;
+        }
     }
 
     public OnClickListener tv_Listener = new View.OnClickListener() {

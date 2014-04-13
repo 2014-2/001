@@ -338,9 +338,9 @@ public class AppCRTBApplication extends Application {
 		}
 		List<SubsidenceCrossSectionInfo> tmpList = new ArrayList<SubsidenceCrossSectionInfo>();
 		for (int i = 0; i < Value.size(); i++) {
-			if (Value.get(i).isbUse()) {
-				tmpList.add(Value.get(i));
-			}
+//			if (Value.get(i).isbUse()) {
+//				tmpList.add(Value.get(i));
+//			}
 		}
 		
 		for (int i = 0; i < tmpList.size(); i++) {

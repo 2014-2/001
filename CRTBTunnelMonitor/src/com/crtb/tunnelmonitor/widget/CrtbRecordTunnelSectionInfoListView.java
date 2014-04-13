@@ -18,6 +18,8 @@ import com.crtb.tunnelmonitor.entity.TunnelCrossSectionInfo;
 public class CrtbRecordTunnelSectionInfoListView extends CrtbBaseListView {
 	
 	private CrtbRecordTunnelSectionInfoAdapter mAdapter ;
+	private String firstSection ;
+	private boolean hasInit ;
 	
 	public CrtbRecordTunnelSectionInfoListView(Context context) {
 		this(context, null);
@@ -49,7 +51,7 @@ public class CrtbRecordTunnelSectionInfoListView extends CrtbBaseListView {
 	}
 	
 	public void setFristSelected(String section){
-		
+		firstSection	= section ;
 	}
 
 	@Override
@@ -64,7 +66,19 @@ public class CrtbRecordTunnelSectionInfoListView extends CrtbBaseListView {
 
 	@Override
 	public void onReload() {
+		
 		List<TunnelCrossSectionInfo> list = TunnelCrossSectionDao.defaultDao().queryAllSection() ;
+		
+		if(list != null && !hasInit && firstSection != null){
+			
+			for(TunnelCrossSectionInfo item : list){
+				if(item.getChainageName().equals(firstSection)){
+					item.setUsed(true);
+					hasInit = true ;
+				}
+			}
+		}
+		
 		mAdapter.loadEntityDatas(list);
 	}
 	
