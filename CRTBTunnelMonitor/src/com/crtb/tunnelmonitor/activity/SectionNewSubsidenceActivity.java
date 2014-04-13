@@ -1,12 +1,12 @@
 package com.crtb.tunnelmonitor.activity;
 
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.zw.android.framework.ioc.InjectCore;
 import org.zw.android.framework.ioc.InjectLayout;
 import org.zw.android.framework.ioc.InjectView;
+import org.zw.android.framework.util.DateUtils;
 
 import android.content.Intent;
 import android.graphics.BitmapFactory;
@@ -27,14 +27,12 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.crtb.tunnelmonitor.AppCRTBApplication;
+import com.crtb.tunnelmonitor.CommonObject;
 import com.crtb.tunnelmonitor.WorkFlowActivity;
-import com.crtb.tunnelmonitor.common.Constant;
-import com.crtb.tunnelmonitor.dao.impl.SubsidenceCrossSectionDaoImpl;
 import com.crtb.tunnelmonitor.entity.SubsidenceCrossSectionInfo;
-import com.crtb.tunnelmonitor.entity.WorkInfos;
+import com.crtb.tunnelmonitor.entity.WorkPlan;
+import com.crtb.tunnelmonitor.mydefine.CrtbDateDialogUtils;
 
 /**
  * 新建地表下层断面
@@ -47,38 +45,60 @@ public class SectionNewSubsidenceActivity extends WorkFlowActivity implements On
 	private ViewPager mPager;
 	
     private List<View> listViews = new ArrayList<View>() ;
-    private ImageView cursor;// 动画图片
-    private TextView t1, t2, t3, textView1;// 页卡头标
-    private int offset = 0;// 动画图片偏移量
-    private int currIndex = 0;// 当前页卡编号
-    private int bmpW;// 动画图片宽度
-    private View View3;
-    private TextView section_new_tv_diheader;  
-    private int num;
+    private ImageView cursor;
+    private TextView t1, t2 ;
+    private int offset = 0;
+    private int currIndex = 0;
+    private int bmpW;
     
+    @InjectView(id=R.id.work_btn_queding,onClick="this")
+	private Button section_btn_queding;
+	
+	@InjectView(id=R.id.work_btn_quxiao,onClick="this")
+	private Button section_btn_quxiao;
+    
+    /////////////////////////////////base info////////////////////////
     @InjectView(layout=R.layout.layout_4)
     private LinearLayout mBaseInfoLayout ;
     
+    @InjectView(id=R.id.section_new_et_chainage_prefix,parent="mBaseInfoLayout")
+	private EditText section_new_et_prefix;
+    
+    @InjectView(id=R.id.section_new_et_Chainage,parent="mBaseInfoLayout")
+    private EditText DSection_Chainage;
+    
+    @InjectView(id=R.id.section_new_et_name,parent="mBaseInfoLayout")
+    private EditText DSection_name;
+    
+    @InjectView(id=R.id.section_new_et_calendar,parent="mBaseInfoLayout",onClick="this")
+    private EditText DSection_createtime;
+    
+    @InjectView(id=R.id.section_new_et_width,parent="mBaseInfoLayout")
+    private EditText DSection_Width;
+    
+    @InjectView(id=R.id.section_new_et_pc,parent="mBaseInfoLayout")
+    private EditText DSection_PointCount;
+    
+    ////////////////////////////////deformation info//////////////////
     @InjectView(layout=R.layout.layout_2)
     private LinearLayout mDeformationInfoLayout ;
     
-    private EditText DSection_Chainage;
-    private EditText DSection_name;
-    private EditText DSection_createtime;
-    private EditText DSection_Width;
-    private EditText DSection_PointCount;
+    @InjectView(id=R.id.DSection_Value1,parent="mDeformationInfoLayout")
     private EditText DSection_Value1;
+    
+    @InjectView(id=R.id.DSection_Value2,parent="mDeformationInfoLayout")
     private EditText DSection_Value2;
+    
+    @InjectView(id=R.id.DSection_SetTime,parent="mDeformationInfoLayout",onClick="this")
     private EditText DSection_SetTime;
+    
+    @InjectView(id=R.id.DSection_Info,parent="mDeformationInfoLayout")
     private EditText DSection_Info;
 
-	/** 确定按钮 */
-	private Button section_btn_queding;
-	/** 取消按钮 */
-	private Button section_btn_quxiao;
-	
 	private String sChainage = null;
 	private SubsidenceCrossSectionInfo editInfo = null;
+	
+	private WorkPlan mCurrentWorkPlan;
 
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,6 +113,16 @@ public class SectionNewSubsidenceActivity extends WorkFlowActivity implements On
 		
 		// init ViewPager
 		initViewPager() ;
+		
+		mCurrentWorkPlan = CommonObject.findObject(KEY_CURRENT_WORKPLAN);
+		
+		// prefix
+		section_new_et_prefix.setText(mCurrentWorkPlan.getMileagePrefix());
+		
+		// default
+		String date = DateUtils.toDateString(DateUtils.getCurrtentTimes(), DateUtils.DATE_TIME_FORMAT) ;
+		DSection_createtime.setText(date);
+		DSection_SetTime.setText(date);
         
 //        num = getIntent().getExtras().getInt("name");
 //        InitImageView();
@@ -124,137 +154,115 @@ public class SectionNewSubsidenceActivity extends WorkFlowActivity implements On
 //		}
     }
 
-    /**
-     * 初始化动画
-     */
-    private void InitImageView() {
-    	
-    	
-    }
-
-    /**
-     * 初始化头标
-     */
-    private void InitTextView() {
-//        t1 = (TextView) findViewById(R.id.tev);
-//        t2 = (TextView) findViewById(R.id.tex);
-//        /// section_new_tv_diheader = (TextView) findViewById(R.id.section_new_tv_diheader);
-//        t1.setOnClickListener(new MyOnClickListener(0));
-//        t2.setOnClickListener(new MyOnClickListener(1));
-//		section_btn_queding = (Button) findViewById(R.id.work_btn_queding);
-//		section_btn_quxiao = (Button) findViewById(R.id.work_btn_quxiao);
-//
-//		section_btn_queding.setOnClickListener(this);
-//		section_btn_quxiao.setOnClickListener(this);
-		
-	}
-	// 点击事件
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.work_btn_quxiao:
 			Intent IntentCancel = new Intent();
-			IntentCancel.putExtra(Constant.Select_SectionRowClickItemsName_Name,2);
 			setResult(RESULT_CANCELED, IntentCancel);
 			this.finish();// 关闭当前界面
 			break;
+		case R.id.section_new_et_calendar:
+			CrtbDateDialogUtils.setAnyDateDialog(this, DSection_createtime, DateUtils.getCurrtentTimes());
+			break ;
+		case R.id.DSection_SetTime:
+			CrtbDateDialogUtils.setAnyDateDialog(this, DSection_SetTime, DateUtils.getCurrtentTimes());
+			break ;
 		case R.id.work_btn_queding: // 数据库
-			if(DSection_Chainage.getText().toString().trim().length() <= 0)
-			{
-				Toast.makeText(this, "请输入完整信息", 3000).show();
-				return;
-			}
-			if(DSection_Width.getText().toString().trim().length() <= 0)
-			{
-				Toast.makeText(this, "请输入完整信息", 3000).show();
-				return;
-			}
-			if(DSection_PointCount.getText().toString().trim().length() <= 0)
-			{
-				Toast.makeText(this, "请输入完整信息", 3000).show();
-				return;
-			}
-
-			AppCRTBApplication CurApp = ((AppCRTBApplication)getApplicationContext());
-			WorkInfos Curw = CurApp.GetCurWork();
-			SubsidenceCrossSectionInfo ts = new SubsidenceCrossSectionInfo();
-			if (editInfo != null) {
-				ts.setId(editInfo.getId());
-			}
-			ts.setChainage(Double.valueOf(DSection_Chainage.getText().toString().trim()));
-			ts.setChainagePrefix(Curw.getChainagePrefix());
-			ts.setInbuiltTime(Timestamp.valueOf(DSection_createtime.getText().toString()));
-			ts.setWidth(Integer.valueOf(DSection_Width.getText().toString().trim()));
-			ts.setSurveyPnts(DSection_PointCount.getText().toString().trim());
-			ts.setInfo(DSection_Info.getText().toString().trim());
-			ts.setChainageName(CurApp.GetSectionName(ts.getChainage().doubleValue()));
-			if(!CurApp.IsValidSubsidenceTunnelCrossSectionInfo(ts))
-			{
-				Toast.makeText(this, "请输入完整信息", 3000).show();
-				return;
-			}
-			if ((ts.getChainage().doubleValue() < Curw.getStartChainage().doubleValue()) ||
-					(ts.getChainage().doubleValue() > Curw.getEndChainage().doubleValue())){
-				String sStart = CurApp.GetSectionName(Curw.getStartChainage().doubleValue());
-				String sEnd = CurApp.GetSectionName(Curw.getEndChainage().doubleValue());
-				String sMsg = "请输入里程为"+sStart+"到"+sEnd+"之间的里程";
-				Toast.makeText(this, sMsg, 3000).show();
-				return;
-			}
-			List<SubsidenceCrossSectionInfo> infos = Curw.getScsiList();
-			if(infos == null)
-			{
-				Toast.makeText(this, "添加失败", 3000).show();
-			}
-			else
-			{
-				boolean bHave = false;
-				for(int i=0;i<infos.size();i++)
-				{
-					SubsidenceCrossSectionInfo tmp = infos.get(i);
-					if(tmp.getChainage().equals(ts.getChainage()))
-					{
-						bHave = true;
-						break;
-					}
-				}
-				if(bHave)
-				{
-					if(editInfo == null)
-					{
-						Toast.makeText(this, "已存在", 3000).show();
-						return;
-					}
-					else
-					{
-						SubsidenceCrossSectionDaoImpl impl = new SubsidenceCrossSectionDaoImpl(this,Curw.getProjectName());
-						impl.UpdateSubsidenceCrossSection(ts);
-						Curw.UpdateSubsidenceCrossSectionInfo(ts);
-						CurApp.UpdateWork(Curw);
-						Toast.makeText(this, "编辑成功", 3000).show();
-					}
-				}
-				else
-				{
-					SubsidenceCrossSectionDaoImpl impl = new SubsidenceCrossSectionDaoImpl(this,Curw.getProjectName());
-					if(impl.InsertSubsidenceCrossSection(ts))
-					{
-						infos.add(ts);
-						CurApp.UpdateWork(Curw);
-						Toast.makeText(this, "添加成功", 3000).show();
-					}
-					else
-					{
-						Toast.makeText(this, "添加失败", 3000).show();
-					}
-				}
-			}
-			Intent IntentOk = new Intent();
-			IntentOk.putExtra(Constant.Select_SectionRowClickItemsName_Name,2);
-			setResult(RESULT_OK, IntentOk);
-			this.finish();
-			break;
-		default:
+//			if(DSection_Chainage.getText().toString().trim().length() <= 0)
+//			{
+//				Toast.makeText(this, "请输入完整信息", 3000).show();
+//				return;
+//			}
+//			if(DSection_Width.getText().toString().trim().length() <= 0)
+//			{
+//				Toast.makeText(this, "请输入完整信息", 3000).show();
+//				return;
+//			}
+//			if(DSection_PointCount.getText().toString().trim().length() <= 0)
+//			{
+//				Toast.makeText(this, "请输入完整信息", 3000).show();
+//				return;
+//			}
+//
+//			AppCRTBApplication CurApp = ((AppCRTBApplication)getApplicationContext());
+//			WorkInfos Curw = CurApp.GetCurWork();
+//			SubsidenceCrossSectionInfo ts = new SubsidenceCrossSectionInfo();
+//			if (editInfo != null) {
+//				ts.setId(editInfo.getId());
+//			}
+//			ts.setChainage(Double.valueOf(DSection_Chainage.getText().toString().trim()));
+//			ts.setChainagePrefix(Curw.getChainagePrefix());
+//			ts.setInbuiltTime(Timestamp.valueOf(DSection_createtime.getText().toString()));
+//			ts.setWidth(Integer.valueOf(DSection_Width.getText().toString().trim()));
+//			ts.setSurveyPnts(DSection_PointCount.getText().toString().trim());
+//			ts.setInfo(DSection_Info.getText().toString().trim());
+//			ts.setChainageName(CurApp.GetSectionName(ts.getChainage().doubleValue()));
+//			if(!CurApp.IsValidSubsidenceTunnelCrossSectionInfo(ts))
+//			{
+//				Toast.makeText(this, "请输入完整信息", 3000).show();
+//				return;
+//			}
+//			if ((ts.getChainage().doubleValue() < Curw.getStartChainage().doubleValue()) ||
+//					(ts.getChainage().doubleValue() > Curw.getEndChainage().doubleValue())){
+//				String sStart = CurApp.GetSectionName(Curw.getStartChainage().doubleValue());
+//				String sEnd = CurApp.GetSectionName(Curw.getEndChainage().doubleValue());
+//				String sMsg = "请输入里程为"+sStart+"到"+sEnd+"之间的里程";
+//				Toast.makeText(this, sMsg, 3000).show();
+//				return;
+//			}
+//			List<SubsidenceCrossSectionInfo> infos = Curw.getScsiList();
+//			if(infos == null)
+//			{
+//				Toast.makeText(this, "添加失败", 3000).show();
+//			}
+//			else
+//			{
+//				boolean bHave = false;
+//				for(int i=0;i<infos.size();i++)
+//				{
+//					SubsidenceCrossSectionInfo tmp = infos.get(i);
+//					if(tmp.getChainage().equals(ts.getChainage()))
+//					{
+//						bHave = true;
+//						break;
+//					}
+//				}
+//				if(bHave)
+//				{
+//					if(editInfo == null)
+//					{
+//						Toast.makeText(this, "已存在", 3000).show();
+//						return;
+//					}
+//					else
+//					{
+//						SubsidenceCrossSectionDaoImpl impl = new SubsidenceCrossSectionDaoImpl(this,Curw.getProjectName());
+//						impl.UpdateSubsidenceCrossSection(ts);
+//						Curw.UpdateSubsidenceCrossSectionInfo(ts);
+//						CurApp.UpdateWork(Curw);
+//						Toast.makeText(this, "编辑成功", 3000).show();
+//					}
+//				}
+//				else
+//				{
+//					SubsidenceCrossSectionDaoImpl impl = new SubsidenceCrossSectionDaoImpl(this,Curw.getProjectName());
+//					if(impl.InsertSubsidenceCrossSection(ts))
+//					{
+//						infos.add(ts);
+//						CurApp.UpdateWork(Curw);
+//						Toast.makeText(this, "添加成功", 3000).show();
+//					}
+//					else
+//					{
+//						Toast.makeText(this, "添加失败", 3000).show();
+//					}
+//				}
+//			}
+//			Intent IntentOk = new Intent();
+//			IntentOk.putExtra(Constant.Select_SectionRowClickItemsName_Name,2);
+//			setResult(RESULT_OK, IntentOk);
+//			this.finish();
 			break;
 		}
 
@@ -401,9 +409,6 @@ public class SectionNewSubsidenceActivity extends WorkFlowActivity implements On
         }
     }
 
-    /**
-     * 头标点击监听
-     */
     public class MyOnClickListener implements View.OnClickListener {
         private int index = 0;
 
@@ -417,13 +422,10 @@ public class SectionNewSubsidenceActivity extends WorkFlowActivity implements On
         }
     };
 
-    /**
-     * 页卡切换监听
-     */
     public class MyOnPageChangeListener implements OnPageChangeListener {
 
-        int one = offset * 2 + bmpW;// 页卡1 -> 页卡2 偏移量
-        int two = one * 2;// 页卡1 -> 页卡3 偏移量
+        int one = offset * 2 + bmpW;
+        int two = one * 2;
 
         @Override
         public void onPageSelected(int arg0) {

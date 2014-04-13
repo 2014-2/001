@@ -29,6 +29,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.crtb.tunnelmonitor.AppCRTBApplication;
+import com.crtb.tunnelmonitor.CommonObject;
 import com.crtb.tunnelmonitor.WorkFlowActivity;
 import com.crtb.tunnelmonitor.adapter.RecordSubsidenceCrossSectionInfoAdapter;
 import com.crtb.tunnelmonitor.adapter.RecordTunnelCrossSectionInfoAdapter;
@@ -40,6 +41,7 @@ import com.crtb.tunnelmonitor.entity.RecordInfo;
 import com.crtb.tunnelmonitor.entity.SubsidenceCrossSectionInfo;
 import com.crtb.tunnelmonitor.entity.TunnelCrossSectionInfo;
 import com.crtb.tunnelmonitor.entity.WorkInfos;
+import com.crtb.tunnelmonitor.entity.WorkPlan;
 import com.crtb.tunnelmonitor.utils.Time;
 
 /**
@@ -64,9 +66,35 @@ public class RecordNewActivity extends WorkFlowActivity implements OnPageChangeL
     int disPlayWidth, offSet;
     Bitmap b;
     
+    @InjectView(id=R.id.work_btn_queding,onClick="this")
+	private Button section_btn_queding;
+	
+	@InjectView(id=R.id.work_btn_quxiao,onClick="this")
+	private Button section_btn_quxiao;
+    
+    ////////////////////////////base info//////////////////////////
     @InjectView(layout=R.layout.lrecord_new_xuanze)
     private LinearLayout mBaseInfoLayout ;
     
+    @InjectView(id=R.id.section_new_et_chainage_prefix,parent="mBaseInfoLayout")
+	private EditText section_new_et_prefix;
+    
+    @InjectView(id=R.id.section_new_et_Chainage,parent="mBaseInfoLayout")
+    private EditText record_Chainage;
+    
+    @InjectView(id=R.id.record_Person,parent="mBaseInfoLayout")
+    private EditText record_Person;
+    
+    @InjectView(id=R.id.record_Card,parent="mBaseInfoLayout")
+    private EditText record_Card;
+    
+    @InjectView(id=R.id.record_C,parent="mBaseInfoLayout")
+    private EditText record_C;
+    
+    @InjectView(id=R.id.record_dotype,parent="mBaseInfoLayout")
+    private EditText record_dotype;
+    
+    ////////////////////////////section info///////////////////////
     @InjectView(layout=R.layout.record_new_xinxi)
     private LinearLayout mSectionListLayout ;
    
@@ -74,24 +102,16 @@ public class RecordNewActivity extends WorkFlowActivity implements OnPageChangeL
     private int num,itype;
     private TextView record_new_tv_header;
     
-    private EditText record_Chainage;
-    private EditText record_Person;
-    private EditText record_Card;
-    private EditText record_C;
-    private EditText record_dotype;
     private List<TunnelCrossSectionInfo> infos = null;
     private List<SubsidenceCrossSectionInfo> infos1 = null;
 
     private RecordTunnelCrossSectionInfoAdapter adapter = null;
     private RecordSubsidenceCrossSectionInfoAdapter adapter1 = null;
     
-	/** 确定按钮 */
-	private Button section_btn_queding;
-	/** 取消按钮 */
-	private Button section_btn_quxiao;
-	
 	private RecordInfo editInfo = null;
 	private AppCRTBApplication CurApp = null;
+	
+	private WorkPlan mCurrentWorkPlan;
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,6 +127,10 @@ public class RecordNewActivity extends WorkFlowActivity implements OnPageChangeL
 		// init ViewPager
 		initViewPager();
 
+		mCurrentWorkPlan = CommonObject.findObject(KEY_CURRENT_WORKPLAN);
+		
+		// prefix
+		section_new_et_prefix.setText(mCurrentWorkPlan.getMileagePrefix());
     }
     
 	@Override
@@ -114,91 +138,88 @@ public class RecordNewActivity extends WorkFlowActivity implements OnPageChangeL
 		switch (v.getId()) {
 		case R.id.work_btn_quxiao:
 			Intent IntentCancel = new Intent();
-			IntentCancel.putExtra(Constant.Select_SectionRowClickItemsName_Name,itype);
 			setResult(RESULT_CANCELED, IntentCancel);
 			this.finish();// 关闭当前界面
 			break;
 		case R.id.work_btn_queding: // 数据库
-			if(record_Chainage.getText().toString().trim().length() <= 0)
-			{
-				Toast.makeText(this, "请输入完整信息", 3000).show();
-				return;
-			}
-			WorkInfos Curw = CurApp.GetCurWork();
-			RecordInfo ts = new RecordInfo();
-			if (editInfo != null) {
-				ts.setId(editInfo.getId());
-			}
-			ts.setFacedk(Double.valueOf(record_Chainage.getText().toString().trim()));
-			ts.setCrossSectionType(itype);
-			// 获取手机的当前时间
-			final String time = Time.getDateEN();
-			ts.setCreateTime(Timestamp.valueOf(time));
-			ts.setFacedescription(record_dotype.getText().toString().trim());
-			ts.setTemperature(Double.valueOf(record_C.getText().toString().trim()));
-			ts.setInfo("");
-			if (itype == 1) {
-				ts.setCrossSectionIDs(AppCRTBApplication.GetSectionIDArrayForTunnelCrossArray(infos));
-			}
-			else {
-				ts.setCrossSectionIDs(AppCRTBApplication.GetSectionIDArrayForSubCrossArray(infos1));
-			}
-			ts.setChainageName(CurApp.GetSectionName(ts.getFacedk().doubleValue()));
-			if(!CurApp.IsValidRecordInfo(ts))
-			{
-				Toast.makeText(this, "请输入完整信息", 3000).show();
-				return;
-			}
-			if ((ts.getFacedk().doubleValue() < Curw.getStartChainage().doubleValue()) ||
-					(ts.getFacedk().doubleValue() > Curw.getEndChainage().doubleValue())){
-				String sStart = CurApp.GetSectionName(Curw.getStartChainage().doubleValue());
-				String sEnd = CurApp.GetSectionName(Curw.getEndChainage().doubleValue());
-				String sMsg = "请输入里程为"+sStart+"到"+sEnd+"之间的里程";
-				Toast.makeText(this, sMsg, 3000).show();
-				return;
-			}
-			List<RecordInfo> rinfos = null;
-			if (itype == 1) {
-				rinfos = Curw.getTcsirecordList();
-			}
-			else {
-				rinfos = Curw.getScsirecordList();
-			}
-			if(rinfos == null)
-			{
-				Toast.makeText(this, "添加失败", 3000).show();
-			}
-			else
-			{
-				if(editInfo == null)
-				{
-					RecordDaoImpl impl = new RecordDaoImpl(this,Curw.getProjectName());
-					if(impl.AddRecord(ts))
-					{
-						rinfos.add(ts);
-						CurApp.UpdateWork(Curw);
-						Toast.makeText(this, "添加成功", 3000).show();
-					}
-					else
-					{
-						Toast.makeText(this, "添加失败", 3000).show();
-					}
-				}
-				else
-				{
-					RecordDaoImpl impl = new RecordDaoImpl(this,Curw.getProjectName());
-					impl.UpdateRecord(ts);
-					Curw.UpdateRecordInfo(itype,ts);
-					CurApp.UpdateWork(Curw);
-					Toast.makeText(this, "编辑成功", 3000).show();
-				}
-			}
-			Intent IntentOk = new Intent();
-			IntentOk.putExtra(Constant.Select_SectionRowClickItemsName_Name,itype);
-			setResult(RESULT_OK, IntentOk);
-			this.finish();
-			break;
-		default:
+//			if(record_Chainage.getText().toString().trim().length() <= 0)
+//			{
+//				Toast.makeText(this, "请输入完整信息", 3000).show();
+//				return;
+//			}
+//			WorkInfos Curw = CurApp.GetCurWork();
+//			RecordInfo ts = new RecordInfo();
+//			if (editInfo != null) {
+//				ts.setId(editInfo.getId());
+//			}
+//			ts.setFacedk(Double.valueOf(record_Chainage.getText().toString().trim()));
+//			ts.setCrossSectionType(itype);
+//			// 获取手机的当前时间
+//			final String time = Time.getDateEN();
+//			ts.setCreateTime(Timestamp.valueOf(time));
+//			ts.setFacedescription(record_dotype.getText().toString().trim());
+//			ts.setTemperature(Double.valueOf(record_C.getText().toString().trim()));
+//			ts.setInfo("");
+//			if (itype == 1) {
+//				ts.setCrossSectionIDs(AppCRTBApplication.GetSectionIDArrayForTunnelCrossArray(infos));
+//			}
+//			else {
+//				ts.setCrossSectionIDs(AppCRTBApplication.GetSectionIDArrayForSubCrossArray(infos1));
+//			}
+//			ts.setChainageName(CurApp.GetSectionName(ts.getFacedk().doubleValue()));
+//			if(!CurApp.IsValidRecordInfo(ts))
+//			{
+//				Toast.makeText(this, "请输入完整信息", 3000).show();
+//				return;
+//			}
+//			if ((ts.getFacedk().doubleValue() < Curw.getStartChainage().doubleValue()) ||
+//					(ts.getFacedk().doubleValue() > Curw.getEndChainage().doubleValue())){
+//				String sStart = CurApp.GetSectionName(Curw.getStartChainage().doubleValue());
+//				String sEnd = CurApp.GetSectionName(Curw.getEndChainage().doubleValue());
+//				String sMsg = "请输入里程为"+sStart+"到"+sEnd+"之间的里程";
+//				Toast.makeText(this, sMsg, 3000).show();
+//				return;
+//			}
+//			List<RecordInfo> rinfos = null;
+//			if (itype == 1) {
+//				rinfos = Curw.getTcsirecordList();
+//			}
+//			else {
+//				rinfos = Curw.getScsirecordList();
+//			}
+//			if(rinfos == null)
+//			{
+//				Toast.makeText(this, "添加失败", 3000).show();
+//			}
+//			else
+//			{
+//				if(editInfo == null)
+//				{
+//					RecordDaoImpl impl = new RecordDaoImpl(this,Curw.getProjectName());
+//					if(impl.AddRecord(ts))
+//					{
+//						rinfos.add(ts);
+//						CurApp.UpdateWork(Curw);
+//						Toast.makeText(this, "添加成功", 3000).show();
+//					}
+//					else
+//					{
+//						Toast.makeText(this, "添加失败", 3000).show();
+//					}
+//				}
+//				else
+//				{
+//					RecordDaoImpl impl = new RecordDaoImpl(this,Curw.getProjectName());
+//					impl.UpdateRecord(ts);
+//					Curw.UpdateRecordInfo(itype,ts);
+//					CurApp.UpdateWork(Curw);
+//					Toast.makeText(this, "编辑成功", 3000).show();
+//				}
+//			}
+//			Intent IntentOk = new Intent();
+//			IntentOk.putExtra(Constant.Select_SectionRowClickItemsName_Name,itype);
+//			setResult(RESULT_OK, IntentOk);
+//			this.finish();
 			break;
 		}
 
@@ -379,8 +400,6 @@ public class RecordNewActivity extends WorkFlowActivity implements OnPageChangeL
                     cursor.startAnimation(ta);
                 }
                 currIndex = 1;
-                break;
-            default:
                 break;
             }
         }

@@ -29,6 +29,13 @@
     <string name="section_title">断面管理</string>
     <string name="section_new_title">新建隧道内断面</string>
     <string name="section_new_subsidence_title">新建地表下沉断面</string>
+    
+     <string-array name="section_excavation">
+        <item>全断面法</item>
+        <item>台阶法</item>
+        <item>三台阶法</item>
+        <item>双侧壁法</item>
+    </string-array>
 
     <!-- 记录单模块 -->
     <string name="record_title">记录单管理</string>

@@ -27,14 +27,17 @@
                 android:layout_height="wrap_content"
                 android:editable="false"
                 android:focusable="false"
-                android:text="DK" />
+                android:text="DK" 
+                android:singleLine="true"/>
 
             <EditText
                 android:id="@+id/section_new_et_Chainage"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="2dp"
-                android:inputType="numberDecimal" />
+                android:inputType="numberDecimal"
+                android:singleLine="true"
+                android:maxLength="12" />
         </LinearLayout>
 
         <ImageView
@@ -60,8 +63,9 @@
             android:id="@+id/section_new_et_name"
             android:layout_width="180dp"
             android:layout_height="wrap_content"
-            android:editable="false"
-            android:focusable="false" />
+            android:singleLine="true"
+            android:inputType="text"
+            android:maxLength="10" />
 
         <ImageView
             android:layout_width="wrap_content"
@@ -87,7 +91,8 @@
             android:layout_width="180dp"
             android:layout_height="wrap_content"
             android:editable="false"
-            android:focusable="false" />
+            android:focusable="false"
+            android:singleLine="true" />
 
         <ImageView
             android:layout_width="wrap_content"
@@ -136,7 +141,9 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_toLeftOf="@id/mi"
-                android:inputType="numberDecimal" />
+                android:inputType="numberDecimal"
+                android:maxLength="12"
+                android:singleLine="true" />
         </RelativeLayout>
     </LinearLayout>
 
@@ -175,11 +182,13 @@
                 android:text="米" />
 
             <EditText
-                android:id="@+id/section_new_et_width"
+                android:id="@+id/section_new_et_pc"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_toLeftOf="@id/mi"
-                android:inputType="numberDecimal" />
+                android:inputType="numberDecimal"
+                android:maxLength="2"
+                android:singleLine="true" />
         </RelativeLayout>
 
         <ImageView

@@ -35,7 +35,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="2dp"
                 android:inputType="numberDecimal"
-                android:singleLine="true" />
+                android:singleLine="true"
+                android:maxLength="20" />
         </LinearLayout>
 
         <ImageView
@@ -62,8 +63,8 @@
             android:layout_width="180dp"
             android:layout_height="wrap_content"
             android:inputType="text"
-            android:maxLength="10"
-            android:singleLine="true" />
+            android:singleLine="true"
+            android:maxLength="20" />
 
         <ImageView
             android:layout_width="wrap_content"
@@ -88,7 +89,7 @@
             android:id="@+id/record_Card"
             android:layout_width="180dp"
             android:layout_height="wrap_content"
-            android:inputType="text"
+            android:inputType="number"
             android:maxLength="20"
             android:singleLine="true" />
 
@@ -141,7 +142,8 @@
             android:id="@+id/record_dotype"
             android:layout_width="180dp"
             android:layout_height="wrap_content"
-            android:singleLine="true" />
+            android:singleLine="true" 
+            android:maxLength="20"/>
 
         <ImageView
             android:layout_width="wrap_content"

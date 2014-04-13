@@ -30,6 +30,8 @@ public abstract class BaseActivity extends Activity {
 	protected static final int TAB_ONE			= 0 ;
 	protected static final int TAB_TWO			= 1 ;
 	protected static final int TAB_THREE		= 2 ;
+	
+	public static final String KEY_CURRENT_WORKPLAN 	= "_key_current_workplan" ;
 
 	// base handler
 	protected AppHandler 			mHanlder ;

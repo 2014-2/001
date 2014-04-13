@@ -63,12 +63,14 @@
                         android:text="拱顶下沉" />
 
                     <EditText
+                        android:id="@+id/section_new_leiji_gd"
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="20dp"
                         android:layout_toLeftOf="@id/right"
                         android:layout_toRightOf="@id/left"
-                        android:inputType="numberDecimal" />
+                        android:inputType="numberDecimal"
+                        android:singleLine="true" />
                 </RelativeLayout>
 
                 <RelativeLayout
@@ -100,12 +102,14 @@
                         android:text="周边收敛" />
 
                     <EditText
+                        android:id="@+id/section_new_leiji_sl"
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="20dp"
                         android:layout_toLeftOf="@id/right"
                         android:layout_toRightOf="@id/left"
-                        android:inputType="numberDecimal" />
+                        android:inputType="numberDecimal"
+                        android:singleLine="true" />
                 </RelativeLayout>
             </LinearLayout>
 
@@ -157,12 +161,14 @@
                         android:text="拱顶下沉" />
 
                     <EditText
+                        android:id="@+id/section_new_single_gd"
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="20dp"
                         android:layout_toLeftOf="@id/right"
                         android:layout_toRightOf="@id/left"
-                        android:inputType="numberDecimal" />
+                        android:inputType="numberDecimal"
+                        android:singleLine="true" />
                 </RelativeLayout>
 
                 <RelativeLayout
@@ -194,12 +200,14 @@
                         android:text="周边收敛" />
 
                     <EditText
+                        android:id="@+id/section_new_single_sl"
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="20dp"
                         android:layout_toLeftOf="@id/right"
                         android:layout_toRightOf="@id/left"
-                        android:inputType="numberDecimal" />
+                        android:inputType="numberDecimal"
+                        android:singleLine="true" />
                 </RelativeLayout>
             </LinearLayout>
 
@@ -252,6 +260,7 @@
                         android:text="拱顶下沉" />
 
                     <EditText
+                        android:id="@+id/section_new_createtime_gd"
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="20dp"
@@ -260,7 +269,8 @@
                         android:editable="false"
                         android:focusable="false"
                         android:inputType="text"
-                        android:text="2014-04-12 00:00:00" />
+                        android:singleLine="true"
+                        android:text="" />
                 </RelativeLayout>
 
                 <RelativeLayout
@@ -293,6 +303,7 @@
                         android:text="周边收敛" />
 
                     <EditText
+                        android:id="@+id/section_new_createtime_sl"
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="20dp"
@@ -301,7 +312,8 @@
                         android:editable="false"
                         android:focusable="false"
                         android:inputType="text"
-                        android:text="2014-04-12 00:00:00" />
+                        android:singleLine="true"
+                        android:text="" />
                 </RelativeLayout>
             </LinearLayout>
 
@@ -353,12 +365,14 @@
                         android:text="拱顶下沉" />
 
                     <EditText
+                        android:id="@+id/section_new_remark_gd"
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="20dp"
                         android:layout_toLeftOf="@id/right"
                         android:layout_toRightOf="@id/left"
-                        android:inputType="text" />
+                        android:inputType="text"
+                        android:singleLine="true" />
                 </RelativeLayout>
 
                 <RelativeLayout
@@ -390,12 +404,14 @@
                         android:text="周边收敛" />
 
                     <EditText
+                        android:id="@+id/section_new_remark_sl"
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="20dp"
                         android:layout_toLeftOf="@id/right"
                         android:layout_toRightOf="@id/left"
-                        android:inputType="text" />
+                        android:inputType="text"
+                        android:singleLine="true" />
                 </RelativeLayout>
             </LinearLayout>
 

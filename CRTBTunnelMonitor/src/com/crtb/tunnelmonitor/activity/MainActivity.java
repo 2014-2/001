@@ -15,6 +15,7 @@ import android.widget.Toast;
 import com.crtb.tunnelmonitor.AppActivityManager;
 import com.crtb.tunnelmonitor.AppCRTBApplication;
 import com.crtb.tunnelmonitor.BaseActivity;
+import com.crtb.tunnelmonitor.CommonObject;
 import com.crtb.tunnelmonitor.common.Constant;
 import com.crtb.tunnelmonitor.dao.impl.v2.WorkPlanDao;
 import com.crtb.tunnelmonitor.entity.TotalStationInfo;
@@ -61,6 +62,9 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 
 		// current edit workplan
 		mCurrentWorkPlan = WorkPlanDao.defaultWorkPlanDao().queryEditWorkPlan();
+		
+		// remove current workplan from cache
+		CommonObject.remove(KEY_CURRENT_WORKPLAN);
 
 		// 测试
 		info.setName("leon0");
@@ -137,6 +141,9 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 			if (mCurrentWorkPlan == null) {
 				Toast.makeText(MainActivity.this, "请先打开工作面", 3000).show();
 			} else {
+				
+				CommonObject.putObject(KEY_CURRENT_WORKPLAN, mCurrentWorkPlan);
+				
 				intent = new Intent(MainActivity.this, SectionActivity.class);
 				startActivity(intent);
 			}
@@ -146,6 +153,9 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 			if (mCurrentWorkPlan == null) {
 				Toast.makeText(MainActivity.this, "请先打开工作面", 3000).show();
 			} else {
+				
+				CommonObject.putObject(KEY_CURRENT_WORKPLAN, mCurrentWorkPlan);
+				
 				intent = new Intent(MainActivity.this, RecordActivity.class);
 				startActivity(intent);
 			}
@@ -155,6 +165,9 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 			if (mCurrentWorkPlan == null) {
 				Toast.makeText(MainActivity.this, "请先打开工作面", 3000).show();
 			} else {
+				
+				CommonObject.putObject(KEY_CURRENT_WORKPLAN, mCurrentWorkPlan);
+				
 				intent = new Intent(MainActivity.this,
 						TotalStationActivity.class);
 				startActivity(intent);
@@ -164,6 +177,9 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 			if (mCurrentWorkPlan == null) {
 				Toast.makeText(MainActivity.this, "请先打开工作面", 3000).show();
 			} else {
+				
+				CommonObject.putObject(KEY_CURRENT_WORKPLAN, mCurrentWorkPlan);
+				
 				intent = new Intent(MainActivity.this, TestRecordActivity.class);
 				startActivity(intent);
 			}

@@ -34,7 +34,8 @@
             android:layout_height="wrap_content"
             android:layout_toLeftOf="@id/start"
             android:inputType="numberDecimal"
-            android:singleLine="true" />
+            android:singleLine="true"
+            android:maxLength="5" />
     </RelativeLayout>
 
     <TextView
@@ -62,12 +63,13 @@
             android:background="@drawable/x" />
 
         <EditText
-            android:id="@+id/DSection_Value1"
+            android:id="@+id/DSection_Value2"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_toLeftOf="@id/start"
             android:inputType="numberDecimal"
-            android:singleLine="true" />
+            android:singleLine="true"
+            android:maxLength="5" />
     </RelativeLayout>
 
     <LinearLayout
@@ -90,8 +92,7 @@
             android:layout_marginRight="40dp"
             android:editable="false"
             android:focusable="true"
-            android:singleLine="true"
-            android:text="2014-04-12 00:00:00" />
+            android:singleLine="true" />
     </LinearLayout>
 
     <LinearLayout
@@ -111,7 +112,9 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
-            android:layout_marginRight="40dp" />
+            android:layout_marginRight="40dp"
+            android:singleLine="true"
+            android:inputType="text" />
     </LinearLayout>
 
 </LinearLayout>

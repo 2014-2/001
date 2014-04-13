@@ -34,6 +34,7 @@ import com.crtb.tunnelmonitor.CommonObject;
 import com.crtb.tunnelmonitor.WorkFlowActivity;
 import com.crtb.tunnelmonitor.dao.impl.v2.WorkPlanDao;
 import com.crtb.tunnelmonitor.entity.WorkPlan;
+import com.crtb.tunnelmonitor.mydefine.CrtbDateDialogUtils;
 
 @InjectLayout(layout=R.layout.activity_work_new)
 public class WorkNewActivity extends WorkFlowActivity implements OnClickListener {
@@ -59,7 +60,7 @@ public class WorkNewActivity extends WorkFlowActivity implements OnClickListener
 	@InjectView(id=R.id.ed_work_new_name,parent="tabOneView")
 	private EditText mWorkPlanName;
 	
-	@InjectView(id=R.id.ed_work_new_calendar,parent="tabOneView")
+	@InjectView(id=R.id.ed_work_new_calendar,parent="tabOneView",onClick="this")
 	private EditText mWorkPlanCalendar;
 	
 	@InjectView(id=R.id.ed_work_new_unit,parent="tabOneView")
@@ -87,7 +88,7 @@ public class WorkNewActivity extends WorkFlowActivity implements OnClickListener
 	@InjectView(id=R.id.vault_trans_velocity,parent="tabTwoView")
 	private EditText mVaultTransVelocity;
 	
-	@InjectView(id=R.id.vault_trans_date,parent="tabTwoView")
+	@InjectView(id=R.id.vault_trans_date,parent="tabTwoView",onClick="this")
 	private EditText mVaultTransDate;
 	
 	@InjectView(id=R.id.vault_trans_remark,parent="tabTwoView")
@@ -101,7 +102,7 @@ public class WorkNewActivity extends WorkFlowActivity implements OnClickListener
 	@InjectView(id=R.id.circum_astringe_velocity,parent="tabTwoView")
 	private EditText mAstringevelocity;
 	
-	@InjectView(id=R.id.circum_astringe_date,parent="tabTwoView")
+	@InjectView(id=R.id.circum_astringe_date,parent="tabTwoView",onClick="this")
 	private EditText mAstringeDate;
 	
 	@InjectView(id=R.id.circum_astringe_remark,parent="tabTwoView")
@@ -305,6 +306,22 @@ public class WorkNewActivity extends WorkFlowActivity implements OnClickListener
 			
 			setResult(RESULT_CANCELED);
 			finish();
+			
+			break;
+		case R.id.ed_work_new_calendar :
+			
+			CrtbDateDialogUtils.setAnyDateDialog(this, mWorkPlanCalendar, DateUtils.getCurrtentTimes());
+			
+			break ;
+		case R.id.vault_trans_date :
+			
+			CrtbDateDialogUtils.setAnyDateDialog(this, mWorkPlanCalendar, DateUtils.getCurrtentTimes());
+			
+			break;
+			
+		case R.id.circum_astringe_date :
+			
+			CrtbDateDialogUtils.setAnyDateDialog(this, mAstringeDate, DateUtils.getCurrtentTimes());
 			
 			break;
 		}
