@@ -10,6 +10,7 @@ import org.zw.android.framework.ioc.InjectCore;
 import org.zw.android.framework.ioc.InjectLayout;
 import org.zw.android.framework.ioc.InjectView;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -25,8 +26,11 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.crtb.tunnelmonitor.CommonObject;
 import com.crtb.tunnelmonitor.WorkFlowActivity;
 import com.crtb.tunnelmonitor.entity.MenuSystemItem;
+import com.crtb.tunnelmonitor.entity.RecordInfo;
+import com.crtb.tunnelmonitor.entity.RecordSubsidenceInfo;
 import com.crtb.tunnelmonitor.widget.CrtbTestRecordSubsidenceListView;
 import com.crtb.tunnelmonitor.widget.CrtbTestRecordTunnelSectionListView;
 
@@ -81,6 +85,9 @@ public class TestRecordActivity extends WorkFlowActivity implements OnPageChange
 		
 		// load system menu
 		loadSystemMenu();
+		
+		// clear cache
+		CommonObject.remove(TestSectionExecuteActivity.KEY_TEST_OBJECT);
 	}
 	
 	private void loadSystemMenu(){
@@ -98,6 +105,47 @@ public class TestRecordActivity extends WorkFlowActivity implements OnPageChange
 		systems.add(item);
 		
 		createSystemMenu(systems);
+	}
+
+	@Override
+	protected void onSystemMenuClick(MenuSystemItem menu) {
+		
+		final String name = menu.getName() ;
+		
+		if(name.equals(getString(R.string.common_open))){
+			
+			if(currIndex == 0){
+				
+				RecordInfo bean = mTestTunnelSectionList.getSelectedSection() ;
+				
+				if(bean == null){
+					showText("请选择测量单");
+				} else {
+					
+					CommonObject.putObject(TestSectionExecuteActivity.KEY_TEST_OBJECT, bean) ;
+					
+					Intent intent = new Intent() ;
+					intent.setClass(TestRecordActivity.this, TestSectionExecuteActivity.class);
+					startActivity(intent);
+				}
+			} else {
+				
+				RecordSubsidenceInfo bean = mTestSubsidenceList.getSelectedSection() ;
+				
+				if(bean == null){
+					showText("请选择测量单");
+				} else {
+					
+					CommonObject.putObject(TestSectionExecuteActivity.KEY_TEST_OBJECT, bean) ;
+					
+					Intent intent = new Intent() ;
+					intent.setClass(TestRecordActivity.this, TestSectionExecuteActivity.class);
+					startActivity(intent);
+				}
+			}
+		} else if(name.equals(getString(R.string.common_search))){
+			
+		}
 	}
 
 	@Override
