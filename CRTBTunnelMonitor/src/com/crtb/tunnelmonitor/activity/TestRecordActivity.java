@@ -10,7 +10,6 @@ import org.zw.android.framework.ioc.InjectCore;
 import org.zw.android.framework.ioc.InjectLayout;
 import org.zw.android.framework.ioc.InjectView;
 
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -18,27 +17,18 @@ import android.os.Parcelable;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
-import android.view.Display;
-import android.view.Gravity;
-import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
 
-import com.crtb.tunnelmonitor.AppCRTBApplication;
 import com.crtb.tunnelmonitor.WorkFlowActivity;
-import com.crtb.tunnelmonitor.adapter.TestRecordAdapter;
-import com.crtb.tunnelmonitor.common.Constant;
-import com.crtb.tunnelmonitor.dao.impl.RecordDaoImpl;
-import com.crtb.tunnelmonitor.entity.RecordInfo;
-import com.crtb.tunnelmonitor.entity.WorkInfos;
-import com.crtb.tunnelmonitor.utils.SelectPicPopupWindow;
+import com.crtb.tunnelmonitor.entity.MenuSystemItem;
+import com.crtb.tunnelmonitor.widget.CrtbTestRecordSubsidenceListView;
+import com.crtb.tunnelmonitor.widget.CrtbTestRecordTunnelSectionListView;
 
 /**
  * 测量模块
@@ -49,41 +39,32 @@ import com.crtb.tunnelmonitor.utils.SelectPicPopupWindow;
 @InjectLayout(layout=R.layout.activity_testrecord)
 public class TestRecordActivity extends WorkFlowActivity implements OnPageChangeListener{
 	
-	private View vie;
-	
-	private ListView listView,listView1;
-	
-	ArrayList<View> list = new ArrayList<View>();
-	
 	@InjectView(id=R.id.vPager)
 	private ViewPager mPager;
+	
+	ArrayList<View> list = new ArrayList<View>();
 	
 	@InjectView(id=R.id.cursor)
 	private ImageView cursor;
 	
 	private TextView t1, t2;
-	private int offset = 0;
 	private int currIndex = 0;
-	private int bmpW;
 	int disPlayWidth, offSet;
 	Bitmap b;
 	
-	LinearLayout xin;
-	private LinearLayout record_bianji;
-	/***/
-	private ListView record_lv_suidao;
-	private ListView record_lv_dibiao;
-	
+	// 隧道内断面测量单
 	@InjectView(layout=R.layout.testrecord_listdibiao)
 	private LinearLayout mSectionRecordLayout ;
 	
-	@InjectView(layout=R.layout.testrecord_listdibiao)
+	@InjectView(id=R.id.test_record_tunnel_section_list,parent="mSectionRecordLayout")
+	private CrtbTestRecordTunnelSectionListView mTestTunnelSectionList ;
+	
+	// 地表下沉测量单
+	@InjectView(layout=R.layout.testrecord_subsidence_layout)
 	private LinearLayout mSubsidenceRecordLayout ;
 	
-	private List<RecordInfo> infos = null,infos1 = null;
-	
-	private TestRecordAdapter adapter = null,adapter1 = null;
-	private int iListPos1 = -1,iListPos2 = -1;
+	@InjectView(id=R.id.test_record_subsidence_list,parent="mSubsidenceRecordLayout")
+	private CrtbTestRecordSubsidenceListView mTestSubsidenceList ;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -98,78 +79,35 @@ public class TestRecordActivity extends WorkFlowActivity implements OnPageChange
 		// init ViewPager
 		initPager() ;
 		
-//		initUI();
-//		InitImageView();
-//		initPager();
+		// load system menu
+		loadSystemMenu();
+	}
+	
+	private void loadSystemMenu(){
+		
+		List<MenuSystemItem> systems = new ArrayList<MenuSystemItem>();
+		
+		MenuSystemItem item = new MenuSystemItem() ;
+		item.setIcon(R.drawable.ic_menu_open);
+		item.setName(getString(R.string.common_open));
+		systems.add(item);
+		
+		item = new MenuSystemItem() ;
+		item.setIcon(R.drawable.ic_menu_search);
+		item.setName(getString(R.string.common_search));
+		systems.add(item);
+		
+		createSystemMenu(systems);
 	}
 
-	public void setdata() {
-		AppCRTBApplication CurApp = ((AppCRTBApplication)getApplicationContext());
-		WorkInfos CurW = CurApp.GetCurWork();
-		if(CurW == null)
-		{
-			return;
-		}
-		infos = CurW.getTcsirecordList();
-		boolean bLoadDB = true;
-		if(infos!=null)
-		{
-			if(infos.size()>0)
-			{
-				bLoadDB = false;
-			}
-		}
-		if(bLoadDB)
-		{
-			if(infos == null)
-			{
-				infos = new ArrayList<RecordInfo>();
-			}
-			RecordDaoImpl impl = new RecordDaoImpl(this, CurW.getProjectName());
-			impl.GetRecordList(1,CurW, infos);
-			CurW.setTcsirecordList(infos);
-			CurApp.UpdateWork(CurW);
-		}
+	@Override
+	protected void onResume() {
+		super.onResume();
 		
-		infos1 = CurW.getScsirecordList();
-		bLoadDB = true;
-		if(infos1!=null)
-		{
-			if(infos1.size()>0)
-			{
-				bLoadDB = false;
-			}
-		}
-		if(bLoadDB)
-		{
-			if(infos1 == null)
-			{
-				infos1 = new ArrayList<RecordInfo>();
-			}
-			RecordDaoImpl impl = new RecordDaoImpl(this, CurW.getProjectName());
-			impl.GetRecordList(2,CurW, infos1);
-			CurW.setScsirecordList(infos1);
-			CurApp.UpdateWork(CurW);
-		}
+		mTestTunnelSectionList.onReload() ;
+		mTestTunnelSectionList.onReload() ;
 	}
-	// 初始化
-	public void initUI() {
-		
-//		xin = (LinearLayout) findViewById(R.id.xin);
-//		record_bianji = (LinearLayout) findViewById(R.id.record_bianji);
-		
-//		mPager = (ViewPager) findViewById(R.id.vPager);
-		
-	}
-
-	public void InitImageView() {
-		
-		
-//		setdata();
-		
-		
-	}
-
+	
 	public void initPager() {
 		
 		t1 = (TextView) findViewById(R.id.text1);
@@ -195,7 +133,6 @@ public class TestRecordActivity extends WorkFlowActivity implements OnPageChange
 			@Override
 			public void destroyItem(View arg0, int arg1, Object arg2) {
 				((ViewPager) arg0).removeView((View) list.get(arg1));
-
 			}
 
 			@Override
@@ -211,8 +148,6 @@ public class TestRecordActivity extends WorkFlowActivity implements OnPageChange
 			@Override
 			public Object instantiateItem(View arg0, int arg1) {
 				((ViewPager) arg0).addView((View) list.get(arg1), 0);
-				
-
 				return (View) list.get(arg1);
 			}
 
@@ -240,11 +175,6 @@ public class TestRecordActivity extends WorkFlowActivity implements OnPageChange
 		mPager.setAdapter(pa);
 		mPager.setCurrentItem(TAB_ONE);
 		mPager.setOnPageChangeListener(this);
-		
-//		/** 隧道内断面 */
-//		Layout1();
-//		/** 地表下沉断面 */
-//		Layout2();
 	}
 
 	@Override
@@ -258,14 +188,25 @@ public class TestRecordActivity extends WorkFlowActivity implements OnPageChange
 	}
 
 	@Override
-	public void onPageSelected(int arg0) {
+	public void onPageSelected(int index) {
 		int single = (int) (b.getWidth() + offSet * 2);
 		TranslateAnimation ta = new TranslateAnimation(currIndex * single,
-				single * arg0, 0, 0);
+				single * index, 0, 0);
 		ta.setFillAfter(true);
 		ta.setDuration(200);
 		cursor.startAnimation(ta);
-		currIndex = arg0;
+		currIndex = index;
+		
+		switchTestList(index);
+	}
+	
+	private void switchTestList(int index){
+		
+		if(index == 0){
+			mTestTunnelSectionList.onResume() ;
+		} else if(index == 1){
+			mTestSubsidenceList.onResume() ;
+		}
 	}
 
 	public OnClickListener tv_Listener = new View.OnClickListener() {
@@ -305,10 +246,10 @@ public class TestRecordActivity extends WorkFlowActivity implements OnPageChange
 	public void Layout1() {
 		/** 隧道内断面界面的控件 */
 		/** List集合中存儲的是View,获取界面上的控件,就List.get(0),0就是集合中第一个界面,1就是集合中第二个界面 */
-		listView = (ListView) list.get(0).findViewById(R.id.record_lv_dibiao);
+//		listView = (ListView) list.get(0).findViewById(R.id.record_lv_dibiao);
 
-		adapter = new TestRecordAdapter(TestRecordActivity.this, infos);
-		listView.setAdapter(adapter);
+//		adapter = new TestRecordAdapter(TestRecordActivity.this, infos);
+//		listView.setAdapter(adapter);
 		// listview的行点击
 //		listView.setOnItemLongClickListener(new OnItemLongClickListener() {
 //
@@ -375,11 +316,11 @@ public class TestRecordActivity extends WorkFlowActivity implements OnPageChange
 
 	public void Layout2() {
 		/** 隧道内断面界面的控件 */
-		/** List集合中存儲的是View,获取界面上的控件,就List.get(0),0就是集合中第一个界面,1就是集合中第二个界面 */
-		listView1 = (ListView) list.get(1).findViewById(R.id.record_lv_dibiao);
-
-		adapter1 = new TestRecordAdapter(TestRecordActivity.this, infos1);
-		listView1.setAdapter(adapter1);
+//		/** List集合中存儲的是View,获取界面上的控件,就List.get(0),0就是集合中第一个界面,1就是集合中第二个界面 */
+//		listView1 = (ListView) list.get(1).findViewById(R.id.record_lv_dibiao);
+//
+//		adapter1 = new TestRecordAdapter(TestRecordActivity.this, infos1);
+//		listView1.setAdapter(adapter1);
 //		// listview的行点击
 //		listView1.setOnItemLongClickListener(new OnItemLongClickListener() {
 //
@@ -438,31 +379,5 @@ public class TestRecordActivity extends WorkFlowActivity implements OnPageChange
 //				return true;
 //			}
 //		});
-	}
-	
-	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data)
-	{
-		switch (resultCode) {
-		case RESULT_OK:
-		{
-			int iSel = data.getExtras().getInt(Constant.Select_RecordRowClickItemsName_Name);
-			switch (iSel) {
-			case 1:
-				adapter.notifyDataSetChanged();
-				break;
-			case 2:
-				adapter1.notifyDataSetChanged();
-				break;
-
-			default:
-				break;
-			}
-		}
-			break;
-
-		default:
-			break;
-		}
 	}
 }

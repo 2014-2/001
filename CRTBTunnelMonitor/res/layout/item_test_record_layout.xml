@@ -1,14 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".MainActivity" >
+    android:orientation="vertical" >
 
     <LinearLayout
         android:layout_width="fill_parent"
-        android:layout_height="40dp"
-        android:background="#97cbd6"
+        android:layout_height="50dp"
         android:orientation="horizontal" >
 
         <RelativeLayout
@@ -17,12 +15,13 @@
             android:layout_weight="1" >
 
             <TextView
+                android:id="@+id/t1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:layout_centerInParent="true"
-                android:text="序号"
-                android:textColor="#FF000000" />
+                android:text="DK16+100"
+                android:textColor="@color/black" />
         </RelativeLayout>
 
         <RelativeLayout
@@ -31,12 +30,13 @@
             android:layout_weight="1" >
 
             <TextView
+                android:id="@+id/t2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="5dp"
-                android:text="记录单"
-                android:textColor="#FF000000" />
+                android:text="11.001"
+                android:textColor="@color/black" />
         </RelativeLayout>
 
         <RelativeLayout
@@ -45,20 +45,18 @@
             android:layout_weight="1" >
 
             <TextView
+                android:id="@+id/t3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:layout_centerInParent="true"
-                android:text="选中"
-                android:textColor="#FF000000" />
+                android:background="@drawable/no" />
         </RelativeLayout>
     </LinearLayout>
 
-    <com.crtb.tunnelmonitor.widget.CrtbTestRecordTunnelSectionListView
-        android:id="@+id/test_record_tunnel_section_list"
+    <View
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:fastScrollEnabled="true"
-        android:focusable="true" />
+        android:layout_height="1dp"
+        android:background="#dbdbdb" />
 
 </LinearLayout>

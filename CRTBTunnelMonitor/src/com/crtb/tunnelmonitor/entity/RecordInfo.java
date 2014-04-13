@@ -18,6 +18,9 @@ import org.zw.android.framework.db.core.ColumnPrimaryKey.PrimaryKeyType;
 @Table(TableName="RecordInfo")
 public class RecordInfo implements Serializable {
 	
+	public static final int TEST_RECORD_STATUS_IDLE		= 0 ;
+	public static final int TEST_RECORD_STATUS_EDIT		= 1 ;
+	
 	@ColumnPrimaryKey(Type = PrimaryKeyType.AUTO)
 	@ColumnInt
 	private int id;									//记录id
@@ -48,6 +51,13 @@ public class RecordInfo implements Serializable {
 	
 	@ColumnString(length = 20)
 	private String sectionID;						// 断面id序列
+	
+	@ColumnInt
+	private int testStatus ;						// 测量状态(是否选中)
+	
+	public RecordInfo(){
+		setTestStatus(TEST_RECORD_STATUS_IDLE);
+	}
 
 	public int getId() {
 		return id;
@@ -59,6 +69,14 @@ public class RecordInfo implements Serializable {
 
 	public String getPrefix() {
 		return prefix;
+	}
+
+	public int getTestStatus() {
+		return testStatus;
+	}
+
+	public void setTestStatus(int testStatus) {
+		this.testStatus = testStatus;
 	}
 
 	public void setPrefix(String prefix) {

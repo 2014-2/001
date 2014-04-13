@@ -1,9 +1,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".MainActivity" >
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical"  >
 
     <LinearLayout
         android:layout_width="fill_parent"
@@ -54,8 +53,8 @@
         </RelativeLayout>
     </LinearLayout>
 
-    <com.crtb.tunnelmonitor.widget.CrtbTestRecordTunnelSectionListView
-        android:id="@+id/test_record_tunnel_section_list"
+    <com.crtb.tunnelmonitor.widget.CrtbTestRecordSubsidenceListView
+        android:id="@+id/test_record_subsidence_list"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:fastScrollEnabled="true"

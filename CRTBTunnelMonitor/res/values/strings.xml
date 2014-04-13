@@ -18,6 +18,7 @@
     <string name="common_open">打开</string>
     <string name="common_edit">编辑</string>
     <string name="common_delete">删除</string>
+    <string name="common_search">搜索</string>
 
     <!-- 工作面模块 -->
     <string name="work_plan_title">工作面管理</string>

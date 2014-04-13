@@ -46,6 +46,9 @@ public class RecordSubsidenceInfo implements Serializable {
 	@ColumnString(length = 20)
 	private String sectionID;						// 断面id序列
 	
+	@ColumnInt
+	private int testStatus ;						// 测量状态(是否选中)
+	
 	private boolean used ;
 
 	public int getId() {
@@ -66,6 +69,14 @@ public class RecordSubsidenceInfo implements Serializable {
 
 	public float getFacedk() {
 		return facedk;
+	}
+
+	public int getTestStatus() {
+		return testStatus;
+	}
+
+	public void setTestStatus(int testStatus) {
+		this.testStatus = testStatus;
 	}
 
 	public void setFacedk(float facedk) {
