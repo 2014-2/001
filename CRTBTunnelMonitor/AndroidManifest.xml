@@ -44,6 +44,7 @@
         <activity android:name="com.crtb.tunnelmonitor.activity.ControlNewActivity" />
         <activity android:name="com.crtb.tunnelmonitor.activity.ControlNewActivityTwo" />
         <activity android:name="com.crtb.tunnelmonitor.activity.TestRecordActivity" />
+        <activity android:name="com.crtb.tunnelmonitor.activity.TestSectionExecuteActivity" />
         <activity android:name="com.crtb.tunnelmonitor.activity.SectionEditActivity" />
         <activity android:name="com.crtb.tunnelmonitor.activity.StationActivity" />
 
