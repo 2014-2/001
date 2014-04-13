@@ -77,7 +77,7 @@ public class TunnelCrossSectionInfo {
 	@ColumnString(length = 32)
 	private String ROCKGRADE; 		// 围岩级别
 
-	private boolean bUse;
+	private boolean used;			// 是否使用
 
 	public int getId() {
 		return id;
@@ -247,12 +247,13 @@ public class TunnelCrossSectionInfo {
 		ROCKGRADE = rOCKGRADE;
 	}
 
-	public boolean isbUse() {
-		return bUse;
+	public boolean isUsed() {
+		return used;
 	}
 
-	public void setbUse(boolean bUse) {
-		this.bUse = bUse;
+	public void setUsed(boolean used) {
+		this.used = used;
 	}
+
 
 }

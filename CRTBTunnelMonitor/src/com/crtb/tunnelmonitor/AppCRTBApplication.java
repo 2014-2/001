@@ -314,19 +314,19 @@ public class AppCRTBApplication extends Application {
 		if (Value == null) {
 			return sRet;
 		}
-		List<TunnelCrossSectionInfo> tmpList = new ArrayList<TunnelCrossSectionInfo>();
-		for (int i = 0; i < Value.size(); i++) {
-			if (Value.get(i).isbUse()) {
-				tmpList.add(Value.get(i));
-			}
-		}
-		
-		for (int i = 0; i < tmpList.size(); i++) {
-			sRet += Integer.toString(tmpList.get(i).getId());
-			if (i < (tmpList.size()-1)) {
-				sRet += ',';
-			}
-		}
+//		List<TunnelCrossSectionInfo> tmpList = new ArrayList<TunnelCrossSectionInfo>();
+//		for (int i = 0; i < Value.size(); i++) {
+//			if (Value.get(i).isbUse()) {
+//				tmpList.add(Value.get(i));
+//			}
+//		}
+//		
+//		for (int i = 0; i < tmpList.size(); i++) {
+//			sRet += Integer.toString(tmpList.get(i).getId());
+//			if (i < (tmpList.size()-1)) {
+//				sRet += ',';
+//			}
+//		}
 		
 		return sRet;
 	}

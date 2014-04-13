@@ -9,6 +9,8 @@ import org.zw.android.framework.db.core.ColumnPrimaryKey.PrimaryKeyType;
 
 /**
  * 地表下沉断面
+ * @author zhouwei
+ *
  */
 @Table(TableName="SubsidenceCrossSectionInfo")
 public class SubsidenceCrossSectionInfo {
