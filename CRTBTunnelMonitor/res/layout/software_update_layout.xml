@@ -14,6 +14,11 @@
         android:padding="20dp"
         android:src="@drawable/software_update_title" />
 
+    <View  
+       android:layout_width="fill_parent"  
+       android:layout_height="1px" 
+       android:background="?android:attr/listDivider" /> 
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
