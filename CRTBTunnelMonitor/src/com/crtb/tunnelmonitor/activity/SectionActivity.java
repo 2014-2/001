@@ -25,6 +25,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.crtb.tunnelmonitor.CommonObject;
 import com.crtb.tunnelmonitor.WorkFlowActivity;
 import com.crtb.tunnelmonitor.dao.impl.v2.SubsidenceCrossSectionDao;
 import com.crtb.tunnelmonitor.dao.impl.v2.TunnelCrossSectionDao;
@@ -109,6 +110,10 @@ public class SectionActivity extends WorkFlowActivity implements OnPageChangeLis
 				showListActionMenu("断面管理", new String[]{"编辑","删除"}, bean);
 			}
 		}) ;
+		
+		// clear
+		CommonObject.remove(SectionNewActivity.KEY_NEW_TUNNEL_SECTION_OBJECT);
+		CommonObject.remove(SectionNewSubsidenceActivity.KEY_NEW_SUBSIDENCE_SECTION_OBJECT);
 	}
 	
 	@Override
@@ -119,6 +124,12 @@ public class SectionActivity extends WorkFlowActivity implements OnPageChangeLis
 			TunnelCrossSectionInfo section = (TunnelCrossSectionInfo)bean ;
 			
 			if(position == 0){
+				
+				CommonObject.putObject(SectionNewActivity.KEY_NEW_TUNNEL_SECTION_OBJECT, section);
+				
+				Intent intent = new Intent() ;
+				intent.setClass(SectionActivity.this, SectionNewActivity.class);
+				startActivity(intent);
 				
 			} else if(position == 1){
 				
@@ -142,6 +153,12 @@ public class SectionActivity extends WorkFlowActivity implements OnPageChangeLis
 			SubsidenceCrossSectionInfo section = (SubsidenceCrossSectionInfo)bean ;
 			
 			if(position == 0){
+				
+				CommonObject.putObject(SectionNewSubsidenceActivity.KEY_NEW_SUBSIDENCE_SECTION_OBJECT, section);
+				
+				Intent intent = new Intent() ;
+				intent.setClass(SectionActivity.this, SectionNewSubsidenceActivity.class);
+				startActivity(intent);
 				
 			} else if(position == 1){
 				
@@ -351,141 +368,5 @@ public class SectionActivity extends WorkFlowActivity implements OnPageChangeLis
 		mSectionTunnelList.onReload() ;
 		mSectionSubsidenceList.onReload() ;
 	}
-
-//	public void Layout1() {
-//		/** 隧道内断面界面的控件 */
-//		/** List集合中存儲的是View,获取界面上的控件,就List.get(0),0就是集合中第一个界面,1就是集合中第二个界面 */
-//		listView = (ListView) list.get(0).findViewById(R.id.listView4);
-//
-//		setdata1();
-//		adapter = new TunnelCrossSectionInfoAdapter(SectionActivity.this, infos);
-//		listView.setAdapter(adapter);
-//		// listview的行点击
-//		listView.setOnItemLongClickListener(new OnItemLongClickListener() {
-//
-//			@Override
-//			public boolean onItemLongClick(AdapterView<?> parent, View view,
-//					int position, long id) {
-//				iListPos1 = position;
-//				// 对话框的选项
-//				//CharSequence items[] = { "打开", "编辑", "导出", "删除" };
-//				// 实例化对话
-//				new AlertDialog.Builder(SectionActivity.this)
-//						.setItems(/*items*/Constant.SectionRowClickItems, new DialogInterface.OnClickListener() {
-//
-//							@Override
-//							public void onClick(DialogInterface dialog,
-//									int which) {
-//								AppCRTBApplication CurApp = ((AppCRTBApplication)getApplicationContext());
-//								TunnelCrossSectionInfo item = (TunnelCrossSectionInfo)listView.getItemAtPosition(iListPos1);
-//								switch (which) {
-//								case 0:// 编辑 
-//									intent = new Intent(SectionActivity.this,
-//											SectionNewActivity.class);
-//									intent.putExtra(Constant.Select_SectionRowClickItemsName_Name,
-//											Double.toString(item.getChainage()));
-//									SectionActivity.this.startActivityForResult(intent,0);
-//									//startActivity(intent);
-//									break;
-//								case 1:// 删除
-//									WorkInfos Curw = CurApp.GetCurWork();
-//									TunnelCrossSectionDaoImpl impl = new TunnelCrossSectionDaoImpl(SectionActivity.this,Curw.getProjectName());
-//									int iRet = impl.DeleteSection(item.getId());
-//									switch (iRet) {
-//									case 0:
-//										Toast.makeText(SectionActivity.this, "删除失败", 3000).show();
-//										break;
-//									case 1:
-//										Curw.DelTunnelCrossSectionInfo(item);
-//										CurApp.UpdateWork(Curw);
-//										adapter.notifyDataSetChanged();
-//										Toast.makeText(SectionActivity.this, "删除成功", 3000).show();
-//										break;
-//									case -1:
-//										Toast.makeText(SectionActivity.this, "删除的断面中存在数据,不可删除", 3000).show();
-//										break;
-//									default:
-//										break;
-//									}
-//									break;
-//								default:
-//									break;
-//								}
-//
-//							}
-//						})
-//						.setCancelable(false)
-//						.show().setCanceledOnTouchOutside(true);// 显示对话框
-//				return true;
-//			}
-//		});
-//	}
-//
-//	public void Layout2() {
-//		/** 隧道内断面界面的控件 */
-//		/** List集合中存儲的是View,获取界面上的控件,就List.get(1),0就是集合中第一个界面,1就是集合中第二个界面 */
-//		listView1 = (ListView) list.get(1).findViewById(R.id.listView4);
-//
-//		setdata2();
-//		adapter1 = new SubsidenceCrossSectionInfoAdapter(SectionActivity.this, infos1);
-//		listView1.setAdapter(adapter1);
-//		// listview的行点击
-//		listView1.setOnItemLongClickListener(new OnItemLongClickListener() {
-//
-//			@Override
-//			public boolean onItemLongClick(AdapterView<?> parent, View view,
-//					int position, long id) {
-//				iListPos2 = position;
-//				new AlertDialog.Builder(SectionActivity.this)
-//						.setItems(/*items*/Constant.SectionRowClickItems, new DialogInterface.OnClickListener() {
-//
-//							@Override
-//							public void onClick(DialogInterface dialog,
-//									int which) {
-//								AppCRTBApplication CurApp = ((AppCRTBApplication)getApplicationContext());
-//								SubsidenceCrossSectionInfo item = (SubsidenceCrossSectionInfo)listView1.getItemAtPosition(iListPos2);
-//								switch (which) {
-//								case 0:// 编辑
-//									intent = new Intent(SectionActivity.this,
-//											SectionEditActivity.class);
-//									intent.putExtra(Constant.Select_SectionRowClickItemsName_Name,
-//											Double.toString(item.getChainage()));
-//									SectionActivity.this.startActivityForResult(intent,0);
-//									//startActivity(intent);
-//									break;
-//								case 1:// 删除
-//									WorkInfos Curw = CurApp.GetCurWork();
-//									SubsidenceCrossSectionDaoImpl impl = new SubsidenceCrossSectionDaoImpl(SectionActivity.this,Curw.getProjectName());
-//									int iRet = impl.DeleteSubsidenceCrossSection(item.getId());
-//									switch (iRet) {
-//									case 0:
-//										Toast.makeText(SectionActivity.this, "删除失败", 3000).show();
-//										break;
-//									case 1:
-//										Curw.DelSubsidenceCrossSectionInfo(item);
-//										CurApp.UpdateWork(Curw);
-//										adapter1.notifyDataSetChanged();
-//										Toast.makeText(SectionActivity.this, "删除成功", 3000).show();
-//										break;
-//									case -1:
-//										Toast.makeText(SectionActivity.this, "删除的断面中存在数据,不可删除", 3000).show();
-//										break;
-//									default:
-//										break;
-//									}
-//									break;
-//								default:
-//									break;
-//								}
-//
-//							}
-//						})
-//						.setCancelable(false)
-//						.show().setCanceledOnTouchOutside(true);// 显示对话框
-//				return true;
-//			}
-//		});
-//	}
-
 }
 
