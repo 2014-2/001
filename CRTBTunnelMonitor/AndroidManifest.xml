@@ -49,7 +49,8 @@
 
         <!-- <activity android:name="com.crtb.tunnelmonitor.activity.ControlNewActivity"/> -->
         <activity android:name="com.crtb.tunnelmonitor.activity.ControlxgActivity" />
-        <activity android:name="com.crtb.tunnelmonitor.activity.SoftwareInfoActivity" >
+        <activity android:name="com.crtb.tunnelmonitor.activity.SoftwareInfoActivity"
+            android:screenOrientation="portrait" >
         </activity>
         <activity android:name="com.crtb.tunnelmonitor.activity.RegisterActivity" >
         </activity>
