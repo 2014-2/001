@@ -73,7 +73,7 @@ public class Myadapter extends BaseAdapter {
 			state.setText("状态："+list.get(pos).getState());
 			TextView message=(TextView) view.findViewById(R.id.message);
 			message.setText(list.get(pos).getMessage());
-			EditText edtstate=(EditText) view.findViewById(R.id.edtstate);
+			TextView edtstate=(TextView) view.findViewById(R.id.edtstate);
 			edtstate.setText(list.get(pos).getEdtState());
 			
 			return view;
