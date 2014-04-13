@@ -1,183 +1,130 @@
 package com.crtb.tunnelmonitor.entity;
 
-import java.sql.Timestamp;
+import java.io.Serializable;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import org.zw.android.framework.db.ColumnFloat;
+import org.zw.android.framework.db.ColumnInt;
+import org.zw.android.framework.db.ColumnString;
+import org.zw.android.framework.db.Table;
+import org.zw.android.framework.db.core.ColumnPrimaryKey;
+import org.zw.android.framework.db.core.ColumnPrimaryKey.PrimaryKeyType;
 
 /**
  * 地表下沉测量单信息
  */
-public class RecordSubsidenceInfo implements Parcelable{
+@Table(TableName="RecordSubsidenceInfo")
+public class RecordSubsidenceInfo implements Serializable {
 	
-	private String ChainageName;					//断面名称
-	private int id;
-	private int CrossSectionType;					/**种类*/
-	private Timestamp CreateTime;					/**默认当前时间*/
-	private String Info;							/**信息*/
-	private Double Facedk;							/**隧道记录单的里程*/
-	private String Facedescription;					/**施工序号*/
-	private double Temperature;						/**温度值*/
-	private String CrossSectionIDs;					/**断面id序列*/
-	//private List<SubsidenceTotalDataInfo> sectionlist=null;
-	private boolean bUse;
+	@ColumnPrimaryKey(Type = PrimaryKeyType.AUTO)
+	@ColumnInt
+	private int id;									//记录id
 	
-	public boolean isbUse() {
-		return bUse;
-	}
-	public void setbUse(boolean bUse) {
-		this.bUse = bUse;
-	}
-	public String getChainageName() {
-		return ChainageName;
-	}
-	public void setChainageName(String chainageName) {
-		ChainageName = chainageName;
-	}
-//	public List<SubsidenceTotalDataInfo> getSectionlist() {
-//		return sectionlist;
-//	}
-//	public void setSectionlist(List<SubsidenceTotalDataInfo> sectionlist) {
-//		this.sectionlist = sectionlist;
-//	}
+	@ColumnString(length = 16)
+	private String prefix; 							// 前缀
+	
+	@ColumnFloat
+	private float facedk;							// 撑子面距离
+	
+	@ColumnString(length = 32)
+	private String chainageName;					//断面名称
+	
+	@ColumnString(length = 32)
+	private String measure ;						// 测量员
+	
+	@ColumnString(length = 20)
+	private String identityCard;					// 身份证
+	
+	@ColumnString(length = 8)
+	private String temperature;						// 温度值
+	
+	@ColumnString(length = 20)
+	private String facedescription;					// 施工序号
+	
+	@ColumnString(length = 20)
+	private String createTime;						// 创建时间
+	
+	@ColumnString(length = 20)
+	private String sectionID;						// 断面id序列
+
 	public int getId() {
 		return id;
 	}
-	public int getCrossSectionType() {
-		return CrossSectionType;
-	}
-	public void setCrossSectionType(int crossSectionType) {
-		CrossSectionType = crossSectionType;
-	}
-	public Timestamp getCreateTime() {
-		return CreateTime;
-	}
-	public void setCreateTime(Timestamp createTime) {
-		CreateTime = createTime;
-	}
-	public Double getFacedk() {
-		return Facedk;
-	}
-	public void setFacedk(Double facedk) {
-		Facedk = facedk;
-	}
-	public String getFacedescription() {
-		return Facedescription;
-	}
-	public void setFacedescription(String facedescription) {
-		Facedescription = facedescription;
-	}
-	public double getTemperature() {
-		return Temperature;
-	}
-	public void setTemperature(double temperature) {
-		Temperature = temperature;
-	}
+
 	public void setId(int id) {
 		this.id = id;
 	}
-	//	public void setCreateTime(String createTime) {
-//		CreateTime = createTime;
-//	}
-//	public String getTunnelFaceChainage() {
-//		return TunnelFaceChainage;
-//	}
-//	public void setTunnelFaceChainage(String tunnelFaceChainage) {
-//		TunnelFaceChainage = tunnelFaceChainage;
-//	}
-//	public String getTemperature() {
-//		return Temperature;
-//	}
-//	public void setTemperature(String temperature) {
-//		Temperature = temperature;
-//	}
-//	public List<Integer> getCrossSectionIds() {
-//		return CrossSectionIds;
-//	}
-//	public void setCrossSectionIds(List<Integer> crossSectionIds) {
-//		CrossSectionIds = crossSectionIds;
-//	}
-//	public String getConstructionProcedure() {
-//		return ConstructionProcedure;
-//	}
-//	public void setConstructionProcedure(String constructionProcedure) {
-//		ConstructionProcedure = constructionProcedure;
-//	}
-//	public DTMSDataCateGory getCateGory() {
-//		return CateGory;
-//	}
-//	public void setCateGory(DTMSDataCateGory cateGory) {
-//		CateGory = cateGory;
-//	}
-	public String getInfo() {
-		return Info;
-	}
-	public void setInfo(String info) {
-		Info = info;
-	}
-	public String getCrossSectionIDs() {
-		return CrossSectionIDs;
-	}
-	public void setCrossSectionIDs(String crossSectionIDs) {
-		CrossSectionIDs = crossSectionIDs;
-	}
-	@Override
-	public int describeContents() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-	@Override
-	public void writeToParcel(Parcel arg0, int arg1) {
-		// TODO Auto-generated method stub
-		arg0.writeString(ChainageName);
-		arg0.writeInt(id);
-		arg0.writeInt(CrossSectionType);
-		arg0.writeString(CreateTime.toString());
-		arg0.writeString(Info);
-		arg0.writeDouble(Facedk);
-		arg0.writeString(Facedescription);
-		arg0.writeDouble(Temperature);
-		arg0.writeString(CrossSectionIDs);
-		//arg0.writeList(sectionlist);
-		arg0.writeBooleanArray(new boolean[]{bUse});
-	}	
-    // 实现Parcelable接口的类型中，必须有一个实现了Parcelable.Creator接口的静态常量成员字段，
-    // 并且它的名字必须为CREATOR的
-    public static final Parcelable.Creator<RecordSubsidenceInfo> CREATOR 
-            = new Parcelable.Creator<RecordSubsidenceInfo>()
-    {
-        // From Parcelable.Creator
-        @Override
-        public RecordSubsidenceInfo createFromParcel(Parcel in)
-        {
-        	RecordSubsidenceInfo brief = new RecordSubsidenceInfo();
-            
-            // 从包裹中读出数据
-        	brief.ChainageName = in.readString();
-        	brief.id = in.readInt();
-        	brief.CrossSectionType = in.readInt();
-        	brief.CreateTime = Timestamp.valueOf(in.readString());
-        	brief.Info = in.readString();
-        	brief.Facedk = in.readDouble();
-        	brief.Facedescription = in.readString();
-        	brief.Temperature = in.readDouble();
-        	brief.CrossSectionIDs = in.readString();
-        	//in.readList(brief.sectionlist, null);
-        	boolean tmp[] = new boolean[1];
-        	in.readBooleanArray(tmp);
-        	brief.bUse = tmp[0];
-            
-            return brief;
-        }
 
+	public String getPrefix() {
+		return prefix;
+	}
 
+	public void setPrefix(String prefix) {
+		this.prefix = prefix;
+	}
 
-        // From Parcelable.Creator
-        @Override
-        public RecordSubsidenceInfo[] newArray(int size)
-        {
-            return new RecordSubsidenceInfo[size];
-        }
-    };
+	public float getFacedk() {
+		return facedk;
+	}
+
+	public void setFacedk(float facedk) {
+		this.facedk = facedk;
+	}
+
+	public String getChainageName() {
+		return chainageName;
+	}
+
+	public void setChainageName(String chainageName) {
+		this.chainageName = chainageName;
+	}
+
+	public String getMeasure() {
+		return measure;
+	}
+
+	public void setMeasure(String measure) {
+		this.measure = measure;
+	}
+
+	public String getIdentityCard() {
+		return identityCard;
+	}
+
+	public void setIdentityCard(String identityCard) {
+		this.identityCard = identityCard;
+	}
+
+	public String getTemperature() {
+		return temperature;
+	}
+
+	public void setTemperature(String temperature) {
+		this.temperature = temperature;
+	}
+
+	public String getFacedescription() {
+		return facedescription;
+	}
+
+	public void setFacedescription(String facedescription) {
+		this.facedescription = facedescription;
+	}
+
+	public String getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(String createTime) {
+		this.createTime = createTime;
+	}
+
+	public String getSectionID() {
+		return sectionID;
+	}
+
+	public void setSectionID(String sectionID) {
+		this.sectionID = sectionID;
+	}
+	
 	
 }

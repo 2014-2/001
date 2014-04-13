@@ -10,11 +10,12 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.crtb.tunnelmonitor.activity.R;
-import com.crtb.tunnelmonitor.entity.SubsidenceCrossSectionInfo;
+import com.crtb.tunnelmonitor.entity.RecordInfo;
+import com.crtb.tunnelmonitor.utils.CrtbUtils;
 
-public class SectionSubsidenceAdapter extends CrtbEntityAdapter<SubsidenceCrossSectionInfo> {
+public class CrtbRecordTunnelSectionAdapter extends CrtbEntityAdapter<RecordInfo> {
 
-	protected SectionSubsidenceAdapter(Context context) {
+	protected CrtbRecordTunnelSectionAdapter(Context context) {
 		super(context);
 	}
 
@@ -22,7 +23,7 @@ public class SectionSubsidenceAdapter extends CrtbEntityAdapter<SubsidenceCrossS
 	public View getView(int position, View convertView, ViewGroup parent) {
 		
 		HolderView holder 					= null ;
-		SubsidenceCrossSectionInfo item 	= getItem(position);
+		RecordInfo item 					= getItem(position);
 		
 		if(convertView == null){
 			
@@ -33,13 +34,13 @@ public class SectionSubsidenceAdapter extends CrtbEntityAdapter<SubsidenceCrossS
 			holder	= (HolderView)convertView.getTag() ;
 		}
 		
-		holder.chainage.setText(item.getChainageName());
-		holder.excavation.setText("无");
+		holder.chainage.setText(item.getCreateTime());
+		holder.excavation.setText(CrtbUtils.formatSectionName(item.getPrefix(), item.getFacedk()));
 		
 		return convertView;
 	}
 
-	@InjectLayout(layout=R.layout.item_tunnel_section_layout)
+	@InjectLayout(layout=R.layout.item_record_tunnel_section_layout)
 	class HolderView {
 		
 		@InjectView(id=R.id.t1)

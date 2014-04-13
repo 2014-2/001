@@ -1,12 +1,12 @@
 package com.crtb.tunnelmonitor.activity;
 
-import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.List;
 
 import org.zw.android.framework.ioc.InjectCore;
 import org.zw.android.framework.ioc.InjectLayout;
 import org.zw.android.framework.ioc.InjectView;
+import org.zw.android.framework.util.DateUtils;
+import org.zw.android.framework.util.StringUtils;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -26,23 +26,14 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.crtb.tunnelmonitor.AppCRTBApplication;
 import com.crtb.tunnelmonitor.CommonObject;
 import com.crtb.tunnelmonitor.WorkFlowActivity;
-import com.crtb.tunnelmonitor.adapter.RecordSubsidenceCrossSectionInfoAdapter;
-import com.crtb.tunnelmonitor.adapter.RecordTunnelCrossSectionInfoAdapter;
-import com.crtb.tunnelmonitor.common.Constant;
-import com.crtb.tunnelmonitor.dao.impl.RecordDaoImpl;
-import com.crtb.tunnelmonitor.dao.impl.SubsidenceCrossSectionDaoImpl;
-import com.crtb.tunnelmonitor.dao.impl.TunnelCrossSectionDaoImpl;
+import com.crtb.tunnelmonitor.dao.impl.v2.RecordTunnelSectionDao;
 import com.crtb.tunnelmonitor.entity.RecordInfo;
-import com.crtb.tunnelmonitor.entity.SubsidenceCrossSectionInfo;
 import com.crtb.tunnelmonitor.entity.TunnelCrossSectionInfo;
-import com.crtb.tunnelmonitor.entity.WorkInfos;
 import com.crtb.tunnelmonitor.entity.WorkPlan;
-import com.crtb.tunnelmonitor.utils.Time;
+import com.crtb.tunnelmonitor.widget.CrtbRecordTunnelSectionInfoListView;
 
 /**
  * 新建隧道内断面记录单
@@ -97,19 +88,11 @@ public class RecordNewActivity extends WorkFlowActivity implements OnPageChangeL
     ////////////////////////////section info///////////////////////
     @InjectView(layout=R.layout.record_new_xinxi)
     private LinearLayout mSectionListLayout ;
-   
-    LinearLayout xin;
-    private int num,itype;
-    private TextView record_new_tv_header;
     
-    private List<TunnelCrossSectionInfo> infos = null;
-    private List<SubsidenceCrossSectionInfo> infos1 = null;
-
-    private RecordTunnelCrossSectionInfoAdapter adapter = null;
-    private RecordSubsidenceCrossSectionInfoAdapter adapter1 = null;
+    @InjectView(id=R.id.section_use_list,parent="mSectionListLayout")
+    private CrtbRecordTunnelSectionInfoListView sectionListView ;
     
-	private RecordInfo editInfo = null;
-	private AppCRTBApplication CurApp = null;
+	private RecordInfo recordInfo = null;
 	
 	private WorkPlan mCurrentWorkPlan;
     
@@ -131,6 +114,9 @@ public class RecordNewActivity extends WorkFlowActivity implements OnPageChangeL
 		
 		// prefix
 		section_new_et_prefix.setText(mCurrentWorkPlan.getMileagePrefix());
+		
+		// 
+		// sectionListView.setFristSelected() ;
     }
     
 	@Override
@@ -142,84 +128,56 @@ public class RecordNewActivity extends WorkFlowActivity implements OnPageChangeL
 			this.finish();// 关闭当前界面
 			break;
 		case R.id.work_btn_queding: // 数据库
-//			if(record_Chainage.getText().toString().trim().length() <= 0)
-//			{
-//				Toast.makeText(this, "请输入完整信息", 3000).show();
-//				return;
-//			}
-//			WorkInfos Curw = CurApp.GetCurWork();
-//			RecordInfo ts = new RecordInfo();
-//			if (editInfo != null) {
-//				ts.setId(editInfo.getId());
-//			}
-//			ts.setFacedk(Double.valueOf(record_Chainage.getText().toString().trim()));
-//			ts.setCrossSectionType(itype);
-//			// 获取手机的当前时间
-//			final String time = Time.getDateEN();
-//			ts.setCreateTime(Timestamp.valueOf(time));
-//			ts.setFacedescription(record_dotype.getText().toString().trim());
-//			ts.setTemperature(Double.valueOf(record_C.getText().toString().trim()));
-//			ts.setInfo("");
-//			if (itype == 1) {
-//				ts.setCrossSectionIDs(AppCRTBApplication.GetSectionIDArrayForTunnelCrossArray(infos));
-//			}
-//			else {
-//				ts.setCrossSectionIDs(AppCRTBApplication.GetSectionIDArrayForSubCrossArray(infos1));
-//			}
-//			ts.setChainageName(CurApp.GetSectionName(ts.getFacedk().doubleValue()));
-//			if(!CurApp.IsValidRecordInfo(ts))
-//			{
-//				Toast.makeText(this, "请输入完整信息", 3000).show();
-//				return;
-//			}
-//			if ((ts.getFacedk().doubleValue() < Curw.getStartChainage().doubleValue()) ||
-//					(ts.getFacedk().doubleValue() > Curw.getEndChainage().doubleValue())){
-//				String sStart = CurApp.GetSectionName(Curw.getStartChainage().doubleValue());
-//				String sEnd = CurApp.GetSectionName(Curw.getEndChainage().doubleValue());
-//				String sMsg = "请输入里程为"+sStart+"到"+sEnd+"之间的里程";
-//				Toast.makeText(this, sMsg, 3000).show();
-//				return;
-//			}
-//			List<RecordInfo> rinfos = null;
-//			if (itype == 1) {
-//				rinfos = Curw.getTcsirecordList();
-//			}
-//			else {
-//				rinfos = Curw.getScsirecordList();
-//			}
-//			if(rinfos == null)
-//			{
-//				Toast.makeText(this, "添加失败", 3000).show();
-//			}
-//			else
-//			{
-//				if(editInfo == null)
-//				{
-//					RecordDaoImpl impl = new RecordDaoImpl(this,Curw.getProjectName());
-//					if(impl.AddRecord(ts))
-//					{
-//						rinfos.add(ts);
-//						CurApp.UpdateWork(Curw);
-//						Toast.makeText(this, "添加成功", 3000).show();
-//					}
-//					else
-//					{
-//						Toast.makeText(this, "添加失败", 3000).show();
-//					}
-//				}
-//				else
-//				{
-//					RecordDaoImpl impl = new RecordDaoImpl(this,Curw.getProjectName());
-//					impl.UpdateRecord(ts);
-//					Curw.UpdateRecordInfo(itype,ts);
-//					CurApp.UpdateWork(Curw);
-//					Toast.makeText(this, "编辑成功", 3000).show();
-//				}
-//			}
-//			Intent IntentOk = new Intent();
-//			IntentOk.putExtra(Constant.Select_SectionRowClickItemsName_Name,itype);
-//			setResult(RESULT_OK, IntentOk);
-//			this.finish();
+			
+			// default 
+			String currentTime 	= DateUtils.toDateString(DateUtils.getCurrtentTimes(), DateUtils.DATE_TIME_FORMAT) ;
+			
+			// base
+			String prefix		= section_new_et_prefix.getEditableText().toString().trim() ;
+			String chainage 	= record_Chainage.getEditableText().toString().trim();// 里程
+			String person 		= record_Person.getEditableText().toString().trim();
+			String idcard 		= record_Card.getEditableText().toString().trim();
+			String temperature 	= record_C.getEditableText().toString().trim();
+			String descr 		= record_dotype.getEditableText().toString().trim();
+						
+			if (StringUtils.isEmpty(chainage)) {
+				showText("撑子面里程不能为空");
+				return;
+			}
+
+			if (StringUtils.isEmpty(person)) {
+				showText("测量员不能为空");
+				return;
+			}
+			
+			if (StringUtils.isEmpty(idcard)) {
+				showText("身份证号不能为空");
+				return;
+			}
+			
+			TunnelCrossSectionInfo section = sectionListView.getSelectedSection() ;
+			
+			if(section == null){
+				showText("请选择断面");
+				return;
+			}
+			
+			
+			recordInfo	= new RecordInfo() ;
+			// 基本信息
+			recordInfo.setPrefix(prefix);
+			recordInfo.setFacedk(Float.valueOf(chainage));
+			recordInfo.setCreateTime(currentTime);
+			recordInfo.setMeasure(person);
+			recordInfo.setChainageName(section.getChainageName());
+			recordInfo.setIdentityCard(idcard);
+			recordInfo.setTemperature(temperature);
+			recordInfo.setFacedescription(descr);
+			
+			RecordTunnelSectionDao.defaultDao().insert(recordInfo);
+			
+			setResult(RESULT_OK);
+			finish();
 			break;
 		}
 
@@ -269,8 +227,6 @@ public class RecordNewActivity extends WorkFlowActivity implements OnPageChangeL
 			@Override
 			public Object instantiateItem(View arg0, int arg1) {
 				((ViewPager) arg0).addView((View) list.get(arg1), 0);
-
-
 				return (View) list.get(arg1);
 			}
 
@@ -300,59 +256,7 @@ public class RecordNewActivity extends WorkFlowActivity implements OnPageChangeL
 		mPager.setOnPageChangeListener(this);
 	}
 
-	public void setdata(int type) {
-    	AppCRTBApplication CurApp = ((AppCRTBApplication)getApplicationContext());
-		WorkInfos CurW = CurApp.GetCurWork();
-		if(CurW == null)
-		{
-			return;
-		}
-		if (type == 1) {
-			if(infos == null)
-			{
-				infos = new ArrayList<TunnelCrossSectionInfo>();
-			}
-			TunnelCrossSectionDaoImpl impl = new TunnelCrossSectionDaoImpl(this, CurW.getProjectName());
-			impl.GetTunnelCrossSectionList(infos);
-			if (editInfo != null) {
-				String sSels = editInfo.getCrossSectionIDs();
-				List<Integer> iSels = AppCRTBApplication.GetSectionIDArray(sSels);
-				for (int i = 0; i < infos.size(); i++) {
-					for (int j = 0; j < iSels.size(); j++) {
-						if (infos.get(i).getId() == iSels.get(j)) {
-							infos.get(i).setbUse(true);
-							break;
-						}
-					}
-				}
-			}
-		}
-		else {
-			if(infos1 == null)
-			{
-				infos1 = new ArrayList<SubsidenceCrossSectionInfo>();
-			}
-			SubsidenceCrossSectionDaoImpl impl = new SubsidenceCrossSectionDaoImpl(this, CurW.getProjectName());
-			impl.GetSubsidenceCrossSectionList(infos1);
-			if (editInfo != null) {
-				String sSels = editInfo.getCrossSectionIDs();
-				List<Integer> iSels = AppCRTBApplication.GetSectionIDArray(sSels);
-				for (int i = 0; i < infos1.size(); i++) {
-					for (int j = 0; j < iSels.size(); j++) {
-						if (infos1.get(i).getId() == iSels.get(j)) {
-							infos1.get(i).setbUse(true);
-							break;
-						}
-					}
-				}
-			}
-		}
-	}    
-    public void initPager() {
-       
-    }
-
-    @Override
+	@Override
     public void onPageScrollStateChanged(int arg0) {
 
     }
@@ -363,14 +267,18 @@ public class RecordNewActivity extends WorkFlowActivity implements OnPageChangeL
     }
 
     @Override
-    public void onPageSelected(int arg0) {
+    public void onPageSelected(int index) {
         int single = (int) (b.getWidth() + offSet * 2);
         TranslateAnimation ta = new TranslateAnimation(currIndex * single,
-                single * arg0, 0, 0);
+                single * index, 0, 0);
         ta.setFillAfter(true);
         ta.setDuration(200);
         cursor.startAnimation(ta);
-        currIndex = arg0;
+        currIndex = index;
+        
+        if(index == 1){
+        	sectionListView.onResume() ;
+        }
     }
 
     public OnClickListener tv_Listener = new View.OnClickListener() {
@@ -380,7 +288,9 @@ public class RecordNewActivity extends WorkFlowActivity implements OnPageChangeL
             int single = (int) (b.getWidth() + offSet * 2);
             switch (v.getId()) {
             case R.id.text1:
+            	
                 mPager.setCurrentItem(0);
+                
                 if (currIndex != 0) {
                     TranslateAnimation ta = new TranslateAnimation(
                             (currIndex * single), 0, 0, 0);
@@ -388,10 +298,14 @@ public class RecordNewActivity extends WorkFlowActivity implements OnPageChangeL
                     ta.setDuration(200);
                     cursor.startAnimation(ta);
                 }
+                
                 currIndex = 0;
+                
                 break;
             case R.id.text2:
+            	
                 mPager.setCurrentItem(1);
+                
                 if (currIndex != 1) {
                     TranslateAnimation ta = new TranslateAnimation(currIndex
                             * single, single, 0, 0);
@@ -399,7 +313,9 @@ public class RecordNewActivity extends WorkFlowActivity implements OnPageChangeL
                     ta.setDuration(200);
                     cursor.startAnimation(ta);
                 }
+                
                 currIndex = 1;
+                
                 break;
             }
         }

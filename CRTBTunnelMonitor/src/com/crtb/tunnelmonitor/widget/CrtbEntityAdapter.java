@@ -13,7 +13,7 @@ import android.content.Context;
  */
 public abstract class CrtbEntityAdapter<T> extends CrtbBaseAdapter {
 	
-	private final List<T> mList	= new ArrayList<T>();
+	protected final List<T> mList	= new ArrayList<T>();
 
 	protected CrtbEntityAdapter(Context context) {
 		super(context);

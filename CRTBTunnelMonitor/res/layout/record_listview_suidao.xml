@@ -41,13 +41,11 @@
         </RelativeLayout>
     </LinearLayout>
 
-    <ListView
-        android:id="@+id/record_lv_suidao"
-        android:layout_width="match_parent"
-        android:layout_height="360dp"
-        android:layout_weight="0.65"
+    <com.crtb.tunnelmonitor.widget.CrtbRecordTunnelSectionListView
+        android:id="@+id/record_lv_tunnnel_section_list"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
         android:fastScrollEnabled="true"
-        android:focusable="true" >
-    </ListView>
+        android:focusable="true" />
 
 </LinearLayout>

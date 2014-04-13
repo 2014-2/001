@@ -91,7 +91,7 @@
             android:layout_marginLeft="10dp"
             android:layout_marginRight="40dp"
             android:editable="false"
-            android:focusable="true"
+            android:focusable="false"
             android:singleLine="true" />
     </LinearLayout>
 

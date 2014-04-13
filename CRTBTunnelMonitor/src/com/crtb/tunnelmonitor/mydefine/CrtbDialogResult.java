@@ -31,4 +31,12 @@ public class CrtbDialogResult extends CrtbDialog {
 		mIcon.setBackgroundResource(mIconResId);
 		mTextView.setText(mMessage);
 	}
+	
+	public static CrtbDialogResult createDeleteSuccessDialog(Context context){
+		return new CrtbDialogResult(context,R.drawable.ic_reslut_sucess,"删除成功");
+	}
+	
+	public static CrtbDialogResult createDeleteFailedDialog(Context context){
+		return new CrtbDialogResult(context,R.drawable.ic_reslut_error,"删除失败");
+	}
 }

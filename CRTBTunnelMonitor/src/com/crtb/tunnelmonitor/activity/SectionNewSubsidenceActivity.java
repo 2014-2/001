@@ -7,6 +7,7 @@ import org.zw.android.framework.ioc.InjectCore;
 import org.zw.android.framework.ioc.InjectLayout;
 import org.zw.android.framework.ioc.InjectView;
 import org.zw.android.framework.util.DateUtils;
+import org.zw.android.framework.util.StringUtils;
 
 import android.content.Intent;
 import android.graphics.BitmapFactory;
@@ -16,6 +17,8 @@ import android.os.Parcelable;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -30,9 +33,11 @@ import android.widget.TextView;
 
 import com.crtb.tunnelmonitor.CommonObject;
 import com.crtb.tunnelmonitor.WorkFlowActivity;
+import com.crtb.tunnelmonitor.dao.impl.v2.SubsidenceCrossSectionDao;
 import com.crtb.tunnelmonitor.entity.SubsidenceCrossSectionInfo;
 import com.crtb.tunnelmonitor.entity.WorkPlan;
 import com.crtb.tunnelmonitor.mydefine.CrtbDateDialogUtils;
+import com.crtb.tunnelmonitor.utils.CrtbUtils;
 
 /**
  * 新建地表下层断面
@@ -95,8 +100,7 @@ public class SectionNewSubsidenceActivity extends WorkFlowActivity implements On
     @InjectView(id=R.id.DSection_Info,parent="mDeformationInfoLayout")
     private EditText DSection_Info;
 
-	private String sChainage = null;
-	private SubsidenceCrossSectionInfo editInfo = null;
+	private SubsidenceCrossSectionInfo subsidence = null;
 	
 	private WorkPlan mCurrentWorkPlan;
 
@@ -123,35 +127,33 @@ public class SectionNewSubsidenceActivity extends WorkFlowActivity implements On
 		String date = DateUtils.toDateString(DateUtils.getCurrtentTimes(), DateUtils.DATE_TIME_FORMAT) ;
 		DSection_createtime.setText(date);
 		DSection_SetTime.setText(date);
-        
-//        num = getIntent().getExtras().getInt("name");
-//        InitImageView();
-//        InitTextView();
-//        InitViewPager();
-//        InitMyTextView();
-//        
-//		sChainage = getIntent().getExtras().getString(Constant.Select_SectionRowClickItemsName_Name);
-//		double dChainage = AppCRTBApplication.StrToDouble(sChainage, -1);
-//		InitImageView();
-//		InitTextView();
-//		InitViewPager();
-//		InitMyTextView();
-//
-//		if (sChainage.length() > 0) {
-//        	section_new_tv_diheader.setText("编辑地表下层断面");
-//			AppCRTBApplication CurApp = ((AppCRTBApplication)getApplicationContext());
-//			WorkInfos Curw = CurApp.GetCurWork();
-//			List<SubsidenceCrossSectionInfo> infos = Curw.getScsiList();
-//			for(int i=0;i<infos.size();i++)
-//			{
-//				SubsidenceCrossSectionInfo tmp = infos.get(i);
-//				if(tmp.getChainage().equals(dChainage))
-//				{
-//					editInfo = tmp;
-//					break;
-//				}
-//			}
-//		}
+		
+		DSection_Chainage.addTextChangedListener(new TextWatcher() {
+			
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+				
+			}
+			
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,int after) {
+				
+			}
+			
+			@Override
+			public void afterTextChanged(Editable edt) {
+				
+				String temp = edt.toString();
+				
+				if(!StringUtils.isEmpty(temp)){
+					float f 	= Float.valueOf(temp);
+					String pre 	= section_new_et_prefix.getEditableText().toString().trim();
+					DSection_name.setText(CrtbUtils.formatSectionName(pre,f));
+				} else {
+					DSection_name.setText("");
+				}
+			}
+		}) ;
     }
 
 	@Override
@@ -169,100 +171,71 @@ public class SectionNewSubsidenceActivity extends WorkFlowActivity implements On
 			CrtbDateDialogUtils.setAnyDateDialog(this, DSection_SetTime, DateUtils.getCurrtentTimes());
 			break ;
 		case R.id.work_btn_queding: // 数据库
-//			if(DSection_Chainage.getText().toString().trim().length() <= 0)
-//			{
-//				Toast.makeText(this, "请输入完整信息", 3000).show();
-//				return;
-//			}
-//			if(DSection_Width.getText().toString().trim().length() <= 0)
-//			{
-//				Toast.makeText(this, "请输入完整信息", 3000).show();
-//				return;
-//			}
-//			if(DSection_PointCount.getText().toString().trim().length() <= 0)
-//			{
-//				Toast.makeText(this, "请输入完整信息", 3000).show();
-//				return;
-//			}
-//
-//			AppCRTBApplication CurApp = ((AppCRTBApplication)getApplicationContext());
-//			WorkInfos Curw = CurApp.GetCurWork();
-//			SubsidenceCrossSectionInfo ts = new SubsidenceCrossSectionInfo();
-//			if (editInfo != null) {
-//				ts.setId(editInfo.getId());
-//			}
-//			ts.setChainage(Double.valueOf(DSection_Chainage.getText().toString().trim()));
-//			ts.setChainagePrefix(Curw.getChainagePrefix());
-//			ts.setInbuiltTime(Timestamp.valueOf(DSection_createtime.getText().toString()));
-//			ts.setWidth(Integer.valueOf(DSection_Width.getText().toString().trim()));
-//			ts.setSurveyPnts(DSection_PointCount.getText().toString().trim());
-//			ts.setInfo(DSection_Info.getText().toString().trim());
-//			ts.setChainageName(CurApp.GetSectionName(ts.getChainage().doubleValue()));
-//			if(!CurApp.IsValidSubsidenceTunnelCrossSectionInfo(ts))
-//			{
-//				Toast.makeText(this, "请输入完整信息", 3000).show();
-//				return;
-//			}
-//			if ((ts.getChainage().doubleValue() < Curw.getStartChainage().doubleValue()) ||
-//					(ts.getChainage().doubleValue() > Curw.getEndChainage().doubleValue())){
-//				String sStart = CurApp.GetSectionName(Curw.getStartChainage().doubleValue());
-//				String sEnd = CurApp.GetSectionName(Curw.getEndChainage().doubleValue());
-//				String sMsg = "请输入里程为"+sStart+"到"+sEnd+"之间的里程";
-//				Toast.makeText(this, sMsg, 3000).show();
-//				return;
-//			}
-//			List<SubsidenceCrossSectionInfo> infos = Curw.getScsiList();
-//			if(infos == null)
-//			{
-//				Toast.makeText(this, "添加失败", 3000).show();
-//			}
-//			else
-//			{
-//				boolean bHave = false;
-//				for(int i=0;i<infos.size();i++)
-//				{
-//					SubsidenceCrossSectionInfo tmp = infos.get(i);
-//					if(tmp.getChainage().equals(ts.getChainage()))
-//					{
-//						bHave = true;
-//						break;
-//					}
-//				}
-//				if(bHave)
-//				{
-//					if(editInfo == null)
-//					{
-//						Toast.makeText(this, "已存在", 3000).show();
-//						return;
-//					}
-//					else
-//					{
-//						SubsidenceCrossSectionDaoImpl impl = new SubsidenceCrossSectionDaoImpl(this,Curw.getProjectName());
-//						impl.UpdateSubsidenceCrossSection(ts);
-//						Curw.UpdateSubsidenceCrossSectionInfo(ts);
-//						CurApp.UpdateWork(Curw);
-//						Toast.makeText(this, "编辑成功", 3000).show();
-//					}
-//				}
-//				else
-//				{
-//					SubsidenceCrossSectionDaoImpl impl = new SubsidenceCrossSectionDaoImpl(this,Curw.getProjectName());
-//					if(impl.InsertSubsidenceCrossSection(ts))
-//					{
-//						infos.add(ts);
-//						CurApp.UpdateWork(Curw);
-//						Toast.makeText(this, "添加成功", 3000).show();
-//					}
-//					else
-//					{
-//						Toast.makeText(this, "添加失败", 3000).show();
-//					}
-//				}
-//			}
-//			Intent IntentOk = new Intent();
-//			IntentOk.putExtra(Constant.Select_SectionRowClickItemsName_Name,2);
-//			setResult(RESULT_OK, IntentOk);
-//			this.finish();
+			
+			// base
+			String prefix		= section_new_et_prefix.getEditableText().toString().trim() ;
+			String chainage 	= DSection_Chainage.getEditableText().toString().trim();// 里程
+			String name 		= DSection_name.getEditableText().toString().trim();
+			String date 		= DSection_createtime.getEditableText().toString().trim();
+			String width 		= DSection_Width.getEditableText().toString().trim();
+			String point 		= DSection_PointCount.getEditableText().toString().trim();
+						
+			if (StringUtils.isEmpty(chainage)) {
+				showText("断面里程不能为空");
+				return;
+			}
+
+			if (StringUtils.isEmpty(date)) {
+				showText("埋设时间不能为空");
+				return;
+			}
+			
+			if (StringUtils.isEmpty(point)) {
+				showText("断面宽度不能为空");
+				return;
+			}
+
+			if (StringUtils.isEmpty(width)) {
+				showText("监测点个数不能为空");
+				return;
+			}
+			
+			// 变形阀值
+			String dbu0 		= DSection_Value1.getEditableText().toString().trim();
+			String dbl 			= DSection_Value2.getEditableText().toString().trim();
+			String buildtime	= DSection_SetTime.getEditableText().toString().trim();
+			String remark 		= DSection_Info.getEditableText().toString().trim();
+			
+			if (StringUtils.isEmpty(dbu0)) {
+				showText("累计变形极限值不能为空");
+				return;
+			}
+			
+			if (StringUtils.isEmpty(dbl)) {
+				showText("累计速率极限值不能为空");
+				return;
+			}
+			
+			subsidence = new SubsidenceCrossSectionInfo() ;
+			
+			///////////baase info//////////
+			subsidence.setPrefix(prefix);
+			subsidence.setChainage(Float.valueOf(chainage));
+			subsidence.setChainageName(name);
+			subsidence.setWidth(Integer.valueOf(width));
+			subsidence.setPoints(Integer.valueOf(point));
+			
+			//
+			subsidence.setDBU0(Float.valueOf(dbu0));
+			subsidence.setDBLimitVelocity(Float.valueOf(dbl));
+			subsidence.setDBU0Time(buildtime);
+			subsidence.setInfo(remark);
+			
+			// insert
+			SubsidenceCrossSectionDao.defaultDao().insert(subsidence);
+			
+			setResult(RESULT_OK);
+			finish();
 			break;
 		}
 

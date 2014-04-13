@@ -124,6 +124,13 @@ public abstract class BaseActivity extends Activity {
 	}
 	
 	/**
+	 * clear list action menu
+	 */
+	protected final void clearListActionMenu(){
+		mListActionMenu	= null ;
+	}
+	
+	/**
 	 * Show List Action menu
 	 * 
 	 * @param title

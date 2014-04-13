@@ -8,23 +8,27 @@ import android.util.AttributeSet;
 import com.crtb.tunnelmonitor.dao.impl.v2.SubsidenceCrossSectionDao;
 import com.crtb.tunnelmonitor.entity.SubsidenceCrossSectionInfo;
 
-public class SectionSubsidenceListView extends CrtbBaseListView {
+public class CrtbRecordSubsidenceSectionInfoListView extends CrtbBaseListView {
 	
-	private SectionSubsidenceAdapter 	mAdapter ;
-
-	public SectionSubsidenceListView(Context context) {
+	private CrtbRecordSubsidenceSectionInfoAdapter mAdapter ;
+	
+	public CrtbRecordSubsidenceSectionInfoListView(Context context) {
 		this(context, null);
 	}
-	
-	public SectionSubsidenceListView(Context context, AttributeSet attrs) {
+
+	public CrtbRecordSubsidenceSectionInfoListView(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		
-		mAdapter	= new SectionSubsidenceAdapter(context);
+		mAdapter	= new CrtbRecordSubsidenceSectionInfoAdapter(context);
 		setAdapter(mAdapter);
 		
 		clearCacheColor() ;
 	}
 	
+	public SubsidenceCrossSectionInfo getItem(int position){
+		return mAdapter.getItem(position);
+	}
+
 	@Override
 	public void onResume() {
 		
@@ -34,15 +38,11 @@ public class SectionSubsidenceListView extends CrtbBaseListView {
 			mAdapter.notifyDataSetChanged() ;
 		}
 	}
-	
+
 	@Override
 	public void onReload() {
-		List<SubsidenceCrossSectionInfo>  list = SubsidenceCrossSectionDao.defaultDao().queryAllSection();
+		List<SubsidenceCrossSectionInfo> list = SubsidenceCrossSectionDao.defaultDao().queryAllSection();
 		mAdapter.loadEntityDatas(list);
 	}
-
-	public SubsidenceCrossSectionInfo getItem(int position){
-		return mAdapter.getItem(position);
-	}
-
+	
 }

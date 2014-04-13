@@ -56,15 +56,15 @@ public class TestRecordAdapter extends BaseAdapter {
 		name.setText(Integer.toString(position));
 		name1.setText(listinfos.get(position).getCreateTime().toString());
 		
-		if(start != null){
-			
-			if (listinfos.get(position).isbUse()) {
-				start.setBackgroundResource(R.drawable.use);
-			}
-			else {
-				start.setBackgroundResource(R.drawable.nouse);
-			}
-		}
+//		if(start != null){
+//			
+//			if (listinfos.get(position).isbUse()) {
+//				start.setBackgroundResource(R.drawable.use);
+//			}
+//			else {
+//				start.setBackgroundResource(R.drawable.nouse);
+//			}
+//		}
 		
 		return convertView;
 	}

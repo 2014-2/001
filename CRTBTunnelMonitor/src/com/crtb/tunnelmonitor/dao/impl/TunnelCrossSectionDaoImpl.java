@@ -189,7 +189,7 @@ public class TunnelCrossSectionDaoImpl implements TunnelCrossSectionDao{
 //			s.setROCKGRADE(c.getString(c.getColumnIndex("ROCKGRADE")));
 			s.setChainageName(GetSectionName(s));
 			//s.setsExcavateMethod(GetExcavateMethod(s));
-			s.setbUse(false);
+//			s.setbUse(false);
 			
 			lt.add(s);
 		}

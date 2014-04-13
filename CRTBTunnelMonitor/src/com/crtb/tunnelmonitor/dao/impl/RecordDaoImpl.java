@@ -42,24 +42,23 @@ public class RecordDaoImpl implements RecordDao {
 				iIndex = c.getColumnIndex("ID");
 				r.setId(c.getInt(iIndex));
 				iIndex = c.getColumnIndex("CrossSectionType");
-				r.setCrossSectionType(c.getInt(iIndex));
+				//r.setCrossSectionType(c.getInt(iIndex));
 				iIndex = c.getColumnIndex("Info");
-				r.setInfo(c.getString(iIndex));
+				//r.setInfo(c.getString(iIndex));
 				iIndex = c.getColumnIndex("FACEDK");
-				r.setFacedk(c.getDouble(iIndex));
+				//r.setFacedk(c.getDouble(iIndex));
 				iIndex = c.getColumnIndex("TEMPERATURE");
-				r.setTemperature(c.getDouble(iIndex));
+				//r.setTemperature(c.getDouble(iIndex));
 				iIndex = c.getColumnIndex("CrossSectionIDs");
-				r.setCrossSectionIDs(c.getString(iIndex));
+				//r.setCrossSectionIDs(c.getString(iIndex));
 				iIndex = c.getColumnIndex("CreateTime");
-				r.setCreateTime(Timestamp.valueOf(c.getString(iIndex)));
+				//r.setCreateTime(Timestamp.valueOf(c.getString(iIndex)));
 				iIndex = c.getColumnIndex("FACEDESCRIPTION");
-				r.setFacedescription(c.getString(iIndex));
+				//r.setFacedescription(c.getString(iIndex));
 				list.add(r);
 			}
 			
 		} catch (Exception e) {
-			// TODO: handle exception
 		}
 		return list;
 	}
@@ -72,8 +71,8 @@ public class RecordDaoImpl implements RecordDao {
 		try {
 			String sql = "insert into RawSheetIndex(CrossSectionType,CreateTime,FACEDK,FACEDESCRIPTION,TEMPERATURE,CrossSectionIDs)" +
 					" values(?,?,?,?,?,?)";
-			Object[] obj = {r.getCrossSectionType(),r.getCreateTime(),r.getFacedk(),r.getFacedescription(),r.getTemperature(),r.getCrossSectionIDs()};
-			db.execSQL(sql,obj);
+			//Object[] obj = {r.getCrossSectionType(),r.getCreateTime(),r.getFacedk(),r.getFacedescription(),r.getTemperature(),r.getCrossSectionIDs()};
+			//db.execSQL(sql,obj);
 			result = true;
 		} catch (Exception e) {
 			result = false;
@@ -96,22 +95,22 @@ public class RecordDaoImpl implements RecordDao {
 					if(entity == null){
 						entity = new RecordInfo();
 					}
-					iIndex = c.getColumnIndex("ID");
-					entity.setId(c.getInt(iIndex));
-					iIndex = c.getColumnIndex("CrossSectionType");
-					entity.setCrossSectionType(c.getInt(iIndex));
-					iIndex = c.getColumnIndex("Info");
-					entity.setInfo(c.getString(iIndex));
-					iIndex = c.getColumnIndex("FACEDK");
-					entity.setFacedk(c.getDouble(iIndex));
-					iIndex = c.getColumnIndex("TEMPERATURE");
-					entity.setTemperature(c.getDouble(iIndex));
-					iIndex = c.getColumnIndex("CrossSectionIDs");
-					entity.setCrossSectionIDs(c.getString(iIndex));
-					iIndex = c.getColumnIndex("CreateTime");
-					entity.setCreateTime(Timestamp.valueOf(c.getString(iIndex)));
-					iIndex = c.getColumnIndex("FACEDESCRIPTION");
-					entity.setFacedescription(c.getString(iIndex));
+//					iIndex = c.getColumnIndex("ID");
+//					entity.setId(c.getInt(iIndex));
+//					iIndex = c.getColumnIndex("CrossSectionType");
+//					entity.setCrossSectionType(c.getInt(iIndex));
+//					iIndex = c.getColumnIndex("Info");
+//					entity.setInfo(c.getString(iIndex));
+//					iIndex = c.getColumnIndex("FACEDK");
+//					entity.setFacedk(c.getDouble(iIndex));
+//					iIndex = c.getColumnIndex("TEMPERATURE");
+//					entity.setTemperature(c.getDouble(iIndex));
+//					iIndex = c.getColumnIndex("CrossSectionIDs");
+//					entity.setCrossSectionIDs(c.getString(iIndex));
+//					iIndex = c.getColumnIndex("CreateTime");
+//					entity.setCreateTime(Timestamp.valueOf(c.getString(iIndex)));
+//					iIndex = c.getColumnIndex("FACEDESCRIPTION");
+//					entity.setFacedescription(c.getString(iIndex));
 				}
 			}
 		} catch (Exception e) {
@@ -147,8 +146,8 @@ public class RecordDaoImpl implements RecordDao {
 		}
 		String sql = "update RawSheetIndex set CrossSectionType=?,FACEDK=?,FACEDESCRIPTION=?,TEMPERATURE=?,CrossSectionIDs=? where Id=?";
 		try {
-			Object[] obj = {r.getCrossSectionType(),r.getFacedk(),r.getFacedescription(),r.getTemperature(),r.getCrossSectionIDs(),r.getId()};
-			db.execSQL(sql, obj);
+//			Object[] obj = {r.getCrossSectionType(),r.getFacedk(),r.getFacedescription(),r.getTemperature(),r.getCrossSectionIDs(),r.getId()};
+//			db.execSQL(sql, obj);
 			result = true;
 		} catch (Exception e) {
 			result = false;
@@ -222,20 +221,20 @@ public class RecordDaoImpl implements RecordDao {
 	}
 	public String GetSectionName(WorkInfos w, RecordInfo Value) {
 		
-		int iChainage = (int)Value.getFacedk().doubleValue();
-		String sName = w.getChainagePrefix();
-		int iDiv = 0,iMod = 0;
-		iDiv = iChainage / 1000;
-		iMod = iChainage % 1000;
-		double dMod = (double)iMod+(Value.getFacedk().doubleValue()-(double)iChainage);
+//		int iChainage = (int)Value.getFacedk().doubleValue();
+//		String sName = w.getChainagePrefix();
+//		int iDiv = 0,iMod = 0;
+//		iDiv = iChainage / 1000;
+//		iMod = iChainage % 1000;
+//		double dMod = (double)iMod+(Value.getFacedk().doubleValue()-(double)iChainage);
+//		
+//		if (iDiv > 0) {
+//			sName += Integer.toString(iDiv);
+//		}
+//		sName += '+';
+//		sName += Double.toString(dMod);
 		
-		if (iDiv > 0) {
-			sName += Integer.toString(iDiv);
-		}
-		sName += '+';
-		sName += Double.toString(dMod);
-		
-		return sName;
+		return "";
 	}
 
 	@Override
@@ -254,27 +253,27 @@ public class RecordDaoImpl implements RecordDao {
 		try {
 			Cursor c = db.rawQuery(sql, null);
 			while (c.moveToNext()) {
-				r =new RecordInfo();
-				iIndex = c.getColumnIndex("Id");
-				r.setId(c.getInt(iIndex));
-				iIndex = c.getColumnIndex("CrossSectionType");
-				r.setCrossSectionType(c.getInt(iIndex));
-				iIndex = c.getColumnIndex("Info");
-				r.setInfo(c.getString(iIndex));
-				iIndex = c.getColumnIndex("FACEDK");
-				r.setFacedk(c.getDouble(iIndex));
-				iIndex = c.getColumnIndex("TEMPERATURE");
-				r.setTemperature(c.getDouble(iIndex));
-				iIndex = c.getColumnIndex("CrossSectionIDs");
-				r.setCrossSectionIDs(c.getString(iIndex));
-				iIndex = c.getColumnIndex("CreateTime");
-				r.setCreateTime(Timestamp.valueOf(c.getString(iIndex)));
-				iIndex = c.getColumnIndex("FACEDESCRIPTION");
-				r.setFacedescription(c.getString(iIndex));
-				List<SubsidenceTotalDataInfo> sublist = GetAllSubsidenceTotalData(-1,-1,r.getId(),r.getCrossSectionType());
-				//r.setSectionlist(sublist);
-				r.setChainageName(GetSectionName(w,r));
-				list.add(r);
+//				r =new RecordInfo();
+//				iIndex = c.getColumnIndex("Id");
+//				r.setId(c.getInt(iIndex));
+//				iIndex = c.getColumnIndex("CrossSectionType");
+//				r.setCrossSectionType(c.getInt(iIndex));
+//				iIndex = c.getColumnIndex("Info");
+//				r.setInfo(c.getString(iIndex));
+//				iIndex = c.getColumnIndex("FACEDK");
+//				r.setFacedk(c.getDouble(iIndex));
+//				iIndex = c.getColumnIndex("TEMPERATURE");
+//				r.setTemperature(c.getDouble(iIndex));
+//				iIndex = c.getColumnIndex("CrossSectionIDs");
+//				r.setCrossSectionIDs(c.getString(iIndex));
+//				iIndex = c.getColumnIndex("CreateTime");
+//				r.setCreateTime(Timestamp.valueOf(c.getString(iIndex)));
+//				iIndex = c.getColumnIndex("FACEDESCRIPTION");
+//				r.setFacedescription(c.getString(iIndex));
+//				List<SubsidenceTotalDataInfo> sublist = GetAllSubsidenceTotalData(-1,-1,r.getId(),r.getCrossSectionType());
+//				//r.setSectionlist(sublist);
+//				r.setChainageName(GetSectionName(w,r));
+//				list.add(r);
 			}
 			
 		} catch (Exception e) {
