@@ -38,7 +38,8 @@ public class WarningActivity extends Activity {
     private String ss[] = {"拱顶", "测线S1", "测线S2"};
     private String sss[] = {"开","正在处理","已消警"};
     private String ssss[] = {"", "", "", ""};
-    private String s2[] = {"XXX超限", "AAA超限", "CCC超限", "YYY超限"};
+    private String s2[] = {"拱顶的累计沉降值超限", "拱顶的单次下沉速率超限", "累计收敛值超限",
+            "地表的累计沉降值超限","地表的单次下沉速率超限" ,"单次收敛速率超限"};
 
     public void initView(){
         warningSignalTV = (TextView)findViewById(R.id.warning_signal);
