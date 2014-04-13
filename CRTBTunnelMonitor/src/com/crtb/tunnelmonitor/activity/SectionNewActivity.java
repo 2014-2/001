@@ -17,6 +17,8 @@ import android.os.Parcelable;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -38,6 +40,7 @@ import com.crtb.tunnelmonitor.dao.impl.v2.TunnelCrossSectionDao;
 import com.crtb.tunnelmonitor.entity.TunnelCrossSectionInfo;
 import com.crtb.tunnelmonitor.entity.WorkPlan;
 import com.crtb.tunnelmonitor.mydefine.CrtbDateDialogUtils;
+import com.crtb.tunnelmonitor.utils.CrtbUtils;
 
 /**
  * 新建隧道内断面
@@ -182,9 +185,32 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 		section_new_createtime1.setText(date);
 		section_new_createtime2.setText(date);
 		
-		List<TunnelCrossSectionInfo> list = TunnelCrossSectionDao.defaultDao().queryAllSection() ;
-		
-		System.out.println(">>>" + list);
+		section_new_et_Chainage.addTextChangedListener(new TextWatcher() {
+			
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+				
+			}
+			
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,int after) {
+				
+			}
+			
+			@Override
+			public void afterTextChanged(Editable edt) {
+				
+				String temp = edt.toString();
+				
+				if(!StringUtils.isEmpty(temp)){
+					float f 	= Float.valueOf(temp);
+					String pre 	= section_new_et_prefix.getEditableText().toString().trim();
+					section_new_et_name.setText(CrtbUtils.formatSectionName(pre,f));
+				} else {
+					section_new_et_name.setText("");
+				}
+			}
+		}) ;
 	}
 
 	private void initViewPager() {
@@ -241,6 +267,7 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 		case R.id.work_btn_queding: // 数据库
 			
 			// base
+			String prefix		= section_new_et_prefix.getEditableText().toString().trim() ;
 			String chainage 	= section_new_et_Chainage.getEditableText().toString().trim();// 里程
 			String name 		= section_new_et_name.getEditableText().toString().trim();
 			String date 		= section_new_et_calendar.getEditableText().toString().trim();
@@ -250,11 +277,6 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 				showText("断面里程不能为空");
 				return ;
 			}
-			
-			//if(StringUtils.isEmpty(name)){
-			//	showText("断面名称不能为空");
-			//	return ;
-			//}
 			
 			if(StringUtils.isEmpty(date)){
 				showText("埋设时间不能为空");
@@ -267,10 +289,16 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 			}
 			
 			sectionInfo = new TunnelCrossSectionInfo() ;
+			
+			// base info
+			sectionInfo.setPrefix(prefix);
 			sectionInfo.setChainage(Float.valueOf(chainage));
 			sectionInfo.setChainageName(name);
 			sectionInfo.setInBuiltTime(date);
 			sectionInfo.setWidth(Float.valueOf(width));
+			
+			// excavation
+			sectionInfo.setExcavateMethod(section_new_sp.getSelectedItem().toString());
 			
 			TunnelCrossSectionDao.defaultDao().insert(sectionInfo);
 			

@@ -50,7 +50,7 @@ public class TunnelCrossSectionInfoAdapter extends BaseAdapter {
 		name.setTextColor(Color.BLACK);
 		start.setTextColor(Color.BLACK);
 		name.setText(listinfos.get(position).getChainageName());
-		start.setText(listinfos.get(position).getsExcavateMethod());
+		//start.setText(listinfos.get(position).getsExcavateMethod());
 		return convertView;
 	}
 }

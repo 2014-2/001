@@ -16,6 +16,9 @@ public class TunnelCrossSectionInfo {
 	@ColumnPrimaryKey(Type = PrimaryKeyType.AUTO)
 	@ColumnInt
 	private int id;
+	
+	@ColumnString(length = 64)
+	private String prefix; 			// 前缀
 
 	@ColumnFloat
 	private float chainage; 		// 断面里程值
@@ -24,16 +27,13 @@ public class TunnelCrossSectionInfo {
 	private String chainageName; 	// 断面名称
 
 	@ColumnString(length = 64)
-	private String sExcavateMethod; // 施工方法
+	private String excavateMethod;  // 施工方法
 
 	@ColumnString(length = 32)
 	private String inBuiltTime; 	// 埋设时间
 
 	@ColumnFloat
 	private float width; 			// 断面宽度
-
-	@ColumnInt
-	private int excavateMethod; 	// 施工方法
 
 	@ColumnString(length = 64)
 	private String surveyPntName; 	// 测点编号
@@ -87,20 +87,20 @@ public class TunnelCrossSectionInfo {
 		this.id = id;
 	}
 
+	public String getPrefix() {
+		return prefix;
+	}
+
+	public void setPrefix(String prefix) {
+		this.prefix = prefix;
+	}
+
 	public String getChainageName() {
 		return chainageName;
 	}
 
 	public void setChainageName(String chainageName) {
 		this.chainageName = chainageName;
-	}
-
-	public String getsExcavateMethod() {
-		return sExcavateMethod;
-	}
-
-	public void setsExcavateMethod(String sExcavateMethod) {
-		this.sExcavateMethod = sExcavateMethod;
 	}
 
 	public float getChainage() {
@@ -127,11 +127,11 @@ public class TunnelCrossSectionInfo {
 		this.width = width;
 	}
 
-	public int getExcavateMethod() {
+	public String getExcavateMethod() {
 		return excavateMethod;
 	}
 
-	public void setExcavateMethod(int excavateMethod) {
+	public void setExcavateMethod(String excavateMethod) {
 		this.excavateMethod = excavateMethod;
 	}
 

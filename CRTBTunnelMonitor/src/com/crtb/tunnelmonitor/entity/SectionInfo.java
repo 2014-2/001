@@ -30,8 +30,8 @@ public class SectionInfo implements Serializable {
 	@ColumnFloat
 	private float width;
 
-	@ColumnInt
-	private int excavateMethod;
+	@ColumnString(length = 16)
+	private String excavateMethod;
 
 	@ColumnString(length = 32)
 	private String surveyPntName;
@@ -107,11 +107,11 @@ public class SectionInfo implements Serializable {
 		this.width = width;
 	}
 
-	public int getExcavateMethod() {
+	public String getExcavateMethod() {
 		return excavateMethod;
 	}
 
-	public void setExcavateMethod(int excavateMethod) {
+	public void setExcavateMethod(String excavateMethod) {
 		this.excavateMethod = excavateMethod;
 	}
 

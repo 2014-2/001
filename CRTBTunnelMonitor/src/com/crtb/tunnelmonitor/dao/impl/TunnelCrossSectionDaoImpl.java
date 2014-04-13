@@ -61,62 +61,62 @@ public class TunnelCrossSectionDaoImpl implements TunnelCrossSectionDao{
 	
 	public static String GetExcavateMethod(TunnelCrossSectionInfo Value) {
 		String sRet = "";
-		switch (Value.getExcavateMethod()) {
-		case 0:
-		{
-			sRet = "全断面法";
-		}
-			break;
-
-		case 1:
-		{
-			sRet = "双侧壁导坑法";
-		}
-			break;
-
-		case 2:
-		{
-			sRet = "台阶法";
-		}
-			break;
-
-		default:
-		{
-			sRet = "台阶法";
-		}
-			break;
-		} 
+//		switch (Value.getExcavateMethod()) {
+//		case 0:
+//		{
+//			sRet = "全断面法";
+//		}
+//			break;
+//
+//		case 1:
+//		{
+//			sRet = "双侧壁导坑法";
+//		}
+//			break;
+//
+//		case 2:
+//		{
+//			sRet = "台阶法";
+//		}
+//			break;
+//
+//		default:
+//		{
+//			sRet = "台阶法";
+//		}
+//			break;
+//		} 
 		
 		return sRet;
 	}
 	
 	public static int GetExcavateMethodInt(TunnelCrossSectionInfo Value) {
 		int iRet = -1;
-		switch (Value.getExcavateMethod()) {
-		case 0:
-		{
-			iRet = 1;
-		}
-			break;
-
-		case 1:
-		{
-			iRet = 2;
-		}
-			break;
-
-		case 2:
-		{
-			iRet = 0;
-		}
-			break;
-
-		default:
-		{
-			iRet = 0;
-		}
-			break;
-		} 
+//		switch (Value.getExcavateMethod()) {
+//		case 0:
+//		{
+//			iRet = 1;
+//		}
+//			break;
+//
+//		case 1:
+//		{
+//			iRet = 2;
+//		}
+//			break;
+//
+//		case 2:
+//		{
+//			iRet = 0;
+//		}
+//			break;
+//
+//		default:
+//		{
+//			iRet = 0;
+//		}
+//			break;
+//		} 
 		
 		return iRet;
 	}
@@ -172,7 +172,7 @@ public class TunnelCrossSectionDaoImpl implements TunnelCrossSectionDao{
 			sInfo = c.getString(iIndex);
 			s.setInBuiltTime(sInfo);
 			s.setWidth(Float.valueOf(c.getString(c.getColumnIndex("Width"))));
-			s.setExcavateMethod(c.getInt(c.getColumnIndex("ExcavateMethod")));
+			//s.setExcavateMethod(c.getInt(c.getColumnIndex("ExcavateMethod")));
 			s.setSurveyPntName(c.getString(c.getColumnIndex("SurveyPntName")));
 			s.setInfo(c.getString(c.getColumnIndex("Info")));
 			s.setChainagePrefix(c.getString(c.getColumnIndex("ChainagePrefix")));
@@ -188,7 +188,7 @@ public class TunnelCrossSectionDaoImpl implements TunnelCrossSectionDao{
 //			s.setLAYVALUE(Float.valueOf(c.getString(c.getColumnIndex("LAYVALUE"))));
 //			s.setROCKGRADE(c.getString(c.getColumnIndex("ROCKGRADE")));
 			s.setChainageName(GetSectionName(s));
-			s.setsExcavateMethod(GetExcavateMethod(s));
+			//s.setsExcavateMethod(GetExcavateMethod(s));
 			s.setbUse(false);
 			
 			lt.add(s);

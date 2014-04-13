@@ -15,6 +15,8 @@ import android.widget.Toast;
 
 import com.crtb.tunnelmonitor.activity.R;
 import com.crtb.tunnelmonitor.entity.MenuSystemItem;
+import com.crtb.tunnelmonitor.mydefine.CrtbDialogList;
+import com.crtb.tunnelmonitor.mydefine.CrtbDialogList.OnMenuItemClick;
 import com.crtb.tunnelmonitor.widget.CrtbSystemMenu;
 import com.crtb.tunnelmonitor.widget.CrtbSystemMenu.ISystemMenuOnclick;
 
@@ -47,6 +49,10 @@ public abstract class BaseActivity extends Activity {
 	
 	// system menu
 	private CrtbSystemMenu			mSystemMenu ;
+	
+	// list item dialog
+	@SuppressWarnings("rawtypes")
+	private CrtbDialogList			mListActionMenu ;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -84,7 +90,7 @@ public abstract class BaseActivity extends Activity {
 	/**
 	 * create system menu
 	 */
-	protected void createSystemMenu(List<MenuSystemItem> menus){
+	protected final void createSystemMenu(List<MenuSystemItem> menus){
 		
 		if(menus == null || menus.isEmpty()){
 			return ;
@@ -114,6 +120,36 @@ public abstract class BaseActivity extends Activity {
 	 * @param menu
 	 */
 	protected void onSystemMenuClick(MenuSystemItem menu){
+		
+	}
+	
+	/**
+	 * Show List Action menu
+	 * 
+	 * @param title
+	 * @param menus
+	 * @param bean
+	 */
+	@SuppressWarnings("unchecked")
+	protected final void showListActionMenu(String title,String[] menus,Object bean){
+		
+		if(mListActionMenu == null){
+			
+			mListActionMenu = new CrtbDialogList<Object>(this, menus, title);
+			mListActionMenu.setMenuItemClick(new OnMenuItemClick<Object>() {
+				
+				@Override
+				public void onItemClick(Object bean, int position, String menu) {
+					onListItemSelected(bean,position,menu);
+				}
+			}) ;
+		}
+		
+		//
+		mListActionMenu.showDialog(bean);
+	}
+	
+	protected void onListItemSelected(Object bean, int position, String menu){
 		
 	}
 	

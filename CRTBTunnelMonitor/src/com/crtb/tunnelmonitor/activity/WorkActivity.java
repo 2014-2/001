@@ -24,8 +24,6 @@ import com.crtb.tunnelmonitor.entity.WorkPlan;
 import com.crtb.tunnelmonitor.mydefine.CrtbDialogDelete;
 import com.crtb.tunnelmonitor.mydefine.CrtbDialogDelete.IButtonOnClick;
 import com.crtb.tunnelmonitor.mydefine.CrtbDialogHint;
-import com.crtb.tunnelmonitor.mydefine.CrtbDialogList;
-import com.crtb.tunnelmonitor.mydefine.CrtbDialogList.OnMenuItemClick;
 import com.crtb.tunnelmonitor.widget.CrtbWorkPlanListView;
 
 /**
@@ -43,9 +41,6 @@ public final class WorkActivity extends WorkFlowActivity {
 	@InjectResource(stringArray=R.array.work_plan_item_menus)
 	private String[] workpalnItemMenu ;
 	
-	// list item menu
-	private CrtbDialogList<WorkPlan>  itemDialog ;
-	
 	// delete dialog
 	private CrtbDialogHint 	mWarringDialog ;
 	
@@ -59,9 +54,6 @@ public final class WorkActivity extends WorkFlowActivity {
 		// title
 		setTopbarTitle(getString(R.string.work_plan_title));
 		
-		// load workplan item menu
-		loadWorkPlanMenu();
-		
 		// load workplan list
 		loadWorkPlanList();
 
@@ -71,60 +63,55 @@ public final class WorkActivity extends WorkFlowActivity {
 		mWarringDialog	= new CrtbDialogHint(WorkActivity.this, R.drawable.ic_warnning, "该工作面正在使用无法删除");
 	}
 	
-	private void loadWorkPlanMenu(){
+	@Override
+	protected void onListItemSelected(Object obj, int position, String menu) {
 		
-		itemDialog = new CrtbDialogList<WorkPlan>(this, workpalnItemMenu, getString(R.string.work_plan_title));
-		itemDialog.setMenuItemClick(new OnMenuItemClick<WorkPlan>() {
+		final WorkPlan bean = (WorkPlan) obj ;
+		
+		if(position == 0){
 			
-			@Override
-			public void onItemClick(final WorkPlan bean, int position, String menu) {
+			WorkPlanDao.defaultWorkPlanDao().updateCurrentWorkPlan(bean) ;
+			
+			// start new MainActivity
+			Intent intent = new Intent() ;
+			intent.setClass(WorkActivity.this, MainActivity.class);
+			intent.putExtra(Constant.LOGIN_TYPE, Constant.LOCAL_USER);
+			startActivity(intent);
+			
+		} else if(position == 1){
+			
+			CommonObject.putObject(WorkNewActivity.KEY_WORKPLAN_OBJECT,bean);
+			Intent intent = new Intent() ;
+			intent.setClass(WorkActivity.this, WorkNewActivity.class);
+			startActivity(intent);
+			
+		} else if(position == 2){
+			
+			if(bean.getWorkPalnStatus() == WorkPlan.STATUS_EDIT){
+				 mWarringDialog.show() ;
+			} else {
 				
-				if(position == 0){
+				CrtbDialogDelete delete = new CrtbDialogDelete(WorkActivity.this,R.drawable.ic_warnning,"执行该操作将删除操作面的全部数据,无法恢复!");
+				
+				delete.setButtonClick(new IButtonOnClick() {
 					
-					WorkPlanDao.defaultWorkPlanDao().updateCurrentWorkPlan(bean) ;
-					
-					// start new MainActivity
-					Intent intent = new Intent() ;
-					intent.setClass(WorkActivity.this, MainActivity.class);
-					intent.putExtra(Constant.LOGIN_TYPE, Constant.LOCAL_USER);
-					startActivity(intent);
-					
-				} else if(position == 1){
-					
-					CommonObject.putObject(WorkNewActivity.KEY_WORKPLAN_OBJECT,bean);
-					Intent intent = new Intent() ;
-					intent.setClass(WorkActivity.this, WorkNewActivity.class);
-					startActivity(intent);
-					
-				} else if(position == 2){
-					
-					if(bean.getWorkPalnStatus() == WorkPlan.STATUS_EDIT){
-						 mWarringDialog.show() ;
-					} else {
+					@Override
+					public void onClick(int id) {
 						
-						CrtbDialogDelete delete = new CrtbDialogDelete(WorkActivity.this,R.drawable.ic_warnning,"执行该操作将删除操作面的全部数据,无法恢复!");
-						
-						delete.setButtonClick(new IButtonOnClick() {
+						if(id == CrtbDialogDelete.BUTTON_ID_CONFIRM){
 							
-							@Override
-							public void onClick(int id) {
-								
-								if(id == CrtbDialogDelete.BUTTON_ID_CONFIRM){
-									
-									if(WorkPlanDao.defaultWorkPlanDao().delete(bean)){
-										loadSystemMenu();
-									}
-								}
+							if(WorkPlanDao.defaultWorkPlanDao().delete(bean)){
+								loadSystemMenu();
 							}
-						}) ;
-						
-						delete.show(); 
+						}
 					}
-				}
+				}) ;
+				
+				delete.show(); 
 			}
-		}) ;
+		}
 	}
-	
+
 	private void loadSystemMenu(){
 		
 		List<MenuSystemItem> systems = new ArrayList<MenuSystemItem>();
@@ -180,7 +167,10 @@ public final class WorkActivity extends WorkFlowActivity {
 
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,int position, long id) {
-				itemDialog.showDialog(mListView.getItem(position)) ;
+				
+				WorkPlan bean = mListView.getItem(position) ;
+				
+				showListActionMenu(getString(R.string.work_plan_title), workpalnItemMenu, bean);
 			}
 		}) ;
 		
