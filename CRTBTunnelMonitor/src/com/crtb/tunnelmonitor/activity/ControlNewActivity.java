@@ -147,6 +147,10 @@ public class ControlNewActivity extends Activity implements OnClickListener {
                     return;
                 }
                 WorkInfos Curw = CurApp.GetCurWork();
+                if (Curw == null) {
+                    Toast.makeText(this, "未找到当前工作面", 3000).show();
+                    return;
+                }
                 TotalStationInfo ts = new TotalStationInfo();
                 if (editInfo != null) {
                     ts.setId(editInfo.getId());
