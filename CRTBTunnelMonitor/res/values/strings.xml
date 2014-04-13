@@ -64,10 +64,7 @@
     <string name="deal_way_first">数据作为首行</string>
     <string name="deal_way_add">添加改正值</string>
 
-<<<<<<< HEAD
 
-=======
->>>>>>> 272e1303eacb17e86551571e2beac02e0c2be46e
     <!-- 升级模块 -->
     <string name="update_title">软件升级</string>
     <!-- 关于页面 -->
@@ -77,8 +74,6 @@
     <string name="copyright">Copy©2014\n中铁天宝数字工程有限责任公司\nAll Rights Reserved.</string>
     <string name="description">数字化监测方案（Digtal Tunnel Monotoring Solution，简称DTMS），实现了沉降信息的自动化测量及电子化管理，同时能在现场直接查看报表和分析曲线，并将数据直接上传至中心服务器。</string>
     <string name="software_update">软件升级</string>
-<<<<<<< HEAD
-=======
-    
->>>>>>> 272e1303eacb17e86551571e2beac02e0c2be46e
+
+
 </resources>
