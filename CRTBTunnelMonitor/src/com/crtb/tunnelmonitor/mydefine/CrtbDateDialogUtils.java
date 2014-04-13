@@ -10,14 +10,11 @@ import android.app.TimePickerDialog;
 import android.app.TimePickerDialog.OnTimeSetListener;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.DialogInterface.OnDismissListener;
 import android.widget.DatePicker;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
 public final class CrtbDateDialogUtils {
-
-	static boolean mSet = false;
 
 	public static String datePickerStringUtil(String date) {
 
@@ -40,40 +37,35 @@ public final class CrtbDateDialogUtils {
 
 		DatePickerDialog dialog = new DatePickerDialog(activity,
 				new DatePickerDialog.OnDateSetListener() {
+			
+					TimePickerDialog timePicker ;
 
 					@Override
 					public void onDateSet(DatePicker view, int year,
 							int monthOfYear, int dayOfMonth) {
+						
+						if(timePicker == null){
+							timePicker = new TimePickerDialog(activity, new OnTimeSetListener() {
 
-						new TimePickerDialog(activity, new OnTimeSetListener() {
-
-							@Override
-							public void onTimeSet(TimePicker arg0, int hour,
-									int minute) {
-								text.setText(mYear + "-"
-										+ DateUtils.pad(mMonth + 1) + "-"
-										+ DateUtils.pad(mDay) + " "
-										+ DateUtils.pad(hour) + ":"
-										+ DateUtils.pad(minute));
-							}
-						}, mHour, mMinute, true).show();
-
+								@Override
+								public void onTimeSet(TimePicker arg0, int hour,
+										int minute) {
+									text.setText(mYear + "-"
+											+ DateUtils.pad(mMonth + 1) + "-"
+											+ DateUtils.pad(mDay) + " "
+											+ DateUtils.pad(hour) + ":"
+											+ DateUtils.pad(minute));
+								}
+							}, mHour, mMinute, true) ;
+						}
+						
+						if(!timePicker.isShowing()){
+							timePicker.show() ;
+						}
+						
 					}
 				}, mYear, mMonth - 1, mDay);
-
-		dialog.setOnDismissListener(new OnDismissListener() {
-
-			@Override
-			public void onDismiss(DialogInterface dialog) {
-				if (CrtbDateDialogUtils.mSet == false) {
-					text.setText("");
-				} else {
-					mSet = false;
-				}
-			}
-
-		});
-
+		
 		dialog.setCanceledOnTouchOutside(true);
 		dialog.show();
 
