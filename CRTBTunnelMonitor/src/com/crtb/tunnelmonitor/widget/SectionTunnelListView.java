@@ -36,7 +36,12 @@ public final class SectionTunnelListView extends CrtbBaseListView {
 
 	@Override
 	public void onResume() {
-		super.onResume();
+		
+		if(mAdapter.isEmpty()){
+			onReload();
+		} else {
+			mAdapter.notifyDataSetChanged() ;
+		}
 	}
 
 	@Override

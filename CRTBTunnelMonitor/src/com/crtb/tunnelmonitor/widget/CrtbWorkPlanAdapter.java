@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.crtb.tunnelmonitor.activity.R;
 import com.crtb.tunnelmonitor.entity.WorkPlan;
+import com.crtb.tunnelmonitor.utils.CrtbUtils;
 
 /**
  * WorkPlan Adapter
@@ -41,8 +42,8 @@ public final class CrtbWorkPlanAdapter extends CrtbEntityAdapter<WorkPlan> {
 		}
 		
 		holder.workplanName.setText(item.getWorkPlanName());
-		holder.startMileage.setText(String.valueOf(item.getStartMileage()));
-		holder.endMileage.setText(String.valueOf(item.getEndMileage()));
+		holder.startMileage.setText(CrtbUtils.formatSectionName(item.getMileagePrefix(),item.getStartMileage()));
+		holder.endMileage.setText(CrtbUtils.formatSectionName(item.getMileagePrefix(),item.getEndMileage()));
 		
 		return convertView;
 	}

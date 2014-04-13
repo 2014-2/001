@@ -26,8 +26,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.crtb.tunnelmonitor.WorkFlowActivity;
+import com.crtb.tunnelmonitor.dao.impl.v2.SubsidenceCrossSectionDao;
 import com.crtb.tunnelmonitor.dao.impl.v2.TunnelCrossSectionDao;
 import com.crtb.tunnelmonitor.entity.MenuSystemItem;
+import com.crtb.tunnelmonitor.entity.SubsidenceCrossSectionInfo;
 import com.crtb.tunnelmonitor.entity.TunnelCrossSectionInfo;
 import com.crtb.tunnelmonitor.mydefine.CrtbDialogResult;
 import com.crtb.tunnelmonitor.widget.SectionSubsidenceListView;
@@ -66,7 +68,6 @@ public class SectionActivity extends WorkFlowActivity implements OnPageChangeLis
 	@InjectView(id=R.id.listView4,parent="rightLayout")
 	private SectionSubsidenceListView mSectionSubsidenceList ;
 	
-	private int offset = 0;// 动画图片偏移量
 	private int currIndex = 0;// 当前页卡编号
 	int disPlayWidth, offSet;
 	Bitmap b;
@@ -98,7 +99,16 @@ public class SectionActivity extends WorkFlowActivity implements OnPageChangeLis
 			}
 		}) ;
 		
-		
+		mSectionSubsidenceList.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,int position, long id) {
+				
+				SubsidenceCrossSectionInfo bean = mSectionSubsidenceList.getItem(position);
+				
+				showListActionMenu("断面管理", new String[]{"编辑","删除"}, bean);
+			}
+		}) ;
 	}
 	
 	@Override
@@ -127,8 +137,30 @@ public class SectionActivity extends WorkFlowActivity implements OnPageChangeLis
 					dialog.show() ;
 				}
 			}
+		} else if(bean instanceof SubsidenceCrossSectionInfo){
+			
+			SubsidenceCrossSectionInfo section = (SubsidenceCrossSectionInfo)bean ;
+			
+			if(position == 0){
+				
+			} else if(position == 1){
+				
+				boolean success = SubsidenceCrossSectionDao.defaultDao().delete(section);
+				
+				CrtbDialogResult dialog = null ;
+				
+				if(success){
+					dialog = new CrtbDialogResult(SectionActivity.this, R.drawable.ic_reslut_sucess, "删除成功");
+					mSectionSubsidenceList.onReload() ;
+				} else {
+					dialog = new CrtbDialogResult(SectionActivity.this, R.drawable.ic_reslut_error, "删除失败");
+				}
+				
+				if(dialog != null){
+					dialog.show() ;
+				}
+			}
 		}
-		
 	}
 
 	private void loadViewPager(){
@@ -289,6 +321,8 @@ public class SectionActivity extends WorkFlowActivity implements OnPageChangeLis
 				
 				currIndex = 0;
 				
+				mSectionTunnelList.onResume() ;
+				
 				break;
 			case R.id.t2:
 				mPager.setCurrentItem(1);
@@ -302,6 +336,9 @@ public class SectionActivity extends WorkFlowActivity implements OnPageChangeLis
 				}
 				
 				currIndex = 1;
+				
+				mSectionSubsidenceList.onResume() ;
+				
 				break;
 			}
 		}
@@ -312,6 +349,7 @@ public class SectionActivity extends WorkFlowActivity implements OnPageChangeLis
 		super.onResume();
 		
 		mSectionTunnelList.onReload() ;
+		mSectionSubsidenceList.onReload() ;
 	}
 
 //	public void Layout1() {

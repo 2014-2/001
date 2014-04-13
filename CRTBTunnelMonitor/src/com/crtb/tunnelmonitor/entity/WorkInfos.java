@@ -283,11 +283,11 @@ public class WorkInfos {
 		for(int i=0;i<scsiList.size();i++)
 		{
 			SubsidenceCrossSectionInfo tmp = scsiList.get(i);
-			if(tmp.getChainage().equals(Value.getChainage()))
-			{
-				scsiList.set(i, Value);
-				break;
-			}
+//			if(tmp.getChainage().equals(Value.getChainage()))
+//			{
+//				scsiList.set(i, Value);
+//				break;
+//			}
 		}
 	}
 	public void DelSubsidenceCrossSectionInfo(SubsidenceCrossSectionInfo Value)
@@ -299,11 +299,11 @@ public class WorkInfos {
 		for(int i=0;i<scsiList.size();i++)
 		{
 			SubsidenceCrossSectionInfo tmp = scsiList.get(i);
-			if(tmp.getChainage().equals(Value.getChainage()))
-			{
-				scsiList.remove(i);
-				break;
-			}
+//			if(tmp.getChainage().equals(Value.getChainage()))
+//			{
+//				scsiList.remove(i);
+//				break;
+//			}
 		}
 	}
 	public void UpdateRecordInfo(int iType, RecordInfo Value)

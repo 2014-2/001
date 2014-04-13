@@ -60,7 +60,7 @@ public class TunnelCrossSectionInfo {
 	private float SLU0; 			// 收敛uo值
 
 	@ColumnFloat
-	private float SLLimitVelocity; // 收敛本次下沉速率
+	private float SLLimitVelocity; 	// 收敛本次下沉速率
 
 	@ColumnString(length = 32)
 	private String SLU0Time; 		// 收敛限差修改时间

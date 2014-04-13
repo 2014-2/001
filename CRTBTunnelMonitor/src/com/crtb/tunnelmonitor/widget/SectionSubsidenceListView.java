@@ -1,7 +1,12 @@
 package com.crtb.tunnelmonitor.widget;
 
+import java.util.List;
+
 import android.content.Context;
 import android.util.AttributeSet;
+
+import com.crtb.tunnelmonitor.dao.impl.v2.SubsidenceCrossSectionDao;
+import com.crtb.tunnelmonitor.entity.SubsidenceCrossSectionInfo;
 
 public class SectionSubsidenceListView extends CrtbBaseListView {
 	
@@ -18,6 +23,26 @@ public class SectionSubsidenceListView extends CrtbBaseListView {
 		setAdapter(mAdapter);
 		
 		clearCacheColor() ;
+	}
+	
+	@Override
+	public void onResume() {
+		
+		if(mAdapter.isEmpty()){
+			onReload();
+		} else {
+			mAdapter.notifyDataSetChanged() ;
+		}
+	}
+	
+	@Override
+	public void onReload() {
+		List<SubsidenceCrossSectionInfo>  list = SubsidenceCrossSectionDao.defaultDao().queryAllSection();
+		mAdapter.loadEntityDatas(list);
+	}
+
+	public SubsidenceCrossSectionInfo getItem(int position){
+		return mAdapter.getItem(position);
 	}
 
 }

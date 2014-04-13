@@ -37,9 +37,9 @@ public class SubsidenceCrossSectionDaoImpl implements SubsidenceCrossSectionDao{
 				iIndex = c.getColumnIndex("ID");
 				entity.setId(c.getInt(iIndex));
 				iIndex = c.getColumnIndex("Chainage");
-				entity.setChainage(c.getDouble(iIndex));
+//				entity.setChainage(c.getDouble(iIndex));
 				iIndex = c.getColumnIndex("InbuiltTime");
-				entity.setInbuiltTime(Timestamp.valueOf(c.getString(iIndex)));
+//				entity.setInbuiltTime(Timestamp.valueOf(c.getString(iIndex)));
 				iIndex = c.getColumnIndex("Width");
 				entity.setWidth(c.getInt(iIndex));
 				iIndex = c.getColumnIndex("SurveyPnts");
@@ -47,11 +47,11 @@ public class SubsidenceCrossSectionDaoImpl implements SubsidenceCrossSectionDao{
 				iIndex = c.getColumnIndex("Info");
 				entity.setInfo(c.getString(iIndex));
 				iIndex = c.getColumnIndex("ChainagePrefix");
-				entity.setChainagePrefix(c.getString(iIndex));
+//				entity.setChainagePrefix(c.getString(iIndex));
 				iIndex = c.getColumnIndex("DBU0");
 				entity.setDBU0(c.getFloat(iIndex));
 				iIndex = c.getColumnIndex("DBU0Time");
-				entity.setDBU0Time(Timestamp.valueOf(c.getString(iIndex)));
+//				entity.setDBU0Time(Timestamp.valueOf(c.getString(iIndex)));
 				iIndex = c.getColumnIndex("DBU0Description");
 				entity.setDBU0Description(c.getString(iIndex));
 				iIndex = c.getColumnIndex("DBLimitVelocity");
@@ -93,7 +93,7 @@ public class SubsidenceCrossSectionDaoImpl implements SubsidenceCrossSectionDao{
 			obj[2] = s.getWidth();
 			obj[3] = s.getSurveyPnts();
 			obj[4] = s.getInfo();
-			obj[5] = s.getChainagePrefix();
+//			obj[5] = s.getChainagePrefix();
 			obj[6] = s.getDBU0();
 			obj[7] = s.getDBU0Time();
 			obj[8] = s.getDBU0Description();
@@ -128,9 +128,9 @@ public class SubsidenceCrossSectionDaoImpl implements SubsidenceCrossSectionDao{
 				iIndex = c.getColumnIndex("ID");
 				entity.setId(c.getInt(iIndex));
 				iIndex = c.getColumnIndex("Chainage");
-				entity.setChainage(c.getDouble(iIndex));
+//				entity.setChainage(c.getDouble(iIndex));
 				iIndex = c.getColumnIndex("InbuiltTime");
-				entity.setInbuiltTime(Timestamp.valueOf(c.getString(iIndex)));
+//				entity.setInbuiltTime(Timestamp.valueOf(c.getString(iIndex)));
 				iIndex = c.getColumnIndex("Width");
 				entity.setWidth(c.getInt(iIndex));
 				iIndex = c.getColumnIndex("SurveyPnts");
@@ -138,11 +138,11 @@ public class SubsidenceCrossSectionDaoImpl implements SubsidenceCrossSectionDao{
 				iIndex = c.getColumnIndex("Info");
 				entity.setInfo(c.getString(iIndex));
 				iIndex = c.getColumnIndex("ChainagePrefix");
-				entity.setChainagePrefix(c.getString(iIndex));
+//				entity.setChainagePrefix(c.getString(iIndex));
 				iIndex = c.getColumnIndex("DBU0");
 				entity.setDBU0(c.getFloat(iIndex));
 				iIndex = c.getColumnIndex("DBU0Time");
-				entity.setDBU0Time(Timestamp.valueOf(c.getString(iIndex)));
+//				entity.setDBU0Time(Timestamp.valueOf(c.getString(iIndex)));
 				iIndex = c.getColumnIndex("DBU0Description");
 				entity.setDBU0Description(c.getString(iIndex));
 				iIndex = c.getColumnIndex("DBLimitVelocity");
@@ -186,7 +186,6 @@ public class SubsidenceCrossSectionDaoImpl implements SubsidenceCrossSectionDao{
 			db.execSQL(sql,obj);
 			iResult = 1;
 		} catch (Exception e) {
-			// TODO: handle exception
 			iResult = 0;
 			System.out.println("DeleteSection:" + e.getLocalizedMessage());
 		}
@@ -216,7 +215,7 @@ public class SubsidenceCrossSectionDaoImpl implements SubsidenceCrossSectionDao{
 			obj[2] = s.getWidth();
 			obj[3] = s.getSurveyPnts();
 			obj[4] = s.getInfo();
-			obj[5] = s.getChainagePrefix();
+//			obj[5] = s.getChainagePrefix();
 			obj[6] = s.getDBU0();
 			obj[7] = s.getDBU0Time();
 			obj[8] = s.getDBU0Description();
@@ -238,17 +237,17 @@ public class SubsidenceCrossSectionDaoImpl implements SubsidenceCrossSectionDao{
 	public String GetSectionName(SubsidenceCrossSectionInfo Value) {
 		
 		String sName = "";
-		int iChainage = (int)(Value.getChainage().doubleValue()); 
-		int iDiv = 0,iMod = 0;
-		iDiv = iChainage / 1000;
-		iMod = iChainage % 1000;
-		double dMod = (double)iMod+(Value.getChainage().doubleValue()-(double)iChainage);
-		sName = Value.getChainagePrefix();
-		if (iDiv > 0) {
-			sName += Integer.toString(iDiv);
-		}
-		sName += '+';
-		sName += Double.toString(dMod);
+//		int iChainage = (int)(Value.getChainage().doubleValue()); 
+//		int iDiv = 0,iMod = 0;
+//		iDiv = iChainage / 1000;
+//		iMod = iChainage % 1000;
+//		double dMod = (double)iMod+(Value.getChainage().doubleValue()-(double)iChainage);
+//		sName = Value.getChainagePrefix();
+//		if (iDiv > 0) {
+//			sName += Integer.toString(iDiv);
+//		}
+//		sName += '+';
+//		sName += Double.toString(dMod);
 		
 		return sName;
 	}
@@ -274,9 +273,9 @@ public class SubsidenceCrossSectionDaoImpl implements SubsidenceCrossSectionDao{
 				iIndex = c.getColumnIndex("Id");
 				entity.setId(c.getInt(iIndex));
 				iIndex = c.getColumnIndex("Chainage");
-				entity.setChainage(c.getDouble(iIndex));
+//				entity.setChainage(c.getDouble(iIndex));
 				iIndex = c.getColumnIndex("InbuiltTime");
-				entity.setInbuiltTime(Timestamp.valueOf(c.getString(iIndex)));
+//				entity.setInbuiltTime(Timestamp.valueOf(c.getString(iIndex)));
 				iIndex = c.getColumnIndex("Width");
 				entity.setWidth(c.getInt(iIndex));
 				iIndex = c.getColumnIndex("SurveyPnts");
@@ -284,7 +283,7 @@ public class SubsidenceCrossSectionDaoImpl implements SubsidenceCrossSectionDao{
 				iIndex = c.getColumnIndex("Info");
 				entity.setInfo(c.getString(iIndex));
 				iIndex = c.getColumnIndex("ChainagePrefix");
-				entity.setChainagePrefix(c.getString(iIndex));
+//				entity.setChainagePrefix(c.getString(iIndex));
 //				iIndex = c.getColumnIndex("DBU0");
 //				entity.setDBU0(c.getFloat(iIndex));
 //				iIndex = c.getColumnIndex("DBU0Time");
