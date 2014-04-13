@@ -1,5 +1,10 @@
 package com.crtb.tunnelmonitor.widget;
 
+import java.util.List;
+
+import com.crtb.tunnelmonitor.dao.impl.v2.TunnelCrossSectionDao;
+import com.crtb.tunnelmonitor.entity.TunnelCrossSectionInfo;
+
 import android.content.Context;
 import android.util.AttributeSet;
 
@@ -23,6 +28,21 @@ public final class SectionTunnelListView extends CrtbBaseListView {
 		setAdapter(mAdapter);
 		
 		clearCacheColor() ;
+	}
+	
+	public TunnelCrossSectionInfo getItem(int position){
+		return mAdapter.getItem(position);
+	}
+
+	@Override
+	public void onResume() {
+		super.onResume();
+	}
+
+	@Override
+	public void onReload() {
+		List<TunnelCrossSectionInfo> list = TunnelCrossSectionDao.defaultDao().queryAllSection() ;
+		mAdapter.loadEntityDatas(list);
 	}
 
 }

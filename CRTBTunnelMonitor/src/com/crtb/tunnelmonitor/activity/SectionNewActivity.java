@@ -6,6 +6,8 @@ import java.util.List;
 import org.zw.android.framework.ioc.InjectCore;
 import org.zw.android.framework.ioc.InjectLayout;
 import org.zw.android.framework.ioc.InjectView;
+import org.zw.android.framework.util.DateUtils;
+import org.zw.android.framework.util.StringUtils;
 
 import android.content.Intent;
 import android.graphics.BitmapFactory;
@@ -15,25 +17,30 @@ import android.os.Parcelable;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.crtb.tunnelmonitor.AppCRTBApplication;
+import com.crtb.tunnelmonitor.CommonObject;
 import com.crtb.tunnelmonitor.WorkFlowActivity;
-import com.crtb.tunnelmonitor.common.Constant;
-import com.crtb.tunnelmonitor.dao.impl.TunnelCrossSectionDaoImpl;
+import com.crtb.tunnelmonitor.dao.impl.v2.TunnelCrossSectionDao;
 import com.crtb.tunnelmonitor.entity.TunnelCrossSectionInfo;
-import com.crtb.tunnelmonitor.entity.WorkInfos;
+import com.crtb.tunnelmonitor.entity.WorkPlan;
+import com.crtb.tunnelmonitor.mydefine.CrtbDateDialogUtils;
+import com.crtb.tunnelmonitor.utils.CrtbUtils;
 
 /**
  * 新建隧道内断面
@@ -42,12 +49,13 @@ import com.crtb.tunnelmonitor.entity.WorkInfos;
 @InjectLayout(layout = R.layout.activity_section_new)
 public class SectionNewActivity extends WorkFlowActivity implements OnClickListener {
 	
-	@InjectView(id=R.id.vPager)
-	private ViewPager mPager;
-
 	private List<View> listViews = new ArrayList<View>();
 
-	private ImageView cursor;// 动画图片
+	@InjectView(id=R.id.vPager)
+	private ViewPager mPager;
+	
+	@InjectView(id=R.id.cursor)
+	private ImageView cursor;
 
 	private TextView t1, t2, t3;// 页卡头标
 
@@ -57,51 +65,85 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 
 	private int bmpW;// 动画图片宽度
 	
+	@InjectView(id=R.id.work_btn_queding,onClick="this")
+	private Button section_btn_queding;
+	
+	@InjectView(id=R.id.work_btn_quxiao,onClick="this")
+	private Button section_btn_quxiao;
+	
+	///////////////////////////////base info//////////////////////////////
 	@InjectView(layout=R.layout.section_new_xinxi)
 	private LinearLayout mBaseInfoLayout ;
 	
+	@InjectView(id=R.id.section_new_et_chainage_prefix,parent="mBaseInfoLayout")
+	private EditText section_new_et_prefix;
+	
+	@InjectView(id=R.id.section_new_et_Chainage,parent="mBaseInfoLayout")
+	private EditText section_new_et_Chainage;
+	
+	@InjectView(id=R.id.section_new_et_name,parent="mBaseInfoLayout")
+	private EditText section_new_et_name;
+	
+	@InjectView(id=R.id.section_new_et_calendar,parent="mBaseInfoLayout",onClick="this")
+	private EditText section_new_et_calendar;
+	
+	@InjectView(id=R.id.section_new_et_width,parent="mBaseInfoLayout")
+	private EditText section_new_et_width;
+
+	///////////////////////////////excavation info//////////////////////////////
 	@InjectView(layout=R.layout.section_new_kaiwa)
 	private LinearLayout mExcavationInfoLayout ;
 	
-	@InjectView(layout=R.layout.section_new_yuzhi)
-	private LinearLayout mDeformationInfoLayout ;
-
-	/***/
-	private int num;
-	// 控件名
-	/***/
-	private TextView section_new_tv_header;
-	private EditText section_new_et_Chainage;
-	private EditText section_new_et_calendar;
-	private EditText section_new_et_name;
-	private EditText section_new_et_width;
-
+	@InjectView(id=R.id.section_new_sp,parent="mExcavationInfoLayout",onClick="this")
 	private Spinner section_new_sp;
+	
+	@InjectView(id=R.id.section_new_et_a,parent="mExcavationInfoLayout")
 	private EditText section_new_et_a;
+	
+	@InjectView(id=R.id.section_new_et_s1,parent="mExcavationInfoLayout")
 	private EditText section_new_et_s1;
+	
+	@InjectView(id=R.id.section_new_et_s2,parent="mExcavationInfoLayout")
 	private EditText section_new_et_s2;
+	
+	@InjectView(id=R.id.section_new_et_s3_label,parent="mExcavationInfoLayout")
+	private TextView section_new_et_s3_label;
+	
+	@InjectView(id=R.id.section_new_et_s3,parent="mExcavationInfoLayout")
 	private EditText section_new_et_s3;
 	
-	private EditText section_new_leiji1;
-	private EditText section_new_leiji2;
-	private EditText section_new_single1;
-	private EditText section_new_single2;
+	////////////////////////////////Deformation info ///////////////////////////
+	@InjectView(layout=R.layout.section_new_yuzhi)
+	private LinearLayout mDeformationInfoLayout ;
+	
+	@InjectView(id=R.id.section_new_leiji_gd,parent="mDeformationInfoLayout")
+	private EditText section_new_leiji_gd;
+	
+	@InjectView(id=R.id.section_new_leiji_sl,parent="mDeformationInfoLayout")
+	private EditText section_new_leiji_sl;
+	
+	@InjectView(id=R.id.section_new_single_gd,parent="mDeformationInfoLayout")
+	private EditText section_new_single_gd;
+	
+	@InjectView(id=R.id.section_new_single_sl,parent="mDeformationInfoLayout")
+	private EditText section_new_single_sl;
+	
+	@InjectView(id=R.id.section_new_createtime_gd,parent="mDeformationInfoLayout",onClick="this")
 	private EditText section_new_createtime1;
+	
+	@InjectView(id=R.id.section_new_createtime_sl,parent="mDeformationInfoLayout",onClick="this")
 	private EditText section_new_createtime2;
-	private EditText section_new_info1;
-	private EditText section_new_info2;
 	
-	private TextView section_v_s3;
+	@InjectView(id=R.id.section_new_remark_gd,parent="mDeformationInfoLayout")
+	private EditText section_new_remark_gd;
 	
-	private ImageView img_fangfa;
-	private EditText et_a;
-	/** 确定按钮 */
-	private Button section_btn_queding;
-	/** 取消按钮 */
-	private Button section_btn_quxiao;
-	private String sChainage = null;
-	private TunnelCrossSectionInfo Edittsci = null;
-
+	@InjectView(id=R.id.section_new_remark_sl,parent="mDeformationInfoLayout")
+	private EditText section_new_remark_sl;
+	
+	private TunnelCrossSectionInfo sectionInfo ;
+	
+	private WorkPlan mCurrentWorkPlan;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -116,29 +158,59 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 		// init ViewPager
 		initViewPager();
 		
-		// sChainage = getIntent().getExtras().getString(Constant.Select_SectionRowClickItemsName_Name);
-		//double dChainage = AppCRTBApplication.StrToDouble(sChainage, -1);
-//		InitImageView();
-//		InitTextView();
-//		InitViewPager();
-//		InitMyTextView();
-//
-//		if (sChainage.length() > 0) {
-//			section_new_tv_header.setText("编辑隧道内断面");
-//			AppCRTBApplication CurApp = ((AppCRTBApplication)getApplicationContext());
-//			WorkInfos Curw = CurApp.GetCurWork();
-//			List<TunnelCrossSectionInfo> infos = Curw.GetTunnelCrossSectionInfoList();
-//			for(int i=0;i<infos.size();i++)
-//			{
-//				TunnelCrossSectionInfo tmp = infos.get(i);
-//				if(tmp.getChainage().equals(dChainage))
-//				{
-//					Edittsci = tmp;
-//					break;
-//				}
-//			}
-//		}
+		mCurrentWorkPlan = CommonObject.findObject(KEY_CURRENT_WORKPLAN);
+		
+		// prefix
+		section_new_et_prefix.setText(mCurrentWorkPlan.getMileagePrefix());
+		
+		// spinner
+		section_new_sp.setAdapter(ArrayAdapter.createFromResource(this, R.array.section_excavation,  
+                android.R.layout.simple_list_item_single_choice)) ;
+		section_new_sp.setOnItemSelectedListener(new OnItemSelectedListener() {
 
+			@Override
+			public void onItemSelected(AdapterView<?> parent, View view,
+					int position, long id) {
+				
+			}
+
+			@Override
+			public void onNothingSelected(AdapterView<?> parent) {
+				
+			}
+		}) ;
+		
+		String date = DateUtils.toDateString(DateUtils.getCurrtentTimes(), DateUtils.DATE_TIME_FORMAT) ;
+		section_new_et_calendar.setText(date);
+		section_new_createtime1.setText(date);
+		section_new_createtime2.setText(date);
+		
+		section_new_et_Chainage.addTextChangedListener(new TextWatcher() {
+			
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+				
+			}
+			
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,int after) {
+				
+			}
+			
+			@Override
+			public void afterTextChanged(Editable edt) {
+				
+				String temp = edt.toString();
+				
+				if(!StringUtils.isEmpty(temp)){
+					float f 	= Float.valueOf(temp);
+					String pre 	= section_new_et_prefix.getEditableText().toString().trim();
+					section_new_et_name.setText(CrtbUtils.formatSectionName(pre,f));
+				} else {
+					section_new_et_name.setText("");
+				}
+			}
+		}) ;
 	}
 
 	private void initViewPager() {
@@ -173,165 +245,194 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 		mPager.setOnPageChangeListener(new MyOnPageChangeListener());
 	}
 
-//	// 初始化头标
-//	private void InitTextView() {
-//		t1 = (TextView) findViewById(R.id.text1);
-//		t2 = (TextView) findViewById(R.id.text2);
-////		section_new_tv_header = (TextView) findViewById(R.id.section_new_tv_header);
-//		t1.setOnClickListener(new MyOnClickListener(0));
-//		t2.setOnClickListener(new MyOnClickListener(1));
-//
-//		section_btn_queding = (Button) findViewById(R.id.work_btn_queding);
-//		section_btn_quxiao = (Button) findViewById(R.id.work_btn_quxiao);
-//
-//		section_btn_queding.setOnClickListener(this);
-//		section_btn_quxiao.setOnClickListener(this);
-//		
-//	}
-	// 点击事件
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.work_btn_quxiao:
+			
 			Intent IntentCancel = new Intent();
-			IntentCancel.putExtra(Constant.Select_SectionRowClickItemsName_Name,1);
 			setResult(RESULT_CANCELED, IntentCancel);
-			this.finish();// 关闭当前界面
-			break;
-		case R.id.work_btn_queding: // 数据库
-			if(section_new_et_Chainage.getText().toString().trim().length() <= 0)
-			{
-				Toast.makeText(this, "请输入完整信息", 3000).show();
-				return;
-			}
-			if(section_new_et_width.getText().toString().trim().length() <= 0)
-			{
-				Toast.makeText(this, "请输入完整信息", 3000).show();
-				return;
-			}
-
-			AppCRTBApplication CurApp = ((AppCRTBApplication)getApplicationContext());
-			WorkInfos Curw = CurApp.GetCurWork();
-			TunnelCrossSectionInfo ts = new TunnelCrossSectionInfo();
-			if (Edittsci != null) {
-				ts.setId(Edittsci.getId());
-			}
-			ts.setChainage(Double.valueOf(section_new_et_Chainage.getText().toString().trim()));
-			ts.setChainagePrefix(Curw.getChainagePrefix());
-			ts.setInBuiltTime(section_new_et_calendar.getText().toString());
-			ts.setWidth(Float.valueOf(section_new_et_width.getText().toString().trim()));
-			if(section_new_sp.getSelectedItemPosition() == 0)
-			{
-				ts.setExcavateMethod(2);
-			}
-			else
-				if(section_new_sp.getSelectedItemPosition() == 1)
-			{
-				ts.setExcavateMethod(0);
-			}
-			else
-				if(section_new_sp.getSelectedItemPosition() == 2)
-			{
-				ts.setExcavateMethod(1);
-			}
-			else
-			{
-				ts.setExcavateMethod(0);
-			}
-			ts.setsExcavateMethod(section_new_sp.getSelectedItem().toString().trim());
-			List<String> strAS = new ArrayList<String>();
-			String strA = section_new_et_a.getText().toString().trim();
-			String strS1 = section_new_et_s1.getText().toString().trim();
-			String strS2 = section_new_et_s2.getText().toString().trim();
-			String strS3 = section_new_et_s3.getText().toString().trim();
-			strAS.add(strA);
-			strAS.add(strS1);
-			strAS.add(strS2);
-			strAS.add(strS3);
-			String sMix = AppCRTBApplication.GetExcavateMethodPoint(strAS);
-			ts.setSurveyPntName(sMix);		
-			if (section_new_info1 == null) {
-				if (Edittsci == null) {
-					ts.setInfo("");
-				}
-				else {
-					ts.setInfo(Edittsci.getInfo());
-				}
-			}
-			else {
-				ts.setInfo(section_new_info1.getText().toString().trim());
-			}
-			ts.setChainageName(section_new_et_name.getText().toString().trim());
-			if(!CurApp.IsValidTunnelCrossSectionInfo(ts))
-			{
-				Toast.makeText(this, "请输入完整信息", 3000).show();
-				return;
-			}
-			if ((ts.getChainage().doubleValue() < Curw.getStartChainage().doubleValue()) ||
-					(ts.getChainage().doubleValue() > Curw.getEndChainage().doubleValue())){
-				String sStart = CurApp.GetSectionName(Curw.getStartChainage().doubleValue());
-				String sEnd = CurApp.GetSectionName(Curw.getEndChainage().doubleValue());
-				String sMsg = "请输入里程为"+sStart+"到"+sEnd+"之间的里程";
-				Toast.makeText(this, sMsg, 3000).show();
-				return;
-			}
-			List<TunnelCrossSectionInfo> infos = Curw.GetTunnelCrossSectionInfoList();
-			if(infos == null)
-			{
-				Toast.makeText(this, "添加失败", 3000).show();
-			}
-			else
-			{
-				boolean bHave = false;
-				for(int i=0;i<infos.size();i++)
-				{
-					TunnelCrossSectionInfo tmp = infos.get(i);
-					if(tmp.getChainage().equals(ts.getChainage()))
-					{
-						bHave = true;
-						break;
-					}
-				}
-				if(bHave)
-				{
-					if(Edittsci == null)
-					{
-						Toast.makeText(this, "已存在", 3000).show();
-						return;
-					}
-					else
-					{
-						TunnelCrossSectionDaoImpl impl = new TunnelCrossSectionDaoImpl(this,Curw.getProjectName());
-						impl.UpdateSection(ts);
-						Curw.UpdateTunnelCrossSectionInfo(ts);
-						CurApp.UpdateWork(Curw);
-						Toast.makeText(this, "编辑成功", 3000).show();
-					}
-				}
-				else
-				{
-					TunnelCrossSectionDaoImpl impl = new TunnelCrossSectionDaoImpl(this,Curw.getProjectName());
-					if(impl.InsertSection(ts))
-					{
-						infos.add(ts);
-						CurApp.UpdateWork(Curw);
-						Toast.makeText(this, "添加成功", 3000).show();
-					}
-					else
-					{
-						Toast.makeText(this, "添加失败", 3000).show();
-					}
-				}
-			}
-			Intent IntentOk = new Intent();
-			IntentOk.putExtra(Constant.Select_SectionRowClickItemsName_Name,1);
-			setResult(RESULT_OK, IntentOk);
 			this.finish();
+			
 			break;
-		default:
+		case R.id.section_new_et_calendar :
+			CrtbDateDialogUtils.setAnyDateDialog(this, section_new_et_calendar, DateUtils.getCurrtentTimes());
+			break ;
+		case R.id.section_new_createtime_gd :
+			CrtbDateDialogUtils.setAnyDateDialog(this, section_new_createtime1, DateUtils.getCurrtentTimes());
+			break ;
+		case R.id.section_new_createtime_sl :
+			CrtbDateDialogUtils.setAnyDateDialog(this, section_new_createtime2, DateUtils.getCurrtentTimes());
+			break ;
+		case R.id.work_btn_queding: // 数据库
+			
+			// base
+			String prefix		= section_new_et_prefix.getEditableText().toString().trim() ;
+			String chainage 	= section_new_et_Chainage.getEditableText().toString().trim();// 里程
+			String name 		= section_new_et_name.getEditableText().toString().trim();
+			String date 		= section_new_et_calendar.getEditableText().toString().trim();
+			String width 		= section_new_et_width.getEditableText().toString().trim();
+			
+			if(StringUtils.isEmpty(chainage)){
+				showText("断面里程不能为空");
+				return ;
+			}
+			
+			if(StringUtils.isEmpty(date)){
+				showText("埋设时间不能为空");
+				return ;
+			}
+			
+			if(StringUtils.isEmpty(width)){
+				showText("埋设时间不能为空");
+				return ;
+			}
+			
+			sectionInfo = new TunnelCrossSectionInfo() ;
+			
+			// base info
+			sectionInfo.setPrefix(prefix);
+			sectionInfo.setChainage(Float.valueOf(chainage));
+			sectionInfo.setChainageName(name);
+			sectionInfo.setInBuiltTime(date);
+			sectionInfo.setWidth(Float.valueOf(width));
+			
+			// excavation
+			sectionInfo.setExcavateMethod(section_new_sp.getSelectedItem().toString());
+			
+			TunnelCrossSectionDao.defaultDao().insert(sectionInfo);
+			
+//			if(section_new_et_Chainage.getText().toString().trim().length() <= 0)
+//			{
+//				Toast.makeText(this, "请输入完整信息", 3000).show();
+//				return;
+//			}
+//			if(section_new_et_width.getText().toString().trim().length() <= 0)
+//			{
+//				Toast.makeText(this, "请输入完整信息", 3000).show();
+//				return;
+//			}
+//
+//			AppCRTBApplication CurApp = ((AppCRTBApplication)getApplicationContext());
+//			WorkInfos Curw = CurApp.GetCurWork();
+//			TunnelCrossSectionInfo ts = new TunnelCrossSectionInfo();
+//			if (Edittsci != null) {
+//				ts.setId(Edittsci.getId());
+//			}
+//			ts.setChainage(Double.valueOf(section_new_et_Chainage.getText().toString().trim()));
+//			ts.setChainagePrefix(Curw.getChainagePrefix());
+//			ts.setInBuiltTime(section_new_et_calendar.getText().toString());
+//			ts.setWidth(Float.valueOf(section_new_et_width.getText().toString().trim()));
+//			if(section_new_sp.getSelectedItemPosition() == 0)
+//			{
+//				ts.setExcavateMethod(2);
+//			}
+//			else
+//				if(section_new_sp.getSelectedItemPosition() == 1)
+//			{
+//				ts.setExcavateMethod(0);
+//			}
+//			else
+//				if(section_new_sp.getSelectedItemPosition() == 2)
+//			{
+//				ts.setExcavateMethod(1);
+//			}
+//			else
+//			{
+//				ts.setExcavateMethod(0);
+//			}
+//			ts.setsExcavateMethod(section_new_sp.getSelectedItem().toString().trim());
+//			List<String> strAS = new ArrayList<String>();
+//			String strA = section_new_et_a.getText().toString().trim();
+//			String strS1 = section_new_et_s1.getText().toString().trim();
+//			String strS2 = section_new_et_s2.getText().toString().trim();
+//			String strS3 = section_new_et_s3.getText().toString().trim();
+//			strAS.add(strA);
+//			strAS.add(strS1);
+//			strAS.add(strS2);
+//			strAS.add(strS3);
+//			String sMix = AppCRTBApplication.GetExcavateMethodPoint(strAS);
+//			ts.setSurveyPntName(sMix);		
+////			if (section_new_info1 == null) {
+////				if (Edittsci == null) {
+////					ts.setInfo("");
+////				}
+////				else {
+////					ts.setInfo(Edittsci.getInfo());
+////				}
+////			}
+////			else {
+////				//ts.setInfo(section_new_info1.getText().toString().trim());
+////			}
+//			ts.setChainageName(section_new_et_name.getText().toString().trim());
+//			if(!CurApp.IsValidTunnelCrossSectionInfo(ts))
+//			{
+//				Toast.makeText(this, "请输入完整信息", 3000).show();
+//				return;
+//			}
+//			if ((ts.getChainage().doubleValue() < Curw.getStartChainage().doubleValue()) ||
+//					(ts.getChainage().doubleValue() > Curw.getEndChainage().doubleValue())){
+//				String sStart = CurApp.GetSectionName(Curw.getStartChainage().doubleValue());
+//				String sEnd = CurApp.GetSectionName(Curw.getEndChainage().doubleValue());
+//				String sMsg = "请输入里程为"+sStart+"到"+sEnd+"之间的里程";
+//				Toast.makeText(this, sMsg, 3000).show();
+//				return;
+//			}
+//			List<TunnelCrossSectionInfo> infos = Curw.GetTunnelCrossSectionInfoList();
+//			if(infos == null)
+//			{
+//				Toast.makeText(this, "添加失败", 3000).show();
+//			}
+//			else
+//			{
+//				boolean bHave = false;
+//				for(int i=0;i<infos.size();i++)
+//				{
+//					TunnelCrossSectionInfo tmp = infos.get(i);
+//					if(tmp.getChainage().equals(ts.getChainage()))
+//					{
+//						bHave = true;
+//						break;
+//					}
+//				}
+//				if(bHave)
+//				{
+//					if(Edittsci == null)
+//					{
+//						Toast.makeText(this, "已存在", 3000).show();
+//						return;
+//					}
+//					else
+//					{
+//						TunnelCrossSectionDaoImpl impl = new TunnelCrossSectionDaoImpl(this,Curw.getProjectName());
+//						impl.UpdateSection(ts);
+//						Curw.UpdateTunnelCrossSectionInfo(ts);
+//						CurApp.UpdateWork(Curw);
+//						Toast.makeText(this, "编辑成功", 3000).show();
+//					}
+//				}
+//				else
+//				{
+//					TunnelCrossSectionDaoImpl impl = new TunnelCrossSectionDaoImpl(this,Curw.getProjectName());
+//					if(impl.InsertSection(ts))
+//					{
+//						infos.add(ts);
+//						CurApp.UpdateWork(Curw);
+//						Toast.makeText(this, "添加成功", 3000).show();
+//					}
+//					else
+//					{
+//						Toast.makeText(this, "添加失败", 3000).show();
+//					}
+//				}
+//			}
+//			Intent IntentOk = new Intent();
+//			IntentOk.putExtra(Constant.Select_SectionRowClickItemsName_Name,1);
+			
+			setResult(RESULT_OK);
+			finish();
 			break;
 		}
-
 	}
 
 	public class MyPagerAdapter extends PagerAdapter {
@@ -347,6 +448,7 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 
 		@Override
 		public void finishUpdate(View arg0) {
+			
 		}
 
 		@Override
@@ -357,151 +459,6 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 		@Override
 		public Object instantiateItem(View arg0, int arg1) {
 			((ViewPager) arg0).addView(listViews.get(arg1), 0);
-
-//			AppCRTBApplication CurApp = ((AppCRTBApplication)getApplicationContext());
-//			WorkInfos Curw = CurApp.GetCurWork();
-//			
-//			section_new_et_Chainage = (EditText) findViewById(R.id.section_new_et_Chainage);
-//			section_new_et_calendar = (EditText) findViewById(R.id.section_new_et_calendar);
-//			section_new_et_name = (EditText) findViewById(R.id.section_new_et_name);
-//			section_new_et_width = (EditText) findViewById(R.id.section_new_et_width);
-//
-//			section_new_sp = (Spinner) findViewById(R.id.section_new_sp);
-//			img_fangfa = (ImageView) findViewById(R.id.img_fangfa);
-//			section_new_et_a = (EditText) findViewById(R.id.section_new_et_a);
-//			section_new_et_s1 = (EditText) findViewById(R.id.section_new_et_s1);
-//			section_new_et_s2 = (EditText) findViewById(R.id.section_new_et_s2);
-//			section_new_et_s3 = (EditText) findViewById(R.id.section_new_et_s3);
-//			
-//			section_new_leiji1 = (EditText) findViewById(R.id.section_new_leiji1);
-//			section_new_leiji2 = (EditText) findViewById(R.id.section_new_leiji2);
-//			section_new_single1 = (EditText) findViewById(R.id.section_new_single1);
-//			section_new_single2 = (EditText) findViewById(R.id.section_new_single2);
-//			section_new_createtime1 = (EditText) findViewById(R.id.section_new_createtime1);
-//			section_new_createtime2 = (EditText) findViewById(R.id.section_new_createtime2);
-//			section_new_info1 = (EditText) findViewById(R.id.section_new_info1);
-//			section_new_info2 = (EditText) findViewById(R.id.section_new_info2);
-//			
-//			section_v_s3 = (TextView)findViewById(R.id.section_v_s3);
-//			
-//			//section_new_info2.setVisibility(View.GONE);
-//			section_new_et_Chainage.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-//				
-//				@Override
-//				public void onFocusChange(View v, boolean hasFocus) {
-//					//if(!hasFocus)
-//					{
-//						String sChainage = section_new_et_Chainage.getText().toString().trim();
-//						if (sChainage.length() > 0) {
-//							AppCRTBApplication CurApp = ((AppCRTBApplication)getApplicationContext());
-//							section_new_et_name.setText(CurApp.GetSectionName(Double.valueOf(sChainage).doubleValue()));
-//						}
-//						else {
-//							section_new_et_name.setText("");
-//						}
-//					}
-//				}
-//			});
-//			List<String> testList = new ArrayList<String>();
-//			testList.add("台阶法");
-//			testList.add("全断面法");
-//			testList.add("双侧壁导坑法");
-//			section_new_sp = (Spinner) findViewById(R.id.section_new_sp);
-//			ArrayAdapter<String> adapter = new ArrayAdapter<String>(
-//					SectionNewActivity.this,
-//					android.R.layout.simple_spinner_item, testList);
-//			adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-//			if (arg1 == 0) {
-//				// 获取手机的当前时间
-//				final String time = Time.getDateEN();
-//				// 设置文本框里面的字体大小
-//				section_new_et_calendar.setTextSize(11);
-//				if (Edittsci != null) {
-//					section_new_et_Chainage.setFocusable(false);
-//					section_new_et_Chainage.setFocusableInTouchMode(false);
-//					section_new_et_name.setFocusableInTouchMode(false);
-//					section_new_et_width.setFocusableInTouchMode(false);
-//					section_new_et_calendar.setFocusableInTouchMode(false);
-//					section_new_et_Chainage.setText(Edittsci.getChainage().toString());
-//					section_new_et_name.setText(CurApp.GetSectionName(Edittsci.getChainage().doubleValue()));
-//					section_new_et_calendar.setText(Edittsci.getInBuiltTime());
-//					section_new_et_width.setText(Float.toString(Edittsci.getWidth()));
-//				}
-//				else
-//				{
-//					// 跟改文本框赋值时间
-//					section_new_et_calendar.setText(time);
-//				}
-//			}
-//			else
-//			if(arg1 == 1)
-//			{
-//				section_new_sp.setAdapter(adapter);
-//				section_new_sp
-//				.setOnItemSelectedListener(new OnItemSelectedListener() {
-//
-//					@Override
-//					public void onItemSelected(AdapterView<?> parent,
-//							View view, int position, long id) {
-//						if (Edittsci != null) {
-//							position = TunnelCrossSectionDaoImpl.GetExcavateMethodInt(Edittsci);
-//						}
-//						if (position == 0) {
-//							img_fangfa
-//									.setBackgroundResource(R.drawable.stepmethod);
-//							section_v_s3.setVisibility(View.GONE);
-//							section_new_et_s3.setVisibility(View.GONE);
-//							System.out.println(section_new_sp
-//									.getSelectedItem().toString());
-//						} else if (position == 1) {
-//							System.out.println(section_new_sp
-//									.getSelectedItem().toString());
-//							img_fangfa
-//									.setBackgroundResource(R.drawable.totalcrosssection);
-//							section_v_s3.setVisibility(View.GONE);
-//							section_new_et_s3.setVisibility(View.GONE);
-//						} else if (position == 2) {
-//							System.out.println(section_new_sp
-//									.getSelectedItem().toString());
-//							img_fangfa
-//									.setBackgroundResource(R.drawable.dualslopemethod);
-//							section_v_s3.setVisibility(View.VISIBLE);
-//							section_new_et_s3.setVisibility(View.VISIBLE);
-//						}
-//					}
-//
-//					@Override
-//					public void onNothingSelected(AdapterView<?> parent) {
-//						
-//					}
-//				});
-//				if (Edittsci != null) {
-//					section_new_sp.setSelection(TunnelCrossSectionDaoImpl.GetExcavateMethodUi(Edittsci.getExcavateMethod()));
-//					section_new_sp.setSelected(false);
-//					List<String> strAS = AppCRTBApplication.GetExcavateMethodPointArray(Edittsci.getSurveyPntName());
-//					section_new_et_a.setText(strAS.get(0));
-//					section_new_et_s1.setText(strAS.get(1));
-//					section_new_et_s2.setText(strAS.get(2));
-//					section_new_et_s3.setText(strAS.get(3));
-//				}
-//			}
-//			else
-//			if (arg1 == 2) {
-//				
-////				section_new_leiji1.setText(Curw.getGDLimitTotalSettlement().toString());
-////				section_new_leiji2.setText(Curw.getSLLimitTotalSettlement().toString());
-////				section_new_single1.setText(Curw.getGDLimitVelocity().toString());
-////				section_new_single2.setText(Curw.getSLLimitVelocity().toString());
-////				section_new_createtime1.setText(section_new_et_calendar.getText().toString().trim());
-////				section_new_createtime2.setText(section_new_et_calendar.getText().toString().trim());
-////
-////				if (Edittsci != null) {
-////					section_new_info1.setText(Edittsci.getInfo());
-////				}
-////				et_a = (EditText) findViewById(R.id.section_new_et_a);
-////				SearchWather s = new SearchWather(et_a);
-//			}
-//			
 			return listViews.get(arg1);
 		}
 		
@@ -525,9 +482,6 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 		}
 	}
 
-	/**
-	 * 头标点击监听
-	 */
 	public class MyOnClickListener implements View.OnClickListener {
 		private int index = 0;
 
@@ -541,13 +495,10 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 		}
 	};
 
-	/**
-	 * 页卡切换监听
-	 */
 	public class MyOnPageChangeListener implements OnPageChangeListener {
 
-		int one = offset * 2 + bmpW;// 页卡1 -> 页卡2 偏移量
-		int two = one * 2;// 页卡1 -> 页卡3 偏移量
+		int one = offset * 2 + bmpW;
+		int two = one * 2;
 
 		@Override
 		public void onPageSelected(int arg0) {

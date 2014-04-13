@@ -8,6 +8,7 @@ import java.util.List;
 
 import org.zw.android.framework.ioc.InjectCore;
 import org.zw.android.framework.ioc.InjectLayout;
+import org.zw.android.framework.ioc.InjectView;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -22,6 +23,7 @@ import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
@@ -50,21 +52,33 @@ public class TestRecordActivity extends WorkFlowActivity implements OnPageChange
 	private View vie;
 	
 	private ListView listView,listView1;
-	private ViewPager mPager;// 页卡内容
-	private List<View> listViews; // Tab页面列表
-	private ImageView cursor;// 动画图片
-	private TextView t1, t2;// 页卡头标
-	private int offset = 0;// 动画图片偏移量
-	private int currIndex = 0;// 当前页卡编号
-	private int bmpW;// 动画图片宽度
-	double disPlayWidth, offSet;
+	
+	ArrayList<View> list = new ArrayList<View>();
+	
+	@InjectView(id=R.id.vPager)
+	private ViewPager mPager;
+	
+	@InjectView(id=R.id.cursor)
+	private ImageView cursor;
+	
+	private TextView t1, t2;
+	private int offset = 0;
+	private int currIndex = 0;
+	private int bmpW;
+	int disPlayWidth, offSet;
 	Bitmap b;
-	ArrayList<View> list = null;
+	
 	LinearLayout xin;
 	private LinearLayout record_bianji;
 	/***/
 	private ListView record_lv_suidao;
 	private ListView record_lv_dibiao;
+	
+	@InjectView(layout=R.layout.testrecord_listdibiao)
+	private LinearLayout mSectionRecordLayout ;
+	
+	@InjectView(layout=R.layout.testrecord_listdibiao)
+	private LinearLayout mSubsidenceRecordLayout ;
 	
 	private List<RecordInfo> infos = null,infos1 = null;
 	
@@ -80,6 +94,9 @@ public class TestRecordActivity extends WorkFlowActivity implements OnPageChange
 
 		// title
 		setTopbarTitle(getString(R.string.test_record_title));
+		
+		// init ViewPager
+		initPager() ;
 		
 //		initUI();
 //		InitImageView();
@@ -137,29 +154,42 @@ public class TestRecordActivity extends WorkFlowActivity implements OnPageChange
 	}
 	// 初始化
 	public void initUI() {
-		t1 = (TextView) findViewById(R.id.text1);
-		t2 = (TextView) findViewById(R.id.text2);
+		
 //		xin = (LinearLayout) findViewById(R.id.xin);
 //		record_bianji = (LinearLayout) findViewById(R.id.record_bianji);
-		cursor = (ImageView) findViewById(R.id.cursor);
-		mPager = (ViewPager) findViewById(R.id.vPager);
-		t1.setOnClickListener(tv_Listener);
-		t2.setOnClickListener(tv_Listener);
+		
+//		mPager = (ViewPager) findViewById(R.id.vPager);
+		
 	}
 
 	public void InitImageView() {
-		Display dis = this.getWindowManager().getDefaultDisplay();
-		disPlayWidth = dis.getWidth();
-		b = BitmapFactory.decodeResource(this.getResources(), R.drawable.heng);
-		offSet = ((disPlayWidth / 4) - b.getWidth() / 2);
-		setdata();
-		list = new ArrayList<View>();
-		LayoutInflater li = LayoutInflater.from(TestRecordActivity.this);
-		list.add(li.inflate(R.layout.testrecord_listdibiao, null));
-		list.add(li.inflate(R.layout.testrecord_listdibiao, null));
+		
+		
+//		setdata();
+		
+		
 	}
 
 	public void initPager() {
+		
+		t1 = (TextView) findViewById(R.id.text1);
+		t2 = (TextView) findViewById(R.id.text2);
+		
+		t1.setOnClickListener(tv_Listener);
+		t2.setOnClickListener(tv_Listener);
+		
+		list.add(mSectionRecordLayout);
+		list.add(mSubsidenceRecordLayout);
+		
+		disPlayWidth = mDisplayMetrics.widthPixels ;
+		b = BitmapFactory.decodeResource(this.getResources(), R.drawable.heng);
+		offSet = ((disPlayWidth / 4) - b.getWidth() / 2);
+		
+		ViewGroup.LayoutParams lp = cursor.getLayoutParams() ;
+		lp.width = disPlayWidth >> 1 ;
+		lp.height = 4 ;
+		cursor.setLayoutParams(lp);
+		
 		PagerAdapter pa = new PagerAdapter() {
 
 			@Override
@@ -206,13 +236,15 @@ public class TestRecordActivity extends WorkFlowActivity implements OnPageChange
 
 			}
 		};
+		
 		mPager.setAdapter(pa);
-		mPager.setCurrentItem(0);
+		mPager.setCurrentItem(TAB_ONE);
 		mPager.setOnPageChangeListener(this);
-		/** 隧道内断面 */
-		Layout1();
-		/** 地表下沉断面 */
-		Layout2();
+		
+//		/** 隧道内断面 */
+//		Layout1();
+//		/** 地表下沉断面 */
+//		Layout2();
 	}
 
 	@Override
@@ -242,7 +274,7 @@ public class TestRecordActivity extends WorkFlowActivity implements OnPageChange
 		public void onClick(View v) {
 			int single = (int) (b.getWidth() + offSet * 2);
 			switch (v.getId()) {
-			case R.id.t1:
+			case R.id.text1:
 				mPager.setCurrentItem(0);
 				if (currIndex != 0) {
 					TranslateAnimation ta = new TranslateAnimation(
@@ -253,7 +285,7 @@ public class TestRecordActivity extends WorkFlowActivity implements OnPageChange
 				}
 				currIndex = 0;
 				break;
-			case R.id.t2:
+			case R.id.text2:
 				mPager.setCurrentItem(1);
 				if (currIndex != 1) {
 					TranslateAnimation ta = new TranslateAnimation(currIndex

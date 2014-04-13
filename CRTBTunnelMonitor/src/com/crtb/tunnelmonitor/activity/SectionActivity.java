@@ -19,12 +19,17 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.animation.TranslateAnimation;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.crtb.tunnelmonitor.WorkFlowActivity;
+import com.crtb.tunnelmonitor.dao.impl.v2.TunnelCrossSectionDao;
 import com.crtb.tunnelmonitor.entity.MenuSystemItem;
+import com.crtb.tunnelmonitor.entity.TunnelCrossSectionInfo;
+import com.crtb.tunnelmonitor.mydefine.CrtbDialogResult;
 import com.crtb.tunnelmonitor.widget.SectionSubsidenceListView;
 import com.crtb.tunnelmonitor.widget.SectionTunnelListView;
 
@@ -81,8 +86,51 @@ public class SectionActivity extends WorkFlowActivity implements OnPageChangeLis
 		
 		// system menu
 		loadSystemMenu();
+		
+		mSectionTunnelList.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,int position, long id) {
+				
+				TunnelCrossSectionInfo bean = mSectionTunnelList.getItem(position);
+				
+				showListActionMenu("断面管理", new String[]{"编辑","删除"}, bean);
+			}
+		}) ;
+		
+		
 	}
 	
+	@Override
+	protected void onListItemSelected(Object bean, int position, String menu) {
+		
+		if(bean instanceof TunnelCrossSectionInfo){
+			
+			TunnelCrossSectionInfo section = (TunnelCrossSectionInfo)bean ;
+			
+			if(position == 0){
+				
+			} else if(position == 1){
+				
+				boolean success = TunnelCrossSectionDao.defaultDao().delete(section);
+				
+				CrtbDialogResult dialog = null ;
+				
+				if(success){
+					dialog = new CrtbDialogResult(SectionActivity.this, R.drawable.ic_reslut_sucess, "删除成功");
+					mSectionTunnelList.onReload() ;
+				} else {
+					dialog = new CrtbDialogResult(SectionActivity.this, R.drawable.ic_reslut_error, "删除失败");
+				}
+				
+				if(dialog != null){
+					dialog.show() ;
+				}
+			}
+		}
+		
+	}
+
 	private void loadViewPager(){
 		
 		tabLeft 	= (TextView) findViewById(R.id.text1);
@@ -258,6 +306,13 @@ public class SectionActivity extends WorkFlowActivity implements OnPageChangeLis
 			}
 		}
 	};
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		
+		mSectionTunnelList.onReload() ;
+	}
 
 //	public void Layout1() {
 //		/** 隧道内断面界面的控件 */

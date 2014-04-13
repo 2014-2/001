@@ -29,7 +29,6 @@ public class WorkInfos {
 	/** 施工单位名称 */
 	private String ConstructionFirm;
 	
-	
 	/** 拱顶单次速率限差 */
 	private Float GDLimitVelocity;
 	/** 拱顶 累计沉降量限差*/
@@ -252,7 +251,7 @@ public class WorkInfos {
 		for(int i=0;i<tcsiList.size();i++)
 		{
 			TunnelCrossSectionInfo tmp = tcsiList.get(i);
-			if(tmp.getChainage().equals(Value.getChainage()))
+			if(tmp.getChainage() == Value.getChainage())
 			{
 				tcsiList.set(i, Value);
 				break;
@@ -268,7 +267,7 @@ public class WorkInfos {
 		for(int i=0;i<tcsiList.size();i++)
 		{
 			TunnelCrossSectionInfo tmp = tcsiList.get(i);
-			if(tmp.getChainage().equals(Value.getChainage()))
+			if(tmp.getChainage() == Value.getChainage())
 			{
 				tcsiList.remove(i);
 				break;

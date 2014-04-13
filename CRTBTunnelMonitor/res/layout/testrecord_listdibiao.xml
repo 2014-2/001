@@ -6,9 +6,9 @@
     tools:context=".MainActivity" >
 
     <LinearLayout
-        android:layout_marginTop="5dp"
         android:layout_width="fill_parent"
-        android:layout_height="35dp"
+        android:layout_height="40dp"
+        android:background="#97cbd6"
         android:orientation="horizontal" >
 
         <RelativeLayout
@@ -17,25 +17,12 @@
             android:layout_weight="1" >
 
             <TextView
-                android:id="@+id/start"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:layout_centerInParent="true"
                 android:text="序号"
                 android:textColor="#FF000000" />
-
-            <View
-                android:layout_width="fill_parent"
-                android:layout_height="2px"
-                android:layout_alignParentBottom="true"
-                android:background="#FF000000" />
-
-            <View
-                android:layout_width="2px"
-                android:layout_height="fill_parent"
-                android:layout_alignParentRight="true"
-                android:background="#FF000000" />
         </RelativeLayout>
 
         <RelativeLayout
@@ -44,56 +31,30 @@
             android:layout_weight="1" >
 
             <TextView
-                android:id="@+id/end"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:layout_centerInParent="true"
                 android:text="记录单"
                 android:textColor="#FF000000" />
-
-            <View
-                android:layout_width="fill_parent"
-                android:layout_height="2px"
-                android:layout_alignParentBottom="true"
-                android:background="#FF000000" />
-
-            <View
-                android:layout_width="2px"
-                android:layout_height="fill_parent"
-                android:layout_alignParentRight="true"
-                android:background="#FF000000" />
         </RelativeLayout>
+
         <RelativeLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1" >
 
             <TextView
-                android:id="@+id/end"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:layout_centerInParent="true"
                 android:text="选中"
                 android:textColor="#FF000000" />
-
-            <View
-                android:layout_width="fill_parent"
-                android:layout_height="2px"
-                android:layout_alignParentBottom="true"
-                android:background="#FF000000" />
-
-            <View
-                android:layout_width="2px"
-                android:layout_height="fill_parent"
-                android:layout_alignParentRight="true"
-                android:background="#FF000000" />
         </RelativeLayout>
-        </LinearLayout>
+    </LinearLayout>
 
-        
-      <ListView
+    <ListView
         android:id="@+id/record_lv_dibiao"
         android:layout_width="match_parent"
         android:layout_height="360dp"
@@ -101,8 +62,5 @@
         android:fastScrollEnabled="true"
         android:focusable="true" >
     </ListView>
-
-    
-  
 
 </LinearLayout>

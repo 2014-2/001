@@ -1,14 +1,9 @@
 package com.crtb.tunnelmonitor.activity;
 
 
+import java.util.ArrayList;
 import java.util.List;
 
-import org.ksoap2.SoapEnvelope;
-import org.ksoap2.serialization.SoapObject;
-import org.ksoap2.serialization.SoapSerializationEnvelope;
-import org.ksoap2.transport.HttpTransportSE;
-
-import ICT.utils.RSACoder;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
@@ -33,11 +28,12 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.crtb.tunnelmonitor.AppCRTBApplication;
 import com.crtb.tunnelmonitor.common.Constant;
 import com.crtb.tunnelmonitor.dao.SurveyerInformationDao;
 import com.crtb.tunnelmonitor.dao.impl.SurveyerInformationDaoImpl;
+import com.crtb.tunnelmonitor.event.DatabaseListener;
 //import android.webkit.WebView.FindListener;
+import com.crtb.tunnelmonitor.event.EventDispatcher;
 
 /**
  * 服务器登录界面 创建时间：2014-3-18下午4:11:55
@@ -58,17 +54,6 @@ public class LoginActivity extends Activity implements OnClickListener {
 	
 	private TextView mDownload;
 	
-	//APP实例
-	private AppCRTBApplication CurApp;
-	
-	private String veri;
-	
-	private String rsal;
-	
-	private String[] sZoneAndSiteCode = null;
-	
-	private int Result = 0;
-
 	private ImageView mArrow,mNotesArrow;
 	
 	private PopupWindow mPop;
@@ -78,6 +63,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 	private List<String> mNotes;
 	
 	private Dialog dlg;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -94,7 +80,6 @@ public class LoginActivity extends Activity implements OnClickListener {
 		mNotesArrow=(ImageView) findViewById(R.id.note_arrow);
 		mUserName = (EditText) findViewById(R.id.username);
 		mCard = (EditText) findViewById(R.id.idcard);
-		CurApp = ((AppCRTBApplication)getApplicationContext());
 	    mDownload=(TextView) findViewById(R.id.load_teser);
 	    mDownload.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG);
 	    mDownload.setOnClickListener(this);
@@ -102,10 +87,17 @@ public class LoginActivity extends Activity implements OnClickListener {
 		login_btn.setOnClickListener(this);
 	    
 	    mPop=new PopupWindow();
-	    SurveyerInformationDao dao=SurveyerInformationDaoImpl.getInstance();
+	    final SurveyerInformationDao dao=SurveyerInformationDaoImpl.getInstance();
         mNames=dao.getFieldsByName(SurveyerInformationDaoImpl.NAME);
         mNotes=dao.getFieldsByName(SurveyerInformationDaoImpl.NOTE);
 	    //ArrayAdapter adapter=new ArrayAdapter(this,android.R.layout.simple_list_item_1,names);
+        EventDispatcher.getInstance().registerDatabaseListener(new DatabaseListener() {
+			@Override
+			public void onChanged() {
+				 mNames = dao.getFieldsByName(SurveyerInformationDaoImpl.NAME);
+			     mNotes = dao.getFieldsByName(SurveyerInformationDaoImpl.NOTE);
+			}
+		});
 	   
 	    mArrow.setOnClickListener(new OnClickListener() {
 			
@@ -222,201 +214,31 @@ public class LoginActivity extends Activity implements OnClickListener {
 			break;
 		}
 	}
-
-//	private String loginTest(String username, String password) {
-//		String ver = String.valueOf(0);
-//		//获取公钥
-//		String publicKey = getPub(username,Constant.testPhysical);
-//		if("0".equals(publicKey)){
-//			//获取失败时提示并返回0
-//			Toast.makeText(LoginActivity.this, "获取公钥失败！", Toast.LENGTH_LONG).show();
-//			ver = String.valueOf(-1);
-//			return ver;
-//		}
-//		//成功则通过私钥加密
-//		CurApp.setPublickey(publicKey);
-//		ver = loginSelect(username,password);
-//		return ver;
-//	}
-//    private void login(String username,String password){
-//    	CrtbWebService.getInstance().login(username, password, new RpcCallback() {
-//
-//    		@Override
-//    		public void onSuccess(Object[] data) {
-//    			 
-//    		}
-//
-//    		
-//
-//			@Override
-//			public void onFailed(String reason) {
-//				Toast.makeText(LoginActivity.this, "用户名或密码错误", Toast.LENGTH_LONG).show();
-//			}
-//    		});
-//    }
-	
-	private String loginSelect(final String username, String password) {
-		veri = String.valueOf(0);
-		//密码加密
-		final String pwd = RSACoder.encnryptDes(password, Constant.testDeskey);
-		new Thread(){
-			public void run() {
-				//创建HttpTransportSe对象
-				HttpTransportSE ht=new HttpTransportSE(Constant.UserSelect);
-				ht.debug=true;
-				SoapSerializationEnvelope envelope=new SoapSerializationEnvelope(SoapEnvelope.VER12);
-				//实例化SoapObject对象
-				SoapObject soapObject = new SoapObject(Constant.NameSpace,"/verifyAppUser");
-				soapObject.addProperty("登陆账号", username);
-				soapObject.addProperty("登陆密码", pwd);
-				soapObject.addProperty("设备物理地址", Constant.testPhysical);
-				soapObject.addProperty("加密后密钥", CurApp.getPublickey());
-
-				envelope.bodyOut = soapObject;
-				try {
-					//调用 web Service	
-					ht.call(Constant.NameSpace+"verifyAppUser",envelope);
-					if(envelope.getResponse()!=null){
-						SoapObject result=(SoapObject)envelope.bodyIn;
-						SoapObject detail=(SoapObject)result.getProperty("verifyAppUserResponse");
-						veri = detail.getProperty(0).toString();
-					}
-				}catch(Exception e) {
-					e.printStackTrace();
-				}
-			};
-		}.start();
-		return veri;
-	}
-
-	private String getPub(final String username,final String testShebei) {
-		rsal = String.valueOf(0);
-		//调用 web Service
-		new Thread(){
-			public void run() {
-				//创建HttpTransportSe对象
-				HttpTransportSE ht=new HttpTransportSE(Constant.UserSelect);
-				ht.debug=true;
-				SoapSerializationEnvelope envelope=new SoapSerializationEnvelope(SoapEnvelope.VER11);
-				//实例化SoapObject对象
-				SoapObject soapObject = new SoapObject(Constant.NameSpace,"getPublicKey");
-				soapObject.addProperty("登陆账号", username);
-				soapObject.addProperty("物理地址", testShebei);
-				envelope.bodyOut = soapObject;
-
-				try {
-					ht.call(Constant.NameSpace+"getPublicKey",envelope);
-					if(envelope.getResponse()!=null){
-						SoapObject result=(SoapObject)envelope.bodyIn;
-						String pub= result.getProperty(0).toString();
-						if(!"0".equals(pub)){
-							rsal = RSACoder.encnryptRSA(Constant.testDeskey, pub);
-						}
-					}
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			};
-		}.start();
-		return rsal;
-	}
-	
-	//获取工区工点序列
-	public String[] getZoneAndSiteCode(final String Randomcode){
-		sZoneAndSiteCode = null;
-		new Thread(){
-			public void run() {
-				//创建HttpTransportSe对象
-				HttpTransportSE ht=new HttpTransportSE(Constant.UserSelect);
-				ht.debug=true;
-				SoapSerializationEnvelope envelope=new SoapSerializationEnvelope(SoapEnvelope.VER12);
-				//实例化SoapObject对象
-				SoapObject soapObject = new SoapObject(Constant.NameSpace,"/getZoneAndSiteCode");
-				soapObject.addProperty("随机码", Randomcode);
-
-				envelope.bodyOut = soapObject;
-				try {
-					//调用 web Service	
-					ht.call(Constant.NameSpace+"getZoneAndSiteCode",envelope);
-					if(envelope.getResponse()!=null){
-						SoapObject result=(SoapObject)envelope.bodyIn;
-//						SoapObject detail=(SoapObject)result.getProperty("verifyAppUserResponse");
-						sZoneAndSiteCode = (String[])result.getProperty(0);
-					}
-				}catch(Exception e) {
-					e.printStackTrace();
-					System.out.println("getZoneAndSiteCode:" + e.getLocalizedMessage());
-				}
-			};
-		}.start();
-		
-		return sZoneAndSiteCode;
-	}
-	
-	//设置量测断面及测点接口
-	public int getSectionPointInfo(final String zonecode,final String Sitecode,final String Sectname,final String Sectcode,final String Sectkilo,
-			final String Sectmethod,final float Sectwidth,final float Movevalueuo,final String Updatetime,final String Uoremark,final int Rocklevel,
-			final String Testcodes,final String Objlaytime,final String Remark,final String Randomcode){
-		int iResult = 0;
-		
-		new Thread(){
-			public void run() {
-				//创建HttpTransportSe对象
-				HttpTransportSE ht=new HttpTransportSE(Constant.UserSelect);
-				ht.debug=true;
-				SoapSerializationEnvelope envelope=new SoapSerializationEnvelope(SoapEnvelope.VER12);
-				//实例化SoapObject对象
-				SoapObject soapObject = new SoapObject(Constant.NameSpace,"/getZoneAndSiteCode");
-				soapObject.addProperty("工区编码", zonecode);
-				soapObject.addProperty("",Sitecode);
-				soapObject.addProperty("",Sectname);
-				soapObject.addProperty("",Sectcode);
-				soapObject.addProperty("",Sectkilo);
-				soapObject.addProperty("",Sectmethod);
-				soapObject.addProperty("",Sectwidth);
-				soapObject.addProperty("",Movevalueuo);
-				soapObject.addProperty("",Updatetime);
-				soapObject.addProperty("",Uoremark);
-				soapObject.addProperty("",Rocklevel);
-				soapObject.addProperty("",Testcodes);
-				soapObject.addProperty("",Objlaytime);
-				soapObject.addProperty("",Remark);
-				soapObject.addProperty("",Randomcode);
-
-				envelope.bodyOut = soapObject;
-				try {
-					//调用 web Service	
-					ht.call(Constant.NameSpace+"getZoneAndSiteCode",envelope);
-					if(envelope.getResponse()!=null){
-						SoapObject result=(SoapObject)envelope.bodyIn;
-//						SoapObject detail=(SoapObject)result.getProperty("verifyAppUserResponse");
-						Result = Integer.valueOf(result.getProperty(0).toString());
-					}
-				}catch(Exception e) {
-					e.printStackTrace();
-					System.out.println("getZoneAndSiteCode:" + e.getLocalizedMessage());
-				}
-			};
-		}.start();
-		iResult = Result;
-		return iResult;
-	}
 	
 	class NameAdapter extends BaseAdapter{
-		private List<String> strs;
+		private List<String> mNameList = new ArrayList<String>();
 		
         public NameAdapter(List<String> list){
-           strs=list;	
+        	if (list != null) {
+        		mNameList = list;	
+        	}
         }
 		
+        public void setNameList(List<String> nameList) {
+        	if (nameList != null) {
+        		mNameList = nameList;
+        		notifyDataSetChanged();
+        	}
+        }
+        
 		@Override
 		public int getCount() {
-			return strs.size();
+			return mNameList.size();
 		}
 
 		@Override
 		public Object getItem(int arg0) {
-			return strs.get(arg0);
+			return mNameList.get(arg0);
 		}
 
 		@Override
@@ -430,7 +252,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 				view=LayoutInflater.from(LoginActivity.this).inflate(R.layout.name_item_layout, null);
 			}
 			TextView text=(TextView) view.findViewById(R.id.text);
-			text.setText(strs.get(pos));
+			text.setText(mNameList.get(pos));
 			
 			return view;
 		}

@@ -5,6 +5,11 @@
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello world!</string>
     <string name="total_station">全站仪</string>
+    <string name="total_station_manage">全站仪连接管理</string>
+    <string name="new_control_station_title">新建全站仪</string>
+    <string name="edit_control_station_title">编辑全站仪</string>
+    <string name="new_control_point_title">新建控制点</string>
+    <string name="edit_control_point_title">编辑控制点</string>
 
     <!-- common -->
     <string name="common_create_new">新建</string>
@@ -28,9 +33,18 @@
     <string name="section_title">断面管理</string>
     <string name="section_new_title">新建隧道内断面</string>
     <string name="section_new_subsidence_title">新建地表下沉断面</string>
+    
+     <string-array name="section_excavation">
+        <item>全断面法</item>
+        <item>台阶法</item>
+        <item>三台阶法</item>
+        <item>双侧壁法</item>
+    </string-array>
 
     <!-- 记录单模块 -->
     <string name="record_title">记录单管理</string>
+    <string name="record_new_section_title">新建隧道内断面记录单</string>
+    <string name="record_new_section_subisdence_title">新建地表下沉断面记录单</string>
 
     <!-- 测量模块 -->
     <string name="test_record_title">测量</string>
@@ -45,9 +59,22 @@
     <string name="main_title">隧道进口</string>
     <string name="server_setting">服务器参数设置</string>
     <string name="user_book">用户手册</string>
+<<<<<<< HEAD
 
     <string name="deal_way_void">数据作废</string>
     <string name="deal_way_first">数据作为首行</string>
     <string name="deal_way_add">添加改正值</string>
 
+=======
+    
+    <!-- 升级模块 -->
+    <string name="update_title">软件升级</string>
+    <!-- 关于页面 -->
+    <string name="project_name">中铁天宝数字隧道监测方案</string>
+    <string name="adapt_to">适用于：隧道围岩量测</string>
+    <string name="version">Version：%s</string>
+    <string name="copyright">Copy©2014\n中铁天宝数字工程有限责任公司\nAll Rights Reserved.</string>
+    <string name="description">数字化监测方案（Digtal Tunnel Monotoring Solution，简称DTMS），实现了沉降信息的自动化测量及电子化管理，同时能在现场直接查看报表和分析曲线，并将数据直接上传至中心服务器。</string>
+    <string name="software_update">软件升级</string>
+>>>>>>> d5491b05512f78c6b18551048229f9a247c00ee2
 </resources>

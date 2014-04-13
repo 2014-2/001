@@ -58,7 +58,10 @@
                     android:layout_width="200dp"
                     android:layout_height="42dip"
                     android:layout_marginLeft="10dp"
-                    android:editable="false" />
+                    android:editable="false" 
+                    android:focusable="false"
+                    android:singleLine="true"
+                    android:text="2014-04-12 00:00:00"/>
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -109,8 +112,7 @@
                     android:layout_width="200dp"
                     android:layout_height="42dip"
                     android:layout_marginLeft="10dp"
-                    android:inputType="numberDecimal"
-                    android:maxLength="20"
+                    android:maxLength="5"
                     android:text="DK" />
 
                 <ImageView

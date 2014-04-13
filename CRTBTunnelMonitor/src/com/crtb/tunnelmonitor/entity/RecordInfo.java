@@ -9,7 +9,8 @@ import android.os.Parcelable;
  * 记录单隧道实体类
  */
 public class RecordInfo implements Parcelable{
-	private String ChainageName;		//断面名称
+	
+	private String ChainageName;					//断面名称
 	private int id;
 	private int CrossSectionType;					/**种类*/
 	private Timestamp CreateTime;					/**默认当前时间*/

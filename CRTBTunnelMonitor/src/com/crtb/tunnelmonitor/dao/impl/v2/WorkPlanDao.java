@@ -10,7 +10,7 @@ import com.crtb.tunnelmonitor.entity.WorkPlan;
  * @author zhouwei
  *
  */
-public final class WorkPlanDao extends AbstractDao {
+public final class WorkPlanDao extends AbstractDao<WorkPlan> {
 	
 	private static WorkPlanDao _instance ;
 

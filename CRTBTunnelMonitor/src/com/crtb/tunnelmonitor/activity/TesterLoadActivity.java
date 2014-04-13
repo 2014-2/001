@@ -21,6 +21,7 @@ import android.widget.Toast;
 import com.crtb.tunnelmonitor.dao.SurveyerInformationDao;
 import com.crtb.tunnelmonitor.dao.impl.SurveyerInformationDaoImpl;
 import com.crtb.tunnelmonitor.entity.SurveyerInformation;
+import com.crtb.tunnelmonitor.event.EventDispatcher;
 import com.crtb.tunnelmonitor.network.CrtbWebService;
 import com.crtb.tunnelmonitor.network.RpcCallback;
 
@@ -28,6 +29,8 @@ public class TesterLoadActivity extends Activity implements OnClickListener {
 
 	private Button mLoad;
 
+	private EditText mServerAddress;
+	
 	private EditText mUserName;
 
 	private EditText mPassword;
@@ -44,6 +47,9 @@ public class TesterLoadActivity extends Activity implements OnClickListener {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.download_tester_layout);
+		mServerAddress = (EditText) findViewById(R.id.server_ip);
+		mServerAddress.setText("http://61.237.239.144/fxkz/basedown");
+		mServerAddress.setSingleLine(true);
 		mLoad = (Button) findViewById(R.id.load);
 		mUserName = (EditText) findViewById(R.id.username);
 		mPassword = (EditText) findViewById(R.id.password);
@@ -106,6 +112,7 @@ public class TesterLoadActivity extends Activity implements OnClickListener {
 												dao.InsertSurveyerInfo(mTestors
 														.get(i));
 											}
+                                            EventDispatcher.getInstance().notifyDatabaseChanged();
 										}
 									}
 
