@@ -8,6 +8,8 @@
     <string name="total_station_manage">全站仪连接管理</string>
     <string name="new_control_station_title">新建全站仪</string>
     <string name="edit_control_station_title">编辑全站仪</string>
+    <string name="new_control_point_title">新建控制点</string>
+    <string name="edit_control_point_title">编辑控制点</string>
 
     <!-- common -->
     <string name="common_create_new">新建</string>
@@ -58,6 +60,8 @@
     <string name="server_setting">服务器参数设置</string>
     <string name="user_book">用户手册</string>
     
+    <!-- 升级模块 -->
+    <string name="update_title">软件升级</string>
     <!-- 关于页面 -->
     <string name="project_name">中铁天宝数字隧道监测方案</string>
     <string name="adapt_to">适用于：隧道围岩量测</string>

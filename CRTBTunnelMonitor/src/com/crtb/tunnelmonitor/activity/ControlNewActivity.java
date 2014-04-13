@@ -54,7 +54,7 @@ public class ControlNewActivity extends Activity implements OnClickListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_controlnew);
         ts_new_tv_header = (TextView)findViewById(R.id.tv_topbar_title);
-        ts_new_tv_header.setText(R.string.edit_control_station_title);
+        ts_new_tv_header.setText(R.string.new_control_station_title);
 
         CurApp = ((AppCRTBApplication)getApplicationContext());
 
