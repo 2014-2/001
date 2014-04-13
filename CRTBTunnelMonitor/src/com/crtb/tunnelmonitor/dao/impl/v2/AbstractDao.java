@@ -9,7 +9,7 @@ import org.zw.android.framework.impl.FrameworkFacade;
  * @author zhouwei
  *
  */
-public abstract class AbstractDao {
+public abstract class AbstractDao<T> {
 
 	protected IAccessDatabase 	mDatabase ;
 	
@@ -17,7 +17,7 @@ public abstract class AbstractDao {
 		mDatabase	= FrameworkFacade.getFrameworkFacade().getAccessDatabase() ;
 	}
 	
-	public final boolean insert(Object bean){
+	public final boolean insert(T bean){
 		
 		if(bean == null){
 			return false ;
@@ -26,7 +26,7 @@ public abstract class AbstractDao {
 		return mDatabase.saveObject(bean) > -1 ;
 	}
 	
-	public final boolean update(Object bean){
+	public final boolean update(T bean){
 		
 		if(bean == null){
 			return false ;
@@ -35,7 +35,7 @@ public abstract class AbstractDao {
 		return mDatabase.updateObject(bean) > -1 ;
 	}
 	
-	public final boolean delete(Object bean){
+	public final boolean delete(T bean){
 		
 		if(bean == null){
 			return false ;

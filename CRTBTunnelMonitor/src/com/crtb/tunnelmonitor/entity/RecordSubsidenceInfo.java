@@ -6,9 +6,9 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 /**
- * 记录单隧道实体类
+ * 地表下沉测量单信息
  */
-public class RecordInfo implements Parcelable{
+public class RecordSubsidenceInfo implements Parcelable{
 	
 	private String ChainageName;					//断面名称
 	private int id;
@@ -143,14 +143,14 @@ public class RecordInfo implements Parcelable{
 	}	
     // 实现Parcelable接口的类型中，必须有一个实现了Parcelable.Creator接口的静态常量成员字段，
     // 并且它的名字必须为CREATOR的
-    public static final Parcelable.Creator<RecordInfo> CREATOR 
-            = new Parcelable.Creator<RecordInfo>()
+    public static final Parcelable.Creator<RecordSubsidenceInfo> CREATOR 
+            = new Parcelable.Creator<RecordSubsidenceInfo>()
     {
         // From Parcelable.Creator
         @Override
-        public RecordInfo createFromParcel(Parcel in)
+        public RecordSubsidenceInfo createFromParcel(Parcel in)
         {
-        	RecordInfo brief = new RecordInfo();
+        	RecordSubsidenceInfo brief = new RecordSubsidenceInfo();
             
             // 从包裹中读出数据
         	brief.ChainageName = in.readString();
@@ -174,9 +174,9 @@ public class RecordInfo implements Parcelable{
 
         // From Parcelable.Creator
         @Override
-        public RecordInfo[] newArray(int size)
+        public RecordSubsidenceInfo[] newArray(int size)
         {
-            return new RecordInfo[size];
+            return new RecordSubsidenceInfo[size];
         }
     };
 	

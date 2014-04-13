@@ -13,6 +13,7 @@ import com.crtb.tunnelmonitor.db.SqliteHelperDTMS;
 import com.crtb.tunnelmonitor.entity.RecordInfo;
 import com.crtb.tunnelmonitor.entity.TunnelCrossSectionInfo;
 import com.crtb.tunnelmonitor.entity.WorkInfos;
+
 /**
  * 断面数据库实现
  */
@@ -33,7 +34,7 @@ public class TunnelCrossSectionDaoImpl implements TunnelCrossSectionDao{
 		Cursor c = db.rawQuery("select Chainage,ChainagePrefix from TunnelCrossSectionIndex", null);
 		while (c.moveToNext()) {
 			TunnelCrossSectionInfo s =new TunnelCrossSectionInfo();
-			s.setChainage(Double.valueOf(c.getString(c.getColumnIndex("Chainage"))));
+			// s.setChainage(Double.valueOf(c.getString(c.getColumnIndex("Chainage"))));
 			s.setChainagePrefix(c.getString(c.getColumnIndex("ChainagePrefix")));
 			list.add(s);
 		}
@@ -43,17 +44,17 @@ public class TunnelCrossSectionDaoImpl implements TunnelCrossSectionDao{
 	public String GetSectionName(TunnelCrossSectionInfo Value) {
 		
 		String sName = "";
-		int iChainage = (int)(Value.getChainage().doubleValue()); 
-		int iDiv = 0,iMod = 0;
-		iDiv = iChainage / 1000;
-		iMod = iChainage % 1000;
-		double dMod = (double)iMod+(Value.getChainage().doubleValue()-(double)iChainage);
-		sName = Value.getChainagePrefix();
-		if (iDiv > 0) {
-			sName += Integer.toString(iDiv);
-		}
-		sName += '+';
-		sName += Double.toString(dMod);
+//		int iChainage = (int)(Value.getChainage().doubleValue()); 
+//		int iDiv = 0,iMod = 0;
+//		iDiv = iChainage / 1000;
+//		iMod = iChainage % 1000;
+//		double dMod = (double)iMod+(Value.getChainage().doubleValue()-(double)iChainage);
+//		sName = Value.getChainagePrefix();
+//		if (iDiv > 0) {
+//			sName += Integer.toString(iDiv);
+//		}
+//		sName += '+';
+//		sName += Double.toString(dMod);
 
 		return sName;
 	}
@@ -166,7 +167,7 @@ public class TunnelCrossSectionDaoImpl implements TunnelCrossSectionDao{
 		while (c.moveToNext()) {
 			TunnelCrossSectionInfo s =new TunnelCrossSectionInfo();
 			s.setId(c.getInt(c.getColumnIndex("Id")));
-			s.setChainage(Double.valueOf(c.getString(c.getColumnIndex("Chainage"))));
+//			s.setChainage(Double.valueOf(c.getString(c.getColumnIndex("Chainage"))));
 			iIndex = c.getColumnIndex("InbuiltTime");
 			sInfo = c.getString(iIndex);
 			s.setInBuiltTime(sInfo);
@@ -226,7 +227,7 @@ public class TunnelCrossSectionDaoImpl implements TunnelCrossSectionDao{
 		Cursor c = db.rawQuery("select Chainage from SubsidenceCrossSectionIndex", null);
 		while (c.moveToNext()) {
 			TunnelCrossSectionInfo s =new TunnelCrossSectionInfo();
-			s.setChainage(Double.valueOf(c.getString(c.getColumnIndex("Chainage"))));
+//			s.setChainage(Double.valueOf(c.getString(c.getColumnIndex("Chainage"))));
 			list.add(s);
 		}
 		return list;
@@ -305,7 +306,6 @@ public Boolean InsertSectiondibiao(TunnelCrossSectionInfo s) {
 			db.execSQL(sql,obj);
 			iResult = 1;
 		} catch (Exception e) {
-			// TODO: handle exception
 			iResult = 0;
 			System.out.println("DeleteSection:" + e.getLocalizedMessage());
 		}

@@ -7,6 +7,7 @@ import org.zw.android.framework.ioc.InjectCore;
 import org.zw.android.framework.ioc.InjectLayout;
 import org.zw.android.framework.ioc.InjectView;
 import org.zw.android.framework.util.DateUtils;
+import org.zw.android.framework.util.StringUtils;
 
 import android.content.Intent;
 import android.graphics.BitmapFactory;
@@ -33,6 +34,7 @@ import android.widget.TextView;
 
 import com.crtb.tunnelmonitor.CommonObject;
 import com.crtb.tunnelmonitor.WorkFlowActivity;
+import com.crtb.tunnelmonitor.dao.impl.v2.TunnelCrossSectionDao;
 import com.crtb.tunnelmonitor.entity.TunnelCrossSectionInfo;
 import com.crtb.tunnelmonitor.entity.WorkPlan;
 import com.crtb.tunnelmonitor.mydefine.CrtbDateDialogUtils;
@@ -135,7 +137,7 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 	@InjectView(id=R.id.section_new_remark_sl,parent="mDeformationInfoLayout")
 	private EditText section_new_remark_sl;
 	
-	private TunnelCrossSectionInfo Edittsci = null;
+	private TunnelCrossSectionInfo sectionInfo ;
 	
 	private WorkPlan mCurrentWorkPlan;
 	
@@ -233,6 +235,41 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 			CrtbDateDialogUtils.setAnyDateDialog(this, section_new_createtime2, DateUtils.getCurrtentTimes());
 			break ;
 		case R.id.work_btn_queding: // 数据库
+			
+			// base
+			String chainage 	= section_new_et_Chainage.getEditableText().toString().trim();// 里程
+			String name 		= section_new_et_name.getEditableText().toString().trim();
+			String date 		= section_new_et_calendar.getEditableText().toString().trim();
+			String width 		= section_new_et_width.getEditableText().toString().trim();
+			
+			if(StringUtils.isEmpty(chainage)){
+				showText("断面里程不能为空");
+				return ;
+			}
+			
+			//if(StringUtils.isEmpty(name)){
+			//	showText("断面名称不能为空");
+			//	return ;
+			//}
+			
+			if(StringUtils.isEmpty(date)){
+				showText("埋设时间不能为空");
+				return ;
+			}
+			
+			if(StringUtils.isEmpty(width)){
+				showText("埋设时间不能为空");
+				return ;
+			}
+			
+			sectionInfo = new TunnelCrossSectionInfo() ;
+			sectionInfo.setChainage(Float.valueOf(chainage));
+			sectionInfo.setChainageName(name);
+			sectionInfo.setInBuiltTime(date);
+			sectionInfo.setWidth(Float.valueOf(width));
+			
+			TunnelCrossSectionDao.defaultDao().insert(sectionInfo);
+			
 //			if(section_new_et_Chainage.getText().toString().trim().length() <= 0)
 //			{
 //				Toast.makeText(this, "请输入完整信息", 3000).show();
