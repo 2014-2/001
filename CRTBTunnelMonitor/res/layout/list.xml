@@ -3,12 +3,23 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="10dp" >
+    android:background="#e6e6e6" >
 
     <LinearLayout
+        android:layout_margin="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:orientation="horizontal"
         android:layout_weight="1" >
+
+        <TextView
+            android:id="@+id/list_num"
+            android:gravity="top"
+            android:text="1"
+            android:textSize="16sp"
+            android:textColor="#cc0080ee"
+            android:layout_width="20dp"
+            android:layout_height="match_parent"/>
 
         <LinearLayout
             android:layout_width="0dp"
@@ -18,6 +29,7 @@
 
             <TextView
                 android:id="@+id/xinghao"
+                android:textSize="16sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Medium Text"
@@ -26,6 +38,7 @@
 
             <TextView
                 android:id="@+id/dianhao"
+                android:textSize="16sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Medium Text"
@@ -33,6 +46,7 @@
 
             <TextView
                 android:id="@+id/state"
+                android:textSize="16sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Medium Text"
@@ -47,6 +61,7 @@
 
             <TextView
                 android:id="@+id/date"
+                android:textSize="16sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Medium Text"
@@ -55,6 +70,7 @@
 
             <TextView
                 android:id="@+id/message"
+                android:textSize="16sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Medium Text"
@@ -62,6 +78,7 @@
 
             <TextView
                 android:id="@+id/chulifangshi"
+                android:textSize="16sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Medium Text"
@@ -72,10 +89,12 @@
     <TextView
         android:id="@+id/edtstate"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="40dp"
         android:layout_marginRight="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginBottom="10dp"
         android:layout_weight="1"
-        android:background="@drawable/text"
+        android:background="@color/white"
         android:ems="10"
         android:minLines="2" >
 
