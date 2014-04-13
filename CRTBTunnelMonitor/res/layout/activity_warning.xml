@@ -43,42 +43,50 @@
         <ListView
                 android:background="@color/white"
                 android:id="@+id/listView12"
+                android:divider="@color/black"
+                android:dividerHeight="1px"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent">
         </ListView>
 
     </LinearLayout>
 
-    <LinearLayout
+    <RelativeLayout
+            android:visibility="gone"
             android:id="@+id/warning_bottom"
             android:layout_width="fill_parent"
-            android:layout_height="60dp"
-            android:visibility="gone"
-            android:layout_alignParentBottom="true"
-            android:background="@drawable/yujingbackgroud">
+            android:layout_height="fill_parent"
+            android:layout_alignParentBottom="true">
 
-
-        <Button
-                android:id="@+id/deal_with_btn"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:layout_weight="1"
-                android:layout_marginTop="5dp"
-                android:layout_marginBottom="5dp"
-                android:layout_marginLeft="60dp"
-                android:background="@drawable/chuli"
-                />
         <Button
                 android:id="@+id/complete_btn"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:layout_weight="1"
-                android:layout_marginTop="5dp"
-                android:layout_marginBottom="5dp"
-                android:layout_marginRight="60dp"
-                android:background="@drawable/xiaojing"
+                android:layout_width="120dp"
+                android:layout_height="50dp"
+                android:layout_centerInParent="true"
+                android:background="#b0000000"
+                android:textSize="16sp"
+                android:text="已消警"
+                android:textColor="@color/white"
                 />
-    </LinearLayout>
+        <View
+                android:id="@+id/line"
+                android:background="#e0000000"
+                android:layout_alignLeft="@+id/complete_btn"
+                android:layout_above="@+id/complete_btn"
+                android:layout_width="120dp"
+                android:layout_height="1dp"/>
+        <Button
+                android:id="@+id/deal_with_btn"
+                android:layout_width="120dp"
+                android:layout_height="50dp"
+                android:background="#b0000000"
+                android:textSize="16sp"
+                android:text="正在处理"
+                android:textColor="@color/white"
+                android:layout_alignLeft="@+id/complete_btn"
+                android:layout_above="@+id/complete_btn"
+                />
+    </RelativeLayout>
 
     <include layout="@layout/warning_complete"/>
 

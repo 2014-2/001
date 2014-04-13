@@ -29,5 +29,6 @@
     <!-- workplan -->
     <color name="workplan_top_color">#a6d4de</color>
     <color name="bottom_menu_bg_color">#2d2d2d</color>
+    <color name="warning_bg">#e6e6e6</color>
 
 </resources>

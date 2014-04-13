@@ -18,7 +18,7 @@ import com.crtb.tunnelmonitor.entity.yujingInfors;
 public class WarningActivity extends Activity {
 
     private ListView listview;
-    private LinearLayout warningBottom;
+    private RelativeLayout warningBottom;
     private RelativeLayout completeView;
     private TextView baojing, yixiao;
     private TextView warningSignalTV, warningPointNumTV,warningStateTV,warningDateTV,
@@ -35,7 +35,7 @@ public class WarningActivity extends Activity {
     private Myadapter adapter;
     private Random ran = new Random();
     private String s[] = new String[20];
-    private String ss[] = {"拱顶", "测试s1", "测试s2"};
+    private String ss[] = {"拱顶", "测线S1", "测线S2"};
     private String sss[] = {"开","正在处理","已消警"};
     private String ssss[] = {"", "", "", ""};
     private String s2[] = {"XXX超限", "AAA超限", "CCC超限", "YYY超限"};
@@ -104,13 +104,11 @@ public class WarningActivity extends Activity {
                     case R.id.complete_btn:
                         switch (stpeNum) {
                             case 0:
-                                Toast.makeText(WarningActivity.this, "请先进行处理", 1000).show();
-                                break;
                             case 1:
                                 completeView.setVisibility(View.VISIBLE);
                                 warningSignalTV.setText(listt.get(CheckID).getXinghao());
                                 warningPointNumTV.setText("点号："+listt.get(CheckID).getDianhao());
-                                warningStateTV.setText("状态"+listt.get(CheckID).getState());
+                                warningStateTV.setText("状态："+listt.get(CheckID).getState());
                                 warningDateTV.setText(listt.get(CheckID).getDate());
                                 warningMessageTV.setText(listt.get(CheckID).getMessage());
                                 warningDealWayTV.setText(listt.get(CheckID).getChuliFangshi());
@@ -131,6 +129,7 @@ public class WarningActivity extends Activity {
                         break;
                     case R.id.complete_cancel:
                         completeView.setVisibility(View.GONE);
+                        if (oldChooseView != null) oldChooseView.setBackgroundResource(R.color.warning_bg);
                         break;
 
                 }
@@ -142,15 +141,16 @@ public class WarningActivity extends Activity {
     public void listviewInit() {
 
         completeView= (RelativeLayout) findViewById(R.id.complete_warning_rl);
-        warningBottom = (LinearLayout) findViewById(R.id.warning_bottom);
+        warningBottom = (RelativeLayout) findViewById(R.id.warning_bottom);
         listview = (ListView) findViewById(R.id.listView12);
+        listview.setDividerHeight(1);
         adapter = new Myadapter(WarningActivity.this, getdata());
         listt = (ArrayList<yujingInfors>) adapter.getList();
         listview.setAdapter(adapter);
         listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                if(oldChooseView!=null)oldChooseView.setBackgroundResource(R.color.white);
+                if (oldChooseView != null) oldChooseView.setBackgroundResource(R.color.warning_bg);
                 view.setBackgroundResource(R.color.lightyellow);
                 CheckID = i;
                 if (listt.get(i).getState().equals("开")) {
@@ -166,6 +166,13 @@ public class WarningActivity extends Activity {
                     Toast.makeText(WarningActivity.this, "已消警", 1000).show();
                 }
                 oldChooseView = view;
+            }
+        });
+        warningBottom.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                warningBottom.setVisibility(View.GONE);
+                if (oldChooseView != null) oldChooseView.setBackgroundResource(R.color.warning_bg);
             }
         });
         yujingInfors.count = adapter.getCount();

@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:id="@+id/complete_warning_rl"
-                android:background="@color/white"
-                android:layout_width="fill_parent"
+                android:background="#E6E6E6"
                 android:visibility="gone"
+                android:layout_width="fill_parent"
                 android:layout_below="@+id/warning_title"
                 android:layout_height="fill_parent">
     <LinearLayout
-            android:layout_margin="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="5dp"
             android:id="@+id/part_top"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -19,6 +21,7 @@
                 android:orientation="vertical">
 
             <TextView
+                    android:textSize="16sp"
                     android:id="@+id/warning_signal"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -27,6 +30,7 @@
                     android:textColor="#cc0080ee"/>
 
             <TextView
+                    android:textSize="16sp"
                     android:id="@+id/warning_point_num"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -34,6 +38,7 @@
                     android:textAppearance="?android:attr/textAppearanceMedium"/>
 
             <TextView
+                    android:textSize="16sp"
                     android:id="@+id/warning_state"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -48,6 +53,7 @@
                 android:orientation="vertical">
 
             <TextView
+                    android:textSize="16sp"
                     android:id="@+id/warning_date"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -56,6 +62,7 @@
                     android:textColor="#cc0080ee"/>
 
             <TextView
+                    android:textSize="16sp"
                     android:id="@+id/warning_message"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -63,6 +70,7 @@
                     android:textAppearance="?android:attr/textAppearanceMedium"/>
 
             <TextView
+                    android:textSize="16sp"
                     android:id="@+id/warning_deal_way"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -71,95 +79,179 @@
         </LinearLayout>
     </LinearLayout>
 
-    <LinearLayout
-            android:layout_below="@+id/part_top"
+    <RelativeLayout
             android:id="@+id/old_date"
-            android:layout_margin="20dp"
+            android:layout_marginTop="14dp"
+            android:layout_marginLeft="23dp"
+            android:layout_marginRight="23dp"
             android:layout_width="fill_parent"
-            android:orientation="vertical"
+            android:background="@drawable/warning_text_bg"
+            android:layout_below="@+id/part_top"
             android:layout_height="wrap_content">
+
         <TextView
-                android:id="@+id/old_date_mileage"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Medium Text"
-                android:textAppearance="?android:attr/textAppearanceMedium"/>
-        <TextView
-                android:id="@+id/old_date_list_num"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Medium Text"
-                android:textAppearance="?android:attr/textAppearanceMedium"/>
-        <TextView
-                android:id="@+id/old_date_point"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Medium Text"
-                android:textAppearance="?android:attr/textAppearanceMedium"/>
+                android:id="@+id/old_date_title"
+                android:layout_width="fill_parent"
+                android:text="原始数据"
+                android:textSize="18sp"
+                android:textColor="#cc0080ee"
+                android:gravity="center"
+                android:layout_height="30dp "/>
 
-    </LinearLayout>
+        <View
+              android:layout_width="fill_parent"
+              android:id="@+id/old_date_line"
+              android:layout_below="@+id/old_date_title"
+              android:background="@color/warning_bg"
+              android:layout_height="1dp"/>
 
-    <RadioGroup
-            android:layout_margin="20dp"
-            android:layout_below="@+id/old_date"
-            android:id="@+id/radio_group"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_marginTop="20dp"
-            android:layout_x="2px" >
-        <RadioButton
-                android:id="@+id/radio_button_void"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/deal_way_void"
-                />
-        <RadioButton
-                android:id="@+id/radio_button_first"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/deal_way_first"
-                />
-        <RadioButton
-                android:id="@+id/radio_button_add"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/deal_way_add"
-                />
+        <LinearLayout
+                android:layout_below="@+id/old_date_line"
+                android:layout_width="fill_parent"
+                android:orientation="vertical"
+                android:padding="5dp"
+                android:layout_height="wrap_content">
+            <TextView
+                    android:id="@+id/old_date_mileage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Medium Text"
+                    android:textAppearance="?android:attr/textAppearanceMedium"/>
+            <TextView
+                    android:id="@+id/old_date_list_num"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Medium Text"
+                    android:textAppearance="?android:attr/textAppearanceMedium"/>
+            <TextView
+                    android:id="@+id/old_date_point"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Medium Text"
+                    android:textAppearance="?android:attr/textAppearanceMedium"/>
 
-    </RadioGroup>
-
-    <EditText android:layout_width="100dp"
-              android:id="@+id/add_edit"
-              android:layout_alignBottom="@+id/radio_group"
-              android:layout_toRightOf="@+id/radio_group"
-              android:gravity="center"
-              android:textSize="20sp"
-              android:layout_height="40dp"/>
-    <TextView android:layout_width="wrap_content"
-              android:layout_alignBottom="@+id/radio_group"
-              android:layout_toRightOf="@+id/radio_group"
-              android:layout_marginLeft="110dp"
-              android:text="毫米"
-              android:gravity="center"
-              android:textSize="20sp"
-              android:layout_height="40dp"/>
-
-    <EditText
-            android:id="@+id/warning_remark"
-            android:layout_below="@+id/radio_group"
-            android:layout_marginTop="20dp"
-            android:layout_margin="10dp"
-            android:gravity="top|left"
-            android:padding="5dp"
+        </LinearLayout>
+    </RelativeLayout>
+    <RelativeLayout
+            android:id="@+id/deal_way"
+            android:layout_marginTop="14dp"
+            android:layout_marginLeft="23dp"
+            android:layout_marginRight="23dp"
             android:layout_width="fill_parent"
-            android:layout_height="100dp"/>
+            android:background="@drawable/warning_text_bg"
+            android:layout_below="@+id/old_date"
+            android:layout_height="wrap_content">
+
+        <TextView
+                android:id="@+id/deal_way_title"
+                android:layout_width="fill_parent"
+                android:text="处理方式"
+                android:textSize="18sp"
+                android:textColor="#cc0080ee"
+                android:gravity="center"
+                android:layout_height="30dp "/>
+
+        <View
+                android:layout_width="fill_parent"
+                android:id="@+id/deal_way_line"
+                android:layout_below="@+id/deal_way_title"
+                android:background="@color/warning_bg"
+                android:layout_height="1dp"/>
+
+        <RadioGroup
+                android:layout_margin="5dp"
+                android:layout_below="@+id/deal_way_line"
+                android:id="@+id/radio_group"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_x="1px" >
+            <RadioButton
+                    style = "?android:attr/ratingBarStyleSmall"
+                    android:id="@+id/radio_button_void"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/deal_way_void"
+                    />
+            <RadioButton
+                    style = "?android:attr/ratingBarStyleSmall"
+                    android:id="@+id/radio_button_first"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/deal_way_first"
+                    />
+            <RadioButton
+                    style = "?android:attr/ratingBarStyleSmall"
+                    android:id="@+id/radio_button_add"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/deal_way_add"
+                    />
+
+        </RadioGroup>
+
+        <EditText android:layout_width="100dp"
+                  android:id="@+id/add_edit"
+                  android:layout_alignBottom="@+id/radio_group"
+                  android:layout_toRightOf="@+id/radio_group"
+                  android:gravity="center"
+                  android:textSize="16sp"
+                  android:layout_marginBottom="8dp"
+                  android:layout_height="30dp"/>
+        <TextView android:layout_width="wrap_content"
+                  android:layout_alignBottom="@+id/radio_group"
+                  android:layout_toRightOf="@+id/radio_group"
+                  android:layout_marginLeft="110dp"
+                  android:text="毫米"
+                  android:gravity="center"
+                  android:textSize="20sp"
+                  android:layout_height="40dp"/>
+    </RelativeLayout>
+
+
+
+    <RelativeLayout
+            android:id="@+id/warning_remark_rl"
+            android:layout_marginTop="14dp"
+            android:layout_marginLeft="23dp"
+            android:layout_marginRight="23dp"
+            android:layout_width="fill_parent"
+            android:background="@drawable/warning_text_bg"
+            android:layout_below="@+id/deal_way"
+            android:layout_height="wrap_content">
+
+        <TextView
+                android:id="@+id/remark_title"
+                android:layout_width="fill_parent"
+                android:text="备注"
+                android:textSize="16sp"
+                android:textColor="#cc0080ee"
+                android:gravity="center"
+                android:layout_height="30dp "/>
+
+        <View
+                android:layout_width="fill_parent"
+                android:id="@+id/remark_line"
+                android:layout_below="@+id/remark_title"
+                android:background="@color/warning_bg"
+                android:layout_height="1dp"/>
+
+        <EditText
+                android:id="@+id/warning_remark"
+                android:layout_below="@+id/remark_line"
+                android:layout_margin="10dp"
+                android:gravity="top|left"
+                android:padding="5dp"
+                android:layout_width="fill_parent"
+                android:layout_height="80dp"/>
+        </RelativeLayout>
+
 
     <LinearLayout
             android:id="@+id/warning_bottom"
             android:layout_width="fill_parent"
             android:layout_height="60dp"
-            android:layout_below="@+id/warning_remark">
+            android:layout_below="@+id/warning_remark_rl">
 
         <Button
                 android:id="@+id/complete_cancel"
