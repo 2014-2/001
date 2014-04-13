@@ -6,6 +6,8 @@
     <string name="hello_world">Hello world!</string>
     <string name="total_station">全站仪</string>
     <string name="total_station_manage">全站仪连接管理</string>
+    <string name="new_control_station_title">新建全站仪</string>
+    <string name="edit_control_station_title">编辑全站仪</string>
 
     <!-- common -->
     <string name="common_create_new">新建</string>
