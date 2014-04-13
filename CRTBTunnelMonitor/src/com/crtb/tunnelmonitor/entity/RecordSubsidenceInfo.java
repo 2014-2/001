@@ -45,6 +45,8 @@ public class RecordSubsidenceInfo implements Serializable {
 	
 	@ColumnString(length = 20)
 	private String sectionID;						// 断面id序列
+	
+	private boolean used ;
 
 	public int getId() {
 		return id;
@@ -125,6 +127,13 @@ public class RecordSubsidenceInfo implements Serializable {
 	public void setSectionID(String sectionID) {
 		this.sectionID = sectionID;
 	}
-	
+
+	public boolean isUsed() {
+		return used;
+	}
+
+	public void setUsed(boolean used) {
+		this.used = used;
+	}
 	
 }

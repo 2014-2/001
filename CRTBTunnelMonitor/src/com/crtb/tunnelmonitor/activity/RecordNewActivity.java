@@ -42,6 +42,8 @@ import com.crtb.tunnelmonitor.widget.CrtbRecordTunnelSectionInfoListView;
 @InjectLayout(layout = R.layout.activity_record_new)
 public class RecordNewActivity extends WorkFlowActivity implements OnPageChangeListener, OnClickListener {
    
+	public static final String KEY_RECORD_TUNNEL_OBJECT		= "_key_record_tunnel_object" ;
+	
 	@InjectView(id=R.id.vPager)
 	private ViewPager mPager;
 	
@@ -53,7 +55,6 @@ public class RecordNewActivity extends WorkFlowActivity implements OnPageChangeL
     private TextView t1, t2;
     private int offset = 0;
     private int currIndex = 0;
-    private int bmpW;
     int disPlayWidth, offSet;
     Bitmap b;
     
@@ -103,10 +104,13 @@ public class RecordNewActivity extends WorkFlowActivity implements OnPageChangeL
         
 		// add by wei.zhou
 		InjectCore.injectUIProperty(this);
+		
+		// find cache
+		recordInfo = CommonObject.findObject(KEY_RECORD_TUNNEL_OBJECT);
 
 		// title
 		setTopbarTitle(getString(R.string.record_new_section_title));
-		
+
 		// init ViewPager
 		initViewPager();
 
@@ -115,8 +119,24 @@ public class RecordNewActivity extends WorkFlowActivity implements OnPageChangeL
 		// prefix
 		section_new_et_prefix.setText(mCurrentWorkPlan.getMileagePrefix());
 		
-		// 
-		// sectionListView.setFristSelected() ;
+		// load default
+		loadDefault();
+    }
+    
+    private void loadDefault(){
+    	
+    	if(recordInfo != null){
+    		
+    		setTopbarTitle("编辑隧道内断面记录单");
+			sectionListView.setFristSelected(recordInfo.getChainageName());
+			
+			section_new_et_prefix.setText(recordInfo.getPrefix());
+			record_Chainage.setText(String.valueOf(recordInfo.getFacedk()));
+			record_Person.setText(recordInfo.getMeasure());
+			record_Card.setText(recordInfo.getIdentityCard());
+			record_C.setText(recordInfo.getTemperature());
+			record_dotype.setText(recordInfo.getFacedescription());
+    	}
     }
     
 	@Override
@@ -162,19 +182,35 @@ public class RecordNewActivity extends WorkFlowActivity implements OnPageChangeL
 				return;
 			}
 			
-			
-			recordInfo	= new RecordInfo() ;
-			// 基本信息
-			recordInfo.setPrefix(prefix);
-			recordInfo.setFacedk(Float.valueOf(chainage));
-			recordInfo.setCreateTime(currentTime);
-			recordInfo.setMeasure(person);
-			recordInfo.setChainageName(section.getChainageName());
-			recordInfo.setIdentityCard(idcard);
-			recordInfo.setTemperature(temperature);
-			recordInfo.setFacedescription(descr);
-			
-			RecordTunnelSectionDao.defaultDao().insert(recordInfo);
+			if(recordInfo == null){
+				
+				recordInfo	= new RecordInfo() ;
+				
+				// 基本信息
+				recordInfo.setPrefix(prefix);
+				recordInfo.setFacedk(Float.valueOf(chainage));
+				recordInfo.setCreateTime(currentTime);
+				recordInfo.setMeasure(person);
+				recordInfo.setChainageName(section.getChainageName());
+				recordInfo.setIdentityCard(idcard);
+				recordInfo.setTemperature(temperature);
+				recordInfo.setFacedescription(descr);
+				
+				RecordTunnelSectionDao.defaultDao().insert(recordInfo);
+			} else {
+				
+				// 基本信息
+				recordInfo.setPrefix(prefix);
+				recordInfo.setFacedk(Float.valueOf(chainage));
+				recordInfo.setCreateTime(currentTime);
+				recordInfo.setMeasure(person);
+				recordInfo.setChainageName(section.getChainageName());
+				recordInfo.setIdentityCard(idcard);
+				recordInfo.setTemperature(temperature);
+				recordInfo.setFacedescription(descr);
+				
+				RecordTunnelSectionDao.defaultDao().update(recordInfo);
+			}
 			
 			setResult(RESULT_OK);
 			finish();

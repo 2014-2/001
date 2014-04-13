@@ -8,6 +8,11 @@ import android.util.AttributeSet;
 import com.crtb.tunnelmonitor.dao.impl.v2.RecordSubsidenceDao;
 import com.crtb.tunnelmonitor.entity.RecordSubsidenceInfo;
 
+/**
+ * 
+ * @author zhouwei
+ *
+ */
 public class CrtbRecordSubsidenceListView extends CrtbBaseListView {
 	
 	private CrtbRecordSubsidenceAdapter mAdapter ;

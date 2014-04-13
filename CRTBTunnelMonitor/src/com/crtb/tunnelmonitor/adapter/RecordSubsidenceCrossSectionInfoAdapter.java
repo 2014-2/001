@@ -50,12 +50,12 @@ public class RecordSubsidenceCrossSectionInfoAdapter extends BaseAdapter {
 		name.setTextColor(Color.BLACK);
 		start.setTextColor(Color.BLACK);
 		name.setText(listinfos.get(position).getChainageName());
-		if (listinfos.get(position).isbUse()) {
-			start.setBackgroundResource(R.drawable.use);
-		}
-		else {
-			start.setBackgroundResource(R.drawable.nouse);
-		}
+//		if (listinfos.get(position).isbUse()) {
+//			start.setBackgroundResource(R.drawable.use);
+//		}
+//		else {
+//			start.setBackgroundResource(R.drawable.nouse);
+//		}
 		return convertView;
 	}
 }
