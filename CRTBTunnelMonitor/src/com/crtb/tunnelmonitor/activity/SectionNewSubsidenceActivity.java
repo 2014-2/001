@@ -45,6 +45,8 @@ import com.crtb.tunnelmonitor.utils.CrtbUtils;
  */
 @InjectLayout(layout = R.layout.activity_sectionedit)
 public class SectionNewSubsidenceActivity extends WorkFlowActivity implements OnClickListener {
+	
+	public static final String KEY_NEW_SUBSIDENCE_SECTION_OBJECT	= "_key_new_subsidence_section_object" ;
   
 	@InjectView(id=R.id.vPager)
 	private ViewPager mPager;
@@ -111,6 +113,8 @@ public class SectionNewSubsidenceActivity extends WorkFlowActivity implements On
         
 		// add by wei.zhou
 		InjectCore.injectUIProperty(this);
+		
+		subsidence	= CommonObject.findObject(KEY_NEW_SUBSIDENCE_SECTION_OBJECT);
 
 		// title
 		setTopbarTitle(getString(R.string.section_new_subsidence_title));
@@ -154,7 +158,30 @@ public class SectionNewSubsidenceActivity extends WorkFlowActivity implements On
 				}
 			}
 		}) ;
+		
+		//
+		loadDefault();
     }
+
+	private void loadDefault(){
+		
+		if(subsidence != null){
+			
+			setTopbarTitle("编辑地表下沉断面");
+			
+			section_new_et_prefix.setText(subsidence.getPrefix());
+			DSection_Chainage.setText(String.valueOf(subsidence.getChainage()));
+			DSection_name.setText(subsidence.getChainageName());
+			DSection_createtime.setText(subsidence.getInbuiltTime());
+			DSection_Width.setText(String.valueOf(subsidence.getWidth()));
+			DSection_PointCount.setText(String.valueOf(subsidence.getPoints()));
+			
+			DSection_Value1.setText(String.valueOf(subsidence.getDBU0()));
+			DSection_Value2.setText(String.valueOf(subsidence.getDBLimitVelocity()));
+			DSection_SetTime.setText(subsidence.getDBU0Time());
+			DSection_Info.setText(subsidence.getDBU0Description());
+		}
+	}
 
 	@Override
 	public void onClick(View v) {
@@ -216,23 +243,44 @@ public class SectionNewSubsidenceActivity extends WorkFlowActivity implements On
 				return;
 			}
 			
-			subsidence = new SubsidenceCrossSectionInfo() ;
-			
-			///////////baase info//////////
-			subsidence.setPrefix(prefix);
-			subsidence.setChainage(Float.valueOf(chainage));
-			subsidence.setChainageName(name);
-			subsidence.setWidth(Integer.valueOf(width));
-			subsidence.setPoints(Integer.valueOf(point));
-			
-			//
-			subsidence.setDBU0(Float.valueOf(dbu0));
-			subsidence.setDBLimitVelocity(Float.valueOf(dbl));
-			subsidence.setDBU0Time(buildtime);
-			subsidence.setInfo(remark);
-			
-			// insert
-			SubsidenceCrossSectionDao.defaultDao().insert(subsidence);
+			if(subsidence == null){
+				
+				subsidence = new SubsidenceCrossSectionInfo() ;
+				
+				///////////baase info//////////
+				subsidence.setPrefix(prefix);
+				subsidence.setChainage(Float.valueOf(chainage));
+				subsidence.setChainageName(name);
+				subsidence.setWidth(Integer.valueOf(width));
+				subsidence.setInbuiltTime(date);
+				subsidence.setPoints(Integer.valueOf(point));
+				
+				//
+				subsidence.setDBU0(Float.valueOf(dbu0));
+				subsidence.setDBLimitVelocity(Float.valueOf(dbl));
+				subsidence.setDBU0Time(buildtime);
+				subsidence.setInfo(remark);
+				
+				// insert
+				SubsidenceCrossSectionDao.defaultDao().insert(subsidence);
+			} else {
+				
+				subsidence.setPrefix(prefix);
+				subsidence.setChainage(Float.valueOf(chainage));
+				subsidence.setChainageName(name);
+				subsidence.setWidth(Integer.valueOf(width));
+				subsidence.setInbuiltTime(date);
+				subsidence.setPoints(Integer.valueOf(point));
+
+				//
+				subsidence.setDBU0(Float.valueOf(dbu0));
+				subsidence.setDBLimitVelocity(Float.valueOf(dbl));
+				subsidence.setDBU0Time(buildtime);
+				subsidence.setInfo(remark);
+
+				// insert
+				SubsidenceCrossSectionDao.defaultDao().update(subsidence);
+			}
 			
 			setResult(RESULT_OK);
 			finish();

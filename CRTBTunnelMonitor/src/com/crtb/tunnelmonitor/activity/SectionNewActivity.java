@@ -49,6 +49,8 @@ import com.crtb.tunnelmonitor.utils.CrtbUtils;
 @InjectLayout(layout = R.layout.activity_section_new)
 public class SectionNewActivity extends WorkFlowActivity implements OnClickListener {
 	
+	public static final String KEY_NEW_TUNNEL_SECTION_OBJECT	= "_key_new_tunnel_section_object" ;
+	
 	private List<View> listViews = new ArrayList<View>();
 
 	@InjectView(id=R.id.vPager)
@@ -155,6 +157,8 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 		// title
 		setTopbarTitle(getString(R.string.section_new_title));
 		
+		sectionInfo	= CommonObject.findObject(KEY_NEW_TUNNEL_SECTION_OBJECT);
+		
 		// init ViewPager
 		initViewPager();
 		
@@ -211,6 +215,22 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 				}
 			}
 		}) ;
+		
+		loadDefault();
+	}
+	
+	private void loadDefault(){
+		
+		if(sectionInfo != null){
+			
+			setTopbarTitle("编辑隧道内断面");
+			
+			section_new_et_prefix.setText(sectionInfo.getPrefix());
+			section_new_et_Chainage.setText(String.valueOf(sectionInfo.getChainage()));
+			section_new_et_name.setText(sectionInfo.getChainageName());
+			section_new_et_calendar.setText(sectionInfo.getInBuiltTime());
+			section_new_et_width.setText(String.valueOf(sectionInfo.getWidth()));
+		}
 	}
 
 	private void initViewPager() {
@@ -288,146 +308,35 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 				return ;
 			}
 			
-			sectionInfo = new TunnelCrossSectionInfo() ;
-			
-			// base info
-			sectionInfo.setPrefix(prefix);
-			sectionInfo.setChainage(Float.valueOf(chainage));
-			sectionInfo.setChainageName(name);
-			sectionInfo.setInBuiltTime(date);
-			sectionInfo.setWidth(Float.valueOf(width));
-			
-			// excavation
-			sectionInfo.setExcavateMethod(section_new_sp.getSelectedItem().toString());
-			
-			TunnelCrossSectionDao.defaultDao().insert(sectionInfo);
-			
-//			if(section_new_et_Chainage.getText().toString().trim().length() <= 0)
-//			{
-//				Toast.makeText(this, "请输入完整信息", 3000).show();
-//				return;
-//			}
-//			if(section_new_et_width.getText().toString().trim().length() <= 0)
-//			{
-//				Toast.makeText(this, "请输入完整信息", 3000).show();
-//				return;
-//			}
-//
-//			AppCRTBApplication CurApp = ((AppCRTBApplication)getApplicationContext());
-//			WorkInfos Curw = CurApp.GetCurWork();
-//			TunnelCrossSectionInfo ts = new TunnelCrossSectionInfo();
-//			if (Edittsci != null) {
-//				ts.setId(Edittsci.getId());
-//			}
-//			ts.setChainage(Double.valueOf(section_new_et_Chainage.getText().toString().trim()));
-//			ts.setChainagePrefix(Curw.getChainagePrefix());
-//			ts.setInBuiltTime(section_new_et_calendar.getText().toString());
-//			ts.setWidth(Float.valueOf(section_new_et_width.getText().toString().trim()));
-//			if(section_new_sp.getSelectedItemPosition() == 0)
-//			{
-//				ts.setExcavateMethod(2);
-//			}
-//			else
-//				if(section_new_sp.getSelectedItemPosition() == 1)
-//			{
-//				ts.setExcavateMethod(0);
-//			}
-//			else
-//				if(section_new_sp.getSelectedItemPosition() == 2)
-//			{
-//				ts.setExcavateMethod(1);
-//			}
-//			else
-//			{
-//				ts.setExcavateMethod(0);
-//			}
-//			ts.setsExcavateMethod(section_new_sp.getSelectedItem().toString().trim());
-//			List<String> strAS = new ArrayList<String>();
-//			String strA = section_new_et_a.getText().toString().trim();
-//			String strS1 = section_new_et_s1.getText().toString().trim();
-//			String strS2 = section_new_et_s2.getText().toString().trim();
-//			String strS3 = section_new_et_s3.getText().toString().trim();
-//			strAS.add(strA);
-//			strAS.add(strS1);
-//			strAS.add(strS2);
-//			strAS.add(strS3);
-//			String sMix = AppCRTBApplication.GetExcavateMethodPoint(strAS);
-//			ts.setSurveyPntName(sMix);		
-////			if (section_new_info1 == null) {
-////				if (Edittsci == null) {
-////					ts.setInfo("");
-////				}
-////				else {
-////					ts.setInfo(Edittsci.getInfo());
-////				}
-////			}
-////			else {
-////				//ts.setInfo(section_new_info1.getText().toString().trim());
-////			}
-//			ts.setChainageName(section_new_et_name.getText().toString().trim());
-//			if(!CurApp.IsValidTunnelCrossSectionInfo(ts))
-//			{
-//				Toast.makeText(this, "请输入完整信息", 3000).show();
-//				return;
-//			}
-//			if ((ts.getChainage().doubleValue() < Curw.getStartChainage().doubleValue()) ||
-//					(ts.getChainage().doubleValue() > Curw.getEndChainage().doubleValue())){
-//				String sStart = CurApp.GetSectionName(Curw.getStartChainage().doubleValue());
-//				String sEnd = CurApp.GetSectionName(Curw.getEndChainage().doubleValue());
-//				String sMsg = "请输入里程为"+sStart+"到"+sEnd+"之间的里程";
-//				Toast.makeText(this, sMsg, 3000).show();
-//				return;
-//			}
-//			List<TunnelCrossSectionInfo> infos = Curw.GetTunnelCrossSectionInfoList();
-//			if(infos == null)
-//			{
-//				Toast.makeText(this, "添加失败", 3000).show();
-//			}
-//			else
-//			{
-//				boolean bHave = false;
-//				for(int i=0;i<infos.size();i++)
-//				{
-//					TunnelCrossSectionInfo tmp = infos.get(i);
-//					if(tmp.getChainage().equals(ts.getChainage()))
-//					{
-//						bHave = true;
-//						break;
-//					}
-//				}
-//				if(bHave)
-//				{
-//					if(Edittsci == null)
-//					{
-//						Toast.makeText(this, "已存在", 3000).show();
-//						return;
-//					}
-//					else
-//					{
-//						TunnelCrossSectionDaoImpl impl = new TunnelCrossSectionDaoImpl(this,Curw.getProjectName());
-//						impl.UpdateSection(ts);
-//						Curw.UpdateTunnelCrossSectionInfo(ts);
-//						CurApp.UpdateWork(Curw);
-//						Toast.makeText(this, "编辑成功", 3000).show();
-//					}
-//				}
-//				else
-//				{
-//					TunnelCrossSectionDaoImpl impl = new TunnelCrossSectionDaoImpl(this,Curw.getProjectName());
-//					if(impl.InsertSection(ts))
-//					{
-//						infos.add(ts);
-//						CurApp.UpdateWork(Curw);
-//						Toast.makeText(this, "添加成功", 3000).show();
-//					}
-//					else
-//					{
-//						Toast.makeText(this, "添加失败", 3000).show();
-//					}
-//				}
-//			}
-//			Intent IntentOk = new Intent();
-//			IntentOk.putExtra(Constant.Select_SectionRowClickItemsName_Name,1);
+			if(sectionInfo == null){
+				
+				sectionInfo = new TunnelCrossSectionInfo() ;
+				
+				// base info
+				sectionInfo.setPrefix(prefix);
+				sectionInfo.setChainage(Float.valueOf(chainage));
+				sectionInfo.setChainageName(name);
+				sectionInfo.setInBuiltTime(date);
+				sectionInfo.setWidth(Float.valueOf(width));
+				
+				// excavation
+				sectionInfo.setExcavateMethod(section_new_sp.getSelectedItem().toString());
+				
+				TunnelCrossSectionDao.defaultDao().insert(sectionInfo);
+			} else {
+				
+				// base info
+				sectionInfo.setPrefix(prefix);
+				sectionInfo.setChainage(Float.valueOf(chainage));
+				sectionInfo.setChainageName(name);
+				sectionInfo.setInBuiltTime(date);
+				sectionInfo.setWidth(Float.valueOf(width));
+				
+				// excavation
+				sectionInfo.setExcavateMethod(section_new_sp.getSelectedItem().toString());
+				
+				TunnelCrossSectionDao.defaultDao().update(sectionInfo);
+			}
 			
 			setResult(RESULT_OK);
 			finish();
