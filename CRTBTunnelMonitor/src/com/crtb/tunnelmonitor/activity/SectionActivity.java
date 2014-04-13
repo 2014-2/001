@@ -127,10 +127,10 @@ public class SectionActivity extends WorkFlowActivity implements OnPageChangeLis
 				CrtbDialogResult dialog = null ;
 				
 				if(success){
-					dialog = new CrtbDialogResult(SectionActivity.this, R.drawable.ic_reslut_sucess, "删除成功");
+					dialog = CrtbDialogResult.createDeleteSuccessDialog(SectionActivity.this);
 					mSectionTunnelList.onReload() ;
 				} else {
-					dialog = new CrtbDialogResult(SectionActivity.this, R.drawable.ic_reslut_error, "删除失败");
+					dialog = CrtbDialogResult.createDeleteFailedDialog(SectionActivity.this);
 				}
 				
 				if(dialog != null){

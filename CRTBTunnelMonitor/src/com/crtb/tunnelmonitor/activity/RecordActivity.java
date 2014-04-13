@@ -20,12 +20,21 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.animation.TranslateAnimation;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.crtb.tunnelmonitor.WorkFlowActivity;
+import com.crtb.tunnelmonitor.dao.impl.v2.RecordSubsidenceDao;
+import com.crtb.tunnelmonitor.dao.impl.v2.RecordTunnelSectionDao;
 import com.crtb.tunnelmonitor.entity.MenuSystemItem;
+import com.crtb.tunnelmonitor.entity.RecordInfo;
+import com.crtb.tunnelmonitor.entity.RecordSubsidenceInfo;
+import com.crtb.tunnelmonitor.mydefine.CrtbDialogDelete;
+import com.crtb.tunnelmonitor.mydefine.CrtbDialogDelete.IButtonOnClick;
+import com.crtb.tunnelmonitor.mydefine.CrtbDialogResult;
 import com.crtb.tunnelmonitor.widget.CrtbRecordSubsidenceListView;
 import com.crtb.tunnelmonitor.widget.CrtbRecordTunnelSectionListView;
 
@@ -43,27 +52,25 @@ public class RecordActivity extends WorkFlowActivity implements OnPageChangeList
 	ArrayList<View> list = new ArrayList<View>();
 	
 	// 隧道内断面距离单
-	@InjectView(layout=R.layout.record_listview_dibiao)
-	private LinearLayout mSectionRecordLayout ;
-	
-	@InjectView(layout=R.id.record_lv_dibiao,parent="mSectionRecordLayout")
+	@InjectView(layout = R.layout.record_listview_suidao)
+	private LinearLayout mSectionRecordLayout;
+
+	@InjectView(id=R.id.record_lv_tunnnel_section_list,parent="mSectionRecordLayout")
 	private CrtbRecordTunnelSectionListView	mTunnelSectionList ;
 	
 	// 地表下沉断面距离单
-	@InjectView(layout=R.layout.record_listview_suidao)
-	private LinearLayout mSectionSubsidenceRecordLayout ;
+	@InjectView(layout = R.layout.record_listview_dibiao)
+	private LinearLayout mSectionSubsidenceRecordLayout;
 	
-	@InjectView(layout=R.id.record_lv_dibiao,parent="mSectionSubsidenceRecordLayout")
-	private CrtbRecordSubsidenceListView	mSubsidenceSectionList ;
+	@InjectView(id = R.id.record_lv_subsidence_list, parent = "mSectionSubsidenceRecordLayout")
+	private CrtbRecordSubsidenceListView mSubsidenceSectionList;
 	
 	private ImageView cursor;// 动画图片
 	private TextView t1, t2;// 页卡头标
 	private int offset = 0;// 动画图片偏移量
 	private int currIndex = 0;// 当前页卡编号
-	private int bmpW;// 动画图片宽度
 	int disPlayWidth, offSet;
 	Bitmap b;
-	
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -80,6 +87,28 @@ public class RecordActivity extends WorkFlowActivity implements OnPageChangeList
 		
 		// menu
 		loadSystemMenu();
+		
+		mTunnelSectionList.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,int position, long id) {
+				
+				RecordInfo bean = mTunnelSectionList.getItem(position) ;
+				
+				showListActionMenu(getString(R.string.work_plan_title), new String[]{"打开","编辑","删除"}, bean);
+			}
+		}) ;
+
+		mSubsidenceSectionList.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,int position, long id) {
+				
+				RecordSubsidenceInfo bean = mSubsidenceSectionList.getItem(position) ;
+				
+				showListActionMenu(getString(R.string.work_plan_title), new String[]{"打开","编辑","删除"}, bean);
+			}
+		}) ;
 	}
 	
 	public void loadSystemMenu(){
@@ -110,6 +139,70 @@ public class RecordActivity extends WorkFlowActivity implements OnPageChangeList
 			}
 			
 			startActivity(intent);
+		}
+	}
+
+	@Override
+	protected void onListItemSelected(Object bean, int position, String menu) {
+		
+		if(bean instanceof RecordInfo){
+			
+			final RecordInfo info = (RecordInfo)bean ;
+			
+			if(position == 0){
+				
+			} else if(position == 1){
+				
+			} else if(position == 2){
+				
+				CrtbDialogDelete delete = new CrtbDialogDelete(RecordActivity.this,R.drawable.ic_warnning,"执行该操作将删除操作面的全部数据,不可恢复!");
+				
+				delete.setButtonClick(new IButtonOnClick() {
+					
+					@Override
+					public void onClick(int id) {
+						
+						if(id == CrtbDialogDelete.BUTTON_ID_CONFIRM){
+							
+							if(RecordTunnelSectionDao.defaultDao().delete(info)){
+								CrtbDialogResult.createDeleteSuccessDialog(RecordActivity.this).show();
+								mTunnelSectionList.onReload() ;
+							}
+						}
+					}
+				}) ;
+				
+				delete.show(); 
+			}
+		} else if(bean instanceof RecordSubsidenceInfo){
+			
+			final RecordSubsidenceInfo info = (RecordSubsidenceInfo)bean ;
+			
+			if(position == 0){
+				
+			} else if(position == 1){
+				
+			} else if(position == 2){
+				
+				CrtbDialogDelete delete = new CrtbDialogDelete(RecordActivity.this,R.drawable.ic_warnning,"执行该操作将删除操作面的全部数据,不可恢复!");
+				
+				delete.setButtonClick(new IButtonOnClick() {
+					
+					@Override
+					public void onClick(int id) {
+						
+						if(id == CrtbDialogDelete.BUTTON_ID_CONFIRM){
+							
+							if(RecordSubsidenceDao.defaultDao().delete(info)){
+								CrtbDialogResult.createDeleteSuccessDialog(RecordActivity.this).show();
+								mSubsidenceSectionList.onReload() ;
+							}
+						}
+					}
+				}) ;
+				
+				delete.show(); 
+			}
 		}
 	}
 

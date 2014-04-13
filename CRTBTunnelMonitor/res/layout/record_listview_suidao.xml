@@ -41,8 +41,8 @@
         </RelativeLayout>
     </LinearLayout>
 
-    <com.crtb.tunnelmonitor.widget.CrtbRecordSubsidenceListView
-        android:id="@+id/record_lv_suidao"
+    <com.crtb.tunnelmonitor.widget.CrtbRecordTunnelSectionListView
+        android:id="@+id/record_lv_tunnnel_section_list"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:fastScrollEnabled="true"
