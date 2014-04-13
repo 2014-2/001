@@ -181,6 +181,10 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 		section_new_et_calendar.setText(date);
 		section_new_createtime1.setText(date);
 		section_new_createtime2.setText(date);
+		
+		List<TunnelCrossSectionInfo> list = TunnelCrossSectionDao.defaultDao().queryAllSection() ;
+		
+		System.out.println(">>>" + list);
 	}
 
 	private void initViewPager() {
@@ -396,8 +400,9 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 //			}
 //			Intent IntentOk = new Intent();
 //			IntentOk.putExtra(Constant.Select_SectionRowClickItemsName_Name,1);
-//			setResult(RESULT_OK, IntentOk);
-//			this.finish();
+			
+			setResult(RESULT_OK);
+			finish();
 			break;
 		}
 	}

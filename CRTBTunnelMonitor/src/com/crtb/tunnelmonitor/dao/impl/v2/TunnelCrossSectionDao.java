@@ -1,5 +1,7 @@
 package com.crtb.tunnelmonitor.dao.impl.v2;
 
+import java.util.List;
+
 import com.crtb.tunnelmonitor.entity.TunnelCrossSectionInfo;
 
 /**
@@ -22,5 +24,12 @@ public final class TunnelCrossSectionDao extends AbstractDao<TunnelCrossSectionI
 		}
 		
 		return _instance ;
+	}
+	
+	public List<TunnelCrossSectionInfo> queryAllSection(){
+		
+		String sql = "select * from TunnelCrossSectionInfo" ;
+		
+		return mDatabase.queryObjects(sql, TunnelCrossSectionInfo.class) ;
 	}
 }
