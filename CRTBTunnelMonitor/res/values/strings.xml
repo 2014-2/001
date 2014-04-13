@@ -46,4 +46,8 @@
     <string name="server_setting">服务器参数设置</string>
     <string name="user_book">用户手册</string>
 
+    <string name="deal_way_void">数据作废</string>
+    <string name="deal_way_first">数据作为首行</string>
+    <string name="deal_way_add">添加改正值</string>
+
 </resources>
