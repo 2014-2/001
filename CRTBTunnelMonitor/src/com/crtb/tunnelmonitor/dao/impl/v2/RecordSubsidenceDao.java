@@ -1,13 +1,15 @@
 package com.crtb.tunnelmonitor.dao.impl.v2;
 
-import com.crtb.tunnelmonitor.entity.RecordInfo;
+import java.util.List;
+
+import com.crtb.tunnelmonitor.entity.RecordSubsidenceInfo;
 
 /**
  * 
  * @author zhouwei
  *
  */
-public final class RecordSubsidenceDao extends AbstractDao<RecordInfo> {
+public final class RecordSubsidenceDao extends AbstractDao<RecordSubsidenceInfo> {
 
 	private static RecordSubsidenceDao _instance ;
 	
@@ -22,5 +24,12 @@ public final class RecordSubsidenceDao extends AbstractDao<RecordInfo> {
 		}
 		
 		return _instance ;
+	}
+	
+	public List<RecordSubsidenceInfo> queryAllSection(){
+		
+		String sql = "select * from RecordSubsidenceInfo" ;
+		
+		return mDatabase.queryObjects(sql, RecordSubsidenceInfo.class) ;
 	}
 }

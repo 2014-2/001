@@ -299,57 +299,54 @@ public class RecordNewSubsidenceActivity extends WorkFlowActivity implements OnP
 		mPager.setOnPageChangeListener(this);
 	}
 
-	public void setdata(int type) {
-    	AppCRTBApplication CurApp = ((AppCRTBApplication)getApplicationContext());
-		WorkInfos CurW = CurApp.GetCurWork();
-		if(CurW == null)
-		{
-			return;
-		}
-		if (type == 1) {
-			if(infos == null)
-			{
-				infos = new ArrayList<TunnelCrossSectionInfo>();
-			}
-			TunnelCrossSectionDaoImpl impl = new TunnelCrossSectionDaoImpl(this, CurW.getProjectName());
-			impl.GetTunnelCrossSectionList(infos);
-			if (editInfo != null) {
-				String sSels = editInfo.getCrossSectionIDs();
-				List<Integer> iSels = AppCRTBApplication.GetSectionIDArray(sSels);
-				for (int i = 0; i < infos.size(); i++) {
-					for (int j = 0; j < iSels.size(); j++) {
-						if (infos.get(i).getId() == iSels.get(j)) {
-							infos.get(i).setbUse(true);
-							break;
-						}
-					}
-				}
-			}
-		}
-		else {
-			if(infos1 == null)
-			{
-				infos1 = new ArrayList<SubsidenceCrossSectionInfo>();
-			}
-			SubsidenceCrossSectionDaoImpl impl = new SubsidenceCrossSectionDaoImpl(this, CurW.getProjectName());
-			impl.GetSubsidenceCrossSectionList(infos1);
-			if (editInfo != null) {
-				String sSels = editInfo.getCrossSectionIDs();
-				List<Integer> iSels = AppCRTBApplication.GetSectionIDArray(sSels);
-				for (int i = 0; i < infos1.size(); i++) {
-					for (int j = 0; j < iSels.size(); j++) {
-						if (infos1.get(i).getId() == iSels.get(j)) {
-							infos1.get(i).setbUse(true);
-							break;
-						}
-					}
-				}
-			}
-		}
-	}    
-    public void initPager() {
-       
-    }
+//	public void setdata(int type) {
+//    	AppCRTBApplication CurApp = ((AppCRTBApplication)getApplicationContext());
+//		WorkInfos CurW = CurApp.GetCurWork();
+//		if(CurW == null)
+//		{
+//			return;
+//		}
+//		if (type == 1) {
+//			if(infos == null)
+//			{
+//				infos = new ArrayList<TunnelCrossSectionInfo>();
+//			}
+//			TunnelCrossSectionDaoImpl impl = new TunnelCrossSectionDaoImpl(this, CurW.getProjectName());
+//			impl.GetTunnelCrossSectionList(infos);
+//			if (editInfo != null) {
+//				String sSels = editInfo.getCrossSectionIDs();
+//				List<Integer> iSels = AppCRTBApplication.GetSectionIDArray(sSels);
+//				for (int i = 0; i < infos.size(); i++) {
+//					for (int j = 0; j < iSels.size(); j++) {
+//						if (infos.get(i).getId() == iSels.get(j)) {
+//							infos.get(i).setbUse(true);
+//							break;
+//						}
+//					}
+//				}
+//			}
+//		}
+//		else {
+//			if(infos1 == null)
+//			{
+//				infos1 = new ArrayList<SubsidenceCrossSectionInfo>();
+//			}
+//			SubsidenceCrossSectionDaoImpl impl = new SubsidenceCrossSectionDaoImpl(this, CurW.getProjectName());
+//			impl.GetSubsidenceCrossSectionList(infos1);
+//			if (editInfo != null) {
+//				String sSels = editInfo.getCrossSectionIDs();
+//				List<Integer> iSels = AppCRTBApplication.GetSectionIDArray(sSels);
+//				for (int i = 0; i < infos1.size(); i++) {
+//					for (int j = 0; j < iSels.size(); j++) {
+//						if (infos1.get(i).getId() == iSels.get(j)) {
+//							infos1.get(i).setbUse(true);
+//							break;
+//						}
+//					}
+//				}
+//			}
+//		}
+//	}    
 
     @Override
     public void onPageScrollStateChanged(int arg0) {
