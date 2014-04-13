@@ -90,7 +90,7 @@ public class AsregardsActivity extends Activity implements OnClickListener{
     }
 
     private void JumpUpdate(){
-        Intent intent = new Intent(this, UpdateActivity.class);
+        Intent intent = new Intent(this, SoftwareUpdateActivity.class);
         startActivity(intent);
 
     }
