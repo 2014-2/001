@@ -9,14 +9,15 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="190dp"
+        android:layout_marginTop="208dp"
         android:text="@string/project_name"
-        android:textColor="@android:color/white"/>
+        android:textColor="@android:color/white"
+        android:textSize="16sp" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="10dp"
         android:text="@string/adapt_to"
         android:textColor="#A0EAEAEA"
         android:textSize="12sp" />
@@ -25,6 +26,7 @@
         android:id="@+id/version"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
         android:text="@string/version"
         android:textColor="#A0EAEAEA"
         android:textSize="12sp" />
@@ -38,14 +40,14 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="10dp"
         android:gravity="center"
         android:text="@string/copyright" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="37dp"
         android:gravity="center"
         android:paddingLeft="25dp"
         android:paddingRight="25dp"

@@ -1,170 +1,143 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-     >
+    android:layout_height="match_parent" >
+
+    <include
+        android:id="@+id/header"
+        layout="@layout/activity_topbar_layout" >
+    </include>
+
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:orientation="vertical">
-        <RelativeLayout
-        android:layout_width="fill_parent"
-        android:layout_height="40dp" >
-
-        <include
-            android:id="@+id/header"
-            layout="@layout/header" >
-        </include>
-
-        <TextView
-            android:id="@+id/cp_new_tv_header"
-            style="@style/header"
-            android:text="新建控制点" />
-    </RelativeLayout>
-    <LinearLayout 
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dip">
-        <TextView 
-            android:layout_width="80dp"
-            android:layout_height="wrap_content"
-            android:text="名称"
-            android:layout_marginLeft="20dip"
-            android:textSize="15sp"
-            
-            />
-        <EditText 
-            android:id="@+id/point_name"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_marginRight="10dip"
-            android:layout_height="50dip"
-            />
-        <TextView android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="*"
-            android:layout_marginRight="10dp"
-            android:textColor="#ff0000"
-            android:textSize="18sp"/>
-    </LinearLayout>
-    
-    <LinearLayout 
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dip">
-         <TextView 
-            android:layout_width="80dp"
-            android:layout_height="wrap_content"
-            android:text="X(m)"
-            android:layout_marginLeft="20dip"
-            android:textSize="15sp"/>
-        <EditText 
-            android:id="@+id/point_x"
-            android:layout_width="fill_parent"
-            android:layout_height="50dip"
-            android:layout_weight="1"
-            android:inputType="number"
-            android:layout_marginRight="35dp"
-            android:text="0"/>
-    </LinearLayout>
-    
-    <LinearLayout 
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dip">
-         <TextView 
-            android:layout_width="80dp"
-            android:layout_height="wrap_content"
-            android:text="Y(m)"
-            android:layout_marginLeft="20dip"
-            android:textSize="15sp"/>
-        <EditText 
-            android:id="@+id/point_y"
-            android:layout_width="fill_parent"
-            android:layout_height="50dip"
-            android:layout_marginRight="35dp"
-            android:text="0"
-            android:inputType="number"
-            android:layout_weight="1"/>
-    </LinearLayout>
-    
-    
-    <LinearLayout 
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dip">
-         <TextView 
-            android:layout_width="80dp"
-            android:layout_height="wrap_content"
-            android:text="Z(m)"
-            
-            android:layout_marginLeft="20dip"
-            android:textSize="15sp"/>
-        <EditText 
-            android:id="@+id/point_z"
-            android:layout_width="fill_parent"
-            android:layout_marginRight="35dip"
-            android:layout_height="50dip"
-            android:layout_weight="1"
-            android:inputType="number"
-            android:text="0"/>
-    </LinearLayout>
-    
-    <LinearLayout 
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dip">
-         <TextView 
-            android:layout_width="80dp"
-            android:layout_height="wrap_content"
-            android:text="备注"
-            android:layout_marginLeft="20dip"
-            android:textSize="15sp"/>
-        <EditText 
-            android:id="@+id/point_info"
-            android:layout_width="fill_parent"
-            android:layout_marginRight="35dip"
-            android:layout_height="50dip"
-            android:layout_weight="1"
-            android:maxLength="10"
-            android:hint="最多输入10个字符"/>
-    </LinearLayout>
-    <RelativeLayout
-        android:id="@+id/main"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent" >
-
+        android:layout_below="@id/header"
+        android:layout_above="@id/bottom_layout"
+        android:orientation="vertical" >
 
         <LinearLayout
-            android:id="@+id/bottom_panel"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:orientation="horizontal" >
+            android:layout_marginTop="20dip" >
 
-            <Button
-                android:id="@+id/work_btn_quxiao"
+            <TextView
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dip"
+                android:text="名称"
+                android:textSize="15sp" />
+
+            <EditText
+                android:id="@+id/point_name"
                 android:layout_width="0dp"
-                android:layout_height="40dip"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="1"
-                android:text="取消" 
-                android:background="@color/green"
-                />
-<ImageView 
-    android:layout_width="2dip"
-    android:layout_height="fill_parent"
-    android:background="@color/black"
-    />
-            <Button
-                android:id="@+id/work_btn_queding"
-                android:layout_width="0dp"
-                android:layout_height="40dip"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="1"
-                android:background="@color/green"
-                android:text="确定" />
+                android:layout_height="50dip"
+                android:layout_marginRight="10dip"
+                android:layout_weight="1" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
+                android:text="*"
+                android:textColor="#ff0000"
+                android:textSize="18sp" />
         </LinearLayout>
-    </RelativeLayout>
-</LinearLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dip" >
+
+            <TextView
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dip"
+                android:text="X(m)"
+                android:textSize="15sp" />
+
+            <EditText
+                android:id="@+id/point_x"
+                android:layout_width="fill_parent"
+                android:layout_height="50dip"
+                android:layout_marginRight="35dp"
+                android:layout_weight="1"
+                android:inputType="number"
+                android:text="0" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dip" >
+
+            <TextView
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dip"
+                android:text="Y(m)"
+                android:textSize="15sp" />
+
+            <EditText
+                android:id="@+id/point_y"
+                android:layout_width="fill_parent"
+                android:layout_height="50dip"
+                android:layout_marginRight="35dp"
+                android:layout_weight="1"
+                android:inputType="number"
+                android:text="0" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dip" >
+
+            <TextView
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dip"
+                android:text="Z(m)"
+                android:textSize="15sp" />
+
+            <EditText
+                android:id="@+id/point_z"
+                android:layout_width="fill_parent"
+                android:layout_height="50dip"
+                android:layout_marginRight="35dip"
+                android:layout_weight="1"
+                android:inputType="number"
+                android:text="0" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dip" >
+
+            <TextView
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dip"
+                android:text="备注"
+                android:textSize="15sp" />
+
+            <EditText
+                android:id="@+id/point_info"
+                android:layout_width="fill_parent"
+                android:layout_height="50dip"
+                android:layout_marginRight="35dip"
+                android:layout_weight="1"
+                android:hint="最多输入10个字符"
+                android:maxLength="10" />
+        </LinearLayout>
+
+    </LinearLayout>
+    
+    <include
+        android:id="@+id/bottom_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        layout="@layout/activity_bottom_layout" />
+
 </RelativeLayout>
