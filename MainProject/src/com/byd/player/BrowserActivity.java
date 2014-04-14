@@ -4,6 +4,7 @@ import java.io.File;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -91,7 +92,14 @@ public class BrowserActivity extends BaseActivity implements OnClickListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.browser);
+        
+        if(true == isZh())
+        {
+        	setContentView(R.layout.browser);
+        }else{
+        	setContentView(R.layout.browser_en);
+        }
+        
         mLayoutInflater = LayoutInflater.from(this);
         mHandler = new MyHandler(this);
         initUI();
@@ -680,4 +688,13 @@ public class BrowserActivity extends BaseActivity implements OnClickListener {
 			}
 		}
 	}
+	
+    private boolean isZh() {
+        Locale locale = getResources().getConfiguration().locale;
+        String language = locale.getLanguage();
+        if (language.endsWith("zh"))
+            return true;
+        else
+            return false;
+    }
 }

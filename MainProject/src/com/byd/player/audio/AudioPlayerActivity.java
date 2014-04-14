@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 
 import android.content.ComponentName;
 import android.content.Context;
@@ -645,7 +646,13 @@ public class AudioPlayerActivity extends BaseActivity {
         if (null == mToastOrderPlay) {
             mToastOrderPlay = new Toast(this);
             ImageView v = new ImageView(this);
-            v.setImageResource(R.drawable.toast_order_play);
+            if(true == isZh())
+            {
+            	v.setImageResource(R.drawable.toast_order_play);
+            }else {
+            	v.setImageResource(R.drawable.toast_order_play_en);
+			}
+            
             mToastOrderPlay.setView(v);
             mToastOrderPlay.setDuration(2000);
         }
@@ -653,7 +660,12 @@ public class AudioPlayerActivity extends BaseActivity {
         if (null == mToastRandomPlay) {
             mToastRandomPlay = new Toast(this);
             ImageView v = new ImageView(this);
-            v.setImageResource(R.drawable.toast_random_play);
+            if(true == isZh())
+            {
+            	v.setImageResource(R.drawable.toast_random_play);
+            }else {
+            	v.setImageResource(R.drawable.toast_random_play_en);
+			}
             mToastRandomPlay.setView(v);
             mToastRandomPlay.setDuration(2000);
         }
@@ -661,7 +673,12 @@ public class AudioPlayerActivity extends BaseActivity {
         if (null == mToastListLoop) {
             mToastListLoop = new Toast(this);
             ImageView v = new ImageView(this);
-            v.setImageResource(R.drawable.toast_list_loop);
+            if(true == isZh())
+            {
+            	v.setImageResource(R.drawable.toast_list_loop);
+            }else {
+            	v.setImageResource(R.drawable.toast_list_loop_en);
+			}
             mToastListLoop.setView(v);
             mToastListLoop.setDuration(2000);
         }
@@ -669,7 +686,12 @@ public class AudioPlayerActivity extends BaseActivity {
         if (null == mToastSingleLoop) {
             mToastSingleLoop = new Toast(this);
             ImageView v = new ImageView(this);
-            v.setImageResource(R.drawable.toast_single_play);
+            if(true == isZh())
+            {
+            	v.setImageResource(R.drawable.toast_single_play);
+            }else {
+            	v.setImageResource(R.drawable.toast_single_play_en);
+			}
             mToastSingleLoop.setView(v);
             mToastSingleLoop.setDuration(2000);
         }
@@ -827,5 +849,14 @@ public class AudioPlayerActivity extends BaseActivity {
         Date date = new Date(progress);
         SimpleDateFormat format = new SimpleDateFormat("mm:ss");
         return format.format(date);
+    }
+    
+    private boolean isZh() {
+        Locale locale = getResources().getConfiguration().locale;
+        String language = locale.getLanguage();
+        if (language.endsWith("zh"))
+            return true;
+        else
+            return false;
     }
 }

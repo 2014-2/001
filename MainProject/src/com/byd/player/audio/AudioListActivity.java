@@ -2,6 +2,7 @@ package com.byd.player.audio;
 
 import java.lang.ref.WeakReference;
 import java.util.List;
+import java.util.Locale;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -72,12 +73,19 @@ OnItemLongClickListener, SearchListener, DeleteListener {
 
     private final int[] TAB_IDS = new int[] { R.id.btn_audio_Local, R.id.btn_audio_sdcard,
             R.id.btn_audio_usb, R.id.btn_audio_aux, R.id.btn_audio_mobile };
-    private final int[] TAB_NORMAL_BGS = new int[] { R.drawable.bg_audio_local_normal,
+    private final int[] TAB_NORMAL_BGS_ZH = new int[] { R.drawable.bg_audio_local_normal,
             R.drawable.bg_sdcard_normal, R.drawable.bg_usb_normal, R.drawable.bg_aux_normal,
             R.drawable.bg_mobile_normal, };
-    private final int[] TAB_SELECTED_BGS = new int[] { R.drawable.bg_audio_local_selected,
+    private final int[] TAB_SELECTED_BGS_ZH = new int[] { R.drawable.bg_audio_local_selected,
             R.drawable.bg_sdcard_selcted, R.drawable.bg_usb_selected, R.drawable.bg_aux_selected,
             R.drawable.bg_mobile_selected, };
+    
+    private final int[] TAB_NORMAL_BGS_EN = new int[] { R.drawable.bg_audio_local_normal_en,
+            R.drawable.bg_sdcard_normal_en, R.drawable.bg_usb_normal, R.drawable.bg_aux_normal,
+            R.drawable.bg_mobile_normal_en, };
+    private final int[] TAB_SELECTED_BGS_EN = new int[] { R.drawable.bg_audio_local_selected_en,
+            R.drawable.bg_sdcard_selcted_en, R.drawable.bg_usb_selected, R.drawable.bg_aux_selected,
+            R.drawable.bg_mobile_selected_en, };
 
     private GridView mAudioList = null;
     private AudioAdapter mAdapter = null;
@@ -398,10 +406,22 @@ OnItemLongClickListener, SearchListener, DeleteListener {
         for (int i = 0; i < TAB_IDS.length; i++) {
             if (i == index) {
                 findViewById(TAB_IDS[i]).setEnabled(false);
-                findViewById(TAB_IDS[i]).setBackgroundResource(TAB_SELECTED_BGS[i]);
+                if(true == isZh())
+                {
+                	findViewById(TAB_IDS[i]).setBackgroundResource(TAB_SELECTED_BGS_ZH[i]);
+                }
+                else {
+                	findViewById(TAB_IDS[i]).setBackgroundResource(TAB_SELECTED_BGS_EN[i]);
+				}
             } else {
                 findViewById(TAB_IDS[i]).setEnabled(true);
-                findViewById(TAB_IDS[i]).setBackgroundResource(TAB_NORMAL_BGS[i]);
+                if(true == isZh())
+                {
+                	findViewById(TAB_IDS[i]).setBackgroundResource(TAB_NORMAL_BGS_ZH[i]);
+                }
+                else {
+                	findViewById(TAB_IDS[i]).setBackgroundResource(TAB_NORMAL_BGS_EN[i]);
+				}
             }
         }
         updateHeadTitle();
@@ -580,16 +600,38 @@ OnItemLongClickListener, SearchListener, DeleteListener {
         {
             final int tabIndex = AudioLoaderManager.getInstance().getViewType();
             findViewById(TAB_IDS[tabIndex]).setEnabled(false);
-            findViewById(TAB_IDS[tabIndex]).setBackgroundResource(TAB_SELECTED_BGS[tabIndex]);
+            if(true == isZh())
+            {
+            	findViewById(TAB_IDS[tabIndex]).setBackgroundResource(TAB_SELECTED_BGS_ZH[tabIndex]);
+            }else {
+            	findViewById(TAB_IDS[tabIndex]).setBackgroundResource(TAB_SELECTED_BGS_EN[tabIndex]);
+			}
+            
             findViewById(TAB_IDS[4]).setEnabled(true);
-            findViewById(TAB_IDS[4]).setBackgroundResource(TAB_NORMAL_BGS[4]);
+            
+            if(true == isZh())
+            {
+            	findViewById(TAB_IDS[4]).setBackgroundResource(TAB_NORMAL_BGS_ZH[4]);
+            }else {
+            	findViewById(TAB_IDS[4]).setBackgroundResource(TAB_NORMAL_BGS_EN[4]);
+			}
         } else if (requestCode == REQCODE_AUX)
         {
             final int tabIndex = AudioLoaderManager.getInstance().getViewType();
             findViewById(TAB_IDS[tabIndex]).setEnabled(false);
-            findViewById(TAB_IDS[tabIndex]).setBackgroundResource(TAB_SELECTED_BGS[tabIndex]);
+            if(true == isZh())
+            {
+            	findViewById(TAB_IDS[tabIndex]).setBackgroundResource(TAB_SELECTED_BGS_ZH[tabIndex]);
+            }else {
+            	findViewById(TAB_IDS[tabIndex]).setBackgroundResource(TAB_SELECTED_BGS_EN[tabIndex]);
+			}
             findViewById(TAB_IDS[3]).setEnabled(true);
-            findViewById(TAB_IDS[3]).setBackgroundResource(TAB_NORMAL_BGS[3]);
+            if(true == isZh())
+            {
+            	findViewById(TAB_IDS[3]).setBackgroundResource(TAB_NORMAL_BGS_ZH[3]);
+            }else {
+            	findViewById(TAB_IDS[3]).setBackgroundResource(TAB_NORMAL_BGS_EN[3]);
+			}
         } else if (requestCode == REQUEST_CODE_PLAY) {
             if (null == mOnSongChangedListener) {
                 mOnSongChangedListener = new OnSongChangedListener() {
@@ -601,5 +643,14 @@ OnItemLongClickListener, SearchListener, DeleteListener {
             }
             AudioPlayerService.setOnSongChangedListener(mOnSongChangedListener);
         }
+    }
+    
+    private boolean isZh() {
+        Locale locale = getResources().getConfiguration().locale;
+        String language = locale.getLanguage();
+        if (language.endsWith("zh"))
+            return true;
+        else
+            return false;
     }
 }
