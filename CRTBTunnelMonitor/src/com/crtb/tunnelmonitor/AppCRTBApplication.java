@@ -28,7 +28,7 @@ public class AppCRTBApplication extends Application {
 	
 	private DTMSDBDaoImpl mDaoImpl = null;
 	private List<WorkInfos> WorkList = null;//工作面列表
-	private WorkInfos CurWork = null;//当前工作面
+	private WorkInfos mCurrentWorkingFace = null;//当前工作面
 	private Object CurTotalStation = null;//正在使用的全站仪
 	
 	private String verify;//13位随机码
@@ -176,15 +176,15 @@ public class AppCRTBApplication extends Application {
 	}
 	
 	
-	public void SetCurWork(Context c,WorkInfos Value)
+	public void setCurrentWorkingFace(Context c, WorkInfos workingFace)
 	{
-		CurWork = Value;
-		CurWork.InitData(c);
+		mCurrentWorkingFace = workingFace;
+		mCurrentWorkingFace.InitData(c);
 	}
 	
-	public WorkInfos GetCurWork()
+	public WorkInfos getCurrentWorkingFace()
 	{
-		return CurWork;
+		return mCurrentWorkingFace;
 	}
 	public void SetCurTotalStation(Object Value)
 	{
@@ -238,7 +238,7 @@ public class AppCRTBApplication extends Application {
 	}
 	public String GetSectionName(double Value) {
 		
-		if (CurWork == null) {
+		if (mCurrentWorkingFace == null) {
 			return "";			
 		}
 		int iDiv = 0,iMod = 0;
@@ -247,7 +247,7 @@ public class AppCRTBApplication extends Application {
 		iMod = iChainage % 1000;
 		double dMod = (double)iMod+(Value-(double)iChainage);
 
-		String sName = CurWork.getChainagePrefix();
+		String sName = mCurrentWorkingFace.getChainagePrefix();
 		if (iDiv > 0) {
 			sName += Integer.toString(iDiv);
 		}

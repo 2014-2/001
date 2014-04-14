@@ -75,7 +75,7 @@ public class ControlPointsActivity extends Activity {
 													list.get(i).setbCheck(false);
 												}
 											}
-											WorkInfos curW = CurApp.GetCurWork();
+											WorkInfos curW = CurApp.getCurrentWorkingFace();
 											curW.setCpList(list);
 											adapter.notifyDataSetChanged();
 											break;
@@ -108,7 +108,7 @@ public class ControlPointsActivity extends Activity {
 		});
 	}
 	public void setdata() {
-		WorkInfos CurW = CurApp.GetCurWork();
+		WorkInfos CurW = CurApp.getCurrentWorkingFace();
 		if(CurW == null)
 		{
 			return;

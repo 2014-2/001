@@ -106,7 +106,7 @@ public class ConPopuWindow extends PopupWindow {
 				List<ControlPointsInfo> tmpList = ((ControlPointsActivity)c).list;
 				if(tmpList!=null){
 				AppCRTBApplication app=(AppCRTBApplication) c.getApplicationContext();
-				final ControlPointsDaoImpl impl = new ControlPointsDaoImpl(c, app.GetCurWork().getProjectName());
+				final ControlPointsDaoImpl impl = new ControlPointsDaoImpl(c, app.getCurrentWorkingFace().getProjectName());
 				mInfo=null;
 				boolean bCheck=false;
 				for(int i=0;i<tmpList.size();i++){

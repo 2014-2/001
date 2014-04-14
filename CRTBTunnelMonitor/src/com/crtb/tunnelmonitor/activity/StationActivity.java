@@ -166,7 +166,7 @@ public class StationActivity extends Activity {
     }
 
     public void setdata() {
-        WorkInfos work = CurApp.GetCurWork();
+        WorkInfos work = CurApp.getCurrentWorkingFace();
         if (work == null) {
             return;
         }
@@ -417,7 +417,7 @@ public class StationActivity extends Activity {
 
                         AppCRTBApplication app = (AppCRTBApplication) SonPopupWindow.this.c
                         .getApplicationContext();
-                        WorkInfos curWork = app.GetCurWork();
+                        WorkInfos curWork = app.getCurrentWorkingFace();
                         if (curWork != null && curWork.getStaionList() != null) {
                             List<TotalStationInfo> list = curWork.getStaionList();
                             boolean hasSelected = false;
