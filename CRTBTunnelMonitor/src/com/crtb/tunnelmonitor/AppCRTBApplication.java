@@ -11,24 +11,18 @@ import org.zw.android.framework.impl.FrameworkConfig;
 import org.zw.android.framework.impl.FrameworkFacade;
 
 import android.app.Application;
-import android.content.Context;
 
-import com.crtb.tunnelmonitor.dao.impl.DTMSDBDaoImpl;
 import com.crtb.tunnelmonitor.entity.ControlPointsInfo;
 import com.crtb.tunnelmonitor.entity.RecordInfo;
 import com.crtb.tunnelmonitor.entity.SubsidenceCrossSectionInfo;
 import com.crtb.tunnelmonitor.entity.SurveyerInformation;
 import com.crtb.tunnelmonitor.entity.TotalStationInfo;
 import com.crtb.tunnelmonitor.entity.TunnelCrossSectionInfo;
-import com.crtb.tunnelmonitor.entity.WorkInfos;
 
 public class AppCRTBApplication extends Application {
 	
 	private static AppCRTBApplication instance;
 	
-	private DTMSDBDaoImpl mDaoImpl = null;
-	private List<WorkInfos> WorkList = null;//工作面列表
-	private WorkInfos mCurrentWorkingFace = null;//当前工作面
 	private Object CurTotalStation = null;//正在使用的全站仪
 	
 	private String verify;//13位随机码
@@ -58,7 +52,7 @@ public class AppCRTBApplication extends Application {
 		super.onCreate();
 		
 		instance=this;
-		mDaoImpl=new DTMSDBDaoImpl(this);
+//		mDaoImpl=new DTMSDBDaoImpl(this);
 		
 		// init framework. add by wei.zhou 2014.04.08
 		FrameworkFacade.create(FrameworkConfig.defaultConfig(this));
@@ -86,35 +80,35 @@ public class AppCRTBApplication extends Application {
 		CurPerson = curPerson;
 	}
 
-	public boolean IsValidWork(WorkInfos Value)
-	{
-		if(Value.getProjectName().trim().length() <= 0)
-		{
-			return false;
-		}
-		if(Value.getConstructionFirm().trim().length() <= 0)
-		{
-			return false;
-		}
-		if(Value.getChainagePrefix().trim().length() <= 0)
-		{
-			return false;
-		}
-		if(Value.getStartChainage() <= 0)
-		{
-			return false;
-		}
-		if(Value.getEndChainage() <= 0)
-		{
-			return false;
-		}
-		if(Value.getEndChainage() <= Value.getStartChainage())
-		{
-			return false;
-		}
-		
-		return true;
-	}
+//	public boolean IsValidWork(WorkInfos Value)
+//	{
+//		if(Value.getProjectName().trim().length() <= 0)
+//		{
+//			return false;
+//		}
+//		if(Value.getConstructionFirm().trim().length() <= 0)
+//		{
+//			return false;
+//		}
+//		if(Value.getChainagePrefix().trim().length() <= 0)
+//		{
+//			return false;
+//		}
+//		if(Value.getStartChainage() <= 0)
+//		{
+//			return false;
+//		}
+//		if(Value.getEndChainage() <= 0)
+//		{
+//			return false;
+//		}
+//		if(Value.getEndChainage() <= Value.getStartChainage())
+//		{
+//			return false;
+//		}
+//		
+//		return true;
+//	}
 	public boolean IsValidTunnelCrossSectionInfo(TunnelCrossSectionInfo Value)
 	{
 //		if(Value.getChainage().toString().trim().length() <= 0)
@@ -169,23 +163,23 @@ public class AppCRTBApplication extends Application {
 		
 		return true;
 	}
+//	
+//	public DTMSDBDaoImpl getDatabase()
+//	{
+//		return mDaoImpl;
+//	}
 	
-	public DTMSDBDaoImpl getDatabase()
-	{
-		return mDaoImpl;
-	}
 	
-	
-	public void setCurrentWorkingFace(Context c, WorkInfos workingFace)
-	{
-		mCurrentWorkingFace = workingFace;
-		mCurrentWorkingFace.InitData(c);
-	}
-	
-	public WorkInfos getCurrentWorkingFace()
-	{
-		return mCurrentWorkingFace;
-	}
+//	public void setCurrentWorkingFace(Context c, WorkInfos workingFace)
+//	{
+//		mCurrentWorkingFace = workingFace;
+//		mCurrentWorkingFace.InitData(c);
+//	}
+//	
+//	public WorkInfos getCurrentWorkingFace()
+//	{
+//		return mCurrentWorkingFace;
+//	}
 	public void SetCurTotalStation(Object Value)
 	{
 		CurTotalStation = Value;
@@ -194,14 +188,14 @@ public class AppCRTBApplication extends Application {
 	{
 		return CurTotalStation;
 	}
-	public void SetWorkList(List<WorkInfos> Value)
-	{
-		WorkList = Value;
-	}
-	public List<WorkInfos> GetWorkList()
-	{
-		return WorkList;
-	}
+//	public void SetWorkList(List<WorkInfos> Value)
+//	{
+//		WorkList = Value;
+//	}
+//	public List<WorkInfos> GetWorkList()
+//	{
+//		return WorkList;
+//	}
 
 
 	public String getVerify() {
@@ -236,57 +230,57 @@ public class AppCRTBApplication extends Application {
 		}
 		return dRet;
 	}
-	public String GetSectionName(double Value) {
-		
-		if (mCurrentWorkingFace == null) {
-			return "";			
-		}
-		int iDiv = 0,iMod = 0;
-	    int iChainage = (int)Value;
-		iDiv = iChainage / 1000;
-		iMod = iChainage % 1000;
-		double dMod = (double)iMod+(Value-(double)iChainage);
+//	public String GetSectionName(double Value) {
+//		
+////		if (mCurrentWorkingFace == null) {
+////			return "";			
+////		}
+////		int iDiv = 0,iMod = 0;
+////	    int iChainage = (int)Value;
+////		iDiv = iChainage / 1000;
+////		iMod = iChainage % 1000;
+////		double dMod = (double)iMod+(Value-(double)iChainage);
+////
+////		String sName = mCurrentWorkingFace.getChainagePrefix();
+////		if (iDiv > 0) {
+////			sName += Integer.toString(iDiv);
+////		}
+////		sName += '+';
+////		sName += Double.toString(dMod);
+////	
+////		return sName;
+//	}
 
-		String sName = mCurrentWorkingFace.getChainagePrefix();
-		if (iDiv > 0) {
-			sName += Integer.toString(iDiv);
-		}
-		sName += '+';
-		sName += Double.toString(dMod);
-	
-		return sName;
-	}
-
-	public void UpdateWork(WorkInfos Value)
-	{
-		if(WorkList == null)
-		{
-			return;
-		}
-		for(int i=0;i<WorkList.size();i++)
-		{
-			if(WorkList.get(i).getProjectName().equals(Value.getProjectName()))
-			{
-				WorkList.set(i, Value);
-				break;
-			}
-		}
-	}
-	public void DelWork(WorkInfos Value)
-	{
-		if(WorkList == null)
-		{
-			return;
-		}
-		for(int i=0;i<WorkList.size();i++)
-		{
-			if(WorkList.get(i).getProjectName().equals(Value.getProjectName()))
-			{
-				WorkList.remove(i);
-				break;
-			}
-		}
-	}
+//	public void UpdateWork(WorkInfos Value)
+//	{
+//		if(WorkList == null)
+//		{
+//			return;
+//		}
+//		for(int i=0;i<WorkList.size();i++)
+//		{
+//			if(WorkList.get(i).getProjectName().equals(Value.getProjectName()))
+//			{
+//				WorkList.set(i, Value);
+//				break;
+//			}
+//		}
+//	}
+//	public void DelWork(WorkInfos Value)
+//	{
+//		if(WorkList == null)
+//		{
+//			return;
+//		}
+//		for(int i=0;i<WorkList.size();i++)
+//		{
+//			if(WorkList.get(i).getProjectName().equals(Value.getProjectName()))
+//			{
+//				WorkList.remove(i);
+//				break;
+//			}
+//		}
+//	}
 	public static List<Integer> GetSectionIDArray(String Value)
 	{
 		List<Integer> lRet = new ArrayList<Integer>();

@@ -72,7 +72,7 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 		info.setBaudRate(1);
 		info.setDatabits(1);
 		info.setId(1);
-		info.setParity(1);
+//		info.setParity(1);
 		info.setCmd("cmd2");
 		info.setStopbits(1);
 		info.setTotalstationType("sa");
@@ -83,7 +83,7 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 		info.setBaudRate(12);
 		info.setDatabits(12);
 		info.setId(12);
-		info.setParity(12);
+//		info.setParity(12);
 		info.setCmd("cmd4");
 		info.setStopbits(12);
 		info.setTotalstationType("sa1");

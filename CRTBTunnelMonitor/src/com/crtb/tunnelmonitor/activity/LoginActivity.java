@@ -27,13 +27,7 @@ import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.crtb.tunnelmonitor.common.Constant;
-import com.crtb.tunnelmonitor.dao.SurveyerInformationDao;
-import com.crtb.tunnelmonitor.dao.impl.SurveyerInformationDaoImpl;
-import com.crtb.tunnelmonitor.event.DatabaseListener;
 //import android.webkit.WebView.FindListener;
-import com.crtb.tunnelmonitor.event.EventDispatcher;
 
 /**
  * 服务器登录界面 创建时间：2014-3-18下午4:11:55
@@ -87,17 +81,17 @@ public class LoginActivity extends Activity implements OnClickListener {
 		login_btn.setOnClickListener(this);
 	    
 	    mPop=new PopupWindow();
-	    final SurveyerInformationDao dao=SurveyerInformationDaoImpl.getInstance();
-        mNames=dao.getFieldsByName(SurveyerInformationDaoImpl.NAME);
-        mNotes=dao.getFieldsByName(SurveyerInformationDaoImpl.NOTE);
-	    //ArrayAdapter adapter=new ArrayAdapter(this,android.R.layout.simple_list_item_1,names);
-        EventDispatcher.getInstance().registerDatabaseListener(new DatabaseListener() {
-			@Override
-			public void onChanged() {
-				 mNames = dao.getFieldsByName(SurveyerInformationDaoImpl.NAME);
-			     mNotes = dao.getFieldsByName(SurveyerInformationDaoImpl.NOTE);
-			}
-		});
+//	    final SurveyerInformationDao dao=SurveyerInformationDaoImpl.getInstance();
+//        mNames=dao.getFieldsByName(SurveyerInformationDaoImpl.NAME);
+//        mNotes=dao.getFieldsByName(SurveyerInformationDaoImpl.NOTE);
+//	    //ArrayAdapter adapter=new ArrayAdapter(this,android.R.layout.simple_list_item_1,names);
+//        EventDispatcher.getInstance().registerDatabaseListener(new DatabaseListener() {
+//			@Override
+//			public void onChanged() {
+//				 mNames = dao.getFieldsByName(SurveyerInformationDaoImpl.NAME);
+//			     mNotes = dao.getFieldsByName(SurveyerInformationDaoImpl.NOTE);
+//			}
+//		});
 	   
 	    mArrow.setOnClickListener(new OnClickListener() {
 			
@@ -181,22 +175,22 @@ public class LoginActivity extends Activity implements OnClickListener {
 				Toast.makeText(this, "请输入用户名和密码", Toast.LENGTH_SHORT).show();
 			}else{
 				//login(Constant.testUsername,Constant.testPassword);
-				SurveyerInformationDaoImpl dao=SurveyerInformationDaoImpl.getInstance();
-	            if(name.equals(dao.getIdCardByName(card))){
-	            	OnClickListener listener=new OnClickListener() {
-						
-						@Override
-						public void onClick(View v) {
-							Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-			    			intent.putExtra(Constant.LOGIN_TYPE
-			    					, Constant.SERVER_USER);
-			    			startActivity(intent);
-						}
-					};
-					showDialog(true,listener);
-	            }else{
-	            	showDialog(false,null);
-	            }
+//				SurveyerInformationDaoImpl dao=SurveyerInformationDaoImpl.getInstance();
+//	            if(name.equals(dao.getIdCardByName(card))){
+//	            	OnClickListener listener=new OnClickListener() {
+//						
+//						@Override
+//						public void onClick(View v) {
+//							Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+//			    			intent.putExtra(Constant.LOGIN_TYPE
+//			    					, Constant.SERVER_USER);
+//			    			startActivity(intent);
+//						}
+//					};
+//					showDialog(true,listener);
+//	            }else{
+//	            	showDialog(false,null);
+//	            }
 			}
 			//验证失败时提示并返回
 //			if("0".equals(verify)){

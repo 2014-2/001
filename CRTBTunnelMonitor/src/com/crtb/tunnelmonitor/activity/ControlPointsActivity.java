@@ -1,10 +1,8 @@
 package com.crtb.tunnelmonitor.activity;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -19,9 +17,7 @@ import android.widget.TextView;
 
 import com.crtb.tunnelmonitor.AppCRTBApplication;
 import com.crtb.tunnelmonitor.adapter.ControlPonitsListAdapter2;
-import com.crtb.tunnelmonitor.dao.impl.ControlPointsDaoImpl;
 import com.crtb.tunnelmonitor.entity.ControlPointsInfo;
-import com.crtb.tunnelmonitor.entity.WorkInfos;
 import com.crtb.tunnelmonitor.utils.ConPopuWindow;
 /**
  * 
@@ -56,33 +52,33 @@ public class ControlPointsActivity extends Activity {
 					int position, long id) {
 				iItemPos = position; 
 				// 实例化对话
-				new AlertDialog.Builder(ControlPointsActivity.this)
-						.setItems(new String[]{"使用该点"},
-								new DialogInterface.OnClickListener() {
-
-									@Override
-									public void onClick(DialogInterface dialog,
-											int which) {
-										switch (which) {
-										case 0: 
-											ControlPointsInfo item = list.get(iItemPos);
-											item.setbUse(true);
-											item.setbCheck(true);
-											list.set(iItemPos, item);
-											for (int i = 0; i < list.size(); i++) {
-												if (i != iItemPos) {
-													list.get(i).setbUse(false);
-													list.get(i).setbCheck(false);
-												}
-											}
-											WorkInfos curW = CurApp.getCurrentWorkingFace();
-											curW.setCpList(list);
-											adapter.notifyDataSetChanged();
-											break;
-										}
-									}
-								}).setCancelable(false).show()
-						.setCanceledOnTouchOutside(true);// 显示对话框
+//				new AlertDialog.Builder(ControlPointsActivity.this)
+//						.setItems(new String[]{"使用该点"},
+//								new DialogInterface.OnClickListener() {
+//
+//									@Override
+//									public void onClick(DialogInterface dialog,
+//											int which) {
+//										switch (which) {
+//										case 0: 
+//											ControlPointsInfo item = list.get(iItemPos);
+//											item.setbUse(true);
+//											item.setbCheck(true);
+//											list.set(iItemPos, item);
+//											for (int i = 0; i < list.size(); i++) {
+//												if (i != iItemPos) {
+//													list.get(i).setbUse(false);
+//													list.get(i).setbCheck(false);
+//												}
+//											}
+//											WorkInfos curW = CurApp.getCurrentWorkingFace();
+//											curW.setCpList(list);
+//											adapter.notifyDataSetChanged();
+//											break;
+//										}
+//									}
+//								}).setCancelable(false).show()
+//						.setCanceledOnTouchOutside(true);// 显示对话框
 				return true;
 			}
 		});
@@ -91,48 +87,47 @@ public class ControlPointsActivity extends Activity {
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1,
 					int arg2, long arg3) {
-				// TODO Auto-generated method stub
-				ControlPointsInfo item = list.get(arg2);	
-				boolean bCheck = !item.isbCheck();
-				item.setbCheck(!item.isbCheck());
-				list.set(arg2, item);
-				if (bCheck) {
-					for (int i = 0; i < list.size(); i++) {
-						if (i != arg2) {
-							list.get(i).setbCheck(false);
-						}
-					}
-				}
-				adapter.notifyDataSetChanged();
+//				ControlPointsInfo item = list.get(arg2);	
+//				boolean bCheck = !item.isbCheck();
+//				item.setbCheck(!item.isbCheck());
+//				list.set(arg2, item);
+//				if (bCheck) {
+//					for (int i = 0; i < list.size(); i++) {
+//						if (i != arg2) {
+//							list.get(i).setbCheck(false);
+//						}
+//					}
+//				}
+//				adapter.notifyDataSetChanged();
 			}
 		});
 	}
 	public void setdata() {
-		WorkInfos CurW = CurApp.getCurrentWorkingFace();
-		if(CurW == null)
-		{
-			return;
-		}
-		list = CurW.getCpList();
-		boolean bLoadDB = true;
-		if(list!=null)
-		{
-			if(list.size()>0)
-			{
-				bLoadDB = false;
-			}
-		}
-		if(bLoadDB)
-		{
-			if(list == null)
-			{
-				list = new ArrayList<ControlPointsInfo>();
-			}
-			ControlPointsDaoImpl impl = new ControlPointsDaoImpl(this, CurW.getProjectName());
-			impl.GetControlPointsList(list);
-			CurW.setCpList(list);
-			CurApp.UpdateWork(CurW);
-		}
+//		WorkInfos CurW = CurApp.getCurrentWorkingFace();
+//		if(CurW == null)
+//		{
+//			return;
+//		}
+//		list = CurW.getCpList();
+//		boolean bLoadDB = true;
+//		if(list!=null)
+//		{
+//			if(list.size()>0)
+//			{
+//				bLoadDB = false;
+//			}
+//		}
+//		if(bLoadDB)
+//		{
+//			if(list == null)
+//			{
+//				list = new ArrayList<ControlPointsInfo>();
+//			}
+//			ControlPointsDaoImpl impl = new ControlPointsDaoImpl(this, CurW.getProjectName());
+//			impl.GetControlPointsList(list);
+//			CurW.setCpList(list);
+//			CurApp.UpdateWork(CurW);
+//		}
 	}
 	
 	public void getadapter() {

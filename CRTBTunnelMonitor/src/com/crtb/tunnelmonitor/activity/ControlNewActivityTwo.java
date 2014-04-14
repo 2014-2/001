@@ -3,8 +3,6 @@
  */
 package com.crtb.tunnelmonitor.activity;
 
-import java.util.List;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
@@ -24,9 +22,7 @@ import android.widget.Toast;
 
 import com.crtb.tunnelmonitor.AppCRTBApplication;
 import com.crtb.tunnelmonitor.common.Constant;
-import com.crtb.tunnelmonitor.dao.impl.ControlPointsDaoImpl;
 import com.crtb.tunnelmonitor.entity.ControlPointsInfo;
-import com.crtb.tunnelmonitor.entity.WorkInfos;
 
 public class ControlNewActivityTwo extends Activity implements OnClickListener {
 
@@ -120,53 +116,53 @@ public class ControlNewActivityTwo extends Activity implements OnClickListener {
                     Toast.makeText(this, "请输入名称", 3000).show();
                     return;
                 }
-                WorkInfos Curw = CurApp.getCurrentWorkingFace();
-                ControlPointsInfo ts = new ControlPointsInfo();
-                if (info != null) {
-                    ts.setId(info.getId());
-                }
-                String name = mName.getText().toString().trim();
-                ts.setName(name);
-                ts.setX(Double.valueOf(mPointX.getText().toString().trim()));
-                ts.setY(Double.valueOf(mPointY.getText().toString().trim()));
-                ts.setZ(Double.valueOf(mPointZ.getText().toString().trim()));
-                ts.setInfo(mNote.getText().toString().trim());
-                ControlPointsDaoImpl impl = new ControlPointsDaoImpl(this,
-                        Curw.getProjectName());
-                List<ControlPointsInfo> cpinfos = null;
-                cpinfos = Curw.getCpList();
-                if (cpinfos == null) {
-                    Toast.makeText(this, "添加失败", 3000).show();
-                    return;
-                } else {
-                    if (!bEdit) {
-                        for (int i = 0; i < cpinfos.size(); i++) {
-                            if (cpinfos.get(i).getName().equals(name)) {
-                                showDialog("该控制点名已存在");
-                                return;
-                            }
-                        }
-                    }
-                    if (!bEdit) {
-                        if (impl.InsertStationInfo(ts)) {
-                            cpinfos.add(ts);
-                            CurApp.UpdateWork(Curw);
-                            Toast.makeText(this, "添加成功", 3000).show();
-                        } else {
-                            Toast.makeText(this, "添加失败", 3000).show();
-                        }
-                    } else {
-                        impl.UpdateStationInfo(ts);
-                        Curw.UpdateContrlPointsInfo(ts);
-                        CurApp.UpdateWork(Curw);
-                        Toast.makeText(this, "编辑成功", 3000).show();
-                    }
-                }
-                Intent IntentOk = new Intent();
-                IntentOk.putExtra(
-                        Constant.Select_ControlPointsRowClickItemsName_Data, "");
-                setResult(RESULT_OK, IntentOk);
-                this.finish();
+//                WorkInfos Curw = CurApp.getCurrentWorkingFace();
+//                ControlPointsInfo ts = new ControlPointsInfo();
+//                if (info != null) {
+//                    ts.setId(info.getId());
+//                }
+//                String name = mName.getText().toString().trim();
+//                ts.setName(name);
+//                ts.setX(Double.valueOf(mPointX.getText().toString().trim()));
+//                ts.setY(Double.valueOf(mPointY.getText().toString().trim()));
+//                ts.setZ(Double.valueOf(mPointZ.getText().toString().trim()));
+//                ts.setInfo(mNote.getText().toString().trim());
+//                ControlPointsDaoImpl impl = new ControlPointsDaoImpl(this,
+//                        Curw.getProjectName());
+//                List<ControlPointsInfo> cpinfos = null;
+//                cpinfos = Curw.getCpList();
+//                if (cpinfos == null) {
+//                    Toast.makeText(this, "添加失败", 3000).show();
+//                    return;
+//                } else {
+//                    if (!bEdit) {
+//                        for (int i = 0; i < cpinfos.size(); i++) {
+//                            if (cpinfos.get(i).getName().equals(name)) {
+//                                showDialog("该控制点名已存在");
+//                                return;
+//                            }
+//                        }
+//                    }
+//                    if (!bEdit) {
+//                        if (impl.InsertStationInfo(ts)) {
+//                            cpinfos.add(ts);
+//                            CurApp.UpdateWork(Curw);
+//                            Toast.makeText(this, "添加成功", 3000).show();
+//                        } else {
+//                            Toast.makeText(this, "添加失败", 3000).show();
+//                        }
+//                    } else {
+//                        impl.UpdateStationInfo(ts);
+//                        Curw.UpdateContrlPointsInfo(ts);
+//                        CurApp.UpdateWork(Curw);
+//                        Toast.makeText(this, "编辑成功", 3000).show();
+//                    }
+//                }
+//                Intent IntentOk = new Intent();
+//                IntentOk.putExtra(
+//                        Constant.Select_ControlPointsRowClickItemsName_Data, "");
+//                setResult(RESULT_OK, IntentOk);
+//                this.finish();
                 break;
             default:
                 break;
