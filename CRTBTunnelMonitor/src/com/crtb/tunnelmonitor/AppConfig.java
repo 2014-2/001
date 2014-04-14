@@ -12,4 +12,8 @@ public final class AppConfig {
 	
 	public static final int STATUS_NOUSED			= 0 ;
 	public static final int STATUS_USED				= 1 ;
+	
+	// boolean string value
+	public static final String BOOLEAN_TRUE			= "true" ;
+	public static final String BOOLEAN_FALSE		= "false" ;
 }

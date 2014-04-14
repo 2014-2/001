@@ -1,5 +1,7 @@
 package com.crtb.tunnelmonitor.entity;
 
+import java.io.Serializable;
+
 import org.zw.android.framework.db.ColumnFloat;
 import org.zw.android.framework.db.ColumnInt;
 import org.zw.android.framework.db.ColumnString;
@@ -11,7 +13,7 @@ import org.zw.android.framework.db.core.ColumnPrimaryKey.PrimaryKeyType;
  * 隧道内断面隧道
  */
 @Table(TableName = "TunnelCrossSectionInfo")
-public class TunnelCrossSectionInfo {
+public class TunnelCrossSectionInfo implements Serializable {
 
 	@ColumnPrimaryKey(Type = PrimaryKeyType.AUTO)
 	@ColumnInt

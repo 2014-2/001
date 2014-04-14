@@ -1,49 +1,82 @@
 package com.crtb.tunnelmonitor.entity;
+
+import java.io.Serializable;
+
+import org.zw.android.framework.db.ColumnInt;
+import org.zw.android.framework.db.ColumnString;
+import org.zw.android.framework.db.core.ColumnPrimaryKey;
+import org.zw.android.framework.db.core.ColumnPrimaryKey.PrimaryKeyType;
+
 /**
  *测量人员信息实体
  */
-public class SurveyerInformation {
+public class SurveyerInformation implements Serializable {
+	
+	@ColumnPrimaryKey(Type = PrimaryKeyType.AUTO)
+	@ColumnInt
 	private int id;
-	private String SurveyerName;			//测量员名
-	private String CertificateID;			//身份证id
-	private String Password;				//密码
-	private String Info;					//备注
-	private int ProjectID;					//工作面id
+	
+	@ColumnString(length=16)
+	private String surveyerName;			//测量员名
+	
+	@ColumnString(length=20)
+	private String certificateID;			//身份证id
+	
+	@ColumnString(length=16)
+	private String password;				//密码
+	
+	@ColumnString(length=512)
+	private String info;					//备注
+	
+	@ColumnInt
+	private int projectID;					//工作面id
+
 	public int getId() {
 		return id;
 	}
+
 	public void setId(int id) {
 		this.id = id;
 	}
+
 	public String getSurveyerName() {
-		return SurveyerName;
+		return surveyerName;
 	}
+
 	public void setSurveyerName(String surveyerName) {
-		SurveyerName = surveyerName;
+		this.surveyerName = surveyerName;
 	}
+
 	public String getCertificateID() {
-		return CertificateID;
+		return certificateID;
 	}
+
 	public void setCertificateID(String certificateID) {
-		CertificateID = certificateID;
+		this.certificateID = certificateID;
 	}
+
 	public String getPassword() {
-		return Password;
+		return password;
 	}
+
 	public void setPassword(String password) {
-		Password = password;
+		this.password = password;
 	}
+
 	public String getInfo() {
-		return Info;
+		return info;
 	}
+
 	public void setInfo(String info) {
-		Info = info;
+		this.info = info;
 	}
+
 	public int getProjectID() {
-		return ProjectID;
+		return projectID;
 	}
+
 	public void setProjectID(int projectID) {
-		ProjectID = projectID;
+		this.projectID = projectID;
 	}
 	
 }

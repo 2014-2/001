@@ -34,7 +34,7 @@ public class SelecActivity extends Activity implements OnClickListener{
 		setContentView(R.layout.activity_select);
 		initView();
 		mApp = AppCRTBApplication.getInstance();
-		mApp.getDatabase().ConnectDB();
+		// mApp.getDatabase().ConnectDB();
 		/*测试代码*/
 		List<SurveyerInformation> testList = new ArrayList<SurveyerInformation>();
 		SurveyerInformation test = new SurveyerInformation();

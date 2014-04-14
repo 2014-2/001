@@ -1,6 +1,5 @@
 package com.crtb.tunnelmonitor.activity;
 
-import java.util.Arrays;
 import java.util.List;
 
 import android.app.Activity;
@@ -18,10 +17,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.crtb.tunnelmonitor.dao.SurveyerInformationDao;
-import com.crtb.tunnelmonitor.dao.impl.SurveyerInformationDaoImpl;
 import com.crtb.tunnelmonitor.entity.SurveyerInformation;
-import com.crtb.tunnelmonitor.event.EventDispatcher;
 import com.crtb.tunnelmonitor.network.CrtbWebService;
 import com.crtb.tunnelmonitor.network.RpcCallback;
 
@@ -61,14 +57,14 @@ public class TesterLoadActivity extends Activity implements OnClickListener {
 	}
 
 	private void init() {
-		SurveyerInformationDaoImpl dao = SurveyerInformationDaoImpl
-				.getInstance();
-		mTestors = dao.SelectAllSurveyerInfo();
-		if (mTestors!=null && mTestors.size() > 0) {
-			mTvLayout.setVisibility(View.VISIBLE);
-			mAdapter = new TestorAdapter();
-			mListView.setAdapter(mAdapter);
-		}
+//		SurveyerInformationDaoImpl dao = SurveyerInformationDaoImpl
+//				.getInstance();
+//		mTestors = dao.SelectAllSurveyerInfo();
+//		if (mTestors!=null && mTestors.size() > 0) {
+//			mTvLayout.setVisibility(View.VISIBLE);
+//			mAdapter = new TestorAdapter();
+//			mListView.setAdapter(mAdapter);
+//		}
 	}
 
 	@Override
@@ -100,26 +96,25 @@ public class TesterLoadActivity extends Activity implements OnClickListener {
 									@Override
 									public void onSuccess(Object[] data) {
 										if (data != null && data.length > 0) {
-											mTestors = Arrays
-													.asList((SurveyerInformation[]) data);
-											SurveyerInformationDao dao = SurveyerInformationDaoImpl
-													.getInstance();
-											dao.deleteAll();
-											mTvLayout.setVisibility(View.VISIBLE);
-                                            mAdapter=new TestorAdapter();
-											mListView.setAdapter(mAdapter);
-                                            for (int i = 0; i < mTestors.size(); i++){
-												dao.InsertSurveyerInfo(mTestors
-														.get(i));
-											}
-                                            EventDispatcher.getInstance().notifyDatabaseChanged();
+//											mTestors = Arrays
+//													.asList((SurveyerInformation[]) data);
+//											SurveyerInformationDao dao = SurveyerInformationDaoImpl
+//													.getInstance();
+//											dao.deleteAll();
+//											mTvLayout.setVisibility(View.VISIBLE);
+//                                            mAdapter=new TestorAdapter();
+//											mListView.setAdapter(mAdapter);
+//                                            for (int i = 0; i < mTestors.size(); i++){
+//												dao.InsertSurveyerInfo(mTestors
+//														.get(i));
+//											}
+//                                            EventDispatcher.getInstance().notifyDatabaseChanged();
 										}
 									}
 
 									@Override
 									public void onFailed(String reason) {
-										// TODO Auto-generated method stub
-
+										
 									}
 								});
 					}
@@ -153,7 +148,6 @@ public class TesterLoadActivity extends Activity implements OnClickListener {
 
 		@Override
 		public long getItemId(int id) {
-			// TODO Auto-generated method stub
 			return id;
 		}
 

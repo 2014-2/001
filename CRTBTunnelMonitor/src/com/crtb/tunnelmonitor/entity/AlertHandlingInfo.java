@@ -1,59 +1,96 @@
 package com.crtb.tunnelmonitor.entity;
 
-import java.sql.Timestamp;
+import java.io.Serializable;
+
+import org.zw.android.framework.db.ColumnInt;
+import org.zw.android.framework.db.ColumnString;
+import org.zw.android.framework.db.Table;
+import org.zw.android.framework.db.core.ColumnPrimaryKey;
+import org.zw.android.framework.db.core.ColumnPrimaryKey.PrimaryKeyType;
 
 /**
  * 预警日志实体
  */
-public class AlertHandlingInfo {
+@Table(TableName="AlertHandlingInfo")
+public class AlertHandlingInfo implements Serializable {
+	
+	@ColumnPrimaryKey(Type = PrimaryKeyType.AUTO)
+	@ColumnInt
 	private int id;						//id
-	private int AlertID;				//预警id
-	private int Handling;				//处理内容
-	private Timestamp HandlingTime;		//处理时间
-	private String DuePerson;			//处理人
-	private int AlertStatus;			//预警信息状态
-	private int HandlingInfo;		//备注
+	
+	@ColumnInt
+	private int alertID;				//预警id
+	
+	@ColumnInt
+	private int handling;				//处理内容
+	
+	@ColumnString(length=32)
+	private String handlingTime;		//处理时间
+	
+	@ColumnString(length=16)
+	private String duePerson;			//处理人
+	
+	@ColumnInt
+	private int alertStatus;			//预警信息状态
+	
+	@ColumnInt
+	private int handlingInfo;		//备注
+
 	public int getId() {
 		return id;
 	}
+
 	public void setId(int id) {
 		this.id = id;
 	}
+
 	public int getAlertID() {
-		return AlertID;
+		return alertID;
 	}
+
 	public void setAlertID(int alertID) {
-		AlertID = alertID;
+		this.alertID = alertID;
 	}
+
 	public int getHandling() {
-		return Handling;
+		return handling;
 	}
+
 	public void setHandling(int handling) {
-		Handling = handling;
+		this.handling = handling;
 	}
-	public Timestamp getHandlingTime() {
-		return HandlingTime;
+
+	public String getHandlingTime() {
+		return handlingTime;
 	}
-	public void setHandlingTime(Timestamp handlingTime) {
-		HandlingTime = handlingTime;
+
+	public void setHandlingTime(String handlingTime) {
+		this.handlingTime = handlingTime;
 	}
+
 	public String getDuePerson() {
-		return DuePerson;
+		return duePerson;
 	}
+
 	public void setDuePerson(String duePerson) {
-		DuePerson = duePerson;
+		this.duePerson = duePerson;
 	}
+
 	public int getAlertStatus() {
-		return AlertStatus;
+		return alertStatus;
 	}
+
 	public void setAlertStatus(int alertStatus) {
-		AlertStatus = alertStatus;
+		this.alertStatus = alertStatus;
 	}
+
 	public int getHandlingInfo() {
-		return HandlingInfo;
+		return handlingInfo;
 	}
+
 	public void setHandlingInfo(int handlingInfo) {
-		HandlingInfo = handlingInfo;
+		this.handlingInfo = handlingInfo;
 	}
+	
 	
 }

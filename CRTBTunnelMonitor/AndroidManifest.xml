@@ -61,7 +61,10 @@
         </activity>
         <activity android:name="com.crtb.tunnelmonitor.activity.UserBookActivity" >
         </activity>
-        <activity android:name="com.crtb.tunnelmonitor.activity.ServerSettingActivity" >
+        <activity android:name="com.crtb.tunnelmonitor.activity.ServerSettingActivity"
+            android:windowSoftInputMode="adjustResize" >
+        </activity>
+        <activity android:name="com.crtb.tunnelmonitor.activity.DataUploadActivity">
         </activity>
         <activity android:name="com.crtb.tunnelmonitor.activity.SoftwareUpdateActivity" >
         </activity>
