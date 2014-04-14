@@ -66,7 +66,7 @@ public class StationActivity extends Activity {
         TextView title=(TextView) findViewById(R.id.tv_topbar_title);
         title.setText(R.string.total_station_manage);
         init();
-        getadapter();
+        loadData();
         /** 长按 */
         listview.setOnItemLongClickListener(new OnItemLongClickListener() {
 
@@ -193,9 +193,7 @@ public class StationActivity extends Activity {
         listview = (ListView) findViewById(R.id.lv_conlist);
     }
 
-    public void getadapter() {
-        // list = new ArrayList<TotalStationInfo>();
-        // list = MainActivity.list;
+    public void loadData() {
         setdata();
         if (mStations != null && mStations.size() > 0) {
             adapter = new ControlPonitsListAdapter(StationActivity.this,
@@ -291,6 +289,7 @@ public class StationActivity extends Activity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (resultCode) {
             case RESULT_OK:
+            	loadData();
                 adapter.notifyDataSetChanged();
                 break;
 
