@@ -21,9 +21,7 @@ import android.widget.Toast;
 import com.crtb.tunnelmonitor.AppCRTBApplication;
 import com.crtb.tunnelmonitor.common.Constant;
 import com.crtb.tunnelmonitor.common.Constant.TotalStationType;
-import com.crtb.tunnelmonitor.dao.impl.TotalStationDaoImpl;
 import com.crtb.tunnelmonitor.entity.TotalStationInfo;
-import com.crtb.tunnelmonitor.entity.WorkInfos;
 
 /**
  * 新建全站仪串口
@@ -146,11 +144,11 @@ public class ControlNewActivity extends Activity implements OnClickListener {
                     Toast.makeText(this, "请输入控制点名", 3000).show();
                     return;
                 }
-                WorkInfos Curw = CurApp.getCurrentWorkingFace();
-                if (Curw == null) {
-                    Toast.makeText(this, "未找到当前工作面", 3000).show();
-                    return;
-                }
+//                WorkInfos Curw = CurApp.getCurrentWorkingFace();
+//                if (Curw == null) {
+//                    Toast.makeText(this, "未找到当前工作面", 3000).show();
+//                    return;
+//                }
                 TotalStationInfo ts = new TotalStationInfo();
                 if (editInfo != null) {
                     ts.setId(editInfo.getId());
@@ -163,7 +161,7 @@ public class ControlNewActivity extends Activity implements OnClickListener {
                     }
                 }
                 ts.setName(name.getText().toString().trim());
-                ts.setParity(Integer.valueOf(xyw.getText().toString().trim()));
+//                ts.setParity(Integer.valueOf(xyw.getText().toString().trim()));
                 ts.setBaudRate(Integer.valueOf(btl.getText().toString().trim()));
                 ts.setPort(cklist.indexOf(ck.getText().toString().trim()));
                 ts.setDatabits(Integer.valueOf(sjw.getText().toString().trim()));
@@ -175,7 +173,7 @@ public class ControlNewActivity extends Activity implements OnClickListener {
                     return;
                 }
                 List<TotalStationInfo> tsinfos = null;
-                tsinfos = Curw.getStaionList();
+                //tsinfos = Curw.getStaionList();
                 if(tsinfos == null)
                 {
                     Toast.makeText(this, "添加失败", 3000).show();
@@ -184,25 +182,25 @@ public class ControlNewActivity extends Activity implements OnClickListener {
                 {
                     if(editInfo == null)
                     {
-                        TotalStationDaoImpl impl = new TotalStationDaoImpl(this,Curw.getProjectName());
-                        if(impl.InsertTotalStation(ts))
-                        {
-                            tsinfos.add(ts);
-                            CurApp.UpdateWork(Curw);
-                            Toast.makeText(this, "添加成功", 3000).show();
-                        }
-                        else
-                        {
-                            Toast.makeText(this, "添加失败", 3000).show();
-                        }
+                        //TotalStationDaoImpl impl = new TotalStationDaoImpl(this,Curw.getProjectName());
+//                        if(impl.InsertTotalStation(ts))
+//                        {
+//                            tsinfos.add(ts);
+//                          //  CurApp.UpdateWork(Curw);
+//                            Toast.makeText(this, "添加成功", 3000).show();
+//                        }
+//                        else
+//                        {
+//                            Toast.makeText(this, "添加失败", 3000).show();
+//                        }
                     }
                     else
                     {
-                        TotalStationDaoImpl impl = new TotalStationDaoImpl(this,Curw.getProjectName());
-                        impl.UpdateTotalStation(ts);
-                        Curw.UpdateTotalStationInfo(ts);
-                        CurApp.UpdateWork(Curw);
-                        Toast.makeText(this, "编辑成功", 3000).show();
+                        //TotalStationDaoImpl impl = new TotalStationDaoImpl(this,Curw.getProjectName());
+//                        impl.UpdateTotalStation(ts);
+//                        //Curw.UpdateTotalStationInfo(ts);
+//                        //CurApp.UpdateWork(Curw);
+//                        Toast.makeText(this, "编辑成功", 3000).show();
                     }
                 }
                 Intent IntentOk = new Intent();
@@ -227,7 +225,7 @@ public class ControlNewActivity extends Activity implements OnClickListener {
                 }
             }
             name.setText(editInfo.getName());
-            xyws.setSelection(xylist.indexOf(Integer.toString(editInfo.getParity())));
+//            xyws.setSelection(xylist.indexOf(Integer.toString(editInfo.getParity())));
             btls.setSelection(btllist.indexOf(Integer.toString(editInfo.getBaudRate())));
             cks.setSelection(editInfo.getPort());
             sjw.setText(Integer.toString(editInfo.getDatabits()));

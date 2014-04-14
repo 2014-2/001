@@ -21,7 +21,6 @@ import com.crtb.tunnelmonitor.WorkFlowActivity;
 import com.crtb.tunnelmonitor.common.Constant;
 import com.crtb.tunnelmonitor.dao.impl.v2.WorkPlanDao;
 import com.crtb.tunnelmonitor.entity.MenuSystemItem;
-import com.crtb.tunnelmonitor.entity.WorkInfos;
 import com.crtb.tunnelmonitor.entity.WorkPlan;
 import com.crtb.tunnelmonitor.mydefine.CrtbDialogDelete;
 import com.crtb.tunnelmonitor.mydefine.CrtbDialogDelete.IButtonOnClick;
@@ -72,11 +71,6 @@ public final class WorkActivity extends WorkFlowActivity {
 		
 		if(position == 0){
 			
-			WorkPlanDao.defaultWorkPlanDao().updateCurrentWorkPlan(bean) ;
-			WorkInfos workingFace = new WorkInfos();
-			workingFace.setProjectName(bean.getWorkPlanName());
-			workingFace.setCreateTime(bean.getCreationTime());
-			((AppCRTBApplication) getApplication()).setCurrentWorkingFace(getApplicationContext(), workingFace);
 			// start new MainActivity
 			Intent intent = new Intent() ;
 			intent.setClass(WorkActivity.this, MainActivity.class);

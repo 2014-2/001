@@ -1,80 +1,129 @@
 package com.crtb.tunnelmonitor.entity;
 
-import java.sql.Timestamp;
+import java.io.Serializable;
+
+import org.zw.android.framework.db.ColumnFloat;
+import org.zw.android.framework.db.ColumnInt;
+import org.zw.android.framework.db.ColumnString;
+import org.zw.android.framework.db.Table;
+import org.zw.android.framework.db.core.ColumnPrimaryKey;
+import org.zw.android.framework.db.core.ColumnPrimaryKey.PrimaryKeyType;
 
 /**
  * 预警内容实体
  */
-public class AlertInfo {
-	private int id;						//id
-	private Timestamp SheetID;			//记录单id
-	private String CrossSectionID;		//断面唯一id
-	private int PntType;				//测点类型
-	private Timestamp AlertTime;		//预警时间
-	private int AlertLeverl;			//预警等级
-	private int Utype;					//超限类型
-	private double UValue;				//超限数值
-	private double UMax;				//超限类型阈值
-	private String OriginalDataID;		//原始数据id
+@Table(TableName = "AlertInfo")
+public class AlertInfo implements Serializable {
+
+	@ColumnPrimaryKey(Type = PrimaryKeyType.AUTO)
+	@ColumnInt
+	private int id; // id
+
+	@ColumnString(length = 32)
+	private String SheetID; // 记录单id
+
+	@ColumnString(length = 32)
+	private String crossSectionID; // 断面唯一id
+
+	@ColumnInt
+	private int pntType; // 测点类型
+
+	@ColumnString(length = 32)
+	private String alertTime; // 预警时间
+
+	@ColumnInt
+	private int alertLeverl; // 预警等级
+
+	@ColumnInt
+	private int utype; // 超限类型
+
+	@ColumnFloat
+	private float uValue; // 超限数值
+
+	@ColumnFloat
+	private float uMax; // 超限类型阈值
+
+	@ColumnString(length = 32)
+	private String originalDataID; // 原始数据id
+
 	public int getId() {
 		return id;
 	}
+
 	public void setId(int id) {
 		this.id = id;
 	}
-	public Timestamp getSheetID() {
+
+	public String getSheetID() {
 		return SheetID;
 	}
-	public void setSheetID(Timestamp sheetID) {
+
+	public void setSheetID(String sheetID) {
 		SheetID = sheetID;
 	}
+
 	public String getCrossSectionID() {
-		return CrossSectionID;
+		return crossSectionID;
 	}
+
 	public void setCrossSectionID(String crossSectionID) {
-		CrossSectionID = crossSectionID;
+		this.crossSectionID = crossSectionID;
 	}
+
 	public int getPntType() {
-		return PntType;
+		return pntType;
 	}
+
 	public void setPntType(int pntType) {
-		PntType = pntType;
+		this.pntType = pntType;
 	}
-	public Timestamp getAlertTime() {
-		return AlertTime;
+
+	public String getAlertTime() {
+		return alertTime;
 	}
-	public void setAlertTime(Timestamp alertTime) {
-		AlertTime = alertTime;
+
+	public void setAlertTime(String alertTime) {
+		this.alertTime = alertTime;
 	}
+
 	public int getAlertLeverl() {
-		return AlertLeverl;
+		return alertLeverl;
 	}
+
 	public void setAlertLeverl(int alertLeverl) {
-		AlertLeverl = alertLeverl;
+		this.alertLeverl = alertLeverl;
 	}
+
 	public int getUtype() {
-		return Utype;
+		return utype;
 	}
+
 	public void setUtype(int utype) {
-		Utype = utype;
+		this.utype = utype;
 	}
-	public double getUValue() {
-		return UValue;
+
+	public float getuValue() {
+		return uValue;
 	}
-	public void setUValue(double uValue) {
-		UValue = uValue;
+
+	public void setuValue(float uValue) {
+		this.uValue = uValue;
 	}
-	public double getUMax() {
-		return UMax;
+
+	public float getuMax() {
+		return uMax;
 	}
-	public void setUMax(double uMax) {
-		UMax = uMax;
+
+	public void setuMax(float uMax) {
+		this.uMax = uMax;
 	}
+
 	public String getOriginalDataID() {
-		return OriginalDataID;
+		return originalDataID;
 	}
+
 	public void setOriginalDataID(String originalDataID) {
-		OriginalDataID = originalDataID;
+		this.originalDataID = originalDataID;
 	}
-	
+
 }

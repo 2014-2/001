@@ -1,118 +1,104 @@
 package com.crtb.tunnelmonitor.entity;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import java.io.Serializable;
+
+import org.zw.android.framework.db.ColumnFloat;
+import org.zw.android.framework.db.ColumnInt;
+import org.zw.android.framework.db.ColumnString;
+import org.zw.android.framework.db.core.ColumnPrimaryKey;
+import org.zw.android.framework.db.core.ColumnPrimaryKey.PrimaryKeyType;
 
 /**
  * 控制点实体
  */
-public class ControlPointsInfo implements Parcelable{
-	private int id;				//标识
-	private String Name;		//点名
-	private double x;			//北坐标
-	private double y;			//东坐标
-	private double z;			//高程
-	private String Info;		//备注
-	private boolean bUse;
-	private boolean bCheck;
+public class ControlPointsInfo implements Serializable {
 	
-	public boolean isbUse() {
-		return bUse;
-	}
-	public void setbUse(boolean bUse) {
-		this.bUse = bUse;
-	}
-	public boolean isbCheck() {
-		return bCheck;
-	}
-	public void setbCheck(boolean bCheck) {
-		this.bCheck = bCheck;
-	}
+	@ColumnPrimaryKey(Type = PrimaryKeyType.AUTO)
+	@ColumnInt
+	private int id;				//标识
+	
+	@ColumnString(length=32)
+	private String name;		//点名
+	
+	@ColumnFloat
+	private float x;			//北坐标
+	
+	@ColumnFloat
+	private float y;			//东坐标
+	
+	@ColumnFloat
+	private float z;			//高程
+	
+	@ColumnString(length=512)
+	private String Info;		//备注
+	
+	@ColumnString(length=8)
+	private String 				bUse;
+	
+	@ColumnString(length=8)
+	private String 				bCheck;
+
 	public int getId() {
 		return id;
 	}
+
 	public void setId(int id) {
 		this.id = id;
 	}
+
 	public String getName() {
-		return Name;
+		return name;
 	}
+
 	public void setName(String name) {
-		Name = name;
+		this.name = name;
 	}
-	public double getX() {
+
+	public float getX() {
 		return x;
 	}
-	public void setX(double x) {
+
+	public void setX(float x) {
 		this.x = x;
 	}
-	public double getY() {
+
+	public float getY() {
 		return y;
 	}
-	public void setY(double y) {
+
+	public void setY(float y) {
 		this.y = y;
 	}
-	public double getZ() {
+
+	public float getZ() {
 		return z;
 	}
-	public void setZ(double z) {
+
+	public void setZ(float z) {
 		this.z = z;
 	}
+
 	public String getInfo() {
 		return Info;
 	}
+
 	public void setInfo(String info) {
 		Info = info;
 	}
-	@Override
-	public int describeContents() {
-		// TODO Auto-generated method stub
-		return 0;
+
+	public String getbUse() {
+		return bUse;
 	}
-	@Override
-	public void writeToParcel(Parcel dest, int flags) {
-		// TODO Auto-generated method stub
-		dest.writeInt(id);
-		dest.writeString(Name);
-		dest.writeDouble(x);
-		dest.writeDouble(y);
-		dest.writeDouble(z);
-		dest.writeString(Info);
-		dest.writeBooleanArray(new boolean[]{bUse,bCheck});
+
+	public void setbUse(String bUse) {
+		this.bUse = bUse;
 	}
-    // 实现Parcelable接口的类型中，必须有一个实现了Parcelable.Creator接口的静态常量成员字段，
-    // 并且它的名字必须为CREATOR的
-    public static final Parcelable.Creator<ControlPointsInfo> CREATOR 
-            = new Parcelable.Creator<ControlPointsInfo>()
-    {
-        // From Parcelable.Creator
-        @Override
-        public ControlPointsInfo createFromParcel(Parcel in)
-        {
-        	ControlPointsInfo brief = new ControlPointsInfo();
-            
-            // 从包裹中读出数据
-        	brief.id = in.readInt();
-        	brief.Name = in.readString();
-        	brief.x = in.readDouble();
-        	brief.y = in.readDouble();
-        	brief.z = in.readDouble();
-        	brief.Info = in.readString();
-        	boolean tmp[] = new boolean[2];
-        	in.readBooleanArray(tmp);
-   			brief.bUse = tmp[0];
-   			brief.bCheck = tmp[1];
-            
-            return brief;
-        }
 
+	public String getbCheck() {
+		return bCheck;
+	}
 
-
-        // From Parcelable.Creator
-        @Override
-        public ControlPointsInfo[] newArray(int size)
-        {
-            return new ControlPointsInfo[size];
-        }
-    };
+	public void setbCheck(String bCheck) {
+		this.bCheck = bCheck;
+	}
 }

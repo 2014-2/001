@@ -21,12 +21,10 @@ import android.widget.RelativeLayout.LayoutParams;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.crtb.tunnelmonitor.AppCRTBApplication;
 import com.crtb.tunnelmonitor.activity.ControlNewActivityTwo;
 import com.crtb.tunnelmonitor.activity.ControlPointsActivity;
 import com.crtb.tunnelmonitor.activity.R;
 import com.crtb.tunnelmonitor.common.Constant;
-import com.crtb.tunnelmonitor.dao.impl.ControlPointsDaoImpl;
 import com.crtb.tunnelmonitor.entity.ControlPointsInfo;
 
 public class ConPopuWindow extends PopupWindow {
@@ -75,27 +73,27 @@ public class ConPopuWindow extends PopupWindow {
 				    return;
 				}
 				else {
-					for (int i = 0; i < tmpList.size(); i++) {
-						if (tmpList.get(i).isbCheck()) {
-							tmp = tmpList.get(i);
-							break;
-						}
-					}
+//					for (int i = 0; i < tmpList.size(); i++) {
+//						if (tmpList.get(i).isbCheck()) {
+//							tmp = tmpList.get(i);
+//							break;
+//						}
+//					}
 				}
 				if (tmp == null) {
 					Toast.makeText((Activity) c, "请选择需要编辑的控制点", 3000).show();
 				    return;
 				}
-				if(tmp.isbUse()){
-					showDialog("该控制点正在使用中，无法编辑",null);
-					return; 
-				}
-				Intent intent = new Intent(c, ControlNewActivityTwo.class);
-				Bundle mBundle = new Bundle();
-				mBundle.putBoolean("bEdit", true);
-		        mBundle.putParcelable(Constant.Select_ControlPointsRowClickItemsName_Data,tmp);
-		        intent.putExtras(mBundle);
-		        ((Activity)c).startActivityForResult(intent,0);
+//				if(tmp.isbUse()){
+//					showDialog("该控制点正在使用中，无法编辑",null);
+//					return; 
+//				}
+//				Intent intent = new Intent(c, ControlNewActivityTwo.class);
+//				Bundle mBundle = new Bundle();
+//				mBundle.putBoolean("bEdit", true);
+//		        mBundle.putParcelable(Constant.Select_ControlPointsRowClickItemsName_Data,tmp);
+//		        intent.putExtras(mBundle);
+//		        ((Activity)c).startActivityForResult(intent,0);
 			}
 		});
 		delete.setOnClickListener(new View.OnClickListener() {
@@ -103,42 +101,42 @@ public class ConPopuWindow extends PopupWindow {
 			@Override
 			public void onClick(View v) {
 				
-				List<ControlPointsInfo> tmpList = ((ControlPointsActivity)c).list;
-				if(tmpList!=null){
-				AppCRTBApplication app=(AppCRTBApplication) c.getApplicationContext();
-				final ControlPointsDaoImpl impl = new ControlPointsDaoImpl(c, app.getCurrentWorkingFace().getProjectName());
-				mInfo=null;
-				boolean bCheck=false;
-				for(int i=0;i<tmpList.size();i++){
-					if(tmpList.get(i).isbCheck()){
-						
-						bCheck=true;
-						if(!tmpList.get(i).isbUse()){
-							mInfo=tmpList.get(i);
-						}
-						break;
-					}
-				}
-				if(!bCheck){
-					 showDialog("请先选择要删除的控制点",null);
-					 return;
-				}
-				if(mInfo==null){
-					showDialog("控制点正在使用中，无法删除",null);
-					return;
-				}
-				showDialog("删除后数据无法恢复，确定删除？", new dialogListener() {
-					
-					@Override
-					public void onClickOk() {
-						impl.DeleteStationInfo(mInfo.getId());
-						((ControlPointsActivity)c).list.remove(mInfo);
-						((ControlPointsActivity)c).adapter.notifyDataSetChanged();
-						showDialog("操作已成功",null);
-					}
-				});						
+//				List<ControlPointsInfo> tmpList = ((ControlPointsActivity)c).list;
+//				if(tmpList!=null){
+//				AppCRTBApplication app=(AppCRTBApplication) c.getApplicationContext();
+//				final ControlPointsDaoImpl impl = new ControlPointsDaoImpl(c, app.getCurrentWorkingFace().getProjectName());
+//				mInfo=null;
+//				boolean bCheck=false;
+//				for(int i=0;i<tmpList.size();i++){
+//					if(tmpList.get(i).isbCheck()){
+//						
+//						bCheck=true;
+//						if(!tmpList.get(i).isbUse()){
+//							mInfo=tmpList.get(i);
+//						}
+//						break;
+//					}
+//				}
+//				if(!bCheck){
+//					 showDialog("请先选择要删除的控制点",null);
+//					 return;
+//				}
+//				if(mInfo==null){
+//					showDialog("控制点正在使用中，无法删除",null);
+//					return;
+//				}
+//				showDialog("删除后数据无法恢复，确定删除？", new dialogListener() {
+//					
+//					@Override
+//					public void onClickOk() {
+//						impl.DeleteStationInfo(mInfo.getId());
+//						((ControlPointsActivity)c).list.remove(mInfo);
+//						((ControlPointsActivity)c).adapter.notifyDataSetChanged();
+//						showDialog("操作已成功",null);
+//					}
+//				});						
 										
-				}
+//				}
 			}
 		});
 

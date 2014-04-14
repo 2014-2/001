@@ -1,6 +1,5 @@
 package com.crtb.tunnelmonitor.activity;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Activity;
@@ -35,9 +34,7 @@ import com.crtb.tssurveyprovider.TSSurveyProvider;
 import com.crtb.tunnelmonitor.AppCRTBApplication;
 import com.crtb.tunnelmonitor.adapter.ControlPonitsListAdapter;
 import com.crtb.tunnelmonitor.common.Constant;
-import com.crtb.tunnelmonitor.dao.impl.TotalStationDaoImpl;
 import com.crtb.tunnelmonitor.entity.TotalStationInfo;
-import com.crtb.tunnelmonitor.entity.WorkInfos;
 
 public class StationActivity extends Activity {
     /**
@@ -91,8 +88,8 @@ public class StationActivity extends Activity {
                                         mStations.get(position)
                                         .getBaudRate());
                                 if (ret == 1) {
-                                    mStations.get(position)
-                                    .setbUse(true);
+//                                    mStations.get(position)
+//                                    .setbUse(true);
                                 }
                                 break;
                             case 1:// 串口连接
@@ -100,15 +97,15 @@ public class StationActivity extends Activity {
                                         mStations.get(position)
                                         .getBaudRate());
                                 if (ret == 1) {
-                                    mStations.get(position)
-                                    .setbUse(true);
+//                                    mStations.get(position)
+//                                    .setbUse(true);
                                 }
                                 break;
                             case 2:// 断开连接
                                 ret = disconnect();
                                 if (ret == 1) {
-                                    mStations.get(position)
-                                    .setbUse(false);
+//                                    mStations.get(position)
+//                                    .setbUse(false);
                                 }
                             default:
                                 break;
@@ -124,18 +121,17 @@ public class StationActivity extends Activity {
             @Override
             public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
                     long arg3) {
-                // TODO Auto-generated method stub
-                TotalStationInfo item = mStations.get(arg2);
-                boolean bCheck = !item.isbCheck();
-                item.setbCheck(!item.isbCheck());
-                mStations.set(arg2, item);
-                if (bCheck) {
-                    for (int i = 0; i < mStations.size(); i++) {
-                        if (i != arg2) {
-                            mStations.get(i).setbCheck(false);
-                        }
-                    }
-                }
+            	TotalStationInfo item = mStations.get(arg2);
+//                boolean bCheck = !item.isbCheck();
+//                item.setbCheck(!item.isbCheck());
+//                mStations.set(arg2, item);
+//                if (bCheck) {
+//                    for (int i = 0; i < mStations.size(); i++) {
+//                        if (i != arg2) {
+//                            mStations.get(i).setbCheck(false);
+//                        }
+//                    }
+//                }
                 adapter.notifyDataSetChanged();
             }
         });
@@ -166,27 +162,27 @@ public class StationActivity extends Activity {
     }
 
     public void setdata() {
-        WorkInfos work = CurApp.getCurrentWorkingFace();
-        if (work == null) {
-            return;
-        }
-        mStations = work.getStaionList();
-        boolean bLoadDB = true;
-        if (mStations != null) {
-            if (mStations.size() > 0) {
-                bLoadDB = false;
-            }
-        }
-        if (bLoadDB) {
-            if (mStations == null) {
-                mStations = new ArrayList<TotalStationInfo>();
-            }
-            TotalStationDaoImpl dao = new TotalStationDaoImpl(this,
-                    work.getProjectName());
-            dao.GetTotalStationList(mStations);
-            work.setStationList(mStations);
-            CurApp.UpdateWork(work);
-        }
+//        WorkInfos work = CurApp.getCurrentWorkingFace();
+//        if (work == null) {
+//            return;
+//        }
+//        mStations = work.getStaionList();
+//        boolean bLoadDB = true;
+//        if (mStations != null) {
+//            if (mStations.size() > 0) {
+//                bLoadDB = false;
+//            }
+//        }
+//        if (bLoadDB) {
+//            if (mStations == null) {
+//                mStations = new ArrayList<TotalStationInfo>();
+//            }
+//            TotalStationDaoImpl dao = new TotalStationDaoImpl(this,
+//                    work.getProjectName());
+//            dao.GetTotalStationList(mStations);
+//            work.setStationList(mStations);
+//            CurApp.UpdateWork(work);
+//        }
     }
 
     private void init() {
@@ -345,10 +341,10 @@ public class StationActivity extends Activity {
                         return;
                     } else {
                         for (int i = 0; i < tmpList.size(); i++) {
-                            if (tmpList.get(i).isbCheck()) {
-                                tmp = tmpList.get(i);
-                                break;
-                            }
+//                            if (tmpList.get(i).isbCheck()) {
+//                                tmp = tmpList.get(i);
+//                                break;
+//                            }
                         }
                     }
                     if (tmp == null) {
@@ -358,9 +354,9 @@ public class StationActivity extends Activity {
                     }
                     Intent intent = new Intent(c, ControlNewActivity.class);
                     Bundle mBundle = new Bundle();
-                    mBundle.putParcelable(
-                            Constant.Select_TotalStationRowClickItemsName_Data,
-                            tmp);
+//                    mBundle.putParcelable(
+//                            Constant.Select_TotalStationRowClickItemsName_Data,
+//                            tmp);
                     mBundle.putBoolean("edit", true);
                     intent.putExtras(mBundle);
                     ((Activity) c).startActivityForResult(intent, 0);
@@ -414,33 +410,33 @@ public class StationActivity extends Activity {
                     case R.id.ok:
                         // 测试
 
-                        AppCRTBApplication app = (AppCRTBApplication) SonPopupWindow.this.c
-                        .getApplicationContext();
-                        WorkInfos curWork = app.getCurrentWorkingFace();
-                        if (curWork != null && curWork.getStaionList() != null) {
-                            List<TotalStationInfo> list = curWork.getStaionList();
-                            boolean hasSelected = false;
-                            for (int i = 0; i < list.size(); i++) {
-                                if (list.get(i).isbCheck()) {
-                                    hasSelected = true;
-                                    if (!list.get(i).isbUse()) {
-                                        TotalStationDaoImpl impl = new TotalStationDaoImpl(
-                                                SonPopupWindow.this.c,
-                                                curWork.getProjectName());
-                                        impl.DeleteTotalStation(list.get(i).getId());
-                                        list.remove(i);
-                                        StationActivity.adapter
-                                        .notifyDataSetChanged();
-                                    } else {
-                                        showDialog("当前全站仪正在使用中，无法删除");
-                                    }
-                                    break;
-                                }
-                            }
-                            if (!hasSelected) {
-                                showDialog("请先选择要删除的全站仪");
-                            }
-                        }
+//                        AppCRTBApplication app = (AppCRTBApplication) SonPopupWindow.this.c
+//                        .getApplicationContext();
+//                        WorkInfos curWork = app.getCurrentWorkingFace();
+//                        if (curWork != null && curWork.getStaionList() != null) {
+//                            List<TotalStationInfo> list = curWork.getStaionList();
+//                            boolean hasSelected = false;
+//                            for (int i = 0; i < list.size(); i++) {
+//                                if (list.get(i).isbCheck()) {
+//                                    hasSelected = true;
+//                                    if (!list.get(i).isbUse()) {
+//                                        TotalStationDaoImpl impl = new TotalStationDaoImpl(
+//                                                SonPopupWindow.this.c,
+//                                                curWork.getProjectName());
+//                                        impl.DeleteTotalStation(list.get(i).getId());
+//                                        list.remove(i);
+//                                        StationActivity.adapter
+//                                        .notifyDataSetChanged();
+//                                    } else {
+//                                        showDialog("当前全站仪正在使用中，无法删除");
+//                                    }
+//                                    break;
+//                                }
+//                            }
+//                            if (!hasSelected) {
+//                                showDialog("请先选择要删除的全站仪");
+//                            }
+//                        }
                         /*
                          * for(int i=0;i<.size();i++) if
                          * (MainActivity.list.get(i).getInfo().equals("选中")) {
