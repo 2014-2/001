@@ -5,102 +5,108 @@
     android:background="#eeeeee"
     android:orientation="vertical" >
 
-    <include layout="@layout/activity_topbar_layout" 
-        android:id="@+id/topbar"/>
+    <include
+        android:id="@+id/topbar"
+        layout="@layout/activity_topbar_layout" />
 
-    <RelativeLayout
-        android:layout_width="fill_parent"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/topbar"
-        android:id="@+id/ip_layout"
-        android:layout_marginTop="10dp" >
+        android:layout_margin="10dp"
+        android:background="@drawable/rect_border_server_settings"
+        android:orientation="vertical" >
 
-        <LinearLayout
+        <RelativeLayout
+            android:id="@+id/ip_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true" >
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:layout_marginTop="5dp" >
 
             <TextView
+                android:id="@+id/ip_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
                 android:layout_marginLeft="20dp"
-                android:text="服务器  "
+                android:layout_marginRight="20dp"
+                android:text="服务器"
                 android:textColor="#6b6b6b"
                 android:textSize="19sp" />
 
             <EditText
                 android:id="@+id/server_ip"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
                 android:layout_marginRight="20dp"
-                android:layout_weight="1" />
-        </LinearLayout>
-    </RelativeLayout>
+                android:singleLine="true"
+                android:background="@null"
+                android:hint="@string/server_settings_ip_hint"
+                android:layout_toRightOf="@id/ip_title" />
+        </RelativeLayout>
 
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginBottom="5dp"
-        android:layout_marginTop="5dp"
-        android:background="#d9d9d9" 
-        android:layout_below="@id/ip_layout"
-        android:id="@+id/divider1"/>
-
-    <RelativeLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dip"
-        android:id="@+id/name_layout"
-        android:layout_below="@id/divider1" >
-
-        <LinearLayout
+        <ImageView
+            android:id="@+id/divider1"
             android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#d9d9d9" />
+
+        <RelativeLayout
+            android:id="@+id/name_layout"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true" >
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:layout_marginTop="5dp" >
 
             <TextView
+                android:id="@+id/username_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
                 android:layout_marginLeft="20dp"
-                android:text="用户名  "
+                android:layout_marginRight="20dp"
+                android:text="用户名"
                 android:textColor="#6b6b6b"
                 android:textSize="19sp" />
 
             <EditText
                 android:id="@+id/username"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
                 android:layout_marginRight="20dp"
-                android:layout_weight="1"
+                android:background="@null"
+                android:singleLine="true"
+                android:hint="@string/server_settings_username_hint"
+                android:layout_toRightOf="@id/username_title"
                 android:text="cl19h1" />
-        </LinearLayout>
-    </RelativeLayout>
+        </RelativeLayout>
 
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginBottom="5dp"
-        android:layout_marginTop="5dp"
-        android:id="@+id/divider2"
-        android:layout_below="@id/name_layout"
-        android:background="#d9d9d9" />
-
-    <RelativeLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp" 
-        android:layout_below="@id/divider2">
-
-        <LinearLayout
+        <ImageView
+            android:id="@+id/divider2"
             android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#d9d9d9" />
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true" >
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:layout_marginTop="5dp" >
 
             <TextView
+                android:id="@+id/password_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
                 android:layout_marginLeft="20dp"
-                android:text="密     码 "
+                android:layout_marginRight="20dp"
+                android:text="密    码"
                 android:textColor="#6b6b6b"
                 android:textSize="19sp" />
 
@@ -108,42 +114,48 @@
                 android:id="@+id/password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
                 android:layout_marginRight="20dp"
+                android:background="@null"
+                android:singleLine="true"
+                android:hint="@string/server_settings_password_hint"
+                android:layout_toRightOf="@id/password_title"
                 android:password="true"
                 android:text="123" />
-        </LinearLayout>
-    </RelativeLayout>
+        </RelativeLayout>
+    </LinearLayout>
 
-            <LinearLayout
-            android:id="@+id/bottom_panel"
-            android:layout_width="fill_parent"
-            android:layout_alignParentBottom="true"
-            android:layout_height="@dimen/bottom_button_height"
-            android:orientation="horizontal" >
+    <LinearLayout
+        android:id="@+id/bottom_panel"
+        android:layout_width="fill_parent"
+        android:layout_height="@dimen/bottom_button_height"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal" >
 
-            <Button
-                android:id="@+id/cancel"
-                android:layout_width="0dp"
-                android:layout_height="fill_parent"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="1"
-                android:background="@drawable/bottom_bnt_selector"
-                android:text="@string/cancel"
-                android:textSize="20sp" />
+        <Button
+            android:id="@+id/cancel"
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:background="@drawable/bottom_bnt_selector"
+            android:text="@string/cancel"
+            android:textSize="20sp" />
 
-            <ImageView
-                android:layout_width="2dip"
-                android:layout_height="fill_parent"
-                android:background="#767676" />
+        <ImageView
+            android:layout_width="2dip"
+            android:layout_height="fill_parent"
+            android:background="#767676" />
 
-            <Button
-                android:id="@+id/ok"
-                android:layout_width="0dp"
-                android:layout_height="fill_parent"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="1"
-                android:background="@drawable/bottom_bnt_selector"
-                android:text="@string/ok"
-                android:textSize="20sp" />
-        </LinearLayout>
+        <Button
+            android:id="@+id/ok"
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:background="@drawable/bottom_bnt_selector"
+            android:text="@string/ok"
+            android:textSize="20sp" />
+    </LinearLayout>
+
 </RelativeLayout>
