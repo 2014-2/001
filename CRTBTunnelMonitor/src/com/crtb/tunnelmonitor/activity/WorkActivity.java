@@ -15,7 +15,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 
-import com.crtb.tunnelmonitor.AppCRTBApplication;
 import com.crtb.tunnelmonitor.CommonObject;
 import com.crtb.tunnelmonitor.WorkFlowActivity;
 import com.crtb.tunnelmonitor.common.Constant;
@@ -71,11 +70,16 @@ public final class WorkActivity extends WorkFlowActivity {
 		
 		if(position == 0){
 			
+			// current edit workplan
+			WorkPlanDao.defaultWorkPlanDao().updateCurrentWorkPlan(bean);
+			
 			// start new MainActivity
 			Intent intent = new Intent() ;
 			intent.setClass(WorkActivity.this, MainActivity.class);
 			intent.putExtra(Constant.LOGIN_TYPE, Constant.LOCAL_USER);
 			startActivity(intent);
+			
+			finish() ;
 			
 		} else if(position == 1){
 			
