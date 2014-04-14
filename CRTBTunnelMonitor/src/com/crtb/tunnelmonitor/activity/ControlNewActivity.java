@@ -146,7 +146,7 @@ public class ControlNewActivity extends Activity implements OnClickListener {
                     Toast.makeText(this, "请输入控制点名", 3000).show();
                     return;
                 }
-                WorkInfos Curw = CurApp.GetCurWork();
+                WorkInfos Curw = CurApp.getCurrentWorkingFace();
                 if (Curw == null) {
                     Toast.makeText(this, "未找到当前工作面", 3000).show();
                     return;

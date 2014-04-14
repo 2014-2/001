@@ -120,7 +120,7 @@ public class ControlNewActivityTwo extends Activity implements OnClickListener {
                     Toast.makeText(this, "请输入名称", 3000).show();
                     return;
                 }
-                WorkInfos Curw = CurApp.GetCurWork();
+                WorkInfos Curw = CurApp.getCurrentWorkingFace();
                 ControlPointsInfo ts = new ControlPointsInfo();
                 if (info != null) {
                     ts.setId(info.getId());
