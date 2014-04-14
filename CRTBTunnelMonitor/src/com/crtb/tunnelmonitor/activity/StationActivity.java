@@ -289,13 +289,17 @@ public class StationActivity extends Activity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (resultCode) {
             case RESULT_OK:
-            	loadData();
+                loadData();
                 adapter.notifyDataSetChanged();
                 break;
 
             default:
                 break;
         }
+    }
+
+    class ConnectPopupWindow extends PopupWindow {
+
     }
 
     class SonPopupWindow extends PopupWindow {

@@ -1,17 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
-
-    <!--
-    <include
-        android:id="@+id/conheader"
-        layout="@layout/header" /> 
-
-    <TextView
-        style="@style/header"
-        android:text="全站仪连接管理" />
-    -->
+    android:layout_height="match_parent"
+    android:background="@color/workplan_top_color" >
 
     <include
         android:id="@+id/header"
@@ -22,51 +13,44 @@
         android:id="@+id/conre1"
         android:layout_width="fill_parent"
         android:layout_height="40dip"
-        android:layout_below="@id/header"
-        android:layout_marginLeft="10dip"
-        android:layout_marginRight="10dip" >
-
-        <include
-            android:id="@+id/rectangle"
-            layout="@layout/horizontal" />
+        android:layout_below="@id/header" >
 
         <LinearLayout
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent" 
-            android:gravity="center_vertical"
-            android:background="@color/workplan_top_color">
+            android:layout_height="fill_parent"
+            android:gravity="center_vertical" >
 
             <TextView
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="35dp"
                 android:layout_weight="1"
+                android:gravity="center_vertical|left"
                 android:text="名称"
-                android:gravity="center"
-                android:textSize="20sp" />
-
-            <ImageView
-                android:layout_width="1dip"
-                android:layout_height="fill_parent"
-                android:background="@color/gray" />
+                android:textSize="16sp" />
 
             <TextView
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:gravity="center"
+                android:layout_marginRight="35dp"
+                android:gravity="center_vertical|right"
                 android:text="选中"
-                android:textSize="20sp" />
+                android:textSize="16sp" />
         </LinearLayout>
     </RelativeLayout>
 
-    <ListView
-        android:id="@+id/lv_conlist"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_below="@id/conre1"
-        android:layout_marginLeft="10dip"
-        android:layout_marginRight="10dip"
-        android:divider="@null"
-        android:descendantFocusability="blocksDescendants" />
+        android:background="#FFFFFF" >
+
+        <ListView
+            android:id="@+id/lv_conlist"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:descendantFocusability="blocksDescendants" />
+    </LinearLayout>
 
 </RelativeLayout>
