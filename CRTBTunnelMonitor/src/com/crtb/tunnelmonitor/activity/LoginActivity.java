@@ -31,6 +31,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.crtb.tunnelmonitor.AppConfig;
+import com.crtb.tunnelmonitor.common.Constant;
 import com.crtb.tunnelmonitor.dao.impl.v2.SurveyerInformationDao;
 import com.crtb.tunnelmonitor.entity.SurveyerInformation;
 //import android.webkit.WebView.FindListener;
@@ -210,6 +211,25 @@ public class LoginActivity extends Activity implements OnClickListener {
 			}else{
 				
 				//login(Constant.testUsername,Constant.testPassword);
+				
+				SurveyerInformation info = SurveyerInformationDao.defaultDao().querySurveyerByName(name);
+				
+				if(info != null && info.getCertificateID().equals(card)){
+					OnClickListener listener=new OnClickListener() {
+						
+						@Override
+						public void onClick(View v) {
+							Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+			    			intent.putExtra(Constant.LOGIN_TYPE
+			    					, Constant.SERVER_USER);
+			    			startActivity(intent);
+						}
+					};
+					showDialog(true,listener);
+				} else {
+					showDialog(false,null);
+				}
+				
 //				SurveyerInformationDaoImpl dao=SurveyerInformationDaoImpl.getInstance();
 //	            if(name.equals(dao.getIdCardByName(card))){
 //	            	OnClickListener listener=new OnClickListener() {
