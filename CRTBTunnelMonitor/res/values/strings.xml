@@ -81,6 +81,11 @@
     <string name="server_settings_username_hint">输入用户名</string>
     <string name="server_settings_password_hint">输入密码</string>
     <string name="server_data_upload_title">数据上传</string>
+    
+    <!-- 全站仪模块 -->
+    <string name="bluetooth_connect">蓝牙连接</string>
+    <string name="com_connect">串口连接</string>
+    <string name="disconnect">断开连接</string>
 
 
 </resources>
