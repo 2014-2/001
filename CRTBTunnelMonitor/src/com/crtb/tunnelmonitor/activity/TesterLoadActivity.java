@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -18,6 +19,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.crtb.tunnelmonitor.AppConfig;
 import com.crtb.tunnelmonitor.dao.impl.v2.SurveyerInformationDao;
 import com.crtb.tunnelmonitor.entity.SurveyerInformation;
 import com.crtb.tunnelmonitor.event.EventDispatcher;
@@ -118,6 +120,9 @@ public class TesterLoadActivity extends Activity implements OnClickListener {
                                             for (int i = 0; i < mTestors.size(); i++){
                                             	SurveyerInformationDao.defaultDao().insert(mTestors.get(i)) ;
 											}
+                                            
+                                            // 通知
+                                            sendBroadcast(new Intent(AppConfig.ACTION_RELOAD_ALL_SURVEYER));
                                             
                                             EventDispatcher.getInstance().notifyDatabaseChanged();
 										}
