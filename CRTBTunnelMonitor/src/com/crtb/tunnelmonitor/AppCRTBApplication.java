@@ -51,11 +51,13 @@ public class AppCRTBApplication extends Application {
 	public void onCreate() {
 		super.onCreate();
 		
-		instance=this;
-//		mDaoImpl=new DTMSDBDaoImpl(this);
+		instance = this;
 		
 		// init framework. add by wei.zhou 2014.04.08
-		FrameworkFacade.create(FrameworkConfig.defaultConfig(this));
+		FrameworkConfig config = FrameworkConfig.defaultConfig(this) ;
+		config.setCachePercent(0.3f);// image cache size
+		config.setDatabaseVersion(AppConfig.DB_VERSION); // db version
+		FrameworkFacade.create(config);
 		mFramework	= FrameworkFacade.getFrameworkFacade() ;
 		
 	}
