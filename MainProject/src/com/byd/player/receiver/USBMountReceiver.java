@@ -22,6 +22,7 @@ import android.os.Message;
  *
  */
 public class USBMountReceiver extends BroadcastReceiver {
+    private final static Uri INTERNAL_URI = Uri.parse("file:///storage/emulated/0");
 
     private final long ONE_MIN = 60 * 1000;
     private long mLastActionTime;
@@ -37,12 +38,20 @@ public class USBMountReceiver extends BroadcastReceiver {
         long curTime = System.currentTimeMillis();
         // make sure the application would not request scan file frequently.
         if (curTime - mLastActionTime > ONE_MIN) {
-            Intent intentScanner = new Intent(Intent.ACTION_MEDIA_MOUNTED, Uri.parse("file://"
+            // scan internal storage
+            Intent intentScanner = new Intent(Intent.ACTION_MEDIA_MOUNTED, INTERNAL_URI);
+            mContext.sendBroadcast(intentScanner);
+
+            // scan external storage 
+            intentScanner = new Intent(Intent.ACTION_MEDIA_MOUNTED, Uri.parse("file://"
                     + Environment.getExternalStorageDirectory()));
             mContext.sendBroadcast(intentScanner);
+
             intentScanner = new Intent(Intent.ACTION_MEDIA_MOUNTED,
                     Uri.parse("file://" + "/extsd/"));
             mContext.sendBroadcast(intentScanner);
+
+            // scan USB
             intentScanner = new Intent(Intent.ACTION_MEDIA_MOUNTED,
                     Uri.parse("file://" + "/udisk/"));
             mContext.sendBroadcast(intentScanner);
