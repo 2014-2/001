@@ -1,12 +1,14 @@
 package com.crtb.tunnelmonitor.activity;
 
 
-import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Paint;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -27,6 +29,10 @@ import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.crtb.tunnelmonitor.AppConfig;
+import com.crtb.tunnelmonitor.dao.impl.v2.SurveyerInformationDao;
+import com.crtb.tunnelmonitor.entity.SurveyerInformation;
 //import android.webkit.WebView.FindListener;
 
 /**
@@ -52,22 +58,40 @@ public class LoginActivity extends Activity implements OnClickListener {
 	
 	private PopupWindow mPop;
 	
-	private List<String> mNames;
-	
-	private List<String> mNotes;
-	
 	private Dialog dlg;
+	
+	// add by wei.zhou
+	private List<SurveyerInformation> mAllSurveyer ; 
+	private BroadcastReceiver mReceiver ;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
+		
 		initView();
+		
+		mReceiver	= new BroadcastReceiver() {
+			
+			@Override
+			public void onReceive(Context context, Intent intent) {
+				
+				if(intent.getAction().equals(AppConfig.ACTION_RELOAD_ALL_SURVEYER)){
+					mAllSurveyer	= SurveyerInformationDao.defaultDao().queryAllSurveyerInformation() ;
+				}
+			}
+		};
+		
+		IntentFilter filter = new IntentFilter() ;
+		filter.addAction(AppConfig.ACTION_RELOAD_ALL_SURVEYER) ;
+		registerReceiver(mReceiver, filter);
 	}
 
 	/** 初始化控件 */
 	private void initView() {
+		
 		login_btn = (Button) findViewById(R.id.login_btn);
+		
 		//login_rl_listview = (RelativeLayout) findViewById(R.id.login_rl_listview);
 		mNote=(EditText)findViewById(R.id.note);
 		mArrow=(ImageView) findViewById(R.id.img);
@@ -77,51 +101,47 @@ public class LoginActivity extends Activity implements OnClickListener {
 	    mDownload=(TextView) findViewById(R.id.load_teser);
 	    mDownload.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG);
 	    mDownload.setOnClickListener(this);
+	    
 		// 点击事件
 		login_btn.setOnClickListener(this);
+		
+		mAllSurveyer = SurveyerInformationDao.defaultDao().queryAllSurveyerInformation();
 	    
-	    mPop=new PopupWindow();
-//	    final SurveyerInformationDao dao=SurveyerInformationDaoImpl.getInstance();
-//        mNames=dao.getFieldsByName(SurveyerInformationDaoImpl.NAME);
-//        mNotes=dao.getFieldsByName(SurveyerInformationDaoImpl.NOTE);
-//	    //ArrayAdapter adapter=new ArrayAdapter(this,android.R.layout.simple_list_item_1,names);
-//        EventDispatcher.getInstance().registerDatabaseListener(new DatabaseListener() {
-//			@Override
-//			public void onChanged() {
-//				 mNames = dao.getFieldsByName(SurveyerInformationDaoImpl.NAME);
-//			     mNotes = dao.getFieldsByName(SurveyerInformationDaoImpl.NOTE);
-//			}
-//		});
-	   
-	    mArrow.setOnClickListener(new OnClickListener() {
+		mArrow.setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
+				
 				if(mPop!=null && mPop.isShowing()){
 					return;
 				}
+				
 				View view=LayoutInflater.from(LoginActivity.this).inflate(R.layout.username_popup_layout, null);
 			    ListView list=(ListView) view.findViewById(R.id.list);
-			    final NameAdapter adapter=new NameAdapter(mNames);
+			    final NameAdapter adapter=new NameAdapter();
 			    list.setAdapter(adapter);
 		        list.setOnItemClickListener(new OnItemClickListener() {
  
 					@Override
 					public void onItemClick(AdapterView<?> arg0, View arg1,
 							int pos, long arg3) {
-					 mUserName.setText((String)adapter.getItem(pos));
+						
+						mUserName.setText(adapter.getItem(pos).getSurveyerName());
+					 
 					 if(mPop!=null){
 						 mPop.dismiss();
+						 mPop = null ;
 					 }
 					}
-		        	
 				});
-			    mPop.setContentView(view);
-			    mPop.setFocusable(true);
-		        mPop.setWidth(mUserName.getWidth());
-		        mPop.setHeight(LayoutParams.WRAP_CONTENT);
-			    mPop.setOutsideTouchable(true);
-			    mPop.setBackgroundDrawable(new ColorDrawable());
+		        
+		        if(mPop == null){
+		        	mPop= new PopupWindow(view,mUserName.getWidth(),LayoutParams.WRAP_CONTENT);
+		        	mPop.setFocusable(true);
+		        	mPop.setOutsideTouchable(true);
+		        	mPop.setBackgroundDrawable(new ColorDrawable());
+		        }
+		        
 				mPop.showAsDropDown(mUserName,0,0);
 				//mPop.showAtLocation(mUserName,Gravity.BOTTOM, 0, 0);
 			    //mPop.showAtLocation(mUserName, Gravity.TOP, 0, 0);
@@ -132,34 +152,48 @@ public class LoginActivity extends Activity implements OnClickListener {
 			
 			@Override
 			public void onClick(View arg0) {
+				
 				if(mPop!=null && mPop.isShowing()){
 					return;
 				}
+				
 				View view=LayoutInflater.from(LoginActivity.this).inflate(R.layout.username_popup_layout, null);
 			    ListView list=(ListView) view.findViewById(R.id.list);
-			    final NameAdapter adapter=new NameAdapter(mNotes);
+			    final NameAdapter adapter=new NameAdapter();
 			    list.setAdapter(adapter);
 		        list.setOnItemClickListener(new OnItemClickListener() {
  
 					@Override
 					public void onItemClick(AdapterView<?> arg0, View arg1,
 							int pos, long arg3) {
-					 mNote.setText((String)adapter.getItem(pos));
+						
+					 mNote.setText(adapter.getItem(pos).getInfo());
+					 
 					 if(mPop!=null){
 						 mPop.dismiss();
+						 mPop = null ;
 					 }
 					}
 		        	
 				});
-			    mPop.setContentView(view);
-			    mPop.setFocusable(true);
-		        mPop.setWidth(mNote.getWidth());
-		        mPop.setHeight(LayoutParams.WRAP_CONTENT);
-			    mPop.setOutsideTouchable(true);
-			    mPop.setBackgroundDrawable(new ColorDrawable());
+		        
+		        if(mPop == null){
+		        	mPop = new PopupWindow(view, mNote.getWidth(), LayoutParams.WRAP_CONTENT);
+				    mPop.setFocusable(true);
+				    mPop.setOutsideTouchable(true);
+				    mPop.setBackgroundDrawable(new ColorDrawable());
+		        }
+			    
 				mPop.showAsDropDown(mNote,0,0);
 			}
 		});
+	}
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		
+		unregisterReceiver(mReceiver);
 	}
 
 	@Override
@@ -174,6 +208,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 			if(TextUtils.isEmpty(name)||TextUtils.isEmpty(card)){
 				Toast.makeText(this, "请输入用户名和密码", Toast.LENGTH_SHORT).show();
 			}else{
+				
 				//login(Constant.testUsername,Constant.testPassword);
 //				SurveyerInformationDaoImpl dao=SurveyerInformationDaoImpl.getInstance();
 //	            if(name.equals(dao.getIdCardByName(card))){
@@ -210,60 +245,60 @@ public class LoginActivity extends Activity implements OnClickListener {
 	}
 	
 	class NameAdapter extends BaseAdapter{
-		private List<String> mNameList = new ArrayList<String>();
 		
-        public NameAdapter(List<String> list){
-        	if (list != null) {
-        		mNameList = list;	
-        	}
+        public NameAdapter(){
+        	
         }
 		
         public void setNameList(List<String> nameList) {
-        	if (nameList != null) {
-        		mNameList = nameList;
-        		notifyDataSetChanged();
-        	}
+        	notifyDataSetChanged();
         }
         
 		@Override
 		public int getCount() {
-			return mNameList.size();
+			return mAllSurveyer != null ? mAllSurveyer.size() :0 ;
 		}
 
 		@Override
-		public Object getItem(int arg0) {
-			return mNameList.get(arg0);
+		public SurveyerInformation getItem(int index) {
+			return mAllSurveyer.get(index);
 		}
 
 		@Override
-		public long getItemId(int arg0) {
-			return arg0;
+		public long getItemId(int index) {
+			return index;
 		}
 
 		@Override
 		public View getView(int pos, View view, ViewGroup arg2) {
+			
 			if(view==null){
 				view=LayoutInflater.from(LoginActivity.this).inflate(R.layout.name_item_layout, null);
 			}
+			
 			TextView text=(TextView) view.findViewById(R.id.text);
-			text.setText(mNameList.get(pos));
+			text.setText(getItem(pos).getSurveyerName());
 			
 			return view;
 		}
 	}
 	
 	private void showDialog(boolean bSuccess,final OnClickListener listener){
+		
 		if(dlg!=null && dlg.isShowing()){
 			return ;
 		}
+		
 		dlg=new Dialog(this,R.style.custom_dlg);
 		View view=LayoutInflater.from(this).inflate(R.layout.success_dialog_layout, null);		
 		dlg.setContentView(view);
 		TextView text=(TextView) dlg.findViewById(R.id.text);
+		
 		if(!bSuccess){
 			text.setText("用户名和身份证不匹配");
 			text.setCompoundDrawablesWithIntrinsicBounds(R.drawable.fail,0, 0, 0);
 		}
+		
 		Button bt=(Button) dlg.findViewById(R.id.bt);
 		bt.setOnClickListener(new OnClickListener() {
 			
@@ -277,11 +312,11 @@ public class LoginActivity extends Activity implements OnClickListener {
 			   }
 			}
 		});
+		
 		dlg.show();
 		WindowManager.LayoutParams param=dlg.getWindow().getAttributes();
 		param.width=getWindowManager().getDefaultDisplay().getWidth()*3/4;
 		dlg.getWindow().setAttributes(param);
 	}
-	
 	
 }

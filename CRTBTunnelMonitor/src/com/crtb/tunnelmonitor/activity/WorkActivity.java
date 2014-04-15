@@ -8,13 +8,16 @@ import org.zw.android.framework.ioc.InjectLayout;
 import org.zw.android.framework.ioc.InjectResource;
 import org.zw.android.framework.ioc.InjectView;
 
+import android.content.BroadcastReceiver;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Message;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 
+import com.crtb.tunnelmonitor.AppHandler;
 import com.crtb.tunnelmonitor.CommonObject;
 import com.crtb.tunnelmonitor.WorkFlowActivity;
 import com.crtb.tunnelmonitor.common.Constant;
@@ -43,6 +46,8 @@ public final class WorkActivity extends WorkFlowActivity {
 	
 	// delete dialog
 	private CrtbDialogHint 	mWarringDialog ;
+	
+	BroadcastReceiver mReceiver ;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -113,6 +118,31 @@ public final class WorkActivity extends WorkFlowActivity {
 				delete.show(); 
 			}
 		}
+	}
+
+	@Override
+	protected AppHandler getHandler() {
+		return new AppHandler(this){
+
+			@Override
+			protected void dispose(Message msg) {
+				
+				switch(msg.what){
+				case 0 :
+					mListView.onReload() ;
+					break ;
+				}
+			}
+			
+		};
+	}
+	
+	
+	private void loadData(){
+		
+		// insert data
+		
+		mHanlder.sendMessage(0);
 	}
 
 	private void loadSystemMenu(){

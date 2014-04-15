@@ -1,5 +1,6 @@
 package com.crtb.tunnelmonitor.activity;
 
+import java.util.Arrays;
 import java.util.List;
 
 import android.app.Activity;
@@ -17,7 +18,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.crtb.tunnelmonitor.dao.impl.v2.SurveyerInformationDao;
 import com.crtb.tunnelmonitor.entity.SurveyerInformation;
+import com.crtb.tunnelmonitor.event.EventDispatcher;
 import com.crtb.tunnelmonitor.network.CrtbWebService;
 import com.crtb.tunnelmonitor.network.RpcCallback;
 
@@ -33,7 +36,7 @@ public class TesterLoadActivity extends Activity implements OnClickListener {
 
 	private RelativeLayout mTvLayout;
 
-	private List<SurveyerInformation> mTestors;
+	private List<SurveyerInformation> mTestors ;
 
 	private ListView mListView;
 
@@ -57,32 +60,37 @@ public class TesterLoadActivity extends Activity implements OnClickListener {
 	}
 
 	private void init() {
-//		SurveyerInformationDaoImpl dao = SurveyerInformationDaoImpl
-//				.getInstance();
-//		mTestors = dao.SelectAllSurveyerInfo();
-//		if (mTestors!=null && mTestors.size() > 0) {
-//			mTvLayout.setVisibility(View.VISIBLE);
-//			mAdapter = new TestorAdapter();
-//			mListView.setAdapter(mAdapter);
-//		}
+		
+		mTestors = SurveyerInformationDao.defaultDao().queryAllSurveyerInformation() ;
+		
+		if (mTestors!=null && mTestors.size() > 0) {
+			mTvLayout.setVisibility(View.VISIBLE);
+			mAdapter = new TestorAdapter();
+			mListView.setAdapter(mAdapter);
+		}
 	}
 
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.load:
+			
 			String name = mUserName.getText().toString().trim();
 			String pwd = mPassword.getText().toString().trim();
+			
 			if (TextUtils.isEmpty(name) || TextUtils.isEmpty(pwd)) {
 				Toast.makeText(this, "请填写用户名和密码", Toast.LENGTH_LONG).show();
 				return;
 			}
+			
 			login(name, pwd);
+			
 			break;
 		}
 	}
 
 	private void login(String username, String password) {
+		
 		CrtbWebService.getInstance().login(username, password,
 				new RpcCallback() {
 
@@ -95,20 +103,23 @@ public class TesterLoadActivity extends Activity implements OnClickListener {
 
 									@Override
 									public void onSuccess(Object[] data) {
+										
 										if (data != null && data.length > 0) {
-//											mTestors = Arrays
-//													.asList((SurveyerInformation[]) data);
-//											SurveyerInformationDao dao = SurveyerInformationDaoImpl
-//													.getInstance();
-//											dao.deleteAll();
-//											mTvLayout.setVisibility(View.VISIBLE);
-//                                            mAdapter=new TestorAdapter();
-//											mListView.setAdapter(mAdapter);
-//                                            for (int i = 0; i < mTestors.size(); i++){
-//												dao.InsertSurveyerInfo(mTestors
-//														.get(i));
-//											}
-//                                            EventDispatcher.getInstance().notifyDatabaseChanged();
+											
+											mTestors = Arrays
+													.asList((SurveyerInformation[]) data);
+											
+											SurveyerInformationDao.defaultDao().deleteAll() ;
+											
+											mTvLayout.setVisibility(View.VISIBLE);
+                                            mAdapter=new TestorAdapter();
+											mListView.setAdapter(mAdapter);
+											
+                                            for (int i = 0; i < mTestors.size(); i++){
+                                            	SurveyerInformationDao.defaultDao().insert(mTestors.get(i)) ;
+											}
+                                            
+                                            EventDispatcher.getInstance().notifyDatabaseChanged();
 										}
 									}
 

@@ -4,12 +4,14 @@ import java.io.Serializable;
 
 import org.zw.android.framework.db.ColumnInt;
 import org.zw.android.framework.db.ColumnString;
+import org.zw.android.framework.db.Table;
 import org.zw.android.framework.db.core.ColumnPrimaryKey;
 import org.zw.android.framework.db.core.ColumnPrimaryKey.PrimaryKeyType;
 
 /**
  *测量人员信息实体
  */
+@Table(TableName="SurveyerInformation")
 public class SurveyerInformation implements Serializable {
 	
 	@ColumnPrimaryKey(Type = PrimaryKeyType.AUTO)
