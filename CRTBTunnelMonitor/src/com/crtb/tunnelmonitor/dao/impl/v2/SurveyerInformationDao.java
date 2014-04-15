@@ -25,6 +25,13 @@ public class SurveyerInformationDao extends AbstractDao<SurveyerInformation> {
 		mDatabase.deleteAll(SurveyerInformation.class);
 	}
 	
+	public SurveyerInformation querySurveyerByName(String name){
+		
+		String sql = "select * from SurveyerInformation where surveyerName = ?" ;
+		
+		return mDatabase.queryObject(sql, new String[]{name}, SurveyerInformation.class);
+	}
+	
 	public List<SurveyerInformation> queryAllSurveyerInformation(){
 		
 		String sql = "select * from SurveyerInformation" ;
