@@ -5,6 +5,7 @@ import com.byd.player.audio.AudioListActivity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Environment;
 import android.os.Handler;
@@ -39,7 +40,7 @@ public class USBMountReceiver extends BroadcastReceiver {
         // make sure the application would not request scan file frequently.
         if (curTime - mLastActionTime > ONE_MIN) {
             // scan internal storage
-            Intent intentScanner = new Intent(Intent.ACTION_MEDIA_MOUNTED, INTERNAL_URI);
+            Intent intentScanner = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, INTERNAL_URI);
             mContext.sendBroadcast(intentScanner);
 
             // scan external storage 
