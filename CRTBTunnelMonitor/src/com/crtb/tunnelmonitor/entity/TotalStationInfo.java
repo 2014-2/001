@@ -46,116 +46,110 @@ public class TotalStationInfo implements Serializable {
     private String cmd;                 //串口
 
     @ColumnString(length=8)
-    private String bUse;
-
+    private String used;				// 是否选中
+    
     @ColumnString(length=8)
-    private String bCheck;
-
-    public int getId() {
-        return id;
+    private String checked;				// 是否使用
+    
+    public TotalStationInfo(){
+    	setUsed("false");
+    	setUsed("false");
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
+	public int getId() {
+		return id;
+	}
 
-    public String getName() {
-        return name;
-    }
+	public void setId(int id) {
+		this.id = id;
+	}
 
-    public void setName(String name) {
-        this.name = name;
-    }
+	public String getName() {
+		return name;
+	}
 
-    public String getTotalstationType() {
-        return totalstationType;
-    }
+	public void setName(String name) {
+		this.name = name;
+	}
 
-    public void setTotalstationType(String totalstationType) {
-        this.totalstationType = totalstationType;
-    }
+	public String getTotalstationType() {
+		return totalstationType;
+	}
 
-    public int getBaudRate() {
-        return baudRate;
-    }
+	public void setTotalstationType(String totalstationType) {
+		this.totalstationType = totalstationType;
+	}
 
-    public void setBaudRate(int baudRate) {
-        this.baudRate = baudRate;
-    }
+	public int getBaudRate() {
+		return baudRate;
+	}
 
-    public int getPort() {
-        return port;
-    }
+	public void setBaudRate(int baudRate) {
+		this.baudRate = baudRate;
+	}
 
-    public void setPort(int port) {
-        this.port = port;
-    }
+	public int getPort() {
+		return port;
+	}
 
-    public int getDarity() {
-        return darity;
-    }
+	public void setPort(int port) {
+		this.port = port;
+	}
 
-    public void setDarity(int darity) {
-        this.darity = darity;
-    }
+	public int getDarity() {
+		return darity;
+	}
 
-    public int getDatabits() {
-        return databits;
-    }
+	public void setDarity(int darity) {
+		this.darity = darity;
+	}
 
-    public void setDatabits(int databits) {
-        this.databits = databits;
-    }
+	public int getDatabits() {
+		return databits;
+	}
 
-    public int getStopbits() {
-        return stopbits;
-    }
+	public void setDatabits(int databits) {
+		this.databits = databits;
+	}
 
-    public void setStopbits(int stopbits) {
-        this.stopbits = stopbits;
-    }
+	public int getStopbits() {
+		return stopbits;
+	}
 
-    public String getInfo() {
-        return info;
-    }
+	public void setStopbits(int stopbits) {
+		this.stopbits = stopbits;
+	}
 
-    public void setInfo(String info) {
-        this.info = info;
-    }
+	public String getInfo() {
+		return info;
+	}
 
-    public String getCmd() {
-        return cmd;
-    }
+	public void setInfo(String info) {
+		this.info = info;
+	}
 
-    public void setCmd(String cmd) {
-        this.cmd = cmd;
-    }
+	public String getCmd() {
+		return cmd;
+	}
 
-    public String getbUse() {
-        return bUse;
-    }
+	public void setCmd(String cmd) {
+		this.cmd = cmd;
+	}
 
-    public void setbUse(String bUse) {
-        this.bUse = bUse;
-    }
+	public String getUsed() {
+		return used != null ? used : "false";
+	}
 
-    public String getbCheck() {
-        return bCheck;
-    }
+	public void setUsed(String used) {
+		this.used = used;
+	}
 
-    public void setbCheck(String bCheck) {
-        this.bCheck = bCheck;
-    }
+	public String getChecked() {
+		return checked != null ? checked : "false";
+	}
 
-    public boolean isbCheck() {
-        return "true".equals(bCheck);
-    }
-
-    public void setbCheck(boolean isChecked) {
-        if (isChecked) {
-            setbCheck("true");
-        } else {
-            setbCheck("false");
-        }
-    }
+	public void setChecked(String checked) {
+		this.checked = checked;
+	}
+	
 }

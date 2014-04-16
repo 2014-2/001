@@ -12,12 +12,14 @@ import org.zw.android.framework.impl.FrameworkFacade;
 
 import android.app.Application;
 
+import com.crtb.tunnelmonitor.entity.AlertHandlingInfo;
 import com.crtb.tunnelmonitor.entity.ControlPointsInfo;
 import com.crtb.tunnelmonitor.entity.RecordInfo;
 import com.crtb.tunnelmonitor.entity.SubsidenceCrossSectionInfo;
 import com.crtb.tunnelmonitor.entity.SurveyerInformation;
 import com.crtb.tunnelmonitor.entity.TotalStationInfo;
 import com.crtb.tunnelmonitor.entity.TunnelCrossSectionInfo;
+import com.crtb.tunnelmonitor.entity.WorkPlan;
 
 public class AppCRTBApplication extends Application {
 	
@@ -59,7 +61,6 @@ public class AppCRTBApplication extends Application {
 		config.setDatabaseVersion(AppConfig.DB_VERSION); // db version
 		FrameworkFacade.create(config);
 		mFramework	= FrameworkFacade.getFrameworkFacade() ;
-		
 	}
 	
 	public IFrameworkFacade getFrameworkFacade(){

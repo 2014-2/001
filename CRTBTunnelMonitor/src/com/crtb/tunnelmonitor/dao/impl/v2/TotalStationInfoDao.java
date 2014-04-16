@@ -4,6 +4,12 @@ import java.util.List;
 
 import com.crtb.tunnelmonitor.entity.TotalStationInfo;
 
+/**
+ * 全站仪
+ * 
+ * @author zhouwei
+ *
+ */
 public class TotalStationInfoDao extends AbstractDao<TotalStationInfo> {
 
 	private static TotalStationInfoDao _instance ;

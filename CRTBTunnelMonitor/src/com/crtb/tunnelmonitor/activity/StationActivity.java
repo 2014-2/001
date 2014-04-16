@@ -84,13 +84,17 @@ public class StationActivity extends Activity {
             public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
                     long arg3) {
                 TotalStationInfo item = mStations.get(arg2);
-                boolean bCheck = !item.isbCheck();
-                item.setbCheck(!item.isbCheck());
+                boolean bCheck = item.getChecked().equals("true");
+                item.setChecked(bCheck ? "false" : "true");
                 mStations.set(arg2, item);
+                
+                // 更新数据库
+                TotalStationInfoDao.defaultDao().update(item);
+                
                 if (bCheck) {
                     for (int i = 0; i < mStations.size(); i++) {
                         if (i != arg2) {
-                            mStations.get(i).setbCheck(false);
+                            mStations.get(i).setChecked("false");
                         }
                     }
                 }
@@ -100,26 +104,26 @@ public class StationActivity extends Activity {
     }
 
     public boolean Connect() {
-        // TSConnectType tstype = TSConnectType.Bluetooth;
-        // String [] tsParams = new String[] {"9600"};
-        //
-        // int nret =
-        // TSSurveyProvider.getDefaultAdapter().BeginConnection(tstype,tsParams
-        // );
-        //
-        // Coordinate3D point = new Coordinate3D();
-        // try {
-        // nret = TSSurveyProvider.getDefaultAdapter().GetCoord(0, 0, point);
-        // String text = String.format("%1$s,%2$s,%3$s",
-        // point.x,point.y,point.z);
-        // tv.setText(text);
-        // }
-        // catch (InterruptedException e) {
-        // e.printStackTrace();
-        // }
-        // nret = TSSurveyProvider.getDefaultAdapter().EndConnection();
-        // TSSurveyProvider.getDefaultAdapter().TestConnection();
-        // }
+//         TSConnectType tstype = TSConnectType.Bluetooth;
+//         String [] tsParams = new String[] {"9600"};
+//        
+//         int nret =
+//         TSSurveyProvider.getDefaultAdapter().BeginConnection(tstype,tsParams
+//         );
+//        
+//         Coordinate3D point = new Coordinate3D();
+//         try {
+//         nret = TSSurveyProvider.getDefaultAdapter().GetCoord(0, 0, point);
+//         String text = String.format("%1$s,%2$s,%3$s",
+//         point.x,point.y,point.z);
+//         tv.setText(text);
+//         }
+//         catch (InterruptedException e) {
+//         e.printStackTrace();
+//         }
+//         nret = TSSurveyProvider.getDefaultAdapter().EndConnection();
+//         TSSurveyProvider.getDefaultAdapter().TestConnection();
+//         }
         return true;
     }
 
@@ -346,7 +350,7 @@ public class StationActivity extends Activity {
                         return;
                     } else {
                         for (int i = 0; i < tmpList.size(); i++) {
-                            if (tmpList.get(i).isbCheck()) {
+                            if (tmpList.get(i).getChecked().equals("true")) {
                                 tmp = tmpList.get(i);
                                 break;
                             }
@@ -405,6 +409,28 @@ public class StationActivity extends Activity {
                 switch (v.getId()) {
                     case R.id.ok:
                         // 测试
+                    	
+                    	// 删除当前选中的全站仪
+                    	 List<TotalStationInfo> list = TotalStationInfoDao.defaultDao().queryAllTotalStations() ;
+                    	 
+                    	 if(list != null && !list.isEmpty()){
+                    		
+                    		 for(TotalStationInfo info : list){
+                    			 
+                    			 if(info.getChecked().equals("true")){
+                    				 
+                    				 if(info.getUsed().equals("false")){
+                    					 TotalStationInfoDao.defaultDao().delete(info);
+                    					 StationActivity.adapter.remove(info);
+                    				 } else {
+                    					 showDialog("当前全站仪正在使用中，无法删除");
+                    				 }
+                    				 
+                    				 break ;
+                    			 }
+                    		 }
+                    	 }
+                    	
 
                         //                        AppCRTBApplication app = (AppCRTBApplication) SonPopupWindow.this.c
                         //                        .getApplicationContext();
