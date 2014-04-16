@@ -90,7 +90,7 @@
                         android:layout_marginRight="20dp"
                         android:layout_weight="1"
                         android:hint="请输入身份证"
-                        android:text="10290198805012891" />
+                        android:text="102190198805012891" />
                 </LinearLayout>
             </RelativeLayout>
 
