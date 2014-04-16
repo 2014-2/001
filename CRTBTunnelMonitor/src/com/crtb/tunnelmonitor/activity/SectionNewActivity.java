@@ -96,6 +96,9 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 	@InjectView(layout=R.layout.section_new_kaiwa)
 	private LinearLayout mExcavationInfoLayout ;
 	
+	@InjectView(id=R.id.img_fangfa,parent="mExcavationInfoLayout")
+	private ImageView section_method ;
+	
 	@InjectView(id=R.id.section_new_sp,parent="mExcavationInfoLayout",onClick="this")
 	private Spinner section_new_sp;
 	
@@ -176,6 +179,15 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 			public void onItemSelected(AdapterView<?> parent, View view,
 					int position, long id) {
 				
+				if(position == 0){
+					section_method.setBackgroundResource(R.drawable.ic_full_face);
+				} else if(position == 1){
+					section_method.setBackgroundResource(R.drawable.ic_step_method);
+				} else if(position == 2){
+					section_method.setBackgroundResource(R.drawable.ic_three_step);
+				} else if(position == 3){
+					section_method.setBackgroundResource(R.drawable.ic_dual_slope_method);
+				} 
 			}
 
 			@Override
