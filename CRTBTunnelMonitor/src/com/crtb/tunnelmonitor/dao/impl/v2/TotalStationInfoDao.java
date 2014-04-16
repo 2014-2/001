@@ -1,5 +1,7 @@
 package com.crtb.tunnelmonitor.dao.impl.v2;
 
+import java.util.List;
+
 import com.crtb.tunnelmonitor.entity.TotalStationInfo;
 
 public class TotalStationInfoDao extends AbstractDao<TotalStationInfo> {
@@ -17,5 +19,10 @@ public class TotalStationInfoDao extends AbstractDao<TotalStationInfo> {
 		}
 		
 		return _instance ;
+	}
+	
+	public List<TotalStationInfo> queryAllTotalStations() {
+		String sql = "select * from TotalStationInfo";
+		return mDatabase.queryObjects(sql, TotalStationInfo.class);
 	}
 }

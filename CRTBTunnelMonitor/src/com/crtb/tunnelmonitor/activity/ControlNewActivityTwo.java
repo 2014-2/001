@@ -1,7 +1,6 @@
-/**
- * 
- */
 package com.crtb.tunnelmonitor.activity;
+
+import java.util.List;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -20,8 +19,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.crtb.tunnelmonitor.AppCRTBApplication;
 import com.crtb.tunnelmonitor.common.Constant;
+import com.crtb.tunnelmonitor.dao.impl.v2.ControlPointsInfoDao;
 import com.crtb.tunnelmonitor.entity.ControlPointsInfo;
 
 public class ControlNewActivityTwo extends Activity implements OnClickListener {
@@ -35,8 +34,6 @@ public class ControlNewActivityTwo extends Activity implements OnClickListener {
     /** 取消按钮 */
     private Button mCancel;
 
-    private AppCRTBApplication CurApp = null;
-
     private Dialog dlg;
 
     private boolean bEdit = false;
@@ -48,7 +45,6 @@ public class ControlNewActivityTwo extends Activity implements OnClickListener {
         cp_new_tv_header = (TextView)findViewById(R.id.tv_topbar_title);
         cp_new_tv_header.setText(R.string.new_control_point_title);
 
-        CurApp = ((AppCRTBApplication) getApplicationContext());
         Bundle bundle = getIntent().getExtras();
         info = (ControlPointsInfo) bundle
                 .getParcelable(Constant.Select_ControlPointsRowClickItemsName_Data);
@@ -116,53 +112,40 @@ public class ControlNewActivityTwo extends Activity implements OnClickListener {
                     Toast.makeText(this, "请输入名称", 3000).show();
                     return;
                 }
-//                WorkInfos Curw = CurApp.getCurrentWorkingFace();
-//                ControlPointsInfo ts = new ControlPointsInfo();
-//                if (info != null) {
-//                    ts.setId(info.getId());
-//                }
-//                String name = mName.getText().toString().trim();
-//                ts.setName(name);
-//                ts.setX(Double.valueOf(mPointX.getText().toString().trim()));
-//                ts.setY(Double.valueOf(mPointY.getText().toString().trim()));
-//                ts.setZ(Double.valueOf(mPointZ.getText().toString().trim()));
-//                ts.setInfo(mNote.getText().toString().trim());
-//                ControlPointsDaoImpl impl = new ControlPointsDaoImpl(this,
-//                        Curw.getProjectName());
-//                List<ControlPointsInfo> cpinfos = null;
-//                cpinfos = Curw.getCpList();
-//                if (cpinfos == null) {
-//                    Toast.makeText(this, "添加失败", 3000).show();
-//                    return;
-//                } else {
-//                    if (!bEdit) {
-//                        for (int i = 0; i < cpinfos.size(); i++) {
-//                            if (cpinfos.get(i).getName().equals(name)) {
-//                                showDialog("该控制点名已存在");
-//                                return;
-//                            }
-//                        }
-//                    }
-//                    if (!bEdit) {
-//                        if (impl.InsertStationInfo(ts)) {
-//                            cpinfos.add(ts);
-//                            CurApp.UpdateWork(Curw);
-//                            Toast.makeText(this, "添加成功", 3000).show();
-//                        } else {
-//                            Toast.makeText(this, "添加失败", 3000).show();
-//                        }
-//                    } else {
-//                        impl.UpdateStationInfo(ts);
-//                        Curw.UpdateContrlPointsInfo(ts);
-//                        CurApp.UpdateWork(Curw);
-//                        Toast.makeText(this, "编辑成功", 3000).show();
-//                    }
-//                }
-//                Intent IntentOk = new Intent();
-//                IntentOk.putExtra(
-//                        Constant.Select_ControlPointsRowClickItemsName_Data, "");
-//                setResult(RESULT_OK, IntentOk);
-//                this.finish();
+                ControlPointsInfo controlPoint = new ControlPointsInfo();
+                if (info != null) {
+                	controlPoint.setId(info.getId());
+                }
+                String name = mName.getText().toString().trim();
+                controlPoint.setName(name);
+                controlPoint.setX(Float.valueOf(mPointX.getText().toString().trim()));
+                controlPoint.setY(Float.valueOf(mPointY.getText().toString().trim()));
+                controlPoint.setZ(Float.valueOf(mPointZ.getText().toString().trim()));
+                controlPoint.setInfo(mNote.getText().toString().trim());
+                ControlPointsInfoDao dao = ControlPointsInfoDao.defaultDao();
+                List<ControlPointsInfo> controlPoints = dao.queryAllControlPoints();
+                if (!bEdit) {
+                	if (controlPoints != null) {
+	                    for (int i = 0; i < controlPoints.size(); i++) {
+	                        if (controlPoints.get(i).getName().equals(name)) {
+	                            showDialog("该控制点名已存在");
+	                            return;
+	                        }
+	                    }
+                	}
+                    if (dao.insert(controlPoint)) {
+                    	 Toast.makeText(this, "添加成功", Toast.LENGTH_LONG).show();
+                    } else {
+                    	 Toast.makeText(this, "添加失败", Toast.LENGTH_LONG).show();
+                    }
+                } else {
+                	dao.update(controlPoint);
+                    Toast.makeText(this, "编辑成功", Toast.LENGTH_LONG).show();
+                }
+                Intent IntentOk = new Intent();
+                IntentOk.putExtra(Constant.Select_ControlPointsRowClickItemsName_Data, "");
+                setResult(RESULT_OK, IntentOk);
+                this.finish();
                 break;
             default:
                 break;
@@ -220,7 +203,6 @@ public class ControlNewActivityTwo extends Activity implements OnClickListener {
                 if (dlg != null) {
                     dlg.dismiss();
                 }
-
             }
         });
     }

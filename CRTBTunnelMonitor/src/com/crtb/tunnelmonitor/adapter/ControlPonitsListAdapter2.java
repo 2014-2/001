@@ -18,25 +18,25 @@ import com.crtb.tunnelmonitor.activity.R;
 import com.crtb.tunnelmonitor.entity.ControlPointsInfo;
 
 public class ControlPonitsListAdapter2 extends BaseAdapter {
-	private List<ControlPointsInfo> listinfos;
+	private List<ControlPointsInfo> mControlPoints;
 	private Context context;
 
 	public ControlPonitsListAdapter2(Context ct, List<ControlPointsInfo> lis) {
 		context = ct;
-		listinfos = lis;
+		mControlPoints = lis;
 	}
 
 	@Override
 	public int getCount() {
-		if (listinfos != null) {
-			return listinfos.size();
+		if (mControlPoints != null) {
+			return mControlPoints.size();
 		}
 		return 0;
 	}
 
 	@Override
 	public Object getItem(int arg0) {
-		return listinfos.get(arg0);
+		return mControlPoints.get(arg0);
 	}
 
 	@Override
@@ -54,13 +54,12 @@ public class ControlPonitsListAdapter2 extends BaseAdapter {
 		TextView name = (TextView) convertView.findViewById(R.id.t1);
 		ImageView start = (ImageView) convertView.findViewById(R.id.t2);
 		name.setTextColor(Color.BLACK);
-		// start.setTextColor(Color.BLACK);
-//		name.setText(listinfos.get(position).getName());
-//		if (listinfos.get(position).isbCheck()) {
-//			start.setImageResource(R.drawable.yes);
-//		} else {
-//			start.setImageResource(R.drawable.no);
-//		}
+		name.setText(mControlPoints.get(position).getName());
+		if ("true".equals(mControlPoints.get(position).getbCheck())) {
+			start.setImageResource(R.drawable.yes);
+		} else {
+			start.setImageResource(R.drawable.no);
+		}
 		return convertView;
 	}
 }

@@ -1,8 +1,10 @@
 package com.crtb.tunnelmonitor.dao.impl.v2;
 
-import com.crtb.tunnelmonitor.entity.AlertInfo;
+import java.util.List;
 
-public class ControlPointsInfoDao extends AbstractDao<AlertInfo> {
+import com.crtb.tunnelmonitor.entity.ControlPointsInfo;
+
+public class ControlPointsInfoDao extends AbstractDao<ControlPointsInfo> {
 
 	private static ControlPointsInfoDao _instance ;
 	
@@ -18,4 +20,10 @@ public class ControlPointsInfoDao extends AbstractDao<AlertInfo> {
 		
 		return _instance ;
 	}
+	
+	public List<ControlPointsInfo> queryAllControlPoints() {
+		String sql = "select * from ControlPointsInfo";
+		return mDatabase.queryObjects(sql, ControlPointsInfo.class);
+	}
+	
 }

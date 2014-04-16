@@ -34,6 +34,8 @@ import com.crtb.tssurveyprovider.TSSurveyProvider;
 import com.crtb.tunnelmonitor.AppCRTBApplication;
 import com.crtb.tunnelmonitor.adapter.ControlPonitsListAdapter;
 import com.crtb.tunnelmonitor.common.Constant;
+import com.crtb.tunnelmonitor.dao.impl.v2.TotalStationInfoDao;
+import com.crtb.tunnelmonitor.dao.impl.v2.WorkPlanDao;
 import com.crtb.tunnelmonitor.entity.TotalStationInfo;
 
 public class StationActivity extends Activity {
@@ -122,39 +124,17 @@ public class StationActivity extends Activity {
         return true;
     }
 
-    public void setdata() {
-        //        WorkInfos work = CurApp.getCurrentWorkingFace();
-        //        if (work == null) {
-        //            return;
-        //        }
-        //        mStations = work.getStaionList();
-        //        boolean bLoadDB = true;
-        //        if (mStations != null) {
-        //            if (mStations.size() > 0) {
-        //                bLoadDB = false;
-        //            }
-        //        }
-        //        if (bLoadDB) {
-        //            if (mStations == null) {
-        //                mStations = new ArrayList<TotalStationInfo>();
-        //            }
-        //            TotalStationDaoImpl dao = new TotalStationDaoImpl(this,
-        //                    work.getProjectName());
-        //            dao.GetTotalStationList(mStations);
-        //            work.setStationList(mStations);
-        //            CurApp.UpdateWork(work);
-        //        }
-    }
-
     private void init() {
         listview = (ListView) findViewById(R.id.lv_conlist);
     }
 
     public void loadData() {
-        setdata();
+    	if (WorkPlanDao.defaultWorkPlanDao().queryEditWorkPlan() == null) {
+    		return ;
+    	}
+    	mStations = TotalStationInfoDao.defaultDao().queryAllTotalStations();
         if (mStations != null && mStations.size() > 0) {
-            adapter = new ControlPonitsListAdapter(StationActivity.this,
-                    mStations);
+            adapter = new ControlPonitsListAdapter(StationActivity.this, mStations);
             listview.setAdapter(adapter);
         }
     }

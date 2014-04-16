@@ -66,7 +66,7 @@ public class ConPopuWindow extends PopupWindow {
 			//@SuppressLint("ShowToast")
 			@Override
 			public void onClick(View v) {
-				List<ControlPointsInfo> tmpList = ((ControlPointsActivity)c).list;
+				List<ControlPointsInfo> tmpList = ((ControlPointsActivity)c).mControlPoints;
 				ControlPointsInfo tmp = null;
 				if (tmpList == null) {
 					Toast.makeText((Activity) c, "请选择需要编辑的控制点", 3000).show();

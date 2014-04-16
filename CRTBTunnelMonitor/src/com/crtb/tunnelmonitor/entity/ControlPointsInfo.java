@@ -5,12 +5,14 @@ import java.io.Serializable;
 import org.zw.android.framework.db.ColumnFloat;
 import org.zw.android.framework.db.ColumnInt;
 import org.zw.android.framework.db.ColumnString;
+import org.zw.android.framework.db.Table;
 import org.zw.android.framework.db.core.ColumnPrimaryKey;
 import org.zw.android.framework.db.core.ColumnPrimaryKey.PrimaryKeyType;
 
 /**
  * 控制点实体
  */
+@Table(TableName = "ControlPointsInfo")
 public class ControlPointsInfo implements Serializable {
 	
 	@ColumnPrimaryKey(Type = PrimaryKeyType.AUTO)
