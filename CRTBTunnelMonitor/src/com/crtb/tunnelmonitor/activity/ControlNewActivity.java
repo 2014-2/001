@@ -126,7 +126,7 @@ public class ControlNewActivity extends Activity implements OnClickListener {
         section_btn_queding.setOnClickListener(this);
         section_btn_quxiao.setOnClickListener(this);
     }
-    
+
     // 点击事件
     @Override
     public void onClick(View v) {
@@ -145,7 +145,7 @@ public class ControlNewActivity extends Activity implements OnClickListener {
                 }
                 if(name.getText().toString().trim().length() <= 0)
                 {
-                    Toast.makeText(this, "请输入控制点名", 3000).show();
+                    Toast.makeText(this, "请输入全站仪名称", 3000).show();
                     return;
                 }
                 WorkPlan workPlan = WorkPlanDao.defaultWorkPlanDao().queryEditWorkPlan();
@@ -165,7 +165,7 @@ public class ControlNewActivity extends Activity implements OnClickListener {
                     }
                 }
                 ts.setName(name.getText().toString().trim());
-//                ts.setParity(Integer.valueOf(xyw.getText().toString().trim()));
+                //                ts.setParity(Integer.valueOf(xyw.getText().toString().trim()));
                 ts.setBaudRate(Integer.valueOf(btl.getText().toString().trim()));
                 ts.setPort(cklist.indexOf(ck.getText().toString().trim()));
                 ts.setDatabits(Integer.valueOf(sjw.getText().toString().trim()));
@@ -176,17 +176,17 @@ public class ControlNewActivity extends Activity implements OnClickListener {
                     Toast.makeText(this, "请输入完整信息", 3000).show();
                     return;
                 }
-				if (editInfo == null) {
-					TotalStationInfoDao dao = TotalStationInfoDao.defaultDao();
-					if (dao.insert(ts)) {
-						Toast.makeText(this, "添加成功", 3000).show();
-					} else {
-						Toast.makeText(this, "添加失败", 3000).show();
-					}
-				} else {
-					TotalStationInfoDao.defaultDao().update(ts);
-					Toast.makeText(this, "编辑成功", 3000).show();
-				}
+                if (editInfo == null) {
+                    TotalStationInfoDao dao = TotalStationInfoDao.defaultDao();
+                    if (dao.insert(ts)) {
+                        Toast.makeText(this, "添加成功", 3000).show();
+                    } else {
+                        Toast.makeText(this, "添加失败", 3000).show();
+                    }
+                } else {
+                    TotalStationInfoDao.defaultDao().update(ts);
+                    Toast.makeText(this, "编辑成功", 3000).show();
+                }
                 Intent IntentOk = new Intent();
                 IntentOk.putExtra(Constant.Select_TotalStationRowClickItemsName_Name,"");
                 setResult(RESULT_OK, IntentOk);
@@ -209,7 +209,7 @@ public class ControlNewActivity extends Activity implements OnClickListener {
                 }
             }
             name.setText(editInfo.getName());
-//            xyws.setSelection(xylist.indexOf(Integer.toString(editInfo.getParity())));
+            //            xyws.setSelection(xylist.indexOf(Integer.toString(editInfo.getParity())));
             btls.setSelection(btllist.indexOf(Integer.toString(editInfo.getBaudRate())));
             cks.setSelection(editInfo.getPort());
             sjw.setText(Integer.toString(editInfo.getDatabits()));
