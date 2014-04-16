@@ -35,6 +35,20 @@ public class ControlPonitsListAdapter extends BaseAdapter {
     public long getItemId(int position) {
         return position;
     }
+    
+    public void remove(TotalStationInfo bean){
+    	
+    	for(TotalStationInfo info : listinfos){
+    		
+    		if(info.getId() == bean.getId()){
+    			listinfos.remove(info);
+    			break ;
+    		}
+    	}
+    	
+    	notifyDataSetChanged() ;
+    }
+    
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         LayoutInflater lay;
@@ -47,7 +61,7 @@ public class ControlPonitsListAdapter extends BaseAdapter {
         name.setTextColor(Color.BLACK);
         //start.setTextColor(Color.BLACK);
         name.setText(listinfos.get(position).getName());
-        if (listinfos.get(position).isbCheck()) {
+        if (listinfos.get(position).getChecked().equals("true")) {
             start.setImageResource(R.drawable.yes);
         } else {
             start.setImageResource(R.drawable.no);
