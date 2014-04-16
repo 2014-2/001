@@ -162,7 +162,7 @@ public class ControlPointsActivity extends Activity {
             int id = v.getId();
             int ret;
             switch (id) {
-                case R.id.use_point: // 蓝牙连接
+                case R.id.use_point:
                     ControlPointsInfo item = mControlPoints.get(iItemPos);
                     item.setbUse("true");
                     item.setbCheck("true");
