@@ -1,5 +1,7 @@
 package com.crtb.tunnelmonitor.dao.impl.v2;
 
+import java.util.List;
+
 import com.crtb.tunnelmonitor.entity.StationInfo;
 
 public class StationInfoDao extends AbstractDao<StationInfo> {
@@ -18,4 +20,5 @@ public class StationInfoDao extends AbstractDao<StationInfo> {
 		
 		return _instance ;
 	}
+	
 }
