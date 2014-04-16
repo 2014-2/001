@@ -29,7 +29,7 @@ import com.crtb.tunnelmonitor.dao.impl.v2.ControlPointsInfoDao;
 import com.crtb.tunnelmonitor.entity.ControlPointsInfo;
 
 public class ConPopuWindow extends PopupWindow {
-    private RelativeLayout xinjian,bianji,delete;//三個按鈕
+    private RelativeLayout shiyong, xinjian, bianji, delete, qita;// 五个按钮
 
     private View mMenuView;
 
@@ -47,9 +47,47 @@ public class ConPopuWindow extends PopupWindow {
         LayoutInflater inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mMenuView = inflater.inflate(R.layout.kd_diagol, null);
+        shiyong = (RelativeLayout)mMenuView.findViewById(R.id.kd_sy);
         xinjian = (RelativeLayout) mMenuView.findViewById(R.id.kd_tj);
         bianji = (RelativeLayout) mMenuView.findViewById(R.id.kd_bj);
         delete = (RelativeLayout) mMenuView.findViewById(R.id.kd_sc);
+        qita = (RelativeLayout)mMenuView.findViewById(R.id.kd_qt);
+
+        shiyong.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                List<ControlPointsInfo> tmpList = ((ControlPointsActivity)c).mControlPoints;
+                ControlPointsInfo tmp = null;
+                int iItemPos = 0;
+                if (tmpList == null) {
+                    Toast.makeText(c, "请选择要使用的控制点", 3000).show();
+                    return;
+                } else {
+                    for (int i = 0; i < tmpList.size(); i++) {
+                        if (tmpList.get(i).getChecked().equals("true")) {
+                            tmp = tmpList.get(i);
+                            iItemPos = i;
+                            break;
+                        }
+                    }
+                }
+                if (tmp == null) {
+                    Toast.makeText(c, "请选择要使用的控制点", 3000).show();
+                    return;
+                }
+                tmp.setUsed("true");
+                tmp.setChecked("true");
+                ((ControlPointsActivity)c).mControlPoints.set(iItemPos, tmp);
+                for (int i = 0; i < ((ControlPointsActivity)c).mControlPoints.size(); i++) {
+                    if (i != iItemPos) {
+                        ((ControlPointsActivity)c).mControlPoints.get(i).setUsed("false");
+                        ((ControlPointsActivity)c).mControlPoints.get(i).setChecked("false");
+                    }
+                }
+                ControlPointsInfoDao.defaultDao().update(tmp);
+                ((ControlPointsActivity)c).mAdapter.notifyDataSetChanged();
+            }
+        });
 
         xinjian.setOnClickListener(new View.OnClickListener() {
             @Override
