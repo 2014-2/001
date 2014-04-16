@@ -416,6 +416,7 @@ public class StationActivity extends Activity {
 							.defaultDao().queryAllTotalStations();
 
 					if (list == null) {
+						dlg.dismiss() ;
 						return;
 					}
 
@@ -427,6 +428,7 @@ public class StationActivity extends Activity {
 					}
 
 					if (!finded) {
+						dlg.dismiss() ;
 						showDialog("请先选择要删除的全站仪");
 						return;
 					}
@@ -438,6 +440,8 @@ public class StationActivity extends Activity {
 							if (info.getUsed().equals("false")) {
 								TotalStationInfoDao.defaultDao().delete(info);
 								StationActivity.adapter.remove(info);
+								
+								showDialog("操作成功");
 							} else {
 								showDialog("当前全站仪正在使用中，无法删除");
 							}
@@ -445,6 +449,8 @@ public class StationActivity extends Activity {
 							break;
 						}
 					}
+					
+					dlg.dismiss() ;
                     	
 
                         //                        AppCRTBApplication app = (AppCRTBApplication) SonPopupWindow.this.c
@@ -481,7 +487,6 @@ public class StationActivity extends Activity {
                          * 
                          * }
                          */
-                        dlg.cancel();
                         break;
                     case R.id.cancel:
                         dlg.cancel();
@@ -523,5 +528,9 @@ public class StationActivity extends Activity {
 
             }
         });
+        
+        if(menuWindow != null){
+        	menuWindow.dismiss() ;
+        }
     }
 }
