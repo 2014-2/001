@@ -10,7 +10,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -128,7 +127,7 @@ public class ControlNewActivityTwo extends Activity implements OnClickListener {
                     if (controlPoints != null) {
                         for (int i = 0; i < controlPoints.size(); i++) {
                             if (controlPoints.get(i).getName().equals(name)) {
-                                showDialog("该控制点名已存在");
+                                showExistDialog();
                                 return;
                             }
                         }
@@ -175,27 +174,14 @@ public class ControlNewActivityTwo extends Activity implements OnClickListener {
         }
     }
 
-    private void showDialog(String text) {
+    private void showExistDialog() {
         AlertDialog.Builder builder = new Builder(this);
-        View view = LayoutInflater.from(this).inflate(R.layout.dialog, null);
-        view.findViewById(R.id.cancel).setVisibility(View.GONE);
-        view.findViewById(R.id.delete2).setOnClickListener(
-                new View.OnClickListener() {
-
-                    @Override
-                    public void onClick(View v) {
-                        if (dlg != null) {
-                            dlg.dismiss();
-                        }
-                    }
-                });
-        TextView message = (TextView) view.findViewById(R.id.message);
-        message.setText(text);
         dlg = builder.create();
+
         dlg.show();
         Window window = dlg.getWindow();
-        window.setContentView(view);
-        Button ok = (Button) view.findViewById(R.id.ok);
+        window.setContentView(R.layout.dialog_control_point_exist);
+        Button ok = (Button)window.findViewById(R.id.ok);
         ok.setOnClickListener(new View.OnClickListener() {
 
             @Override
