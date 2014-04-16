@@ -75,13 +75,13 @@ public class ConPopuWindow extends PopupWindow {
                     Toast.makeText(c, "请选择要使用的控制点", 3000).show();
                     return;
                 }
-                tmp.setbUse("true");
-                tmp.setbCheck("true");
+                tmp.setUsed("true");
+                tmp.setChecked("true");
                 ((ControlPointsActivity)c).mControlPoints.set(iItemPos, tmp);
                 for (int i = 0; i < ((ControlPointsActivity)c).mControlPoints.size(); i++) {
                     if (i != iItemPos) {
-                        ((ControlPointsActivity)c).mControlPoints.get(i).setbUse("false");
-                        ((ControlPointsActivity)c).mControlPoints.get(i).setbCheck("false");
+                        ((ControlPointsActivity)c).mControlPoints.get(i).setUsed("false");
+                        ((ControlPointsActivity)c).mControlPoints.get(i).setChecked("false");
                     }
                 }
                 ControlPointsInfoDao.defaultDao().update(tmp);
@@ -124,6 +124,7 @@ public class ConPopuWindow extends PopupWindow {
                     return;
                 }
                 if (tmp.isbUse()) {
+
                     showDialog("该控制点正在使用中,无法编辑", null);
                     return;
                 }
@@ -139,6 +140,35 @@ public class ConPopuWindow extends PopupWindow {
 
             @Override
             public void onClick(View v) {
+
+            	// 所以控制点
+            	List<ControlPointsInfo> list = ControlPointsInfoDao.defaultDao().queryAllControlPoints();
+            	
+            	if(list != null){
+            		
+            		for(final ControlPointsInfo info : list){
+            			
+            			if(info.getChecked().equals("true")){
+            				
+            				if(info.getUsed().equals("false")){
+            					
+            					showDialog("删除后数据无法恢复，确定删除？",new dialogListener(){
+
+									@Override
+									public void onClickOk() {
+										
+										ControlPointsInfoDao.defaultDao().delete(info);
+										ControlPointsActivity.mAdapter.remove(info);
+									}
+            					});
+            				} else {
+            					showDialog("控制点正在使用中，无法删除",null);
+            				}
+            				
+            				break ;
+            			} 
+            		}
+            	}
 
                 // List<ControlPointsInfo> tmpList =
                 // ((ControlPointsActivity)c).list;

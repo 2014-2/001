@@ -408,28 +408,49 @@ public class StationActivity extends Activity {
             public void onClick(View v) {
                 switch (v.getId()) {
                     case R.id.ok:
-                        // 测试
-                    	
-                    	// 删除当前选中的全站仪
-                    	 List<TotalStationInfo> list = TotalStationInfoDao.defaultDao().queryAllTotalStations() ;
-                    	 
-                    	 if(list != null && !list.isEmpty()){
-                    		
-                    		 for(TotalStationInfo info : list){
-                    			 
-                    			 if(info.getChecked().equals("true")){
-                    				 
-                    				 if(info.getUsed().equals("false")){
-                    					 TotalStationInfoDao.defaultDao().delete(info);
-                    					 StationActivity.adapter.remove(info);
-                    				 } else {
-                    					 showDialog("当前全站仪正在使用中，无法删除");
-                    				 }
-                    				 
-                    				 break ;
-                    			 }
-                    		 }
-                    	 }
+					// 测试
+
+					boolean finded = false;
+					// 删除当前选中的全站仪
+					List<TotalStationInfo> list = TotalStationInfoDao
+							.defaultDao().queryAllTotalStations();
+
+					if (list == null) {
+						dlg.dismiss() ;
+						return;
+					}
+
+					for (TotalStationInfo info : list) {
+						if (info.getChecked().equals("true")) {
+							finded = true;
+							break;
+						}
+					}
+
+					if (!finded) {
+						dlg.dismiss() ;
+						showDialog("请先选择要删除的全站仪");
+						return;
+					}
+
+					for (TotalStationInfo info : list) {
+
+						if (info.getChecked().equals("true")) {
+
+							if (info.getUsed().equals("false")) {
+								TotalStationInfoDao.defaultDao().delete(info);
+								StationActivity.adapter.remove(info);
+								
+								showDialog("操作成功");
+							} else {
+								showDialog("当前全站仪正在使用中，无法删除");
+							}
+
+							break;
+						}
+					}
+					
+					dlg.dismiss() ;
                     	
 
                         //                        AppCRTBApplication app = (AppCRTBApplication) SonPopupWindow.this.c
@@ -466,7 +487,6 @@ public class StationActivity extends Activity {
                          * 
                          * }
                          */
-                        dlg.cancel();
                         break;
                     case R.id.cancel:
                         dlg.cancel();
@@ -508,5 +528,9 @@ public class StationActivity extends Activity {
 
             }
         });
+        
+        if(menuWindow != null){
+        	menuWindow.dismiss() ;
+        }
     }
 }
