@@ -85,16 +85,16 @@ public class StationActivity extends Activity {
             public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
                     long arg3) {
                 TotalStationInfo item = mStations.get(arg2);
-                //                boolean bCheck = !item.isbCheck();
-                //                item.setbCheck(!item.isbCheck());
-                //                mStations.set(arg2, item);
-                //                if (bCheck) {
-                //                    for (int i = 0; i < mStations.size(); i++) {
-                //                        if (i != arg2) {
-                //                            mStations.get(i).setbCheck(false);
-                //                        }
-                //                    }
-                //                }
+                boolean bCheck = !item.isbCheck();
+                item.setbCheck(!item.isbCheck());
+                mStations.set(arg2, item);
+                if (bCheck) {
+                    for (int i = 0; i < mStations.size(); i++) {
+                        if (i != arg2) {
+                            mStations.get(i).setbCheck(false);
+                        }
+                    }
+                }
                 adapter.notifyDataSetChanged();
             }
         });
@@ -129,10 +129,10 @@ public class StationActivity extends Activity {
     }
 
     public void loadData() {
-    	if (WorkPlanDao.defaultWorkPlanDao().queryEditWorkPlan() == null) {
-    		return ;
-    	}
-    	mStations = TotalStationInfoDao.defaultDao().queryAllTotalStations();
+        if (WorkPlanDao.defaultWorkPlanDao().queryEditWorkPlan() == null) {
+            return ;
+        }
+        mStations = TotalStationInfoDao.defaultDao().queryAllTotalStations();
         if (mStations != null && mStations.size() > 0) {
             adapter = new ControlPonitsListAdapter(StationActivity.this, mStations);
             listview.setAdapter(adapter);
@@ -347,10 +347,10 @@ public class StationActivity extends Activity {
                         return;
                     } else {
                         for (int i = 0; i < tmpList.size(); i++) {
-                            //                            if (tmpList.get(i).isbCheck()) {
-                            //                                tmp = tmpList.get(i);
-                            //                                break;
-                            //                            }
+                            if (tmpList.get(i).isbCheck()) {
+                                tmp = tmpList.get(i);
+                                break;
+                            }
                         }
                     }
                     if (tmp == null) {
@@ -360,9 +360,8 @@ public class StationActivity extends Activity {
                     }
                     Intent intent = new Intent(c, ControlNewActivity.class);
                     Bundle mBundle = new Bundle();
-                    //                    mBundle.putParcelable(
-                    //                            Constant.Select_TotalStationRowClickItemsName_Data,
-                    //                            tmp);
+                    // mBundle.putParcelable(Constant.Select_TotalStationRowClickItemsName_Data,
+                    // tmp);
                     mBundle.putBoolean("edit", true);
                     intent.putExtras(mBundle);
                     ((Activity) c).startActivityForResult(intent, 0);

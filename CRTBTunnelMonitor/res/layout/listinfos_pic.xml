@@ -24,12 +24,11 @@
         android:layout_weight="1"
         android:gravity="center_vertical|right" >
 
-<!--         <ImageView
+        <ImageView
             android:id="@+id/t2"
             android:layout_marginRight="20dp"
             android:layout_width="76dp"
-            android:layout_height="25dp"/> -->
-            <com.crtb.tunnelmonitor.widget.Switch style="@style/Switch" android:layout_marginRight="20dp" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+            android:layout_height="25dp"/>
     </LinearLayout>
 
 </LinearLayout>
