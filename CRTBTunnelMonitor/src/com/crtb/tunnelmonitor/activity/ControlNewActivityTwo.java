@@ -127,7 +127,7 @@ public class ControlNewActivityTwo extends Activity implements OnClickListener {
                     if (controlPoints != null) {
                         for (int i = 0; i < controlPoints.size(); i++) {
                             if (controlPoints.get(i).getName().equals(name)) {
-                                showExistDialog();
+                                showDialog("该点名已存在,请重新输入！");
                                 return;
                             }
                         }
@@ -174,13 +174,15 @@ public class ControlNewActivityTwo extends Activity implements OnClickListener {
         }
     }
 
-    private void showExistDialog() {
+    private void showDialog(String msgText) {
         AlertDialog.Builder builder = new Builder(this);
         dlg = builder.create();
 
         dlg.show();
         Window window = dlg.getWindow();
-        window.setContentView(R.layout.dialog_control_point_exist);
+        window.setContentView(R.layout.dialog_custom_message);
+        TextView message = (TextView)window.findViewById(R.id.message);
+        message.setText(msgText);
         Button ok = (Button)window.findViewById(R.id.ok);
         ok.setOnClickListener(new View.OnClickListener() {
 

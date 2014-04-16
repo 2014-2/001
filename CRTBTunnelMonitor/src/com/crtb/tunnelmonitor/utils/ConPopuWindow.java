@@ -124,7 +124,7 @@ public class ConPopuWindow extends PopupWindow {
                     return;
                 }
                 if (tmp.isbUse()) {
-                    showDialog("该控制点正在使用中，无法编辑", null);
+                    showDialog("该控制点正在使用中,无法编辑", null);
                     return;
                 }
                 Intent intent = new Intent(c, ControlNewActivityTwo.class);
@@ -195,26 +195,16 @@ public class ConPopuWindow extends PopupWindow {
         setOutsideTouchable(true);
     }
 
-    private void showDialog(String text,final dialogListener listener) {
+    private void showDialog(String msgText, final dialogListener listener) {
         AlertDialog.Builder builder = new Builder(c);
-        View view=LayoutInflater.from(c).inflate(R.layout.dialog, null);
-        view.findViewById(R.id.cancel).setVisibility(View.GONE);
-        view.findViewById(R.id.delete2).setOnClickListener(new View.OnClickListener() {
+        dlg = builder.create();
 
-            @Override
-            public void onClick(View v) {
-                if(dlg!=null){
-                    dlg.dismiss();
-                }
-            }
-        });
-        TextView message=(TextView) view.findViewById(R.id.message);
-        message.setText(text);
-        dlg=builder.create();
         dlg.show();
-        Window window=dlg.getWindow();
-        window.setContentView(view);
-        Button ok=(Button) view.findViewById(R.id.ok);
+        Window window = dlg.getWindow();
+        window.setContentView(R.layout.dialog_custom_message);
+        TextView message = (TextView)window.findViewById(R.id.message);
+        message.setText(msgText);
+        Button ok = (Button)window.findViewById(R.id.ok);
         ok.setOnClickListener(new View.OnClickListener() {
 
             @Override
