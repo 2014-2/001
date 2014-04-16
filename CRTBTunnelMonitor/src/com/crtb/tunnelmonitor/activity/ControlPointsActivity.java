@@ -150,6 +150,7 @@ public class ControlPointsActivity extends Activity {
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		switch (resultCode) {
 		case RESULT_OK:
+			loadData();
 			mAdapter.notifyDataSetChanged();
 			break;
 
