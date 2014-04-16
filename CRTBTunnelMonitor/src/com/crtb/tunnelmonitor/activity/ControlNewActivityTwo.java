@@ -47,7 +47,7 @@ public class ControlNewActivityTwo extends Activity implements OnClickListener {
 
         Bundle bundle = getIntent().getExtras();
         info = (ControlPointsInfo) bundle
-                .getParcelable(Constant.Select_ControlPointsRowClickItemsName_Data);
+                .getSerializable(Constant.Select_ControlPointsRowClickItemsName_Data);
         bEdit = bundle.getBoolean("bEdit");
         initUI();
         initData();
@@ -114,7 +114,7 @@ public class ControlNewActivityTwo extends Activity implements OnClickListener {
                 }
                 ControlPointsInfo controlPoint = new ControlPointsInfo();
                 if (info != null) {
-                	controlPoint.setId(info.getId());
+                    controlPoint.setId(info.getId());
                 }
                 String name = mName.getText().toString().trim();
                 controlPoint.setName(name);
@@ -125,21 +125,21 @@ public class ControlNewActivityTwo extends Activity implements OnClickListener {
                 ControlPointsInfoDao dao = ControlPointsInfoDao.defaultDao();
                 List<ControlPointsInfo> controlPoints = dao.queryAllControlPoints();
                 if (!bEdit) {
-                	if (controlPoints != null) {
-	                    for (int i = 0; i < controlPoints.size(); i++) {
-	                        if (controlPoints.get(i).getName().equals(name)) {
-	                            showDialog("该控制点名已存在");
-	                            return;
-	                        }
-	                    }
-                	}
+                    if (controlPoints != null) {
+                        for (int i = 0; i < controlPoints.size(); i++) {
+                            if (controlPoints.get(i).getName().equals(name)) {
+                                showDialog("该控制点名已存在");
+                                return;
+                            }
+                        }
+                    }
                     if (dao.insert(controlPoint)) {
-                    	 Toast.makeText(this, "添加成功", Toast.LENGTH_LONG).show();
+                        Toast.makeText(this, "添加成功", Toast.LENGTH_LONG).show();
                     } else {
-                    	 Toast.makeText(this, "添加失败", Toast.LENGTH_LONG).show();
+                        Toast.makeText(this, "添加失败", Toast.LENGTH_LONG).show();
                     }
                 } else {
-                	dao.update(controlPoint);
+                    dao.update(controlPoint);
                     Toast.makeText(this, "编辑成功", Toast.LENGTH_LONG).show();
                 }
                 Intent IntentOk = new Intent();
