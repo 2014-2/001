@@ -23,7 +23,7 @@ import android.os.Message;
  *
  */
 public class USBMountReceiver extends BroadcastReceiver {
-    private final static Uri INTERNAL_URI = Uri.parse("file:///storage/emulated/0");
+    private final static Uri INTERNAL_URI = Uri.parse("file:///storage/emulated/");
 
     private final long ONE_MIN = 60 * 1000;
     private long mLastActionTime;
