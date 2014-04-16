@@ -25,6 +25,8 @@
     <color name="button_normal">#1d7690</color>
     <color name="button_select">#c8c8c8</color>
     <color name="button_select_two">#ae8b1c</color>
+    <color name="button_blue">#2188A1</color>
+    <color name="button_yellow">#E6C149</color>
 
     <!-- workplan -->
     <color name="workplan_top_color">#a6d4de</color>

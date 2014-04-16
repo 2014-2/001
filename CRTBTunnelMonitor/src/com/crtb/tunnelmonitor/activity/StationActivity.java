@@ -21,7 +21,6 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.PopupWindow;
@@ -390,13 +389,10 @@ public class StationActivity extends Activity {
             dlg.show();
             Window window = dlg.getWindow();
             // *** 主要就是在这里实现这种效果的.
-            window.setContentView(R.layout.dialog);
+            window.setContentView(R.layout.dialog_delete);
 
-            ImageButton delete2 = (ImageButton) window
-                    .findViewById(R.id.delete2);
             Button ok = (Button) window.findViewById(R.id.ok);
             Button cancel = (Button) window.findViewById(R.id.cancel);
-            delete2.setOnClickListener(listener);
             ok.setOnClickListener(listener);
             cancel.setOnClickListener(listener);
 
@@ -407,10 +403,6 @@ public class StationActivity extends Activity {
             @Override
             public void onClick(View v) {
                 switch (v.getId()) {
-                    case R.id.delete2:
-                        dlg.cancel();
-
-                        break;
                     case R.id.ok:
                         // 测试
 
