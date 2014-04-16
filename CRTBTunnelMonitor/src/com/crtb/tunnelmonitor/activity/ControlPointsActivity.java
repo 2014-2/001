@@ -129,7 +129,8 @@ public class ControlPointsActivity extends Activity {
 		mContrlPointList.setAdapter(mAdapter);
 	}
 
-	public boolean onKeyDown(int keyCode, KeyEvent event) {
+	@Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (event.getAction() == KeyEvent.ACTION_DOWN) {
 			if (keyCode == KeyEvent.KEYCODE_MENU) {
 				vie = new View(this);
