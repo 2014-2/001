@@ -64,7 +64,7 @@ public class ControlNewActivity extends Activity implements OnClickListener {
         btllist = new ArrayList<String>();
         cklist = new ArrayList<String>();
         Bundle bundle=getIntent().getExtras();
-        editInfo = (TotalStationInfo)bundle.getParcelable(Constant.Select_TotalStationRowClickItemsName_Data);
+        editInfo = (TotalStationInfo)bundle.getSerializable(Constant.Select_TotalStationRowClickItemsName_Data);
         bEdit=bundle.getBoolean("bEdit");
         initUI();
         name.setOnFocusChangeListener(new OnFocusChangeListener() {

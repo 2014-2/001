@@ -360,8 +360,7 @@ public class StationActivity extends Activity {
                     }
                     Intent intent = new Intent(c, ControlNewActivity.class);
                     Bundle mBundle = new Bundle();
-                    // mBundle.putParcelable(Constant.Select_TotalStationRowClickItemsName_Data,
-                    // tmp);
+                    mBundle.putSerializable(Constant.Select_TotalStationRowClickItemsName_Data, tmp);
                     mBundle.putBoolean("edit", true);
                     intent.putExtras(mBundle);
                     ((Activity) c).startActivityForResult(intent, 0);
