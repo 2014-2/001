@@ -14,93 +14,117 @@ import org.zw.android.framework.db.core.ColumnPrimaryKey.PrimaryKeyType;
  */
 @Table(TableName = "ControlPointsInfo")
 public class ControlPointsInfo implements Serializable {
-	
-	@ColumnPrimaryKey(Type = PrimaryKeyType.AUTO)
-	@ColumnInt
-	private int id;				//标识
-	
-	@ColumnString(length=32)
-	private String name;		//点名
-	
-	@ColumnFloat
-	private float x;			//北坐标
-	
-	@ColumnFloat
-	private float y;			//东坐标
-	
-	@ColumnFloat
-	private float z;			//高程
-	
-	@ColumnString(length=512)
-	private String Info;		//备注
-	
-	@ColumnString(length=8)
-	private String 				bUse;
-	
-	@ColumnString(length=8)
-	private String 				bCheck;
 
-	public int getId() {
-		return id;
-	}
+    @ColumnPrimaryKey(Type = PrimaryKeyType.AUTO)
+    @ColumnInt
+    private int id;				//标识
 
-	public void setId(int id) {
-		this.id = id;
-	}
+    @ColumnString(length=32)
+    private String name;		//点名
 
-	public String getName() {
-		return name;
-	}
+    @ColumnFloat
+    private float x;			//北坐标
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    @ColumnFloat
+    private float y;			//东坐标
 
-	public float getX() {
-		return x;
-	}
+    @ColumnFloat
+    private float z;			//高程
 
-	public void setX(float x) {
-		this.x = x;
-	}
+    @ColumnString(length=512)
+    private String Info;		//备注
 
-	public float getY() {
-		return y;
-	}
+    @ColumnString(length=8)
+    private String 				bUse;
 
-	public void setY(float y) {
-		this.y = y;
-	}
+    @ColumnString(length=8)
+    private String 				bCheck;
 
-	public float getZ() {
-		return z;
-	}
+    public int getId() {
+        return id;
+    }
 
-	public void setZ(float z) {
-		this.z = z;
-	}
+    public void setId(int id) {
+        this.id = id;
+    }
 
-	public String getInfo() {
-		return Info;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public void setInfo(String info) {
-		Info = info;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public String getbUse() {
-		return bUse;
-	}
+    public float getX() {
+        return x;
+    }
 
-	public void setbUse(String bUse) {
-		this.bUse = bUse;
-	}
+    public void setX(float x) {
+        this.x = x;
+    }
 
-	public String getbCheck() {
-		return bCheck;
-	}
+    public float getY() {
+        return y;
+    }
 
-	public void setbCheck(String bCheck) {
-		this.bCheck = bCheck;
-	}
+    public void setY(float y) {
+        this.y = y;
+    }
+
+    public float getZ() {
+        return z;
+    }
+
+    public void setZ(float z) {
+        this.z = z;
+    }
+
+    public String getInfo() {
+        return Info;
+    }
+
+    public void setInfo(String info) {
+        Info = info;
+    }
+
+    public String getbUse() {
+        return bUse;
+    }
+
+    public void setbUse(String bUse) {
+        this.bUse = bUse;
+    }
+
+    public String getbCheck() {
+        return bCheck;
+    }
+
+    public void setbCheck(String bCheck) {
+        this.bCheck = bCheck;
+    }
+
+    public boolean isbCheck() {
+        return "true".equals(bCheck);
+    }
+
+    public void setbCheck(boolean isChecked) {
+        if (isChecked) {
+            setbCheck("true");
+        } else {
+            setbCheck("false");
+        }
+    }
+
+    public boolean isbUse() {
+        return "true".equals(bUse);
+    }
+
+    public void setbUse(boolean isUsed) {
+        if (isUsed) {
+            setbUse("true");
+        } else {
+            setbUse("false");
+        }
+    }
 }

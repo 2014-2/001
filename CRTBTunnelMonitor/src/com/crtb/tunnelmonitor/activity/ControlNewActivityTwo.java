@@ -10,7 +10,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -47,7 +46,7 @@ public class ControlNewActivityTwo extends Activity implements OnClickListener {
 
         Bundle bundle = getIntent().getExtras();
         info = (ControlPointsInfo) bundle
-                .getParcelable(Constant.Select_ControlPointsRowClickItemsName_Data);
+                .getSerializable(Constant.Select_ControlPointsRowClickItemsName_Data);
         bEdit = bundle.getBoolean("bEdit");
         initUI();
         initData();
@@ -114,7 +113,7 @@ public class ControlNewActivityTwo extends Activity implements OnClickListener {
                 }
                 ControlPointsInfo controlPoint = new ControlPointsInfo();
                 if (info != null) {
-                	controlPoint.setId(info.getId());
+                    controlPoint.setId(info.getId());
                 }
                 String name = mName.getText().toString().trim();
                 controlPoint.setName(name);
@@ -125,21 +124,21 @@ public class ControlNewActivityTwo extends Activity implements OnClickListener {
                 ControlPointsInfoDao dao = ControlPointsInfoDao.defaultDao();
                 List<ControlPointsInfo> controlPoints = dao.queryAllControlPoints();
                 if (!bEdit) {
-                	if (controlPoints != null) {
-	                    for (int i = 0; i < controlPoints.size(); i++) {
-	                        if (controlPoints.get(i).getName().equals(name)) {
-	                            showDialog("该控制点名已存在");
-	                            return;
-	                        }
-	                    }
-                	}
+                    if (controlPoints != null) {
+                        for (int i = 0; i < controlPoints.size(); i++) {
+                            if (controlPoints.get(i).getName().equals(name)) {
+                                showExistDialog();
+                                return;
+                            }
+                        }
+                    }
                     if (dao.insert(controlPoint)) {
-                    	 Toast.makeText(this, "添加成功", Toast.LENGTH_LONG).show();
+                        Toast.makeText(this, "添加成功", Toast.LENGTH_LONG).show();
                     } else {
-                    	 Toast.makeText(this, "添加失败", Toast.LENGTH_LONG).show();
+                        Toast.makeText(this, "添加失败", Toast.LENGTH_LONG).show();
                     }
                 } else {
-                	dao.update(controlPoint);
+                    dao.update(controlPoint);
                     Toast.makeText(this, "编辑成功", Toast.LENGTH_LONG).show();
                 }
                 Intent IntentOk = new Intent();
@@ -175,27 +174,14 @@ public class ControlNewActivityTwo extends Activity implements OnClickListener {
         }
     }
 
-    private void showDialog(String text) {
+    private void showExistDialog() {
         AlertDialog.Builder builder = new Builder(this);
-        View view = LayoutInflater.from(this).inflate(R.layout.dialog, null);
-        view.findViewById(R.id.cancel).setVisibility(View.GONE);
-        view.findViewById(R.id.delete2).setOnClickListener(
-                new View.OnClickListener() {
-
-                    @Override
-                    public void onClick(View v) {
-                        if (dlg != null) {
-                            dlg.dismiss();
-                        }
-                    }
-                });
-        TextView message = (TextView) view.findViewById(R.id.message);
-        message.setText(text);
         dlg = builder.create();
+
         dlg.show();
         Window window = dlg.getWindow();
-        window.setContentView(view);
-        Button ok = (Button) view.findViewById(R.id.ok);
+        window.setContentView(R.layout.dialog_control_point_exist);
+        Button ok = (Button)window.findViewById(R.id.ok);
         ok.setOnClickListener(new View.OnClickListener() {
 
             @Override
