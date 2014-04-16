@@ -35,10 +35,15 @@ public class ControlPointsInfo implements Serializable {
     private String Info;		//备注
 
     @ColumnString(length=8)
-    private String 				bUse;
+    private String 				used;
 
     @ColumnString(length=8)
-    private String 				bCheck;
+    private String 				checked;
+    
+    public ControlPointsInfo(){
+    	setChecked("false");
+    	setUsed("false");
+    }
 
     public int getId() {
         return id;
@@ -88,43 +93,20 @@ public class ControlPointsInfo implements Serializable {
         Info = info;
     }
 
-    public String getbUse() {
-        return bUse;
-    }
+	public String getUsed() {
+		return used;
+	}
 
-    public void setbUse(String bUse) {
-        this.bUse = bUse;
-    }
+	public void setUsed(String used) {
+		this.used = used;
+	}
 
-    public String getbCheck() {
-        return bCheck;
-    }
+	public String getChecked() {
+		return checked;
+	}
 
-    public void setbCheck(String bCheck) {
-        this.bCheck = bCheck;
-    }
+	public void setChecked(String checked) {
+		this.checked = checked;
+	}
 
-    public boolean isbCheck() {
-        return "true".equals(bCheck);
-    }
-
-    public void setbCheck(boolean isChecked) {
-        if (isChecked) {
-            setbCheck("true");
-        } else {
-            setbCheck("false");
-        }
-    }
-
-    public boolean isbUse() {
-        return "true".equals(bUse);
-    }
-
-    public void setbUse(boolean isUsed) {
-        if (isUsed) {
-            setbUse("true");
-        } else {
-            setbUse("false");
-        }
-    }
 }

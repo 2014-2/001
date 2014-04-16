@@ -71,19 +71,19 @@ public class ControlPointsActivity extends Activity {
                             case 0:
                                 ControlPointsInfo item = mControlPoints
                                 .get(iItemPos);
-                                item.setbUse("true");
-                                item.setbCheck("true");
+                                item.setUsed("true");
+                                item.setChecked("true");
                                 mControlPoints.set(
                                         iItemPos, item);
                                 for (int i = 0; i < mControlPoints
                                         .size(); i++) {
                                     if (i != iItemPos) {
                                         mControlPoints.get(
-                                                i).setbUse(
+                                                i).setUsed(
                                                         "false");
                                         mControlPoints
                                         .get(i)
-                                        .setbCheck(
+                                        .setChecked(
                                                 "false");
                                     }
                                 }
@@ -105,16 +105,21 @@ public class ControlPointsActivity extends Activity {
             public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
                     long arg3) {
                 ControlPointsInfo item = mControlPoints.get(arg2);
-                boolean bCheck = !item.isbCheck();
-                item.setbCheck(!item.isbCheck());
+                
+                boolean bCheck = item.getChecked().equals("true");
+                item.setChecked(bCheck ? "false" : "true");
+                
+                // 更新数据库
+                ControlPointsInfoDao.defaultDao().update(item) ;
+                
                 mControlPoints.set(arg2, item);
-                if (bCheck) {
-                    for (int i = 0; i < mControlPoints.size(); i++) {
-                        if (i != arg2) {
-                            mControlPoints.get(i).setbCheck("false");
-                        }
-                    }
-                }
+//                if (bCheck) {
+//                    for (int i = 0; i < mControlPoints.size(); i++) {
+//                        if (i != arg2) {
+//                            mControlPoints.get(i).setbCheck("false");
+//                        }
+//                    }
+//                }
                 mAdapter.notifyDataSetChanged();
             }
         });

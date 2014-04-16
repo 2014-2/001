@@ -33,6 +33,22 @@ public class ControlPonitsListAdapter2 extends BaseAdapter {
 		}
 		return 0;
 	}
+	
+	public void remove(ControlPointsInfo bean){
+		
+		if(mControlPoints != null){
+			
+			for(ControlPointsInfo info : mControlPoints){
+				
+				if(info.getId() == bean.getId()){
+					mControlPoints.remove(info);
+					break ;
+				}
+			}
+			
+			notifyDataSetChanged() ;
+		}
+	}
 
 	@Override
 	public Object getItem(int arg0) {
@@ -55,7 +71,7 @@ public class ControlPonitsListAdapter2 extends BaseAdapter {
 		ImageView start = (ImageView) convertView.findViewById(R.id.t2);
 		name.setTextColor(Color.BLACK);
 		name.setText(mControlPoints.get(position).getName());
-		if ("true".equals(mControlPoints.get(position).getbCheck())) {
+		if ("true".equals(mControlPoints.get(position).getChecked())) {
 			start.setImageResource(R.drawable.yes);
 		} else {
 			start.setImageResource(R.drawable.no);
