@@ -39,12 +39,8 @@ public class USBMountReceiver extends BroadcastReceiver {
         long curTime = System.currentTimeMillis();
         // make sure the application would not request scan file frequently.
         if (curTime - mLastActionTime > ONE_MIN) {
-            // scan internal storage
-            Intent intentScanner = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, INTERNAL_URI);
-            mContext.sendBroadcast(intentScanner);
-
             // scan external storage 
-            intentScanner = new Intent(Intent.ACTION_MEDIA_MOUNTED, Uri.parse("file://"
+            Intent intentScanner = new Intent(Intent.ACTION_MEDIA_MOUNTED, Uri.parse("file://"
                     + Environment.getExternalStorageDirectory()));
             mContext.sendBroadcast(intentScanner);
 

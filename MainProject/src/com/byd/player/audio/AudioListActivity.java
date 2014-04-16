@@ -93,6 +93,7 @@ OnItemLongClickListener, SearchListener, DeleteListener {
     private EditText mSearchText = null;
     private ProgressDialog mProgressDialog = null;
 
+    private AudioInternalScanner mInternalScanner = null;
     private USBMountReceiver mUSBMountReceiver;
 
     private MediaStoreChangedHandler mMediaStoreChangedHandler;
@@ -138,8 +139,9 @@ OnItemLongClickListener, SearchListener, DeleteListener {
         setMode(MODE_NORMAL);
 
         registerUSBStateChangedReceiver();
-
         registerMediaStoreChangedObserver();
+
+        mInternalScanner = new AudioInternalScanner(this);
 
         if (getIntent() != null) {
             final int tabIndex = getIntent().getIntExtra(TAB_INDEX, TAB_INDEX_LOCAL);
@@ -431,6 +433,14 @@ OnItemLongClickListener, SearchListener, DeleteListener {
     protected void onResume() {
         mAdapter.notifyDataSetInvalidated();
         super.onResume();
+
+        mInternalScanner.startScan();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mInternalScanner.stopScan();
     }
 
     @Override
