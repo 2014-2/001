@@ -39,10 +39,10 @@ public class ControlPointsInfo implements Serializable {
 
     @ColumnString(length=8)
     private String 				checked;
-    
+
     public ControlPointsInfo(){
-    	setChecked("false");
-    	setUsed("false");
+        setChecked("false");
+        setUsed("false");
     }
 
     public int getId() {
@@ -93,20 +93,43 @@ public class ControlPointsInfo implements Serializable {
         Info = info;
     }
 
-	public String getUsed() {
-		return used;
-	}
+    public String getUsed() {
+        return used;
+    }
 
-	public void setUsed(String used) {
-		this.used = used;
-	}
+    public void setUsed(String used) {
+        this.used = used;
+    }
 
-	public String getChecked() {
-		return checked;
-	}
+    public String getChecked() {
+        return checked;
+    }
 
-	public void setChecked(String checked) {
-		this.checked = checked;
-	}
+    public void setChecked(String checked) {
+        this.checked = checked;
+    }
 
+    public boolean isbCheck() {
+        return "true".equals(checked);
+    }
+
+    public void setbCheck(boolean isChecked) {
+        if (isChecked) {
+            setChecked("true");
+        } else {
+            setChecked("false");
+        }
+    }
+
+    public boolean isbUse() {
+        return "true".equals(used);
+    }
+
+    public void setbUse(boolean isUsed) {
+        if (isUsed) {
+            setUsed("true");
+        } else {
+            setUsed("false");
+        }
+    }
 }

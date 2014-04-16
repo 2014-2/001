@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -64,44 +63,6 @@ public class ControlPointsActivity extends Activity {
             public boolean onItemLongClick(AdapterView<?> parent,
                     View view, int position, long id) {
                 iItemPos = position;
-                // 实例化对话
-                new AlertDialog.Builder(ControlPointsActivity.this)
-                .setItems(new String[] { "使用该点" },
-                        new DialogInterface.OnClickListener() {
-
-                    @Override
-                    public void onClick(
-                            DialogInterface dialog,
-                            int which) {
-                        switch (which) {
-                            case 0:
-                                ControlPointsInfo item = mControlPoints
-                                .get(iItemPos);
-                                item.setUsed("true");
-                                item.setChecked("true");
-                                mControlPoints.set(
-                                        iItemPos, item);
-                                for (int i = 0; i < mControlPoints
-                                        .size(); i++) {
-                                    if (i != iItemPos) {
-                                        mControlPoints.get(
-                                                i).setUsed(
-                                                        "false");
-                                        mControlPoints
-                                        .get(i)
-                                        .setChecked(
-                                                "false");
-                                    }
-                                }
-                                ControlPointsInfoDao
-                                .defaultDao()
-                                .update(item);
-                                mAdapter.notifyDataSetChanged();
-                                break;
-                        }
-                    }
-                }).setCancelable(false).show()
-                .setCanceledOnTouchOutside(true);// 显示对话框
                 UsePointPopupWindow usePointWindow = new UsePointPopupWindow(
                         ControlPointsActivity.this,
                         position);
