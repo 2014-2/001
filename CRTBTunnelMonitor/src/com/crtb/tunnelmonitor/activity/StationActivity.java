@@ -373,6 +373,31 @@ public class StationActivity extends Activity {
 
                 @Override
                 public void onClick(View v) {
+                	
+                	dismiss();
+                	 
+                	boolean finded = false;
+                	
+                	// 删除当前选中的全站仪
+					List<TotalStationInfo> list = TotalStationInfoDao
+							.defaultDao().queryAllTotalStations();
+					
+					if (list == null) {
+						return;
+					}
+                	
+                	for (TotalStationInfo info : list) {
+						if (info.getChecked().equals("true")) {
+							finded = true;
+							break;
+						}
+					}
+
+					if (!finded) {
+						showDialog("请先选择要删除的全站仪");
+						return;
+					}
+					
                     showExitGameAlert();
                 }
             });
@@ -389,7 +414,7 @@ public class StationActivity extends Activity {
         };
 
         private void showExitGameAlert() {
-            dismiss();
+           
             dlg.show();
             Window window = dlg.getWindow();
             // *** 主要就是在这里实现这种效果的.
@@ -399,7 +424,6 @@ public class StationActivity extends Activity {
             Button cancel = (Button) window.findViewById(R.id.cancel);
             ok.setOnClickListener(listener);
             cancel.setOnClickListener(listener);
-
         }
 
         private OnClickListener listener = new OnClickListener() {
@@ -417,19 +441,6 @@ public class StationActivity extends Activity {
 
 					if (list == null) {
 						dlg.dismiss() ;
-						return;
-					}
-
-					for (TotalStationInfo info : list) {
-						if (info.getChecked().equals("true")) {
-							finded = true;
-							break;
-						}
-					}
-
-					if (!finded) {
-						dlg.dismiss() ;
-						showDialog("请先选择要删除的全站仪");
 						return;
 					}
 
