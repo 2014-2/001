@@ -9,7 +9,6 @@ import android.util.Log;
 import android.widget.TextView;
 
 import com.crtb.tunnelmonitor.dao.impl.v2.TunnelCrossSectionDao;
-import com.crtb.tunnelmonitor.entity.SectionInfo;
 import com.crtb.tunnelmonitor.entity.TunnelCrossSectionInfo;
 import com.crtb.tunnelmonitor.network.CrtbWebService;
 import com.crtb.tunnelmonitor.network.RpcCallback;
