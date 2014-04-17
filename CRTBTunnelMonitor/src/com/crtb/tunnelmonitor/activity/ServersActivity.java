@@ -54,8 +54,10 @@ public class ServersActivity extends Activity implements OnClickListener{
                 JumpDataUpload();
                 break;
             case R.id.warn_upload:
+            	JumpWarningUpload();
                 break;
             case R.id.workinfo_download:
+            	JumpWorkInfoDownload();
                 break;
             default:
                 break;
@@ -72,4 +74,15 @@ public class ServersActivity extends Activity implements OnClickListener{
         Intent intent = new Intent(this, DataUploadActivity.class);
         startActivity(intent);
     }
+    
+    private void JumpWarningUpload() {
+    	Intent intent = new Intent(this, WarningUploadActivity.class);
+        startActivity(intent);
+    }
+    
+    private void JumpWorkInfoDownload() {
+    	Intent intent = new Intent(this, WorkInfoDownloadActivity.class);
+        startActivity(intent);
+    }
+    
 }

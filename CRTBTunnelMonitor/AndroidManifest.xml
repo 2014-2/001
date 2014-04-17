@@ -47,6 +47,8 @@
         <activity android:name="com.crtb.tunnelmonitor.activity.TestSectionExecuteActivity" />
         <activity android:name="com.crtb.tunnelmonitor.activity.SectionEditActivity" />
         <activity android:name="com.crtb.tunnelmonitor.activity.StationActivity" />
+        <activity android:name="com.crtb.tunnelmonitor.activity.WarningUploadActivity" />
+        <activity android:name="com.crtb.tunnelmonitor.activity.WorkInfoDownloadActivity" />
 
         <!-- <activity android:name="com.crtb.tunnelmonitor.activity.ControlNewActivity"/> -->
         <activity android:name="com.crtb.tunnelmonitor.activity.ControlxgActivity" />
