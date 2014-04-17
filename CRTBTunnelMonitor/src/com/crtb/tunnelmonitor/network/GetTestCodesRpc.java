@@ -1,6 +1,8 @@
 package com.crtb.tunnelmonitor.network;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.ksoap2.serialization.SoapObject;
@@ -53,11 +55,17 @@ class GetTestCodesRpc extends AbstractRpc {
 			SoapObject result = (SoapObject) response;
 			SoapObject data = (SoapObject) result.getProperty(0);
 			final int count = data.getPropertyCount();
+			List<String> pointList = new ArrayList<String>();
 			for(int i = 0; i < count; i++) {
 				String[] pointInfo =  data.getPropertyAsString(i).split("#");
+				pointList.add(pointInfo[0]);
 				Log.d(LOG_TAG, "test point: " + pointInfo[0]);
 			}
-			notifySuccess(null);
+			if (pointList.size() > 0) {
+				notifySuccess(pointList.toArray(new String[pointList.size()]));
+			} else {
+				notifyFailed("empty point");
+			}
 		} catch (Exception e) {
 			notifyFailed("Exception: " + e.getMessage());
 			e.printStackTrace();

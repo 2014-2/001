@@ -23,6 +23,7 @@ import android.widget.TextView;
 import com.crtb.tunnelmonitor.dao.impl.v2.TunnelCrossSectionDao;
 import com.crtb.tunnelmonitor.entity.TunnelCrossSectionInfo;
 import com.crtb.tunnelmonitor.network.CrtbWebService;
+import com.crtb.tunnelmonitor.network.PointStatus;
 import com.crtb.tunnelmonitor.network.RpcCallback;
 import com.crtb.tunnelmonitor.network.SectionStatus;
 
@@ -68,15 +69,63 @@ public class WorkInfoDownloadActivity extends Activity {
 
             @Override
             public void onSuccess(Object[] data) {
-				TunnelCrossSectionInfo[] section = (TunnelCrossSectionInfo[])data;
-				TunnelCrossSectionDao dao = TunnelCrossSectionDao.defaultDao();
-				dao.insert(section[0]);
+                TunnelCrossSectionInfo[] sectionInfo = (TunnelCrossSectionInfo[])data;
+                TunnelCrossSectionInfo section = sectionInfo[0];
+                TunnelCrossSectionDao dao = TunnelCrossSectionDao.defaultDao();
+                dao.insert(section);
+                List<String> pointCodeList = Arrays.asList(section.getSurveyPntName().split(","));
+                //downloadPointList(sectionCode);
             }
 
             @Override
             public void onFailed(String reason) {
                 // TODO Auto-generated method stub
-				Log.d(LOG_TAG, "downloadSection failed: " + reason);
+                Log.d(LOG_TAG, "downloadSection failed: " + reason);
+            }
+        });
+    }
+
+    //TODO:  It's not work yet.
+    private void downloadPointList(String sectionCode) {
+        CrtbWebService.getInstance().getPointCodeList(sectionCode, PointStatus.VALID, new RpcCallback() {
+
+            @Override
+            public void onSuccess(Object[] data) {
+                // TODO Auto-generated method stub
+
+
+
+
+
+
+
+
+
+
+
+
+
+            }
+
+            @Override
+            public void onFailed(String reason) {
+                // TODO Auto-generated method stub
+
+            }
+        });
+    }
+
+    private void downloadPoint(String pointCode) {
+        CrtbWebService.getInstance().getPointInfo("XPCL01SD00010001SL01#XPCL01SD00010001SL02", new RpcCallback() {
+
+            @Override
+            public void onSuccess(Object[] data) {
+                Log.d(LOG_TAG, "download point success.");
+            }
+
+            @Override
+            public void onFailed(String reason) {
+                Log.d(LOG_TAG, "download point failed.");
             }
         });
     }
