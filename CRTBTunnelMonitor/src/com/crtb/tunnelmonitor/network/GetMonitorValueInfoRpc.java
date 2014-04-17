@@ -66,6 +66,7 @@ class GetMonitorValueInfoRpc extends AbstractRpc {
 				String procedure = pointInfo[6];
 				Log.d(LOG_TAG, "xyz: " + xyz);
 			}
+			notifySuccess(null);
 		} catch (Exception e) {
 			notifyFailed("Exception: " + e.getMessage());
 			e.printStackTrace();
