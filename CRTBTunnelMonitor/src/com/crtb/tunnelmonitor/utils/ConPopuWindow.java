@@ -64,7 +64,7 @@ public class ConPopuWindow extends PopupWindow {
                     return;
                 } else {
                     for (int i = 0; i < tmpList.size(); i++) {
-                        if (tmpList.get(i).isbCheck()) {
+                        if (tmpList.get(i).isChecked()) {
                             tmp = tmpList.get(i);
                             iItemPos = i;
                             break;
@@ -75,13 +75,13 @@ public class ConPopuWindow extends PopupWindow {
                     Toast.makeText(c, "请选择要使用的控制点", 3000).show();
                     return;
                 }
-                tmp.setUsed("true");
-                tmp.setChecked("true");
+                tmp.setUsed(true);
+                tmp.setChecked(true);
                 ((ControlPointsActivity)c).mControlPoints.set(iItemPos, tmp);
                 for (int i = 0; i < ((ControlPointsActivity)c).mControlPoints.size(); i++) {
                     if (i != iItemPos) {
-                        ((ControlPointsActivity)c).mControlPoints.get(i).setUsed("false");
-                        ((ControlPointsActivity)c).mControlPoints.get(i).setChecked("false");
+                        ((ControlPointsActivity)c).mControlPoints.get(i).setUsed(false);
+                        ((ControlPointsActivity)c).mControlPoints.get(i).setChecked(false);
                     }
                 }
                 ControlPointsInfoDao.defaultDao().update(tmp);
@@ -113,7 +113,7 @@ public class ConPopuWindow extends PopupWindow {
                 }
                 else {
                     for (int i = 0; i < tmpList.size(); i++) {
-                        if (tmpList.get(i).isbCheck()) {
+                        if (tmpList.get(i).isChecked()) {
                             tmp = tmpList.get(i);
                             break;
                         }
@@ -123,7 +123,7 @@ public class ConPopuWindow extends PopupWindow {
                     Toast.makeText(c, "请选择需要编辑的控制点", 3000).show();
                     return;
                 }
-                if (tmp.isbUse()) {
+                if (tmp.isUsed()) {
 
                     showDialog("该控制点正在使用中,无法编辑", null);
                     return;
@@ -148,9 +148,9 @@ public class ConPopuWindow extends PopupWindow {
             		
             		for(final ControlPointsInfo info : list){
             			
-            			if(info.getChecked().equals("true")){
+            			if(info.isChecked()){
             				
-            				if(info.getUsed().equals("false")){
+            				if(!info.isUsed()){
             					
             					showDialog("删除后数据无法恢复，确定删除？",new dialogListener(){
 

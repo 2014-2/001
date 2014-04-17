@@ -84,20 +84,21 @@ public class StationActivity extends Activity {
             public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
                     long arg3) {
                 TotalStationInfo item = mStations.get(arg2);
-                boolean bCheck = item.getChecked().equals("true");
-                item.setChecked(bCheck ? "false" : "true");
+                boolean bCheck = item.isChecked() ;
+                item.setChecked(!bCheck);
                 mStations.set(arg2, item);
                 
                 // 更新数据库
                 TotalStationInfoDao.defaultDao().update(item);
                 
-                if (bCheck) {
-                    for (int i = 0; i < mStations.size(); i++) {
-                        if (i != arg2) {
-                            mStations.get(i).setChecked("false");
-                        }
-                    }
-                }
+//                if (bCheck) {
+//                    for (int i = 0; i < mStations.size(); i++) {
+//                        if (i != arg2) {
+//                            mStations.get(i).setChecked(false);
+//                        }
+//                    }
+//                }
+                
                 adapter.notifyDataSetChanged();
             }
         });
@@ -350,7 +351,7 @@ public class StationActivity extends Activity {
                         return;
                     } else {
                         for (int i = 0; i < tmpList.size(); i++) {
-                            if (tmpList.get(i).getChecked().equals("true")) {
+                            if (tmpList.get(i).isChecked()) {
                                 tmp = tmpList.get(i);
                                 break;
                             }
@@ -387,7 +388,7 @@ public class StationActivity extends Activity {
 					}
                 	
                 	for (TotalStationInfo info : list) {
-						if (info.getChecked().equals("true")) {
+						if (info.isChecked()) {
 							finded = true;
 							break;
 						}
@@ -446,9 +447,9 @@ public class StationActivity extends Activity {
 
 					for (TotalStationInfo info : list) {
 
-						if (info.getChecked().equals("true")) {
+						if (info.isChecked()) {
 
-							if (info.getUsed().equals("false")) {
+							if (!info.isUsed()) {
 								TotalStationInfoDao.defaultDao().delete(info);
 								StationActivity.adapter.remove(info);
 								

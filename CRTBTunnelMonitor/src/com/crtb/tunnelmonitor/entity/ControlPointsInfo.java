@@ -2,6 +2,7 @@ package com.crtb.tunnelmonitor.entity;
 
 import java.io.Serializable;
 
+import org.zw.android.framework.db.ColumnBoolean;
 import org.zw.android.framework.db.ColumnFloat;
 import org.zw.android.framework.db.ColumnInt;
 import org.zw.android.framework.db.ColumnString;
@@ -34,15 +35,15 @@ public class ControlPointsInfo implements Serializable {
     @ColumnString(length=512)
     private String Info;		//备注
 
-    @ColumnString(length=8)
-    private String 				used;
+    @ColumnBoolean
+    private boolean used; 		// 使用
 
-    @ColumnString(length=8)
-    private String 				checked;
+    @ColumnBoolean
+    private boolean checked; 	// 选中
 
     public ControlPointsInfo(){
-        setChecked("false");
-        setUsed("false");
+        setChecked(false);
+        setUsed(false);
     }
 
     public int getId() {
@@ -93,43 +94,20 @@ public class ControlPointsInfo implements Serializable {
         Info = info;
     }
 
-    public String getUsed() {
-        return used;
-    }
+	public boolean isUsed() {
+		return used;
+	}
 
-    public void setUsed(String used) {
-        this.used = used;
-    }
+	public void setUsed(boolean used) {
+		this.used = used;
+	}
 
-    public String getChecked() {
-        return checked;
-    }
+	public boolean isChecked() {
+		return checked;
+	}
 
-    public void setChecked(String checked) {
-        this.checked = checked;
-    }
+	public void setChecked(boolean checked) {
+		this.checked = checked;
+	}
 
-    public boolean isbCheck() {
-        return "true".equals(checked);
-    }
-
-    public void setbCheck(boolean isChecked) {
-        if (isChecked) {
-            setChecked("true");
-        } else {
-            setChecked("false");
-        }
-    }
-
-    public boolean isbUse() {
-        return "true".equals(used);
-    }
-
-    public void setbUse(boolean isUsed) {
-        if (isUsed) {
-            setUsed("true");
-        } else {
-            setUsed("false");
-        }
-    }
 }
