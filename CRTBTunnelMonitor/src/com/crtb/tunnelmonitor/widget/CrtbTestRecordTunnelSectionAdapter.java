@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.crtb.tunnelmonitor.activity.R;
-import com.crtb.tunnelmonitor.entity.RecordInfo;
+import com.crtb.tunnelmonitor.entity.TunnelSettlementTotalData;
 
 /**
  * 隧道内断面测量单
@@ -18,7 +18,7 @@ import com.crtb.tunnelmonitor.entity.RecordInfo;
  * @author zhouwei
  *
  */
-public class CrtbTestRecordTunnelSectionAdapter extends CrtbEntityAdapter<RecordInfo> {
+public class CrtbTestRecordTunnelSectionAdapter extends CrtbEntityAdapter<TunnelSettlementTotalData> {
 
 	protected CrtbTestRecordTunnelSectionAdapter(Context context) {
 		super(context);
@@ -28,23 +28,21 @@ public class CrtbTestRecordTunnelSectionAdapter extends CrtbEntityAdapter<Record
 		
 		for(int index = 0 ,size = mList.size() ; index < size ; index++){
 			
-			RecordInfo item = mList.get(index) ;
+			TunnelSettlementTotalData item = mList.get(index) ;
 			
 			if(index == position){
-				item.setTestStatus(item.getTestStatus() == RecordInfo.TEST_RECORD_STATUS_IDLE ? RecordInfo.TEST_RECORD_STATUS_EDIT : RecordInfo.TEST_RECORD_STATUS_IDLE);
-			} else {
-				item.setTestStatus(RecordInfo.TEST_RECORD_STATUS_IDLE);
+				item.setChecked(!item.isChecked());
 			}
 		}
 		
 		notifyDataSetChanged() ;
 	}
 	
-	protected RecordInfo getSelectedSection(){
+	protected TunnelSettlementTotalData getSelectedSection(){
 		
-		for(RecordInfo item : mList){
+		for(TunnelSettlementTotalData item : mList){
 			
-			if(item.getTestStatus() == RecordInfo.TEST_RECORD_STATUS_EDIT){
+			if(item.isChecked()){
 				return item ;
 			}
 		}
@@ -56,7 +54,7 @@ public class CrtbTestRecordTunnelSectionAdapter extends CrtbEntityAdapter<Record
 	public View getView(int position, View convertView, ViewGroup parent) {
 		
 		HolderView holder 	= null ;
-		RecordInfo item 	= getItem(position);
+		TunnelSettlementTotalData item 	= getItem(position);
 		
 		if(convertView == null){
 			holder		= new HolderView() ;
@@ -66,10 +64,10 @@ public class CrtbTestRecordTunnelSectionAdapter extends CrtbEntityAdapter<Record
 			holder		= (HolderView)convertView.getTag() ;
 		}
 		
-		holder.recordNo.setText(String.valueOf(item.getId()));
-		holder.recordName.setText(item.getChainageName());
+		holder.recordNo.setText(String.valueOf(item.getID()));
+		holder.recordName.setText(item.getPrefix());
 		
-		if(item.getTestStatus() == RecordInfo.TEST_RECORD_STATUS_IDLE){
+		if(!item.isChecked()){
 			holder.status.setBackgroundResource(R.drawable.no);
 		} else {
 			holder.status.setBackgroundResource(R.drawable.yes);

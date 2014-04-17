@@ -2,7 +2,7 @@ package com.crtb.tunnelmonitor.dao.impl.v2;
 
 import java.util.List;
 
-import com.crtb.tunnelmonitor.entity.TotalStationInfo;
+import com.crtb.tunnelmonitor.entity.TotalStationIndex;
 
 /**
  * 全站仪
@@ -10,7 +10,7 @@ import com.crtb.tunnelmonitor.entity.TotalStationInfo;
  * @author zhouwei
  *
  */
-public class TotalStationInfoDao extends AbstractDao<TotalStationInfo> {
+public class TotalStationInfoDao extends AbstractDao<TotalStationIndex> {
 
 	private static TotalStationInfoDao _instance ;
 	
@@ -27,8 +27,10 @@ public class TotalStationInfoDao extends AbstractDao<TotalStationInfo> {
 		return _instance ;
 	}
 	
-	public List<TotalStationInfo> queryAllTotalStations() {
-		String sql = "select * from TotalStationInfo";
-		return mDatabase.queryObjects(sql, TotalStationInfo.class);
+	public List<TotalStationIndex> queryAllTotalStations() {
+		
+		String sql = "select * from TotalStationIndex";
+		
+		return mDatabase.queryObjects(sql, TotalStationIndex.class);
 	}
 }

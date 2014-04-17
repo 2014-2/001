@@ -14,13 +14,13 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.crtb.tunnelmonitor.activity.R;
-import com.crtb.tunnelmonitor.entity.TunnelCrossSectionInfo;
+import com.crtb.tunnelmonitor.entity.TunnelCrossSectionIndex;
 
 
 public class TunnelCrossSectionInfoAdapter extends BaseAdapter {
-	private List<TunnelCrossSectionInfo>listinfos;
+	private List<TunnelCrossSectionIndex>listinfos;
 	private Context context;
-	public TunnelCrossSectionInfoAdapter(Context ct,List<TunnelCrossSectionInfo> lis){
+	public TunnelCrossSectionInfoAdapter(Context ct,List<TunnelCrossSectionIndex> lis){
 		context=ct;
 		listinfos=lis;
 	}
@@ -49,7 +49,7 @@ public class TunnelCrossSectionInfoAdapter extends BaseAdapter {
 		TextView start=(TextView) convertView.findViewById(R.id.t2);
 		name.setTextColor(Color.BLACK);
 		start.setTextColor(Color.BLACK);
-		name.setText(listinfos.get(position).getChainageName());
+//		name.setText(listinfos.get(position).getChainageName());
 		//start.setText(listinfos.get(position).getsExcavateMethod());
 		return convertView;
 	}

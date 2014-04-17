@@ -20,8 +20,8 @@ import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.crtb.tunnelmonitor.dao.impl.v2.TunnelCrossSectionDao;
-import com.crtb.tunnelmonitor.entity.TunnelCrossSectionInfo;
+import com.crtb.tunnelmonitor.dao.impl.v2.TunnelCrossSectionIndexDao;
+import com.crtb.tunnelmonitor.entity.TunnelCrossSectionIndex;
 import com.crtb.tunnelmonitor.network.CrtbWebService;
 import com.crtb.tunnelmonitor.network.PointStatus;
 import com.crtb.tunnelmonitor.network.RpcCallback;
@@ -68,9 +68,9 @@ public class WorkInfoDownloadActivity extends Activity {
 
             @Override
             public void onSuccess(Object[] data) {
-                TunnelCrossSectionInfo[] sectionInfo = (TunnelCrossSectionInfo[])data;
-                TunnelCrossSectionInfo section = sectionInfo[0];
-                TunnelCrossSectionDao dao = TunnelCrossSectionDao.defaultDao();
+                TunnelCrossSectionIndex[] sectionInfo = (TunnelCrossSectionIndex[])data;
+                TunnelCrossSectionIndex section = sectionInfo[0];
+                TunnelCrossSectionIndexDao dao = TunnelCrossSectionIndexDao.defaultDao();
                 dao.insert(section);
                 List<String> pointCodeList = Arrays.asList(section.getSurveyPntName().split(","));
                 downloadPointList(pointCodeList);

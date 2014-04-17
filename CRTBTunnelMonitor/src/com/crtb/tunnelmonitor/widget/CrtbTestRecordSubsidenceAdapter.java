@@ -10,8 +10,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.crtb.tunnelmonitor.activity.R;
-import com.crtb.tunnelmonitor.entity.RecordInfo;
-import com.crtb.tunnelmonitor.entity.RecordSubsidenceInfo;
+import com.crtb.tunnelmonitor.entity.SubsidenceTotalData;
 
 /**
  * 地表下沉断面测量单
@@ -19,7 +18,7 @@ import com.crtb.tunnelmonitor.entity.RecordSubsidenceInfo;
  * @author zhouwei
  *
  */
-public class CrtbTestRecordSubsidenceAdapter extends CrtbEntityAdapter<RecordSubsidenceInfo> {
+public class CrtbTestRecordSubsidenceAdapter extends CrtbEntityAdapter<SubsidenceTotalData> {
 
 	protected CrtbTestRecordSubsidenceAdapter(Context context) {
 		super(context);
@@ -29,23 +28,21 @@ public class CrtbTestRecordSubsidenceAdapter extends CrtbEntityAdapter<RecordSub
 		
 		for(int index = 0 ,size = mList.size() ; index < size ; index++){
 			
-			RecordSubsidenceInfo item = mList.get(index) ;
+			SubsidenceTotalData item = mList.get(index) ;
 			
 			if(index == position){
-				item.setTestStatus(item.getTestStatus() == RecordInfo.TEST_RECORD_STATUS_IDLE ? RecordInfo.TEST_RECORD_STATUS_EDIT : RecordInfo.TEST_RECORD_STATUS_IDLE);
-			} else {
-				item.setTestStatus(RecordInfo.TEST_RECORD_STATUS_IDLE);
+				item.setChecked(!item.isChecked());
 			}
 		}
 		
 		notifyDataSetChanged() ;
 	}
 	
-	protected RecordSubsidenceInfo getSelectedSection(){
+	protected SubsidenceTotalData getSelectedSection(){
 		
-		for(RecordSubsidenceInfo item : mList){
+		for(SubsidenceTotalData item : mList){
 			
-			if(item.getTestStatus() == RecordInfo.TEST_RECORD_STATUS_EDIT){
+			if(item.isChecked()){
 				return item ;
 			}
 		}
@@ -57,7 +54,7 @@ public class CrtbTestRecordSubsidenceAdapter extends CrtbEntityAdapter<RecordSub
 	public View getView(int position, View convertView, ViewGroup parent) {
 		
 		HolderView holder 	= null ;
-		RecordSubsidenceInfo item = getItem(position);
+		SubsidenceTotalData item = getItem(position);
 		
 		if(convertView == null){
 			holder		= new HolderView() ;
@@ -67,10 +64,10 @@ public class CrtbTestRecordSubsidenceAdapter extends CrtbEntityAdapter<RecordSub
 			holder		= (HolderView)convertView.getTag() ;
 		}
 		
-		holder.recordNo.setText(String.valueOf(item.getId()));
-		holder.recordName.setText(item.getChainageName());
+		holder.recordNo.setText(String.valueOf(item.getID()));
+		holder.recordName.setText(item.getPrefix());
 		
-		if(item.getTestStatus() == RecordInfo.TEST_RECORD_STATUS_IDLE){
+		if(!item.isChecked()){
 			holder.status.setBackgroundResource(R.drawable.no);
 		} else {
 			holder.status.setBackgroundResource(R.drawable.yes);

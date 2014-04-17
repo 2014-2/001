@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 import org.zw.android.framework.db.ColumnInt;
 import org.zw.android.framework.db.ColumnString;
+import org.zw.android.framework.db.ColumnText;
 import org.zw.android.framework.db.Table;
 import org.zw.android.framework.db.core.ColumnPrimaryKey;
 import org.zw.android.framework.db.core.ColumnPrimaryKey.PrimaryKeyType;
@@ -18,20 +19,20 @@ public class SurveyerInformation implements Serializable {
 	@ColumnInt
 	private int id;
 	
-	@ColumnString(length=16)
-	private String surveyerName;			//测量员名
+	@ColumnString(length=100)
+	private String SurveyerName;			//测量员名
 	
 	@ColumnString(length=20)
-	private String certificateID;			//身份证id
+	private String CertificateID;			//身份证id
 	
-	@ColumnString(length=16)
-	private String password;				//密码
+	@ColumnString(length=64)
+	private String Password;				//密码
 	
-	@ColumnString(length=512)
-	private String info;					//备注
+	@ColumnText
+	private String Info;					//备注
 	
 	@ColumnInt
-	private int projectID;					//工作面id
+	private int ProjectID;					//工作面id
 
 	public int getId() {
 		return id;
@@ -42,43 +43,42 @@ public class SurveyerInformation implements Serializable {
 	}
 
 	public String getSurveyerName() {
-		return surveyerName;
+		return SurveyerName;
 	}
 
 	public void setSurveyerName(String surveyerName) {
-		this.surveyerName = surveyerName;
+		SurveyerName = surveyerName;
 	}
 
 	public String getCertificateID() {
-		return certificateID;
+		return CertificateID;
 	}
 
 	public void setCertificateID(String certificateID) {
-		this.certificateID = certificateID;
+		CertificateID = certificateID;
 	}
 
 	public String getPassword() {
-		return password;
+		return Password;
 	}
 
 	public void setPassword(String password) {
-		this.password = password;
+		Password = password;
 	}
 
 	public String getInfo() {
-		return info;
+		return Info;
 	}
 
 	public void setInfo(String info) {
-		this.info = info;
+		Info = info;
 	}
 
 	public int getProjectID() {
-		return projectID;
+		return ProjectID;
 	}
 
 	public void setProjectID(int projectID) {
-		this.projectID = projectID;
+		ProjectID = projectID;
 	}
-	
 }

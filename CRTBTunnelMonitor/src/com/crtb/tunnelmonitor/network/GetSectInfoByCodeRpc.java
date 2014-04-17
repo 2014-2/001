@@ -4,9 +4,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.ksoap2.serialization.SoapObject;
+import org.zw.android.framework.util.DateUtils;
 
-import com.crtb.tunnelmonitor.entity.SectionInfo;
-import com.crtb.tunnelmonitor.entity.TunnelCrossSectionInfo;
+import com.crtb.tunnelmonitor.entity.TunnelCrossSectionIndex;
 
 class GetSectInfoByCodeRpc extends AbstractRpc {
 	private static final String LOG_TAG = "GetSectInfoByCodeRpc";
@@ -62,10 +62,10 @@ class GetSectInfoByCodeRpc extends AbstractRpc {
 			SoapObject result = (SoapObject) response;
 			SoapObject data = (SoapObject) result.getProperty(0);
 			int i = 0;
-			TunnelCrossSectionInfo section = new TunnelCrossSectionInfo();
+			TunnelCrossSectionIndex section = new TunnelCrossSectionIndex();
 			try {
 				String name = data.getPropertyAsString(i++);
-				section.setChainageName(name);
+				section.setSectionName(name);
 			} catch (NullPointerException e) {
 				// ignore
 			}
@@ -79,7 +79,7 @@ class GetSectInfoByCodeRpc extends AbstractRpc {
 			}
 			try {
 				String digMehtod = data.getPropertyAsString(i++);
-				section.setExcavateMethod(digMehtod);
+				section.setExcavateMethod(Integer.valueOf(digMehtod));
 			} catch (NullPointerException e) {
 				// ignore
 			}
@@ -98,8 +98,8 @@ class GetSectInfoByCodeRpc extends AbstractRpc {
 			}
 			try {
 				String u0ModifiedTime = data.getPropertyAsString(i++);
-				section.setGDU0Time(u0ModifiedTime);
-				section.setSLU0Time(u0ModifiedTime);
+				section.setGDU0Time(DateUtils.toDate(u0ModifiedTime));
+				section.setSLU0Time(DateUtils.toDate(u0ModifiedTime));
 			} catch (NullPointerException e) {
 				// ignore
 			}
@@ -128,7 +128,7 @@ class GetSectInfoByCodeRpc extends AbstractRpc {
 			} catch (NullPointerException e) {
 				// ignore
 			}
-			notifySuccess(new TunnelCrossSectionInfo[] { section });
+			notifySuccess(new TunnelCrossSectionIndex[] { section });
 		} catch (Exception e) {
 			notifyFailed("Exception: " + e.getMessage());
 			e.printStackTrace();

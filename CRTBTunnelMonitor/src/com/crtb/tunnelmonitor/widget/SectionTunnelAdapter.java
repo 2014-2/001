@@ -10,9 +10,10 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.crtb.tunnelmonitor.activity.R;
-import com.crtb.tunnelmonitor.entity.TunnelCrossSectionInfo;
+import com.crtb.tunnelmonitor.entity.TunnelCrossSectionIndex;
+import com.crtb.tunnelmonitor.utils.CrtbUtils;
 
-public final class SectionTunnelAdapter extends CrtbEntityAdapter<TunnelCrossSectionInfo> {
+public final class SectionTunnelAdapter extends CrtbEntityAdapter<TunnelCrossSectionIndex> {
 	
 	protected SectionTunnelAdapter(Context context) {
 		super(context);
@@ -22,7 +23,7 @@ public final class SectionTunnelAdapter extends CrtbEntityAdapter<TunnelCrossSec
 	public View getView(int position, View convertView, ViewGroup parent) {
 		
 		HolderView holder 				= null ;
-		TunnelCrossSectionInfo item 	= getItem(position);
+		TunnelCrossSectionIndex item 	= getItem(position);
 		
 		if(convertView == null){
 			
@@ -33,8 +34,8 @@ public final class SectionTunnelAdapter extends CrtbEntityAdapter<TunnelCrossSec
 			holder	= (HolderView)convertView.getTag() ;
 		}
 		
-		holder.chainage.setText(item.getChainageName());
-		holder.excavation.setText(item.getExcavateMethod());
+		holder.chainage.setText(CrtbUtils.formatSectionName(item.getChainagePrefix(), (float)item.getChainage()));
+		holder.excavation.setText(String.valueOf(item.getExcavateMethod()));
 		
 		return convertView;
 	}

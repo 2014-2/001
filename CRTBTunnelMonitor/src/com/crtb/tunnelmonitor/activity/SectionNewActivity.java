@@ -36,9 +36,9 @@ import android.widget.TextView;
 
 import com.crtb.tunnelmonitor.CommonObject;
 import com.crtb.tunnelmonitor.WorkFlowActivity;
-import com.crtb.tunnelmonitor.dao.impl.v2.TunnelCrossSectionDao;
-import com.crtb.tunnelmonitor.entity.TunnelCrossSectionInfo;
-import com.crtb.tunnelmonitor.entity.WorkPlan;
+import com.crtb.tunnelmonitor.dao.impl.v2.TunnelCrossSectionIndexDao;
+import com.crtb.tunnelmonitor.entity.TunnelCrossSectionIndex;
+import com.crtb.tunnelmonitor.entity.ProjectIndex;
 import com.crtb.tunnelmonitor.mydefine.CrtbDateDialogUtils;
 import com.crtb.tunnelmonitor.utils.CrtbUtils;
 
@@ -145,9 +145,9 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 	@InjectView(id=R.id.section_new_remark_sl,parent="mDeformationInfoLayout")
 	private EditText section_new_remark_sl;
 	
-	private TunnelCrossSectionInfo sectionInfo ;
+	private TunnelCrossSectionIndex sectionInfo ;
 	
-	private WorkPlan mCurrentWorkPlan;
+	private ProjectIndex mCurrentWorkPlan;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -168,7 +168,7 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 		mCurrentWorkPlan = CommonObject.findObject(KEY_CURRENT_WORKPLAN);
 		
 		// prefix
-		section_new_et_prefix.setText(mCurrentWorkPlan.getMileagePrefix());
+		section_new_et_prefix.setText(mCurrentWorkPlan.getChainagePrefix());
 		
 		// spinner
 		section_new_sp.setAdapter(ArrayAdapter.createFromResource(this, R.array.section_excavation,  
@@ -237,10 +237,10 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 			
 			setTopbarTitle("编辑隧道内断面");
 			
-			section_new_et_prefix.setText(sectionInfo.getPrefix());
+			section_new_et_prefix.setText(sectionInfo.getChainagePrefix());
 			section_new_et_Chainage.setText(String.valueOf(sectionInfo.getChainage()));
-			section_new_et_name.setText(sectionInfo.getChainageName());
-			section_new_et_calendar.setText(sectionInfo.getInBuiltTime());
+			section_new_et_name.setText(sectionInfo.getSectionName());
+			section_new_et_calendar.setText(DateUtils.toDateString(sectionInfo.getInBuiltTime()));
 			section_new_et_width.setText(String.valueOf(sectionInfo.getWidth()));
 		}
 	}
@@ -322,32 +322,32 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 			
 			if(sectionInfo == null){
 				
-				sectionInfo = new TunnelCrossSectionInfo() ;
+				sectionInfo = new TunnelCrossSectionIndex() ;
 				
 				// base info
-				sectionInfo.setPrefix(prefix);
+				sectionInfo.setChainagePrefix(prefix);
 				sectionInfo.setChainage(Float.valueOf(chainage));
-				sectionInfo.setChainageName(name);
-				sectionInfo.setInBuiltTime(date);
+				sectionInfo.setSectionName(name);
+				sectionInfo.setInBuiltTime(DateUtils.toDate(date, DateUtils.PART_TIME_FORMAT));
 				sectionInfo.setWidth(Float.valueOf(width));
 				
 				// excavation
-				sectionInfo.setExcavateMethod(section_new_sp.getSelectedItem().toString());
+				sectionInfo.setExcavateMethod((int)section_new_sp.getSelectedItemId());
 				
-				TunnelCrossSectionDao.defaultDao().insert(sectionInfo);
+				TunnelCrossSectionIndexDao.defaultDao().insert(sectionInfo);
 			} else {
 				
 				// base info
-				sectionInfo.setPrefix(prefix);
+				sectionInfo.setChainagePrefix(prefix);
 				sectionInfo.setChainage(Float.valueOf(chainage));
-				sectionInfo.setChainageName(name);
-				sectionInfo.setInBuiltTime(date);
+				sectionInfo.setSectionName(name);
+				sectionInfo.setInBuiltTime(DateUtils.toDate(date, DateUtils.PART_TIME_FORMAT));
 				sectionInfo.setWidth(Float.valueOf(width));
 				
 				// excavation
-				sectionInfo.setExcavateMethod(section_new_sp.getSelectedItem().toString());
+				sectionInfo.setExcavateMethod((int)section_new_sp.getSelectedItemId());
 				
-				TunnelCrossSectionDao.defaultDao().update(sectionInfo);
+				TunnelCrossSectionIndexDao.defaultDao().update(sectionInfo);
 			}
 			
 			setResult(RESULT_OK);

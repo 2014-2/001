@@ -22,9 +22,9 @@ import com.crtb.tunnelmonitor.AppCRTBApplication;
 import com.crtb.tunnelmonitor.common.Constant;
 import com.crtb.tunnelmonitor.common.Constant.TotalStationType;
 import com.crtb.tunnelmonitor.dao.impl.v2.TotalStationInfoDao;
-import com.crtb.tunnelmonitor.dao.impl.v2.WorkPlanDao;
-import com.crtb.tunnelmonitor.entity.TotalStationInfo;
-import com.crtb.tunnelmonitor.entity.WorkPlan;
+import com.crtb.tunnelmonitor.dao.impl.v2.ProjectIndexDao;
+import com.crtb.tunnelmonitor.entity.TotalStationIndex;
+import com.crtb.tunnelmonitor.entity.ProjectIndex;
 
 /**
  * 新建全站仪串口
@@ -40,7 +40,7 @@ public class ControlNewActivity extends Activity implements OnClickListener {
     private List<String> xylist = null;
     private List<String> btllist = null;
     private List<String> cklist = null;
-    private TotalStationInfo editInfo = null;
+    private TotalStationIndex editInfo = null;
     /** 确定按钮 */
     private Button section_btn_queding;
     /** 取消按钮 */
@@ -64,7 +64,7 @@ public class ControlNewActivity extends Activity implements OnClickListener {
         btllist = new ArrayList<String>();
         cklist = new ArrayList<String>();
         Bundle bundle=getIntent().getExtras();
-        editInfo = (TotalStationInfo)bundle.getSerializable(Constant.Select_TotalStationRowClickItemsName_Data);
+        editInfo = (TotalStationIndex)bundle.getSerializable(Constant.Select_TotalStationRowClickItemsName_Data);
         bEdit=bundle.getBoolean("bEdit");
         initUI();
         name.setOnFocusChangeListener(new OnFocusChangeListener() {
@@ -148,14 +148,14 @@ public class ControlNewActivity extends Activity implements OnClickListener {
                     Toast.makeText(this, "请输入全站仪名称", 3000).show();
                     return;
                 }
-                WorkPlan workPlan = WorkPlanDao.defaultWorkPlanDao().queryEditWorkPlan();
+                ProjectIndex workPlan = ProjectIndexDao.defaultWorkPlanDao().queryEditWorkPlan();
                 if (workPlan == null) {
                     Toast.makeText(this, "未找到当前工作面", 3000).show();
                     return;
                 }
-                TotalStationInfo ts = new TotalStationInfo();
+                TotalStationIndex ts = new TotalStationIndex();
                 if (editInfo != null) {
-                    ts.setId(editInfo.getId());
+                    ts.setID(editInfo.getID());
                 }
                 for (TotalStationType type : TotalStationType.values()){
                     if(type.getDesc().equals(pp.getText().toString()))

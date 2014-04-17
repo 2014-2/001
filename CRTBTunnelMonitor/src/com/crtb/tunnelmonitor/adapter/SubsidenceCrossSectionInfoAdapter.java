@@ -14,14 +14,14 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.crtb.tunnelmonitor.activity.R;
-import com.crtb.tunnelmonitor.entity.SubsidenceCrossSectionInfo;
+import com.crtb.tunnelmonitor.entity.SubsidenceCrossSectionIndex;
 
 
 public class SubsidenceCrossSectionInfoAdapter extends BaseAdapter {
 
-	private List<SubsidenceCrossSectionInfo>listinfos;
+	private List<SubsidenceCrossSectionIndex>listinfos;
 	private Context context;
-	public SubsidenceCrossSectionInfoAdapter(Context ct,List<SubsidenceCrossSectionInfo> lis){
+	public SubsidenceCrossSectionInfoAdapter(Context ct,List<SubsidenceCrossSectionIndex> lis){
 		context=ct;
 		listinfos=lis;
 	}
@@ -50,7 +50,7 @@ public class SubsidenceCrossSectionInfoAdapter extends BaseAdapter {
 		TextView start=(TextView) convertView.findViewById(R.id.t2);
 		name.setTextColor(Color.BLACK);
 		start.setTextColor(Color.BLACK);
-		name.setText(listinfos.get(position).getChainageName());
+//		name.setText(listinfos.get(position).getChainageName());
 		start.setText(listinfos.get(position).getSurveyPnts());
 		return convertView;
 	}

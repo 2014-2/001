@@ -63,7 +63,8 @@
                     android:layout_marginRight="10dp"
                     android:layout_marginTop="10dp"
                     android:layout_toLeftOf="@id/hint_img"
-                    android:inputType="numberDecimal" />
+                    android:inputType="numberDecimal"
+                    android:text="5" />
             </RelativeLayout>
 
             <TextView
@@ -96,7 +97,8 @@
                     android:layout_marginRight="10dp"
                     android:layout_marginTop="10dp"
                     android:layout_toLeftOf="@id/hint_img"
-                    android:inputType="numberDecimal" />
+                    android:inputType="numberDecimal"
+                    android:text="100" />
             </RelativeLayout>
 
             <LinearLayout
@@ -192,7 +194,8 @@
                     android:layout_marginRight="10dp"
                     android:layout_marginTop="10dp"
                     android:layout_toLeftOf="@id/hint_img"
-                    android:inputType="numberDecimal" />
+                    android:inputType="numberDecimal"
+                    android:text="5" />
             </RelativeLayout>
 
             <TextView
@@ -225,7 +228,8 @@
                     android:layout_marginRight="10dp"
                     android:layout_marginTop="10dp"
                     android:layout_toLeftOf="@id/hint_img"
-                    android:inputType="numberDecimal" />
+                    android:inputType="numberDecimal"
+                    android:text="100" />
             </RelativeLayout>
 
             <LinearLayout
@@ -321,7 +325,8 @@
                     android:layout_marginRight="10dp"
                     android:layout_marginTop="10dp"
                     android:layout_toLeftOf="@id/hint_img"
-                    android:inputType="numberDecimal" />
+                    android:inputType="numberDecimal"
+                    android:text="100" />
             </RelativeLayout>
         </LinearLayout>
     </ScrollView>

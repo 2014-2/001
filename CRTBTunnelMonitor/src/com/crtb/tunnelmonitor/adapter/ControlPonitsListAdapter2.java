@@ -15,13 +15,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.crtb.tunnelmonitor.activity.R;
-import com.crtb.tunnelmonitor.entity.ControlPointsInfo;
+import com.crtb.tunnelmonitor.entity.ControlPointsIndex;
 
 public class ControlPonitsListAdapter2 extends BaseAdapter {
-	private List<ControlPointsInfo> mControlPoints;
+	private List<ControlPointsIndex> mControlPoints;
 	private Context context;
 
-	public ControlPonitsListAdapter2(Context ct, List<ControlPointsInfo> lis) {
+	public ControlPonitsListAdapter2(Context ct, List<ControlPointsIndex> lis) {
 		context = ct;
 		mControlPoints = lis;
 	}
@@ -34,11 +34,11 @@ public class ControlPonitsListAdapter2 extends BaseAdapter {
 		return 0;
 	}
 	
-	public void remove(ControlPointsInfo bean){
+	public void remove(ControlPointsIndex bean){
 		
 		if(mControlPoints != null){
 			
-			for(ControlPointsInfo info : mControlPoints){
+			for(ControlPointsIndex info : mControlPoints){
 				
 				if(info.getId() == bean.getId()){
 					mControlPoints.remove(info);

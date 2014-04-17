@@ -5,8 +5,8 @@ import java.util.List;
 import android.content.Context;
 import android.util.AttributeSet;
 
-import com.crtb.tunnelmonitor.dao.impl.v2.SubsidenceCrossSectionDao;
-import com.crtb.tunnelmonitor.entity.SubsidenceCrossSectionInfo;
+import com.crtb.tunnelmonitor.dao.impl.v2.SubsidenceCrossSectionIndexDao;
+import com.crtb.tunnelmonitor.entity.SubsidenceCrossSectionIndex;
 
 public class SectionSubsidenceListView extends CrtbBaseListView {
 	
@@ -37,11 +37,11 @@ public class SectionSubsidenceListView extends CrtbBaseListView {
 	
 	@Override
 	public void onReload() {
-		List<SubsidenceCrossSectionInfo>  list = SubsidenceCrossSectionDao.defaultDao().queryAllSection();
+		List<SubsidenceCrossSectionIndex>  list = SubsidenceCrossSectionIndexDao.defaultDao().queryAllSection();
 		mAdapter.loadEntityDatas(list);
 	}
 
-	public SubsidenceCrossSectionInfo getItem(int position){
+	public SubsidenceCrossSectionIndex getItem(int position){
 		return mAdapter.getItem(position);
 	}
 

@@ -7,8 +7,8 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.AdapterView;
 
-import com.crtb.tunnelmonitor.dao.impl.v2.SubsidenceCrossSectionDao;
-import com.crtb.tunnelmonitor.entity.SubsidenceCrossSectionInfo;
+import com.crtb.tunnelmonitor.dao.impl.v2.SubsidenceCrossSectionIndexDao;
+import com.crtb.tunnelmonitor.entity.SubsidenceCrossSectionIndex;
 
 public class CrtbRecordSubsidenceSectionInfoListView extends CrtbBaseListView {
 	
@@ -37,11 +37,11 @@ public class CrtbRecordSubsidenceSectionInfoListView extends CrtbBaseListView {
 		}) ;
 	}
 	
-	public SubsidenceCrossSectionInfo getItem(int position){
+	public SubsidenceCrossSectionIndex getItem(int position){
 		return mAdapter.getItem(position);
 	}
 	
-	public SubsidenceCrossSectionInfo getSelectedSection(){
+	public SubsidenceCrossSectionIndex getSelectedSection(){
 		return mAdapter.getSelectedSection();
 	}
 	
@@ -62,12 +62,12 @@ public class CrtbRecordSubsidenceSectionInfoListView extends CrtbBaseListView {
 	@Override
 	public void onReload() {
 		
-		List<SubsidenceCrossSectionInfo> list = SubsidenceCrossSectionDao.defaultDao().queryAllSection();
+		List<SubsidenceCrossSectionIndex> list = SubsidenceCrossSectionIndexDao.defaultDao().queryAllSection();
 
 		if(list != null && !hasInit && firstSection != null){
 			
-			for(SubsidenceCrossSectionInfo item : list){
-				if(item.getChainageName().equals(firstSection)){
+			for(SubsidenceCrossSectionIndex item : list){
+				if(item.getSectionName().equals(firstSection)){
 					item.setUsed(true);
 					hasInit = true ;
 				}

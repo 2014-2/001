@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.crtb.tunnelmonitor.activity.R;
-import com.crtb.tunnelmonitor.entity.WorkPlan;
+import com.crtb.tunnelmonitor.entity.ProjectIndex;
 import com.crtb.tunnelmonitor.utils.CrtbUtils;
 
 /**
@@ -19,7 +19,7 @@ import com.crtb.tunnelmonitor.utils.CrtbUtils;
  * @author zhouwei
  *
  */
-public final class CrtbWorkPlanAdapter extends CrtbEntityAdapter<WorkPlan> {
+public final class CrtbWorkPlanAdapter extends CrtbEntityAdapter<ProjectIndex> {
 
 	protected CrtbWorkPlanAdapter(Context context) {
 		super(context);
@@ -28,7 +28,7 @@ public final class CrtbWorkPlanAdapter extends CrtbEntityAdapter<WorkPlan> {
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		
-		final WorkPlan item = getItem(position);
+		final ProjectIndex item = getItem(position);
 		HolderView holder 	= null ;
 		
 		if(convertView == null){
@@ -41,9 +41,9 @@ public final class CrtbWorkPlanAdapter extends CrtbEntityAdapter<WorkPlan> {
 			holder	= (HolderView)convertView.getTag() ;
 		}
 		
-		holder.workplanName.setText(item.getWorkPlanName());
-		holder.startMileage.setText(CrtbUtils.formatSectionName(item.getMileagePrefix(),item.getStartMileage()));
-		holder.endMileage.setText(CrtbUtils.formatSectionName(item.getMileagePrefix(),item.getEndMileage()));
+		holder.workplanName.setText(item.getProjectName());
+		holder.startMileage.setText(CrtbUtils.formatSectionName(item.getChainagePrefix(),(float)item.getStartChainage()));
+		holder.endMileage.setText(CrtbUtils.formatSectionName(item.getChainagePrefix(),(float)item.getEndChainage()));
 		
 		return convertView;
 	}

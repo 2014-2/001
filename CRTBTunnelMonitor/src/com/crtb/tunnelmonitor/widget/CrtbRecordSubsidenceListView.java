@@ -5,8 +5,8 @@ import java.util.List;
 import android.content.Context;
 import android.util.AttributeSet;
 
-import com.crtb.tunnelmonitor.dao.impl.v2.RecordSubsidenceDao;
-import com.crtb.tunnelmonitor.entity.RecordSubsidenceInfo;
+import com.crtb.tunnelmonitor.dao.impl.v2.RecordSubsidenceTotalDataDao;
+import com.crtb.tunnelmonitor.entity.SubsidenceTotalData;
 
 /**
  * 
@@ -30,7 +30,7 @@ public class CrtbRecordSubsidenceListView extends CrtbBaseListView {
 		clearCacheColor() ;
 	}
 
-	public RecordSubsidenceInfo getItem(int position){
+	public SubsidenceTotalData getItem(int position){
 		return mAdapter.getItem(position);
 	}
 
@@ -46,7 +46,7 @@ public class CrtbRecordSubsidenceListView extends CrtbBaseListView {
 
 	@Override
 	public void onReload() {
-		List<RecordSubsidenceInfo> list = RecordSubsidenceDao.defaultDao().queryAllSection();
+		List<SubsidenceTotalData> list = RecordSubsidenceTotalDataDao.defaultDao().queryAllSection();
 		mAdapter.loadEntityDatas(list);
 	}
 	

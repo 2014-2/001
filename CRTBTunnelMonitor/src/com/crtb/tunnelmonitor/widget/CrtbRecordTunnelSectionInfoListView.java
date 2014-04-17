@@ -7,8 +7,9 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.AdapterView;
 
-import com.crtb.tunnelmonitor.dao.impl.v2.TunnelCrossSectionDao;
-import com.crtb.tunnelmonitor.entity.TunnelCrossSectionInfo;
+import com.crtb.tunnelmonitor.dao.impl.v2.TunnelCrossSectionIndexDao;
+import com.crtb.tunnelmonitor.entity.TunnelCrossSectionIndex;
+import com.crtb.tunnelmonitor.utils.CrtbUtils;
 
 /**
  * 
@@ -42,11 +43,11 @@ public class CrtbRecordTunnelSectionInfoListView extends CrtbBaseListView {
 		}) ;
 	}
 	
-	public TunnelCrossSectionInfo getItem(int position){
+	public TunnelCrossSectionIndex getItem(int position){
 		return mAdapter.getItem(position);
 	}
 	
-	public TunnelCrossSectionInfo getSelectedSection(){
+	public TunnelCrossSectionIndex getSelectedSection(){
 		return mAdapter.getSelectedSection();
 	}
 	
@@ -67,12 +68,16 @@ public class CrtbRecordTunnelSectionInfoListView extends CrtbBaseListView {
 	@Override
 	public void onReload() {
 		
-		List<TunnelCrossSectionInfo> list = TunnelCrossSectionDao.defaultDao().queryAllSection() ;
+		List<TunnelCrossSectionIndex> list = TunnelCrossSectionIndexDao.defaultDao().queryAllSection() ;
 		
 		if(list != null && !hasInit && firstSection != null){
 			
-			for(TunnelCrossSectionInfo item : list){
-				if(item.getChainageName().equals(firstSection)){
+			for(TunnelCrossSectionIndex item : list){
+				
+				// 断面名称
+				String name = CrtbUtils.formatSectionName(item.getChainagePrefix(), (float)item.getChainage()) ;
+				
+				if(name.equals(firstSection)){
 					item.setUsed(true);
 					hasInit = true ;
 				}

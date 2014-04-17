@@ -28,11 +28,11 @@ import android.widget.TextView;
 
 import com.crtb.tunnelmonitor.CommonObject;
 import com.crtb.tunnelmonitor.WorkFlowActivity;
-import com.crtb.tunnelmonitor.dao.impl.v2.RecordSubsidenceDao;
-import com.crtb.tunnelmonitor.dao.impl.v2.RecordTunnelSectionDao;
+import com.crtb.tunnelmonitor.dao.impl.v2.RecordSubsidenceTotalDataDao;
+import com.crtb.tunnelmonitor.dao.impl.v2.RecordTunnelSettlementTotalDataDao;
 import com.crtb.tunnelmonitor.entity.MenuSystemItem;
-import com.crtb.tunnelmonitor.entity.RecordInfo;
-import com.crtb.tunnelmonitor.entity.RecordSubsidenceInfo;
+import com.crtb.tunnelmonitor.entity.SubsidenceTotalData;
+import com.crtb.tunnelmonitor.entity.TunnelSettlementTotalData;
 import com.crtb.tunnelmonitor.mydefine.CrtbDialogDelete;
 import com.crtb.tunnelmonitor.mydefine.CrtbDialogDelete.IButtonOnClick;
 import com.crtb.tunnelmonitor.mydefine.CrtbDialogResult;
@@ -94,7 +94,7 @@ public class RecordActivity extends WorkFlowActivity implements OnPageChangeList
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,int position, long id) {
 				
-				RecordInfo bean = mTunnelSectionList.getItem(position) ;
+				TunnelSettlementTotalData bean = mTunnelSectionList.getItem(position) ;
 				
 				showListActionMenu(getString(R.string.work_plan_title), new String[]{"打开","编辑","删除"}, bean);
 			}
@@ -105,7 +105,7 @@ public class RecordActivity extends WorkFlowActivity implements OnPageChangeList
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,int position, long id) {
 				
-				RecordSubsidenceInfo bean = mSubsidenceSectionList.getItem(position) ;
+				SubsidenceTotalData bean = mSubsidenceSectionList.getItem(position) ;
 				
 				showListActionMenu(getString(R.string.work_plan_title), new String[]{"打开","编辑","删除"}, bean);
 			}
@@ -150,9 +150,9 @@ public class RecordActivity extends WorkFlowActivity implements OnPageChangeList
 	@Override
 	protected void onListItemSelected(Object bean, int position, String menu) {
 		
-		if(bean instanceof RecordInfo){
+		if(bean instanceof TunnelSettlementTotalData){
 			
-			final RecordInfo info = (RecordInfo)bean ;
+			final TunnelSettlementTotalData info = (TunnelSettlementTotalData)bean ;
 			
 			if(position == 0){
 				
@@ -175,7 +175,7 @@ public class RecordActivity extends WorkFlowActivity implements OnPageChangeList
 						
 						if(id == CrtbDialogDelete.BUTTON_ID_CONFIRM){
 							
-							if(RecordTunnelSectionDao.defaultDao().delete(info)){
+							if(RecordTunnelSettlementTotalDataDao.defaultDao().delete(info)){
 								CrtbDialogResult.createDeleteSuccessDialog(RecordActivity.this).show();
 								mTunnelSectionList.onReload() ;
 							}
@@ -185,9 +185,9 @@ public class RecordActivity extends WorkFlowActivity implements OnPageChangeList
 				
 				delete.show(); 
 			}
-		} else if(bean instanceof RecordSubsidenceInfo){
+		} else if(bean instanceof SubsidenceTotalData){
 			
-			final RecordSubsidenceInfo info = (RecordSubsidenceInfo)bean ;
+			final SubsidenceTotalData info = (SubsidenceTotalData)bean ;
 			
 			if(position == 0){
 				
@@ -210,7 +210,7 @@ public class RecordActivity extends WorkFlowActivity implements OnPageChangeList
 						
 						if(id == CrtbDialogDelete.BUTTON_ID_CONFIRM){
 							
-							if(RecordSubsidenceDao.defaultDao().delete(info)){
+							if(RecordSubsidenceTotalDataDao.defaultDao().delete(info)){
 								CrtbDialogResult.createDeleteSuccessDialog(RecordActivity.this).show();
 								mSubsidenceSectionList.onReload() ;
 							}

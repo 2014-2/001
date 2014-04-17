@@ -25,7 +25,7 @@ import android.widget.TextView;
 
 import com.crtb.tunnelmonitor.adapter.ControlPonitsListAdapter2;
 import com.crtb.tunnelmonitor.dao.impl.v2.ControlPointsInfoDao;
-import com.crtb.tunnelmonitor.entity.ControlPointsInfo;
+import com.crtb.tunnelmonitor.entity.ControlPointsIndex;
 import com.crtb.tunnelmonitor.utils.ConPopuWindow;
 
 public class ControlPointsActivity extends Activity {
@@ -34,7 +34,7 @@ public class ControlPointsActivity extends Activity {
      */
     private ListView mContrlPointList;
     private int iItemPos = -1;
-    public List<ControlPointsInfo> mControlPoints = null;
+    public List<ControlPointsIndex> mControlPoints = null;
     public static ControlPonitsListAdapter2 mAdapter;
     private View vie;
     private ConPopuWindow menuWindow;
@@ -76,7 +76,7 @@ public class ControlPointsActivity extends Activity {
             @Override
             public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
                     long arg3) {
-                ControlPointsInfo item = mControlPoints.get(arg2);
+                ControlPointsIndex item = mControlPoints.get(arg2);
                 
                 boolean bCheck = item.isChecked() ;
                 item.setChecked(!bCheck);
@@ -101,7 +101,7 @@ public class ControlPointsActivity extends Activity {
         mControlPoints = ControlPointsInfoDao.defaultDao()
                 .queryAllControlPoints();
         if (mControlPoints == null) {
-            mControlPoints = new ArrayList<ControlPointsInfo>();
+            mControlPoints = new ArrayList<ControlPointsIndex>();
         }
         mAdapter = new ControlPonitsListAdapter2(ControlPointsActivity.this,
                 mControlPoints);
@@ -169,7 +169,7 @@ public class ControlPointsActivity extends Activity {
             int ret;
             switch (id) {
                 case R.id.use_point:
-                    ControlPointsInfo item = mControlPoints.get(iItemPos);
+                    ControlPointsIndex item = mControlPoints.get(iItemPos);
                     item.setUsed(true);
                     item.setChecked(true);
                     mControlPoints.set(iItemPos, item);

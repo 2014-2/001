@@ -10,14 +10,14 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.crtb.tunnelmonitor.activity.R;
-import com.crtb.tunnelmonitor.entity.SubsidenceCrossSectionInfo;
+import com.crtb.tunnelmonitor.entity.SubsidenceCrossSectionIndex;
 
 /**
  * 
  * @author zhouwei
  *
  */
-public class CrtbRecordSubsidenceSectionInfoAdapter extends CrtbEntityAdapter<SubsidenceCrossSectionInfo> {
+public class CrtbRecordSubsidenceSectionInfoAdapter extends CrtbEntityAdapter<SubsidenceCrossSectionIndex> {
 
 	protected CrtbRecordSubsidenceSectionInfoAdapter(Context context) {
 		super(context);
@@ -27,7 +27,7 @@ public class CrtbRecordSubsidenceSectionInfoAdapter extends CrtbEntityAdapter<Su
 		
 		for(int index = 0 ,size = mList.size() ; index < size ; index++){
 			
-			SubsidenceCrossSectionInfo item = mList.get(index) ;
+			SubsidenceCrossSectionIndex item = mList.get(index) ;
 			
 			if(index == position){
 				item.setUsed(!item.isUsed());
@@ -39,9 +39,9 @@ public class CrtbRecordSubsidenceSectionInfoAdapter extends CrtbEntityAdapter<Su
 		notifyDataSetChanged() ;
 	}
 	
-	protected SubsidenceCrossSectionInfo getSelectedSection(){
+	protected SubsidenceCrossSectionIndex getSelectedSection(){
 		
-		for(SubsidenceCrossSectionInfo item : mList){
+		for(SubsidenceCrossSectionIndex item : mList){
 			
 			if(item.isUsed()){
 				return item ;
@@ -55,7 +55,7 @@ public class CrtbRecordSubsidenceSectionInfoAdapter extends CrtbEntityAdapter<Su
 	public View getView(int position, View convertView, ViewGroup parent) {
 		
 		HolderView holder 					= null ;
-		SubsidenceCrossSectionInfo item 	= getItem(position);
+		SubsidenceCrossSectionIndex item 	= getItem(position);
 		
 		if(convertView == null){
 			holder		= new HolderView() ;
@@ -65,7 +65,7 @@ public class CrtbRecordSubsidenceSectionInfoAdapter extends CrtbEntityAdapter<Su
 			holder		= (HolderView)convertView.getTag() ;
 		}
 		
-		holder.chainage.setText(item.getChainageName());
+		holder.chainage.setText(item.getSectionName());
 		
 		if(item.isUsed()){
 			holder.status.setBackgroundResource(R.drawable.use);

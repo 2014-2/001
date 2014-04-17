@@ -26,7 +26,7 @@ import com.crtb.tunnelmonitor.activity.ControlPointsActivity;
 import com.crtb.tunnelmonitor.activity.R;
 import com.crtb.tunnelmonitor.common.Constant;
 import com.crtb.tunnelmonitor.dao.impl.v2.ControlPointsInfoDao;
-import com.crtb.tunnelmonitor.entity.ControlPointsInfo;
+import com.crtb.tunnelmonitor.entity.ControlPointsIndex;
 
 public class ConPopuWindow extends PopupWindow {
     private RelativeLayout shiyong, xinjian, bianji, delete, qita;// 五个按钮
@@ -37,7 +37,7 @@ public class ConPopuWindow extends PopupWindow {
 
     AlertDialog dlg = null;
 
-    private ControlPointsInfo mInfo;
+    private ControlPointsIndex mInfo;
 
     public ConPopuWindow(Activity context, OnClickListener itemsOnClick,
             final int num, final int currIndex) {
@@ -56,8 +56,8 @@ public class ConPopuWindow extends PopupWindow {
         shiyong.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                List<ControlPointsInfo> tmpList = ((ControlPointsActivity)c).mControlPoints;
-                ControlPointsInfo tmp = null;
+                List<ControlPointsIndex> tmpList = ((ControlPointsActivity)c).mControlPoints;
+                ControlPointsIndex tmp = null;
                 int iItemPos = 0;
                 if (tmpList == null) {
                     Toast.makeText(c, "请选择要使用的控制点", 3000).show();
@@ -105,8 +105,8 @@ public class ConPopuWindow extends PopupWindow {
             //@SuppressLint("ShowToast")
             @Override
             public void onClick(View v) {
-                List<ControlPointsInfo> tmpList = ((ControlPointsActivity)c).mControlPoints;
-                ControlPointsInfo tmp = null;
+                List<ControlPointsIndex> tmpList = ((ControlPointsActivity)c).mControlPoints;
+                ControlPointsIndex tmp = null;
                 if (tmpList == null) {
                     Toast.makeText(c, "请选择需要编辑的控制点", 3000).show();
                     return;
@@ -142,11 +142,11 @@ public class ConPopuWindow extends PopupWindow {
             public void onClick(View v) {
 
             	// 所以控制点
-            	List<ControlPointsInfo> list = ControlPointsInfoDao.defaultDao().queryAllControlPoints();
+            	List<ControlPointsIndex> list = ControlPointsInfoDao.defaultDao().queryAllControlPoints();
             	
             	if(list != null){
             		
-            		for(final ControlPointsInfo info : list){
+            		for(final ControlPointsIndex info : list){
             			
             			if(info.isChecked()){
             				

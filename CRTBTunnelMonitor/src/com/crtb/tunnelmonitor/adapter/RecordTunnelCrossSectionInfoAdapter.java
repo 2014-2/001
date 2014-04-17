@@ -15,13 +15,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.crtb.tunnelmonitor.activity.R;
-import com.crtb.tunnelmonitor.entity.TunnelCrossSectionInfo;
+import com.crtb.tunnelmonitor.entity.TunnelCrossSectionIndex;
 
 
 public class RecordTunnelCrossSectionInfoAdapter extends BaseAdapter {
-	private List<TunnelCrossSectionInfo>listinfos;
+	private List<TunnelCrossSectionIndex>listinfos;
 	private Context context;
-	public RecordTunnelCrossSectionInfoAdapter(Context ct,List<TunnelCrossSectionInfo> lis){
+	public RecordTunnelCrossSectionInfoAdapter(Context ct,List<TunnelCrossSectionIndex> lis){
 		context=ct;
 		listinfos=lis;
 	}
@@ -50,7 +50,7 @@ public class RecordTunnelCrossSectionInfoAdapter extends BaseAdapter {
 		ImageView start=(ImageView) convertView.findViewById(R.id.t2);
 		name.setTextColor(Color.BLACK);
 		//start.setTextColor(Color.BLACK);
-		name.setText(listinfos.get(position).getChainageName());
+//		name.setText(listinfos.get(position).getChainageName());
 //		if (listinfos.get(position).isbUse()) {
 //			start.setBackgroundResource(R.drawable.use);
 //		}

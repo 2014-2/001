@@ -14,13 +14,13 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.crtb.tunnelmonitor.activity.R;
-import com.crtb.tunnelmonitor.entity.SubsidenceTotalDataInfo;
+import com.crtb.tunnelmonitor.entity.SubsidenceTotalData;
 
 public class RecordSectionAdapter extends BaseAdapter {
 
-	private List<SubsidenceTotalDataInfo>listinfos;
+	private List<SubsidenceTotalData>listinfos;
 	private Context context;
-	public RecordSectionAdapter(Context ct,List<SubsidenceTotalDataInfo> lis){
+	public RecordSectionAdapter(Context ct,List<SubsidenceTotalData> lis){
 		context=ct;
 		listinfos=lis;
 	}

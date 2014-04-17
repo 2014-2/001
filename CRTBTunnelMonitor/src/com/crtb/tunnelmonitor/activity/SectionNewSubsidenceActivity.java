@@ -33,9 +33,9 @@ import android.widget.TextView;
 
 import com.crtb.tunnelmonitor.CommonObject;
 import com.crtb.tunnelmonitor.WorkFlowActivity;
-import com.crtb.tunnelmonitor.dao.impl.v2.SubsidenceCrossSectionDao;
-import com.crtb.tunnelmonitor.entity.SubsidenceCrossSectionInfo;
-import com.crtb.tunnelmonitor.entity.WorkPlan;
+import com.crtb.tunnelmonitor.dao.impl.v2.SubsidenceCrossSectionIndexDao;
+import com.crtb.tunnelmonitor.entity.SubsidenceCrossSectionIndex;
+import com.crtb.tunnelmonitor.entity.ProjectIndex;
 import com.crtb.tunnelmonitor.mydefine.CrtbDateDialogUtils;
 import com.crtb.tunnelmonitor.utils.CrtbUtils;
 
@@ -102,9 +102,9 @@ public class SectionNewSubsidenceActivity extends WorkFlowActivity implements On
     @InjectView(id=R.id.DSection_Info,parent="mDeformationInfoLayout")
     private EditText DSection_Info;
 
-	private SubsidenceCrossSectionInfo subsidence = null;
+	private SubsidenceCrossSectionIndex subsidence = null;
 	
-	private WorkPlan mCurrentWorkPlan;
+	private ProjectIndex mCurrentWorkPlan;
 
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -125,7 +125,7 @@ public class SectionNewSubsidenceActivity extends WorkFlowActivity implements On
 		mCurrentWorkPlan = CommonObject.findObject(KEY_CURRENT_WORKPLAN);
 		
 		// prefix
-		section_new_et_prefix.setText(mCurrentWorkPlan.getMileagePrefix());
+		section_new_et_prefix.setText(mCurrentWorkPlan.getChainagePrefix());
 		
 		// default
 		String date = DateUtils.toDateString(DateUtils.getCurrtentTimes(), DateUtils.DATE_TIME_FORMAT) ;
@@ -169,16 +169,16 @@ public class SectionNewSubsidenceActivity extends WorkFlowActivity implements On
 			
 			setTopbarTitle("编辑地表下沉断面");
 			
-			section_new_et_prefix.setText(subsidence.getPrefix());
+			section_new_et_prefix.setText(subsidence.getChainagePrefix());
 			DSection_Chainage.setText(String.valueOf(subsidence.getChainage()));
-			DSection_name.setText(subsidence.getChainageName());
-			DSection_createtime.setText(subsidence.getInbuiltTime());
-			DSection_Width.setText(String.valueOf(subsidence.getWidth()));
-			DSection_PointCount.setText(String.valueOf(subsidence.getPoints()));
+			DSection_name.setText(subsidence.getSectionName());
+			DSection_createtime.setText(DateUtils.toDateString(subsidence.getInbuiltTime()));
+			DSection_Width.setText(String.valueOf((int)subsidence.getWidth()));
+			DSection_PointCount.setText(String.valueOf(subsidence.getSurveyPnts()));
 			
 			DSection_Value1.setText(String.valueOf(subsidence.getDBU0()));
 			DSection_Value2.setText(String.valueOf(subsidence.getDBLimitVelocity()));
-			DSection_SetTime.setText(subsidence.getDBU0Time());
+			DSection_SetTime.setText(DateUtils.toDateString(subsidence.getDBU0Time()));
 			DSection_Info.setText(subsidence.getDBU0Description());
 		}
 	}
@@ -245,41 +245,41 @@ public class SectionNewSubsidenceActivity extends WorkFlowActivity implements On
 			
 			if(subsidence == null){
 				
-				subsidence = new SubsidenceCrossSectionInfo() ;
+				subsidence = new SubsidenceCrossSectionIndex() ;
 				
 				///////////baase info//////////
-				subsidence.setPrefix(prefix);
+				subsidence.setChainagePrefix(prefix);
 				subsidence.setChainage(Float.valueOf(chainage));
-				subsidence.setChainageName(name);
+				subsidence.setSectionName(name);
 				subsidence.setWidth(Integer.valueOf(width));
-				subsidence.setInbuiltTime(date);
-				subsidence.setPoints(Integer.valueOf(point));
+				subsidence.setInbuiltTime(DateUtils.toDate(date, DateUtils.PART_TIME_FORMAT));
+				subsidence.setSurveyPnts(point);
 				
 				//
 				subsidence.setDBU0(Float.valueOf(dbu0));
 				subsidence.setDBLimitVelocity(Float.valueOf(dbl));
-				subsidence.setDBU0Time(buildtime);
+				subsidence.setDBU0Time(DateUtils.toDate(buildtime,DateUtils.PART_TIME_FORMAT));
 				subsidence.setInfo(remark);
 				
 				// insert
-				SubsidenceCrossSectionDao.defaultDao().insert(subsidence);
+				SubsidenceCrossSectionIndexDao.defaultDao().insert(subsidence);
 			} else {
 				
-				subsidence.setPrefix(prefix);
+				subsidence.setChainagePrefix(prefix);
 				subsidence.setChainage(Float.valueOf(chainage));
-				subsidence.setChainageName(name);
+				subsidence.setSectionName(name);
 				subsidence.setWidth(Integer.valueOf(width));
-				subsidence.setInbuiltTime(date);
-				subsidence.setPoints(Integer.valueOf(point));
+				subsidence.setInbuiltTime(DateUtils.toDate(date, DateUtils.PART_TIME_FORMAT));
+				subsidence.setSurveyPnts(point);
 
 				//
 				subsidence.setDBU0(Float.valueOf(dbu0));
 				subsidence.setDBLimitVelocity(Float.valueOf(dbl));
-				subsidence.setDBU0Time(buildtime);
+				subsidence.setDBU0Time(DateUtils.toDate(buildtime,DateUtils.PART_TIME_FORMAT));
 				subsidence.setInfo(remark);
 
 				// insert
-				SubsidenceCrossSectionDao.defaultDao().update(subsidence);
+				SubsidenceCrossSectionIndexDao.defaultDao().update(subsidence);
 			}
 			
 			setResult(RESULT_OK);
