@@ -10,6 +10,8 @@
     <string name="edit_control_station_title">编辑全站仪</string>
     <string name="new_control_point_title">新建控制点</string>
     <string name="edit_control_point_title">编辑控制点</string>
+    <string name="upload_warning_data">上传预警信息</string>
+    <string name="download_work_data">下载工作面</string>
 
     <!-- common -->
     <string name="common_create_new">新建</string>
