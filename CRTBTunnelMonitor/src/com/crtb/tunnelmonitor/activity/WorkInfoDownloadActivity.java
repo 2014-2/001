@@ -27,6 +27,10 @@ public class WorkInfoDownloadActivity extends Activity {
 			@Override
 			public void onSuccess(Object[] data) {
 				Log.d(LOG_TAG, "download section code list success.");
+				String[] codeArray = (String[]) data;
+				for(String code : codeArray) {
+					Log.d(LOG_TAG, "code: " + code);
+				}
 			}
 			
 			@Override
