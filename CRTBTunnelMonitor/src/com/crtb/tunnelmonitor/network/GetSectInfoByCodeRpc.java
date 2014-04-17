@@ -118,7 +118,7 @@ class GetSectInfoByCodeRpc extends AbstractRpc {
 			}
 			try {
 				String pointCodeList = data.getPropertyAsString(i++);
-				section.setSurveyPntName(pointCodeList.replace("#", ","));
+				section.setSurveyPntName(pointCodeList.replace("/", ","));
 			} catch (NullPointerException e) {
 				// ignore
 			}

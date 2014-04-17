@@ -37,7 +37,6 @@ public class WorkInfoDownloadActivity extends Activity {
         setContentView(R.layout.activity_workinfo_download);
         TextView title=(TextView) findViewById(R.id.tv_topbar_title);
         title.setText(R.string.download_work_data);
-        downloadSectionCodeList(SectionStatus.VALID);
     }
 
     //下载断面编码数据
@@ -74,7 +73,7 @@ public class WorkInfoDownloadActivity extends Activity {
                 TunnelCrossSectionDao dao = TunnelCrossSectionDao.defaultDao();
                 dao.insert(section);
                 List<String> pointCodeList = Arrays.asList(section.getSurveyPntName().split(","));
-                //downloadPointList(sectionCode);
+                downloadPointList(pointCodeList);
             }
 
             @Override
@@ -86,37 +85,14 @@ public class WorkInfoDownloadActivity extends Activity {
     }
 
     //TODO:  It's not work yet.
-    private void downloadPointList(String sectionCode) {
-        CrtbWebService.getInstance().getPointCodeList(sectionCode, PointStatus.VALID, new RpcCallback() {
-
-            @Override
-            public void onSuccess(Object[] data) {
-                // TODO Auto-generated method stub
-
-
-
-
-
-
-
-
-
-
-
-
-
-            }
-
-            @Override
-            public void onFailed(String reason) {
-                // TODO Auto-generated method stub
-
-            }
-        });
+    private void downloadPointList(List<String> pointCodeList) {
+    	for(String pointCode : pointCodeList) {
+    		downloadPoint(pointCode);
+    	}
     }
 
     private void downloadPoint(String pointCode) {
-        CrtbWebService.getInstance().getPointInfo("XPCL01SD00010001SL01#XPCL01SD00010001SL02", new RpcCallback() {
+        CrtbWebService.getInstance().getPointInfo(pointCode, new RpcCallback() {
 
             @Override
             public void onSuccess(Object[] data) {
@@ -149,7 +125,7 @@ public class WorkInfoDownloadActivity extends Activity {
             xiazai.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    //TODO：
+                	downloadSectionCodeList(SectionStatus.VALID);
                 }
             });
             setContentView(mMenuView);
