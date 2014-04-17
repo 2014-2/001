@@ -4,8 +4,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 
-public class AppConfig {
-	private static AppConfig sInstance;
+public class CrtbAppConfig {
+	private static CrtbAppConfig sInstance;
 	private static final String CONFIG_FILE_NAME = "app_config";
 	private static final String KEY_SERVER_ADDRESS = "server_address";
 	private static final String KEY_USER_NAME = "user_name";
@@ -13,15 +13,15 @@ public class AppConfig {
 	
 	private SharedPreferences mPreferences;
 	
-	public static synchronized AppConfig getInstance(Context context) {
+	public static synchronized CrtbAppConfig getInstance(Context context) {
 		if (sInstance == null) {
-			sInstance = new AppConfig(context);
+			sInstance = new CrtbAppConfig(context);
 		}
 		return sInstance;
 	}
 	
 			
-	private AppConfig(Context context) {
+	private CrtbAppConfig(Context context) {
 		mPreferences = context.getSharedPreferences(CONFIG_FILE_NAME, Context.MODE_PRIVATE);
 	}
 	

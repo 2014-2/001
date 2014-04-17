@@ -25,6 +25,7 @@ import com.crtb.tunnelmonitor.entity.SurveyerInformation;
 import com.crtb.tunnelmonitor.event.EventDispatcher;
 import com.crtb.tunnelmonitor.network.CrtbWebService;
 import com.crtb.tunnelmonitor.network.RpcCallback;
+import com.crtb.tunnelmonitor.utils.CrtbAppConfig;
 
 public class TesterLoadActivity extends Activity implements OnClickListener {
 
@@ -91,7 +92,7 @@ public class TesterLoadActivity extends Activity implements OnClickListener {
 		}
 	}
 
-	private void login(String username, String password) {
+	private void login(final String username, final String password) {
 		
 		CrtbWebService.getInstance().login(username, password,
 				new RpcCallback() {
@@ -100,6 +101,9 @@ public class TesterLoadActivity extends Activity implements OnClickListener {
 					public void onSuccess(Object[] data) {
 						// Toast.makeText(TesterLoadActivity.this,
 						// "获取成功",Toast.LENGTH_LONG).show();
+						CrtbAppConfig config = CrtbAppConfig.getInstance(getApplicationContext());
+						config.setUserName(username);
+						config.setPassword(password);
 						CrtbWebService.getInstance().getSurveyors(
 								new RpcCallback() {
 
