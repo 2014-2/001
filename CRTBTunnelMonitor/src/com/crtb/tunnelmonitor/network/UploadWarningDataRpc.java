@@ -23,22 +23,22 @@ class UploadWarningDataRpc extends AbstractRpc {
 	private static final String KEY_RANDOM_CODE = "随机码";
 	private static final String KEY_ACTION = "getWarningData";
 	
-	private Map<String, String> mParameters = new HashMap<String, String>();
+	private Map<String, Object> mParameters = new HashMap<String, Object>();
 	private RpcCallback mCallback;
 	
-	UploadWarningDataRpc(RpcCallback callback) {
-		mParameters.put(KEY_SECTION_CODE, "");
-		mParameters.put(KEY_POINT_CODE, "");
-		mParameters.put(KEY_WARNING_LEVEL, "");
-		mParameters.put(KEY_TRANSFORM_SPEED, "");
-		mParameters.put(KEY_WARNING_POINT_VALUE, "");
-		mParameters.put(KEY_WARNING_TIME, "");
-		mParameters.put(KEY_WARNING_PERSON, "");
-		mParameters.put(KEY_WARNING_DESCRIPTION, "");
-		mParameters.put(KEY_WARNING_END_TIME, "");
-		mParameters.put(KEY_WARNING_RESULT, "");
-		mParameters.put(KEY_REMARK, "");
-		mParameters.put(KEY_RANDOM_CODE, "");
+	UploadWarningDataRpc(long randomCode, RpcCallback callback) {
+		mParameters.put(KEY_SECTION_CODE, "XPCL01SD00010001");
+		mParameters.put(KEY_POINT_CODE, "XPCL01SD00010001GD01");
+		mParameters.put(KEY_WARNING_LEVEL, 1);
+		mParameters.put(KEY_TRANSFORM_SPEED, 6.0f);
+		mParameters.put(KEY_WARNING_POINT_VALUE, 1.0f);
+		mParameters.put(KEY_WARNING_TIME, "2014-04-17 23:47:00");
+		mParameters.put(KEY_WARNING_PERSON, "杨工");
+		mParameters.put(KEY_WARNING_DESCRIPTION, "abc");
+		mParameters.put(KEY_WARNING_END_TIME, "2014-04-17 23:48:00");
+		mParameters.put(KEY_WARNING_RESULT, 0);
+		mParameters.put(KEY_REMARK, "kkk");
+		mParameters.put(KEY_RANDOM_CODE, randomCode);
 		mCallback = callback;
 	}
 	

@@ -63,7 +63,7 @@ public class WorkInfoDownloadActivity extends Activity {
         }
     }
 
-    private void downloadSection(String sectionCode) {
+    private void downloadSection(final String sectionCode) {
         CrtbWebService.getInstance().getSectionInfo(sectionCode, new RpcCallback() {
 
             @Override
@@ -74,6 +74,7 @@ public class WorkInfoDownloadActivity extends Activity {
                 dao.insert(section);
                 List<String> pointCodeList = Arrays.asList(section.getSurveyPntName().split(","));
                 downloadPointList(pointCodeList);
+                Log.d("timdebug", "sectionCode: " + sectionCode + ", codeList: " + section.getSurveyPntName());
             }
 
             @Override

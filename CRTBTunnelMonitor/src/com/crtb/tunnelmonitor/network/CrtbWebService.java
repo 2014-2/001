@@ -209,6 +209,55 @@ public final class CrtbWebService {
 		task.execute();
 	}
 	
+	/**
+	 * 上传断面信息
+	 * 
+	 * @param section
+	 * @param callback
+	 */
+	public void uploadSection(Object section, RpcCallback callback) {
+		String zoneCode = getZoneCode();
+		String siteCode = getSiteCode();
+		UploadSectionPointInfoRpc rpc = new UploadSectionPointInfoRpc(zoneCode, siteCode, section, new RpcCallbackWrapper(callback));
+		RpcSendTask task = new RpcSendTask(rpc, DATA_UPLOAD_URL);
+		task.execute();
+	}
+	
+	/**
+	 * 上传测量数据
+	 * 
+	 * @param testData
+	 * @param callback
+	 */
+	public void uploadTestResult(Object testData, RpcCallback callback) {
+		UploadTestResultDataRpc rpc = new UploadTestResultDataRpc(testData, new RpcCallbackWrapper(callback));
+		RpcSendTask task = new RpcSendTask(rpc, DATA_UPLOAD_URL);
+		task.execute();
+	}
+	
+	/**
+	 * 上传预警信息
+	 * 
+	 * @param callback
+	 */
+	public void uploadWarningData(Object warningData, RpcCallback callback) {
+		long randomCode = getRandomCode();
+		UploadWarningDataRpc rpc = new UploadWarningDataRpc(randomCode, new RpcCallbackWrapper(callback));
+		RpcSendTask task = new RpcSendTask(rpc, DATA_UPLOAD_URL);
+		task.execute();
+	}
+	
+	/**
+	 * 上传测量数据后需要调此接口确认
+	 * 
+	 * @param callback
+	 */
+	public void confirmSubmitData(RpcCallback callback) {
+		ConfirmSubmitDataRpc rpc = new ConfirmSubmitDataRpc(getRandomCode(), new RpcCallbackWrapper(callback));
+		RpcSendTask task = new RpcSendTask(rpc, DATA_UPLOAD_URL);
+		task.execute();
+	}
+	
 	private class RpcSendTask extends AsyncTask<Void, Void, Void> {
 		private AbstractRpc mRpc;
 		private String mUrl;

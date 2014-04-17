@@ -12,10 +12,10 @@ class ConfirmSubmitDataRpc extends AbstractRpc {
 	private static final String KEY_RANDOM_CODE = "随机码";
 	private static final String KEY_ACTION = "confirmSubmitData";
 	
-	private Map<String, String> mParameters = new HashMap<String, String>();
+	private Map<String, Object> mParameters = new HashMap<String, Object>();
 	private RpcCallback mCallback;
 	
-	ConfirmSubmitDataRpc(String randomCode, RpcCallback callback) {
+	ConfirmSubmitDataRpc(long randomCode, RpcCallback callback) {
 		mParameters.put(KEY_RANDOM_CODE, randomCode);
 		mCallback = callback;
 	}

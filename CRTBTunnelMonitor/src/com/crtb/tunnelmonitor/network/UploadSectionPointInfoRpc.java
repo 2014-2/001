@@ -29,9 +29,9 @@ class UploadSectionPointInfoRpc extends AbstractRpc {
 	private Map<String, String> mParameters = new HashMap<String, String>();
 	private RpcCallback mCallback;
 	
-	UploadSectionPointInfoRpc(RpcCallback callback) {
-		mParameters.put(KEY_ZONE_CODE, "");
-		mParameters.put(KEY_SITE_CODE, "");
+	UploadSectionPointInfoRpc(String zoneCode, String siteCode, Object section, RpcCallback callback) {
+		mParameters.put(KEY_ZONE_CODE, zoneCode);
+		mParameters.put(KEY_SITE_CODE, siteCode);
 		mParameters.put(KEY_SECTION_NAME, "");
 		mParameters.put(KEY_SECTION_CODE, "");
 		mParameters.put(KEY_SECTION_CHAINAGE, "");
