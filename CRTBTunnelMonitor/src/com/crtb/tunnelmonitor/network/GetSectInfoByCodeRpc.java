@@ -5,7 +5,8 @@ import java.util.Map;
 
 import org.ksoap2.serialization.SoapObject;
 
-import android.util.Log;
+import com.crtb.tunnelmonitor.entity.SectionInfo;
+import com.crtb.tunnelmonitor.entity.TunnelCrossSectionInfo;
 
 class GetSectInfoByCodeRpc extends AbstractRpc {
 	private static final String LOG_TAG = "GetSectInfoByCodeRpc";
@@ -61,67 +62,73 @@ class GetSectInfoByCodeRpc extends AbstractRpc {
 			SoapObject result = (SoapObject) response;
 			SoapObject data = (SoapObject) result.getProperty(0);
 			int i = 0;
-			String name = "";
+			TunnelCrossSectionInfo section = new TunnelCrossSectionInfo();
 			try {
-				name = data.getPropertyAsString(i++);
+				String name = data.getPropertyAsString(i++);
+				section.setChainageName(name);
 			} catch (NullPointerException e) {
 				// ignore
 			}
-			String chainage = "";
 			try {
-				chainage = data.getPropertyAsString(i++);
+				String chainage = data.getPropertyAsString(i++);
+				String[] chainageInfo = chainage.substring(2).split("\\+");
+				final float total = Float.parseFloat(chainageInfo[0]) * 1000 + Float.parseFloat(chainageInfo[1]);
+				section.setChainage(total);
 			} catch (NullPointerException e) {
 				// ignore
 			}
-			String digMehtod = "";
 			try {
-				digMehtod = data.getPropertyAsString(i++);
+				String digMehtod = data.getPropertyAsString(i++);
+				section.setExcavateMethod(digMehtod);
 			} catch (NullPointerException e) {
 				// ignore
 			}
-			String width = "";
 			try {
-				width = data.getPropertyAsString(i++);
+				String width = data.getPropertyAsString(i++);
+				section.setWidth(Float.parseFloat(width));
 			} catch (NullPointerException e) {
 				// ignore
 			}
-			String u0Value = "";
 			try {
-				u0Value = data.getPropertyAsString(i++);
+				String u0Value = data.getPropertyAsString(i++);
+				section.setGDU0(Float.parseFloat(u0Value));
+				section.setSLU0(Float.parseFloat(u0Value));
 			} catch (NullPointerException e) {
 				// ignore
 			}
-			String u0ModifiedTime = "";
 			try {
-				u0ModifiedTime = data.getPropertyAsString(i++);
+				String u0ModifiedTime = data.getPropertyAsString(i++);
+				section.setGDU0Time(u0ModifiedTime);
+				section.setSLU0Time(u0ModifiedTime);
 			} catch (NullPointerException e) {
 				// ignore
 			}
-			String u0Remark = "";
 			try {
-				u0Remark = data.getPropertyAsString(i++);
+				String u0Remark = data.getPropertyAsString(i++);
+				section.setGDU0Description(u0Remark);
+				section.setSLU0Description(u0Remark);
 			} catch (NullPointerException e) {
 				// ignore
 			}
-			String wallRockLevel = "";
 			try {
-				wallRockLevel = data.getPropertyAsString(i++);
+				String wallRockLevel = data.getPropertyAsString(i++);
+				section.setROCKGRADE(wallRockLevel);
 			} catch (NullPointerException e) {
 				// ignore
 			}
-			String pointCodeList = "";
 			try {
-				pointCodeList = data.getPropertyAsString(i++);
+				String pointCodeList = data.getPropertyAsString(i++);
+				section.setSurveyPntName(pointCodeList.replace("#", ","));
 			} catch (NullPointerException e) {
 				// ignore
 			}
-			String remark = "";
 			try {
-				remark = data.getPropertyAsString(i++);
+				String remark = data.getPropertyAsString(i++);
+				section.setInfo(remark);
 			} catch (NullPointerException e) {
 				// ignore
 			}
-			Log.d(LOG_TAG, "name: " + name + ", chainage: " + chainage + ", digMehtod: " + digMehtod + ", width: " + width + ", u0Value: " + u0Value + ", u0ModifiedTime: " + u0ModifiedTime + ", u0Remark: " + u0Remark + ", wallRockLevel: " + wallRockLevel + ", pointCodeList: " + pointCodeList + ", remark: " + remark);
+			notifySuccess(new TunnelCrossSectionInfo[] { section });
 		} catch (Exception e) {
 			notifyFailed("Exception: " + e.getMessage());
 			e.printStackTrace();

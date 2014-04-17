@@ -21,6 +21,9 @@ public class SectionInfo implements Serializable {
 	@ColumnInt
 	private int id;
 
+	@ColumnString(length = 32)
+	private String name;
+	
 	@ColumnFloat
 	private float chainage;
 
@@ -82,7 +85,15 @@ public class SectionInfo implements Serializable {
 	public void setId(int id) {
 		this.id = id;
 	}
+	
+	public void setName(String name) {
+		this.name = name;
+	}
 
+	public String getName() {
+		return name;
+	}
+	
 	public float getChainage() {
 		return chainage;
 	}
