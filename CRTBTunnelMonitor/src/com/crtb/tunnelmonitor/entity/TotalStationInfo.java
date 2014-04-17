@@ -2,6 +2,7 @@ package com.crtb.tunnelmonitor.entity;
 
 import java.io.Serializable;
 
+import org.zw.android.framework.db.ColumnBoolean;
 import org.zw.android.framework.db.ColumnInt;
 import org.zw.android.framework.db.ColumnString;
 import org.zw.android.framework.db.Table;
@@ -45,15 +46,15 @@ public class TotalStationInfo implements Serializable {
     @ColumnString(length=32)
     private String cmd;                 //串口
 
-    @ColumnString(length=8)
-    private String used;				// 是否选中
+    @ColumnBoolean
+    private boolean used;				// 是否选中
     
-    @ColumnString(length=8)
-    private String checked;				// 是否使用
+    @ColumnBoolean
+    private boolean checked;				// 是否使用
     
     public TotalStationInfo(){
-    	setUsed("false");
-    	setUsed("false");
+    	setUsed(false);
+    	setChecked(false);
     }
 
 	public int getId() {
@@ -136,19 +137,19 @@ public class TotalStationInfo implements Serializable {
 		this.cmd = cmd;
 	}
 
-	public String getUsed() {
-		return used != null ? used : "false";
+	public boolean isUsed() {
+		return used;
 	}
 
-	public void setUsed(String used) {
+	public void setUsed(boolean used) {
 		this.used = used;
 	}
 
-	public String getChecked() {
-		return checked != null ? checked : "false";
+	public boolean isChecked() {
+		return checked;
 	}
 
-	public void setChecked(String checked) {
+	public void setChecked(boolean checked) {
 		this.checked = checked;
 	}
 	

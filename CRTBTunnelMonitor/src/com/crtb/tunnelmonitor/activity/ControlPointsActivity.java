@@ -78,8 +78,8 @@ public class ControlPointsActivity extends Activity {
                     long arg3) {
                 ControlPointsInfo item = mControlPoints.get(arg2);
                 
-                boolean bCheck = item.getChecked().equals("true");
-                item.setChecked(bCheck ? "false" : "true");
+                boolean bCheck = item.isChecked() ;
+                item.setChecked(!bCheck);
                 
                 // 更新数据库
                 ControlPointsInfoDao.defaultDao().update(item) ;
@@ -170,13 +170,13 @@ public class ControlPointsActivity extends Activity {
             switch (id) {
                 case R.id.use_point:
                     ControlPointsInfo item = mControlPoints.get(iItemPos);
-                    item.setUsed("true");
-                    item.setChecked("true");
+                    item.setUsed(true);
+                    item.setChecked(true);
                     mControlPoints.set(iItemPos, item);
                     for (int i = 0; i < mControlPoints.size(); i++) {
                         if (i != iItemPos) {
-                            mControlPoints.get(i).setUsed("false");
-                            mControlPoints.get(i).setChecked("false");
+                            mControlPoints.get(i).setUsed(false);
+                            mControlPoints.get(i).setChecked(false);
                         }
                     }
                     ControlPointsInfoDao.defaultDao().update(item);

@@ -71,7 +71,7 @@ public class ControlPonitsListAdapter2 extends BaseAdapter {
 		ImageView start = (ImageView) convertView.findViewById(R.id.t2);
 		name.setTextColor(Color.BLACK);
 		name.setText(mControlPoints.get(position).getName());
-		if ("true".equals(mControlPoints.get(position).getChecked())) {
+		if (mControlPoints.get(position).isChecked()) {
 			start.setImageResource(R.drawable.yes);
 		} else {
 			start.setImageResource(R.drawable.no);
