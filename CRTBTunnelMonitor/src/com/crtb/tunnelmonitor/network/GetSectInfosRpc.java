@@ -1,6 +1,8 @@
 package com.crtb.tunnelmonitor.network;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.ksoap2.serialization.SoapObject;
@@ -56,12 +58,17 @@ class GetSectInfosRpc extends AbstractRpc {
 			SoapObject result = (SoapObject) response;
 			SoapObject data = (SoapObject) result.getProperty(0);
 			final int count = data.getPropertyCount();
+			List<String> codeList = new ArrayList<String>();
 			for(int i = 0; i < count; i++) {
 				String[] sectionInfo = data.getPropertyAsString(i).split("#");
+				codeList.add(sectionInfo[0]);
 				Log.d(LOG_TAG, "section code: " + sectionInfo[0] + ", total: " + sectionInfo[1]);
 			}
-			notifySuccess(null);
-			// TODO: Parse the response
+			if (codeList.size() > 0) {
+				notifySuccess(codeList.toArray(new String[codeList.size()]));
+			} else {
+				notifyFailed("empty data");
+			}
 		} catch (Exception e) {
 			notifyFailed("Exception: " + e.getMessage());
 			e.printStackTrace();
