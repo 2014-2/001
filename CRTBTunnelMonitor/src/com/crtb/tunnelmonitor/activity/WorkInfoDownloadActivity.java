@@ -8,6 +8,9 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.TextView;
 
+import com.crtb.tunnelmonitor.dao.impl.v2.TunnelCrossSectionDao;
+import com.crtb.tunnelmonitor.entity.SectionInfo;
+import com.crtb.tunnelmonitor.entity.TunnelCrossSectionInfo;
 import com.crtb.tunnelmonitor.network.CrtbWebService;
 import com.crtb.tunnelmonitor.network.RpcCallback;
 import com.crtb.tunnelmonitor.network.SectionStatus;
@@ -53,13 +56,15 @@ public class WorkInfoDownloadActivity extends Activity {
 			
 			@Override
 			public void onSuccess(Object[] data) {
-				// TODO Auto-generated method stub
+				TunnelCrossSectionInfo[] section = (TunnelCrossSectionInfo[])data;
+				TunnelCrossSectionDao dao = TunnelCrossSectionDao.defaultDao();
+				dao.insert(section[0]);
 			}
 			
 			@Override
 			public void onFailed(String reason) {
 				// TODO Auto-generated method stub
-				
+				Log.d(LOG_TAG, "downloadSection failed: " + reason);
 			}
 		});
 	}
