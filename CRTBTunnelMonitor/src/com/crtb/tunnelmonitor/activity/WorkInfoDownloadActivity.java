@@ -15,15 +15,19 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
+import android.widget.BaseAdapter;
+import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.crtb.tunnelmonitor.dao.impl.v2.TunnelCrossSectionDao;
+import com.crtb.tunnelmonitor.dao.impl.v2.WorkPlanDao;
 import com.crtb.tunnelmonitor.entity.TunnelCrossSectionInfo;
+import com.crtb.tunnelmonitor.entity.WorkPlan;
 import com.crtb.tunnelmonitor.network.CrtbWebService;
-import com.crtb.tunnelmonitor.network.PointStatus;
 import com.crtb.tunnelmonitor.network.RpcCallback;
 import com.crtb.tunnelmonitor.network.SectionStatus;
 
@@ -31,12 +35,28 @@ public class WorkInfoDownloadActivity extends Activity {
     private static final String LOG_TAG = "WorkInfoDownloadActivity";
     private MenuPopupWindow menuWindow;
 
+    private ListView mlvWorkInfos;
+
+    private WorkPlanAdapter mAdapter;
+
+    private List<WorkPlan> mAllWorkPlans;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_workinfo_download);
         TextView title=(TextView) findViewById(R.id.tv_topbar_title);
         title.setText(R.string.download_work_data);
+        init();
+    }
+
+    private void init() {
+        mlvWorkInfos = (ListView)findViewById(R.id.lv_workinfo);
+
+        mAllWorkPlans = WorkPlanDao.defaultWorkPlanDao().queryAllWorkPlan();
+
+        mAdapter = new WorkPlanAdapter();
+        mlvWorkInfos.setAdapter(mAdapter);
     }
 
     //下载断面编码数据
@@ -86,9 +106,9 @@ public class WorkInfoDownloadActivity extends Activity {
 
     //TODO:  It's not work yet.
     private void downloadPointList(List<String> pointCodeList) {
-    	for(String pointCode : pointCodeList) {
-    		downloadPoint(pointCode);
-    	}
+        for(String pointCode : pointCodeList) {
+            downloadPoint(pointCode);
+        }
     }
 
     private void downloadPoint(String pointCode) {
@@ -125,7 +145,7 @@ public class WorkInfoDownloadActivity extends Activity {
             xiazai.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                	downloadSectionCodeList(SectionStatus.VALID);
+                    downloadSectionCodeList(SectionStatus.VALID);
                 }
             });
             setContentView(mMenuView);
@@ -155,5 +175,41 @@ public class WorkInfoDownloadActivity extends Activity {
             }
         }
         return true;
+    }
+
+    class WorkPlanAdapter extends BaseAdapter {
+
+        @Override
+        public int getCount() {
+            return mAllWorkPlans.size();
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return mAllWorkPlans.get(position);
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return mAllWorkPlans.get(position).getId();
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            if (convertView == null) {
+                convertView = LayoutInflater.from(getApplicationContext()).inflate(
+                        R.layout.layout_workinfo_download_item, null);
+            }
+            WorkPlan workPlan = mAllWorkPlans.get(position);
+            TextView id = (TextView)convertView.findViewById(R.id.workplan_id);
+            id.setText(String.valueOf(workPlan.getId()));
+            TextView name = (TextView)convertView.findViewById(R.id.workplan_name);
+            name.setText(workPlan.getWorkPlanName());
+            TextView isUpload = (TextView)convertView.findViewById(R.id.workplan_is_upload);
+            //TODO: 当前暂时无法判断是否已上传
+            isUpload.setText("已上传");
+            return convertView;
+        }
+
     }
 }

@@ -15,7 +15,7 @@
         android:background="#e8e8e8" >
 
         <TextView
-            android:id="@+id/text1"
+            android:id="@+id/tunnel"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:layout_weight="1.0"
@@ -25,7 +25,7 @@
             android:textSize="19sp" />
 
         <TextView
-            android:id="@+id/text2"
+            android:id="@+id/sink"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:layout_weight="1.0"
@@ -43,13 +43,6 @@
         android:layout_marginTop="-4dp"
         android:scaleType="matrix"
         android:src="#2d7b90" />
-
-    <include
-        android:id="@+id/bottom_layout"
-        android:layout_width="fill_parent"
-        android:layout_height="50dp"
-        android:layout_alignParentBottom="true"
-        layout="@layout/activity_bottom_layout" />
 
     <android.support.v4.view.ViewPager
         android:id="@+id/vPager"
