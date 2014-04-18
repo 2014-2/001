@@ -1,11 +1,15 @@
 package com.crtb.tunnelmonitor.activity;
 
+import com.crtb.tunnelmonitor.network.CrtbWebService;
+import com.crtb.tunnelmonitor.network.RpcCallback;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -17,6 +21,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 public class WarningUploadActivity extends Activity {
+	private static final String LOG_TAG = "WarningUploadActivity";
+	
     private MenuPopupWindow menuWindow;
 
     @Override
@@ -53,10 +59,9 @@ public class WarningUploadActivity extends Activity {
             });
             shangchuan.setOnClickListener(new OnClickListener() {
 
-                // @SuppressLint("ShowToast")
                 @Override
                 public void onClick(View v) {
-                    //TODO:
+                	uploadWarningData();
                 }
             });
             setContentView(mMenuView);
@@ -87,4 +92,19 @@ public class WarningUploadActivity extends Activity {
         }
         return true;
     }
+    
+	private void uploadWarningData() {
+		CrtbWebService.getInstance().uploadWarningData(null, new RpcCallback() {
+			
+			@Override
+			public void onSuccess(Object[] data) {
+				Log.d(LOG_TAG, "upload warning data success.");
+			}
+			
+			@Override
+			public void onFailed(String reason) {
+				Log.d(LOG_TAG, "upload warning data failed.");
+			}
+		});
+	}
 }

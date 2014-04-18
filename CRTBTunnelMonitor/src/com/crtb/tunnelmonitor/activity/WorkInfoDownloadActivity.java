@@ -23,10 +23,10 @@ import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.crtb.tunnelmonitor.dao.impl.v2.TunnelCrossSectionDao;
-import com.crtb.tunnelmonitor.dao.impl.v2.WorkPlanDao;
-import com.crtb.tunnelmonitor.entity.TunnelCrossSectionInfo;
-import com.crtb.tunnelmonitor.entity.WorkPlan;
+import com.crtb.tunnelmonitor.dao.impl.v2.ProjectIndexDao;
+import com.crtb.tunnelmonitor.dao.impl.v2.TunnelCrossSectionIndexDao;
+import com.crtb.tunnelmonitor.entity.ProjectIndex;
+import com.crtb.tunnelmonitor.entity.TunnelCrossSectionIndex;
 import com.crtb.tunnelmonitor.network.CrtbWebService;
 import com.crtb.tunnelmonitor.network.RpcCallback;
 import com.crtb.tunnelmonitor.network.SectionStatus;
@@ -39,7 +39,7 @@ public class WorkInfoDownloadActivity extends Activity {
 
     private WorkPlanAdapter mAdapter;
 
-    private List<WorkPlan> mAllWorkPlans;
+    private List<ProjectIndex> mAllProjects;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +53,7 @@ public class WorkInfoDownloadActivity extends Activity {
     private void init() {
         mlvWorkInfos = (ListView)findViewById(R.id.lv_workinfo);
 
-        mAllWorkPlans = WorkPlanDao.defaultWorkPlanDao().queryAllWorkPlan();
+        mAllProjects = ProjectIndexDao.defaultWorkPlanDao().queryAllWorkPlan();
 
         mAdapter = new WorkPlanAdapter();
         mlvWorkInfos.setAdapter(mAdapter);
@@ -83,17 +83,18 @@ public class WorkInfoDownloadActivity extends Activity {
         }
     }
 
-    private void downloadSection(String sectionCode) {
+    private void downloadSection(final String sectionCode) {
         CrtbWebService.getInstance().getSectionInfo(sectionCode, new RpcCallback() {
 
             @Override
             public void onSuccess(Object[] data) {
-                TunnelCrossSectionInfo[] sectionInfo = (TunnelCrossSectionInfo[])data;
-                TunnelCrossSectionInfo section = sectionInfo[0];
-                TunnelCrossSectionDao dao = TunnelCrossSectionDao.defaultDao();
+                TunnelCrossSectionIndex[] sectionInfo = (TunnelCrossSectionIndex[])data;
+                TunnelCrossSectionIndex section = sectionInfo[0];
+                TunnelCrossSectionIndexDao dao = TunnelCrossSectionIndexDao.defaultDao();
                 dao.insert(section);
                 List<String> pointCodeList = Arrays.asList(section.getSurveyPntName().split(","));
                 downloadPointList(pointCodeList);
+                Log.d("timdebug", "sectionCode: " + sectionCode + ", codeList: " + section.getSurveyPntName());
             }
 
             @Override
@@ -181,17 +182,17 @@ public class WorkInfoDownloadActivity extends Activity {
 
         @Override
         public int getCount() {
-            return mAllWorkPlans.size();
+            return mAllProjects.size();
         }
 
         @Override
         public Object getItem(int position) {
-            return mAllWorkPlans.get(position);
+            return mAllProjects.get(position);
         }
 
         @Override
         public long getItemId(int position) {
-            return mAllWorkPlans.get(position).getId();
+            return mAllProjects.get(position).getId();
         }
 
         @Override
@@ -200,11 +201,11 @@ public class WorkInfoDownloadActivity extends Activity {
                 convertView = LayoutInflater.from(getApplicationContext()).inflate(
                         R.layout.layout_workinfo_download_item, null);
             }
-            WorkPlan workPlan = mAllWorkPlans.get(position);
+            ProjectIndex project = mAllProjects.get(position);
             TextView id = (TextView)convertView.findViewById(R.id.workplan_id);
-            id.setText(String.valueOf(workPlan.getId()));
+            id.setText(String.valueOf(project.getId()));
             TextView name = (TextView)convertView.findViewById(R.id.workplan_name);
-            name.setText(workPlan.getWorkPlanName());
+            name.setText(project.getProjectName());
             TextView isUpload = (TextView)convertView.findViewById(R.id.workplan_is_upload);
             //TODO: 当前暂时无法判断是否已上传
             isUpload.setText("已上传");

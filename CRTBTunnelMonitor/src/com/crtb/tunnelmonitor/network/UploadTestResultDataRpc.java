@@ -26,7 +26,7 @@ class UploadTestResultDataRpc extends AbstractRpc {
 	private Map<String, String> mParameters = new HashMap<String, String>();
 	private RpcCallback mCallback;
 	
-	UploadTestResultDataRpc(RpcCallback callback) {
+	UploadTestResultDataRpc(Object testData, RpcCallback callback) {
 		mParameters.put(KEY_SECTION_CODE, "");
 		mParameters.put(KEY_POINT_CODE_LIST, "");
 		mParameters.put(KEY_TUNNEL_FACE_DISTANCE, "");

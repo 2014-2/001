@@ -7,8 +7,8 @@ import android.os.Bundle;
 
 import com.crtb.tunnelmonitor.CommonObject;
 import com.crtb.tunnelmonitor.WorkFlowActivity;
-import com.crtb.tunnelmonitor.entity.RecordInfo;
-import com.crtb.tunnelmonitor.entity.RecordSubsidenceInfo;
+import com.crtb.tunnelmonitor.entity.SubsidenceTotalData;
+import com.crtb.tunnelmonitor.entity.TunnelSettlementTotalData;
 
 /**
  * 开始测量
@@ -31,10 +31,10 @@ public class TestSectionExecuteActivity extends WorkFlowActivity {
 		Object bean = CommonObject.findObject(KEY_TEST_OBJECT);
 		
 		// title
-		if(bean instanceof RecordInfo){
-			setTopbarTitle(((RecordInfo)bean).getChainageName());
-		} else if(bean instanceof RecordSubsidenceInfo){
-			setTopbarTitle(((RecordSubsidenceInfo)bean).getChainageName());
+		if(bean instanceof TunnelSettlementTotalData){
+			setTopbarTitle(((TunnelSettlementTotalData)bean).getSectionName());
+		} else if(bean instanceof SubsidenceTotalData){
+			setTopbarTitle(((SubsidenceTotalData)bean).getSectionName());
 		}
 		
 	}

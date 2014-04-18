@@ -3,6 +3,7 @@ package com.crtb.tunnelmonitor.widget;
 import org.zw.android.framework.ioc.InjectCore;
 import org.zw.android.framework.ioc.InjectLayout;
 import org.zw.android.framework.ioc.InjectView;
+import org.zw.android.framework.util.DateUtils;
 
 import android.content.Context;
 import android.view.View;
@@ -10,10 +11,10 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.crtb.tunnelmonitor.activity.R;
-import com.crtb.tunnelmonitor.entity.RecordInfo;
+import com.crtb.tunnelmonitor.entity.TunnelSettlementTotalData;
 import com.crtb.tunnelmonitor.utils.CrtbUtils;
 
-public class CrtbRecordTunnelSectionAdapter extends CrtbEntityAdapter<RecordInfo> {
+public class CrtbRecordTunnelSectionAdapter extends CrtbEntityAdapter<TunnelSettlementTotalData> {
 
 	protected CrtbRecordTunnelSectionAdapter(Context context) {
 		super(context);
@@ -23,7 +24,7 @@ public class CrtbRecordTunnelSectionAdapter extends CrtbEntityAdapter<RecordInfo
 	public View getView(int position, View convertView, ViewGroup parent) {
 		
 		HolderView holder 					= null ;
-		RecordInfo item 					= getItem(position);
+		TunnelSettlementTotalData item 		= getItem(position);
 		
 		if(convertView == null){
 			
@@ -34,7 +35,7 @@ public class CrtbRecordTunnelSectionAdapter extends CrtbEntityAdapter<RecordInfo
 			holder	= (HolderView)convertView.getTag() ;
 		}
 		
-		holder.chainage.setText(item.getCreateTime());
+		holder.chainage.setText(DateUtils.toDateString(item.getCreateTime()));
 		holder.excavation.setText(CrtbUtils.formatSectionName(item.getPrefix(), item.getFacedk()));
 		
 		return convertView;

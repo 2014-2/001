@@ -34,8 +34,8 @@ import com.crtb.tunnelmonitor.AppCRTBApplication;
 import com.crtb.tunnelmonitor.adapter.ControlPonitsListAdapter;
 import com.crtb.tunnelmonitor.common.Constant;
 import com.crtb.tunnelmonitor.dao.impl.v2.TotalStationInfoDao;
-import com.crtb.tunnelmonitor.dao.impl.v2.WorkPlanDao;
-import com.crtb.tunnelmonitor.entity.TotalStationInfo;
+import com.crtb.tunnelmonitor.dao.impl.v2.ProjectIndexDao;
+import com.crtb.tunnelmonitor.entity.TotalStationIndex;
 
 public class StationActivity extends Activity {
     /**
@@ -49,7 +49,7 @@ public class StationActivity extends Activity {
     private View vie;
 
     private SonPopupWindow menuWindow;
-    public List<TotalStationInfo> mStations = null;
+    public List<TotalStationIndex> mStations = null;
     private AppCRTBApplication CurApp = null;
     private int iConnectType = 0;
     private boolean bConnect = false;
@@ -83,7 +83,7 @@ public class StationActivity extends Activity {
             @Override
             public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
                     long arg3) {
-                TotalStationInfo item = mStations.get(arg2);
+                TotalStationIndex item = mStations.get(arg2);
                 boolean bCheck = item.isChecked() ;
                 item.setChecked(!bCheck);
                 mStations.set(arg2, item);
@@ -133,7 +133,7 @@ public class StationActivity extends Activity {
     }
 
     public void loadData() {
-        if (WorkPlanDao.defaultWorkPlanDao().queryEditWorkPlan() == null) {
+        if (ProjectIndexDao.defaultWorkPlanDao().queryEditWorkPlan() == null) {
             return ;
         }
         mStations = TotalStationInfoDao.defaultDao().queryAllTotalStations();
@@ -343,8 +343,8 @@ public class StationActivity extends Activity {
                 // @SuppressLint("ShowToast")
                 @Override
                 public void onClick(View v) {
-                    List<TotalStationInfo> tmpList = ((StationActivity) c).mStations;
-                    TotalStationInfo tmp = null;
+                    List<TotalStationIndex> tmpList = ((StationActivity) c).mStations;
+                    TotalStationIndex tmp = null;
                     if (tmpList == null) {
                         Toast.makeText(c, "请选择需要编辑的全站仪", 3000)
                         .show();
@@ -380,14 +380,14 @@ public class StationActivity extends Activity {
                 	boolean finded = false;
                 	
                 	// 删除当前选中的全站仪
-					List<TotalStationInfo> list = TotalStationInfoDao
+					List<TotalStationIndex> list = TotalStationInfoDao
 							.defaultDao().queryAllTotalStations();
 					
 					if (list == null) {
 						return;
 					}
                 	
-                	for (TotalStationInfo info : list) {
+                	for (TotalStationIndex info : list) {
 						if (info.isChecked()) {
 							finded = true;
 							break;
@@ -437,7 +437,7 @@ public class StationActivity extends Activity {
 
 					boolean finded = false;
 					// 删除当前选中的全站仪
-					List<TotalStationInfo> list = TotalStationInfoDao
+					List<TotalStationIndex> list = TotalStationInfoDao
 							.defaultDao().queryAllTotalStations();
 
 					if (list == null) {
@@ -445,7 +445,7 @@ public class StationActivity extends Activity {
 						return;
 					}
 
-					for (TotalStationInfo info : list) {
+					for (TotalStationIndex info : list) {
 
 						if (info.isChecked()) {
 

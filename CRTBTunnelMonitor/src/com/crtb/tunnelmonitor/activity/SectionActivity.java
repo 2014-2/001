@@ -27,11 +27,11 @@ import android.widget.TextView;
 
 import com.crtb.tunnelmonitor.CommonObject;
 import com.crtb.tunnelmonitor.WorkFlowActivity;
-import com.crtb.tunnelmonitor.dao.impl.v2.SubsidenceCrossSectionDao;
-import com.crtb.tunnelmonitor.dao.impl.v2.TunnelCrossSectionDao;
+import com.crtb.tunnelmonitor.dao.impl.v2.SubsidenceCrossSectionIndexDao;
+import com.crtb.tunnelmonitor.dao.impl.v2.TunnelCrossSectionIndexDao;
 import com.crtb.tunnelmonitor.entity.MenuSystemItem;
-import com.crtb.tunnelmonitor.entity.SubsidenceCrossSectionInfo;
-import com.crtb.tunnelmonitor.entity.TunnelCrossSectionInfo;
+import com.crtb.tunnelmonitor.entity.SubsidenceCrossSectionIndex;
+import com.crtb.tunnelmonitor.entity.TunnelCrossSectionIndex;
 import com.crtb.tunnelmonitor.mydefine.CrtbDialogResult;
 import com.crtb.tunnelmonitor.widget.SectionSubsidenceListView;
 import com.crtb.tunnelmonitor.widget.SectionTunnelListView;
@@ -94,7 +94,7 @@ public class SectionActivity extends WorkFlowActivity implements OnPageChangeLis
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,int position, long id) {
 				
-				TunnelCrossSectionInfo bean = mSectionTunnelList.getItem(position);
+				TunnelCrossSectionIndex bean = mSectionTunnelList.getItem(position);
 				
 				showListActionMenu("断面管理", new String[]{"编辑","删除"}, bean);
 			}
@@ -105,7 +105,7 @@ public class SectionActivity extends WorkFlowActivity implements OnPageChangeLis
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,int position, long id) {
 				
-				SubsidenceCrossSectionInfo bean = mSectionSubsidenceList.getItem(position);
+				SubsidenceCrossSectionIndex bean = mSectionSubsidenceList.getItem(position);
 				
 				showListActionMenu("断面管理", new String[]{"编辑","删除"}, bean);
 			}
@@ -119,9 +119,9 @@ public class SectionActivity extends WorkFlowActivity implements OnPageChangeLis
 	@Override
 	protected void onListItemSelected(Object bean, int position, String menu) {
 		
-		if(bean instanceof TunnelCrossSectionInfo){
+		if(bean instanceof TunnelCrossSectionIndex){
 			
-			TunnelCrossSectionInfo section = (TunnelCrossSectionInfo)bean ;
+			TunnelCrossSectionIndex section = (TunnelCrossSectionIndex)bean ;
 			
 			if(position == 0){
 				
@@ -133,7 +133,7 @@ public class SectionActivity extends WorkFlowActivity implements OnPageChangeLis
 				
 			} else if(position == 1){
 				
-				boolean success = TunnelCrossSectionDao.defaultDao().delete(section);
+				boolean success = TunnelCrossSectionIndexDao.defaultDao().delete(section);
 				
 				CrtbDialogResult dialog = null ;
 				
@@ -148,9 +148,9 @@ public class SectionActivity extends WorkFlowActivity implements OnPageChangeLis
 					dialog.show() ;
 				}
 			}
-		} else if(bean instanceof SubsidenceCrossSectionInfo){
+		} else if(bean instanceof SubsidenceCrossSectionIndex){
 			
-			SubsidenceCrossSectionInfo section = (SubsidenceCrossSectionInfo)bean ;
+			SubsidenceCrossSectionIndex section = (SubsidenceCrossSectionIndex)bean ;
 			
 			if(position == 0){
 				
@@ -162,7 +162,7 @@ public class SectionActivity extends WorkFlowActivity implements OnPageChangeLis
 				
 			} else if(position == 1){
 				
-				boolean success = SubsidenceCrossSectionDao.defaultDao().delete(section);
+				boolean success = SubsidenceCrossSectionIndexDao.defaultDao().delete(section);
 				
 				CrtbDialogResult dialog = null ;
 				

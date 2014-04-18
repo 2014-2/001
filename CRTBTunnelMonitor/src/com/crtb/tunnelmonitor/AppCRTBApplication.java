@@ -12,14 +12,11 @@ import org.zw.android.framework.impl.FrameworkFacade;
 
 import android.app.Application;
 
-import com.crtb.tunnelmonitor.entity.AlertHandlingInfo;
-import com.crtb.tunnelmonitor.entity.ControlPointsInfo;
-import com.crtb.tunnelmonitor.entity.RecordInfo;
-import com.crtb.tunnelmonitor.entity.SubsidenceCrossSectionInfo;
+import com.crtb.tunnelmonitor.entity.ControlPointsIndex;
+import com.crtb.tunnelmonitor.entity.SubsidenceCrossSectionIndex;
 import com.crtb.tunnelmonitor.entity.SurveyerInformation;
-import com.crtb.tunnelmonitor.entity.TotalStationInfo;
-import com.crtb.tunnelmonitor.entity.TunnelCrossSectionInfo;
-import com.crtb.tunnelmonitor.entity.WorkPlan;
+import com.crtb.tunnelmonitor.entity.TotalStationIndex;
+import com.crtb.tunnelmonitor.entity.TunnelCrossSectionIndex;
 
 public class AppCRTBApplication extends Application {
 	
@@ -61,6 +58,9 @@ public class AppCRTBApplication extends Application {
 		config.setDatabaseVersion(AppConfig.DB_VERSION); // db version
 		FrameworkFacade.create(config);
 		mFramework	= FrameworkFacade.getFrameworkFacade() ;
+		
+		// preferences
+		AppPreferences.initCrtbPreferences(this);
 	}
 	
 	public IFrameworkFacade getFrameworkFacade(){
@@ -112,16 +112,16 @@ public class AppCRTBApplication extends Application {
 //		
 //		return true;
 //	}
-	public boolean IsValidTunnelCrossSectionInfo(TunnelCrossSectionInfo Value)
+	public boolean IsValidTunnelCrossSectionInfo(TunnelCrossSectionIndex Value)
 	{
 //		if(Value.getChainage().toString().trim().length() <= 0)
 //		{
 //			return false;
 //		}
-		if(Value.getInBuiltTime().trim().length() <= 0)
-		{
-			return false;
-		}
+//		if(Value.getInBuiltTime().trim().length() <= 0)
+//		{
+//			return false;
+//		}
 //		if(Value.getWidth().toString().trim().length() <= 0)
 //		{
 //			return false;
@@ -130,7 +130,7 @@ public class AppCRTBApplication extends Application {
 		return true;
 	}
 	
-	public boolean IsValidSubsidenceTunnelCrossSectionInfo(SubsidenceCrossSectionInfo Value)
+	public boolean IsValidSubsidenceTunnelCrossSectionInfo(SubsidenceCrossSectionIndex Value)
 	{
 //		if(Value.getChainage().toString().trim().length() <= 0)
 //		{
@@ -151,17 +151,17 @@ public class AppCRTBApplication extends Application {
 		
 		return true;
 	}
-	public boolean IsValidRecordInfo(RecordInfo Value)
+//	public boolean IsValidRecordInfo(RecordInfo Value)
+//	{
+//		
+//		return true;
+//	}
+	public boolean IsValidTotalStationInfo(TotalStationIndex Value)
 	{
 		
 		return true;
 	}
-	public boolean IsValidTotalStationInfo(TotalStationInfo Value)
-	{
-		
-		return true;
-	}
-	public boolean IsValidControlPointInfo(ControlPointsInfo Value)
+	public boolean IsValidControlPointInfo(ControlPointsIndex Value)
 	{
 		
 		return true;
@@ -305,7 +305,7 @@ public class AppCRTBApplication extends Application {
 		
 		return lRet;
 	}
-	public static String GetSectionIDArrayForTunnelCrossArray(List<TunnelCrossSectionInfo> Value)
+	public static String GetSectionIDArrayForTunnelCrossArray(List<TunnelCrossSectionIndex> Value)
 	{
 		String sRet = "";
 		if (Value == null) {
@@ -327,25 +327,25 @@ public class AppCRTBApplication extends Application {
 		
 		return sRet;
 	}
-	public static String GetSectionIDArrayForSubCrossArray(List<SubsidenceCrossSectionInfo> Value)
+	public static String GetSectionIDArrayForSubCrossArray(List<SubsidenceCrossSectionIndex> Value)
 	{
 		String sRet = "";
 		if (Value == null) {
 			return sRet;
 		}
-		List<SubsidenceCrossSectionInfo> tmpList = new ArrayList<SubsidenceCrossSectionInfo>();
+		List<SubsidenceCrossSectionIndex> tmpList = new ArrayList<SubsidenceCrossSectionIndex>();
 		for (int i = 0; i < Value.size(); i++) {
 //			if (Value.get(i).isbUse()) {
 //				tmpList.add(Value.get(i));
 //			}
 		}
 		
-		for (int i = 0; i < tmpList.size(); i++) {
-			sRet += Integer.toString(tmpList.get(i).getId());
-			if (i < (tmpList.size()-1)) {
-				sRet += ',';
-			}
-		}
+//		for (int i = 0; i < tmpList.size(); i++) {
+//			sRet += Integer.toString(tmpList.get(i).getId());
+//			if (i < (tmpList.size()-1)) {
+//				sRet += ',';
+//			}
+//		}
 		
 		return sRet;
 	}

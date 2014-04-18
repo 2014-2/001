@@ -7,8 +7,8 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.AdapterView;
 
-import com.crtb.tunnelmonitor.dao.impl.v2.RecordTunnelSectionDao;
-import com.crtb.tunnelmonitor.entity.RecordInfo;
+import com.crtb.tunnelmonitor.dao.impl.v2.RecordTunnelSettlementTotalDataDao;
+import com.crtb.tunnelmonitor.entity.TunnelSettlementTotalData;
 
 /**
  * 隧道内断面测量单
@@ -42,11 +42,11 @@ public final class CrtbTestRecordTunnelSectionListView extends CrtbBaseListView 
 		}) ;
 	}
 	
-	public RecordInfo getItem(int position){
+	public TunnelSettlementTotalData getItem(int position){
 		return mAdapter.getItem(position);
 	}
 	
-	public RecordInfo getSelectedSection(){
+	public TunnelSettlementTotalData getSelectedSection(){
 		return mAdapter.getSelectedSection();
 	}
 	
@@ -63,7 +63,7 @@ public final class CrtbTestRecordTunnelSectionListView extends CrtbBaseListView 
 	@Override
 	public void onReload() {
 		
-		List<RecordInfo> list = RecordTunnelSectionDao.defaultDao().queryAllSection();
+		List<TunnelSettlementTotalData> list = RecordTunnelSettlementTotalDataDao.defaultDao().queryAllTunnelSection();
 		mAdapter.loadEntityDatas(list);
 	}
 	

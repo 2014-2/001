@@ -12,12 +12,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.crtb.tunnelmonitor.activity.R;
-import com.crtb.tunnelmonitor.entity.TotalStationInfo;
+import com.crtb.tunnelmonitor.entity.TotalStationIndex;
 
 public class ControlPonitsListAdapter extends BaseAdapter {
-    private List<TotalStationInfo>listinfos;
+    private List<TotalStationIndex>listinfos;
     private Context context;
-    public ControlPonitsListAdapter(Context ct,List<TotalStationInfo> lis){
+    public ControlPonitsListAdapter(Context ct,List<TotalStationIndex> lis){
         context=ct;
         listinfos=lis;
     }
@@ -36,16 +36,16 @@ public class ControlPonitsListAdapter extends BaseAdapter {
         return position;
     }
     
-    public void remove(TotalStationInfo bean){
+    public void remove(TotalStationIndex bean){
     	
-    	for(TotalStationInfo info : listinfos){
-    		
-    		if(info.getId() == bean.getId()){
-    			listinfos.remove(info);
-    			break ;
-    		}
-    	}
-    	
+//    	for(TotalStationIndex info : listinfos){
+//    		
+//    		if(info.getId() == bean.getId()){
+//    			listinfos.remove(info);
+//    			break ;
+//    		}
+//    	}
+//    	
     	notifyDataSetChanged() ;
     }
     

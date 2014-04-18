@@ -10,14 +10,15 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.crtb.tunnelmonitor.activity.R;
-import com.crtb.tunnelmonitor.entity.TunnelCrossSectionInfo;
+import com.crtb.tunnelmonitor.entity.TunnelCrossSectionIndex;
+import com.crtb.tunnelmonitor.utils.CrtbUtils;
 
 /**
  * 
  * @author zhouwei
  *
  */
-public final class CrtbRecordTunnelSectionInfoAdapter extends CrtbEntityAdapter<TunnelCrossSectionInfo> {
+public final class CrtbRecordTunnelSectionInfoAdapter extends CrtbEntityAdapter<TunnelCrossSectionIndex> {
 
 	protected CrtbRecordTunnelSectionInfoAdapter(Context context) {
 		super(context);
@@ -27,7 +28,7 @@ public final class CrtbRecordTunnelSectionInfoAdapter extends CrtbEntityAdapter<
 		
 		for(int index = 0 ,size = mList.size() ; index < size ; index++){
 			
-			TunnelCrossSectionInfo item = mList.get(index) ;
+			TunnelCrossSectionIndex item = mList.get(index) ;
 			
 			if(index == position){
 				item.setUsed(!item.isUsed());
@@ -39,9 +40,9 @@ public final class CrtbRecordTunnelSectionInfoAdapter extends CrtbEntityAdapter<
 		notifyDataSetChanged() ;
 	}
 	
-	protected TunnelCrossSectionInfo getSelectedSection(){
+	protected TunnelCrossSectionIndex getSelectedSection(){
 		
-		for(TunnelCrossSectionInfo item : mList){
+		for(TunnelCrossSectionIndex item : mList){
 			
 			if(item.isUsed()){
 				return item ;
@@ -55,7 +56,7 @@ public final class CrtbRecordTunnelSectionInfoAdapter extends CrtbEntityAdapter<
 	public View getView(int position, View convertView, ViewGroup parent) {
 		
 		HolderView holder 			= null ;
-		TunnelCrossSectionInfo item = getItem(position);
+		TunnelCrossSectionIndex item = getItem(position);
 		
 		if(convertView == null){
 			holder		= new HolderView() ;
@@ -65,7 +66,7 @@ public final class CrtbRecordTunnelSectionInfoAdapter extends CrtbEntityAdapter<
 			holder		= (HolderView)convertView.getTag() ;
 		}
 		
-		holder.chainage.setText(item.getChainageName());
+		holder.chainage.setText(CrtbUtils.formatSectionName(item.getChainagePrefix(), (float)item.getChainage()));
 		
 		if(item.isUsed()){
 			holder.status.setBackgroundResource(R.drawable.use);

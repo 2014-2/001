@@ -32,8 +32,8 @@ import android.widget.TextView;
 
 import com.crtb.tunnelmonitor.CommonObject;
 import com.crtb.tunnelmonitor.WorkFlowActivity;
-import com.crtb.tunnelmonitor.dao.impl.v2.WorkPlanDao;
-import com.crtb.tunnelmonitor.entity.WorkPlan;
+import com.crtb.tunnelmonitor.dao.impl.v2.ProjectIndexDao;
+import com.crtb.tunnelmonitor.entity.ProjectIndex;
 import com.crtb.tunnelmonitor.mydefine.CrtbDateDialogUtils;
 
 @InjectLayout(layout=R.layout.activity_work_new)
@@ -117,7 +117,7 @@ public class WorkNewActivity extends WorkFlowActivity implements OnClickListener
 	private Button mBntCancel;
 	
 	private List<View> listViews = new ArrayList<View>();
-	private WorkPlan mWorkPlanBean ;
+	private ProjectIndex mWorkPlanBean ;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -148,14 +148,14 @@ public class WorkNewActivity extends WorkFlowActivity implements OnClickListener
 		}
 	}
 	
-	private void loadDefaultData(WorkPlan bean){
+	private void loadDefaultData(ProjectIndex bean){
 		
-		mWorkPlanName.setText(bean.getWorkPlanName());
-		mWorkPlanCalendar.setText(bean.getCreationTime());
-		mWorkPlanUnit.setText(bean.getConstructionOrganization());
-		mWorkPlanPrefix.setText(bean.getMileagePrefix());
-		mWorkPlanStart.setText(String.valueOf(bean.getStartMileage()));
-		mWorkPlanEnd.setText(String.valueOf(bean.getEndMileage()));
+		mWorkPlanName.setText(bean.getProjectName());
+		mWorkPlanCalendar.setText(DateUtils.toDateString(bean.getCreateTime(),DateUtils.PART_TIME_FORMAT));
+		mWorkPlanUnit.setText(bean.getConstructionFirm());
+		mWorkPlanPrefix.setText(bean.getChainagePrefix());
+		mWorkPlanStart.setText(String.valueOf((int)bean.getStartChainage()));
+		mWorkPlanEnd.setText(String.valueOf((int)bean.getEndChainage()));
 		
 //		String vaultVel 	= mVaultTransVelocity.getEditableText().toString().trim() ;
 //		String vaultDate 	= mVaultTransDate.getEditableText().toString().trim() ;
@@ -283,25 +283,25 @@ public class WorkNewActivity extends WorkFlowActivity implements OnClickListener
 			
 			if(mWorkPlanBean != null){
 				
-				mWorkPlanBean.setWorkPlanName(name);
-				mWorkPlanBean.setCreationTime(date);
-				mWorkPlanBean.setConstructionOrganization(unit);
-				mWorkPlanBean.setMileagePrefix(pref);
-				mWorkPlanBean.setStartMileage(sm);
-				mWorkPlanBean.setEndMileage(em);
+				mWorkPlanBean.setProjectName(name);
+				mWorkPlanBean.setCreateTime(DateUtils.toDate(date));
+				mWorkPlanBean.setConstructionFirm(unit);
+				mWorkPlanBean.setChainagePrefix(pref);
+				mWorkPlanBean.setStartChainage(sm);
+				mWorkPlanBean.setEndChainage(em);
 				
-				WorkPlanDao.defaultWorkPlanDao().update(mWorkPlanBean);
+				ProjectIndexDao.defaultWorkPlanDao().update(mWorkPlanBean);
 			} else {
 				
-				WorkPlan info = new WorkPlan() ;
-				info.setWorkPlanName(name);
-				info.setCreationTime(date);
-				info.setConstructionOrganization(unit);
-				info.setMileagePrefix(pref);
-				info.setStartMileage(sm);
-				info.setEndMileage(em);
+				ProjectIndex info = new ProjectIndex() ;
+				info.setProjectName(name);
+				info.setCreateTime(DateUtils.toDate(date));
+				info.setConstructionFirm(unit);
+				info.setChainagePrefix(pref);
+				info.setStartChainage(sm);
+				info.setEndChainage(em);
 				
-				WorkPlanDao.defaultWorkPlanDao().insert(info);
+				ProjectIndexDao.defaultWorkPlanDao().insert(info);
 			}
 			
 			setResult(RESULT_CANCELED);

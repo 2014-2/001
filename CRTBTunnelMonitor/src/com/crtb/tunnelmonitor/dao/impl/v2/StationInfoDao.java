@@ -1,8 +1,8 @@
 package com.crtb.tunnelmonitor.dao.impl.v2;
 
-import com.crtb.tunnelmonitor.entity.StationInfo;
+import com.crtb.tunnelmonitor.entity.StationInfoIndex;
 
-public class StationInfoDao extends AbstractDao<StationInfo> {
+public class StationInfoDao extends AbstractDao<StationInfoIndex> {
 
 	private static StationInfoDao _instance ;
 	

@@ -10,9 +10,9 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.crtb.tunnelmonitor.activity.R;
-import com.crtb.tunnelmonitor.entity.SubsidenceCrossSectionInfo;
+import com.crtb.tunnelmonitor.entity.SubsidenceCrossSectionIndex;
 
-public class SectionSubsidenceAdapter extends CrtbEntityAdapter<SubsidenceCrossSectionInfo> {
+public class SectionSubsidenceAdapter extends CrtbEntityAdapter<SubsidenceCrossSectionIndex> {
 
 	protected SectionSubsidenceAdapter(Context context) {
 		super(context);
@@ -22,7 +22,7 @@ public class SectionSubsidenceAdapter extends CrtbEntityAdapter<SubsidenceCrossS
 	public View getView(int position, View convertView, ViewGroup parent) {
 		
 		HolderView holder 					= null ;
-		SubsidenceCrossSectionInfo item 	= getItem(position);
+		SubsidenceCrossSectionIndex item 	= getItem(position);
 		
 		if(convertView == null){
 			
@@ -33,7 +33,7 @@ public class SectionSubsidenceAdapter extends CrtbEntityAdapter<SubsidenceCrossS
 			holder	= (HolderView)convertView.getTag() ;
 		}
 		
-		holder.chainage.setText(item.getChainageName());
+		holder.chainage.setText(item.getSectionName());
 		holder.excavation.setText("无");
 		
 		return convertView;

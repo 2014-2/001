@@ -29,10 +29,10 @@ import android.widget.TextView;
 
 import com.crtb.tunnelmonitor.CommonObject;
 import com.crtb.tunnelmonitor.WorkFlowActivity;
-import com.crtb.tunnelmonitor.dao.impl.v2.RecordSubsidenceDao;
-import com.crtb.tunnelmonitor.entity.RecordSubsidenceInfo;
-import com.crtb.tunnelmonitor.entity.SubsidenceCrossSectionInfo;
-import com.crtb.tunnelmonitor.entity.WorkPlan;
+import com.crtb.tunnelmonitor.dao.impl.v2.RecordSubsidenceTotalDataDao;
+import com.crtb.tunnelmonitor.entity.ProjectIndex;
+import com.crtb.tunnelmonitor.entity.SubsidenceCrossSectionIndex;
+import com.crtb.tunnelmonitor.entity.SubsidenceTotalData;
 import com.crtb.tunnelmonitor.widget.CrtbRecordSubsidenceSectionInfoListView;
 
 /**
@@ -93,9 +93,9 @@ public class RecordNewSubsidenceActivity extends WorkFlowActivity implements OnP
 	@InjectView(id = R.id.section_use_list, parent = "mSectionListLayout")
 	private CrtbRecordSubsidenceSectionInfoListView sectionListView;
     
-	private RecordSubsidenceInfo recordInfo = null;
+	private SubsidenceTotalData recordInfo = null;
 	
-	private WorkPlan mCurrentWorkPlan;
+	private ProjectIndex mCurrentWorkPlan;
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -117,7 +117,7 @@ public class RecordNewSubsidenceActivity extends WorkFlowActivity implements OnP
 		mCurrentWorkPlan = CommonObject.findObject(KEY_CURRENT_WORKPLAN);
 		
 		// prefix
-		section_new_et_prefix.setText(mCurrentWorkPlan.getMileagePrefix());
+		section_new_et_prefix.setText(mCurrentWorkPlan.getChainagePrefix());
 		
 		// load default
 		loadDefault();
@@ -128,13 +128,13 @@ public class RecordNewSubsidenceActivity extends WorkFlowActivity implements OnP
     	if(recordInfo != null){
     		
     		setTopbarTitle("编辑地表下沉断面记录单");
-    		sectionListView.setFristSelected(recordInfo.getChainageName());
+    		sectionListView.setFristSelected(recordInfo.getSectionName());
 			
 			section_new_et_prefix.setText(recordInfo.getPrefix());
 			record_Chainage.setText(String.valueOf(recordInfo.getFacedk()));
-			record_Person.setText(recordInfo.getMeasure());
-			record_Card.setText(recordInfo.getIdentityCard());
-			record_C.setText(recordInfo.getTemperature());
+			record_Person.setText(recordInfo.getSurveyor());
+			record_Card.setText(recordInfo.getSurveyorID());
+			record_C.setText(String.valueOf(recordInfo.getTemperature()));
 			record_dotype.setText(recordInfo.getFacedescription());
     	}
     }
@@ -175,7 +175,14 @@ public class RecordNewSubsidenceActivity extends WorkFlowActivity implements OnP
 				return;
 			}
 			
-			SubsidenceCrossSectionInfo section = sectionListView.getSelectedSection() ;
+			float temp = 0f ;
+			try{
+				temp	= Float.valueOf(temperature) ;
+			}catch(Exception e){
+				
+			}
+			
+			SubsidenceCrossSectionIndex section = sectionListView.getSelectedSection() ;
 			
 			if(section == null){
 				showText("请选择断面");
@@ -184,32 +191,32 @@ public class RecordNewSubsidenceActivity extends WorkFlowActivity implements OnP
 			
 			if(recordInfo == null){
 				
-				recordInfo = new RecordSubsidenceInfo();
+				recordInfo = new SubsidenceTotalData();
 				// 基本信息
 				recordInfo.setPrefix(prefix);
 				recordInfo.setFacedk(Float.valueOf(chainage));
-				recordInfo.setCreateTime(currentTime);
-				recordInfo.setChainageName(section.getChainageName());
-				recordInfo.setMeasure(person);
-				recordInfo.setIdentityCard(idcard);
-				recordInfo.setTemperature(temperature);
+				recordInfo.setCreateTime(DateUtils.toDate(currentTime,DateUtils.PART_TIME_FORMAT));
+				recordInfo.setSurveyor(person);
+				recordInfo.setSurveyorID(Integer.valueOf(idcard));
+				recordInfo.setSectionName(section.getSectionName());
+				recordInfo.setTemperature(temp);
 				recordInfo.setFacedescription(descr);
 
-				RecordSubsidenceDao.defaultDao().insert(recordInfo);
+				RecordSubsidenceTotalDataDao.defaultDao().insert(recordInfo);
 				
 			} else {
 				
 				// 基本信息
 				recordInfo.setPrefix(prefix);
 				recordInfo.setFacedk(Float.valueOf(chainage));
-				recordInfo.setCreateTime(currentTime);
-				recordInfo.setChainageName(section.getChainageName());
-				recordInfo.setMeasure(person);
-				recordInfo.setIdentityCard(idcard);
-				recordInfo.setTemperature(temperature);
+				recordInfo.setCreateTime(DateUtils.toDate(currentTime,DateUtils.PART_TIME_FORMAT));
+				recordInfo.setSurveyor(person);
+				recordInfo.setSurveyorID(Integer.valueOf(idcard));
+				recordInfo.setSectionName(section.getSectionName());
+				recordInfo.setTemperature(temp);
 				recordInfo.setFacedescription(descr);
 
-				RecordSubsidenceDao.defaultDao().update(recordInfo);
+				RecordSubsidenceTotalDataDao.defaultDao().update(recordInfo);
 			}
 
 			setResult(RESULT_OK);

@@ -5,8 +5,8 @@ import java.util.List;
 import android.content.Context;
 import android.util.AttributeSet;
 
-import com.crtb.tunnelmonitor.dao.impl.v2.WorkPlanDao;
-import com.crtb.tunnelmonitor.entity.WorkPlan;
+import com.crtb.tunnelmonitor.dao.impl.v2.ProjectIndexDao;
+import com.crtb.tunnelmonitor.entity.ProjectIndex;
 
 /**
  * 
@@ -32,11 +32,11 @@ public final class CrtbWorkPlanListView extends CrtbBaseListView {
 
 	public void onReload(){
 		
-		List<WorkPlan> list = WorkPlanDao.defaultWorkPlanDao().queryAllWorkPlan() ;
+		List<ProjectIndex> list = ProjectIndexDao.defaultWorkPlanDao().queryAllWorkPlan() ;
 		mAdapter.loadEntityDatas(list);
 	}
 	
-	public WorkPlan getItem(int position){
+	public ProjectIndex getItem(int position){
 		return mAdapter.getItem(position);
 	}
 

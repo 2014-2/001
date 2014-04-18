@@ -29,10 +29,10 @@ import android.widget.TextView;
 
 import com.crtb.tunnelmonitor.CommonObject;
 import com.crtb.tunnelmonitor.WorkFlowActivity;
-import com.crtb.tunnelmonitor.dao.impl.v2.RecordTunnelSectionDao;
-import com.crtb.tunnelmonitor.entity.RecordInfo;
-import com.crtb.tunnelmonitor.entity.TunnelCrossSectionInfo;
-import com.crtb.tunnelmonitor.entity.WorkPlan;
+import com.crtb.tunnelmonitor.dao.impl.v2.RecordTunnelSettlementTotalDataDao;
+import com.crtb.tunnelmonitor.entity.ProjectIndex;
+import com.crtb.tunnelmonitor.entity.TunnelCrossSectionIndex;
+import com.crtb.tunnelmonitor.entity.TunnelSettlementTotalData;
 import com.crtb.tunnelmonitor.widget.CrtbRecordTunnelSectionInfoListView;
 
 /**
@@ -93,9 +93,9 @@ public class RecordNewActivity extends WorkFlowActivity implements OnPageChangeL
     @InjectView(id=R.id.section_use_list,parent="mSectionListLayout")
     private CrtbRecordTunnelSectionInfoListView sectionListView ;
     
-	private RecordInfo recordInfo = null;
+	private TunnelSettlementTotalData recordInfo = null;
 	
-	private WorkPlan mCurrentWorkPlan;
+	private ProjectIndex mCurrentWorkPlan;
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -117,7 +117,7 @@ public class RecordNewActivity extends WorkFlowActivity implements OnPageChangeL
 		mCurrentWorkPlan = CommonObject.findObject(KEY_CURRENT_WORKPLAN);
 		
 		// prefix
-		section_new_et_prefix.setText(mCurrentWorkPlan.getMileagePrefix());
+		section_new_et_prefix.setText(mCurrentWorkPlan.getChainagePrefix());
 		
 		// load default
 		loadDefault();
@@ -128,13 +128,13 @@ public class RecordNewActivity extends WorkFlowActivity implements OnPageChangeL
     	if(recordInfo != null){
     		
     		setTopbarTitle("编辑隧道内断面记录单");
-			sectionListView.setFristSelected(recordInfo.getChainageName());
+			sectionListView.setFristSelected(recordInfo.getSectionName());
 			
 			section_new_et_prefix.setText(recordInfo.getPrefix());
 			record_Chainage.setText(String.valueOf(recordInfo.getFacedk()));
-			record_Person.setText(recordInfo.getMeasure());
-			record_Card.setText(recordInfo.getIdentityCard());
-			record_C.setText(recordInfo.getTemperature());
+			record_Person.setText(recordInfo.getSurveyor());
+			record_Card.setText(recordInfo.getSurveyorID());
+			record_C.setText(String.valueOf(recordInfo.getTemperature()));
 			record_dotype.setText(recordInfo.getFacedescription());
     	}
     }
@@ -175,41 +175,48 @@ public class RecordNewActivity extends WorkFlowActivity implements OnPageChangeL
 				return;
 			}
 			
-			TunnelCrossSectionInfo section = sectionListView.getSelectedSection() ;
+			TunnelCrossSectionIndex section = sectionListView.getSelectedSection() ;
 			
 			if(section == null){
 				showText("请选择断面");
 				return;
 			}
 			
+			float temp = 0f ;
+			try{
+				temp	= Float.valueOf(temperature) ;
+			}catch(Exception e){
+				
+			}
+			
 			if(recordInfo == null){
 				
-				recordInfo	= new RecordInfo() ;
+				recordInfo	= new TunnelSettlementTotalData() ;
 				
 				// 基本信息
 				recordInfo.setPrefix(prefix);
 				recordInfo.setFacedk(Float.valueOf(chainage));
-				recordInfo.setCreateTime(currentTime);
-				recordInfo.setMeasure(person);
-				recordInfo.setChainageName(section.getChainageName());
-				recordInfo.setIdentityCard(idcard);
-				recordInfo.setTemperature(temperature);
+				recordInfo.setCreateTime(DateUtils.toDate(currentTime,DateUtils.PART_TIME_FORMAT));
+				recordInfo.setSurveyor(person);
+				recordInfo.setSurveyorID(Integer.valueOf(idcard));
+				recordInfo.setSectionName(section.getSectionName());
+				recordInfo.setTemperature(temp);
 				recordInfo.setFacedescription(descr);
 				
-				RecordTunnelSectionDao.defaultDao().insert(recordInfo);
+				RecordTunnelSettlementTotalDataDao.defaultDao().insert(recordInfo);
 			} else {
 				
 				// 基本信息
 				recordInfo.setPrefix(prefix);
 				recordInfo.setFacedk(Float.valueOf(chainage));
-				recordInfo.setCreateTime(currentTime);
-				recordInfo.setMeasure(person);
-				recordInfo.setChainageName(section.getChainageName());
-				recordInfo.setIdentityCard(idcard);
-				recordInfo.setTemperature(temperature);
+				recordInfo.setCreateTime(DateUtils.toDate(currentTime,DateUtils.PART_TIME_FORMAT));
+				recordInfo.setSurveyor(person);
+				recordInfo.setSurveyorID(Integer.valueOf(idcard));
+				recordInfo.setSectionName(section.getSectionName());
+				recordInfo.setTemperature(temp);
 				recordInfo.setFacedescription(descr);
 				
-				RecordTunnelSectionDao.defaultDao().update(recordInfo);
+				RecordTunnelSettlementTotalDataDao.defaultDao().update(recordInfo);
 			}
 			
 			setResult(RESULT_OK);

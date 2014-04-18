@@ -18,12 +18,13 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 
 import com.crtb.tunnelmonitor.AppHandler;
+import com.crtb.tunnelmonitor.AppPreferences;
 import com.crtb.tunnelmonitor.CommonObject;
 import com.crtb.tunnelmonitor.WorkFlowActivity;
 import com.crtb.tunnelmonitor.common.Constant;
-import com.crtb.tunnelmonitor.dao.impl.v2.WorkPlanDao;
+import com.crtb.tunnelmonitor.dao.impl.v2.ProjectIndexDao;
 import com.crtb.tunnelmonitor.entity.MenuSystemItem;
-import com.crtb.tunnelmonitor.entity.WorkPlan;
+import com.crtb.tunnelmonitor.entity.ProjectIndex;
 import com.crtb.tunnelmonitor.mydefine.CrtbDialogDelete;
 import com.crtb.tunnelmonitor.mydefine.CrtbDialogDelete.IButtonOnClick;
 import com.crtb.tunnelmonitor.mydefine.CrtbDialogHint;
@@ -71,12 +72,12 @@ public final class WorkActivity extends WorkFlowActivity {
 	@Override
 	protected void onListItemSelected(Object obj, int position, String menu) {
 		
-		final WorkPlan bean = (WorkPlan) obj ;
+		final ProjectIndex bean = (ProjectIndex) obj ;
 		
 		if(position == 0){
 			
 			// current edit workplan
-			WorkPlanDao.defaultWorkPlanDao().updateCurrentWorkPlan(bean);
+			ProjectIndexDao.defaultWorkPlanDao().updateCurrentWorkPlan(bean);
 			
 			// start new MainActivity
 			Intent intent = new Intent() ;
@@ -95,7 +96,9 @@ public final class WorkActivity extends WorkFlowActivity {
 			
 		} else if(position == 2){
 			
-			if(bean.getWorkPalnStatus() == WorkPlan.STATUS_EDIT){
+			String name = AppPreferences.getPreferences().getCurrentProject() ;
+			
+			if(name != null && name.equals(bean.getProjectName())){
 				 mWarringDialog.show() ;
 			} else {
 				
@@ -108,7 +111,7 @@ public final class WorkActivity extends WorkFlowActivity {
 						
 						if(id == CrtbDialogDelete.BUTTON_ID_CONFIRM){
 							
-							if(WorkPlanDao.defaultWorkPlanDao().delete(bean)){
+							if(ProjectIndexDao.defaultWorkPlanDao().delete(bean)){
 								loadSystemMenu();
 							}
 						}
@@ -155,7 +158,7 @@ public final class WorkActivity extends WorkFlowActivity {
 		systems.add(item);
 		
 		// 
-		if(WorkPlanDao.defaultWorkPlanDao().hasWorkPlan()){
+		if(ProjectIndexDao.defaultWorkPlanDao().hasWorkPlan()){
 			item = new MenuSystemItem() ;
 			item.setIcon(R.drawable.ic_menu_export);
 			item.setName(getString(R.string.common_export));
@@ -202,7 +205,7 @@ public final class WorkActivity extends WorkFlowActivity {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,int position, long id) {
 				
-				WorkPlan bean = mListView.getItem(position) ;
+				ProjectIndex bean = mListView.getItem(position) ;
 				
 				showListActionMenu(getString(R.string.work_plan_title), workpalnItemMenu, bean);
 			}

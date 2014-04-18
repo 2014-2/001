@@ -5,6 +5,7 @@ import java.io.Serializable;
 import org.zw.android.framework.db.ColumnBoolean;
 import org.zw.android.framework.db.ColumnInt;
 import org.zw.android.framework.db.ColumnString;
+import org.zw.android.framework.db.ColumnText;
 import org.zw.android.framework.db.Table;
 import org.zw.android.framework.db.core.ColumnPrimaryKey;
 import org.zw.android.framework.db.core.ColumnPrimaryKey.PrimaryKeyType;
@@ -12,36 +13,36 @@ import org.zw.android.framework.db.core.ColumnPrimaryKey.PrimaryKeyType;
 /**
  * 全站仪连接参数信息
  */
-@Table(TableName="TotalStationInfo")
-public class TotalStationInfo implements Serializable {
+@Table(TableName="TotalStationIndex")
+public class TotalStationIndex implements Serializable {
 
     @ColumnPrimaryKey(Type = PrimaryKeyType.AUTO)
     @ColumnInt
-    private int id;						//id
+    private int ID;						//id
 
-    @ColumnString(length=32)
-    private String name;				//仪器名称
+    @ColumnString(length=255)
+    private String Name;				//仪器名称
 
-    @ColumnString(length=32)
-    private String totalstationType;	//全站仪品牌
-
-    @ColumnInt
-    private int baudRate;				//波特率
+    @ColumnText
+    private String TotalstationType;	//全站仪品牌
 
     @ColumnInt
-    private int port;					//端口号
+    private int BaudRate;				//波特率
 
     @ColumnInt
-    private int darity;					//奇偶校验
+    private int Port;					//端口号
 
     @ColumnInt
-    private int databits;				//数据位
+    private int Parity;					//奇偶校验
 
     @ColumnInt
-    private int stopbits;				//停止位
+    private int Databits;				//数据位
 
-    @ColumnString(length=512)
-    private String info;				//备注
+    @ColumnInt
+    private int Stopbits;				//停止位
+
+    @ColumnText
+    private String Info;				//备注
 
     @ColumnString(length=32)
     private String cmd;                 //串口
@@ -52,81 +53,81 @@ public class TotalStationInfo implements Serializable {
     @ColumnBoolean
     private boolean checked;				// 是否使用
     
-    public TotalStationInfo(){
+    public TotalStationIndex(){
     	setUsed(false);
     	setChecked(false);
     }
 
-	public int getId() {
-		return id;
+	public int getID() {
+		return ID;
 	}
 
-	public void setId(int id) {
-		this.id = id;
+	public void setID(int iD) {
+		ID = iD;
 	}
 
 	public String getName() {
-		return name;
+		return Name;
 	}
 
 	public void setName(String name) {
-		this.name = name;
+		Name = name;
 	}
 
 	public String getTotalstationType() {
-		return totalstationType;
+		return TotalstationType;
 	}
 
 	public void setTotalstationType(String totalstationType) {
-		this.totalstationType = totalstationType;
+		TotalstationType = totalstationType;
 	}
 
 	public int getBaudRate() {
-		return baudRate;
+		return BaudRate;
 	}
 
 	public void setBaudRate(int baudRate) {
-		this.baudRate = baudRate;
+		BaudRate = baudRate;
 	}
 
 	public int getPort() {
-		return port;
+		return Port;
 	}
 
 	public void setPort(int port) {
-		this.port = port;
+		Port = port;
 	}
 
-	public int getDarity() {
-		return darity;
+	public int getParity() {
+		return Parity;
 	}
 
-	public void setDarity(int darity) {
-		this.darity = darity;
+	public void setParity(int parity) {
+		Parity = parity;
 	}
 
 	public int getDatabits() {
-		return databits;
+		return Databits;
 	}
 
 	public void setDatabits(int databits) {
-		this.databits = databits;
+		Databits = databits;
 	}
 
 	public int getStopbits() {
-		return stopbits;
+		return Stopbits;
 	}
 
 	public void setStopbits(int stopbits) {
-		this.stopbits = stopbits;
+		Stopbits = stopbits;
 	}
 
 	public String getInfo() {
-		return info;
+		return Info;
 	}
 
 	public void setInfo(String info) {
-		this.info = info;
+		Info = info;
 	}
 
 	public String getCmd() {
@@ -152,5 +153,4 @@ public class TotalStationInfo implements Serializable {
 	public void setChecked(boolean checked) {
 		this.checked = checked;
 	}
-	
 }

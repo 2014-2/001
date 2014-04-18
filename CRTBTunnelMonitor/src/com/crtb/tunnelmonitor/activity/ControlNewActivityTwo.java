@@ -20,14 +20,14 @@ import android.widget.Toast;
 
 import com.crtb.tunnelmonitor.common.Constant;
 import com.crtb.tunnelmonitor.dao.impl.v2.ControlPointsInfoDao;
-import com.crtb.tunnelmonitor.entity.ControlPointsInfo;
+import com.crtb.tunnelmonitor.entity.ControlPointsIndex;
 
 public class ControlNewActivityTwo extends Activity implements OnClickListener {
 
     private TextView cp_new_tv_header;
 
     private EditText mName, mPointX, mPointY, mPointZ, mNote;
-    private ControlPointsInfo info = null;
+    private ControlPointsIndex info = null;
     /** 确定按钮 */
     private Button mOk;
     /** 取消按钮 */
@@ -45,7 +45,7 @@ public class ControlNewActivityTwo extends Activity implements OnClickListener {
         cp_new_tv_header.setText(R.string.new_control_point_title);
 
         Bundle bundle = getIntent().getExtras();
-        info = (ControlPointsInfo) bundle
+        info = (ControlPointsIndex) bundle
                 .getSerializable(Constant.Select_ControlPointsRowClickItemsName_Data);
         bEdit = bundle.getBoolean("bEdit");
         initUI();
@@ -111,7 +111,7 @@ public class ControlNewActivityTwo extends Activity implements OnClickListener {
                     Toast.makeText(this, "请输入名称", 3000).show();
                     return;
                 }
-                ControlPointsInfo controlPoint = new ControlPointsInfo();
+                ControlPointsIndex controlPoint = new ControlPointsIndex();
                 if (info != null) {
                     controlPoint.setId(info.getId());
                 }
@@ -122,7 +122,7 @@ public class ControlNewActivityTwo extends Activity implements OnClickListener {
                 controlPoint.setZ(Float.valueOf(mPointZ.getText().toString().trim()));
                 controlPoint.setInfo(mNote.getText().toString().trim());
                 ControlPointsInfoDao dao = ControlPointsInfoDao.defaultDao();
-                List<ControlPointsInfo> controlPoints = dao.queryAllControlPoints();
+                List<ControlPointsIndex> controlPoints = dao.queryAllControlPoints();
                 if (!bEdit) {
                     if (controlPoints != null) {
                         for (int i = 0; i < controlPoints.size(); i++) {
