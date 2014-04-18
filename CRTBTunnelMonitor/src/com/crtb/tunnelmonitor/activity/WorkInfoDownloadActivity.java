@@ -26,8 +26,10 @@ import android.widget.TextView;
 
 import com.crtb.tunnelmonitor.dao.impl.v2.ProjectIndexDao;
 import com.crtb.tunnelmonitor.dao.impl.v2.TunnelCrossSectionIndexDao;
+import com.crtb.tunnelmonitor.dao.impl.v2.TunnelSettlementTotalDataDao;
 import com.crtb.tunnelmonitor.entity.ProjectIndex;
 import com.crtb.tunnelmonitor.entity.TunnelCrossSectionIndex;
+import com.crtb.tunnelmonitor.entity.TunnelSettlementTotalData;
 import com.crtb.tunnelmonitor.network.CrtbWebService;
 import com.crtb.tunnelmonitor.network.RpcCallback;
 import com.crtb.tunnelmonitor.network.SectionStatus;
@@ -121,6 +123,11 @@ public class WorkInfoDownloadActivity extends Activity {
 
             @Override
             public void onSuccess(Object[] data) {
+            	List<TunnelSettlementTotalData> pointTestDataList = Arrays.asList((TunnelSettlementTotalData[])data);
+            	TunnelSettlementTotalDataDao dao = TunnelSettlementTotalDataDao.defaultDao();
+            	for(TunnelSettlementTotalData testPointData : pointTestDataList) {
+            		dao.insert(testPointData);
+            	}
                 Log.d(LOG_TAG, "download point success.");
             }
 

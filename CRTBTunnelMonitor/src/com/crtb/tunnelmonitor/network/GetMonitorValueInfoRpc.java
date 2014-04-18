@@ -12,12 +12,14 @@ import android.util.Log;
 
 import com.crtb.tunnelmonitor.common.Constant;
 import com.crtb.tunnelmonitor.entity.TunnelSettlementTotalData;
+import com.crtb.tunnelmonitor.utils.CrtbUtils;
 
 class GetMonitorValueInfoRpc extends AbstractRpc {
 	private static final String LOG_TAG = "GetMonitorValueInfoRpc";
 	private static final String KEY_POINT_CODE = "测点编码";
 	private static final String KEY_RANDOM_CODE = "随机码";
 	private static final String KEY_ACTION = "getMonitorValueInfo";
+	private static final int DATA_FILED_NUM = 6;
 	
 	private Map<String, Object> mParameters = new HashMap<String, Object>();
 	private RpcCallback mCallback;
@@ -64,16 +66,24 @@ class GetMonitorValueInfoRpc extends AbstractRpc {
 			for(int i = 0; i < count; i++) {
 				TunnelSettlementTotalData pointTestData = new TunnelSettlementTotalData();
 				String[] pointInfo = data.getPropertyAsString(i).split("/");
-				String value = pointInfo[0];
-				String xyz = RSACoder.decnryptDes(pointInfo[1], Constant.testDeskey);
-				String deformation = RSACoder.decnryptDes(pointInfo[2], Constant.testDeskey);
-				String time = pointInfo[3];
-				String name = pointInfo[4];
-				String id = pointInfo[5];
-				pointTestData.setCoordinate("1.0,2.0,3.0");
-				pointTestData.setSurveyorID(19);
-				//String distance = pointInfo[6];
-				//String procedure = pointInfo[7];
+				int index = 0;
+				String value = pointInfo[index++];
+				String encryptCoordinate = pointInfo[index++];
+				final int num = pointInfo.length - DATA_FILED_NUM;
+				if (num > 0) {
+					for(int k = 0 ; k < num; k++) {
+						encryptCoordinate += "/" + pointInfo[index++];
+					}
+				}
+				String coordinate = RSACoder.decnryptDes(encryptCoordinate, Constant.testDeskey);
+				String time = pointInfo[index++];
+				String surveyorName = pointInfo[index++];
+				int surveyorId = Integer.parseInt(pointInfo[index++]);
+				Log.d(LOG_TAG, "test data: " + coordinate + "pointinfo: " + data.getPropertyAsString(i));
+				//TODO: 解析剩下的数据
+				pointTestData.setCoordinate(coordinate);
+				pointTestData.setSurveyTime(CrtbUtils.parseDate(time));
+				pointTestData.setSurveyorID(surveyorId);
 				pointTestDataList.add(pointTestData);
 			}
 			final int dataCount = pointTestDataList.size();
