@@ -1,6 +1,8 @@
 package com.crtb.tunnelmonitor.network;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.ksoap2.serialization.SoapObject;
@@ -9,6 +11,7 @@ import ICT.utils.RSACoder;
 import android.util.Log;
 
 import com.crtb.tunnelmonitor.common.Constant;
+import com.crtb.tunnelmonitor.entity.TunnelSettlementTotalData;
 
 class GetMonitorValueInfoRpc extends AbstractRpc {
 	private static final String LOG_TAG = "GetMonitorValueInfoRpc";
@@ -50,23 +53,35 @@ class GetMonitorValueInfoRpc extends AbstractRpc {
 			 * getMonitorValueInfoResponse{return=anyType{ item=
 			 * 6.6701/u3lcHq4AGrpbJ3OUATdW0ETYULVy2qhZjNDijM5hZh112cDSGKzw2fnkkMOHcjMqcZm4cT2cIPS8/
 			 * TUvYb3igAVZoKTONlH9/2014-01-03 11:48:36.0/瑞/19/nullnull;
+			 * 瑞=测量人员，19=身份证id，null=到掌子面距离，null=施工工序
 			 */
-			Log.d(LOG_TAG, "response: " + response);
+			String pointCode = (String) mParameters.get(KEY_POINT_CODE);
+			Log.d(LOG_TAG, "response(pointCode " + pointCode + "): " + response);
 			SoapObject result = (SoapObject) response;
 			SoapObject data = (SoapObject) result.getProperty(0);
 			final int count = data.getPropertyCount();
+			List<TunnelSettlementTotalData> pointTestDataList = new ArrayList<TunnelSettlementTotalData>(); 
 			for(int i = 0; i < count; i++) {
+				TunnelSettlementTotalData pointTestData = new TunnelSettlementTotalData();
 				String[] pointInfo = data.getPropertyAsString(i).split("/");
 				String value = pointInfo[0];
 				String xyz = RSACoder.decnryptDes(pointInfo[1], Constant.testDeskey);
 				String deformation = RSACoder.decnryptDes(pointInfo[2], Constant.testDeskey);
 				String time = pointInfo[3];
 				String name = pointInfo[4];
-				String distance = pointInfo[5];
-				String procedure = pointInfo[6];
-				Log.d(LOG_TAG, "xyz: " + xyz);
+				String id = pointInfo[5];
+				pointTestData.setCoordinate("1.0,2.0,3.0");
+				pointTestData.setSurveyorID(19);
+				//String distance = pointInfo[6];
+				//String procedure = pointInfo[7];
+				pointTestDataList.add(pointTestData);
 			}
-			notifySuccess(null);
+			final int dataCount = pointTestDataList.size();
+			if (dataCount > 0) {
+				notifySuccess(pointTestDataList.toArray(new TunnelSettlementTotalData[dataCount]));
+			} else {
+				notifyFailed("empty test data.");
+			}
 		} catch (Exception e) {
 			notifyFailed("Exception: " + e.getMessage());
 			e.printStackTrace();

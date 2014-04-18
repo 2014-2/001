@@ -1,9 +1,17 @@
 package com.crtb.tunnelmonitor.network;
 
+import java.io.IOException;
+
 import org.ksoap2.SoapEnvelope;
+import org.ksoap2.serialization.Marshal;
+import org.ksoap2.serialization.MarshalDate;
+import org.ksoap2.serialization.PropertyInfo;
 import org.ksoap2.serialization.SoapObject;
 import org.ksoap2.serialization.SoapSerializationEnvelope;
 import org.ksoap2.transport.HttpTransportSE;
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserException;
+import org.xmlpull.v1.XmlSerializer;
 
 import ICT.utils.RSACoder;
 import android.os.AsyncTask;
@@ -272,9 +280,14 @@ public final class CrtbWebService {
 			SoapObject rpcMessage = mRpc.getRpcMessage(NAMESPACE);
 			Log.d(TAG, "sending request: " + rpcMessage.toString());
 	        SoapSerializationEnvelope soapEnvelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
-	        soapEnvelope.bodyOut = rpcMessage;
-	        //soapEnvelope.dotNet  = true;
-	        soapEnvelope.encodingStyle = "UTF-8";
+			soapEnvelope.bodyOut = rpcMessage;
+			// soapEnvelope.dotNet = true;
+			soapEnvelope.encodingStyle = "UTF-8";
+			// Register Marshaler
+			// For date marshaling
+			Marshal dateMarshal = new MarshalDate();
+			dateMarshal.register(soapEnvelope);
+	        new MarshalFloat().register(soapEnvelope);
 	        HttpTransportSE localHttpTransportSE = new HttpTransportSE(mUrl, CONNECITON_TIME_OUT);
 	        try {
 				localHttpTransportSE.call(NAMESPACE + rpcMessage.getName(), soapEnvelope);
@@ -341,6 +354,28 @@ public final class CrtbWebService {
 	
 	private void setSiteCode(String siteCode) {
 		mSiteCode = siteCode;
+	}
+	
+	private static final class MarshalFloat implements Marshal {
+
+		@Override
+		public Object readInstance(XmlPullParser parser, String arg1,
+				String arg2, PropertyInfo arg3) throws IOException,
+				XmlPullParserException {
+			return Float.parseFloat(parser.nextText());
+		}
+
+		@Override
+		public void register(SoapSerializationEnvelope sse) {
+			sse.addMapping(sse.xsd, "float", Float.class, this);
+		}
+
+		@Override
+		public void writeInstance(XmlSerializer writer, Object obj)
+				throws IOException {
+			// TODO Auto-generated method stub
+			writer.text(obj.toString());
+		}
 	}
 	
 }
