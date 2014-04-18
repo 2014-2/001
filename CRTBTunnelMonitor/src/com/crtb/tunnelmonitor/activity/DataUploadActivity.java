@@ -32,6 +32,7 @@ import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.crtb.tunnelmonitor.widget.SubsidenceCrossSectionFragment;
 import com.crtb.tunnelmonitor.widget.TunnelCrossSectionFragment;import com.crtb.tunnelmonitor.network.CrtbWebService;
@@ -228,7 +229,8 @@ public class DataUploadActivity extends FragmentActivity {
                     switch (mPager.getCurrentItem()) {
                        //隧道内断面
                         case 0:
-                        	updateSection();
+                        	uploadSection();
+                        	showMessage(true);
                         	break;
                         case 1:
                         	break;
@@ -275,11 +277,13 @@ public class DataUploadActivity extends FragmentActivity {
 			@Override
 			public void onSuccess(Object[] data) {
 				Log.d(LOG_TAG, "upload section success.");
+				uploadTestResult();
 			}
 			
 			@Override
 			public void onFailed(String reason) {
 				Log.d(LOG_TAG, "upload section faled: " + reason);
+				showMessage(false);
 			}
 		});
     }
@@ -310,11 +314,13 @@ public class DataUploadActivity extends FragmentActivity {
 					@Override
 					public void onSuccess(Object[] data) {
 						Log.d(LOG_TAG, "upload test data success.");
+						showMessage(true);
 					}
 					
 					@Override
 					public void onFailed(String reason) {
 						Log.d(LOG_TAG, "confirm test data failed: " + reason);
+						showMessage(false);
 					}
 				});
 			}
@@ -322,7 +328,16 @@ public class DataUploadActivity extends FragmentActivity {
 			@Override
 			public void onFailed(String reason) {
 				Log.d(LOG_TAG, "upload test data failed.");
+				showMessage(false);
 			}
 		});
+	}
+	
+	private void showMessage(boolean success) {
+		if (success) {
+			Toast.makeText(getApplicationContext(), "上传数据成功", Toast.LENGTH_SHORT).show();
+		} else {
+			Toast.makeText(getApplicationContext(), "上传数据失败", Toast.LENGTH_SHORT).show();
+		}
 	}
 }
