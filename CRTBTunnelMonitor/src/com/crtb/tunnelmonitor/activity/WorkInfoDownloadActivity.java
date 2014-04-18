@@ -23,6 +23,7 @@ import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.crtb.tunnelmonitor.dao.impl.v2.ProjectIndexDao;
 import com.crtb.tunnelmonitor.dao.impl.v2.TunnelCrossSectionIndexDao;
@@ -158,6 +159,7 @@ public class WorkInfoDownloadActivity extends Activity {
                 @Override
                 public void onClick(View v) {
                     downloadSectionCodeList(SectionStatus.VALID);
+                    Toast.makeText(getApplicationContext(), "下载数据成功", Toast.LENGTH_SHORT).show();
                 }
             });
             setContentView(mMenuView);

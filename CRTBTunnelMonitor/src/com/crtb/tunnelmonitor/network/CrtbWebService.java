@@ -28,6 +28,7 @@ public final class CrtbWebService {
 	private static final String USRE_AUTH_URL = "http://61.237.239.144/fxkz/basedown";
 	private static final String DATA_UPLOAD_URL = "http://61.237.239.144/fxkz/testdata";
 	
+	private static final int RETRY_COUNT = 3;
 	private static final int CONNECITON_TIME_OUT = 10000;
 	
 	private static CrtbWebService sInstance;
@@ -296,7 +297,8 @@ public final class CrtbWebService {
 		protected Void doInBackground(Void... params) {
 			SoapObject rpcMessage = mRpc.getRpcMessage(NAMESPACE);
 			Log.d(TAG, "sending request: " + rpcMessage.toString());
-	        SoapSerializationEnvelope soapEnvelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+			SoapSerializationEnvelope soapEnvelope = new SoapSerializationEnvelope(
+					SoapEnvelope.VER11);
 			soapEnvelope.bodyOut = rpcMessage;
 			// soapEnvelope.dotNet = true;
 			soapEnvelope.encodingStyle = "UTF-8";
@@ -304,15 +306,22 @@ public final class CrtbWebService {
 			// For date marshaling
 			Marshal dateMarshal = new MarshalDate();
 			dateMarshal.register(soapEnvelope);
-	        new MarshalFloat().register(soapEnvelope);
-	        HttpTransportSE localHttpTransportSE = new HttpTransportSE(mUrl, CONNECITON_TIME_OUT);
-	        try {
-				localHttpTransportSE.call(NAMESPACE + rpcMessage.getName(), soapEnvelope);
-			} catch (Exception e) {
-				e.printStackTrace();
-			} 
-	        Log.d(TAG, "received response: " + soapEnvelope.bodyIn);
-	        mRpc.onResponse(soapEnvelope.bodyIn);
+			new MarshalFloat().register(soapEnvelope);
+			HttpTransportSE localHttpTransportSE = new HttpTransportSE(mUrl, CONNECITON_TIME_OUT);
+			Object response = null;
+			for (int i = 0; i < RETRY_COUNT; i++) {
+				try {
+					localHttpTransportSE.call(NAMESPACE + rpcMessage.getName(), soapEnvelope);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				response = soapEnvelope.bodyIn;
+				Log.d(TAG, "received response: " + response);
+				if (response != null) {
+					break;
+				}
+			}
+			mRpc.onResponse(response);
 			return null;
 		}
 	}
