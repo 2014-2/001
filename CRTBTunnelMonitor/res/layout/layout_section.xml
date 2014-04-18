@@ -42,7 +42,7 @@
     </RelativeLayout>
 
     <ListView
-        android:id="@+id/surface_list"
+        android:id="@+id/section_list"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:descendantFocusability="blocksDescendants"

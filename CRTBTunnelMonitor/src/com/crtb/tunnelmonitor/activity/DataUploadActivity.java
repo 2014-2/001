@@ -32,8 +32,8 @@ import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.crtb.tunnelmonitor.widget.SinkSurfaceFragment;
-import com.crtb.tunnelmonitor.widget.TunnelSurfaceFragment;
+import com.crtb.tunnelmonitor.widget.SubsidenceCrossSectionFragment;
+import com.crtb.tunnelmonitor.widget.TunnelCrossSectionFragment;
 
 public class DataUploadActivity extends FragmentActivity {
 
@@ -45,9 +45,9 @@ public class DataUploadActivity extends FragmentActivity {
 
     private ArrayList<Fragment> mFragmentList;
 
-    private TunnelSurfaceFragment mTunnelFragment;
+    private TunnelCrossSectionFragment mTunnelFragment;
 
-    private SinkSurfaceFragment mSinkFragment;
+    private SubsidenceCrossSectionFragment mSinkFragment;
 
     private TextView mTunnelTab;
 
@@ -102,8 +102,8 @@ public class DataUploadActivity extends FragmentActivity {
 
         mFragmentList = new ArrayList<Fragment>();
 
-        mTunnelFragment = new TunnelSurfaceFragment();
-        mSinkFragment = new SinkSurfaceFragment();
+        mTunnelFragment = new TunnelCrossSectionFragment();
+        mSinkFragment = new SubsidenceCrossSectionFragment();
 
         mFragmentList.add(mTunnelFragment);
         mFragmentList.add(mSinkFragment);

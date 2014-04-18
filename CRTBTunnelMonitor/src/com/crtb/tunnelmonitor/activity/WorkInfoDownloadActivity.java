@@ -1,5 +1,6 @@
 package com.crtb.tunnelmonitor.activity;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -54,6 +55,9 @@ public class WorkInfoDownloadActivity extends Activity {
         mlvWorkInfos = (ListView)findViewById(R.id.lv_workinfo);
 
         mAllProjects = ProjectIndexDao.defaultWorkPlanDao().queryAllWorkPlan();
+        if (mAllProjects == null) {
+            mAllProjects = new ArrayList<ProjectIndex>();
+        }
 
         mAdapter = new WorkPlanAdapter();
         mlvWorkInfos.setAdapter(mAdapter);
