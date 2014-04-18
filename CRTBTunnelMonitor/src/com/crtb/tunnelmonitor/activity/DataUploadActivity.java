@@ -270,7 +270,24 @@ public class DataUploadActivity extends FragmentActivity {
         return true;
     }
     
+    //上传断面
     private void uploadSection() {
+    	CrtbWebService.getInstance().uploadSection(null, new RpcCallback() {
+			
+			@Override
+			public void onSuccess(Object[] data) {
+				Log.d(LOG_TAG, "upload section success.");
+			}
+			
+			@Override
+			public void onFailed(String reason) {
+				Log.d(LOG_TAG, "upload section faled: " + reason);
+			}
+		});
+    }
+    
+    //上传测量数据
+    private void uploadTestResult() {
     	CrtbWebService.getInstance().uploadTestResult(null, new RpcCallback() {
 			
 			@Override

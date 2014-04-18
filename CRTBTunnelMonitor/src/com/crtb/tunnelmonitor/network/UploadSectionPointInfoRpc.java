@@ -1,5 +1,6 @@
 package com.crtb.tunnelmonitor.network;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -26,25 +27,25 @@ class UploadSectionPointInfoRpc extends AbstractRpc {
 	private static final String KEY_RANDOM_CODE = "随机码";
 	private static final String KEY_ACTION = "getSectionPointInfo";
 	
-	private Map<String, String> mParameters = new HashMap<String, String>();
+	private Map<String, Object> mParameters = new HashMap<String, Object>();
 	private RpcCallback mCallback;
 	
-	UploadSectionPointInfoRpc(String zoneCode, String siteCode, Object section, RpcCallback callback) {
+	UploadSectionPointInfoRpc(String zoneCode, String siteCode, long randomCode, Object section, RpcCallback callback) {
 		mParameters.put(KEY_ZONE_CODE, zoneCode);
 		mParameters.put(KEY_SITE_CODE, siteCode);
-		mParameters.put(KEY_SECTION_NAME, "");
-		mParameters.put(KEY_SECTION_CODE, "");
-		mParameters.put(KEY_SECTION_CHAINAGE, "");
-		mParameters.put(KEY_SECTION_DIG_METHOD, "");
-		mParameters.put(KEY_SECTION_WIDTH, "");
-		mParameters.put(KEY_TOTAL_U0_LIMIT, "");
-		mParameters.put(KEY_U0_MODIFIED_TIME, "");
-		mParameters.put(KEY_U0_REMARK, "");
-		mParameters.put(KEY_WALL_ROCK_LEVEL, "");
-		mParameters.put(KEY_POINTS_LIST, "");
-		mParameters.put(KEY_FIRST_MEASURE_DATE, "");
-		mParameters.put(KEY_REMARK, "");
-		mParameters.put(KEY_RANDOM_CODE, "");
+		mParameters.put(KEY_SECTION_NAME, "DK0+150");
+		mParameters.put(KEY_SECTION_CODE, "XPCL01SD00010008");
+		mParameters.put(KEY_SECTION_CHAINAGE, "DK0+150");
+		mParameters.put(KEY_SECTION_DIG_METHOD, "DT");
+		mParameters.put(KEY_SECTION_WIDTH, 7.5f);
+		mParameters.put(KEY_TOTAL_U0_LIMIT, 50.0f);
+		mParameters.put(KEY_U0_MODIFIED_TIME, new Date());
+		mParameters.put(KEY_U0_REMARK, "xxx");
+		mParameters.put(KEY_WALL_ROCK_LEVEL, 1);
+		mParameters.put(KEY_POINTS_LIST, "XPCL01SD00010008GD01/XPCL01SD00010008SL01#XPCL01SD00010008SL02/XPCL01SD00010008SL03#XPCL01SD00010008SL04");
+		mParameters.put(KEY_FIRST_MEASURE_DATE, new Date());
+		mParameters.put(KEY_REMARK, "yyy");
+		mParameters.put(KEY_RANDOM_CODE, randomCode);
 		mCallback = callback;
 	}
 	
@@ -70,7 +71,12 @@ class UploadSectionPointInfoRpc extends AbstractRpc {
 		try {
 			Log.d(LOG_TAG, "response: " + response);
 			SoapObject result = (SoapObject) response;
-			//TODO: Parse the response
+			int code = Integer.parseInt(result.getPropertyAsString(0));
+			if (code == 1) {
+				notifySuccess(null);
+			} else {
+				notifyFailed("upload section data failed: code = " + code);
+			}
 		} catch (Exception e) {
 			notifyFailed("Exception: " + e.getMessage());
 			e.printStackTrace();
