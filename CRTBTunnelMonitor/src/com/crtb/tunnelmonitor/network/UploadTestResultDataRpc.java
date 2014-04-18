@@ -33,12 +33,12 @@ class UploadTestResultDataRpc extends AbstractRpc {
 	UploadTestResultDataRpc(long randomCode, Object testData, RpcCallback callback) {
 		mParameters.put(KEY_SECTION_CODE, "XPCL01SD00010003");
 		mParameters.put(KEY_POINT_CODE_LIST, "XPCL01SD00010003GD01/XPCL01SD00010003SL01#XPCL01SD00010003SL02/XPCL01SD00010003SL03#XPCL01SD00010003SL04");
-		mParameters.put(KEY_TUNNEL_FACE_DISTANCE, 159.0f);
+		mParameters.put(KEY_TUNNEL_FACE_DISTANCE, 12.88f);
 		mParameters.put(KEY_PROCEDURE, "02");
 		mParameters.put(KEY_MONITOR_MODEL, "xxx");
 		mParameters.put(KEY_MEASURE_DATE, new Date());
-		mParameters.put(KEY_POINT_VALUE_LIST, "1/2/3");
-		String coordinate = "100#200#300/100#200#300/100#200#300";
+		mParameters.put(KEY_POINT_VALUE_LIST, "50/141.4249/141.4249");
+		String coordinate = "50#50#50/100#200#300#200#300#301/100#200#300#200#300#301";
 		String encncyptCoordinate = RSACoder.encnryptDes(coordinate, Constant.testDeskey);
 		mParameters.put(KEY_POINT_COORDINATE_LIST, encncyptCoordinate);
 		mParameters.put(KEY_SURVEYOR_NAME, "杨工");
@@ -70,7 +70,12 @@ class UploadTestResultDataRpc extends AbstractRpc {
 		try {
 			Log.d(LOG_TAG, "response: " + response);
 			SoapObject result = (SoapObject) response;
-			//TODO: Parse the response
+			int code = Integer.parseInt(result.getPropertyAsString(0));
+			if (code == 1) {
+				notifySuccess(null);
+			} else {
+				notifyFailed("upload test data failed: code = " + code);
+			}
 		} catch (Exception e) {
 			notifyFailed("Exception: " + e.getMessage());
 			e.printStackTrace();
