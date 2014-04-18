@@ -18,6 +18,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -33,10 +34,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.crtb.tunnelmonitor.widget.SubsidenceCrossSectionFragment;
-import com.crtb.tunnelmonitor.widget.TunnelCrossSectionFragment;
-
+import com.crtb.tunnelmonitor.widget.TunnelCrossSectionFragment;import com.crtb.tunnelmonitor.network.CrtbWebService;
+import com.crtb.tunnelmonitor.network.RpcCallback;
 public class DataUploadActivity extends FragmentActivity {
-
+	private static final String LOG_TAG = "DataUploadActivity";
     private TextView mTopbarTitle;
 
     private ImageView cursor;
@@ -225,10 +226,15 @@ public class DataUploadActivity extends FragmentActivity {
                 @Override
                 public void onClick(View v) {
                     switch (mPager.getCurrentItem()) {
+                       //隧道内断面
                         case 0:
-                            // TODO:隧道内断面
+                        	uploadSection();
+                        	break;
                         case 1:
+                        	break;
                             // TODO:地标下沉断面
+                        default:
+                        	break;
                     }
                 }
             });
@@ -260,5 +266,20 @@ public class DataUploadActivity extends FragmentActivity {
             }
         }
         return true;
+    }
+    
+    private void uploadSection() {
+    	CrtbWebService.getInstance().uploadTestResult(null, new RpcCallback() {
+			
+			@Override
+			public void onSuccess(Object[] data) {
+				Log.d(LOG_TAG, "upload test data success.");
+}
+			
+			@Override
+			public void onFailed(String reason) {
+				Log.d(LOG_TAG, "upload test data failed.");
+			}
+		});
     }
 }

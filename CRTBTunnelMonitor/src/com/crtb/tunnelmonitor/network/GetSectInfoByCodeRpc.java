@@ -6,6 +6,8 @@ import java.util.Map;
 import org.ksoap2.serialization.SoapObject;
 import org.zw.android.framework.util.DateUtils;
 
+import android.util.Log;
+
 import com.crtb.tunnelmonitor.entity.TunnelCrossSectionIndex;
 
 class GetSectInfoByCodeRpc extends AbstractRpc {
@@ -42,6 +44,8 @@ class GetSectInfoByCodeRpc extends AbstractRpc {
 			notifyFailed("Unknown reponse type: " + response.getClass().getName());
 			return;
 		}
+		String sectionCode = (String) mParameters.get(KEY_SECTION_CODE);
+		Log.d(LOG_TAG, "response( " + sectionCode + " ): " + response);
 		try {
 			/**
 			 * getSectInfoByCodeResponse{return=anyType

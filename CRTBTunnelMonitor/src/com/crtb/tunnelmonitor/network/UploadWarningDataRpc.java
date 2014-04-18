@@ -1,5 +1,8 @@
 package com.crtb.tunnelmonitor.network;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -32,10 +35,10 @@ class UploadWarningDataRpc extends AbstractRpc {
 		mParameters.put(KEY_WARNING_LEVEL, 1);
 		mParameters.put(KEY_TRANSFORM_SPEED, 6.0f);
 		mParameters.put(KEY_WARNING_POINT_VALUE, 1.0f);
-		mParameters.put(KEY_WARNING_TIME, "2014-04-17 23:47:00");
+		mParameters.put(KEY_WARNING_TIME, new Date());
 		mParameters.put(KEY_WARNING_PERSON, "杨工");
 		mParameters.put(KEY_WARNING_DESCRIPTION, "abc");
-		mParameters.put(KEY_WARNING_END_TIME, "2014-04-17 23:48:00");
+		mParameters.put(KEY_WARNING_END_TIME, new Date());
 		mParameters.put(KEY_WARNING_RESULT, 0);
 		mParameters.put(KEY_REMARK, "kkk");
 		mParameters.put(KEY_RANDOM_CODE, randomCode);
@@ -64,7 +67,12 @@ class UploadWarningDataRpc extends AbstractRpc {
 		try {
 			Log.d(LOG_TAG, "response: " + response);
 			SoapObject result = (SoapObject) response;
-			//TODO: Parse the response
+			int code = Integer.parseInt(result.getPropertyAsString(0));
+			if (code == 1) {
+				notifySuccess(null);
+			} else {
+				notifyFailed("upload failed: code = " + code);
+			}
 		} catch (Exception e) {
 			notifyFailed("Exception: " + e.getMessage());
 			e.printStackTrace();
