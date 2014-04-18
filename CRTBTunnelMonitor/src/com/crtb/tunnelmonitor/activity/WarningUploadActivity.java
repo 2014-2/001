@@ -19,6 +19,7 @@ import android.view.ViewGroup.LayoutParams;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class WarningUploadActivity extends Activity {
 	private static final String LOG_TAG = "WarningUploadActivity";
@@ -99,11 +100,13 @@ public class WarningUploadActivity extends Activity {
 			@Override
 			public void onSuccess(Object[] data) {
 				Log.d(LOG_TAG, "upload warning data success.");
+				Toast.makeText(getApplicationContext(), "上传预警信息成功", Toast.LENGTH_SHORT).show();
 			}
 			
 			@Override
 			public void onFailed(String reason) {
 				Log.d(LOG_TAG, "upload warning data failed.");
+				Toast.makeText(getApplicationContext(), "上传预警信息失败", Toast.LENGTH_SHORT).show();
 			}
 		});
 	}

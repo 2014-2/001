@@ -238,7 +238,8 @@ public final class CrtbWebService {
 	 * @param callback
 	 */
 	public void uploadTestResult(Object testData, RpcCallback callback) {
-		UploadTestResultDataRpc rpc = new UploadTestResultDataRpc(testData, new RpcCallbackWrapper(callback));
+		final long randomCode = getRandomCode();
+		UploadTestResultDataRpc rpc = new UploadTestResultDataRpc(randomCode, testData, new RpcCallbackWrapper(callback));
 		RpcSendTask task = new RpcSendTask(rpc, DATA_UPLOAD_URL);
 		task.execute();
 	}

@@ -23,22 +23,22 @@ class UploadTestResultDataRpc extends AbstractRpc {
 	private static final String KEY_RANDOM_CODE = "随机码";
 	private static final String KEY_ACTION = "getTestResultData";
 	
-	private Map<String, String> mParameters = new HashMap<String, String>();
+	private Map<String, Object> mParameters = new HashMap<String, Object>();
 	private RpcCallback mCallback;
 	
-	UploadTestResultDataRpc(Object testData, RpcCallback callback) {
+	UploadTestResultDataRpc(long randomCode, Object testData, RpcCallback callback) {
 		mParameters.put(KEY_SECTION_CODE, "");
 		mParameters.put(KEY_POINT_CODE_LIST, "");
-		mParameters.put(KEY_TUNNEL_FACE_DISTANCE, "");
+		mParameters.put(KEY_TUNNEL_FACE_DISTANCE, 159.0f);
 		mParameters.put(KEY_PROCEDURE, "");
 		mParameters.put(KEY_MONITOR_MODEL, "");
-		mParameters.put(KEY_MEASURE_DATE, "");
+		//mParameters.put(KEY_MEASURE_DATE, "");
 		mParameters.put(KEY_POINT_VALUE_LIST, "");
 		mParameters.put(KEY_POINT_COORDINATE_LIST, "");
 		mParameters.put(KEY_SURVEYOR_NAME, "");
 		mParameters.put(KEY_SURVEYOR_ID, "");
 		mParameters.put(KEY_REMARK, "");
-		mParameters.put(KEY_RANDOM_CODE, "");
+		mParameters.put(KEY_RANDOM_CODE, randomCode);
 		mCallback = callback;
 	}
 	
