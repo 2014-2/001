@@ -1,10 +1,14 @@
 package com.crtb.tunnelmonitor.network;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.ksoap2.serialization.SoapObject;
 
+import com.crtb.tunnelmonitor.common.Constant;
+
+import ICT.utils.RSACoder;
 import android.util.Log;
 
 class UploadTestResultDataRpc extends AbstractRpc {
@@ -27,17 +31,19 @@ class UploadTestResultDataRpc extends AbstractRpc {
 	private RpcCallback mCallback;
 	
 	UploadTestResultDataRpc(long randomCode, Object testData, RpcCallback callback) {
-		mParameters.put(KEY_SECTION_CODE, "");
-		mParameters.put(KEY_POINT_CODE_LIST, "");
+		mParameters.put(KEY_SECTION_CODE, "XPCL01SD00010003");
+		mParameters.put(KEY_POINT_CODE_LIST, "XPCL01SD00010003GD01/XPCL01SD00010003SL01#XPCL01SD00010003SL02/XPCL01SD00010003SL03#XPCL01SD00010003SL04");
 		mParameters.put(KEY_TUNNEL_FACE_DISTANCE, 159.0f);
-		mParameters.put(KEY_PROCEDURE, "");
-		mParameters.put(KEY_MONITOR_MODEL, "");
-		//mParameters.put(KEY_MEASURE_DATE, "");
-		mParameters.put(KEY_POINT_VALUE_LIST, "");
-		mParameters.put(KEY_POINT_COORDINATE_LIST, "");
-		mParameters.put(KEY_SURVEYOR_NAME, "");
-		mParameters.put(KEY_SURVEYOR_ID, "");
-		mParameters.put(KEY_REMARK, "");
+		mParameters.put(KEY_PROCEDURE, "02");
+		mParameters.put(KEY_MONITOR_MODEL, "xxx");
+		mParameters.put(KEY_MEASURE_DATE, new Date());
+		mParameters.put(KEY_POINT_VALUE_LIST, "1/2/3");
+		String coordinate = "100#200#300/100#200#300/100#200#300";
+		String encncyptCoordinate = RSACoder.encnryptDes(coordinate, Constant.testDeskey);
+		mParameters.put(KEY_POINT_COORDINATE_LIST, encncyptCoordinate);
+		mParameters.put(KEY_SURVEYOR_NAME, "杨工");
+		mParameters.put(KEY_SURVEYOR_ID, "102190198805012891");
+		mParameters.put(KEY_REMARK, "hi");
 		mParameters.put(KEY_RANDOM_CODE, randomCode);
 		mCallback = callback;
 	}
