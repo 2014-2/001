@@ -233,6 +233,21 @@ public final class CrtbWebService {
 	}
 	
 	/**
+	 * 设置已上传断面信息
+	 * 
+	 * @param section
+	 * @param callback
+	 */
+	public void updateSection(Object section, RpcCallback callback) {
+		String zoneCode = getZoneCode();
+		String siteCode = getSiteCode();
+		long randomCode = getRandomCode();
+		UploadRemoveSectionTestDataRpc rpc = new UploadRemoveSectionTestDataRpc(zoneCode, siteCode, randomCode, new RpcCallbackWrapper(callback));
+		RpcSendTask task = new RpcSendTask(rpc, DATA_UPLOAD_URL);
+		task.execute();
+		
+	}
+	/**
 	 * 上传测量数据
 	 * 
 	 * @param testData

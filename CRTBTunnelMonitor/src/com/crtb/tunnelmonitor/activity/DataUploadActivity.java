@@ -228,7 +228,7 @@ public class DataUploadActivity extends FragmentActivity {
                     switch (mPager.getCurrentItem()) {
                        //隧道内断面
                         case 0:
-                        	uploadSection();
+                        	updateSection();
                         	break;
                         case 1:
                         	break;
@@ -284,19 +284,45 @@ public class DataUploadActivity extends FragmentActivity {
 		});
     }
     
-    //上传测量数据
-    private void uploadTestResult() {
-    	CrtbWebService.getInstance().uploadTestResult(null, new RpcCallback() {
+    private void updateSection() {
+    	CrtbWebService.getInstance().updateSection(null, new RpcCallback() {
 			
 			@Override
 			public void onSuccess(Object[] data) {
-				Log.d(LOG_TAG, "upload test data success.");
-}
+				Log.d(LOG_TAG, "update section status success.");
+			}
 			
+			@Override
+			public void onFailed(String reason) {
+				Log.d(LOG_TAG, "update section status failed.");
+			}
+		});
+    }
+    
+    //上传测量数据
+	private void uploadTestResult() {
+		CrtbWebService.getInstance().uploadTestResult(null, new RpcCallback() {
+
+			@Override
+			public void onSuccess(Object[] data) {
+				CrtbWebService.getInstance().confirmSubmitData(new RpcCallback() {
+					
+					@Override
+					public void onSuccess(Object[] data) {
+						Log.d(LOG_TAG, "upload test data success.");
+					}
+					
+					@Override
+					public void onFailed(String reason) {
+						Log.d(LOG_TAG, "confirm test data failed: " + reason);
+					}
+				});
+			}
+
 			@Override
 			public void onFailed(String reason) {
 				Log.d(LOG_TAG, "upload test data failed.");
 			}
 		});
-    }
+	}
 }
