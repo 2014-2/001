@@ -1,8 +1,10 @@
 package com.crtb.tunnelmonitor.dao.impl.v2;
 
-import com.crtb.tunnelmonitor.entity.ControlPointsIndex;
+import java.util.Date;
 
-public class AlertHandlingInfoDao extends AbstractDao<ControlPointsIndex> {
+import com.crtb.tunnelmonitor.entity.AlertHandlingList;
+
+public class AlertHandlingInfoDao extends AbstractDao<AlertHandlingList> {
 
 	private static AlertHandlingInfoDao _instance ;
 	
@@ -18,4 +20,16 @@ public class AlertHandlingInfoDao extends AbstractDao<ControlPointsIndex> {
 		
 		return _instance ;
 	}
+
+    public int insertItem(int alertId, int handling, Date handlingTime, String duePerson,
+            int alertStatus, int handlingInfo) {
+        AlertHandlingList ah = new AlertHandlingList();
+        ah.setAlertID(alertId);
+        ah.setHandling(handling);
+        ah.setHandlingTime(handlingTime);
+        ah.setDuePerson(duePerson);
+        ah.setAlertStatus(alertStatus);
+        ah.setHandlingInfo(handlingInfo);
+        return mDatabase.saveObject(ah);
+    }
 }

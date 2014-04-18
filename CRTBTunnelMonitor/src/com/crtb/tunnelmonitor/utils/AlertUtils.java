@@ -7,6 +7,8 @@ import java.util.List;
 
 import android.text.TextUtils;
 
+import com.crtb.tunnelmonitor.dao.impl.v2.AlertHandlingInfoDao;
+import com.crtb.tunnelmonitor.dao.impl.v2.AlertListDao;
 import com.crtb.tunnelmonitor.dao.impl.v2.SubsidenceTotalDataDao;
 import com.crtb.tunnelmonitor.dao.impl.v2.TunnelSettlementTotalDataDao;
 import com.crtb.tunnelmonitor.entity.SubsidenceTotalData;
@@ -144,16 +146,31 @@ public class AlertUtils {
 
         double lineThisLength = getLineLength(s_1, s_2);
         Date s_1ThisTime = s_1.getSurveyTime();
+        Date s_2ThisTime = s_2.getSurveyTime();
+        Date thisTimeDate = s_1ThisTime;
+        double thisTime = s_1ThisTime.getTime();
+        if (s_2ThisTime.getTime() > thisTime) {
+            thisTime = s_2ThisTime.getTime();
+            thisTimeDate = s_2ThisTime;
+        }
+
+        int chainageId = s_1.getChainageId();
 
         List<TunnelSettlementTotalData> s_1InfoList = TunnelSettlementTotalDataDao.defaultDao()
-                .queryInfoBeforeMEASNo(s_1.getChainageId(), s_1.getPntType(), s_1.getMEASNo());
+                .queryInfoBeforeMEASNo(chainageId, s_1.getPntType(), s_1.getMEASNo());
         if (s_1InfoList != null && s_1InfoList.size() > 0) {
             TunnelSettlementTotalData s_1First = s_1InfoList.get(0);
             TunnelSettlementTotalData s_2First = TunnelSettlementTotalDataDao.defaultDao()
                     .queryOppositePointOfALine(s_1First, s_2.getPntType());
             double lineFirstLength = getLineLength(s_1First, s_2First);
-            if (Math.abs(lineFirstLength - lineThisLength) >= ACCUMULATIVE_THRESHOLD) {
-                errList.add(SHOULIAN_LEIJI_EXCEEDING);
+            double convergence = Math.abs(lineFirstLength - lineThisLength);
+            if (convergence >= ACCUMULATIVE_THRESHOLD) {
+                int uType = SHOULIAN_LEIJI_EXCEEDING;
+                errList.add(uType);
+                int alertId = AlertListDao.defaultDao().insertItem(s_1, 3/* default */,
+                        uType, convergence, ACCUMULATIVE_THRESHOLD, ""/*TODO: OriginalDataID 格式?*/);
+                AlertHandlingInfoDao.defaultDao().insertItem(alertId, 0/*TODO: ?*/,
+                        thisTimeDate, String.valueOf(chainageId) + s_1.getPntType(), 1/*报警*/, 0/*TODO: ?*/);
             }
 
             TunnelSettlementTotalData s_1Last = s_1InfoList.get(s_1InfoList.size());
@@ -162,11 +179,21 @@ public class AlertUtils {
             double lineLastLength = getLineLength(s_1Last, s_2Last);
             double deltaLenth = Math.abs(lineLastLength - lineThisLength);
             Date s_1LastTime = s_1Last.getSurveyTime();
-            double deltaTime = (s_1ThisTime.getTime() - s_1LastTime.getTime())
+            Date s_2LastTime = s_2Last.getSurveyTime();
+            double lastTime = s_1LastTime.getTime();
+            if (s_2LastTime.getTime() > lastTime) {
+                lastTime = s_2LastTime.getTime();
+            }
+            double deltaTime = Math.abs((thisTime - lastTime))
                     / Time.DAY_MILLISECEND_RATIO;
             double shoulianSpeed = deltaLenth / deltaTime;
             if (shoulianSpeed >= SPEED_THRESHOLD) {
-                errList.add(SHOULIAN_SULV_EXCEEDING);
+                int uType = SHOULIAN_SULV_EXCEEDING;
+                errList.add(uType);
+                int alertId = AlertListDao.defaultDao().insertItem(s_1, 3/* default */, uType, shoulianSpeed,
+                        SPEED_THRESHOLD, ""/*TODO: OriginalDataID 格式?*/);
+                AlertHandlingInfoDao.defaultDao().insertItem(alertId, 0/*TODO: ?*/,
+                        thisTimeDate, String.valueOf(chainageId) + s_1.getPntType(), 1/*报警*/, 0/*TODO: ?*/);
             }
         }
 

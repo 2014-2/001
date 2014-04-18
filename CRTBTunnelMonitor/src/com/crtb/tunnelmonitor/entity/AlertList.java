@@ -22,14 +22,14 @@ public class AlertList implements Serializable {
 	@ColumnInt
 	private int ID; 						// id
 
-	@ColumnDate
-	private Date SheetID; 					// 记录单id
-
-	@ColumnString(length = 255)
-	private String CrossSectionID; 			// 断面唯一id
+	@ColumnInt
+	private int SheetID; 					// 记录单id
 
 	@ColumnInt
-	private int PntType; 					// 测点类型
+	private int CrossSectionID; 			// 断面唯一id
+
+	@ColumnString(length = 10)
+	private String PntType; 					// 测点类型
 
 	@ColumnDate
 	private Date AlertTime; 				// 预警时间
@@ -57,27 +57,27 @@ public class AlertList implements Serializable {
 		ID = iD;
 	}
 
-	public Date getSheetID() {
+	public int getSheetID() {
 		return SheetID;
 	}
 
-	public void setSheetID(Date sheetID) {
+	public void setSheetID(int sheetID) {
 		SheetID = sheetID;
 	}
 
-	public String getCrossSectionID() {
+	public int getCrossSectionID() {
 		return CrossSectionID;
 	}
 
-	public void setCrossSectionID(String crossSectionID) {
+	public void setCrossSectionID(int crossSectionID) {
 		CrossSectionID = crossSectionID;
 	}
 
-	public int getPntType() {
+	public String getPntType() {
 		return PntType;
 	}
 
-	public void setPntType(int pntType) {
+	public void setPntType(String pntType) {
 		PntType = pntType;
 	}
 
