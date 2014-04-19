@@ -248,11 +248,11 @@ public final class CrtbWebService {
 	 * @param section
 	 * @param callback
 	 */
-	public void uploadSection(Object section, RpcCallback callback) {
+	public void uploadSection(SectionUploadParamter parameter, RpcCallback callback) {
 		String zoneCode = getZoneCode();
 		String siteCode = getSiteCode();
 		long randomCode = getRandomCode();
-		UploadSectionPointInfoRpc rpc = new UploadSectionPointInfoRpc(zoneCode, siteCode, randomCode, section, new RpcCallbackWrapper(callback));
+		UploadSectionPointInfoRpc rpc = new UploadSectionPointInfoRpc(zoneCode, siteCode, randomCode, parameter, new RpcCallbackWrapper(callback));
 		RpcSendTask task = new RpcSendTask(rpc, DATA_UPLOAD_URL);
 		task.execute();
 	}
@@ -278,9 +278,9 @@ public final class CrtbWebService {
 	 * @param testData
 	 * @param callback
 	 */
-	public void uploadTestResult(Object testData, RpcCallback callback) {
+	public void uploadTestResult(PointUploadParameter parameter, RpcCallback callback) {
 		final long randomCode = getRandomCode();
-		UploadTestResultDataRpc rpc = new UploadTestResultDataRpc(randomCode, testData, new RpcCallbackWrapper(callback));
+		UploadTestResultDataRpc rpc = new UploadTestResultDataRpc(randomCode, parameter, new RpcCallbackWrapper(callback));
 		RpcSendTask task = new RpcSendTask(rpc, DATA_UPLOAD_URL);
 		task.execute();
 	}
@@ -290,9 +290,9 @@ public final class CrtbWebService {
 	 * 
 	 * @param callback
 	 */
-	public void uploadWarningData(Object warningData, RpcCallback callback) {
+	public void uploadWarningData(WarningUploadParameter parameter, RpcCallback callback) {
 		long randomCode = getRandomCode();
-		UploadWarningDataRpc rpc = new UploadWarningDataRpc(randomCode, new RpcCallbackWrapper(callback));
+		UploadWarningDataRpc rpc = new UploadWarningDataRpc(randomCode, parameter, new RpcCallbackWrapper(callback));
 		RpcSendTask task = new RpcSendTask(rpc, DATA_UPLOAD_URL);
 		task.execute();
 	}
