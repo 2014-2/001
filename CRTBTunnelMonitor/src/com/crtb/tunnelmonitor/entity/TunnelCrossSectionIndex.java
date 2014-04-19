@@ -39,8 +39,8 @@ public class TunnelCrossSectionIndex implements Serializable {
 	@ColumnString(length=255)
 	private String sectionName ;		// 断面名称
 
-	@ColumnInt
-	private int ExcavateMethod;  		// 施工方法
+	@ColumnString(length=255)
+	private String ExcavateMethod;  		// 施工方法
 
 	@ColumnString(length = 255)
 	private String SurveyPntName; 		// 测点编号
@@ -127,11 +127,11 @@ public class TunnelCrossSectionIndex implements Serializable {
 		Width = width;
 	}
 
-	public int getExcavateMethod() {
+	public String getExcavateMethod() {
 		return ExcavateMethod;
 	}
 
-	public void setExcavateMethod(int excavateMethod) {
+	public void setExcavateMethod(String excavateMethod) {
 		ExcavateMethod = excavateMethod;
 	}
 

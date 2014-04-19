@@ -19,7 +19,7 @@ class GetMonitorValueInfoRpc extends AbstractRpc {
 	private static final String KEY_POINT_CODE = "测点编码";
 	private static final String KEY_RANDOM_CODE = "随机码";
 	private static final String KEY_ACTION = "getMonitorValueInfo";
-	private static final int DATA_FILED_NUM = 6;
+	private static final int DATA_FILED_NUM = 7;
 	
 	private Map<String, Object> mParameters = new HashMap<String, Object>();
 	private RpcCallback mCallback;
@@ -78,12 +78,13 @@ class GetMonitorValueInfoRpc extends AbstractRpc {
 				String coordinate = RSACoder.decnryptDes(encryptCoordinate, Constant.testDeskey);
 				String time = pointInfo[index++];
 				String surveyorName = pointInfo[index++];
-				int surveyorId = Integer.parseInt(pointInfo[index++]);
+				long surveyorId = Long.parseLong(pointInfo[index++]);
 				Log.d(LOG_TAG, "test data: " + coordinate + "pointinfo: " + data.getPropertyAsString(i));
 				//TODO: 解析剩下的数据
 				pointTestData.setCoordinate(coordinate);
 				pointTestData.setSurveyTime(CrtbUtils.parseDate(time));
-				pointTestData.setSurveyorID(surveyorId);
+				//TODO: 无法获取此数据，暂时用0代替
+				pointTestData.setSurveyorID(0);
 				pointTestDataList.add(pointTestData);
 			}
 			final int dataCount = pointTestDataList.size();

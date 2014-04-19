@@ -134,7 +134,7 @@ public class WorkInfoDownloadActivity extends Activity {
 
             @Override
             public void onFailed(String reason) {
-                Log.d(LOG_TAG, "download point failed.");
+                Log.d(LOG_TAG, "download point failed: " + reason);
             }
         });
     }
