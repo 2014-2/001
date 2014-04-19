@@ -25,7 +25,7 @@ public final class CrtbProject implements Serializable {
 	@ColumnString(length=256)
 	private String username ;			// 用户
 	
-	@ColumnString(length=64)
+	@ColumnString(length=256)
 	private String dbName ;				// 数据库名称
 	
 	@ColumnString(length=256)
@@ -38,47 +38,64 @@ public final class CrtbProject implements Serializable {
 	
 	@ColumnString(length = 256)
 	private String ProjectName;					// 项目名称
-	
+
 	@ColumnDate
 	private Date CreateTime;					// 创建时间
-	
+
 	@ColumnDouble
 	private double StartChainage;				// 开始里程
-	
+
 	@ColumnDouble
 	private double EndChainage;					// 结束里程
-	
+
 	@ColumnDate
-	private float LastOpenTime;					// 最后打开时间
-	
+	private Date LastOpenTime;					// 最后打开时间
+
 	@ColumnText
-	private String Info;							// 备注信息
-	
+	private String Info;						// 备注信息
+
 	// /////////////////deflection info /////////////////////
-	
+
 	// vault
 	@ColumnString(length = 256)
 	private String ChainagePrefix;				// 里程前缀				DK
-	
+
 	@ColumnFloat
 	private float GDLimitVelocity;				// 拱顶单次沉降速率		5
-	
+
 	// restrain
 	@ColumnFloat
 	private float GDLimitTotalSettlement;		// 拱顶累计沉降速率		100
 	
+	@ColumnDate
+	private Date GDCreateTime ;					// 拱顶设置时间	----扩展
+	
+	@ColumnText
+	private String GDInfo ;						// 拱顶设置时间	----扩展
+
 	@ColumnFloat
 	private float SLLimitVelocity;				// 收敛单次变形速率		5
-	
-	// surface
+
 	@ColumnFloat
 	private float SLLimitTotalSettlement;		// 收敛累计变形差			100
 	
+	@ColumnDate
+	private Date  SLCreateTime ;				// 收敛设置时间	----扩展
+	
+	@ColumnText
+	private String SLInfo ;					// 收敛设置时间	----扩展
+
 	@ColumnFloat
 	private float DBLimitVelocity;				// 地表单次下沉速率		5
-	
+
 	@ColumnFloat
 	private float DBLimitTotalSettlement;		// 地表累计下沉限差		100
+	
+	@ColumnDate
+	private Date  DBCreateTime ;				// 地表设置时间	----扩展
+	
+	@ColumnText
+	private String DBInfo ;						// 地表设置时间	----扩展
 	
 	@ColumnString(length = 256)
 	private String ConstructionFirm ;			// 施工单位
@@ -96,6 +113,54 @@ public final class CrtbProject implements Serializable {
 
 	public int getProjectId() {
 		return ProjectId;
+	}
+
+	public Date getGDCreateTime() {
+		return GDCreateTime;
+	}
+
+	public void setGDCreateTime(Date gDCreateTime) {
+		GDCreateTime = gDCreateTime;
+	}
+
+	public String getGDInfo() {
+		return GDInfo;
+	}
+
+	public void setGDInfo(String gDInfo) {
+		GDInfo = gDInfo;
+	}
+
+	public Date getSLCreateTime() {
+		return SLCreateTime;
+	}
+
+	public void setSLCreateTime(Date sLCreateTime) {
+		SLCreateTime = sLCreateTime;
+	}
+
+	public String getSLInfo() {
+		return SLInfo;
+	}
+
+	public void setSLInfo(String sLInfo) {
+		SLInfo = sLInfo;
+	}
+
+	public Date getDBCreateTime() {
+		return DBCreateTime;
+	}
+
+	public void setDBCreateTime(Date dBCreateTime) {
+		DBCreateTime = dBCreateTime;
+	}
+
+	public String getDBInfo() {
+		return DBInfo;
+	}
+
+	public void setDBInfo(String dBInfo) {
+		DBInfo = dBInfo;
 	}
 
 	public void setProjectId(int projectId) {
@@ -133,12 +198,12 @@ public final class CrtbProject implements Serializable {
 	public void setEndChainage(double endChainage) {
 		EndChainage = endChainage;
 	}
-
-	public float getLastOpenTime() {
+	
+	public Date getLastOpenTime() {
 		return LastOpenTime;
 	}
 
-	public void setLastOpenTime(float lastOpenTime) {
+	public void setLastOpenTime(Date lastOpenTime) {
 		LastOpenTime = lastOpenTime;
 	}
 

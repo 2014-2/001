@@ -133,11 +133,11 @@ public class SectionActivity extends WorkFlowActivity implements OnPageChangeLis
 				
 			} else if(position == 1){
 				
-				boolean success = TunnelCrossSectionIndexDao.defaultDao().delete(section);
+				int code = TunnelCrossSectionIndexDao.defaultDao().delete(section);
 				
 				CrtbDialogResult dialog = null ;
 				
-				if(success){
+				if(code == TunnelCrossSectionIndexDao.DB_EXECUTE_SUCCESS){
 					dialog = CrtbDialogResult.createDeleteSuccessDialog(SectionActivity.this);
 					mSectionTunnelList.onReload() ;
 				} else {
@@ -162,11 +162,11 @@ public class SectionActivity extends WorkFlowActivity implements OnPageChangeLis
 				
 			} else if(position == 1){
 				
-				boolean success = SubsidenceCrossSectionIndexDao.defaultDao().delete(section);
+				int code = SubsidenceCrossSectionIndexDao.defaultDao().delete(section);
 				
 				CrtbDialogResult dialog = null ;
 				
-				if(success){
+				if(code == SubsidenceCrossSectionIndexDao.DB_EXECUTE_SUCCESS){
 					dialog = new CrtbDialogResult(SectionActivity.this, R.drawable.ic_reslut_sucess, "删除成功");
 					mSectionSubsidenceList.onReload() ;
 				} else {

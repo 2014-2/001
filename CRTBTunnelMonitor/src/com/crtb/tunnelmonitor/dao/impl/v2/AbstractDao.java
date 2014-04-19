@@ -17,6 +17,9 @@ import com.crtb.tunnelmonitor.AppPreferences;
  */
 public abstract class AbstractDao<T> {
 	
+	public static final int DB_EXECUTE_SUCCESS	= 1 ; // 执行成功
+	public static final int DB_EXECUTE_FAILED	= -1 ; //执行失败
+	
 	static final String TAG						= "AbstractDao" ;
 	static final String PROJECT_PREFIX			= "crtb_" ;
 
@@ -26,7 +29,7 @@ public abstract class AbstractDao<T> {
 		mFramework	= FrameworkFacade.getFrameworkFacade() ;
 	}
 	
-	protected final String getDbUniqueName(String name){
+	public static final String getDbUniqueName(String name){
 		return PROJECT_PREFIX + name + ".db";
 	}
 	
@@ -41,27 +44,24 @@ public abstract class AbstractDao<T> {
 
 		if (StringUtils.isEmpty(name)) {
 			
-			Log.e(TAG, "zhouwei : 没有编辑项目");
+			Log.e(TAG, "zhouwei : 当前没有编辑的工作面");
 			
 			return null;
 		}
 		
 		// return
-		return getProjectIndexDb(name) ;
+		return openDb(name) ;
 	}
 	
-	protected final IAccessDatabase getProjectIndexDb(String projectName){
-		
-		String dbName = getDbUniqueName(projectName);
-		
+	protected final IAccessDatabase openDb(String dbName){
 		// return
 		return mFramework.openDatabaseByName(dbName, 0) ;
 	}
 	
-	public boolean insert(T bean){
+	public int insert(T bean){
 		
 		if(bean == null){
-			return false ;
+			return DB_EXECUTE_FAILED ;
 		}
 		
 		final IAccessDatabase db = getCurrentDb();
@@ -70,16 +70,16 @@ public abstract class AbstractDao<T> {
 			
 			Log.e("AbstractDao", "zhouwei : insert db is null");
 			
-			return false ;
+			return DB_EXECUTE_FAILED ;
 		}
 		
-		return db.saveObject(bean) > -1 ;
+		return db.saveObject(bean) > -1 ? DB_EXECUTE_SUCCESS : DB_EXECUTE_FAILED;
 	}
 	
-	public boolean update(T bean){
+	public int update(T bean){
 		
 		if(bean == null){
-			return false ;
+			return DB_EXECUTE_FAILED ;
 		}
 		
 		final IAccessDatabase db = getCurrentDb();
@@ -88,16 +88,16 @@ public abstract class AbstractDao<T> {
 			
 			Log.e("AbstractDao", "zhouwei : update db is null");
 			
-			return false ;
+			return DB_EXECUTE_FAILED ;
 		}
 		
-		return db.updateObject(bean) > -1 ;
+		return db.updateObject(bean) > -1 ? DB_EXECUTE_SUCCESS : DB_EXECUTE_FAILED;
 	}
 	
-	public boolean delete(T bean){
+	public int delete(T bean){
 		
 		if(bean == null){
-			return false ;
+			return DB_EXECUTE_FAILED ;
 		}
 		
 		final IAccessDatabase db = getCurrentDb();
@@ -106,10 +106,10 @@ public abstract class AbstractDao<T> {
 			
 			Log.e("AbstractDao", "zhouwei : delete db is null");
 			
-			return false ;
+			return DB_EXECUTE_FAILED ;
 		}
 		
-		return db.deleteObject(bean) > -1 ;
+		return db.deleteObject(bean) > -1 ? DB_EXECUTE_SUCCESS : DB_EXECUTE_FAILED;
 	} 
 	
 	public final void executeSql(String sql , String[] params){

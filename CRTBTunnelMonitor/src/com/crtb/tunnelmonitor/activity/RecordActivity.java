@@ -175,7 +175,9 @@ public class RecordActivity extends WorkFlowActivity implements OnPageChangeList
 						
 						if(id == CrtbDialogDelete.BUTTON_ID_CONFIRM){
 							
-							if(RecordTunnelSettlementTotalDataDao.defaultDao().delete(info)){
+							int code = RecordTunnelSettlementTotalDataDao.defaultDao().delete(info) ;
+							
+							if(code == RecordTunnelSettlementTotalDataDao.DB_EXECUTE_SUCCESS){
 								CrtbDialogResult.createDeleteSuccessDialog(RecordActivity.this).show();
 								mTunnelSectionList.onReload() ;
 							}
@@ -210,7 +212,9 @@ public class RecordActivity extends WorkFlowActivity implements OnPageChangeList
 						
 						if(id == CrtbDialogDelete.BUTTON_ID_CONFIRM){
 							
-							if(RecordSubsidenceTotalDataDao.defaultDao().delete(info)){
+							int code = RecordSubsidenceTotalDataDao.defaultDao().delete(info) ;
+							
+							if(code == RecordSubsidenceTotalDataDao.DB_EXECUTE_SUCCESS){
 								CrtbDialogResult.createDeleteSuccessDialog(RecordActivity.this).show();
 								mSubsidenceSectionList.onReload() ;
 							}

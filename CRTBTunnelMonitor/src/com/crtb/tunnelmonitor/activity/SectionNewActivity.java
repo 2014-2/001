@@ -316,7 +316,7 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 			}
 			
 			if(StringUtils.isEmpty(width)){
-				showText("埋设时间不能为空");
+				showText("断面宽度必须大于0");
 				return ;
 			}
 			
@@ -332,8 +332,7 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 				sectionInfo.setWidth(Float.valueOf(width));
 				
 				// excavation
-				//TODO: 开挖方法从数字类型变为string了，需要修改
-				//sectionInfo.setExcavateMethod((int)section_new_sp.getSelectedItemId());
+				sectionInfo.setExcavateMethod((int)section_new_sp.getSelectedItemId());
 				
 				TunnelCrossSectionIndexDao.defaultDao().insert(sectionInfo);
 			} else {
@@ -346,8 +345,7 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 				sectionInfo.setWidth(Float.valueOf(width));
 				
 				// excavation
-				//TODO: 开挖方法从数字类型变为string了，需要修改
-				//sectionInfo.setExcavateMethod((int)section_new_sp.getSelectedItemId());
+				sectionInfo.setExcavateMethod((int)section_new_sp.getSelectedItemId());
 				
 				TunnelCrossSectionIndexDao.defaultDao().update(sectionInfo);
 			}

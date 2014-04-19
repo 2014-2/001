@@ -132,7 +132,10 @@ public class ControlNewActivityTwo extends Activity implements OnClickListener {
                             }
                         }
                     }
-                    if (dao.insert(controlPoint)) {
+                    
+                    int code = dao.insert(controlPoint) ;
+                    
+                    if (code == ControlPointsInfoDao.DB_EXECUTE_SUCCESS) {
                         Toast.makeText(this, "添加成功", Toast.LENGTH_LONG).show();
                     } else {
                         Toast.makeText(this, "添加失败", Toast.LENGTH_LONG).show();

@@ -157,9 +157,20 @@ public class WorkNewActivity extends WorkFlowActivity implements OnClickListener
 		mWorkPlanStart.setText(String.valueOf((int)bean.getStartChainage()));
 		mWorkPlanEnd.setText(String.valueOf((int)bean.getEndChainage()));
 		
-//		String vaultVel 	= mVaultTransVelocity.getEditableText().toString().trim() ;
-//		String vaultDate 	= mVaultTransDate.getEditableText().toString().trim() ;
-//		String vaultRemark 	= mVaultTransRemark.getEditableText().toString().trim() ;
+		// 拱顶
+		mVaultTransMax.setText(String.valueOf(bean.getGDLimitTotalSettlement()));
+		mVaultTransVelocity.setText(String.valueOf(bean.getGDLimitVelocity()));
+		mVaultTransDate.setText(DateUtils.toDateString(bean.getGDCreateTime(),DateUtils.PART_TIME_FORMAT));
+		mVaultTransRemark.setText(bean.getGDInfo());
+		
+		// 收敛
+		mAstringeMax.setText(String.valueOf(bean.getSLLimitTotalSettlement()));
+		mAstringevelocity.setText(String.valueOf(bean.getSLLimitVelocity()));
+		mAstringeDate.setText(DateUtils.toDateString(bean.getSLCreateTime(),DateUtils.PART_TIME_FORMAT));
+		mAstringeRemark.setText(bean.getSLInfo());
+		
+		// 地表
+		mSurfaceSinkMax.setText(String.valueOf(bean.getDBLimitTotalSettlement()));
 	}
 
 	private void InitViewPager() {
@@ -241,7 +252,7 @@ public class WorkNewActivity extends WorkFlowActivity implements OnClickListener
 				return ;
 			}
 			
-			// Vault
+			// 拱顶
 			String vaultMax 	= mVaultTransMax.getEditableText().toString().trim() ;
 			String vaultVel 	= mVaultTransVelocity.getEditableText().toString().trim() ;
 			String vaultDate 	= mVaultTransDate.getEditableText().toString().trim() ;
@@ -257,7 +268,7 @@ public class WorkNewActivity extends WorkFlowActivity implements OnClickListener
 				return ;
 			}
 			
-			// circum astringe
+			// 收敛
 			String circumMax 	= mAstringeMax.getEditableText().toString().trim() ;
 			String circumVel 	= mAstringevelocity.getEditableText().toString().trim() ;
 			String circumDate 	= mAstringeDate.getEditableText().toString().trim() ;
@@ -281,6 +292,20 @@ public class WorkNewActivity extends WorkFlowActivity implements OnClickListener
 				return ;
 			}
 			
+			float gdlimt= 0f ,gdv = 0f,sllimt= 0f ,sldv = 0f,dblimt = 0f,dbv = 0f ;
+			
+			try{
+				
+				gdlimt	= Float.valueOf(vaultMax);
+				gdv		= Float.valueOf(vaultVel);
+				sllimt	= Float.valueOf(circumMax);
+				sldv	= Float.valueOf(circumVel);
+				dblimt	= Float.valueOf(surfaceMax);
+				
+			} catch(Exception e){
+				e.printStackTrace() ;
+			}
+			
 			if(mWorkPlanBean != null){
 				
 				mWorkPlanBean.setProjectName(name);
@@ -290,7 +315,22 @@ public class WorkNewActivity extends WorkFlowActivity implements OnClickListener
 				mWorkPlanBean.setStartChainage(sm);
 				mWorkPlanBean.setEndChainage(em);
 				
-				ProjectIndexDao.defaultWorkPlanDao().update(mWorkPlanBean);
+				mWorkPlanBean.setGDLimitTotalSettlement(gdlimt);
+				mWorkPlanBean.setGDLimitVelocity(gdv);
+				mWorkPlanBean.setGDCreateTime(DateUtils.toDate(vaultDate, DateUtils.PART_TIME_FORMAT));
+				mWorkPlanBean.setGDInfo(vaultRemark);
+				
+				mWorkPlanBean.setSLLimitTotalSettlement(sllimt);
+				mWorkPlanBean.setSLLimitVelocity(sldv);
+				mWorkPlanBean.setSLCreateTime(DateUtils.toDate(circumDate, DateUtils.PART_TIME_FORMAT));
+				mWorkPlanBean.setSLInfo(circumRemark);
+				
+				mWorkPlanBean.setDBLimitTotalSettlement(dblimt);
+				
+				if(ProjectIndexDao.defaultWorkPlanDao().update(mWorkPlanBean) == ProjectIndexDao.DB_EXECUTE_FAILED){
+					showText("更新工作面失败");
+					return ;
+				}
 			} else {
 				
 				ProjectIndex info = new ProjectIndex() ;
@@ -301,7 +341,33 @@ public class WorkNewActivity extends WorkFlowActivity implements OnClickListener
 				info.setStartChainage(sm);
 				info.setEndChainage(em);
 				
-				ProjectIndexDao.defaultWorkPlanDao().insert(info);
+				// 第一次初始化数据库名称
+				if(StringUtils.isEmpty(info.getDbName())){
+					info.setDbName(ProjectIndexDao.getDbUniqueName(name)) ;
+				}
+				
+				info.setGDLimitTotalSettlement(gdlimt);
+				info.setGDLimitVelocity(gdv);
+				info.setGDCreateTime(DateUtils.toDate(vaultDate, DateUtils.PART_TIME_FORMAT));
+				info.setGDInfo(vaultRemark);
+				
+				info.setSLLimitTotalSettlement(sllimt);
+				info.setSLLimitVelocity(sldv);
+				info.setSLCreateTime(DateUtils.toDate(circumDate, DateUtils.PART_TIME_FORMAT));
+				info.setSLInfo(circumRemark);
+				
+				info.setDBLimitTotalSettlement(dblimt);
+				
+				int code = ProjectIndexDao.defaultWorkPlanDao().insert(info) ;
+				
+				// 保存数据
+				if(code == 100){
+					showText("非注册用户，只能创建4个工作面");
+					return ;
+				} else if(code == ProjectIndexDao.DB_EXECUTE_FAILED){
+					showText("保存失败");
+					return ;
+				}
 			}
 			
 			setResult(RESULT_CANCELED);

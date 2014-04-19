@@ -27,6 +27,9 @@ public class ProjectIndex implements Serializable {
 	private int Id;								// id
 
 	///////////////base info////////////////
+	
+	@ColumnString(length=256)
+	private String dbName ;						// 数据库名称 ----扩展
 
 	@ColumnString(length = 256)
 	private String ProjectName;					// 项目名称
@@ -41,7 +44,7 @@ public class ProjectIndex implements Serializable {
 	private double EndChainage;					// 结束里程
 
 	@ColumnDate
-	private float LastOpenTime;					// 最后打开时间
+	private Date LastOpenTime;					// 最后打开时间
 
 	@ColumnText
 	private String Info;						// 备注信息
@@ -58,19 +61,36 @@ public class ProjectIndex implements Serializable {
 	// restrain
 	@ColumnFloat
 	private float GDLimitTotalSettlement;		// 拱顶累计沉降速率		100
+	
+	@ColumnDate
+	private Date GDCreateTime ;					// 拱顶设置时间	----扩展
+	
+	@ColumnText
+	private String GDInfo ;						// 拱顶设置时间	----扩展
 
 	@ColumnFloat
 	private float SLLimitVelocity;				// 收敛单次变形速率		5
 
-	// surface
 	@ColumnFloat
 	private float SLLimitTotalSettlement;		// 收敛累计变形差			100
+	
+	@ColumnDate
+	private Date  SLCreateTime ;				// 收敛设置时间	----扩展
+	
+	@ColumnText
+	private String SLInfo ;					// 收敛设置时间	----扩展
 
 	@ColumnFloat
 	private float DBLimitVelocity;				// 地表单次下沉速率		5
 
 	@ColumnFloat
 	private float DBLimitTotalSettlement;		// 地表累计下沉限差		100
+	
+	@ColumnDate
+	private Date  DBCreateTime ;				// 地表设置时间	----扩展
+	
+	@ColumnText
+	private String DBInfo ;						// 地表设置时间	----扩展
 	
 	@ColumnString(length = 256)
 	private String ConstructionFirm ;			// 施工单位
@@ -80,6 +100,71 @@ public class ProjectIndex implements Serializable {
 	
 	public ProjectIndex(){
 		
+	}
+
+	public Date getGDCreateTime() {
+		return GDCreateTime;
+	}
+
+	public void setGDCreateTime(Date gDCreateTime) {
+		GDCreateTime = gDCreateTime;
+	}
+
+	public Date getLastOpenTime() {
+		return LastOpenTime;
+	}
+
+	public String getDbName() {
+		return dbName;
+	}
+
+	public void setDbName(String dbName) {
+		this.dbName = dbName;
+	}
+
+	public void setLastOpenTime(Date lastOpenTime) {
+		LastOpenTime = lastOpenTime;
+	}
+
+	public String getGDInfo() {
+		return GDInfo;
+	}
+
+	public void setGDInfo(String gDInfo) {
+		GDInfo = gDInfo;
+	}
+
+
+	public Date getSLCreateTime() {
+		return SLCreateTime;
+	}
+
+	public void setSLCreateTime(Date sLCreateTime) {
+		SLCreateTime = sLCreateTime;
+	}
+
+	public String getSLInfo() {
+		return SLInfo;
+	}
+
+	public void setSLInfo(String sLInfo) {
+		SLInfo = sLInfo;
+	}
+
+	public Date getDBCreateTime() {
+		return DBCreateTime;
+	}
+
+	public void setDBCreateTime(Date dBCreateTime) {
+		DBCreateTime = dBCreateTime;
+	}
+
+	public String getDBInfo() {
+		return DBInfo;
+	}
+
+	public void setDBInfo(String dBInfo) {
+		DBInfo = dBInfo;
 	}
 
 	public int getId() {
@@ -121,14 +206,6 @@ public class ProjectIndex implements Serializable {
 
 	public void setEndChainage(double endChainage) {
 		EndChainage = endChainage;
-	}
-
-	public float getLastOpenTime() {
-		return LastOpenTime;
-	}
-
-	public void setLastOpenTime(float lastOpenTime) {
-		LastOpenTime = lastOpenTime;
 	}
 
 	public String getInfo() {

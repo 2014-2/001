@@ -111,7 +111,9 @@ public final class WorkActivity extends WorkFlowActivity {
 						
 						if(id == CrtbDialogDelete.BUTTON_ID_CONFIRM){
 							
-							if(ProjectIndexDao.defaultWorkPlanDao().delete(bean)){
+							int code = ProjectIndexDao.defaultWorkPlanDao().delete(bean) ;
+							
+							if(code == ProjectIndexDao.DB_EXECUTE_SUCCESS){
 								loadSystemMenu();
 							}
 						}
@@ -191,6 +193,8 @@ public final class WorkActivity extends WorkFlowActivity {
 		String name = menu.getName() ;
 		
 		if(name.equals(getString(R.string.common_create_new))){
+			
+			CommonObject.remove(WorkNewActivity.KEY_WORKPLAN_OBJECT);
 			
 			Intent intent = new Intent() ;
 			intent.setClass(this, WorkNewActivity.class);

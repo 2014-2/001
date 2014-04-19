@@ -177,8 +177,12 @@ public class ControlNewActivity extends Activity implements OnClickListener {
                     return;
                 }
                 if (editInfo == null) {
+                	
                     TotalStationInfoDao dao = TotalStationInfoDao.defaultDao();
-                    if (dao.insert(ts)) {
+                    
+                    int code = dao.insert(ts) ;
+                    
+                    if (code == TotalStationInfoDao.DB_EXECUTE_SUCCESS) {
                         Toast.makeText(this, "添加成功", 3000).show();
                     } else {
                         Toast.makeText(this, "添加失败", 3000).show();

@@ -83,7 +83,7 @@ class GetSectInfoByCodeRpc extends AbstractRpc {
 			}
 			try {
 				String digMehtod = data.getPropertyAsString(i++);
-				section.setExcavateMethod(digMehtod);
+				section.setExcavateMethod(Integer.valueOf(digMehtod));
 			} catch (NullPointerException e) {
 				// ignore
 			}
