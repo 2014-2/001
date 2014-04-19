@@ -44,9 +44,13 @@ class GetZoneAndSiteCodeRpc extends AbstractRpc {
 			//getZoneAndSiteCodeResponse{return=anyType{item=XPCL01SG05GQ01#一工区; item=XPCL01SD0001#跃龙门隧道; }; }
 			SoapObject result = (SoapObject) response;
 			SoapObject data = (SoapObject) result.getProperty(0);
-			String[] zoneAndSiteCode = new String[2];
-			zoneAndSiteCode[0] = data.getPropertyAsString(0).split("#")[0];
-			zoneAndSiteCode[1] = data.getPropertyAsString(1).split("#")[0];
+			String[] zoneAndSiteCode = new String[4];
+			String[] zoneInfo = data.getPropertyAsString(0).split("#");
+			String[] siteInfo = data.getPropertyAsString(1).split("#");
+			zoneAndSiteCode[0] = zoneInfo[0];
+			zoneAndSiteCode[1] = zoneInfo[1];
+			zoneAndSiteCode[2] = siteInfo[0];
+			zoneAndSiteCode[3] = siteInfo[1];
 			notifySuccess(zoneAndSiteCode);
 		} catch (Exception e) {
 			notifyFailed("Exception: " + e.getMessage());

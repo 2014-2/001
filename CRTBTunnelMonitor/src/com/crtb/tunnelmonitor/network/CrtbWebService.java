@@ -36,7 +36,9 @@ public final class CrtbWebService {
 	
 	private long mRandomCode;
 	private String mZoneCode;
+	private String mZoneName;
 	private String mSiteCode;
+	private String mSiteName;
 	
 	private CrtbWebService() {
 		mHandler = new Handler(Looper.getMainLooper());
@@ -47,6 +49,24 @@ public final class CrtbWebService {
 			sInstance = new CrtbWebService();
 		}
 		return sInstance;
+	}
+	
+	/**
+	 * 获取工区的名字
+	 * 
+	 * @return 工作名字
+	 */
+	public String getZoneName() {
+		return mZoneName;
+	}
+	
+	/**
+	 * 获取站点的名字
+	 * 
+	 * @return 站点名字
+	 */
+	public String getSiteName() {
+		return mSiteName;
 	}
 	
 	public void login(final String account, final String password, final RpcCallback callback) {
@@ -127,9 +147,13 @@ public final class CrtbWebService {
 			@Override
 			public void onSuccess(Object[] data) {
 				String zoneCode = (String) data[0];
-				String siteCode = (String) data[1];
+				String zoneName = (String) data[1];
+				String siteCode = (String) data[2];
+				String siteName = (String) data[3];
 				setZoneCode(zoneCode);
+				setZoneName(zoneName);
 				setSiteCode(siteCode);
+				setSiteName(siteName);
 				if (callback != null) {
 					callback.onSuccess(data);
 				}
@@ -374,12 +398,20 @@ public final class CrtbWebService {
 		mZoneCode = zoneCode;
 	}
 	
+	private void setZoneName(String zoneName) {
+		mZoneName = zoneName;
+	}
+	
 	private String getSiteCode() {
 		return mSiteCode;
 	}
 	
 	private void setSiteCode(String siteCode) {
 		mSiteCode = siteCode;
+	}
+	
+	private void setSiteName(String siteName) {
+		mSiteName = siteName;
 	}
 	
 	private static final class MarshalFloat implements Marshal {

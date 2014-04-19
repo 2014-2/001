@@ -159,7 +159,8 @@ public class WorkInfoDownloadActivity extends Activity {
                 @Override
                 public void onClick(View v) {
                     downloadSectionCodeList(SectionStatus.VALID);
-                    Toast.makeText(getApplicationContext(), "下载数据成功", Toast.LENGTH_SHORT).show();
+                    String siteName = CrtbWebService.getInstance().getSiteName();
+                    Toast.makeText(getApplicationContext(), "下载" + siteName + "成功", Toast.LENGTH_SHORT).show();
                 }
             });
             setContentView(mMenuView);
