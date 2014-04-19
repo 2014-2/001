@@ -2,6 +2,8 @@ package com.crtb.tunnelmonitor.dao.impl.v2;
 
 import java.util.List;
 
+import org.zw.android.framework.IAccessDatabase;
+
 import com.crtb.tunnelmonitor.entity.RawSheetIndex;
 
 /**
@@ -28,6 +30,12 @@ public class RawSheetIndexDao extends AbstractDao<RawSheetIndex> {
 	}
 	
 	public List<RawSheetIndex> queryAllRawSheetIndex() {
+		
+		final IAccessDatabase mDatabase = getCurrentDb();
+		
+		if(mDatabase == null){
+			return null ;
+		}
 		
 		String sql = "select * from RawSheetIndex";
 		

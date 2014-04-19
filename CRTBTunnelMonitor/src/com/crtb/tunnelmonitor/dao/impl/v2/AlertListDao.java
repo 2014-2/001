@@ -2,6 +2,8 @@ package com.crtb.tunnelmonitor.dao.impl.v2;
 
 import java.util.List;
 
+import org.zw.android.framework.IAccessDatabase;
+
 import com.crtb.tunnelmonitor.entity.AlertList;
 import com.crtb.tunnelmonitor.entity.SubsidenceTotalData;
 import com.crtb.tunnelmonitor.entity.TunnelSettlementTotalData;
@@ -25,6 +27,12 @@ public class AlertListDao extends AbstractDao<AlertList> {
 	
 	public List<AlertList> queryAllRawSheetIndex() {
 		
+		final IAccessDatabase mDatabase = getCurrentDb();
+		
+		if(mDatabase == null){
+			return null ;
+		}
+		
 		String sql = "select * from AlertList";
 		
 		return mDatabase.queryObjects(sql, AlertList.class);
@@ -41,11 +49,20 @@ public class AlertListDao extends AbstractDao<AlertList> {
      */
     public int insertItem(TunnelSettlementTotalData point, int alertLevel, int Utype,
             double UValue, double UMax, String originalDataID) {
+    	
+    	final IAccessDatabase mDatabase = getCurrentDb();
+		
+		if(mDatabase == null){
+			return -1 ;
+		}
+		
         AlertList al = new AlertList();
         String pntType = point.getPntType();
+        
         if (pntType != null && pntType.contains("_")) {// such as "S1_1" or "S1_2"
             pntType = pntType.substring(0, pntType.indexOf("_"));
         }
+        
         al.setSheetID(point.getSheetId());
         al.setCrossSectionID(point.getChainageId());
         al.setPntType(pntType);
@@ -55,6 +72,7 @@ public class AlertListDao extends AbstractDao<AlertList> {
         al.setUValue(UValue);
         al.setUMax(UMax);
         al.setOriginalDataID(originalDataID);
+        
         return mDatabase.saveObject(al);
     }
 
@@ -69,6 +87,13 @@ public class AlertListDao extends AbstractDao<AlertList> {
      */
     public int insertItem(SubsidenceTotalData point, int alertLevel, int Utype,
             double UValue, double UMax, String originalDataID) {
+    	
+    	final IAccessDatabase mDatabase = getCurrentDb();
+		
+		if(mDatabase == null){
+			return -1 ;
+		}
+		
         AlertList al = new AlertList();
         al.setSheetID(point.getSheetId());
         al.setCrossSectionID(point.getChainageId());
@@ -79,6 +104,7 @@ public class AlertListDao extends AbstractDao<AlertList> {
         al.setUValue(UValue);
         al.setUMax(UMax);
         al.setOriginalDataID(originalDataID);
+        
         return mDatabase.saveObject(al);
     }
 }

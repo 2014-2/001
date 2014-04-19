@@ -2,6 +2,10 @@ package com.crtb.tunnelmonitor.dao.impl.v2;
 
 import java.util.List;
 
+import org.zw.android.framework.IAccessDatabase;
+
+import android.util.Log;
+
 import com.crtb.tunnelmonitor.AppPreferences;
 import com.crtb.tunnelmonitor.entity.ProjectIndex;
 
@@ -30,12 +34,30 @@ public final class ProjectIndexDao extends AbstractDao<ProjectIndex> {
 	
 	public List<ProjectIndex> queryAllWorkPlan(){
 		
+		final IAccessDatabase mDatabase = getCurrentDb();
+		
+		if(mDatabase == null){
+			
+			Log.e("AbstractDao", "zhouwei : insert db is null");
+			
+			return null ;
+		}
+		
 		String sql = "select * from ProjectIndex" ;
 		
 		return mDatabase.queryObjects(sql, ProjectIndex.class);
 	}
 	
 	public ProjectIndex queryEditWorkPlan(){
+		
+		final IAccessDatabase mDatabase = getCurrentDb();
+		
+		if(mDatabase == null){
+			
+			Log.e("AbstractDao", "zhouwei : insert db is null");
+			
+			return null ;
+		}
 		
 		String projectName = AppPreferences.getPreferences().getCurrentProject() ; 
 		

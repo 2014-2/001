@@ -12,6 +12,7 @@ import org.zw.android.framework.impl.FrameworkFacade;
 
 import android.app.Application;
 
+import com.crtb.tunnelmonitor.dao.impl.v2.CrtbLicenseDao;
 import com.crtb.tunnelmonitor.entity.ControlPointsIndex;
 import com.crtb.tunnelmonitor.entity.SubsidenceCrossSectionIndex;
 import com.crtb.tunnelmonitor.entity.SurveyerInformation;
@@ -61,6 +62,9 @@ public class AppCRTBApplication extends Application {
 		
 		// preferences
 		AppPreferences.initCrtbPreferences(this);
+		
+		// default user
+		CrtbLicenseDao.registDefaultUser(this);
 	}
 	
 	public IFrameworkFacade getFrameworkFacade(){

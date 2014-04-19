@@ -2,6 +2,8 @@ package com.crtb.tunnelmonitor.dao.impl.v2;
 
 import java.util.List;
 
+import org.zw.android.framework.IAccessDatabase;
+
 import com.crtb.tunnelmonitor.entity.ControlPointsIndex;
 
 public class ControlPointsInfoDao extends AbstractDao<ControlPointsIndex> {
@@ -22,6 +24,13 @@ public class ControlPointsInfoDao extends AbstractDao<ControlPointsIndex> {
 	}
 	
 	public List<ControlPointsIndex> queryAllControlPoints() {
+		
+		final IAccessDatabase mDatabase = getCurrentDb();
+		
+		if(mDatabase == null){
+			return null ;
+		}
+		
 		String sql = "select * from ControlPointsIndex";
 		return mDatabase.queryObjects(sql, ControlPointsIndex.class);
 	}

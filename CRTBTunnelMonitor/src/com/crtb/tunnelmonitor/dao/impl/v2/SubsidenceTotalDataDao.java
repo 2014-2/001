@@ -2,6 +2,8 @@ package com.crtb.tunnelmonitor.dao.impl.v2;
 
 import java.util.List;
 
+import org.zw.android.framework.IAccessDatabase;
+
 import com.crtb.tunnelmonitor.entity.SubsidenceTotalData;
 
 public class SubsidenceTotalDataDao extends AbstractDao<SubsidenceTotalData> {
@@ -23,6 +25,12 @@ public class SubsidenceTotalDataDao extends AbstractDao<SubsidenceTotalData> {
 	
 	public List<SubsidenceTotalData> queryAllSection(){
 		
+		final IAccessDatabase mDatabase = getCurrentDb();
+		
+		if(mDatabase == null){
+			return null ;
+		}
+		
 		String sql = "select * from SubsidenceTotalData" ;
 		
 		return mDatabase.queryObjects(sql, SubsidenceTotalData.class) ;
@@ -38,9 +46,17 @@ public class SubsidenceTotalDataDao extends AbstractDao<SubsidenceTotalData> {
      */
     public List<SubsidenceTotalData> queryInfoBeforeMEASNo(int chainageId, String pntType,
             int MEASNo) {
+    	
+    	final IAccessDatabase mDatabase = getCurrentDb();
+		
+		if(mDatabase == null){
+			return null ;
+		}
+		
         String sql = "select * from SubsidenceTotalData where chainageId=" + chainageId
                 + " AND pntType=" + pntType + " AND MEASNo < " + String.valueOf(MEASNo)
                 + " order by MEASNo ASC";
+        
         return mDatabase.queryObjects(sql, SubsidenceTotalData.class);
     }
 }

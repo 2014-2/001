@@ -26,7 +26,7 @@ public class ProjectIndex implements Serializable {
 	@ColumnInt
 	private int Id;								// id
 
-	// /////////////base info////////////////
+	///////////////base info////////////////
 
 	@ColumnString(length = 256)
 	private String ProjectName;					// 项目名称

@@ -2,6 +2,8 @@ package com.crtb.tunnelmonitor.dao.impl.v2;
 
 import java.util.List;
 
+import org.zw.android.framework.IAccessDatabase;
+
 import com.crtb.tunnelmonitor.entity.TunnelSettlementTotalData;
 import com.crtb.tunnelmonitor.entity.TunnelSettlementTotalData;
 import com.crtb.tunnelmonitor.entity.TunnelSettlementTotalData;
@@ -31,6 +33,12 @@ public class TunnelSettlementTotalDataDao extends AbstractDao<TunnelSettlementTo
 	
 	public List<TunnelSettlementTotalData> queryAllRawSheetIndex() {
 		
+		final IAccessDatabase mDatabase = getCurrentDb();
+		
+		if(mDatabase == null){
+			return null ;
+		}
+		
 		String sql = "select * from TunnelSettlementTotalData";
 		
 		return mDatabase.queryObjects(sql, TunnelSettlementTotalData.class);
@@ -49,14 +57,29 @@ public class TunnelSettlementTotalDataDao extends AbstractDao<TunnelSettlementTo
      */
     public List<TunnelSettlementTotalData> queryInfoBeforeMEASNo(int chainageId, String pntType,
             int MEASNo) {
+    	
+    	final IAccessDatabase mDatabase = getCurrentDb();
+		
+		if(mDatabase == null){
+			return null ;
+		}
+		
         String sql = "select * from TunnelSettlementTotalData where chainageId=" + chainageId
                 + " AND pntType=" + pntType + " AND MEASNo < " + String.valueOf(MEASNo)
                 + " order by MEASNo ASC";
+        
         return mDatabase.queryObjects(sql, TunnelSettlementTotalData.class);
     }
 
     public TunnelSettlementTotalData queryOppositePointOfALine(TunnelSettlementTotalData point1,
             String point2Type) {
+    	
+    	final IAccessDatabase mDatabase = getCurrentDb();
+		
+		if(mDatabase == null){
+			return null ;
+		}
+		
         TunnelSettlementTotalData point2 = null;
         String sql = "select * from TunnelSettlementTotalData where chainageId="
                 // 同一个断面

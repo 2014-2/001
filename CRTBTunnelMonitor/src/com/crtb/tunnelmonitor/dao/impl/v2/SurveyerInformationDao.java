@@ -2,6 +2,8 @@ package com.crtb.tunnelmonitor.dao.impl.v2;
 
 import java.util.List;
 
+import org.zw.android.framework.IAccessDatabase;
+
 import com.crtb.tunnelmonitor.entity.SurveyerInformation;
 
 public class SurveyerInformationDao extends AbstractDao<SurveyerInformation> {
@@ -22,10 +24,23 @@ public class SurveyerInformationDao extends AbstractDao<SurveyerInformation> {
 	}
 	
 	public void deleteAll(){
+		
+		final IAccessDatabase mDatabase = getCurrentDb();
+		
+		if(mDatabase == null){
+			return ;
+		}
+		
 		mDatabase.deleteAll(SurveyerInformation.class);
 	}
 	
 	public SurveyerInformation querySurveyerByName(String name){
+		
+		final IAccessDatabase mDatabase = getCurrentDb();
+		
+		if(mDatabase == null){
+			return null ;
+		}
 		
 		String sql = "select * from SurveyerInformation where surveyerName = ?" ;
 		
@@ -33,6 +48,12 @@ public class SurveyerInformationDao extends AbstractDao<SurveyerInformation> {
 	}
 	
 	public List<SurveyerInformation> queryAllSurveyerInformation(){
+		
+		final IAccessDatabase mDatabase = getCurrentDb();
+		
+		if(mDatabase == null){
+			return null ;
+		}
 		
 		String sql = "select * from SurveyerInformation" ;
 		
