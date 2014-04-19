@@ -248,11 +248,11 @@ public final class CrtbWebService {
 	 * @param section
 	 * @param callback
 	 */
-	public void uploadSection(Object section, RpcCallback callback) {
+	public void uploadSection(SectionUploadParamter sectionParamter, RpcCallback callback) {
 		String zoneCode = getZoneCode();
 		String siteCode = getSiteCode();
 		long randomCode = getRandomCode();
-		UploadSectionPointInfoRpc rpc = new UploadSectionPointInfoRpc(zoneCode, siteCode, randomCode, section, new RpcCallbackWrapper(callback));
+		UploadSectionPointInfoRpc rpc = new UploadSectionPointInfoRpc(zoneCode, siteCode, randomCode, sectionParamter, new RpcCallbackWrapper(callback));
 		RpcSendTask task = new RpcSendTask(rpc, DATA_UPLOAD_URL);
 		task.execute();
 	}
