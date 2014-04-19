@@ -4,9 +4,7 @@ import org.zw.android.framework.IAccessDatabase;
 import org.zw.android.framework.impl.FrameworkFacade;
 
 import android.content.Context;
-import android.util.Log;
 
-import com.crtb.tunnelmonitor.entity.CrtbProject;
 import com.crtb.tunnelmonitor.entity.CrtbUser;
 
 /**
@@ -26,7 +24,6 @@ public final class CrtbLicenseDao {
 
 	private static CrtbLicenseDao	_instance ;
 	
-	private Context					mContext ;
 	private String 					mDefaultUsername ;
 	private CrtbUser 				mCrtbUser ;
 	private IAccessDatabase 		mDatabase ;
@@ -49,7 +46,6 @@ public final class CrtbLicenseDao {
 		String username 		= context.getPackageName() ;
 		
 		CrtbLicenseDao dao 		= defaultDao() ;
-		dao.mContext			= context ;
 		dao.mDefaultUsername	= username ;
 		
 		String sql = "select * from CrtbUser where username = ? " ;
@@ -93,24 +89,6 @@ public final class CrtbLicenseDao {
 		}
 		
 		return mCrtbUser ;
-	}
-	
-	public CrtbProject queryEditCrtbProject(){
-		
-		CrtbUser user = queryCrtbUser() ;
-		
-		if(user != null){
-			
-			// 当前编辑工作面工程
-			String sql = "select * from CrtbProject where username = ? and dbStatus = ?" ;
-			CrtbProject project = mDatabase.queryObject(sql, new String[]{user.getUsername(),String.valueOf(CrtbProject.CRTB_DB_STATUS_EDIT)}, CrtbProject.class);
-		
-			return project ;
-		}
-		
-		Log.d(TAG, "error : 没有编辑的工作面");
-		
-		return null ;
 	}
 	
 }

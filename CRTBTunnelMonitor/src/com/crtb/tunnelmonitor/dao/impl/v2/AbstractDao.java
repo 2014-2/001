@@ -7,7 +7,7 @@ import org.zw.android.framework.util.StringUtils;
 
 import android.util.Log;
 
-import com.crtb.tunnelmonitor.entity.CrtbProject;
+import com.crtb.tunnelmonitor.AppPreferences;
 
 /**
  * abstract dao
@@ -16,11 +16,18 @@ import com.crtb.tunnelmonitor.entity.CrtbProject;
  *
  */
 public abstract class AbstractDao<T> {
+	
+	static final String TAG						= "AbstractDao" ;
+	static final String PROJECT_PREFIX			= "crtb_" ;
 
 	private IFrameworkFacade	mFramework ;
 	
 	protected AbstractDao(){
 		mFramework	= FrameworkFacade.getFrameworkFacade() ;
+	}
+	
+	protected final String getDbUniqueName(String name){
+		return PROJECT_PREFIX + name + ".db";
 	}
 	
 	protected final IAccessDatabase getDefaultDb(){
@@ -29,20 +36,29 @@ public abstract class AbstractDao<T> {
 	
 	protected final IAccessDatabase getCurrentDb(){
 		
-		CrtbProject progject = CrtbLicenseDao.defaultDao().queryEditCrtbProject() ;
-		
-		if(progject == null || StringUtils.isEmpty(progject.getDbName())){
+		// 当前项目名称
+		String name = AppPreferences.getPreferences().getCurrentProject();
+
+		if (StringUtils.isEmpty(name)) {
 			
-			Log.e("AbstractDao", "zhouwei : 没有查询到项目");
+			Log.e(TAG, "zhouwei : 没有编辑项目");
 			
-			return null ;
+			return null;
 		}
 		
 		// return
-		return mFramework.openDatabaseByName(progject.getDbName(), 0) ;
+		return getProjectIndexDb(name) ;
 	}
 	
-	public final boolean insert(T bean){
+	protected final IAccessDatabase getProjectIndexDb(String projectName){
+		
+		String dbName = getDbUniqueName(projectName);
+		
+		// return
+		return mFramework.openDatabaseByName(dbName, 0) ;
+	}
+	
+	public boolean insert(T bean){
 		
 		if(bean == null){
 			return false ;
@@ -60,7 +76,7 @@ public abstract class AbstractDao<T> {
 		return db.saveObject(bean) > -1 ;
 	}
 	
-	public final boolean update(T bean){
+	public boolean update(T bean){
 		
 		if(bean == null){
 			return false ;
@@ -78,7 +94,7 @@ public abstract class AbstractDao<T> {
 		return db.updateObject(bean) > -1 ;
 	}
 	
-	public final boolean delete(T bean){
+	public boolean delete(T bean){
 		
 		if(bean == null){
 			return false ;

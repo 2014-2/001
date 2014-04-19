@@ -10,6 +10,10 @@ import org.zw.android.framework.db.core.ColumnPrimaryKey.PrimaryKeyType;
 
 @Table(TableName="CrtbUser")
 public final class CrtbUser implements Serializable {
+	
+	public static final int LICENSE_TYPE_DEFAULT				= 1 ;
+	public static final int LICENSE_TYPE_REGISTER				= 2 ;
+	public static final int LICENSE_TYPE_DMIN					= 3 ;
 
 	@ColumnPrimaryKey(Type = PrimaryKeyType.AUTO)
 	@ColumnInt
@@ -25,7 +29,7 @@ public final class CrtbUser implements Serializable {
 	private String license ; 			// 授权类型 
 
 	public CrtbUser(){
-		setUsertype(1);
+		setUsertype(LICENSE_TYPE_DEFAULT);
 	}
 	
 	public int getId() {

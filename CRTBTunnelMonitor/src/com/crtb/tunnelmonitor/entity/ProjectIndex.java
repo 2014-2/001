@@ -44,7 +44,7 @@ public class ProjectIndex implements Serializable {
 	private float LastOpenTime;					// 最后打开时间
 
 	@ColumnText
-	private String Info;							// 备注信息
+	private String Info;						// 备注信息
 
 	// /////////////////deflection info /////////////////////
 
