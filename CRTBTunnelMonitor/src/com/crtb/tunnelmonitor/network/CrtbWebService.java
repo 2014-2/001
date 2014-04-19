@@ -290,9 +290,9 @@ public final class CrtbWebService {
 	 * 
 	 * @param callback
 	 */
-	public void uploadWarningData(Object warningData, RpcCallback callback) {
+	public void uploadWarningData(WarningUploadParameter parameter, RpcCallback callback) {
 		long randomCode = getRandomCode();
-		UploadWarningDataRpc rpc = new UploadWarningDataRpc(randomCode, new RpcCallbackWrapper(callback));
+		UploadWarningDataRpc rpc = new UploadWarningDataRpc(randomCode, parameter, new RpcCallbackWrapper(callback));
 		RpcSendTask task = new RpcSendTask(rpc, DATA_UPLOAD_URL);
 		task.execute();
 	}

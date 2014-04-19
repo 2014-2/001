@@ -1,7 +1,5 @@
 package com.crtb.tunnelmonitor.network;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -29,18 +27,25 @@ class UploadWarningDataRpc extends AbstractRpc {
 	private Map<String, Object> mParameters = new HashMap<String, Object>();
 	private RpcCallback mCallback;
 	
-	UploadWarningDataRpc(long randomCode, RpcCallback callback) {
-		mParameters.put(KEY_SECTION_CODE, "XPCL01SD00010001");
-		mParameters.put(KEY_POINT_CODE, "XPCL01SD00010001GD01");
-		mParameters.put(KEY_WARNING_LEVEL, 1);
-		mParameters.put(KEY_TRANSFORM_SPEED, 6.0f);
-		mParameters.put(KEY_WARNING_POINT_VALUE, 1.0f);
-		mParameters.put(KEY_WARNING_TIME, new Date());
-		mParameters.put(KEY_WARNING_PERSON, "杨工");
-		mParameters.put(KEY_WARNING_DESCRIPTION, "abc");
-		mParameters.put(KEY_WARNING_END_TIME, new Date());
-		mParameters.put(KEY_WARNING_RESULT, 0);
-		mParameters.put(KEY_REMARK, "kkk");
+	UploadWarningDataRpc(long randomCode, WarningUploadParameter parameter, RpcCallback callback) {
+		if (parameter == null) {
+			mParameters.put(KEY_SECTION_CODE, "XPCL01SD00010001");
+			mParameters.put(KEY_POINT_CODE, "XPCL01SD00010001GD01");
+			mParameters.put(KEY_WARNING_LEVEL, 1);
+			mParameters.put(KEY_TRANSFORM_SPEED, 6.0f);
+			mParameters.put(KEY_WARNING_POINT_VALUE, 1.0f);
+			mParameters.put(KEY_WARNING_TIME, new Date());
+			mParameters.put(KEY_WARNING_PERSON, "杨工");
+			mParameters.put(KEY_WARNING_DESCRIPTION, "abc");
+			mParameters.put(KEY_WARNING_END_TIME, new Date());
+			mParameters.put(KEY_WARNING_RESULT, 0);
+			mParameters.put(KEY_REMARK, "kkk");
+		} else {
+			Map<String, Object> parameterMap = parameter.getParameters();
+			for(String key : parameterMap.keySet()) {
+				mParameters.put(key, parameterMap.get(key));
+			}
+		}
 		mParameters.put(KEY_RANDOM_CODE, randomCode);
 		mCallback = callback;
 	}
