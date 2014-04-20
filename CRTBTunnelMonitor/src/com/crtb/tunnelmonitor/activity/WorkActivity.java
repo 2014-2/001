@@ -80,10 +80,10 @@ public final class WorkActivity extends WorkFlowActivity {
 			ProjectIndexDao.defaultWorkPlanDao().updateCurrentWorkPlan(bean);
 			
 			// start new MainActivity
-			Intent intent = new Intent() ;
-			intent.setClass(WorkActivity.this, MainActivity.class);
-			intent.putExtra(Constant.LOGIN_TYPE, Constant.LOCAL_USER);
-			startActivity(intent);
+//			Intent intent = new Intent() ;
+//			intent.setClass(WorkActivity.this, MainActivity.class);
+//			intent.putExtra(Constant.LOGIN_TYPE, Constant.LOCAL_USER);
+//			startActivity(intent);
 			
 			finish() ;
 			
