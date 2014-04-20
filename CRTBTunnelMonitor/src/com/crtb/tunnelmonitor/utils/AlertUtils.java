@@ -56,6 +56,9 @@ public class AlertUtils {
         List pastInfoList = null;
         String[] thisCoords = null;
         Date thisTime = null;
+        int chainageId = -1;
+        String pntType = null;
+        String originalDataID = null;
 
         if (point instanceof TunnelSettlementTotalData) {
             type = 1;
@@ -64,6 +67,9 @@ public class AlertUtils {
             thisTime = tPoint.getSurveyTime();
             pastInfoList = TunnelSettlementTotalDataDao.defaultDao().queryInfoBeforeMEASNo(
                     tPoint.getChainageId(), tPoint.getPntType(), tPoint.getMEASNo());
+            chainageId = ((TunnelSettlementTotalData) point).getChainageId();
+            pntType = ((TunnelSettlementTotalData) point).getPntType();
+            originalDataID = String.valueOf(((TunnelSettlementTotalData) point).getID());
         } else if (point instanceof SubsidenceTotalData) {
             type = 2;
             SubsidenceTotalData sPoint = (SubsidenceTotalData) point;
@@ -71,6 +77,9 @@ public class AlertUtils {
             thisTime = sPoint.getSurveyTime();
             pastInfoList = SubsidenceTotalDataDao.defaultDao().queryInfoBeforeMEASNo(
                     sPoint.getChainageId(), sPoint.getPntType(), sPoint.getMEASNo());
+            chainageId = ((SubsidenceTotalData) point).getChainageId();
+            pntType = ((SubsidenceTotalData) point).getPntType();
+            originalDataID = String.valueOf(((SubsidenceTotalData) point).getID());
         } else {
             return null;
         }
@@ -99,8 +108,19 @@ public class AlertUtils {
                     double firstZ = Double.valueOf(firstCoords[2]);
                     double accumulativeSubsidence = Math.abs(thisZ - firstZ);
                     if (accumulativeSubsidence >= ACCUMULATIVE_THRESHOLD) {
-                        errList.add(type == 1 ? GONGDING_LEIJI_XIACHEN_EXCEEDING
-                                : DIBIAO_LEIJI_XIACHEN_EXCEEDING);
+                        int uType = type == 1 ? GONGDING_LEIJI_XIACHEN_EXCEEDING
+                                : DIBIAO_LEIJI_XIACHEN_EXCEEDING;
+                        errList.add(uType);
+                        int alertId = -1;
+                        if (type == 1) {
+                            alertId = AlertListDao.defaultDao().insertItem((TunnelSettlementTotalData) point, 3/* default */,
+                                    uType, accumulativeSubsidence, ACCUMULATIVE_THRESHOLD, originalDataID);
+                        } else {
+                            alertId = AlertListDao.defaultDao().insertItem((SubsidenceTotalData) point, 3/* default */,
+                                    uType, accumulativeSubsidence, ACCUMULATIVE_THRESHOLD, originalDataID);
+                        }
+                        AlertHandlingInfoDao.defaultDao().insertItem(alertId, 0,
+                                thisTime, String.valueOf(chainageId) + pntType, 1/*报警*/, 01/*true*/);
                     }
                 }
 
@@ -123,8 +143,19 @@ public class AlertUtils {
                     long deltaT = Math.abs(thisTime.getTime() - lastTime.getTime());
                     double subsidenceSpeed = deltaZ / (deltaT / Time.DAY_MILLISECEND_RATIO);
                     if (subsidenceSpeed >= SPEED_THRESHOLD) {
-                        errList.add(type == 1 ? GONGDINGI_XIACHEN_SULV_EXCEEDING
-                                : DIBIAO_XIACHEN_SULV_EXCEEDING);
+                        int uType = type == 1 ? GONGDINGI_XIACHEN_SULV_EXCEEDING
+                                : DIBIAO_XIACHEN_SULV_EXCEEDING;
+                        errList.add(uType);
+                        int alertId = -1;
+                        if (type == 1) {
+                            alertId = AlertListDao.defaultDao().insertItem((TunnelSettlementTotalData) point, 3/* default */,
+                                    uType, subsidenceSpeed, SPEED_THRESHOLD, originalDataID);
+                        } else {
+                            alertId = AlertListDao.defaultDao().insertItem((SubsidenceTotalData) point, 3/* default */,
+                                    uType, subsidenceSpeed, SPEED_THRESHOLD, originalDataID);
+                        }
+                        AlertHandlingInfoDao.defaultDao().insertItem(alertId, 0,
+                                thisTime, String.valueOf(chainageId) + pntType, 1/*报警*/, 01/*true*/);
                     }
                 }
             }
@@ -143,6 +174,8 @@ public class AlertUtils {
     public static ArrayList<Integer> checkLineConvergenceExceed(TunnelSettlementTotalData s_1,
             TunnelSettlementTotalData s_2) {
         ArrayList<Integer> errList = new ArrayList<Integer>();
+
+        String originalDataID = s_1.getID() + "," + s_2.getID();
 
         double lineThisLength = getLineLength(s_1, s_2);
         Date s_1ThisTime = s_1.getSurveyTime();
@@ -168,9 +201,9 @@ public class AlertUtils {
                 int uType = SHOULIAN_LEIJI_EXCEEDING;
                 errList.add(uType);
                 int alertId = AlertListDao.defaultDao().insertItem(s_1, 3/* default */,
-                        uType, convergence, ACCUMULATIVE_THRESHOLD, ""/*TODO: OriginalDataID 格式?*/);
-                AlertHandlingInfoDao.defaultDao().insertItem(alertId, 0/*TODO: ?*/,
-                        thisTimeDate, String.valueOf(chainageId) + s_1.getPntType(), 1/*报警*/, 0/*TODO: ?*/);
+                        uType, convergence, ACCUMULATIVE_THRESHOLD, originalDataID);
+                AlertHandlingInfoDao.defaultDao().insertItem(alertId, 0,
+                        thisTimeDate, String.valueOf(chainageId) + s_1.getPntType(), 1/*报警*/, 01/*true*/);
             }
 
             TunnelSettlementTotalData s_1Last = s_1InfoList.get(s_1InfoList.size());
@@ -191,9 +224,9 @@ public class AlertUtils {
                 int uType = SHOULIAN_SULV_EXCEEDING;
                 errList.add(uType);
                 int alertId = AlertListDao.defaultDao().insertItem(s_1, 3/* default */, uType, shoulianSpeed,
-                        SPEED_THRESHOLD, ""/*TODO: OriginalDataID 格式?*/);
-                AlertHandlingInfoDao.defaultDao().insertItem(alertId, 0/*TODO: ?*/,
-                        thisTimeDate, String.valueOf(chainageId) + s_1.getPntType(), 1/*报警*/, 0/*TODO: ?*/);
+                        SPEED_THRESHOLD, originalDataID);
+                AlertHandlingInfoDao.defaultDao().insertItem(alertId, 0,
+                        thisTimeDate, String.valueOf(chainageId) + s_1.getPntType(), 1/*报警*/, 1/*true*/);
             }
         }
 
