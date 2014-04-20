@@ -6,6 +6,7 @@ import java.util.List;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
@@ -44,6 +45,10 @@ public class WorkInfoDownloadActivity extends Activity {
     private WorkPlanAdapter mAdapter;
 
     private List<ProjectIndex> mAllProjects;
+    
+    private int mPointCount = 0;
+    private boolean mFlag = true;
+    private ProgressDialog mProgressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,16 +73,22 @@ public class WorkInfoDownloadActivity extends Activity {
 
     //下载断面编码数据
     private void downloadSectionCodeList(SectionStatus status) {
+    	mPointCount = 0;
+    	mFlag = true;
+    	onDownLoadStarted();
         CrtbWebService.getInstance().getSectionCodeList(status, new RpcCallback() {
 
             @Override
             public void onSuccess(Object[] data) {
                 Log.d(LOG_TAG, "download section code list success.");
-                downloadSectionList(Arrays.asList((String[])data));
+                List<String> sectionCodeList = Arrays.asList((String[])data);
+                downloadSectionList(sectionCodeList);
             }
 
             @Override
             public void onFailed(String reason) {
+            	mFlag = false;
+            	onDownLoadFinished(mFlag);
                 Log.d(LOG_TAG, "download section code list failed.");
             }
         });
@@ -96,18 +107,24 @@ public class WorkInfoDownloadActivity extends Activity {
             @Override
             public void onSuccess(Object[] data) {
                 TunnelCrossSectionIndex[] sectionInfo = (TunnelCrossSectionIndex[])data;
-                TunnelCrossSectionIndex section = sectionInfo[0];
-                TunnelCrossSectionIndexDao dao = TunnelCrossSectionIndexDao.defaultDao();
-                dao.insert(section);
+                final TunnelCrossSectionIndex section = sectionInfo[0];
+                new Thread(new Runnable() {
+					@Override
+					public void run() {
+			             TunnelCrossSectionIndexDao dao = TunnelCrossSectionIndexDao.defaultDao();
+			             dao.insert(section);
+					}
+				}).start();
                 List<String> pointCodeList = Arrays.asList(section.getSurveyPntName().split(","));
+                mPointCount += pointCodeList.size();
                 downloadPointList(pointCodeList);
-                Log.d("timdebug", "sectionCode: " + sectionCode + ", codeList: " + section.getSurveyPntName());
             }
 
             @Override
             public void onFailed(String reason) {
                 // TODO Auto-generated method stub
                 Log.d(LOG_TAG, "downloadSection failed: " + reason);
+                mFlag = false;
             }
         });
     }
@@ -124,16 +141,30 @@ public class WorkInfoDownloadActivity extends Activity {
 
             @Override
             public void onSuccess(Object[] data) {
-            	List<TunnelSettlementTotalData> pointTestDataList = Arrays.asList((TunnelSettlementTotalData[])data);
-            	TunnelSettlementTotalDataDao dao = TunnelSettlementTotalDataDao.defaultDao();
-            	for(TunnelSettlementTotalData testPointData : pointTestDataList) {
-            		dao.insert(testPointData);
+            	final List<TunnelSettlementTotalData> pointTestDataList = Arrays.asList((TunnelSettlementTotalData[])data);
+            	new Thread(new Runnable() {
+					@Override
+					public void run() {
+						TunnelSettlementTotalDataDao dao = TunnelSettlementTotalDataDao.defaultDao();
+		            	for(TunnelSettlementTotalData testPointData : pointTestDataList) {
+		            		dao.insert(testPointData);
+		            	}
+					}
+				}).start();
+            	mPointCount--;
+            	if (mPointCount == 0) {
+            		onDownLoadFinished(mFlag);
             	}
                 Log.d(LOG_TAG, "download point success.");
             }
 
             @Override
             public void onFailed(String reason) {
+            	mFlag = false;
+            	mPointCount--;
+            	if (mPointCount == 0) {
+            		onDownLoadFinished(mFlag);
+            	}
                 Log.d(LOG_TAG, "download point failed: " + reason);
             }
         });
@@ -158,9 +189,12 @@ public class WorkInfoDownloadActivity extends Activity {
             xiazai.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    downloadSectionCodeList(SectionStatus.VALID);
-                    String siteName = CrtbWebService.getInstance().getSiteName();
-                    Toast.makeText(getApplicationContext(), "下载" + siteName + "成功", Toast.LENGTH_SHORT).show();
+                	ProjectIndex currentProject = ProjectIndexDao.defaultWorkPlanDao().queryEditWorkPlan();
+                	if (currentProject != null) {
+	                    downloadSectionCodeList(SectionStatus.VALID);
+                	} else {
+                		Toast.makeText(getApplicationContext(), "请先打开工作面", Toast.LENGTH_SHORT).show();
+                	}
                 }
             });
             setContentView(mMenuView);
@@ -225,6 +259,19 @@ public class WorkInfoDownloadActivity extends Activity {
             isUpload.setText("已上传");
             return convertView;
         }
-
+    }
+    
+    private void onDownLoadStarted() {
+    	mProgressDialog = ProgressDialog.show(this, null, "正在下载数据", true, false);
+    }
+    
+    private void onDownLoadFinished(boolean flag) {
+    	mProgressDialog.dismiss();
+    	String siteName = CrtbWebService.getInstance().getSiteName();
+    	if (flag) {
+    		Toast.makeText(getApplicationContext(), "下载" + siteName + "成功", Toast.LENGTH_SHORT).show();
+    	} else {
+    		Toast.makeText(getApplicationContext(), "下载" + siteName + "失败", Toast.LENGTH_SHORT).show();
+    	}
     }
 }
