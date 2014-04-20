@@ -30,8 +30,8 @@ public class AudioLoaderTask extends AsyncQueryHandler {
         MediaStore.Audio.Media.DATA };
 
     public final static String DEF_SELECTION_LOCAL = "(" + MediaStore.Audio.Media.MIME_TYPE + "=? or "
-            + MediaStore.Audio.Media.MIME_TYPE + "=?) and "
-            + MediaStore.Audio.Media.DATA + " like '%" + Constants.LOCAL_REGIX + "%'";
+            + MediaStore.Audio.Media.MIME_TYPE + "=?) and ("
+            + MediaStore.Audio.Media.DATA + " like '%" + Constants.LOCAL_REGIX + "%')";
 
     public final static String DEF_SELECTION_SDCARD = "(" + MediaStore.Audio.Media.MIME_TYPE
             + "=? or " + MediaStore.Audio.Media.MIME_TYPE + "=?) and "
@@ -57,9 +57,9 @@ public class AudioLoaderTask extends AsyncQueryHandler {
     public void loadData() {
         switch (mType) {
             case AudioLoaderManager.INTERNAL_TYPE:
-                startQuery(0, (Object) null, MediaStore.Audio.Media.INTERNAL_CONTENT_URI,
-                        AudioLoaderTask.DEF_PROJECTION, null/*AudioLoaderTask.DEF_SELECTION_LOCAL*/,
-                        null/*DEF_SELECTION_ARGS*/, null);
+                startQuery(0, (Object) null, MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
+                        AudioLoaderTask.DEF_PROJECTION, AudioLoaderTask.DEF_SELECTION_LOCAL,
+                        DEF_SELECTION_ARGS, null);
                 break;
 
             case AudioLoaderManager.EXTERNAL_SDCARD_TYPE:
@@ -118,10 +118,13 @@ public class AudioLoaderTask extends AsyncQueryHandler {
         do {
             Song song = null;
             song = new Song();
-            song.setFileName(cursor.getString(1));// file Name
-            song.setFileTitle(cursor.getString(2));// song name
+            String fileName = getStringForChinese(cursor.getString(1));
+            song.setFileName(fileName);// file Name
+            String fileTitle = getStringForChinese(cursor.getString(2));
+            song.setFileTitle(fileTitle);// song name
             song.setDuration(cursor.getInt(3));// play time
-            song.setSinger(cursor.getString(4));// artist
+            String artist = getStringForChinese(cursor.getString(4));
+            song.setSinger(artist);// artist
 //            song.setAlbumArt(cursor.getString(5)); // album
             final int albumId = cursor.getInt(6); // album id
             String album = getAlbumArt(mContext.getContentResolver(), albumId);
@@ -180,4 +183,16 @@ public class AudioLoaderTask extends AsyncQueryHandler {
         }
         return album_art;
     }
+
+    public static String getStringForChinese(String value) {
+        String newValue = value;
+        try {
+            if (value.equals(new String(value.getBytes("ISO-8859-1"), "ISO-8859-1"))) {
+                newValue = new String(value.getBytes("ISO-8859-1"), "GBK");
+            }
+        } catch (Exception e) {
+        }
+        return newValue;
+    }
+    
 }

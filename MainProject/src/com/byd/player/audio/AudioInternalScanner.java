@@ -6,6 +6,8 @@ import java.util.TimerTask;
 import android.content.Context;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
+import android.os.Handler;
+import android.os.Message;
 
 import com.byd.player.audio.AudioLoaderManager;
 
@@ -43,6 +45,22 @@ public class AudioInternalScanner implements MediaScannerConnection.OnScanComple
 
     @Override
     public void onScanCompleted(String path, Uri uri) {
-        AudioLoaderManager.getInstance().loadData(AudioLoaderManager.INTERNAL_TYPE);
+        
+        mHandler.sendEmptyMessage(RELOAD_AUDIO_INTERNAL);
     }
+    
+    private final static int RELOAD_AUDIO_INTERNAL = 1;
+    private Handler mHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+            case RELOAD_AUDIO_INTERNAL:
+                AudioLoaderManager.getInstance().loadData(AudioLoaderManager.INTERNAL_TYPE);
+                break;
+            default:
+                break;
+            }
+        }
+
+    };
 }

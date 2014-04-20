@@ -15,7 +15,7 @@ public class Constants {
      * 目录结构
      */
     public static final String USB_REGIX = "/udisk/";
-    public static final String LOCAL_REGIX = "/storage/emulated/";
+    public static final String LOCAL_REGIX = "/storage/";
     public static final String SDCARD_REGIX = "/extsd/";
 
     public static final int ERROR_DISMISS_THREE_SECONDS = 3000;
