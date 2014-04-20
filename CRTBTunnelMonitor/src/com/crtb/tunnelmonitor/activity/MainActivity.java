@@ -128,6 +128,12 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 	}
 
 	@Override
+	protected void onResume() {
+		super.onResume();
+		mCurrentWorkPlan = ProjectIndexDao.defaultWorkPlanDao().queryEditWorkPlan();
+	}
+	
+	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.worksection:// 工作面
