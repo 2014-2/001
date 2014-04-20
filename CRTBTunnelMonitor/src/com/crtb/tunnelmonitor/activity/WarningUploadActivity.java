@@ -144,24 +144,24 @@ public class WarningUploadActivity extends Activity {
     public ArrayList<yujingInfors> getdata() {
         yujingInfors.yixiao = 0;
         ArrayList<yujingInfors> listt = new ArrayList<yujingInfors>();
-        yujingInfors infor;
-        for (int i = 0; i < s.length; i++) {
-            infor = new yujingInfors();
-            infor.setDate(getdate());
-            infor.setXinghao(s[i]);
-            infor.setDianhao(ss[ran.nextInt(3)]);
-            infor.setChuliFangshi("自由处理");
-            infor.setState(sss[ran.nextInt(3)]);
-            infor.setMessage(s2[ran.nextInt(4)]);
-            infor.setEdtState(ssss[ran.nextInt(4)]);
-            infor.setState1(true);
-            if (infor.getState().equals("已消警")) {
-                yujingInfors.yixiao = yujingInfors.yixiao + 1;
-                System.out.println(yujingInfors.yixiao);
-
-            }
-            listt.add(infor);
-        }
+//        yujingInfors infor;
+//        for (int i = 0; i < s.length; i++) {
+//            infor = new yujingInfors();
+//            infor.setDate(getdate());
+//            infor.setXinghao(s[i]);
+//            infor.setDianhao(ss[ran.nextInt(3)]);
+//            infor.setChuliFangshi("自由处理");
+//            infor.setState(sss[ran.nextInt(3)]);
+//            infor.setMessage(s2[ran.nextInt(4)]);
+//            infor.setEdtState(ssss[ran.nextInt(4)]);
+//            infor.setState1(true);
+//            if (infor.getState().equals("已消警")) {
+//                yujingInfors.yixiao = yujingInfors.yixiao + 1;
+//                System.out.println(yujingInfors.yixiao);
+//
+//            }
+//            listt.add(infor);
+//        }
         return listt;
     }
 
