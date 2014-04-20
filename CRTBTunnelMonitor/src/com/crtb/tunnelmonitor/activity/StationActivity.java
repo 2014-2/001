@@ -28,11 +28,14 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.crtb.tssurveyprovider.ISurveyProvider;
+import com.crtb.tssurveyprovider.TSCommandType;
 import com.crtb.tssurveyprovider.TSConnectType;
 import com.crtb.tssurveyprovider.TSSurveyProvider;
 import com.crtb.tunnelmonitor.AppCRTBApplication;
 import com.crtb.tunnelmonitor.adapter.ControlPonitsListAdapter;
 import com.crtb.tunnelmonitor.common.Constant;
+import com.crtb.tunnelmonitor.common.Constant.TotalStationType;
 import com.crtb.tunnelmonitor.dao.impl.v2.TotalStationInfoDao;
 import com.crtb.tunnelmonitor.dao.impl.v2.ProjectIndexDao;
 import com.crtb.tunnelmonitor.entity.TotalStationIndex;
@@ -171,12 +174,11 @@ public class StationActivity extends Activity {
     }
 
     /** 连接全站仪成功 */
-    private int connect(TSConnectType type, int baudRate) {
+    private int connect(TSConnectType type, TSCommandType tsCmdType, String [] tsParams) {
         String result = null;
         int ret = 0;
         try {
-            String[] tsParams = new String[] { String.valueOf(baudRate) };
-            ret = TSSurveyProvider.getDefaultAdapter().BeginConnection(type,
+            ret = TSSurveyProvider.getDefaultAdapter().BeginConnection(type,tsCmdType,
                     tsParams);
             if (ret == 1) {
                 result = "成功";
@@ -274,16 +276,39 @@ public class StationActivity extends Activity {
         public void onClick(View v) {
             int id = v.getId();
             int ret;
+            
+            TotalStationIndex tsInfo = mStations.get(mPosition);
+            
+            // 全站仪品牌
+            TotalStationType t = Enum.valueOf(TotalStationType.class, tsInfo.getTotalstationType());
+            TSCommandType tsCmdType = TSCommandType.NoneTS;
+            switch (t) {
+						case Leica: 
+							tsCmdType = TSCommandType.LeicaGEOCOM;
+							break;
+						case LeicaTPS: 
+							tsCmdType = TSCommandType.LeicaGSI16;
+							break;
+
+						default:
+							break;
+						}
+     
+            // 全站仪参数数组
+            String [] tsParams;
+            
             switch (id) {
                 case R.id.bluetooth_connect: // 蓝牙连接
-                    ret = connect(TSConnectType.Bluetooth, mStations.get(mPosition).getBaudRate());
+                	tsParams = new String[] {tsInfo.getName(), tsInfo.getInfo()};
+                    ret = connect(TSConnectType.Bluetooth, tsCmdType, tsParams);
                     if (ret == 1) {
                         // mStations.get(position)
                         // .setbUse(true);
                     }
                     break;
                 case R.id.com_connect:// 串口连接
-                    ret = connect(TSConnectType.RS232, mStations.get(mPosition).getBaudRate());
+                	tsParams = new String[] {tsInfo.getName(), String.valueOf( tsInfo.getBaudRate())};
+                    ret = connect(TSConnectType.RS232, tsCmdType, tsParams);
                     if (ret == 1) {
                         // mStations.get(position)
                         // .setbUse(true);
@@ -328,7 +353,7 @@ public class StationActivity extends Activity {
             xinjian.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(c, ControlNewActivity.class);
+                    Intent intent = new Intent(c, TotalStationNewBluetoothActivity.class);
                     Bundle mBundle = new Bundle();
                     mBundle.putParcelable(
                             Constant.Select_TotalStationRowClickItemsName_Data,
@@ -362,7 +387,7 @@ public class StationActivity extends Activity {
                         .show();
                         return;
                     }
-                    Intent intent = new Intent(c, ControlNewActivity.class);
+                    Intent intent = new Intent(c, TotalStationNewBluetoothActivity.class);
                     Bundle mBundle = new Bundle();
                     mBundle.putSerializable(Constant.Select_TotalStationRowClickItemsName_Data, tmp);
                     mBundle.putBoolean("edit", true);

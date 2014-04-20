@@ -11,7 +11,7 @@ import com.crtb.tunnelmonitor.entity.TotalStationIndex;
  * 
  * @author zhouwei
  *
- */
+ */ 
 public class TotalStationInfoDao extends AbstractDao<TotalStationIndex> {
 
 	private static TotalStationInfoDao _instance ;

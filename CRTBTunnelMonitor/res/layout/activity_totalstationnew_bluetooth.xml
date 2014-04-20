@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+
+    <include
+        android:id="@+id/header"
+        layout="@layout/activity_topbar_layout" >
+    </include>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/bottom_layout"
+        android:layout_below="@id/header" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="20dp"
+            android:orientation="vertical" >
+
+            <LinearLayout
+                android:id="@+id/banner_layout"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical" >
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dip"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical|left"
+                    android:text="品牌"
+                    android:textSize="15sp" />
+
+                <EditText
+                    android:id="@+id/pp"
+                    android:layout_width="0dp"
+                    android:layout_height="50dip"
+                    android:layout_marginLeft="10dip"
+                    android:layout_weight="5"
+                    android:editable="false" />
+
+                <Spinner
+                    android:id="@+id/pps"
+                    android:layout_width="0dp"
+                    android:layout_height="50dip"
+                    android:layout_marginLeft="7dp"
+                    android:layout_weight="1" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/name_layout"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dip"
+                android:gravity="center_vertical" >
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dip"
+                    android:layout_weight="1"
+                    android:text="名称"
+                    android:textSize="15sp" />
+
+                <EditText
+                    android:id="@+id/name"
+                    android:layout_width="0dp"
+                    android:layout_height="50dip"
+                    android:layout_marginLeft="10dip"
+                    android:layout_weight="5"
+                    android:hint="全站仪品牌仪器型号" />
+
+                <Spinner
+                    android:id="@+id/pps"
+                    android:layout_width="0dp"
+                    android:layout_height="50dip"
+                    android:layout_marginLeft="7dp"
+                    android:layout_weight="1"
+                    android:visibility="invisible" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/bluetooth_layout"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dip"
+                android:gravity="center_vertical" >
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dip"
+                    android:layout_weight="1"
+                    android:text="蓝牙地址"
+                    android:textSize="15sp" />
+
+                <EditText
+                    android:id="@+id/info"
+                    android:layout_width="0dp"
+                    android:layout_height="50dip"
+                    android:layout_marginLeft="10dip"
+                    android:layout_weight="5"
+                    android:editable="false" />
+
+                <Spinner
+                    android:id="@+id/infos"
+                    android:layout_width="0dp"
+                    android:layout_height="50dip"
+                    android:layout_marginLeft="7dp"
+                    android:layout_weight="1" />
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+
+    <include
+        android:id="@+id/bottom_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        layout="@layout/activity_bottom_layout" />
+
+</RelativeLayout>

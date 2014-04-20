@@ -13,6 +13,7 @@ import android.widget.LinearLayout;
 import com.crtb.tunnelmonitor.AppCRTBApplication;
 import com.crtb.tunnelmonitor.common.Constant;
 import com.crtb.tunnelmonitor.entity.SurveyerInformation;
+import com.rebcenter.update.Update;
 /**
  * 用户选择 界面
  *@author edison.xiao
@@ -47,6 +48,13 @@ public class SelecActivity extends Activity implements OnClickListener{
         mApp.setPersonList(testList);
         mApp.setCurPerson(test);
         /*测试代码*/
+		/** 
+		 * 部工管中心在线升级库  
+		 * 依赖于<manifest>中 android:versionCode="1" 和 android:versionName="1.0"
+		 * Added by Carl.Mo 
+		 */
+		Update update = new Update(this, "ZTTB");
+		update.updateApp();
     }
 
     /** 初始化控件 */
