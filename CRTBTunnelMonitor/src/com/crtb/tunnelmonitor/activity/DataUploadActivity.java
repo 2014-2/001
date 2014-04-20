@@ -37,6 +37,7 @@ import android.widget.Toast;
 import com.crtb.tunnelmonitor.widget.SubsidenceCrossSectionFragment;
 import com.crtb.tunnelmonitor.widget.TunnelCrossSectionFragment;import com.crtb.tunnelmonitor.network.CrtbWebService;
 import com.crtb.tunnelmonitor.network.RpcCallback;
+import com.crtb.tunnelmonitor.network.SectionUploadParamter;
 public class DataUploadActivity extends FragmentActivity {
 	private static final String LOG_TAG = "DataUploadActivity";
     private TextView mTopbarTitle;
@@ -229,7 +230,7 @@ public class DataUploadActivity extends FragmentActivity {
                     switch (mPager.getCurrentItem()) {
                        //隧道内断面
                         case 0:
-                        	uploadSection();
+                        	uploadSection(null);
                         	showMessage(true);
                         	break;
                         case 1:
@@ -271,13 +272,13 @@ public class DataUploadActivity extends FragmentActivity {
     }
     
     //上传断面
-    private void uploadSection() {
-    	CrtbWebService.getInstance().uploadSection(null, new RpcCallback() {
+    private void uploadSection(SectionUploadParamter paramter) {
+    	CrtbWebService.getInstance().uploadSection(paramter, new RpcCallback() {
 			
 			@Override
 			public void onSuccess(Object[] data) {
 				Log.d(LOG_TAG, "upload section success.");
-				uploadTestResult();
+				//uploadTestResult();
 			}
 			
 			@Override
