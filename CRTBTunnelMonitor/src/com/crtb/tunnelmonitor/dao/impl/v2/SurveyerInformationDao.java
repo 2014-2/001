@@ -25,7 +25,7 @@ public class SurveyerInformationDao extends AbstractDao<SurveyerInformation> {
 	
 	public void deleteAll(){
 		
-		final IAccessDatabase mDatabase = getCurrentDb();
+		final IAccessDatabase mDatabase = getDefaultDb();
 		
 		if(mDatabase == null){
 			return ;
@@ -36,7 +36,7 @@ public class SurveyerInformationDao extends AbstractDao<SurveyerInformation> {
 	
 	public SurveyerInformation querySurveyerByName(String name){
 		
-		final IAccessDatabase mDatabase = getCurrentDb();
+		final IAccessDatabase mDatabase = getDefaultDb();
 		
 		if(mDatabase == null){
 			return null ;
@@ -49,7 +49,7 @@ public class SurveyerInformationDao extends AbstractDao<SurveyerInformation> {
 	
 	public List<SurveyerInformation> queryAllSurveyerInformation(){
 		
-		final IAccessDatabase mDatabase = getCurrentDb();
+		final IAccessDatabase mDatabase = getDefaultDb();
 		
 		if(mDatabase == null){
 			return null ;
