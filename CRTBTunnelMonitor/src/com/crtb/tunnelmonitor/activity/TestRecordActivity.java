@@ -122,6 +122,7 @@ public class TestRecordActivity extends WorkFlowActivity implements OnPageChange
 				} else {
 					
 					CommonObject.putObject(TestSectionExecuteActivity.KEY_TEST_OBJECT, bean) ;
+					CommonObject.putInteger(TestSectionExecuteActivity.KEY_TEST_SECTION_TYPE, RawSheetIndex.CROSS_SECTION_TYPE_TUNNEL);
 					
 					Intent intent = new Intent() ;
 					intent.setClass(TestRecordActivity.this, TestSectionExecuteActivity.class);
@@ -136,6 +137,7 @@ public class TestRecordActivity extends WorkFlowActivity implements OnPageChange
 				} else {
 					
 					CommonObject.putObject(TestSectionExecuteActivity.KEY_TEST_OBJECT, bean) ;
+					CommonObject.putInteger(TestSectionExecuteActivity.KEY_TEST_SECTION_TYPE, RawSheetIndex.CROSS_SECTION_TYPE_SUBSIDENCES);
 					
 					Intent intent = new Intent() ;
 					intent.setClass(TestRecordActivity.this, TestSectionExecuteActivity.class);

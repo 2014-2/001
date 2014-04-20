@@ -35,5 +35,9 @@
     
     <!-- total station -->
     <color name="list_item_pressed">#d7d7d7</color>
+    
+    <!-- test -->
+    <color name="button_test_normal">#f6f6f6</color>
+    <color name="button_test_select">#c2c2c2</color>
 
 </resources>

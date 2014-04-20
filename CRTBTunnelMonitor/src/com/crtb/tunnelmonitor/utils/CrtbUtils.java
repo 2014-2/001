@@ -107,8 +107,8 @@ public final class CrtbUtils {
     	// 断面序列号 ？
     	outParamter.setSectionCode(String.valueOf(data.getID()));
     	// outParamter.setPointCodeList(data.get) ?
-    	outParamter.setTunnelFaceDistance(data.getFacedk());
-    	outParamter.setProcedure(data.getFacedescription());
+    	//outParamter.setTunnelFaceDistance(data.getFacedk());
+    	//outParamter.setProcedure(data.getFacedescription());
     	// outParamter.setMonitorModel(data.get)
     }
 	

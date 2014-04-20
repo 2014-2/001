@@ -46,7 +46,7 @@ public class TunnelCrossSectionIndex implements Serializable {
 	//////////////////////开挖方式//////////////////////////
 
 	@ColumnString(length = 255)
-	private String ExcavateMethod;  		// 施工方法
+	private String ExcavateMethod;  	// 施工方法
 
 	@ColumnString(length = 255)
 	private String SurveyPntName; 		// 测点编号

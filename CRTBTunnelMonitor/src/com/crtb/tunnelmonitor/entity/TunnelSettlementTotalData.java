@@ -59,34 +59,10 @@ public class TunnelSettlementTotalData implements Serializable {
 								// 1:数据不参与计算
 								// 2:数据作为首行
 								// 3:改正值
-	
+
 	@ColumnFloat
 	private float DataCorrection;	// 异常数据修正值
 	
-	@ColumnString(length = 16)
-	private String prefix; 			// 前缀--扩充
-	
-	@ColumnFloat
-	private float Facedk;			// 撑子面距离--扩充
-	
-	@ColumnString(length = 20)
-	private String facedescription;	// 施工序号--扩充
-	
-	@ColumnBoolean
-	private boolean checked ;		// 是否选中--扩充
-	
-	@ColumnDate
-	private Date CreateTime;		// 创建时间--扩充
-	
-	@ColumnFloat
-	private float Temperature;   	// 温度--扩充
-	
-	@ColumnString(length=255)
-	private String Surveyor;		// 测量员名称
-	
-	@ColumnString(length=255)
-	private String SectionName;		// 断面名称
-
 	public int getID() {
 		return ID;
 	}
@@ -95,28 +71,12 @@ public class TunnelSettlementTotalData implements Serializable {
 		ID = iD;
 	}
 
-	public float getTemperature() {
-		return Temperature;
+	public float getDataCorrection() {
+		return DataCorrection;
 	}
 
-	public String getSectionName() {
-		return SectionName;
-	}
-
-	public void setSectionName(String sectionName) {
-		SectionName = sectionName;
-	}
-
-	public String getSurveyor() {
-		return Surveyor;
-	}
-
-	public void setSurveyor(String surveyor) {
-		Surveyor = surveyor;
-	}
-
-	public void setTemperature(float temperature) {
-		Temperature = temperature;
+	public void setDataCorrection(float dataCorrection) {
+		DataCorrection = dataCorrection;
 	}
 
 	public int getStationId() {
@@ -198,53 +158,4 @@ public class TunnelSettlementTotalData implements Serializable {
 	public void setDataStatus(int dataStatus) {
 		DataStatus = dataStatus;
 	}
-
-	public float getDataCorrection() {
-		return DataCorrection;
-	}
-
-	public String getPrefix() {
-		return prefix;
-	}
-
-	public void setPrefix(String prefix) {
-		this.prefix = prefix;
-	}
-
-	public float getFacedk() {
-		return Facedk;
-	}
-
-	public void setFacedk(float facedk) {
-		Facedk = facedk;
-	}
-
-	public String getFacedescription() {
-		return facedescription;
-	}
-
-	public void setFacedescription(String facedescription) {
-		this.facedescription = facedescription;
-	}
-	
-	public boolean isChecked() {
-		return checked;
-	}
-
-	public void setChecked(boolean checked) {
-		this.checked = checked;
-	}
-
-	public void setDataCorrection(float dataCorrection) {
-		DataCorrection = dataCorrection;
-	}
-
-	public Date getCreateTime() {
-		return CreateTime;
-	}
-
-	public void setCreateTime(Date createTime) {
-		CreateTime = createTime;
-	}
-	
 }
