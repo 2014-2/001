@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.zw.android.framework.IAccessDatabase;
 
+import android.util.Log;
+
 import com.crtb.tunnelmonitor.entity.SurveyerInformation;
 
 public class SurveyerInformationDao extends AbstractDao<SurveyerInformation> {
@@ -23,6 +25,63 @@ public class SurveyerInformationDao extends AbstractDao<SurveyerInformation> {
 		return _instance ;
 	}
 	
+	@Override
+	public int insert(SurveyerInformation bean) {
+		
+		if(bean == null){
+			return DB_EXECUTE_FAILED ;
+		}
+		
+		final IAccessDatabase db = getDefaultDb() ;
+		
+		if(db == null){
+			
+			Log.e("AbstractDao", "zhouwei : insert db is null");
+			
+			return DB_EXECUTE_FAILED ;
+		}
+		
+		return db.saveObject(bean) > -1 ? DB_EXECUTE_SUCCESS : DB_EXECUTE_FAILED;
+	}
+
+	@Override
+	public int update(SurveyerInformation bean) {
+		
+		if(bean == null){
+			return DB_EXECUTE_FAILED ;
+		}
+		
+		final IAccessDatabase db = getDefaultDb();
+		
+		if(db == null){
+			
+			Log.e("AbstractDao", "zhouwei : update db is null");
+			
+			return DB_EXECUTE_FAILED ;
+		}
+		
+		return db.updateObject(bean) > -1 ? DB_EXECUTE_SUCCESS : DB_EXECUTE_FAILED;
+	}
+
+	@Override
+	public int delete(SurveyerInformation bean) {
+		
+		if(bean == null){
+			return DB_EXECUTE_FAILED ;
+		}
+		
+		final IAccessDatabase db = getDefaultDb();
+		
+		if(db == null){
+			
+			Log.e("AbstractDao", "zhouwei : delete db is null");
+			
+			return DB_EXECUTE_FAILED ;
+		}
+		
+		return db.deleteObject(bean) > -1 ? DB_EXECUTE_SUCCESS : DB_EXECUTE_FAILED;
+	}
+
 	public void deleteAll(){
 		
 		final IAccessDatabase mDatabase = getDefaultDb();
