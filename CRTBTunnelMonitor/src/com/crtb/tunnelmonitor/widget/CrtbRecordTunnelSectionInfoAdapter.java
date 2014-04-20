@@ -32,24 +32,32 @@ public final class CrtbRecordTunnelSectionInfoAdapter extends CrtbEntityAdapter<
 			
 			if(index == position){
 				item.setUsed(!item.isUsed());
-			} else {
-				item.setUsed(false);
 			}
 		}
 		
 		notifyDataSetChanged() ;
 	}
 	
-	protected TunnelCrossSectionIndex getSelectedSection(){
+	protected String getSelectedSection(){
+		
+		StringBuilder str = new StringBuilder() ;
+		boolean insert = false ;
 		
 		for(TunnelCrossSectionIndex item : mList){
 			
 			if(item.isUsed()){
-				return item ;
+				
+				if(insert){
+					str.append(",");
+				}
+				
+				str.append(item.getID());
+
+				insert = true ;
 			}
 		}
 		
-		return null ;
+		return str.toString() ;
 	}
 	
 	@Override

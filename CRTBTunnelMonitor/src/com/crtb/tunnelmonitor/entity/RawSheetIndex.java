@@ -3,9 +3,11 @@ package com.crtb.tunnelmonitor.entity;
 import java.io.Serializable;
 import java.util.Date;
 
+import org.zw.android.framework.db.ColumnBoolean;
 import org.zw.android.framework.db.ColumnDate;
 import org.zw.android.framework.db.ColumnDouble;
 import org.zw.android.framework.db.ColumnInt;
+import org.zw.android.framework.db.ColumnString;
 import org.zw.android.framework.db.ColumnText;
 import org.zw.android.framework.db.Table;
 import org.zw.android.framework.db.core.ColumnPrimaryKey;
@@ -19,7 +21,10 @@ import org.zw.android.framework.db.core.ColumnPrimaryKey.PrimaryKeyType;
  */
 @Table(TableName="RawSheetIndex")
 public class RawSheetIndex implements Serializable {
-
+	
+	public static final int CROSS_SECTION_TYPE_TUNNEL			= 1 ;
+	public static final int CROSS_SECTION_TYPE_SUBSIDENCES		= 2 ;
+	
 	@ColumnPrimaryKey(Type = PrimaryKeyType.AUTO)
 	@ColumnInt
 	private int ID;
@@ -37,21 +42,67 @@ public class RawSheetIndex implements Serializable {
 	@ColumnDouble
 	private double FACEDK ;					// 开挖面里程值
 	
+	@ColumnString(length=64)
+	private String prefix ;					// 前缀  ------扩展
+	
 	@ColumnText
 	private String FACEDESCRIPTION ;		// 施工工序
+	
+	@ColumnString(length=100)
+	private String Surveyer ;				// 测量人员  ------扩展
+	
+	@ColumnString(length=20)
+	private String CertificateID;			// 测量人员id------扩展
 	
 	@ColumnDouble
 	private double	TEMPERATURE ;			// 温度
 	
 	@ColumnText
-	private String CrossSectionIDs ;		// 断面ID序列
+	private String CrossSectionIDs ;		// 断面ID序列: 断面ID以逗号分隔
+											// TunnelCrossSectionIndex
+											// SubsidenceCrossSectionIndex
 
+	@ColumnBoolean
+	private boolean checked ;				// 是否选择
+	
 	public int getID() {
 		return ID;
 	}
 
 	public void setID(int iD) {
 		ID = iD;
+	}
+
+	public boolean isChecked() {
+		return checked;
+	}
+
+	public void setChecked(boolean checked) {
+		this.checked = checked;
+	}
+
+	public String getSurveyer() {
+		return Surveyer;
+	}
+
+	public void setSurveyer(String surveyer) {
+		Surveyer = surveyer;
+	}
+
+	public String getCertificateID() {
+		return CertificateID;
+	}
+
+	public void setCertificateID(String certificateID) {
+		CertificateID = certificateID;
+	}
+
+	public String getPrefix() {
+		return prefix;
+	}
+
+	public void setPrefix(String prefix) {
+		this.prefix = prefix;
 	}
 
 	public int getCrossSectionType() {

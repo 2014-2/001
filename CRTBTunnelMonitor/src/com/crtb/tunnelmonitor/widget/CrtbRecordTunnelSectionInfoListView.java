@@ -1,5 +1,6 @@
 package com.crtb.tunnelmonitor.widget;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Context;
@@ -9,7 +10,6 @@ import android.widget.AdapterView;
 
 import com.crtb.tunnelmonitor.dao.impl.v2.TunnelCrossSectionIndexDao;
 import com.crtb.tunnelmonitor.entity.TunnelCrossSectionIndex;
-import com.crtb.tunnelmonitor.utils.CrtbUtils;
 
 /**
  * 
@@ -19,8 +19,7 @@ import com.crtb.tunnelmonitor.utils.CrtbUtils;
 public class CrtbRecordTunnelSectionInfoListView extends CrtbBaseListView {
 	
 	private CrtbRecordTunnelSectionInfoAdapter mAdapter ;
-	private String firstSection ;
-	private boolean hasInit ;
+	private List<String> sectionIds = new ArrayList<String>() ;
 	
 	public CrtbRecordTunnelSectionInfoListView(Context context) {
 		this(context, null);
@@ -47,12 +46,20 @@ public class CrtbRecordTunnelSectionInfoListView extends CrtbBaseListView {
 		return mAdapter.getItem(position);
 	}
 	
-	public TunnelCrossSectionIndex getSelectedSection(){
+	public String getSelectedSection(){
 		return mAdapter.getSelectedSection();
 	}
 	
-	public void setFristSelected(String section){
-		firstSection	= section ;
+	public void setSectionIds(String section){
+		
+		if(section != null){
+			
+			String[] array = section.split(",");
+			
+			for(String id: array){
+				sectionIds.add(id);
+			}
+		}
 	}
 
 	@Override
@@ -70,18 +77,18 @@ public class CrtbRecordTunnelSectionInfoListView extends CrtbBaseListView {
 		
 		List<TunnelCrossSectionIndex> list = TunnelCrossSectionIndexDao.defaultDao().queryAllSection() ;
 		
-		if(list != null && !hasInit && firstSection != null){
+		if(list != null && sectionIds != null){
 			
 			for(TunnelCrossSectionIndex item : list){
 				
-				// 断面名称
-				String name = CrtbUtils.formatSectionName(item.getChainagePrefix(), (float)item.getChainage()) ;
-				
-				if(name.equals(firstSection)){
-					item.setUsed(true);
-					hasInit = true ;
+				for(String id : sectionIds){
+					if(id.equals(String.valueOf(item.getID()))){
+						item.setUsed(true);
+						break ;
+					}
 				}
 			}
+			
 		}
 		
 		mAdapter.loadEntityDatas(list);

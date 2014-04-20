@@ -7,7 +7,7 @@ import org.zw.android.framework.IAccessDatabase;
 import com.crtb.tunnelmonitor.entity.RawSheetIndex;
 
 /**
- * 全站仪
+ * 记录单信息表
  * 
  * @author zhouwei
  *
@@ -29,7 +29,8 @@ public class RawSheetIndexDao extends AbstractDao<RawSheetIndex> {
 		return _instance ;
 	}
 	
-	public List<RawSheetIndex> queryAllRawSheetIndex() {
+	// 隧道内记录单
+	public List<RawSheetIndex> queryTunnelSectionRawSheetIndex() {
 		
 		final IAccessDatabase mDatabase = getCurrentDb();
 		
@@ -37,8 +38,22 @@ public class RawSheetIndexDao extends AbstractDao<RawSheetIndex> {
 			return null ;
 		}
 		
-		String sql = "select * from RawSheetIndex";
+		String sql = "select * from RawSheetIndex where CrossSectionType = ? ";
 		
-		return mDatabase.queryObjects(sql, RawSheetIndex.class);
+		return mDatabase.queryObjects(sql, new String[]{String.valueOf(RawSheetIndex.CROSS_SECTION_TYPE_TUNNEL)}, RawSheetIndex.class);
 	}
+	
+	// 地表下沉断面记录单
+	public List<RawSheetIndex> queryAllSubsidenceSectionRawSheetIndex() {
+		
+		final IAccessDatabase mDatabase = getCurrentDb();
+		
+		if(mDatabase == null){
+			return null ;
+		}
+		
+		String sql = "select * from RawSheetIndex where CrossSectionType = ? ";
+		
+		return mDatabase.queryObjects(sql, new String[]{String.valueOf(RawSheetIndex.CROSS_SECTION_TYPE_SUBSIDENCES)}, RawSheetIndex.class);
+	} 
 }

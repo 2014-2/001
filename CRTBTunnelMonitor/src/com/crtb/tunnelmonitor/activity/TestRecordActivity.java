@@ -29,8 +29,7 @@ import android.widget.TextView;
 import com.crtb.tunnelmonitor.CommonObject;
 import com.crtb.tunnelmonitor.WorkFlowActivity;
 import com.crtb.tunnelmonitor.entity.MenuSystemItem;
-import com.crtb.tunnelmonitor.entity.SubsidenceTotalData;
-import com.crtb.tunnelmonitor.entity.TunnelSettlementTotalData;
+import com.crtb.tunnelmonitor.entity.RawSheetIndex;
 import com.crtb.tunnelmonitor.widget.CrtbTestRecordSubsidenceListView;
 import com.crtb.tunnelmonitor.widget.CrtbTestRecordTunnelSectionListView;
 
@@ -116,7 +115,7 @@ public class TestRecordActivity extends WorkFlowActivity implements OnPageChange
 			
 			if(currIndex == 0){
 				
-				TunnelSettlementTotalData bean = mTestTunnelSectionList.getSelectedSection() ;
+				RawSheetIndex bean = mTestTunnelSectionList.getSelectedSection() ;
 				
 				if(bean == null){
 					showText("请选择测量单");
@@ -130,7 +129,7 @@ public class TestRecordActivity extends WorkFlowActivity implements OnPageChange
 				}
 			} else {
 				
-				SubsidenceTotalData bean = mTestSubsidenceList.getSelectedSection() ;
+				RawSheetIndex bean = mTestSubsidenceList.getSelectedSection() ;
 				
 				if(bean == null){
 					showText("请选择测量单");

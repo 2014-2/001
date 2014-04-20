@@ -1,5 +1,6 @@
 package com.crtb.tunnelmonitor.widget;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Context;
@@ -13,8 +14,7 @@ import com.crtb.tunnelmonitor.entity.SubsidenceCrossSectionIndex;
 public class CrtbRecordSubsidenceSectionInfoListView extends CrtbBaseListView {
 	
 	private CrtbRecordSubsidenceSectionInfoAdapter mAdapter ;
-	private String firstSection ;
-	private boolean hasInit ;
+	private List<String> sectionIds = new ArrayList<String>() ;
 	
 	public CrtbRecordSubsidenceSectionInfoListView(Context context) {
 		this(context, null);
@@ -41,12 +41,20 @@ public class CrtbRecordSubsidenceSectionInfoListView extends CrtbBaseListView {
 		return mAdapter.getItem(position);
 	}
 	
-	public SubsidenceCrossSectionIndex getSelectedSection(){
+	public String getSelectedSection(){
 		return mAdapter.getSelectedSection();
 	}
 	
-	public void setFristSelected(String section){
-		firstSection	= section ;
+	public void setSectionIds(String section){
+		
+		if(section != null){
+			
+			String[] array = section.split(",");
+			
+			for(String id: array){
+				sectionIds.add(id);
+			}
+		}
 	}
 
 	@Override
@@ -64,12 +72,15 @@ public class CrtbRecordSubsidenceSectionInfoListView extends CrtbBaseListView {
 		
 		List<SubsidenceCrossSectionIndex> list = SubsidenceCrossSectionIndexDao.defaultDao().queryAllSection();
 
-		if(list != null && !hasInit && firstSection != null){
+		if(list != null && sectionIds != null){
 			
 			for(SubsidenceCrossSectionIndex item : list){
-				if(item.getSectionName().equals(firstSection)){
-					item.setUsed(true);
-					hasInit = true ;
+				
+				for(String id : sectionIds){
+					
+					if(id.equals(String.valueOf(item.getID()))){
+						item.setUsed(true);
+					}
 				}
 			}
 		}

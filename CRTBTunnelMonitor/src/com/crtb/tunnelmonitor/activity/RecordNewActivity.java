@@ -29,10 +29,9 @@ import android.widget.TextView;
 
 import com.crtb.tunnelmonitor.CommonObject;
 import com.crtb.tunnelmonitor.WorkFlowActivity;
-import com.crtb.tunnelmonitor.dao.impl.v2.RecordTunnelSettlementTotalDataDao;
+import com.crtb.tunnelmonitor.dao.impl.v2.RawSheetIndexDao;
 import com.crtb.tunnelmonitor.entity.ProjectIndex;
-import com.crtb.tunnelmonitor.entity.TunnelCrossSectionIndex;
-import com.crtb.tunnelmonitor.entity.TunnelSettlementTotalData;
+import com.crtb.tunnelmonitor.entity.RawSheetIndex;
 import com.crtb.tunnelmonitor.widget.CrtbRecordTunnelSectionInfoListView;
 
 /**
@@ -93,7 +92,7 @@ public class RecordNewActivity extends WorkFlowActivity implements OnPageChangeL
     @InjectView(id=R.id.section_use_list,parent="mSectionListLayout")
     private CrtbRecordTunnelSectionInfoListView sectionListView ;
     
-	private TunnelSettlementTotalData recordInfo = null;
+	private RawSheetIndex recordInfo = null;
 	
 	private ProjectIndex mCurrentWorkPlan;
     
@@ -128,14 +127,14 @@ public class RecordNewActivity extends WorkFlowActivity implements OnPageChangeL
     	if(recordInfo != null){
     		
     		setTopbarTitle("编辑隧道内断面记录单");
-			sectionListView.setFristSelected(recordInfo.getSectionName());
+			sectionListView.setSectionIds(recordInfo.getCrossSectionIDs());
 			
 			section_new_et_prefix.setText(recordInfo.getPrefix());
-			record_Chainage.setText(String.valueOf(recordInfo.getFacedk()));
-			record_Person.setText(recordInfo.getSurveyor());
-			record_Card.setText(recordInfo.getSurveyorID());
-			record_C.setText(String.valueOf(recordInfo.getTemperature()));
-			record_dotype.setText(recordInfo.getFacedescription());
+			record_Chainage.setText(String.valueOf(recordInfo.getFACEDK()));
+			record_Person.setText(recordInfo.getSurveyer());
+			record_Card.setText(recordInfo.getCertificateID());
+			record_C.setText(String.valueOf(recordInfo.getTEMPERATURE()));
+			record_dotype.setText(recordInfo.getFACEDESCRIPTION());
     	}
     }
     
@@ -175,9 +174,9 @@ public class RecordNewActivity extends WorkFlowActivity implements OnPageChangeL
 				return;
 			}
 			
-			TunnelCrossSectionIndex section = sectionListView.getSelectedSection() ;
+			String sections = sectionListView.getSelectedSection() ;
 			
-			if(section == null){
+			if(StringUtils.isEmpty(sections)){
 				showText("请选择断面");
 				return;
 			}
@@ -186,37 +185,39 @@ public class RecordNewActivity extends WorkFlowActivity implements OnPageChangeL
 			try{
 				temp	= Float.valueOf(temperature) ;
 			}catch(Exception e){
-				
+				e.printStackTrace() ;
 			}
 			
 			if(recordInfo == null){
 				
-				recordInfo	= new TunnelSettlementTotalData() ;
+				recordInfo	= new RawSheetIndex() ;
 				
 				// 基本信息
+				recordInfo.setCrossSectionType(RawSheetIndex.CROSS_SECTION_TYPE_TUNNEL);
 				recordInfo.setPrefix(prefix);
-				recordInfo.setFacedk(Float.valueOf(chainage));
+				recordInfo.setFACEDK(Double.valueOf(chainage));
 				recordInfo.setCreateTime(DateUtils.toDate(currentTime,DateUtils.PART_TIME_FORMAT));
-				recordInfo.setSurveyor(person);
-				recordInfo.setSurveyorID(Integer.valueOf(idcard));
-				recordInfo.setSectionName(section.getSectionName());
-				recordInfo.setTemperature(temp);
-				recordInfo.setFacedescription(descr);
+				recordInfo.setSurveyer(person);
+				recordInfo.setCertificateID(idcard);
+				recordInfo.setTEMPERATURE(temp);
+				recordInfo.setFACEDESCRIPTION(descr);
+				recordInfo.setCrossSectionIDs(sections);
 				
-				RecordTunnelSettlementTotalDataDao.defaultDao().insert(recordInfo);
+				RawSheetIndexDao.defaultDao().insert(recordInfo);
 			} else {
 				
 				// 基本信息
+				recordInfo.setCrossSectionType(RawSheetIndex.CROSS_SECTION_TYPE_TUNNEL);
 				recordInfo.setPrefix(prefix);
-				recordInfo.setFacedk(Float.valueOf(chainage));
+				recordInfo.setFACEDK(Double.valueOf(chainage));
 				recordInfo.setCreateTime(DateUtils.toDate(currentTime,DateUtils.PART_TIME_FORMAT));
-				recordInfo.setSurveyor(person);
-				recordInfo.setSurveyorID(Integer.valueOf(idcard));
-				recordInfo.setSectionName(section.getSectionName());
-				recordInfo.setTemperature(temp);
-				recordInfo.setFacedescription(descr);
+				recordInfo.setSurveyer(person);
+				recordInfo.setCertificateID(idcard);
+				recordInfo.setTEMPERATURE(temp);
+				recordInfo.setFACEDESCRIPTION(descr);
+				recordInfo.setCrossSectionIDs(sections);
 				
-				RecordTunnelSettlementTotalDataDao.defaultDao().update(recordInfo);
+				RawSheetIndexDao.defaultDao().update(recordInfo);
 			}
 			
 			setResult(RESULT_OK);

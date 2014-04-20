@@ -1,8 +1,5 @@
 package com.crtb.tunnelmonitor.activity;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 import org.zw.android.framework.ioc.InjectCore;
 import org.zw.android.framework.ioc.InjectLayout;
 
@@ -18,6 +15,7 @@ import com.crtb.tssurveyprovider.ISurveyProvider;
 import com.crtb.tssurveyprovider.TSSurveyProvider;
 import com.crtb.tunnelmonitor.CommonObject;
 import com.crtb.tunnelmonitor.WorkFlowActivity;
+import com.crtb.tunnelmonitor.entity.RawSheetIndex;
 import com.crtb.tunnelmonitor.entity.SubsidenceTotalData;
 import com.crtb.tunnelmonitor.entity.TunnelSettlementTotalData;
 import com.crtb.tunnelmonitor.utils.Time;
@@ -43,11 +41,11 @@ public class TestSectionExecuteActivity extends WorkFlowActivity {
 		Object bean = CommonObject.findObject(KEY_TEST_OBJECT);
 		
 		// title
-		if(bean instanceof TunnelSettlementTotalData){
-			setTopbarTitle(((TunnelSettlementTotalData)bean).getSectionName());
-		} else if(bean instanceof SubsidenceTotalData){
-			setTopbarTitle(((SubsidenceTotalData)bean).getSectionName());
-		}
+//		if(bean instanceof RawSheetIndex){
+//			setTopbarTitle(((RawSheetIndex)bean).getSectionName());
+//		} else if(bean instanceof SubsidenceTotalData){
+//			setTopbarTitle(((SubsidenceTotalData)bean).getSectionName());
+//		}
 		
 		// 测量按钮事件
 		findViewById(R.id.bnt_test_a).setOnClickListener(mMeasListener);

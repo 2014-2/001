@@ -31,24 +31,32 @@ public class CrtbRecordSubsidenceSectionInfoAdapter extends CrtbEntityAdapter<Su
 			
 			if(index == position){
 				item.setUsed(!item.isUsed());
-			} else {
-				item.setUsed(false);
 			}
 		}
 		
 		notifyDataSetChanged() ;
 	}
 	
-	protected SubsidenceCrossSectionIndex getSelectedSection(){
+	protected String getSelectedSection(){
+		
+		StringBuilder str = new StringBuilder() ;
+		boolean inster = false ;
 		
 		for(SubsidenceCrossSectionIndex item : mList){
 			
 			if(item.isUsed()){
-				return item ;
+				
+				if(inster){
+					str.append(",");
+				}
+				
+				str.append(item.getSectionName());
+				
+				inster	= true ;
 			}
 		}
 		
-		return null ;
+		return str.toString() ;
 	}
 	
 	@Override

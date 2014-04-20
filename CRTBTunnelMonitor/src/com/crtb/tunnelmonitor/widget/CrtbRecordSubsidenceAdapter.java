@@ -11,10 +11,10 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.crtb.tunnelmonitor.activity.R;
-import com.crtb.tunnelmonitor.entity.SubsidenceTotalData;
+import com.crtb.tunnelmonitor.entity.RawSheetIndex;
 import com.crtb.tunnelmonitor.utils.CrtbUtils;
 
-public class CrtbRecordSubsidenceAdapter extends CrtbEntityAdapter<SubsidenceTotalData> {
+public class CrtbRecordSubsidenceAdapter extends CrtbEntityAdapter<RawSheetIndex> {
 
 	protected CrtbRecordSubsidenceAdapter(Context context) {
 		super(context);
@@ -23,8 +23,8 @@ public class CrtbRecordSubsidenceAdapter extends CrtbEntityAdapter<SubsidenceTot
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		
-		HolderView holder 					= null ;
-		SubsidenceTotalData item 			= getItem(position);
+		HolderView holder 			= null ;
+		RawSheetIndex item 			= getItem(position);
 		
 		if(convertView == null){
 			
@@ -36,7 +36,7 @@ public class CrtbRecordSubsidenceAdapter extends CrtbEntityAdapter<SubsidenceTot
 		}
 		
 		holder.chainage.setText(DateUtils.toDateString(item.getCreateTime()));
-		holder.excavation.setText(CrtbUtils.formatSectionName(item.getPrefix(), item.getFacedk()));
+		holder.excavation.setText(CrtbUtils.formatSectionName(item.getPrefix(), (float)item.getFACEDK()));
 		
 		return convertView;
 	}

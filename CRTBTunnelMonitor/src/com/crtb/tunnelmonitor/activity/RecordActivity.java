@@ -28,11 +28,9 @@ import android.widget.TextView;
 
 import com.crtb.tunnelmonitor.CommonObject;
 import com.crtb.tunnelmonitor.WorkFlowActivity;
-import com.crtb.tunnelmonitor.dao.impl.v2.RecordSubsidenceTotalDataDao;
-import com.crtb.tunnelmonitor.dao.impl.v2.RecordTunnelSettlementTotalDataDao;
+import com.crtb.tunnelmonitor.dao.impl.v2.RawSheetIndexDao;
 import com.crtb.tunnelmonitor.entity.MenuSystemItem;
-import com.crtb.tunnelmonitor.entity.SubsidenceTotalData;
-import com.crtb.tunnelmonitor.entity.TunnelSettlementTotalData;
+import com.crtb.tunnelmonitor.entity.RawSheetIndex;
 import com.crtb.tunnelmonitor.mydefine.CrtbDialogDelete;
 import com.crtb.tunnelmonitor.mydefine.CrtbDialogDelete.IButtonOnClick;
 import com.crtb.tunnelmonitor.mydefine.CrtbDialogResult;
@@ -94,7 +92,7 @@ public class RecordActivity extends WorkFlowActivity implements OnPageChangeList
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,int position, long id) {
 				
-				TunnelSettlementTotalData bean = mTunnelSectionList.getItem(position) ;
+				RawSheetIndex bean = mTunnelSectionList.getItem(position) ;
 				
 				showListActionMenu(getString(R.string.work_plan_title), new String[]{"打开","编辑","删除"}, bean);
 			}
@@ -105,7 +103,7 @@ public class RecordActivity extends WorkFlowActivity implements OnPageChangeList
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,int position, long id) {
 				
-				SubsidenceTotalData bean = mSubsidenceSectionList.getItem(position) ;
+				RawSheetIndex bean = mSubsidenceSectionList.getItem(position) ;
 				
 				showListActionMenu(getString(R.string.work_plan_title), new String[]{"打开","编辑","删除"}, bean);
 			}
@@ -150,79 +148,88 @@ public class RecordActivity extends WorkFlowActivity implements OnPageChangeList
 	@Override
 	protected void onListItemSelected(Object bean, int position, String menu) {
 		
-		if(bean instanceof TunnelSettlementTotalData){
+		if(bean instanceof RawSheetIndex){
 			
-			final TunnelSettlementTotalData info = (TunnelSettlementTotalData)bean ;
+			final RawSheetIndex info = (RawSheetIndex) bean ;
 			
+			// 打开
 			if(position == 0){
 				
-			} else if(position == 1){
-				
-				CommonObject.putObject(RecordNewActivity.KEY_RECORD_TUNNEL_OBJECT, info);
-				
-				Intent intent = new Intent() ;
-				intent.setClass(RecordActivity.this, RecordNewActivity.class);
-				startActivity(intent);
-				
-			} else if(position == 2){
-				
-				CrtbDialogDelete delete = new CrtbDialogDelete(RecordActivity.this,R.drawable.ic_warnning,"执行该操作将删除操作面的全部数据,不可恢复!");
-				
-				delete.setButtonClick(new IButtonOnClick() {
-					
-					@Override
-					public void onClick(int id) {
-						
-						if(id == CrtbDialogDelete.BUTTON_ID_CONFIRM){
-							
-							int code = RecordTunnelSettlementTotalDataDao.defaultDao().delete(info) ;
-							
-							if(code == RecordTunnelSettlementTotalDataDao.DB_EXECUTE_SUCCESS){
-								CrtbDialogResult.createDeleteSuccessDialog(RecordActivity.this).show();
-								mTunnelSectionList.onReload() ;
-							}
-						}
-					}
-				}) ;
-				
-				delete.show(); 
-			}
-		} else if(bean instanceof SubsidenceTotalData){
-			
-			final SubsidenceTotalData info = (SubsidenceTotalData)bean ;
-			
-			if(position == 0){
-				
-			} else if(position == 1){
-				
-				CommonObject.putObject(RecordNewSubsidenceActivity.KEY_RECORD_SUBSIDENCE_OBJECT, info);
+			} 
+			// 编辑
+			else if(position == 1){
 				
 				Intent intent = new Intent() ;
-				intent.setClass(RecordActivity.this, RecordNewSubsidenceActivity.class);
-				startActivity(intent);
 				
-			} else if(position == 2){
-				
-				CrtbDialogDelete delete = new CrtbDialogDelete(RecordActivity.this,R.drawable.ic_warnning,"执行该操作将删除操作面的全部数据,不可恢复!");
-				
-				delete.setButtonClick(new IButtonOnClick() {
+				// 隧道内断面
+				if(info.getCrossSectionType() == RawSheetIndex.CROSS_SECTION_TYPE_TUNNEL){
 					
-					@Override
-					public void onClick(int id) {
+					CommonObject.putObject(RecordNewActivity.KEY_RECORD_TUNNEL_OBJECT, info);
+					intent.setClass(RecordActivity.this, RecordNewActivity.class);
+					startActivity(intent);
+					
+				} 
+				// 地表下沉
+				else if(info.getCrossSectionType() == RawSheetIndex.CROSS_SECTION_TYPE_SUBSIDENCES){
+					
+					CommonObject.putObject(RecordNewSubsidenceActivity.KEY_RECORD_SUBSIDENCE_OBJECT, info);
+					
+					intent.setClass(RecordActivity.this, RecordNewSubsidenceActivity.class);
+					startActivity(intent);
+				}
+				
+			} 
+			// 删除
+			else if(position == 2){
+				
+				// 隧道内
+				if(info.getCrossSectionType() == RawSheetIndex.CROSS_SECTION_TYPE_TUNNEL){
+					
+					CrtbDialogDelete delete = new CrtbDialogDelete(RecordActivity.this,R.drawable.ic_warnning,"执行该操作将删除操作面的全部数据,不可恢复!");
+					
+					delete.setButtonClick(new IButtonOnClick() {
 						
-						if(id == CrtbDialogDelete.BUTTON_ID_CONFIRM){
+						@Override
+						public void onClick(int id) {
 							
-							int code = RecordSubsidenceTotalDataDao.defaultDao().delete(info) ;
-							
-							if(code == RecordSubsidenceTotalDataDao.DB_EXECUTE_SUCCESS){
-								CrtbDialogResult.createDeleteSuccessDialog(RecordActivity.this).show();
-								mSubsidenceSectionList.onReload() ;
+							if(id == CrtbDialogDelete.BUTTON_ID_CONFIRM){
+								
+								int code = RawSheetIndexDao.defaultDao().delete(info) ;
+								
+								if(code == RawSheetIndexDao.DB_EXECUTE_SUCCESS){
+									CrtbDialogResult.createDeleteSuccessDialog(RecordActivity.this).show();
+									mTunnelSectionList.onReload() ;
+								}
 							}
 						}
-					}
-				}) ;
-				
-				delete.show(); 
+					}) ;
+					
+					delete.show(); 
+				}
+				// 地表下沉
+				else if(info.getCrossSectionType() == RawSheetIndex.CROSS_SECTION_TYPE_SUBSIDENCES){
+					
+					CrtbDialogDelete delete = new CrtbDialogDelete(RecordActivity.this,R.drawable.ic_warnning,"执行该操作将删除操作面的全部数据,不可恢复!");
+					
+					delete.setButtonClick(new IButtonOnClick() {
+						
+						@Override
+						public void onClick(int id) {
+							
+							if(id == CrtbDialogDelete.BUTTON_ID_CONFIRM){
+								
+								int code = RawSheetIndexDao.defaultDao().delete(info) ;
+								
+								if(code == RawSheetIndexDao.DB_EXECUTE_SUCCESS){
+									CrtbDialogResult.createDeleteSuccessDialog(RecordActivity.this).show();
+									mSubsidenceSectionList.onReload() ;
+								}
+							}
+						}
+					}) ;
+					
+					delete.show(); 
+				}
 			}
 		}
 	}
@@ -366,142 +373,4 @@ public class RecordActivity extends WorkFlowActivity implements OnPageChangeList
 			}
 		}
 	};
-
-//	public void Layout1() {
-//		/** 隧道内断面界面的控件 */
-//		/** List集合中存儲的是View,获取界面上的控件,就List.get(0),0就是集合中第一个界面,1就是集合中第二个界面 */
-//		listView = (ListView) list.get(0).findViewById(R.id.record_lv_dibiao);
-//
-//		adapter = new RecordAdapter(RecordActivity.this, infos);
-//		listView.setAdapter(adapter);
-//		// listview的行点击
-//		listView.setOnItemLongClickListener(new OnItemLongClickListener() {
-//
-//			@Override
-//			public boolean onItemLongClick(AdapterView<?> parent, View view,
-//					int position, long id) {
-//				iListPos1 = position;
-//				// 对话框的选项
-//				//CharSequence items[] = { "打开", "编辑", "导出", "删除" };
-//				// 实例化对话
-//				new AlertDialog.Builder(RecordActivity.this)
-//						.setItems(/*items*/Constant.RecordRowClickItems, new DialogInterface.OnClickListener() {
-//
-//							@Override
-//							public void onClick(DialogInterface dialog,
-//									int which) {
-//								AppCRTBApplication CurApp = ((AppCRTBApplication)getApplicationContext());
-//								RecordInfo item = (RecordInfo)listView.getItemAtPosition(iListPos1);
-//								switch (which) {
-//								case 0:// 编辑
-//									Intent intent = new Intent(RecordActivity.this,
-//											RecordNewActivity.class);
-//									Bundle mBundle = new Bundle();  
-//									mBundle.putInt(Constant.Select_RecordRowClickItemsName_Name, 2);
-//							        mBundle.putParcelable(Constant.Select_RecordRowClickItemsName_Data, item);
-//							        intent.putExtras(mBundle);
-//									RecordActivity.this.startActivityForResult(intent,0);
-//									//startActivity(intent);
-//									break;
-//								case 1:// 删除
-////									WorkInfos Curw = CurApp.GetCurWork();
-////									TunnelCrossSectionDaoImpl impl = new TunnelCrossSectionDaoImpl(RecordActivity.this,Curw.getProjectName());
-////									int iRet = impl.DeleteSection(item.getId());
-////									switch (iRet) {
-////									case 0:
-////										Toast.makeText(RecordActivity.this, "删除失败", 3000).show();
-////										break;
-////									case 1:
-////										Curw.DelTunnelCrossSectionInfo(item);
-////										CurApp.UpdateWork(Curw);
-////										adapter.notifyDataSetChanged();
-////										Toast.makeText(RecordActivity.this, "删除成功", 3000).show();
-////										break;
-////									case -1:
-////										Toast.makeText(RecordActivity.this, "删除的断面中存在数据,不可删除", 3000).show();
-////										break;
-////									default:
-////										break;
-////									}
-//									break;
-//								default:
-//									break;
-//								}
-//
-//							}
-//						})
-//						.setCancelable(false)
-//						.show().setCanceledOnTouchOutside(true);// 显示对话框
-//				return true;
-//			}
-//		});
-//
-//	}
-
-//	public void Layout2() {
-//		/** 隧道内断面界面的控件 */
-//		/** List集合中存儲的是View,获取界面上的控件,就List.get(0),0就是集合中第一个界面,1就是集合中第二个界面 */
-//		listView1 = (ListView) list.get(1).findViewById(R.id.record_lv_suidao);
-//
-//		adapter1 = new RecordAdapter(RecordActivity.this, infos1);
-//		listView1.setAdapter(adapter1);
-//		// listview的行点击
-//		listView1.setOnItemLongClickListener(new OnItemLongClickListener() {
-//
-//			@Override
-//			public boolean onItemLongClick(AdapterView<?> parent, View view,
-//					int position, long id) {
-//				iListPos2 = position;
-//				new AlertDialog.Builder(RecordActivity.this)
-//						.setItems(/*items*/Constant.RecordRowClickItems, new DialogInterface.OnClickListener() {
-//
-//							@Override
-//							public void onClick(DialogInterface dialog,
-//									int which) {
-//								AppCRTBApplication CurApp = ((AppCRTBApplication)getApplicationContext());
-//								RecordInfo item = (RecordInfo)listView1.getItemAtPosition(iListPos2);
-//								switch (which) {
-//								case 0:// 编辑
-//									Intent intent = new Intent(RecordActivity.this,
-//											RecordNewActivity.class);
-//									Bundle mBundle = new Bundle();  
-//									mBundle.putInt(Constant.Select_RecordRowClickItemsName_Name, 4);
-//							        mBundle.putParcelable(Constant.Select_RecordRowClickItemsName_Data, item);
-//							        intent.putExtras(mBundle);
-//									RecordActivity.this.startActivityForResult(intent,0);
-//									//startActivity(intent);
-//									break;
-//								case 1:// 删除
-////									WorkInfos Curw = CurApp.GetCurWork();
-////									SubsidenceCrossSectionDaoImpl impl = new SubsidenceCrossSectionDaoImpl(RecordActivity.this,Curw.getProjectName());
-////									int iRet = impl.DeleteSubsidenceCrossSection(item.getId());
-////									switch (iRet) {
-////									case 0:
-////										Toast.makeText(RecordActivity.this, "删除失败", 3000).show();
-////										break;
-////									case 1:
-////										Curw.DelSubsidenceCrossSectionInfo(item);
-////										CurApp.UpdateWork(Curw);
-////										adapter1.notifyDataSetChanged();
-////										Toast.makeText(RecordActivity.this, "删除成功", 3000).show();
-////										break;
-////									case -1:
-////										Toast.makeText(RecordActivity.this, "删除的断面中存在数据,不可删除", 3000).show();
-////										break;
-////									default:
-////										break;
-////									}
-//									break;
-//								default:
-//									break;
-//								}
-//
-//							}
-//						})
-//						.setCancelable(false)
-//						.show().setCanceledOnTouchOutside(true);// 显示对话框
-//				return true;
-//			}
-//		});
-//	}
 }

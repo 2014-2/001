@@ -3,7 +3,6 @@ package com.crtb.tunnelmonitor.entity;
 import java.io.Serializable;
 import java.util.Date;
 
-import org.zw.android.framework.db.ColumnBoolean;
 import org.zw.android.framework.db.ColumnDate;
 import org.zw.android.framework.db.ColumnDouble;
 import org.zw.android.framework.db.ColumnFloat;
@@ -69,7 +68,6 @@ public class SubsidenceCrossSectionIndex implements Serializable {
 	@ColumnString(length = 255)
 	private String ROCKGRADE;			// 围岩级别
 	
-	@ColumnBoolean
 	private boolean used;
 
 	public int getID() {

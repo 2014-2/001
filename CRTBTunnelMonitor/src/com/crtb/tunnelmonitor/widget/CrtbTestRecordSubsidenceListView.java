@@ -7,8 +7,8 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.AdapterView;
 
-import com.crtb.tunnelmonitor.dao.impl.v2.RecordSubsidenceTotalDataDao;
-import com.crtb.tunnelmonitor.entity.SubsidenceTotalData;
+import com.crtb.tunnelmonitor.dao.impl.v2.RawSheetIndexDao;
+import com.crtb.tunnelmonitor.entity.RawSheetIndex;
 
 /**
  * 下沉断面测量单
@@ -42,11 +42,11 @@ public final class CrtbTestRecordSubsidenceListView extends CrtbBaseListView {
 		}) ;
 	}
 	
-	public SubsidenceTotalData getItem(int position){
+	public RawSheetIndex getItem(int position){
 		return mAdapter.getItem(position);
 	}
 	
-	public SubsidenceTotalData getSelectedSection(){
+	public RawSheetIndex getSelectedSection(){
 		return mAdapter.getSelectedSection();
 	}
 	
@@ -63,7 +63,7 @@ public final class CrtbTestRecordSubsidenceListView extends CrtbBaseListView {
 	@Override
 	public void onReload() {
 		
-		List<SubsidenceTotalData> list = RecordSubsidenceTotalDataDao.defaultDao().queryAllSection() ;
+		List<RawSheetIndex> list = RawSheetIndexDao.defaultDao().queryAllSubsidenceSectionRawSheetIndex();
 		mAdapter.loadEntityDatas(list);
 	}
 	

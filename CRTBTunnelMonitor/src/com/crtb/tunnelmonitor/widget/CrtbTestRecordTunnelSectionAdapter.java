@@ -10,8 +10,9 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.crtb.tunnelmonitor.activity.R;
-import com.crtb.tunnelmonitor.dao.impl.v2.TunnelSettlementTotalDataDao;
-import com.crtb.tunnelmonitor.entity.TunnelSettlementTotalData;
+import com.crtb.tunnelmonitor.dao.impl.v2.RawSheetIndexDao;
+import com.crtb.tunnelmonitor.entity.RawSheetIndex;
+import com.crtb.tunnelmonitor.utils.CrtbUtils;
 
 /**
  * 隧道内断面测量单
@@ -19,7 +20,7 @@ import com.crtb.tunnelmonitor.entity.TunnelSettlementTotalData;
  * @author zhouwei
  *
  */
-public class CrtbTestRecordTunnelSectionAdapter extends CrtbEntityAdapter<TunnelSettlementTotalData> {
+public class CrtbTestRecordTunnelSectionAdapter extends CrtbEntityAdapter<RawSheetIndex> {
 
 	protected CrtbTestRecordTunnelSectionAdapter(Context context) {
 		super(context);
@@ -27,11 +28,11 @@ public class CrtbTestRecordTunnelSectionAdapter extends CrtbEntityAdapter<Tunnel
 	
 	protected void changeStatus(int position){
 		
-		TunnelSettlementTotalDataDao dao = TunnelSettlementTotalDataDao.defaultDao() ;
+		RawSheetIndexDao dao = RawSheetIndexDao.defaultDao() ;
 		
 		for(int index = 0 ,size = mList.size() ; index < size ; index++){
 			
-			TunnelSettlementTotalData item = mList.get(index) ;
+			RawSheetIndex item = mList.get(index) ;
 			
 			if(index == position){
 				item.setChecked(!item.isChecked());
@@ -42,9 +43,9 @@ public class CrtbTestRecordTunnelSectionAdapter extends CrtbEntityAdapter<Tunnel
 		notifyDataSetChanged() ;
 	}
 	
-	protected TunnelSettlementTotalData getSelectedSection(){
+	protected RawSheetIndex getSelectedSection(){
 		
-		for(TunnelSettlementTotalData item : mList){
+		for(RawSheetIndex item : mList){
 			
 			if(item.isChecked()){
 				return item ;
@@ -58,7 +59,7 @@ public class CrtbTestRecordTunnelSectionAdapter extends CrtbEntityAdapter<Tunnel
 	public View getView(int position, View convertView, ViewGroup parent) {
 		
 		HolderView holder 	= null ;
-		TunnelSettlementTotalData item 	= getItem(position);
+		RawSheetIndex item 	= getItem(position);
 		
 		if(convertView == null){
 			holder		= new HolderView() ;
@@ -69,7 +70,7 @@ public class CrtbTestRecordTunnelSectionAdapter extends CrtbEntityAdapter<Tunnel
 		}
 		
 		holder.recordNo.setText(String.valueOf(item.getID()));
-		holder.recordName.setText(item.getPrefix());
+		holder.recordName.setText(CrtbUtils.formatSectionName(item.getPrefix(),(float)item.getFACEDK()));
 		
 		if(!item.isChecked()){
 			holder.status.setBackgroundResource(R.drawable.no);

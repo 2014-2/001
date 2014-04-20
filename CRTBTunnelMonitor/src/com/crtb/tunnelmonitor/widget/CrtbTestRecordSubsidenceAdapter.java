@@ -10,8 +10,9 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.crtb.tunnelmonitor.activity.R;
-import com.crtb.tunnelmonitor.dao.impl.v2.SubsidenceTotalDataDao;
-import com.crtb.tunnelmonitor.entity.SubsidenceTotalData;
+import com.crtb.tunnelmonitor.dao.impl.v2.RawSheetIndexDao;
+import com.crtb.tunnelmonitor.entity.RawSheetIndex;
+import com.crtb.tunnelmonitor.utils.CrtbUtils;
 
 /**
  * 地表下沉断面测量单
@@ -19,7 +20,7 @@ import com.crtb.tunnelmonitor.entity.SubsidenceTotalData;
  * @author zhouwei
  *
  */
-public class CrtbTestRecordSubsidenceAdapter extends CrtbEntityAdapter<SubsidenceTotalData> {
+public class CrtbTestRecordSubsidenceAdapter extends CrtbEntityAdapter<RawSheetIndex> {
 
 	protected CrtbTestRecordSubsidenceAdapter(Context context) {
 		super(context);
@@ -27,11 +28,11 @@ public class CrtbTestRecordSubsidenceAdapter extends CrtbEntityAdapter<Subsidenc
 
 	protected void changeStatus(int position){
 		
-		SubsidenceTotalDataDao dao = SubsidenceTotalDataDao.defaultDao() ;
+		RawSheetIndexDao dao = RawSheetIndexDao.defaultDao() ;
 		
 		for(int index = 0 ,size = mList.size() ; index < size ; index++){
 			
-			SubsidenceTotalData item = mList.get(index) ;
+			RawSheetIndex item = mList.get(index) ;
 			
 			if(index == position){
 				item.setChecked(!item.isChecked());
@@ -42,9 +43,9 @@ public class CrtbTestRecordSubsidenceAdapter extends CrtbEntityAdapter<Subsidenc
 		notifyDataSetChanged() ;
 	}
 	
-	protected SubsidenceTotalData getSelectedSection(){
+	protected RawSheetIndex getSelectedSection(){
 		
-		for(SubsidenceTotalData item : mList){
+		for(RawSheetIndex item : mList){
 			
 			if(item.isChecked()){
 				return item ;
@@ -58,7 +59,7 @@ public class CrtbTestRecordSubsidenceAdapter extends CrtbEntityAdapter<Subsidenc
 	public View getView(int position, View convertView, ViewGroup parent) {
 		
 		HolderView holder 	= null ;
-		SubsidenceTotalData item = getItem(position);
+		RawSheetIndex item 	= getItem(position);
 		
 		if(convertView == null){
 			holder		= new HolderView() ;
@@ -69,7 +70,7 @@ public class CrtbTestRecordSubsidenceAdapter extends CrtbEntityAdapter<Subsidenc
 		}
 		
 		holder.recordNo.setText(String.valueOf(item.getID()));
-		holder.recordName.setText(item.getPrefix());
+		holder.recordName.setText(CrtbUtils.formatSectionName(item.getPrefix(),(float)item.getFACEDK()));
 		
 		if(!item.isChecked()){
 			holder.status.setBackgroundResource(R.drawable.no);

@@ -269,6 +269,9 @@ public class SectionActivity extends WorkFlowActivity implements OnPageChangeLis
 		String name = menu.getName();
 
 		if (name.equals(getString(R.string.common_create_new))) {
+			
+			CommonObject.remove(SectionNewActivity.KEY_NEW_TUNNEL_SECTION_OBJECT);
+			CommonObject.remove(SectionNewSubsidenceActivity.KEY_NEW_SUBSIDENCE_SECTION_OBJECT);
 
 			Intent intent = new Intent();
 

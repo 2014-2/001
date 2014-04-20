@@ -242,6 +242,8 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 			section_new_et_name.setText(sectionInfo.getSectionName());
 			section_new_et_calendar.setText(DateUtils.toDateString(sectionInfo.getInBuiltTime()));
 			section_new_et_width.setText(String.valueOf(sectionInfo.getWidth()));
+			
+			section_new_sp.setSelection(CrtbUtils.getExcavateMethod(sectionInfo.getExcavateMethod()));
 		}
 	}
 
@@ -332,8 +334,7 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 				sectionInfo.setWidth(Float.valueOf(width));
 				
 				// excavation
-				//TODO: 需要修改参数类型
-				//sectionInfo.setExcavateMethod((int)section_new_sp.getSelectedItemId());
+				sectionInfo.setExcavateMethod((String)section_new_sp.getSelectedItem());
 				
 				TunnelCrossSectionIndexDao.defaultDao().insert(sectionInfo);
 			} else {
@@ -346,8 +347,7 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 				sectionInfo.setWidth(Float.valueOf(width));
 				
 				// excavation
-				//TODO: 需要修改参数类型
-				//sectionInfo.setExcavateMethod((int)section_new_sp.getSelectedItemId());
+				sectionInfo.setExcavateMethod((String)section_new_sp.getSelectedItem());
 				
 				TunnelCrossSectionIndexDao.defaultDao().update(sectionInfo);
 			}
