@@ -68,7 +68,7 @@ public abstract class AbstractDao<T> {
 		
 		if(db == null){
 			
-			Log.e("AbstractDao", "zhouwei : insert db is null");
+			Log.e(TAG, "zhouwei : insert db is null");
 			
 			return DB_EXECUTE_FAILED ;
 		}
@@ -86,7 +86,7 @@ public abstract class AbstractDao<T> {
 		
 		if(db == null){
 			
-			Log.e("AbstractDao", "zhouwei : update db is null");
+			Log.e(TAG, "zhouwei : update db is null");
 			
 			return DB_EXECUTE_FAILED ;
 		}
@@ -104,7 +104,7 @@ public abstract class AbstractDao<T> {
 		
 		if(db == null){
 			
-			Log.e("AbstractDao", "zhouwei : delete db is null");
+			Log.e(TAG, "zhouwei : delete db is null");
 			
 			return DB_EXECUTE_FAILED ;
 		}
@@ -112,13 +112,13 @@ public abstract class AbstractDao<T> {
 		return db.deleteObject(bean) > -1 ? DB_EXECUTE_SUCCESS : DB_EXECUTE_FAILED;
 	} 
 	
-	public final void executeSql(String sql , String[] params){
+	public void executeSql(String sql , String[] params){
 		
 		final IAccessDatabase db = getCurrentDb();
 		
 		if(db == null){
 			
-			Log.e("AbstractDao", "zhouwei : executeSql db is null");
+			Log.e(TAG, "zhouwei : executeSql db is null");
 			
 			return ;
 		}
