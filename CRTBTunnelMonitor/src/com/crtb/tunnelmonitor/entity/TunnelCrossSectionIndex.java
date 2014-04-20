@@ -27,8 +27,16 @@ public class TunnelCrossSectionIndex implements Serializable {
 	@ColumnInt
 	private int ID;
 	
+	///////////////////////base info////////////////////
+	
+	@ColumnString(length = 64)
+	private String ChainagePrefix; 		// 里程前缀
+	
 	@ColumnDouble
 	private double Chainage; 			// 断面里程值
+	
+	@ColumnString(length=255)
+	private String sectionName ;		// 断面名称
 
 	@ColumnDate
 	private Date InBuiltTime; 			// 埋设时间
@@ -36,20 +44,18 @@ public class TunnelCrossSectionIndex implements Serializable {
 	@ColumnFloat
 	private float Width; 				// 断面宽度
 	
-	@ColumnString(length=255)
-	private String sectionName ;		// 断面名称
+	//////////////////////开挖方式//////////////////////////
 
 	@ColumnInt
-	private int ExcavateMethod;  	// 施工方法
+	private int ExcavateMethod;  		// 施工方法
 
 	@ColumnString(length = 255)
 	private String SurveyPntName; 		// 测点编号
+	
+	//////////////////////变形阀值///////////////////////////
 
 	@ColumnText
 	private String info; 				// 备注
-
-	@ColumnString(length = 64)
-	private String ChainagePrefix; 		// 里程前缀
 
 	@ColumnFloat
 	private float GDU0; 				// 拱顶U0值

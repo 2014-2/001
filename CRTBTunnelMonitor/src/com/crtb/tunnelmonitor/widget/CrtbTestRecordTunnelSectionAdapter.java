@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.crtb.tunnelmonitor.activity.R;
+import com.crtb.tunnelmonitor.dao.impl.v2.TunnelSettlementTotalDataDao;
 import com.crtb.tunnelmonitor.entity.TunnelSettlementTotalData;
 
 /**
@@ -26,12 +27,15 @@ public class CrtbTestRecordTunnelSectionAdapter extends CrtbEntityAdapter<Tunnel
 	
 	protected void changeStatus(int position){
 		
+		TunnelSettlementTotalDataDao dao = TunnelSettlementTotalDataDao.defaultDao() ;
+		
 		for(int index = 0 ,size = mList.size() ; index < size ; index++){
 			
 			TunnelSettlementTotalData item = mList.get(index) ;
 			
 			if(index == position){
 				item.setChecked(!item.isChecked());
+				dao.update(item);
 			}
 		}
 		

@@ -66,7 +66,7 @@ public class ProjectIndex implements Serializable {
 	private Date GDCreateTime ;					// 拱顶设置时间	----扩展
 	
 	@ColumnText
-	private String GDInfo ;						// 拱顶设置时间	----扩展
+	private String GDInfo ;						// 拱顶备注信息	----扩展
 
 	@ColumnFloat
 	private float SLLimitVelocity;				// 收敛单次变形速率		5

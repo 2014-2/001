@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.crtb.tunnelmonitor.activity.R;
+import com.crtb.tunnelmonitor.dao.impl.v2.SubsidenceTotalDataDao;
 import com.crtb.tunnelmonitor.entity.SubsidenceTotalData;
 
 /**
@@ -26,12 +27,15 @@ public class CrtbTestRecordSubsidenceAdapter extends CrtbEntityAdapter<Subsidenc
 
 	protected void changeStatus(int position){
 		
+		SubsidenceTotalDataDao dao = SubsidenceTotalDataDao.defaultDao() ;
+		
 		for(int index = 0 ,size = mList.size() ; index < size ; index++){
 			
 			SubsidenceTotalData item = mList.get(index) ;
 			
 			if(index == position){
 				item.setChecked(!item.isChecked());
+				dao.update(item);
 			}
 		}
 		
