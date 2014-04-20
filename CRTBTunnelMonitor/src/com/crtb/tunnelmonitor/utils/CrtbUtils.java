@@ -38,6 +38,25 @@ public final class CrtbUtils {
         return DATE_FORMAT.format(date);
     }
     
+    public static int getExcavateMethod(String method){
+    	
+    	if(method == null){
+    		return 0 ;
+    	}
+    	
+    	if(method.equals("全断面法")){
+    		return 0 ;
+    	} else if(method.equals("台阶法")){
+    		return 1 ;
+    	} else if(method.equals("三台阶法")){
+    		return 2 ;
+    	} else if(method.equals("双侧壁法")){
+    		return 3 ;
+    	}
+    	
+    	return 0 ;
+    }
+    
     public static void fillSectionParamter(TunnelCrossSectionIndex section,SectionUploadParamter outParamter){
     	
     	if(section == null || outParamter == null){
