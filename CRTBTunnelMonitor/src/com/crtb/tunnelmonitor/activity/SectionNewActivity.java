@@ -332,6 +332,8 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 				sectionInfo.setSectionName(name);
 				sectionInfo.setInBuiltTime(DateUtils.toDate(date, DateUtils.PART_TIME_FORMAT));
 				sectionInfo.setWidth(Float.valueOf(width));
+				//TODO: 表示数据未上传
+				sectionInfo.setInfo("1"); 
 				
 				// excavation
 				sectionInfo.setExcavateMethod((String)section_new_sp.getSelectedItem());

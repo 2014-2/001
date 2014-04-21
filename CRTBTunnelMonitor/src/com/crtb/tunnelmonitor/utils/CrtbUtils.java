@@ -4,9 +4,12 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import android.util.Log;
+
 import com.crtb.tunnelmonitor.entity.SubsidenceCrossSectionIndex;
 import com.crtb.tunnelmonitor.entity.TunnelCrossSectionIndex;
 import com.crtb.tunnelmonitor.entity.TunnelSettlementTotalData;
+import com.crtb.tunnelmonitor.network.CrtbWebService;
 import com.crtb.tunnelmonitor.network.PointUploadParameter;
 import com.crtb.tunnelmonitor.network.SectionUploadParamter;
 
@@ -58,22 +61,41 @@ public final class CrtbUtils {
     }
     
     public static void fillSectionParamter(TunnelCrossSectionIndex section,SectionUploadParamter outParamter){
-    	
     	if(section == null || outParamter == null){
     		return ;
     	}
-    	
     	outParamter.setSectionName(section.getSectionName());
-    	// outParamter.setSectioCode(section.get) // ?
-    	outParamter.setChainage(String.valueOf(section.getChainage()));
-    	outParamter.setDigMethod(String.valueOf(section.getExcavateMethod()));
+    	int sectionSequence = CrtbWebService.getInstance().getSectionSequence() + 1;
+    	CrtbWebService.getInstance().setSectionSequence(sectionSequence);
+    	String sectionCode = CrtbWebService.getInstance().getSiteCode() + String.format("%04d",  sectionSequence);
+    	outParamter.setSectioCode(sectionCode);
+    	//使用自己编码的方式
+    	String pointList = sectionCode + "GD01" + "/" + sectionCode + "SL01" + "#" 
+    	+ sectionCode + "SL02" + "/" + sectionCode + "SL03" + "#" + sectionCode + "SL04";
+    	//outParamter.setPointList(section.getSurveyPntName());
+    	outParamter.setPointList(pointList);
+    	//TODO: 值要保持一至
+    	//outParamter.setChainage(String.valueOf(section.getChainage()));
+    	outParamter.setChainage(section.getSectionName());
+    	//TODO:类型编码不对
+    	//outParamter.setDigMethod(String.valueOf(section.getExcavateMethod()));
+    	outParamter.setDigMethod("QD");
     	outParamter.setWidth(section.getWidth());
-    	outParamter.setTotalU0Limit(section.getGDU0());
-    	outParamter.setModifiedTime(section.getGDU0Time());
-    	outParamter.setU0Remark(section.getGDU0Description());
-    	outParamter.setWallRockLevel(Integer.valueOf(section.getLithologi()));
-    	outParamter.setPointList(section.getSurveyPntName());
-    	outParamter.setFirstMeasureDate(section.getInBuiltTime());
+    	//TODO:暂时取不到数据,使用"50.0f"
+    	//outParamter.setTotalU0Limit(section.getGDU0());
+    	outParamter.setTotalU0Limit(50.0f);
+    	//TODO:暂时取不到数据,使用当前时间
+    	//outParamter.setModifiedTime(section.getGDU0Time());
+    	outParamter.setModifiedTime(new Date());
+    	//TODO:暂时取不到数据,使用"xxx"
+    	//outParamter.setU0Remark(section.getGDU0Description());
+    	outParamter.setU0Remark("xxx");
+    	//TODO: 暂时取不到数据，使用固定值3
+    	//outParamter.setWallRockLevel(Integer.valueOf(section.getLithologi()));
+    	outParamter.setWallRockLevel(3);
+    	//TODO:暂时取不到数据,使用当前时间
+    	//outParamter.setFirstMeasureDate(section.getInBuiltTime());
+    	outParamter.setFirstMeasureDate(new Date());
     	outParamter.setRemark(section.getInfo());
     }
     
@@ -82,9 +104,8 @@ public final class CrtbUtils {
     	if(section == null || outParamter == null){
     		return ;
     	}
-    	
     	outParamter.setSectionName(section.getSectionName());
-    	// outParamter.setSectioCode(section.get) // ?
+    	//outParamter.setSectioCode(section.get) // ?
     	outParamter.setChainage(String.valueOf(section.getChainage()));
     	// outParamter.setDigMethod(String.valueOf(section.getExcavateMethod()));
     	outParamter.setWidth(section.getWidth());

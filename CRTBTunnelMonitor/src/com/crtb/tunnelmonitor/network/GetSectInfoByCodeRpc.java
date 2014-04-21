@@ -127,8 +127,9 @@ class GetSectInfoByCodeRpc extends AbstractRpc {
 				// ignore
 			}
 			try {
+				//TODO: 1表示未上传 2表示已上传
 				String remark = data.getPropertyAsString(i++);
-				section.setInfo(remark);
+				section.setInfo("2");
 			} catch (NullPointerException e) {
 				// ignore
 			}

@@ -55,13 +55,13 @@ public class TunnelCrossSectionFragment extends Fragment {
         mList = new ArrayList<TunnelCrossSectionIndex>();
 
         //TODO: Fake data
-        TunnelCrossSectionIndex t1 = new TunnelCrossSectionIndex();
-        t1.setInBuiltTime(new Date(114, 1, 10, 12, 42));
-        mList.add(t1);
-
-        TunnelCrossSectionIndex t2 = new TunnelCrossSectionIndex();
-        t2.setInBuiltTime(new Date(114, 2, 5, 11, 37));
-        mList.add(t2);
+//        TunnelCrossSectionIndex t1 = new TunnelCrossSectionIndex();
+//        t1.setInBuiltTime(new Date(114, 1, 10, 12, 42));
+//        mList.add(t1);
+//
+//        TunnelCrossSectionIndex t2 = new TunnelCrossSectionIndex();
+//        t2.setInBuiltTime(new Date(114, 2, 5, 11, 37));
+//        mList.add(t2);
 
         mlvTunnelSurface.setAdapter(new TunnelSurfaceAdapter());
     }

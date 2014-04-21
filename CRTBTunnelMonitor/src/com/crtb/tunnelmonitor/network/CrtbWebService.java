@@ -1,6 +1,10 @@
 package com.crtb.tunnelmonitor.network;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 import org.ksoap2.SoapEnvelope;
 import org.ksoap2.serialization.Marshal;
@@ -39,6 +43,7 @@ public final class CrtbWebService {
 	private String mZoneName;
 	private String mSiteCode;
 	private String mSiteName;
+	private int mSectionSequence;
 	
 	private CrtbWebService() {
 		mHandler = new Handler(Looper.getMainLooper());
@@ -67,6 +72,27 @@ public final class CrtbWebService {
 	 */
 	public String getSiteName() {
 		return mSiteName;
+	}
+	
+	/**
+	 * 获取工点编号
+	 * 
+	 * @return
+	 */
+	public String getSiteCode() {
+		return mSiteCode;
+	}
+	
+	/**
+	 * 
+	 * @param sequence
+	 */
+	public void setSectionSequence(int sequence) {
+		mSectionSequence = sequence;
+	}
+	
+	public int getSectionSequence() {
+		return mSectionSequence;
 	}
 	
 	public void login(final String account, final String password, final RpcCallback callback) {
@@ -201,8 +227,29 @@ public final class CrtbWebService {
 	 * @param status
 	 * @param callback
 	 */
-	public void getSectionCodeList(SectionStatus status, RpcCallback callback) {
-		GetSectInfosRpc rpc = new GetSectInfosRpc(getSiteCode(), status.value(), getRandomCode(), new RpcCallbackWrapper(callback));
+	public void getSectionCodeList(SectionStatus status, final RpcCallback callback) {
+		GetSectInfosRpc rpc = new GetSectInfosRpc(getSiteCode(), status.value(), getRandomCode(), new RpcCallbackWrapper(new RpcCallback() {
+			
+			@Override
+			public void onSuccess(Object[] data) {
+				List<String> sectionCodeList = Arrays.asList((String[])data);
+				List<Integer> sequenceList = new ArrayList<Integer>();
+				for(String sectionCode : sectionCodeList) {
+					sequenceList.add(Integer.parseInt(sectionCode.replace(getSiteCode(), "")));
+				}
+				setSectionSequence(Collections.max(sequenceList));
+				if (callback != null) {
+					callback.onSuccess(data);
+				}
+			}
+			
+			@Override
+			public void onFailed(String reason) {
+				if (callback != null) {
+					callback.onFailed(reason);
+				}
+			}
+		}));
 		RpcSendTask task = new RpcSendTask(rpc, USRE_AUTH_URL);
 		task.execute();
 	}
@@ -400,10 +447,6 @@ public final class CrtbWebService {
 	
 	private void setZoneName(String zoneName) {
 		mZoneName = zoneName;
-	}
-	
-	private String getSiteCode() {
-		return mSiteCode;
 	}
 	
 	private void setSiteCode(String siteCode) {

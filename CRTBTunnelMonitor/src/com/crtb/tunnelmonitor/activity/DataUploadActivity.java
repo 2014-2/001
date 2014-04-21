@@ -34,9 +34,15 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.crtb.tunnelmonitor.utils.CrtbUtils;
 import com.crtb.tunnelmonitor.widget.SubsidenceCrossSectionFragment;
-import com.crtb.tunnelmonitor.widget.TunnelCrossSectionFragment;import com.crtb.tunnelmonitor.network.CrtbWebService;
+import com.crtb.tunnelmonitor.widget.TunnelCrossSectionFragment;import com.crtb.tunnelmonitor.dao.impl.v2.ProjectIndexDao;
+import com.crtb.tunnelmonitor.dao.impl.v2.TunnelCrossSectionIndexDao;
+import com.crtb.tunnelmonitor.entity.ProjectIndex;
+import com.crtb.tunnelmonitor.entity.TunnelCrossSectionIndex;
+import com.crtb.tunnelmonitor.network.CrtbWebService;
 import com.crtb.tunnelmonitor.network.RpcCallback;
+import com.crtb.tunnelmonitor.network.SectionStatus;
 import com.crtb.tunnelmonitor.network.SectionUploadParamter;
 public class DataUploadActivity extends FragmentActivity {
 	private static final String LOG_TAG = "DataUploadActivity";
@@ -224,23 +230,28 @@ public class DataUploadActivity extends FragmentActivity {
             mMenuView = inflater.inflate(R.layout.menu_data_upload, null);
             upload = (RelativeLayout)mMenuView.findViewById(R.id.menu_upload);
 
-            upload.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    switch (mPager.getCurrentItem()) {
-                       //隧道内断面
-                        case 0:
-                        	uploadSection(null);
-                        	showMessage(true);
-                        	break;
-                        case 1:
-                        	break;
-                            // TODO:地标下沉断面
-                        default:
-                        	break;
-                    }
-                }
-            });
+			upload.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					ProjectIndex currentProject = ProjectIndexDao.defaultWorkPlanDao().queryEditWorkPlan();
+					if (currentProject != null) {
+						switch (mPager.getCurrentItem()) {
+						// 隧道内断面
+						case 0:
+							uploadSectionList();
+							break;
+						case 1:
+							break;
+						// TODO:地标下沉断面
+						default:
+							break;
+						}
+					} else {
+						Toast.makeText(getApplicationContext(), "请先打开工作面",
+								Toast.LENGTH_SHORT).show();
+					}
+				}
+			});
             setContentView(mMenuView);
             setWidth(LayoutParams.FILL_PARENT);
             setHeight(LayoutParams.WRAP_CONTENT);
@@ -269,6 +280,19 @@ public class DataUploadActivity extends FragmentActivity {
             }
         }
         return true;
+    }
+    
+    //上传所有断面数据
+    private void uploadSectionList() {
+    	TunnelCrossSectionIndexDao dao = TunnelCrossSectionIndexDao.defaultDao();
+    	List<TunnelCrossSectionIndex> sectionList = dao.queryUnUploadSections();
+    	if (sectionList != null && sectionList.size() > 0) {
+    		for(TunnelCrossSectionIndex section : sectionList) {
+    			SectionUploadParamter paramter = new SectionUploadParamter();
+    			CrtbUtils.fillSectionParamter(section, paramter);
+    			uploadSection(paramter);
+    		}
+    	}
     }
     
     //上传断面

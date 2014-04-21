@@ -61,6 +61,19 @@ public final class TunnelCrossSectionIndexDao extends AbstractDao<TunnelCrossSec
 		return mDatabase.queryObjects(sql, TunnelCrossSectionIndex.class) ;
 	}
 	
+	public List<TunnelCrossSectionIndex> queryUnUploadSections(){
+		
+		final IAccessDatabase mDatabase = getCurrentDb();
+		
+		if(mDatabase == null){
+			return null ;
+		}
+		
+		String sql = "select * from TunnelCrossSectionIndex where info != '2'" ;
+		
+		return mDatabase.queryObjects(sql, TunnelCrossSectionIndex.class) ;
+	}
+	
 	public TunnelCrossSectionIndex querySectionIndex(String id){
 		
 		final IAccessDatabase mDatabase = getCurrentDb();
