@@ -45,7 +45,7 @@ public class SongInfoUtils {
                 for (int i = 0; i < count; i++) {
                     if (mSongsList.get(i).getFilePath().equals(filePath)
                             && mSongsList.get(i).getFileName()
-                                    .equals(fileName)) {
+                            .equals(fileName)) {
                         fileMessage[0] = mSongsList.get(i).getFileTitle();
                         fileMessage[1] = mSongsList.get(i).getAlbumArt();
                         fileMessage[2] = mSongsList.get(i).getSinger();
@@ -57,7 +57,7 @@ public class SongInfoUtils {
 
         return fileMessage;
     }
-    
+
     /**
      * readDataFromSD()
      */
@@ -76,15 +76,15 @@ public class SongInfoUtils {
                         MediaStore.Audio.Media.MIME_TYPE,
                         MediaStore.Audio.Media.SIZE,
                         MediaStore.Audio.Media.DATA },
-                MediaStore.Audio.Media.MIME_TYPE + "=? or "
-                        + MediaStore.Audio.Media.MIME_TYPE + "=?",
-                new String[] { "audio/mpeg", "audio/x-ms-wma" }, null);
+                        MediaStore.Audio.Media.MIME_TYPE + "=? or "
+                                + MediaStore.Audio.Media.MIME_TYPE + "=?",
+                                new String[] { "audio/mpeg", "audio/x-ms-wma" }, null);
         if (cursor.moveToFirst()) {
             getSongList(cursor);
         }
         return;
     }
-    
+
     /**
      * getSongList()
      * @param cursor
@@ -97,7 +97,7 @@ public class SongInfoUtils {
             song.setFileTitle(cursor.getString(2));// song name
             song.setDuration(cursor.getInt(3));// play time
             song.setSinger(cursor.getString(4));// artist
-//            song.setAlbumArt(cursor.getString(5));// album
+            //            song.setAlbumArt(cursor.getString(5));// album
             final int albumId = cursor.getInt(6); // album id
             String album = AudioLoaderTask.getAlbumArt(mContext.getContentResolver(), albumId);
             song.setAlbumArt(album);
@@ -107,11 +107,11 @@ public class SongInfoUtils {
             } else {
                 song.setYear("undefine");
             }
-            if ("audio/mpeg".equals(cursor.getString(8).trim())) {// file type
-                song.setFileType("mp3");
-            } else if ("audio/x-ms-wma".equals(cursor.getString(8).trim())) {
-                song.setFileType("wma");
-            }
+            //            if ("audio/mpeg".equals(cursor.getString(8).trim())) {// file type
+            //                song.setFileType("mp3");
+            //            } else if ("audio/x-ms-wma".equals(cursor.getString(8).trim())) {
+            //                song.setFileType("wma");
+            //            }
             if (cursor.getString(9) != null) {// fileSize
                 float temp = cursor.getInt(9) / 1024f / 1024f;
                 String sizeStr = (temp + "").substring(0, 4);

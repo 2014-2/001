@@ -29,19 +29,13 @@ public class AudioLoaderTask extends AsyncQueryHandler {
         MediaStore.Audio.Media.SIZE,
         MediaStore.Audio.Media.DATA };
 
-    public final static String DEF_SELECTION_LOCAL = "(" + MediaStore.Audio.Media.MIME_TYPE + "=? or "
-            + MediaStore.Audio.Media.MIME_TYPE + "=?) and ("
-            + MediaStore.Audio.Media.DATA + " like '%" + Constants.LOCAL_REGIX + "%')";
+    public final static String DEF_SELECTION_LOCAL = MediaStore.Audio.Media.DATA + " like '%" + Constants.LOCAL_REGIX + "%'";
 
-    public final static String DEF_SELECTION_SDCARD = "(" + MediaStore.Audio.Media.MIME_TYPE
-            + "=? or " + MediaStore.Audio.Media.MIME_TYPE + "=?) and "
-            + MediaStore.Audio.Media.DATA + " like '%" + Constants.SDCARD_REGIX + "%'";
+    public final static String DEF_SELECTION_SDCARD = MediaStore.Audio.Media.DATA + " like '%" + Constants.SDCARD_REGIX + "%'";
 
-    public final static String DEF_SELECTION_USB = "(" + MediaStore.Audio.Media.MIME_TYPE
-            + "=? or " + MediaStore.Audio.Media.MIME_TYPE + "=?) and "
-            + MediaStore.Audio.Media.DATA + " like '%" + Constants.USB_REGIX + "%'";
+    public final static String DEF_SELECTION_USB = MediaStore.Audio.Media.DATA + " like '%" + Constants.USB_REGIX + "%'";
 
-    public final static String[] DEF_SELECTION_ARGS = new String[] { "audio/mpeg", "audio/x-ms-wma" };
+    //    public final static String[] DEF_SELECTION_ARGS = new String[] { "audio/mpeg", "audio/x-ms-wma", "audio/mp4", "audio/x-aac" };
 
     protected AudioLoaderManager mAudioManager;
     private int mType;
@@ -59,18 +53,18 @@ public class AudioLoaderTask extends AsyncQueryHandler {
             case AudioLoaderManager.INTERNAL_TYPE:
                 startQuery(0, (Object) null, MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
                         AudioLoaderTask.DEF_PROJECTION, AudioLoaderTask.DEF_SELECTION_LOCAL,
-                        DEF_SELECTION_ARGS, null);
+                        null, null);
                 break;
 
             case AudioLoaderManager.EXTERNAL_SDCARD_TYPE:
                 startQuery(0, (Object) null, MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
                         AudioLoaderTask.DEF_PROJECTION, AudioLoaderTask.DEF_SELECTION_SDCARD,
-                        DEF_SELECTION_ARGS, null);
+                        null, null);
                 break;
             case AudioLoaderManager.EXTERNAL_USB_TYPE:
                 startQuery(0, (Object) null, MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
                         AudioLoaderTask.DEF_PROJECTION, AudioLoaderTask.DEF_SELECTION_USB,
-                        DEF_SELECTION_ARGS, null);
+                        null, null);
                 break;
             default:
                 break;
@@ -125,7 +119,7 @@ public class AudioLoaderTask extends AsyncQueryHandler {
             song.setDuration(cursor.getInt(3));// play time
             String artist = getStringForChinese(cursor.getString(4));
             song.setSinger(artist);// artist
-//            song.setAlbumArt(cursor.getString(5)); // album
+            //            song.setAlbumArt(cursor.getString(5)); // album
             final int albumId = cursor.getInt(6); // album id
             String album = getAlbumArt(mContext.getContentResolver(), albumId);
             song.setAlbumArt(album);
@@ -135,11 +129,13 @@ public class AudioLoaderTask extends AsyncQueryHandler {
             } else {
                 song.setYear("undefine");
             }
-            if ("audio/mpeg".equals(cursor.getString(8).trim())) {// file type
-                song.setFileType("mp3");
-            } else if ("audio/x-ms-wma".equals(cursor.getString(8).trim())) {
-                song.setFileType("wma");
-            }
+            //            if ("audio/mpeg".equals(cursor.getString(8).trim())) {// file type
+            //                song.setFileType("mp3");
+            //            } else if ("audio/x-ms-wma".equals(cursor.getString(8).trim())) {
+            //                song.setFileType("wma");
+            //            } else if ("audio/x-aac".equals(cursor.getString(8).trim())) {
+            //                song.setFileType("aac");
+            //            }
             if (cursor.getString(9) != null) {// fileSize
                 float temp = cursor.getInt(9) / 1024f / 1024f;
                 String sizeStr = (temp + "").substring(0, 4);
@@ -194,5 +190,5 @@ public class AudioLoaderTask extends AsyncQueryHandler {
         }
         return newValue;
     }
-    
+
 }

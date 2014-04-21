@@ -42,10 +42,10 @@ public class Song {
      */
     private String mYear = "";
 
-    /**
-     * mFileType
-     */
-    private String mFileType = "";
+    //    /**
+    //     * mFileType
+    //     */
+    //    private String mFileType = "";
 
     /**
      * mFileSize
@@ -187,23 +187,23 @@ public class Song {
         this.mYear = mYear;
     }
 
-    /**
-     * getFileType()
-     * 
-     * @return
-     */
-    public String getFileType() {
-        return mFileType;
-    }
-
-    /**
-     * setFileType()
-     * 
-     * @param mFileType
-     */
-    public void setFileType(String mFileType) {
-        this.mFileType = mFileType;
-    }
+    //    /**
+    //     * getFileType()
+    //     *
+    //     * @return
+    //     */
+    //    public String getFileType() {
+    //        return mFileType;
+    //    }
+    //
+    //    /**
+    //     * setFileType()
+    //     *
+    //     * @param mFileType
+    //     */
+    //    public void setFileType(String mFileType) {
+    //        this.mFileType = mFileType;
+    //    }
 
     /**
      * getFileSize()
