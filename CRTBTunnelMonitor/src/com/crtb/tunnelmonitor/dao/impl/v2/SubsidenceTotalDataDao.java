@@ -35,6 +35,20 @@ public class SubsidenceTotalDataDao extends AbstractDao<SubsidenceTotalData> {
 		
 		return mDatabase.queryObjects(sql, SubsidenceTotalData.class) ;
 	}
+	
+	// 查询已经存在的测量点信息
+	public SubsidenceTotalData queryTunnelTotalData(int sheetId,int chainageId,String pntType) {
+			
+		final IAccessDatabase mDatabase = getCurrentDb();
+			
+		if(mDatabase == null){
+			return null ;
+		}
+			
+		String sql = "select * from SubsidenceTotalData where SheetId = ? and ChainageId = ? and PntType = ?" ;
+			
+		return mDatabase.queryObject(sql, new String[]{String.valueOf(sheetId),String.valueOf(chainageId),pntType},SubsidenceTotalData.class);
+	}
 
     /**
      * 查询 本次测量(MEASNo)之前的所有相同断面和相同测点类型的测点信息
