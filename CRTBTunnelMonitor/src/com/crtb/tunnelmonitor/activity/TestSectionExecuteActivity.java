@@ -74,7 +74,7 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 		InjectCore.injectUIProperty(this);
 		
 		Object bean = CommonObject.findObject(KEY_TEST_OBJECT);
-		sectionType = CommonObject.findObject(KEY_TEST_SECTION_TYPE);
+		sectionType = CommonObject.findInteger(KEY_TEST_SECTION_TYPE);
 		
 		// 测量数据
 		rawSheet = (RawSheetIndex)bean ;
