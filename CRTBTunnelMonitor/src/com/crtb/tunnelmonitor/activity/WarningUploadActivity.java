@@ -27,7 +27,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.crtb.tunnelmonitor.entity.yujingInfors;
+import com.crtb.tunnelmonitor.entity.AlertInfo;
 import com.crtb.tunnelmonitor.network.CrtbWebService;
 import com.crtb.tunnelmonitor.network.RpcCallback;
 
@@ -38,7 +38,7 @@ public class WarningUploadActivity extends Activity {
 
     private ListView mlvWarningList;
 
-    private List<yujingInfors> mWarningInfos;
+    private List<AlertInfo> mWarningInfos;
 
     private Random ran = new Random();
     private String s[] = new String[20];
@@ -141,9 +141,9 @@ public class WarningUploadActivity extends Activity {
         });
     }
 
-    public ArrayList<yujingInfors> getdata() {
-        yujingInfors.yixiao = 0;
-        ArrayList<yujingInfors> listt = new ArrayList<yujingInfors>();
+    public ArrayList<AlertInfo> getdata() {
+        AlertInfo.yixiao = 0;
+        ArrayList<AlertInfo> listt = new ArrayList<AlertInfo>();
 //        yujingInfors infor;
 //        for (int i = 0; i < s.length; i++) {
 //            infor = new yujingInfors();
@@ -204,7 +204,7 @@ public class WarningUploadActivity extends Activity {
             if (convertView == null) {
                 convertView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.layout_warning_upload_item, null);
             }
-            yujingInfors info = mWarningInfos.get(position);
+            AlertInfo info = mWarningInfos.get(position);
             TextView time = (TextView)convertView.findViewById(R.id.warning_id);
             time.setText(info.getDate());
             TextView state = (TextView)convertView.findViewById(R.id.warning_state);

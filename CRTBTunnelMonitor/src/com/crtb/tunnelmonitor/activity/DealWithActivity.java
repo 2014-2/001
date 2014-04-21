@@ -5,7 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.*;
 import com.crtb.tunnelmonitor.adapter.Myadapter;
-import com.crtb.tunnelmonitor.entity.yujingInfors;
+import com.crtb.tunnelmonitor.entity.AlertInfo;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;

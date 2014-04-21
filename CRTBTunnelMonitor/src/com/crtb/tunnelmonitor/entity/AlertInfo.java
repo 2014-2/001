@@ -1,6 +1,6 @@
 package com.crtb.tunnelmonitor.entity;
 
-public class yujingInfors {
+public class AlertInfo {
 	public static int count=0;
 	public static int yixiao=0;
 	public boolean state1;

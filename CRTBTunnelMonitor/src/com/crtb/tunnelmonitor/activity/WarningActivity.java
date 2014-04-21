@@ -13,7 +13,7 @@ import android.widget.*;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 
 import com.crtb.tunnelmonitor.adapter.Myadapter;
-import com.crtb.tunnelmonitor.entity.yujingInfors;
+import com.crtb.tunnelmonitor.entity.AlertInfo;
 
 public class WarningActivity extends Activity {
 
@@ -30,7 +30,7 @@ public class WarningActivity extends Activity {
     private View oldChooseView;
     private int CheckID;
     private int stpeNum;
-    private ArrayList<yujingInfors> listt;
+    private ArrayList<AlertInfo> listt;
     private LinearLayout rela;
     private Myadapter adapter;
     private Random ran = new Random();
@@ -79,9 +79,9 @@ public class WarningActivity extends Activity {
         initView();
         listviewInit();
         baojing = (TextView) findViewById(R.id.rizhi);
-        baojing.setText("报警日志：(" + yujingInfors.count + ")");
+        baojing.setText("报警日志：(" + AlertInfo.count + ")");
         yixiao = (TextView) findViewById(R.id.yixiaojing);
-        yixiao.setText("已消警：(" + yujingInfors.yixiao + ")");
+        yixiao.setText("已消警：(" + AlertInfo.yixiao + ")");
     }
 
 
@@ -146,7 +146,7 @@ public class WarningActivity extends Activity {
         listview = (ListView) findViewById(R.id.listView12);
         listview.setDividerHeight(1);
         adapter = new Myadapter(WarningActivity.this, getdata());
-        listt = (ArrayList<yujingInfors>) adapter.getList();
+        listt = (ArrayList<AlertInfo>) adapter.getList();
         listview.setAdapter(adapter);
         listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -176,7 +176,7 @@ public class WarningActivity extends Activity {
                 if (oldChooseView != null) oldChooseView.setBackgroundResource(R.color.warning_bg);
             }
         });
-        yujingInfors.count = adapter.getCount();
+        AlertInfo.count = adapter.getCount();
 
     }
 
@@ -189,12 +189,12 @@ public class WarningActivity extends Activity {
         }
     }
 
-    public ArrayList<yujingInfors> getdata() {
-        yujingInfors.yixiao = 0;
-        ArrayList<yujingInfors> listt = new ArrayList<yujingInfors>();
-        yujingInfors infor;
+    public ArrayList<AlertInfo> getdata() {
+        AlertInfo.yixiao = 0;
+        ArrayList<AlertInfo> listt = new ArrayList<AlertInfo>();
+        AlertInfo infor;
         for (int i = 0; i < s.length; i++) {
-            infor = new yujingInfors();
+            infor = new AlertInfo();
             infor.setDate(getdate());
             infor.setXinghao(s[i]);
             infor.setDianhao(ss[ran.nextInt(3)]);
@@ -204,8 +204,8 @@ public class WarningActivity extends Activity {
             infor.setEdtState(ssss[ran.nextInt(4)]);
             infor.setState1(true);
             if (infor.getState().equals("已消警")) {
-                yujingInfors.yixiao = yujingInfors.yixiao + 1;
-                System.out.println(yujingInfors.yixiao);
+                AlertInfo.yixiao = AlertInfo.yixiao + 1;
+                System.out.println(AlertInfo.yixiao);
 
             }
             listt.add(infor);

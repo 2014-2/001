@@ -11,10 +11,10 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.crtb.tunnelmonitor.activity.R;
-import com.crtb.tunnelmonitor.entity.yujingInfors;
+import com.crtb.tunnelmonitor.entity.AlertInfo;
 
 public class Myadapter extends BaseAdapter {
-	private List<yujingInfors> list;
+	private List<AlertInfo> list;
 	private	LayoutInflater inflater;
 	private	Context context;
 	private	int gaoliang=-1;
@@ -25,7 +25,7 @@ public class Myadapter extends BaseAdapter {
 	public void setselect(int select) {
 		this.select = select;
 	}
-	public Myadapter(Context cont,List<yujingInfors> list) {
+	public Myadapter(Context cont,List<AlertInfo> list) {
 		// TODO Auto-generated constructor stub
 		context=cont;
 		this.list=list;
@@ -36,10 +36,10 @@ public class Myadapter extends BaseAdapter {
 		return list.size();
 	}
 
-	public List<yujingInfors> getList() {
+	public List<AlertInfo> getList() {
 		return list;
 	}
-	public void setList(List<yujingInfors> list) {
+	public void setList(List<AlertInfo> list) {
 		this.list = list;
 	}
 	@Override

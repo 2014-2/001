@@ -5,7 +5,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import android.database.Cursor;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.crtb.tunnelmonitor.dao.impl.v2.AlertHandlingInfoDao;
 import com.crtb.tunnelmonitor.dao.impl.v2.AlertListDao;
@@ -13,8 +15,11 @@ import com.crtb.tunnelmonitor.dao.impl.v2.SubsidenceTotalDataDao;
 import com.crtb.tunnelmonitor.dao.impl.v2.TunnelSettlementTotalDataDao;
 import com.crtb.tunnelmonitor.entity.SubsidenceTotalData;
 import com.crtb.tunnelmonitor.entity.TunnelSettlementTotalData;
+import com.crtb.tunnelmonitor.entity.AlertInfo;
 
 public class AlertUtils {
+
+    private static final String TAG = "AlertUtils";
 
     // 累计变形值阈值
     public static final double ACCUMULATIVE_THRESHOLD = 100; // mm
@@ -40,6 +45,12 @@ public class AlertUtils {
     // 5表示地表下沉速率超限
     public static final int DIBIAO_XIACHEN_SULV_EXCEEDING = 5;
 
+    public static final String[] EXCEEDIN_TYPES = {"拱顶累计下沉值超限", "拱顶下沉速率超限", "收敛累计值超限", "收敛速率超限", "地表累计下沉值超限", "地表下沉速率超限"};
+
+    public static final int ALERT_STATUS_HANDLED = 0;
+    public static final int ALERT_STATUS_OPEN = 1;
+    public static final int ALERT_STATUS_HANDLING = 2;
+    public static final String[] ALERT_STATUSES = {"已消警", "开", "处理中"};
     /**
      * 检测 断面拱顶 或 地表测点 的 累计沉降 或 单次沉降速率 是否超限.
      * 
@@ -248,4 +259,65 @@ public class AlertUtils {
         return Math.sqrt(squar);
     }
 
+    public static List<AlertInfo> getAlertInfoList() {
+        Log.d(TAG, "getAlertInfoList");
+        ArrayList<AlertInfo> l = new ArrayList<AlertInfo>();
+        String sql = "SELECT"
+                + " TunnelCrossSectionIndex.sectionName AS sectionName"
+                + " AlertList.AlertTime AS date"
+                + " AlertList.PntType AS pntType"
+                + " AlertList.Utype AS utype"
+                + " AlertHandlingList.AlertStatus AS status"
+                + " FROM AlertList LEFT JOIN AlertHandlingList"
+                + " ON AlertList.ID=AlertHandlingList.AlertID"
+                + " LEFT JOIN TunnelCrossSectionIndex"
+                + " ON AlertList.CrossSectionID=TunnelCrossSectionIndex.ID"
+                + " ORDER BY"
+                + " CASE AlertHandlingList.AlertStatus"
+                + "   WHEN 1 THEN 0"
+                + "   WHEN 2 THEN 1"
+                + "   WHEN 0 THEN 2"
+                + " END,"
+                + " AlertList.AlertTime DESC";
+
+        Cursor c = AlertListDao.defaultDao().executeQuerySQL(sql, null);
+
+        if (c != null) {
+            Log.d(TAG, "cursor count: " + c.getCount());
+            try {
+                while (c.moveToNext()) {
+                    AlertInfo ai = new AlertInfo();
+                    ai.setXinghao(c.getString(0));
+                    String dateStr = c.getString(1);
+                    ai.setDate(dateStr);
+                    ai.setDianhao(c.getString(2));
+                    int uType = c.getInt(3);
+                    ai.setMessage((uType >= 0 && uType < 6) ? EXCEEDIN_TYPES[uType] : "");
+                    int alertStatus = c.getInt(4);
+                    ai.setState((alertStatus >= 0 && alertStatus < 3) ? ALERT_STATUSES[alertStatus] : "");
+                    l.add(ai);
+                }
+            } finally {
+                c.close();
+            }
+        }
+        return l;
+    }
+
+    public static int getAlertCountOfState(int state) {
+        String sql = "SELECT * FROM AlertList INNER JOIN AlertHandlingList"
+                + " ON AlertList.ID=AlertHandlingList.AlertID"
+                + " WHERE AlertStatus=?";
+        String[] args = new String[]{String.valueOf(state)};
+        Cursor c = AlertListDao.defaultDao().executeQuerySQL(sql, args);
+        int count = 0;
+        if (c != null) {
+            try {
+                count = c.getCount();
+            } finally {
+                c.close();
+            }
+        }
+        return count;
+    }
 }
