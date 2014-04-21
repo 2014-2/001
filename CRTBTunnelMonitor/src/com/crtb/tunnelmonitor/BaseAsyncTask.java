@@ -4,20 +4,21 @@ import org.zw.android.framework.IExecuteAsyncTask.IAsyncTask;
 import org.zw.android.framework.impl.Worker;
 
 /**
+ * Asynchronous task
  * 
  * @author zhouwei
  *
  */
-public abstract class BaseSyncTask extends IAsyncTask implements MessageDefine {
+public abstract class BaseAsyncTask extends IAsyncTask implements MessageDefine {
 
 	protected static boolean debug 		= false ;
 	protected AppHandler 			mBaseHandler ;
 	
-	public BaseSyncTask(){
+	public BaseAsyncTask(){
 		this(null); ;
 	}
 	
-	public BaseSyncTask(AppHandler handler){
+	public BaseAsyncTask(AppHandler handler){
 		mBaseHandler	= handler ;
 	}
 	

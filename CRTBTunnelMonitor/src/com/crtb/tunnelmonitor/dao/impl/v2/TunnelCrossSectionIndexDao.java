@@ -6,7 +6,7 @@ import org.zw.android.framework.IAccessDatabase;
 import org.zw.android.framework.impl.ExecuteAsyncTaskImpl;
 
 import com.crtb.tunnelmonitor.AppHandler;
-import com.crtb.tunnelmonitor.BaseSyncTask;
+import com.crtb.tunnelmonitor.BaseAsyncTask;
 import com.crtb.tunnelmonitor.entity.TunnelCrossSectionIndex;
 
 /**
@@ -34,7 +34,7 @@ public final class TunnelCrossSectionIndexDao extends AbstractDao<TunnelCrossSec
 	
 	public void queryAllSection(AppHandler handler){
 		
-		ExecuteAsyncTaskImpl.defaultSyncExecutor().executeTask(new BaseSyncTask(handler) {
+		ExecuteAsyncTaskImpl.defaultSyncExecutor().executeTask(new BaseAsyncTask(handler) {
 			
 			@Override
 			public void process() {
