@@ -4,10 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Context;
+import android.os.Message;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.AdapterView;
 
+import com.crtb.tunnelmonitor.AppHandler;
 import com.crtb.tunnelmonitor.dao.impl.v2.TunnelCrossSectionIndexDao;
 import com.crtb.tunnelmonitor.entity.TunnelCrossSectionIndex;
 
@@ -73,25 +75,41 @@ public class CrtbRecordTunnelSectionInfoListView extends CrtbBaseListView {
 	}
 
 	@Override
-	public void onReload() {
-		
-		List<TunnelCrossSectionIndex> list = TunnelCrossSectionIndexDao.defaultDao().queryAllSection() ;
-		
-		if(list != null && sectionIds != null){
-			
-			for(TunnelCrossSectionIndex item : list){
+	protected AppHandler getAppHandler() {
+		return new AppHandler(getContext()){
+
+			@SuppressWarnings("unchecked")
+			@Override
+			protected void dispose(Message msg) {
 				
-				for(String id : sectionIds){
-					if(id.equals(String.valueOf(item.getID()))){
-						item.setUsed(true);
-						break ;
+				if(msg.what == MSG_QUERY_SECTION_SUCCESS){
+					
+					List<TunnelCrossSectionIndex> list = (ArrayList<TunnelCrossSectionIndex>)msg.obj ;
+					
+					if(list != null && sectionIds != null){
+						
+						for(TunnelCrossSectionIndex item : list){
+							
+							for(String id : sectionIds){
+								if(id.equals(String.valueOf(item.getID()))){
+									item.setUsed(true);
+									break ;
+								}
+							}
+						}
+						
 					}
+					
+					mAdapter.loadEntityDatas(list);
 				}
 			}
 			
-		}
-		
-		mAdapter.loadEntityDatas(list);
+		};
+	}
+
+	@Override
+	public void onReload() {
+		TunnelCrossSectionIndexDao.defaultDao().queryAllSection(mHandler) ;
 	}
 	
 }
