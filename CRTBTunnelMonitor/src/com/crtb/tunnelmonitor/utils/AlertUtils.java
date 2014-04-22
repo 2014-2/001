@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.zw.android.framework.IAccessDatabase;
+
 import android.database.Cursor;
 import android.text.TextUtils;
 import android.util.Log;
@@ -91,6 +93,7 @@ public class AlertUtils {
      * @return error list; if null or empty, it means no exceeding.
      */
     public static Exceeding checkPointSubsidenceExceed(Object point) {
+        Log.d(TAG, "checkPointSubsidenceExceed");
         Exceeding ret = new Exceeding();
 
         int type = 0;
@@ -215,6 +218,7 @@ public class AlertUtils {
      */
     public static Exceeding checkLineConvergenceExceed(TunnelSettlementTotalData s_1,
             TunnelSettlementTotalData s_2) {
+        Log.d(TAG, "checkLineConvergenceExceed");
         Exceeding ret = new Exceeding();
 
         String originalDataID = s_1.getID() + ORIGINAL_ID_DIVIDER + s_2.getID();
@@ -294,6 +298,10 @@ public class AlertUtils {
 
     public static ArrayList<AlertInfo> getAlertInfoList() {
         Log.d(TAG, "getAlertInfoList");
+
+//        AlertListDao.defaultDao().createTable();
+//        AlertHandlingInfoDao.defaultDao().createTable();
+
         ArrayList<AlertInfo> l = new ArrayList<AlertInfo>();
         String sql = "SELECT"
                 + " AlertList.ID AS alertId"
@@ -315,11 +323,12 @@ public class AlertUtils {
                 + " END,"
                 + " AlertList.AlertTime DESC";
 
-        Cursor c = AlertListDao.defaultDao().executeQuerySQL(sql, null);
+        Cursor c = null;
+        try {
+            c = AlertListDao.defaultDao().executeQuerySQL(sql, null);
 
-        if (c != null) {
-            Log.d(TAG, "cursor count: " + c.getCount());
-            try {
+            if (c != null) {
+                Log.d(TAG, "cursor count: " + c.getCount());
                 while (c.moveToNext()) {
                     AlertInfo ai = new AlertInfo();
                     ai.setAlertId(c.getInt(0));
@@ -333,10 +342,13 @@ public class AlertUtils {
                     ai.setUTypeMsg((uType >= 0 && uType < 6) ? U_TYPE_MSGS[uType] : "");
                     int alertStatus = c.getInt(4);
                     ai.setAlertStatus(alertStatus);
-                    ai.setAlertStatusMsg((alertStatus >= 0 && alertStatus < 3) ? ALERT_STATUS_MSGS[alertStatus] : "");
+                    ai.setAlertStatusMsg((alertStatus >= 0 && alertStatus < 3) ? ALERT_STATUS_MSGS[alertStatus]
+                            : "");
                     l.add(ai);
                 }
-            } finally {
+            }
+        } finally {
+            if (c != null) {
                 c.close();
             }
         }
@@ -344,16 +356,21 @@ public class AlertUtils {
     }
 
     public static int getAlertCountOfState(int state) {
+
+//        AlertListDao.defaultDao().createTable();
+//        AlertHandlingInfoDao.defaultDao().createTable();
         String sql = "SELECT * FROM AlertList INNER JOIN AlertHandlingList"
-                + " ON AlertList.ID=AlertHandlingList.AlertID"
-                + " WHERE AlertStatus=?";
-        String[] args = new String[]{String.valueOf(state)};
-        Cursor c = AlertListDao.defaultDao().executeQuerySQL(sql, args);
+                + " ON AlertList.ID=AlertHandlingList.AlertID" + " WHERE AlertStatus=?";
+        String[] args = new String[] { String.valueOf(state) };
         int count = 0;
-        if (c != null) {
-            try {
+        Cursor c = null;
+        try {
+            c = AlertListDao.defaultDao().executeQuerySQL(sql, args);
+            if (c != null) {
                 count = c.getCount();
-            } finally {
+            }
+        } finally {
+            if (c != null) {
                 c.close();
             }
         }

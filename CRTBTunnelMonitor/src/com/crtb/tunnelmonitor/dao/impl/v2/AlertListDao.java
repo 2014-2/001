@@ -5,6 +5,7 @@ import java.util.List;
 import org.zw.android.framework.IAccessDatabase;
 
 import android.database.Cursor;
+import android.util.Log;
 
 import com.crtb.tunnelmonitor.entity.AlertList;
 import com.crtb.tunnelmonitor.entity.SubsidenceTotalData;
@@ -25,6 +26,15 @@ public class AlertListDao extends AbstractDao<AlertList> {
 		}
 		
 		return _instance ;
+	}
+
+	public void createTable() {
+        final IAccessDatabase db = getCurrentDb();
+        
+        if(db == null){
+            return;
+        }
+        db.createTable(AlertList.class);
 	}
 	
 	public List<AlertList> queryAllRawSheetIndex() {
@@ -104,6 +114,7 @@ public class AlertListDao extends AbstractDao<AlertList> {
     public int insertItem(SubsidenceTotalData point, int alertLevel, int Utype, double UValue,
             double UMax, String originalDataID) {
 
+        Log.d(TAG, "insertItem");
         final IAccessDatabase mDatabase = getCurrentDb();
 
         if (mDatabase == null) {
@@ -121,7 +132,9 @@ public class AlertListDao extends AbstractDao<AlertList> {
         al.setUMax(UMax);
         al.setOriginalDataID(originalDataID);
 
-        return mDatabase.saveObject(al);
+        int ret = mDatabase.saveObject(al);
+        Log.d(TAG, "insertItem, ret: " + ret);
+        return ret;
     }
 
     public Cursor executeQuerySQL(String sql, String[] args) {

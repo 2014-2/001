@@ -46,6 +46,11 @@ import com.crtb.tunnelmonitor.utils.Time;
 @InjectLayout(layout=R.layout.activity_testrecord_execute)
 public class TestSectionExecuteActivity extends WorkFlowActivity implements View.OnClickListener {
 	
+    private static int DEBUG_TEST_NUM = 0;//TODO: remove, just for debug
+    private static double DEBUG_x = 2001.67;//TODO: remove, just for debug
+    private static double DEBUG_y = 3422.35;//TODO: remove, just for debug
+    private static double DEBUG_z = 4368.26;//TODO: remove, just for debug
+
 	public static final String KEY_TEST_SECTION_TYPE	= "_key_test_section_type" ;
 	
 	public static final String KEY_TEST_OBJECT	= "_key_test_object" ;
@@ -207,7 +212,8 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 			
 			@Override
 			public void onClick(View v) {
-				
+			    DEBUG_TEST_NUM++;//TODO: remove, just for debug
+
 				ISurveyProvider ts = TSSurveyProvider.getDefaultAdapter();
 				
 				if (ts == null) {

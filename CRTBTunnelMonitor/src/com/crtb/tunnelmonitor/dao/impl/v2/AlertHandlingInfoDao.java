@@ -7,6 +7,7 @@ import org.zw.android.framework.IAccessDatabase;
 import android.util.Log;
 
 import com.crtb.tunnelmonitor.entity.AlertHandlingList;
+import com.crtb.tunnelmonitor.entity.AlertList;
 
 public class AlertHandlingInfoDao extends AbstractDao<AlertHandlingList> {
 
@@ -25,15 +26,24 @@ public class AlertHandlingInfoDao extends AbstractDao<AlertHandlingList> {
 		return _instance ;
 	}
 
+    public void createTable() {
+        final IAccessDatabase db = getCurrentDb();
+
+        if(db == null){
+            return;
+        }
+        db.createTable(AlertHandlingList.class);
+    }
+
     public int insertItem(int alertId, String handling, Date handlingTime, String duePerson,
             int alertStatus, int handlingInfo) {
-    	
-    	final IAccessDatabase mDatabase = getCurrentDb();
-		
-		if(mDatabase == null){
-			return -1 ;
-		}
-		
+        Log.d(TAG, "insertItem");
+        final IAccessDatabase mDatabase = getCurrentDb();
+
+        if (mDatabase == null) {
+            return -1;
+        }
+
         AlertHandlingList ah = new AlertHandlingList();
         ah.setAlertID(alertId);
         ah.setHandling(handling);
@@ -42,7 +52,9 @@ public class AlertHandlingInfoDao extends AbstractDao<AlertHandlingList> {
         ah.setAlertStatus(alertStatus);
         ah.setHandlingInfo(handlingInfo);
 
-        return mDatabase.saveObject(ah);
+        int ret = mDatabase.saveObject(ah);
+        Log.d(TAG, "insertItem ret: " + ret);
+        return ret;
     }
 
     public void deleteItemById(int id) {
