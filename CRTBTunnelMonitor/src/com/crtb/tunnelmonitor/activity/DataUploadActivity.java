@@ -37,7 +37,8 @@ import android.widget.Toast;
 
 import com.crtb.tunnelmonitor.utils.CrtbUtils;
 import com.crtb.tunnelmonitor.widget.SubsidenceCrossSectionFragment;
-import com.crtb.tunnelmonitor.widget.TunnelCrossSectionFragment;import com.crtb.tunnelmonitor.dao.impl.v2.ProjectIndexDao;
+import com.crtb.tunnelmonitor.widget.TunnelCrossSectionFragment;import com.crtb.tunnelmonitor.widget.TunnelCrossSectionFragment.RawSheetData;
+import com.crtb.tunnelmonitor.dao.impl.v2.ProjectIndexDao;
 import com.crtb.tunnelmonitor.dao.impl.v2.TunnelCrossSectionIndexDao;
 import com.crtb.tunnelmonitor.entity.ProjectIndex;
 import com.crtb.tunnelmonitor.entity.TunnelCrossSectionIndex;
@@ -257,7 +258,20 @@ public class DataUploadActivity extends FragmentActivity {
 						switch (mPager.getCurrentItem()) {
 						// 隧道内断面
 						case 0:
-							uploadSectionList();
+							List<RawSheetData> sheetDataList = mTunnelFragment.getTunnelSheets();
+							int uploadSheetCount = 0;
+							if (sheetDataList != null || sheetDataList.size() > 0) {
+								for(RawSheetData sheetData : sheetDataList) {
+									if (sheetData.isChecked()) {
+										uploadSheetCount++;
+									}
+								}
+							}
+							if (uploadSheetCount > 0) {
+								uploadSectionList();
+							} else {
+								Toast.makeText(getApplicationContext(), "请先选择要上传的记录单", Toast.LENGTH_LONG).show();
+							}
 							break;
 						case 1:
 							break;

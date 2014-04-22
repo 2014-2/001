@@ -1,8 +1,6 @@
 package com.crtb.tunnelmonitor.widget;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import android.app.Activity;
@@ -11,20 +9,22 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.crtb.tunnelmonitor.activity.R;
-import com.crtb.tunnelmonitor.entity.TunnelCrossSectionIndex;
+import com.crtb.tunnelmonitor.dao.impl.v2.RawSheetIndexDao;
+import com.crtb.tunnelmonitor.entity.RawSheetIndex;
+import com.crtb.tunnelmonitor.utils.CrtbUtils;
 
 public class TunnelCrossSectionFragment extends Fragment {
 
-    private ListView mlvTunnelSurface;
-
-    private List<TunnelCrossSectionIndex> mList;
-
-    static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    private ListView mTunnelSheetList;
+    private TunnelSheetAdapter mAdapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -51,53 +51,118 @@ public class TunnelCrossSectionFragment extends Fragment {
     }
 
     private void init() {
-        mlvTunnelSurface = (ListView)getView().findViewById(R.id.section_list);
-        mList = new ArrayList<TunnelCrossSectionIndex>();
-
-        //TODO: Fake data
-//        TunnelCrossSectionIndex t1 = new TunnelCrossSectionIndex();
-//        t1.setInBuiltTime(new Date(114, 1, 10, 12, 42));
-//        mList.add(t1);
-//
-//        TunnelCrossSectionIndex t2 = new TunnelCrossSectionIndex();
-//        t2.setInBuiltTime(new Date(114, 2, 5, 11, 37));
-//        mList.add(t2);
-
-        mlvTunnelSurface.setAdapter(new TunnelSurfaceAdapter());
+    	mTunnelSheetList = (ListView)getView().findViewById(R.id.section_list);
+        List<RawSheetData> sheetDataList = new ArrayList<RawSheetData>();
+        List<RawSheetIndex> rawSheets = RawSheetIndexDao.defaultDao().queryTunnelSectionRawSheetIndex();
+        if (rawSheets != null && rawSheets.size() > 0) {
+        	for(RawSheetIndex sheet: rawSheets) {
+        		RawSheetData sheetData = new RawSheetData();
+        		sheetData.setCreatedTime(CrtbUtils.formatDate(sheet.getCreateTime()));
+        		sheetData.setUploaded(false);
+        		sheetData.setChecked(true);
+        		sheetDataList.add(sheetData);
+        	}
+        }
+        mAdapter = new TunnelSheetAdapter(sheetDataList);
+        mTunnelSheetList.setAdapter(mAdapter);
+        mTunnelSheetList.setOnItemClickListener(new OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				mAdapter.revertCheck(position);
+			}
+		});
     }
 
-    class TunnelSurfaceAdapter extends BaseAdapter {
-
+    public List<RawSheetData> getTunnelSheets() {
+    	return mAdapter.getSheetList();
+    }
+    
+    class TunnelSheetAdapter extends BaseAdapter {
+    	private List<RawSheetData> mSheetDataList;
+    	
+    	TunnelSheetAdapter(List<RawSheetData> sheetDataList) {
+    		mSheetDataList = new ArrayList<RawSheetData>();
+    		if (sheetDataList != null) {
+    			mSheetDataList = sheetDataList;
+    		}
+    	}
+    	
+    	public List<RawSheetData> getSheetList() {
+    		return mSheetDataList;
+    	}
+    	
         @Override
         public int getCount() {
-            // TODO Auto-generated method stub
-            return mList.size();
+            return mSheetDataList.size();
         }
 
         @Override
         public Object getItem(int position) {
-            // TODO Auto-generated method stub
-            return mList.get(position);
+            return mSheetDataList.get(position);
         }
 
         @Override
         public long getItemId(int position) {
-            // TODO Auto-generated method stub
-            return mList.get(position).getID();
+        	return position;
         }
 
+        public void revertCheck(int position) {
+        	RawSheetData sheetData = mSheetDataList.get(position);
+        	sheetData.setChecked(!sheetData.isChecked());
+        	notifyDataSetChanged();
+        }
+        
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             if (convertView == null) {
                 convertView = LayoutInflater.from(getActivity()).inflate(R.layout.layout_section_item, null);
             }
-            TunnelCrossSectionIndex section = mList.get(position);
+            RawSheetData sheetData = mSheetDataList.get(position);
             TextView time = (TextView)convertView.findViewById(R.id.section_time);
-            time.setText(DATE_FORMAT.format(section.getInBuiltTime()));
+            time.setText(sheetData.getCreatedTime());
             TextView is_uploaded = (TextView)convertView.findViewById(R.id.section_is_uploaded);
-            is_uploaded.setText("已上传");
+            if (sheetData.isUploaded()) {
+            	is_uploaded.setText("已上传");
+            } else {
+            	is_uploaded.setText("未上传");
+            }
+            ImageView checkedStatus = (ImageView) convertView.findViewById(R.id.checked_switch);
+            if (sheetData.isChecked()) {
+            	checkedStatus.setImageResource(R.drawable.yes);
+            } else {
+            	checkedStatus.setImageResource(R.drawable.no);
+            }
             return convertView;
         }
-
+    }
+    
+   public class RawSheetData {
+    	private String mCreatedTime;
+    	private boolean mIsUploaded;
+    	private boolean mIsChecked;
+    	
+    	public void setCreatedTime(String time) {
+    		mCreatedTime = time;
+    	}
+    	
+    	public String getCreatedTime() {
+    		return mCreatedTime;
+    	}
+    	
+    	public void setUploaded(boolean flag) {
+    		mIsUploaded = flag;
+    	}
+    	
+    	public boolean isUploaded() {
+    		return mIsUploaded;
+    	}
+    	
+    	public void setChecked(boolean checked) {
+    		mIsChecked = checked;
+    	}
+    	
+    	public boolean isChecked() {
+    		return mIsChecked;
+    	}
     }
 }
