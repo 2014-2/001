@@ -60,6 +60,38 @@ public final class CrtbUtils {
     	return -1 ;
     }
     
+    public static String getExcavateMethodByStr(String method){
+    	
+    	if(method == null){
+    		return "无" ;
+    	}
+    	
+    	//DT-台阶法
+    	//ST-三台阶法
+    	//QD-全断面法
+    	//HX-环行开挖
+    	//ZG-中壁
+    	//JC-交叉
+    	//SC-双侧壁法
+    	//DB-地表下沉
+    	
+    	if(method.equals("全断面法") 
+    			|| method.equals("QD")){
+    		return "全断面法" ;
+    	} else if(method.equals("台阶法")
+    			|| method.equals("DT")){
+    		return "台阶法" ;
+    	} else if(method.equals("三台阶法")
+    			|| method.equals("ST")){
+    		return "三台阶法" ;
+    	} else if(method.equals("双侧壁法")
+    			|| method.equals("SC")){
+    		return "双侧壁法" ;
+    	}
+    	
+    	return "无" ;
+    }
+    
     public static void fillSectionParamter(TunnelCrossSectionIndex section,SectionUploadParamter outParamter){
     	if(section == null || outParamter == null){
     		return ;
