@@ -9,6 +9,7 @@ import org.zw.android.framework.ioc.InjectView;
 import org.zw.android.framework.util.DateUtils;
 import org.zw.android.framework.util.StringUtils;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -69,6 +70,8 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 	private int sectionIndex ;
 	private TunnelCrossSectionIndex tunnelSection ;
 	private SubsidenceCrossSectionIndex subsidenceSection ;
+	
+	private TunnelSettlementTotalData pS1,pS2 ;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -162,7 +165,7 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 		mContainerLayout.addView(view);
 	}
 	
-	private View createTunnelTestPointView(TunnelSettlementTotalData bean,String type){
+	private View createTunnelTestPointView(TunnelSettlementTotalData bean,final String type){
 		
 		TunnelSettlementTotalData obj 	= bean ;
 		final TestPointHolder holder 	= new TestPointHolder() ;
@@ -248,15 +251,27 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 				item.setSurveyTime(DateUtils.toDate(time, DateUtils.DATE_TIME_FORMAT));
 				item.setDataStatus(0);
 				
-				ArrayList<Integer> list = AlertUtils.checkPointSubsidenceExceed(item);
-				
-				if(list == null){
-					
-				}
-				
 				// 插入
 				if(holder.insert){
 					if(dao.insert(item) == TunnelSettlementTotalDataDao.DB_EXECUTE_SUCCESS){
+						
+						if(type.equals(AppConfig.POINT_A)){
+							doWarring(holder,AlertUtils.checkPointSubsidenceExceed(item));
+						} else {
+							
+							if(type.equals(AppConfig.POINT_S1_1)
+									|| type.equals(AppConfig.POINT_S2_1)
+									|| type.equals(AppConfig.POINT_S3_1)){
+								pS1	= item ;
+							} else {
+								pS2	= item ;
+							}
+							
+							if(pS1 != null && pS2 != null){
+								doWarringLine(holder);
+							}
+						}
+						
 						showText("保存成功");
 					} else {
 						showText("保存失败");
@@ -265,6 +280,24 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 				// 更新
 				else {
 					if(dao.update(item) == TunnelSettlementTotalDataDao.DB_EXECUTE_SUCCESS){
+						
+						if(type.equals(AppConfig.POINT_A)){
+							doWarring(holder,AlertUtils.checkPointSubsidenceExceed(item));
+						} else {
+							
+							if(type.equals(AppConfig.POINT_S1_1)
+									|| type.equals(AppConfig.POINT_S2_1)
+									|| type.equals(AppConfig.POINT_S3_1)){
+								pS1	= item ;
+							} else {
+								pS2	= item ;
+							}
+							
+							if(pS1 != null && pS2 != null){
+								doWarringLine(holder);
+							}
+						}
+						
 						showText("更新成功");
 					} else {
 						showText("更新失败");
@@ -274,6 +307,49 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 		}) ;
 		
 		return view ;
+	}
+	
+	private void doWarringLine(TestPointHolder holder){
+		
+		ArrayList<Integer> list = AlertUtils.checkLineConvergenceExceed(pS1,pS2);
+
+		doWarring(holder, list);
+
+		pS1 = null;
+		pS2 = null;
+	}
+	
+	private void doWarring(TestPointHolder holder,ArrayList<Integer> list){
+		
+		if(list == null || list.isEmpty()){
+			System.out.println("zhouwei : 检查拱顶 ------ 没有错误");
+			return ;
+		}
+		
+		holder.warringLayout.setVisibility(View.VISIBLE);
+		
+		for(int code : list){
+			
+			TextView tv = new TextView(this);
+			tv.setTextColor(Color.RED);
+			tv.setTextSize(20);
+			
+			if(code == 0){
+				tv.setText("拱顶累计下沉值超限");
+			} else if(code == 1){
+				tv.setText("拱顶下沉速率超限");
+			} else if(code == 2){
+				tv.setText("收敛累计值超限");
+			} else if(code == 3){
+				tv.setText("收敛速率超限");
+			} else if(code == 4){
+				tv.setText("地表累计下沉值超限");
+			} else if(code == 5){
+				tv.setText("地表下沉速率超限");
+			}
+			
+			holder.warringLayout.addView(tv);
+		}
 	}
 	
 	private View createSubsidenceTestPointView(SubsidenceTotalData bean,String type){
@@ -394,6 +470,8 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 			TunnelSettlementTotalDataDao dao = TunnelSettlementTotalDataDao.defaultDao();
 			String method 	= tunnelSection.getExcavateMethod() ;
 			int type 		= CrtbUtils.getExcavateMethod(method);
+			pS1				= null ;
+			pS2				= null ;
 			
 			if(type == -1){
 				showText("无效开挖类型: " + method);
@@ -511,41 +589,6 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 		}
 	}
 
-//	private OnClickListener mMeasListener = new OnClickListener() {
-//
-//		@Override
-//		public void onClick(View v) {
-//			
-//			// 从全站仪得到数据
-//			
-//			ISurveyProvider ts = TSSurveyProvider.getDefaultAdapter();
-//			
-//			if (ts == null) {
-//				Toast.makeText(TestSectionExecuteActivity.this, "请先连接全站仪",
-//						Toast.LENGTH_SHORT).show();
-//				return;
-//			}
-//
-//			Coordinate3D point = new Coordinate3D(null);
-//			try {
-//				int nret = ts.GetCoord(0, 0, point);
-//				if (nret != 1) {
-//					Toast.makeText(TestSectionExecuteActivity.this, "测量失败",
-//							Toast.LENGTH_SHORT).show();
-//					return;
-//				}
-//				// String text = String.format("%1$s,%2$s,%3$s",
-//				// point.N,point.E,point.H);
-//				// tv.setText(text);
-//			} catch (InterruptedException e) {
-//				e.printStackTrace();
-//				return;
-//			}
-//			
-//			String text = "" , x = "" , y = "" ,z = "", time = Time.getDateEN() ;
-//		}
-//	};
-	
 	@Override
 	public void onClick(View v) {
 		
@@ -632,11 +675,5 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 		
 		@InjectView(id=R.id.test_warring_layout)
 		LinearLayout warringLayout ;
-		
-		@InjectView(id=R.id.test_warring_line_1)
-		TextView mWarringLine1 ;
-		
-		@InjectView(id=R.id.test_warring_line_2)
-		TextView mWarringLine2 ;
 	}
 }
