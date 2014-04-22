@@ -5,6 +5,8 @@ import java.util.List;
 import org.zw.android.framework.IAccessDatabase;
 import org.zw.android.framework.impl.ExecuteAsyncTaskImpl;
 
+import android.util.Log;
+
 import com.crtb.tunnelmonitor.AppHandler;
 import com.crtb.tunnelmonitor.BaseAsyncTask;
 import com.crtb.tunnelmonitor.entity.TunnelCrossSectionIndex;
@@ -69,7 +71,7 @@ public final class TunnelCrossSectionIndexDao extends AbstractDao<TunnelCrossSec
 			return null ;
 		}
 		
-		String sql = "select * from TunnelCrossSectionIndex where info != '2'" ;
+		String sql = "select * from TunnelCrossSectionIndex where info == '1'" ;
 		
 		return mDatabase.queryObjects(sql, TunnelCrossSectionIndex.class) ;
 	}
@@ -85,5 +87,14 @@ public final class TunnelCrossSectionIndexDao extends AbstractDao<TunnelCrossSec
 		String sql = "select * from TunnelCrossSectionIndex where ID = ?" ;
 		
 		return mDatabase.queryObject(sql,new String[]{id}, TunnelCrossSectionIndex.class) ;
+	}
+	
+	public List<TunnelCrossSectionIndex> querySectionByIds(String rowIds) {
+		final IAccessDatabase mDatabase = getCurrentDb();
+		if (mDatabase == null) {
+			return null;
+		}
+		String sql = "select * from TunnelCrossSectionIndex where ID IN (" + rowIds +")";
+		return mDatabase.queryObjects(sql, TunnelCrossSectionIndex.class);
 	}
 }

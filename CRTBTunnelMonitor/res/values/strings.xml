@@ -83,6 +83,9 @@
     <string name="server_settings_username_hint">输入用户名</string>
     <string name="server_settings_password_hint">输入密码</string>
     <string name="server_data_upload_title">数据上传</string>
+    <string name="data_uploading">上传中，请稍候</string>
+    <string name="data_upload_success">上传记录单成功!</string>
+    <string name="data_upload_fail">上传失败,连接超时!</string>
     
     <!-- 全站仪模块 -->
     <string name="bluetooth_connect">蓝牙连接</string>
