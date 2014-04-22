@@ -19,7 +19,11 @@ import android.widget.TextView;
 
 import com.crtb.tunnelmonitor.activity.R;
 import com.crtb.tunnelmonitor.dao.impl.v2.RawSheetIndexDao;
+import com.crtb.tunnelmonitor.dao.impl.v2.SubsidenceCrossSectionIndexDao;
+import com.crtb.tunnelmonitor.dao.impl.v2.TunnelCrossSectionIndexDao;
 import com.crtb.tunnelmonitor.entity.RawSheetIndex;
+import com.crtb.tunnelmonitor.entity.SubsidenceCrossSectionIndex;
+import com.crtb.tunnelmonitor.entity.TunnelCrossSectionIndex;
 import com.crtb.tunnelmonitor.utils.CrtbUtils;
 
 @SuppressLint("ValidFragment")
@@ -85,7 +89,7 @@ public class SectionSheetFragment extends Fragment {
                 sheetDataList.add(sheetData);
             }
         }
-        mAdapter = new SheetAdapter(sheetDataList);
+        mAdapter = new SheetAdapter(loadData());
         mSheetList.setAdapter(mAdapter);
         mSheetList.setOnItemClickListener(new OnItemClickListener() {
             @Override
@@ -93,6 +97,98 @@ public class SectionSheetFragment extends Fragment {
                 mAdapter.revertCheck(position);
             }
         });
+    }
+
+    private List<RawSheetData> loadData() {
+        List<RawSheetData> sheetDataList = new ArrayList<RawSheetData>();
+        List<RawSheetIndex> rawSheets = null;
+        switch (mSheetType) {
+            case TUNNEL_CROSS:
+                rawSheets = RawSheetIndexDao.defaultDao().queryTunnelSectionRawSheetIndex();
+                break;
+            case SUBSIDENCE_CROSS:
+                rawSheets = RawSheetIndexDao.defaultDao().queryAllSubsidenceSectionRawSheetIndex();
+                break;
+        }
+        if (rawSheets != null && rawSheets.size() > 0) {
+            for (RawSheetIndex sheet : rawSheets) {
+                RawSheetData sheetData = new RawSheetData();
+                sheetData.setCreatedTime(CrtbUtils.formatDate(sheet.getCreateTime()));
+                switch (mSheetType) {
+                    case TUNNEL_CROSS:
+                        List<TunnelCrossSectionIndex> unUploadTunnelSections = getUnUploadTunnelSections(sheet
+                                .getCrossSectionIDs());
+                        if (unUploadTunnelSections.size() > 0) {
+                            sheetData.setUploaded(false);
+                            sheetData.setChecked(true);
+                        } else {
+                            sheetData.setUploaded(true);
+                            sheetData.setChecked(false);
+                        }
+                        break;
+                    case SUBSIDENCE_CROSS:
+                        List<SubsidenceCrossSectionIndex> unUploadSubsidenceSections = getUnUploadSubsidenceSections(sheet
+                                .getCrossSectionIDs());
+                        if (unUploadSubsidenceSections.size() > 0) {
+                            sheetData.setUploaded(false);
+                            sheetData.setChecked(true);
+                        } else {
+                            sheetData.setUploaded(true);
+                            sheetData.setChecked(false);
+                        }
+                        break;
+                }
+                sheetDataList.add(sheetData);
+            }
+        }
+        return sheetDataList;
+    }
+
+    public void refreshUI() {
+        mAdapter.setSheetList(loadData());
+    }
+
+    /**
+     * 获取未上传隧道内断面列表
+     * 
+     * @param sectionRowIds 断面数据库ids
+     * @return
+     */
+    public List<TunnelCrossSectionIndex> getUnUploadTunnelSections(String sectionRowIds) {
+        TunnelCrossSectionIndexDao dao = TunnelCrossSectionIndexDao.defaultDao();
+        List<TunnelCrossSectionIndex> unUploadSectionList = new ArrayList<TunnelCrossSectionIndex>();
+        List<TunnelCrossSectionIndex> sectionList = dao.querySectionByIds(sectionRowIds);
+        if (sectionList != null && sectionList.size() > 0) {
+            for (TunnelCrossSectionIndex section : sectionList) {
+                // 1表示未上传, 2表示已上传
+                if ("1".equals(section.getInfo())) {
+                    unUploadSectionList.add(section);
+                }
+            }
+        }
+        return unUploadSectionList;
+    }
+
+    /**
+     * 获取未上传地表下层断面列表
+     * 
+     * @param sectionRowIds 断面数据库ids
+     * @return
+     */
+    public List<SubsidenceCrossSectionIndex> getUnUploadSubsidenceSections(String sectionRowIds) {
+        SubsidenceCrossSectionIndexDao dao = SubsidenceCrossSectionIndexDao.defaultDao();
+        List<SubsidenceCrossSectionIndex> unUploadSectionList = new ArrayList<SubsidenceCrossSectionIndex>();
+        // List<SubsidenceCrossSectionIndex> sectionList =
+        // dao.querySectionByIds(sectionRowIds);
+        // if (sectionList != null && sectionList.size() > 0) {
+        // for (SubsidenceCrossSectionIndex section : sectionList) {
+        // // 1表示未上传, 2表示已上传
+        // if ("1".equals(section.getInfo())) {
+        // unUploadSectionList.add(section);
+        // }
+        // }
+        // }
+        return unUploadSectionList;
     }
 
     public List<RawSheetData> getSheets() {
@@ -107,6 +203,11 @@ public class SectionSheetFragment extends Fragment {
             if (sheetDataList != null) {
                 mSheetDataList = sheetDataList;
             }
+        }
+
+        public void setSheetList(List<RawSheetData> sheetDataList) {
+            mSheetDataList = sheetDataList;
+            notifyDataSetChanged();
         }
 
         public List<RawSheetData> getSheetList() {
