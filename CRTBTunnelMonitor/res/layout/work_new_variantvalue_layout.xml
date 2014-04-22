@@ -64,7 +64,7 @@
                     android:layout_marginTop="10dp"
                     android:layout_toLeftOf="@id/hint_img"
                     android:inputType="numberDecimal"
-                    android:text="5" />
+                    android:text="100" />
             </RelativeLayout>
 
             <TextView
@@ -98,7 +98,7 @@
                     android:layout_marginTop="10dp"
                     android:layout_toLeftOf="@id/hint_img"
                     android:inputType="numberDecimal"
-                    android:text="100" />
+                    android:text="5" />
             </RelativeLayout>
 
             <LinearLayout

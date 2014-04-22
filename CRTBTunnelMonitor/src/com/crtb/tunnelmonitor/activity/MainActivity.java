@@ -3,6 +3,8 @@ package com.crtb.tunnelmonitor.activity;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.zw.android.framework.util.StringUtils;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -14,6 +16,7 @@ import android.widget.Toast;
 
 import com.crtb.tunnelmonitor.AppActivityManager;
 import com.crtb.tunnelmonitor.AppCRTBApplication;
+import com.crtb.tunnelmonitor.AppPreferences;
 import com.crtb.tunnelmonitor.BaseActivity;
 import com.crtb.tunnelmonitor.CommonObject;
 import com.crtb.tunnelmonitor.common.Constant;
@@ -92,8 +95,11 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 
 	/** 初始化控件 */
 	private void initView() {
+		
 		TextView title = (TextView) findViewById(R.id.tv_topbar_title);
-		title.setText(R.string.main_title);
+		String name = AppPreferences.getPreferences().getCurrentSimpleProjectName();
+		title.setText(StringUtils.isEmpty(name) ? getString(R.string.main_title) : name);
+		
 		mWorkSection = (TextView) findViewById(R.id.worksection);
 		mCrossSection = (TextView) findViewById(R.id.crosssection);
 		mSheet = (TextView) findViewById(R.id.sheet);

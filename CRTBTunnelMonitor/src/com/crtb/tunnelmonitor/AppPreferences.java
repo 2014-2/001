@@ -55,6 +55,24 @@ public final class AppPreferences {
 		return getString(KEY_CURRENT_PROJECT) ;
 	}
 	
+	public String getCurrentSimpleProjectName(){
+		
+		String name = getCurrentProject();
+		
+		if(StringUtils.isEmpty(name)){
+			return "" ;
+		}
+		
+		int start = name.indexOf("_");
+		int end		= name.lastIndexOf(".");
+		
+		if(end > start){
+			return name.substring(start + 1, end);
+		}
+		
+		return "" ;
+	}
+	
 	private boolean checkGetInput(String key){
 		
 		if(key == null || key.equals("")){

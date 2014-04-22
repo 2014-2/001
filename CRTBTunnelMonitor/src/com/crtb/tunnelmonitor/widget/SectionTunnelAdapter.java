@@ -34,8 +34,8 @@ public final class SectionTunnelAdapter extends CrtbEntityAdapter<TunnelCrossSec
 			holder	= (HolderView)convertView.getTag() ;
 		}
 		
-		holder.chainage.setText(CrtbUtils.formatSectionName(item.getChainagePrefix(), (float)item.getChainage()));
-		holder.excavation.setText(String.valueOf(item.getExcavateMethod()));
+		holder.chainage.setText(item.getSectionName());
+		holder.excavation.setText(CrtbUtils.getExcavateMethodByStr(item.getExcavateMethod()));
 		
 		return convertView;
 	}
