@@ -11,7 +11,6 @@ import android.widget.TextView;
 
 import com.crtb.tunnelmonitor.activity.R;
 import com.crtb.tunnelmonitor.entity.TunnelCrossSectionIndex;
-import com.crtb.tunnelmonitor.utils.CrtbUtils;
 
 /**
  * 
@@ -74,7 +73,7 @@ public final class CrtbRecordTunnelSectionInfoAdapter extends CrtbEntityAdapter<
 			holder		= (HolderView)convertView.getTag() ;
 		}
 		
-		holder.chainage.setText(CrtbUtils.formatSectionName(item.getChainagePrefix(), (float)item.getChainage()));
+		holder.chainage.setText(item.getSectionName());
 		
 		if(item.isUsed()){
 			holder.status.setBackgroundResource(R.drawable.use);

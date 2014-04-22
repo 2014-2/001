@@ -469,7 +469,7 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 			
 			TunnelSettlementTotalDataDao dao = TunnelSettlementTotalDataDao.defaultDao();
 			String method 	= tunnelSection.getExcavateMethod() ;
-			int type 		= CrtbUtils.getExcavateMethod(method);
+			int type 		= CrtbUtils.getExcavateMethod(CrtbUtils.getExcavateMethodByStr(method));
 			pS1				= null ;
 			pS2				= null ;
 			
