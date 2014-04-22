@@ -65,8 +65,9 @@ public final class CrtbUtils {
     		return ;
     	}
     	outParamter.setSectionName(section.getSectionName());
-    	int sectionSequence = CrtbWebService.getInstance().getSectionSequence() + 1;
-    	CrtbWebService.getInstance().setSectionSequence(sectionSequence);
+    	CrtbAppConfig config = CrtbAppConfig.getInstance();
+    	int sectionSequence = config.getSectionSequence() + 1;
+    	config.setSectionSequence(sectionSequence);
     	String sectionCode = CrtbWebService.getInstance().getSiteCode() + String.format("%04d",  sectionSequence);
     	outParamter.setSectioCode(sectionCode);
     	//使用自己编码的方式

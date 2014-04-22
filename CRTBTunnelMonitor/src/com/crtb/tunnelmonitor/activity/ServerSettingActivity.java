@@ -29,7 +29,7 @@ public class ServerSettingActivity extends WorkFlowActivity {
 		mOk.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				CrtbAppConfig appConfig = CrtbAppConfig.getInstance(getApplicationContext());
+				CrtbAppConfig appConfig = CrtbAppConfig.getInstance();
 				appConfig.setServerAddress(mServerIp.getText().toString());
 				appConfig.setUserName(mUserName.getText().toString());
 				appConfig.setPassword(mPassword.getText().toString());

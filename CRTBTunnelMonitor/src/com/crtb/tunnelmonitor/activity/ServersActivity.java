@@ -95,7 +95,7 @@ public class ServersActivity extends Activity implements OnClickListener{
     }
     
     private void login() {
-    	CrtbAppConfig config = CrtbAppConfig.getInstance(getApplicationContext());
+    	CrtbAppConfig config = CrtbAppConfig.getInstance();
 		String userName = config.getUserName();
 		String password = config.getPassword();
 		if (TextUtils.isEmpty(userName) || TextUtils.isEmpty(password)) {

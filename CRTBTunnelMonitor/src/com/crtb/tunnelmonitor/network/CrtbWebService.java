@@ -24,6 +24,7 @@ import android.os.Looper;
 import android.util.Log;
 
 import com.crtb.tunnelmonitor.common.Constant;
+import com.crtb.tunnelmonitor.utils.CrtbAppConfig;
 
 public final class CrtbWebService {
 	private static final String TAG = "CrtbWebService";
@@ -43,7 +44,6 @@ public final class CrtbWebService {
 	private String mZoneName;
 	private String mSiteCode;
 	private String mSiteName;
-	private int mSectionSequence;
 	
 	private CrtbWebService() {
 		mHandler = new Handler(Looper.getMainLooper());
@@ -81,18 +81,6 @@ public final class CrtbWebService {
 	 */
 	public String getSiteCode() {
 		return mSiteCode;
-	}
-	
-	/**
-	 * 
-	 * @param sequence
-	 */
-	public void setSectionSequence(int sequence) {
-		mSectionSequence = sequence;
-	}
-	
-	public int getSectionSequence() {
-		return mSectionSequence;
 	}
 	
 	public void login(final String account, final String password, final RpcCallback callback) {
@@ -237,7 +225,8 @@ public final class CrtbWebService {
 				for(String sectionCode : sectionCodeList) {
 					sequenceList.add(Integer.parseInt(sectionCode.replace(getSiteCode(), "")));
 				}
-				setSectionSequence(Collections.max(sequenceList));
+				CrtbAppConfig config = CrtbAppConfig.getInstance();
+				config.setSectionSequence(Collections.max(sequenceList));
 				if (callback != null) {
 					callback.onSuccess(data);
 				}

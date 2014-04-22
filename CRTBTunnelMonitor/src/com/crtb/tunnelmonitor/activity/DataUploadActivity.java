@@ -5,6 +5,7 @@ import java.util.List;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
@@ -41,8 +42,9 @@ import com.crtb.tunnelmonitor.dao.impl.v2.TunnelCrossSectionIndexDao;
 import com.crtb.tunnelmonitor.entity.ProjectIndex;
 import com.crtb.tunnelmonitor.entity.TunnelCrossSectionIndex;
 import com.crtb.tunnelmonitor.network.CrtbWebService;
+import com.crtb.tunnelmonitor.network.DataCounter;
+import com.crtb.tunnelmonitor.network.DataCounter.CounterListener;
 import com.crtb.tunnelmonitor.network.RpcCallback;
-import com.crtb.tunnelmonitor.network.SectionStatus;
 import com.crtb.tunnelmonitor.network.SectionUploadParamter;
 public class DataUploadActivity extends FragmentActivity {
 	private static final String LOG_TAG = "DataUploadActivity";
@@ -69,6 +71,23 @@ public class DataUploadActivity extends FragmentActivity {
     private int currIndex = 0;
 
     private MenuPopupWindow menuWindow;
+    
+    private CounterListener mUploadListener = new CounterListener() {
+		
+		@Override
+		public void done(final boolean success) {
+			mProgressDialog.dismiss();
+			if (success) {
+				Toast.makeText(getApplicationContext(), "上传断面数据成功", Toast.LENGTH_LONG).show();
+			} else {
+				Toast.makeText(getApplicationContext(), "上传断面数据失败", Toast.LENGTH_LONG).show();
+			}
+		}
+	};
+	
+	private DataCounter mUploadCounter;
+	
+	private ProgressDialog mProgressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -287,28 +306,32 @@ public class DataUploadActivity extends FragmentActivity {
     	TunnelCrossSectionIndexDao dao = TunnelCrossSectionIndexDao.defaultDao();
     	List<TunnelCrossSectionIndex> sectionList = dao.queryUnUploadSections();
     	if (sectionList != null && sectionList.size() > 0) {
+    		mProgressDialog = ProgressDialog.show(this, null, "正在上传数据", true, false);
+    		mUploadCounter = new DataCounter("SectionUpload", sectionList.size(), mUploadListener);
     		for(TunnelCrossSectionIndex section : sectionList) {
-    			SectionUploadParamter paramter = new SectionUploadParamter();
-    			CrtbUtils.fillSectionParamter(section, paramter);
-    			uploadSection(paramter);
+    			uploadSection(section);
     		}
     	}
     }
     
     //上传断面
-    private void uploadSection(SectionUploadParamter paramter) {
+    private void uploadSection(final TunnelCrossSectionIndex section) {
+    	SectionUploadParamter paramter = new SectionUploadParamter();
+		CrtbUtils.fillSectionParamter(section, paramter);
     	CrtbWebService.getInstance().uploadSection(paramter, new RpcCallback() {
-			
 			@Override
 			public void onSuccess(Object[] data) {
+				TunnelCrossSectionIndexDao dao = TunnelCrossSectionIndexDao.defaultDao();
+				section.setInfo("2");
+				dao.update(section);
 				Log.d(LOG_TAG, "upload section success.");
-				//uploadTestResult();
+				mUploadCounter.increase(true);
 			}
 			
 			@Override
 			public void onFailed(String reason) {
 				Log.d(LOG_TAG, "upload section faled: " + reason);
-				showMessage(false);
+				mUploadCounter.increase(false);
 			}
 		});
     }

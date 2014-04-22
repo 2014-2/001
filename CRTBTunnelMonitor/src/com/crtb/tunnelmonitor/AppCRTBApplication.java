@@ -11,6 +11,7 @@ import org.zw.android.framework.impl.FrameworkConfig;
 import org.zw.android.framework.impl.FrameworkFacade;
 
 import android.app.Application;
+import android.content.Context;
 
 import com.crtb.tunnelmonitor.dao.impl.v2.CrtbLicenseDao;
 import com.crtb.tunnelmonitor.entity.ControlPointsIndex;
@@ -47,6 +48,14 @@ public class AppCRTBApplication extends Application {
 	   return instance;
 	}
 
+	public static Context getAppContext() {
+		Context appContext = null;
+		if (instance != null) {
+			appContext = instance.getApplicationContext();
+		}
+		return appContext;
+	}
+	
 	@Override
 	public void onCreate() {
 		super.onCreate();

@@ -101,7 +101,7 @@ public class TesterLoadActivity extends Activity implements OnClickListener {
 					public void onSuccess(Object[] data) {
 						// Toast.makeText(TesterLoadActivity.this,
 						// "获取成功",Toast.LENGTH_LONG).show();
-						CrtbAppConfig config = CrtbAppConfig.getInstance(getApplicationContext());
+						CrtbAppConfig config = CrtbAppConfig.getInstance();
 						config.setUserName(username);
 						config.setPassword(password);
 						CrtbWebService.getInstance().getSurveyors(
