@@ -44,7 +44,7 @@ public final class CrtbUtils {
     public static int getExcavateMethod(String method){
     	
     	if(method == null){
-    		return 0 ;
+    		return -1 ;
     	}
     	
     	if(method.equals("全断面法")){
@@ -57,7 +57,7 @@ public final class CrtbUtils {
     		return 3 ;
     	}
     	
-    	return 0 ;
+    	return -1 ;
     }
     
     public static void fillSectionParamter(TunnelCrossSectionIndex section,SectionUploadParamter outParamter){

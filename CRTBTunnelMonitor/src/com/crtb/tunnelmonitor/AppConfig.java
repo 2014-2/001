@@ -20,6 +20,15 @@ public final class AppConfig {
 	// database version
 	public static final int DB_VERSION							= 1 ;
 	
+	// test point type
+	public static final String  POINT_A							= "A" ;
+	public static final String  POINT_S1_1						= "S1-1" ;
+	public static final String  POINT_S1_2						= "S1-2" ;
+	public static final String  POINT_S2_1						= "S2-1" ;
+	public static final String  POINT_S2_2						= "S2-2" ;
+	public static final String  POINT_S3_1						= "S3-1" ;
+	public static final String  POINT_S3_2						= "S3-2" ;
+	
 	// load all surveyer
 	public static final String ACTION_RELOAD_ALL_SURVEYER 		= "action.reload.all.surveyer" ;
 }
