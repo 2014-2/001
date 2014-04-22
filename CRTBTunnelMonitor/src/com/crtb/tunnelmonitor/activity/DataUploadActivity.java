@@ -79,6 +79,7 @@ public class DataUploadActivity extends FragmentActivity {
 		public void done(final boolean success) {
 			mProgressDialog.dismiss();
 			if (success) {
+				mTunnelFragment.refreshUI();
 				Toast.makeText(getApplicationContext(), "上传断面数据成功", Toast.LENGTH_LONG).show();
 			} else {
 				Toast.makeText(getApplicationContext(), "上传断面数据失败", Toast.LENGTH_LONG).show();

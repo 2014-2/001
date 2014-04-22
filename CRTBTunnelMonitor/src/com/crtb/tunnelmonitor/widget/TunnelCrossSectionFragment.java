@@ -18,7 +18,9 @@ import android.widget.TextView;
 
 import com.crtb.tunnelmonitor.activity.R;
 import com.crtb.tunnelmonitor.dao.impl.v2.RawSheetIndexDao;
+import com.crtb.tunnelmonitor.dao.impl.v2.TunnelCrossSectionIndexDao;
 import com.crtb.tunnelmonitor.entity.RawSheetIndex;
+import com.crtb.tunnelmonitor.entity.TunnelCrossSectionIndex;
 import com.crtb.tunnelmonitor.utils.CrtbUtils;
 
 public class TunnelCrossSectionFragment extends Fragment {
@@ -52,18 +54,7 @@ public class TunnelCrossSectionFragment extends Fragment {
 
     private void init() {
     	mTunnelSheetList = (ListView)getView().findViewById(R.id.section_list);
-        List<RawSheetData> sheetDataList = new ArrayList<RawSheetData>();
-        List<RawSheetIndex> rawSheets = RawSheetIndexDao.defaultDao().queryTunnelSectionRawSheetIndex();
-        if (rawSheets != null && rawSheets.size() > 0) {
-        	for(RawSheetIndex sheet: rawSheets) {
-        		RawSheetData sheetData = new RawSheetData();
-        		sheetData.setCreatedTime(CrtbUtils.formatDate(sheet.getCreateTime()));
-        		sheetData.setUploaded(false);
-        		sheetData.setChecked(true);
-        		sheetDataList.add(sheetData);
-        	}
-        }
-        mAdapter = new TunnelSheetAdapter(sheetDataList);
+        mAdapter = new TunnelSheetAdapter(loadData());
         mTunnelSheetList.setAdapter(mAdapter);
         mTunnelSheetList.setOnItemClickListener(new OnItemClickListener() {
 			@Override
@@ -73,6 +64,52 @@ public class TunnelCrossSectionFragment extends Fragment {
 		});
     }
 
+	private List<RawSheetData> loadData() {
+		List<RawSheetData> sheetDataList = new ArrayList<RawSheetData>();
+		List<RawSheetIndex> rawSheets = RawSheetIndexDao.defaultDao().queryTunnelSectionRawSheetIndex();
+		if (rawSheets != null && rawSheets.size() > 0) {
+			for (RawSheetIndex sheet : rawSheets) {
+				RawSheetData sheetData = new RawSheetData();
+				sheetData.setCreatedTime(CrtbUtils.formatDate(sheet.getCreateTime()));
+				List<TunnelCrossSectionIndex> unUploadSections = getUnUploadSections(sheet.getCrossSectionIDs());
+				if (unUploadSections.size() > 0) {
+					sheetData.setUploaded(false);
+					sheetData.setChecked(true);
+				} else {
+					sheetData.setUploaded(true);
+					sheetData.setChecked(false);
+				}
+				sheetDataList.add(sheetData);
+			}
+		}
+		return sheetDataList;
+	}
+	
+    public void refreshUI() {
+    	mAdapter.setSheetList(loadData());
+    }
+    
+    /**
+     * 获取未上传断面列表
+     * 
+     * @param sectionRowIds  断面数据库ids
+     * @return
+     */
+    public List<TunnelCrossSectionIndex> getUnUploadSections(String sectionRowIds) {
+    	TunnelCrossSectionIndexDao dao = TunnelCrossSectionIndexDao.defaultDao();
+    	List<TunnelCrossSectionIndex> unUploadSectionList = new ArrayList<TunnelCrossSectionIndex>();
+		List<TunnelCrossSectionIndex> sectionList = dao.querySectionByIds(sectionRowIds);
+		if (sectionList != null && sectionList.size() > 0) {
+			for(TunnelCrossSectionIndex section: sectionList) {
+				//1表示未上传, 2表示已上传
+				if ("1".equals(section.getInfo())) {
+					unUploadSectionList.add(section);
+				}
+			}
+		}
+		return unUploadSectionList;
+    }
+    
     public List<RawSheetData> getTunnelSheets() {
     	return mAdapter.getSheetList();
     }
@@ -85,6 +122,11 @@ public class TunnelCrossSectionFragment extends Fragment {
     		if (sheetDataList != null) {
     			mSheetDataList = sheetDataList;
     		}
+    	}
+    	
+    	public void setSheetList(List<RawSheetData> sheetDataList) {
+    		mSheetDataList = sheetDataList;
+    		notifyDataSetChanged();
     	}
     	
     	public List<RawSheetData> getSheetList() {
@@ -137,6 +179,7 @@ public class TunnelCrossSectionFragment extends Fragment {
     }
     
    public class RawSheetData {
+	    private String mSectionIds;
     	private String mCreatedTime;
     	private boolean mIsUploaded;
     	private boolean mIsChecked;
@@ -163,6 +206,14 @@ public class TunnelCrossSectionFragment extends Fragment {
     	
     	public boolean isChecked() {
     		return mIsChecked;
+    	}
+    	
+    	public void setSectionIds(String sectionIds) {
+    		mSectionIds = sectionIds;
+    	}
+    	
+    	public String getSectionIds() {
+    		return mSectionIds;
     	}
     }
 }
