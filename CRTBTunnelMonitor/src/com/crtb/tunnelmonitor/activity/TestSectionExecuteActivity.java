@@ -326,6 +326,7 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 			return ;
 		}
 		
+		holder.warringLayout.removeAllViews() ;
 		holder.warringLayout.setVisibility(View.VISIBLE);
 		
 		for(int code : list){
