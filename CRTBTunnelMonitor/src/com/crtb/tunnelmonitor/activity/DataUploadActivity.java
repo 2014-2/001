@@ -5,7 +5,6 @@ import java.util.List;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
@@ -23,14 +22,18 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.PopupWindow;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -65,6 +68,16 @@ public class DataUploadActivity extends FragmentActivity {
 
     private TextView mSubsidenceTab;
 
+    private LinearLayout mProgressOverlay;
+
+    private ProgressBar mUploadProgress;
+
+    private ImageView mUploadStatusIcon;
+
+    private TextView mUploadStatusText;
+
+    private boolean isUploading = true;
+
     private int bmpW;
 
     private int offset = 0;
@@ -77,19 +90,14 @@ public class DataUploadActivity extends FragmentActivity {
 
         @Override
         public void done(final boolean success) {
-            mProgressDialog.dismiss();
             if (success) {
-				mTunnelFragment.refreshUI();
-                Toast.makeText(getApplicationContext(), "上传断面数据成功", Toast.LENGTH_LONG).show();
-            } else {
-                Toast.makeText(getApplicationContext(), "上传断面数据失败", Toast.LENGTH_LONG).show();
+                mTunnelFragment.refreshUI();
             }
+            uploadStatus(success);
         }
     };
 
     private DataCounter mUploadCounter;
-
-    private ProgressDialog mProgressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,6 +107,7 @@ public class DataUploadActivity extends FragmentActivity {
         initImageView();
         initPager();
         initTab();
+        initProgressOverlay();
     }
 
     protected void setTopbarTitle(String title) {
@@ -162,6 +171,47 @@ public class DataUploadActivity extends FragmentActivity {
             }
         });
 
+    }
+
+    private void initProgressOverlay() {
+        mProgressOverlay = (LinearLayout)findViewById(R.id.progress_overlay);
+        mUploadProgress = (ProgressBar)findViewById(R.id.progressbar);
+        mUploadStatusIcon = (ImageView)findViewById(R.id.upload_status_icon);
+        mUploadStatusText = (TextView)findViewById(R.id.upload_status_text);
+        mProgressOverlay.setOnTouchListener(new OnTouchListener() {
+
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (!isUploading) {
+                    hideProgressOverlay();
+                }
+                return true;
+            }
+        });
+    }
+
+    private void showProgressOverlay() {
+        mProgressOverlay.setVisibility(View.VISIBLE);
+        mUploadProgress.setIndeterminate(true);
+        mUploadStatusIcon.setVisibility(View.GONE);
+        mUploadStatusText.setText(R.string.data_uploading);
+        isUploading = true;
+    }
+
+    private void hideProgressOverlay() {
+        mProgressOverlay.setVisibility(View.GONE);
+    }
+
+    private void uploadStatus(boolean isSuccess) {
+        isUploading = false;
+        mUploadStatusIcon.setVisibility(View.VISIBLE);
+        if (isSuccess) {
+            mUploadStatusIcon.setImageResource(R.drawable.success);
+            mUploadStatusText.setText(R.string.data_upload_success);
+        } else {
+            mUploadStatusIcon.setImageResource(R.drawable.fail);
+            mUploadStatusText.setText(R.string.data_upload_fail);
+        }
     }
 
     class UploadPagerAdapter extends FragmentPagerAdapter {
@@ -285,6 +335,7 @@ public class DataUploadActivity extends FragmentActivity {
                         Toast.makeText(getApplicationContext(), "请先打开工作面",
                                 Toast.LENGTH_SHORT).show();
                     }
+                    menuWindow.dismiss();
                 }
             });
             setContentView(mMenuView);
@@ -322,7 +373,7 @@ public class DataUploadActivity extends FragmentActivity {
         TunnelCrossSectionIndexDao dao = TunnelCrossSectionIndexDao.defaultDao();
         List<TunnelCrossSectionIndex> sectionList = dao.queryUnUploadSections();
         if (sectionList != null && sectionList.size() > 0) {
-            mProgressDialog = ProgressDialog.show(this, null, "正在上传数据", true, false);
+            showProgressOverlay();
             mUploadCounter = new DataCounter("SectionUpload", sectionList.size(), mUploadListener);
             for(TunnelCrossSectionIndex section : sectionList) {
                 uploadSection(section);
