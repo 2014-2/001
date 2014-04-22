@@ -35,9 +35,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.crtb.tunnelmonitor.utils.CrtbUtils;
-import com.crtb.tunnelmonitor.widget.SubsidenceCrossSectionFragment;
-import com.crtb.tunnelmonitor.widget.TunnelCrossSectionFragment;import com.crtb.tunnelmonitor.widget.TunnelCrossSectionFragment.RawSheetData;
 import com.crtb.tunnelmonitor.dao.impl.v2.ProjectIndexDao;
 import com.crtb.tunnelmonitor.dao.impl.v2.TunnelCrossSectionIndexDao;
 import com.crtb.tunnelmonitor.entity.ProjectIndex;
@@ -47,8 +44,11 @@ import com.crtb.tunnelmonitor.network.DataCounter;
 import com.crtb.tunnelmonitor.network.DataCounter.CounterListener;
 import com.crtb.tunnelmonitor.network.RpcCallback;
 import com.crtb.tunnelmonitor.network.SectionUploadParamter;
+import com.crtb.tunnelmonitor.utils.CrtbUtils;
+import com.crtb.tunnelmonitor.widget.SectionSheetFragment;
+import com.crtb.tunnelmonitor.widget.SectionSheetFragment.RawSheetData;
 public class DataUploadActivity extends FragmentActivity {
-	private static final String LOG_TAG = "DataUploadActivity";
+    private static final String LOG_TAG = "DataUploadActivity";
     private TextView mTopbarTitle;
 
     private ImageView cursor;
@@ -57,13 +57,13 @@ public class DataUploadActivity extends FragmentActivity {
 
     private ArrayList<Fragment> mFragmentList;
 
-    private TunnelCrossSectionFragment mTunnelFragment;
+    private SectionSheetFragment mTunnelFragment;
 
-    private SubsidenceCrossSectionFragment mSinkFragment;
+    private SectionSheetFragment mSubsidenceFragment;
 
     private TextView mTunnelTab;
 
-    private TextView mSinkTab;
+    private TextView mSubsidenceTab;
 
     private int bmpW;
 
@@ -72,23 +72,23 @@ public class DataUploadActivity extends FragmentActivity {
     private int currIndex = 0;
 
     private MenuPopupWindow menuWindow;
-    
+
     private CounterListener mUploadListener = new CounterListener() {
-		
-		@Override
-		public void done(final boolean success) {
-			mProgressDialog.dismiss();
-			if (success) {
-				Toast.makeText(getApplicationContext(), "上传断面数据成功", Toast.LENGTH_LONG).show();
-			} else {
-				Toast.makeText(getApplicationContext(), "上传断面数据失败", Toast.LENGTH_LONG).show();
-			}
-		}
-	};
-	
-	private DataCounter mUploadCounter;
-	
-	private ProgressDialog mProgressDialog;
+
+        @Override
+        public void done(final boolean success) {
+            mProgressDialog.dismiss();
+            if (success) {
+                Toast.makeText(getApplicationContext(), "上传断面数据成功", Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(getApplicationContext(), "上传断面数据失败", Toast.LENGTH_LONG).show();
+            }
+        }
+    };
+
+    private DataCounter mUploadCounter;
+
+    private ProgressDialog mProgressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -131,11 +131,12 @@ public class DataUploadActivity extends FragmentActivity {
 
         mFragmentList = new ArrayList<Fragment>();
 
-        mTunnelFragment = new TunnelCrossSectionFragment();
-        mSinkFragment = new SubsidenceCrossSectionFragment();
+        mTunnelFragment = new SectionSheetFragment(SectionSheetFragment.TUNNEL_CROSS);
+        mSubsidenceFragment = new SectionSheetFragment(
+                SectionSheetFragment.SUBSIDENCE_CROSS);
 
         mFragmentList.add(mTunnelFragment);
-        mFragmentList.add(mSinkFragment);
+        mFragmentList.add(mSubsidenceFragment);
 
         mPager.setAdapter(new UploadPagerAdapter(getSupportFragmentManager(), mFragmentList));
         mPager.setCurrentItem(0);
@@ -144,7 +145,7 @@ public class DataUploadActivity extends FragmentActivity {
 
     private void initTab() {
         mTunnelTab = (TextView)findViewById(R.id.tunnel);
-        mSinkTab = (TextView)findViewById(R.id.sink);
+        mSubsidenceTab = (TextView)findViewById(R.id.sink);
 
         mTunnelTab.setOnClickListener(new OnClickListener() {
             @Override
@@ -153,7 +154,7 @@ public class DataUploadActivity extends FragmentActivity {
             }
         });
 
-        mSinkTab.setOnClickListener(new OnClickListener() {
+        mSubsidenceTab.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 mPager.setCurrentItem(1);
@@ -250,41 +251,41 @@ public class DataUploadActivity extends FragmentActivity {
             mMenuView = inflater.inflate(R.layout.menu_data_upload, null);
             upload = (RelativeLayout)mMenuView.findViewById(R.id.menu_upload);
 
-			upload.setOnClickListener(new OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					ProjectIndex currentProject = ProjectIndexDao.defaultWorkPlanDao().queryEditWorkPlan();
-					if (currentProject != null) {
-						switch (mPager.getCurrentItem()) {
-						// 隧道内断面
-						case 0:
-							List<RawSheetData> sheetDataList = mTunnelFragment.getTunnelSheets();
-							int uploadSheetCount = 0;
-							if (sheetDataList != null || sheetDataList.size() > 0) {
-								for(RawSheetData sheetData : sheetDataList) {
-									if (sheetData.isChecked()) {
-										uploadSheetCount++;
-									}
-								}
-							}
-							if (uploadSheetCount > 0) {
-								uploadSectionList();
-							} else {
-								Toast.makeText(getApplicationContext(), "请先选择要上传的记录单", Toast.LENGTH_LONG).show();
-							}
-							break;
-						case 1:
-							break;
-						// TODO:地标下沉断面
-						default:
-							break;
-						}
-					} else {
-						Toast.makeText(getApplicationContext(), "请先打开工作面",
-								Toast.LENGTH_SHORT).show();
-					}
-				}
-			});
+            upload.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ProjectIndex currentProject = ProjectIndexDao.defaultWorkPlanDao().queryEditWorkPlan();
+                    if (currentProject != null) {
+                        switch (mPager.getCurrentItem()) {
+                            // 隧道内断面
+                            case 0:
+                                List<RawSheetData> sheetDataList = mTunnelFragment.getSheets();
+                                int uploadSheetCount = 0;
+                                if (sheetDataList != null || sheetDataList.size() > 0) {
+                                    for(RawSheetData sheetData : sheetDataList) {
+                                        if (sheetData.isChecked()) {
+                                            uploadSheetCount++;
+                                        }
+                                    }
+                                }
+                                if (uploadSheetCount > 0) {
+                                    uploadSectionList();
+                                } else {
+                                    Toast.makeText(getApplicationContext(), "请先选择要上传的记录单", Toast.LENGTH_LONG).show();
+                                }
+                                break;
+                            case 1:
+                                break;
+                                // TODO:地标下沉断面
+                            default:
+                                break;
+                        }
+                    } else {
+                        Toast.makeText(getApplicationContext(), "请先打开工作面",
+                                Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
             setContentView(mMenuView);
             setWidth(LayoutParams.FILL_PARENT);
             setHeight(LayoutParams.WRAP_CONTENT);
@@ -314,92 +315,92 @@ public class DataUploadActivity extends FragmentActivity {
         }
         return true;
     }
-    
+
     //上传所有断面数据
     private void uploadSectionList() {
-    	TunnelCrossSectionIndexDao dao = TunnelCrossSectionIndexDao.defaultDao();
-    	List<TunnelCrossSectionIndex> sectionList = dao.queryUnUploadSections();
-    	if (sectionList != null && sectionList.size() > 0) {
-    		mProgressDialog = ProgressDialog.show(this, null, "正在上传数据", true, false);
-    		mUploadCounter = new DataCounter("SectionUpload", sectionList.size(), mUploadListener);
-    		for(TunnelCrossSectionIndex section : sectionList) {
-    			uploadSection(section);
-    		}
-    	}
+        TunnelCrossSectionIndexDao dao = TunnelCrossSectionIndexDao.defaultDao();
+        List<TunnelCrossSectionIndex> sectionList = dao.queryUnUploadSections();
+        if (sectionList != null && sectionList.size() > 0) {
+            mProgressDialog = ProgressDialog.show(this, null, "正在上传数据", true, false);
+            mUploadCounter = new DataCounter("SectionUpload", sectionList.size(), mUploadListener);
+            for(TunnelCrossSectionIndex section : sectionList) {
+                uploadSection(section);
+            }
+        }
     }
-    
+
     //上传断面
     private void uploadSection(final TunnelCrossSectionIndex section) {
-    	SectionUploadParamter paramter = new SectionUploadParamter();
-		CrtbUtils.fillSectionParamter(section, paramter);
-    	CrtbWebService.getInstance().uploadSection(paramter, new RpcCallback() {
-			@Override
-			public void onSuccess(Object[] data) {
-				TunnelCrossSectionIndexDao dao = TunnelCrossSectionIndexDao.defaultDao();
-				section.setInfo("2");
-				dao.update(section);
-				Log.d(LOG_TAG, "upload section success.");
-				mUploadCounter.increase(true);
-			}
-			
-			@Override
-			public void onFailed(String reason) {
-				Log.d(LOG_TAG, "upload section faled: " + reason);
-				mUploadCounter.increase(false);
-			}
-		});
+        SectionUploadParamter paramter = new SectionUploadParamter();
+        CrtbUtils.fillSectionParamter(section, paramter);
+        CrtbWebService.getInstance().uploadSection(paramter, new RpcCallback() {
+            @Override
+            public void onSuccess(Object[] data) {
+                TunnelCrossSectionIndexDao dao = TunnelCrossSectionIndexDao.defaultDao();
+                section.setInfo("2");
+                dao.update(section);
+                Log.d(LOG_TAG, "upload section success.");
+                mUploadCounter.increase(true);
+            }
+
+            @Override
+            public void onFailed(String reason) {
+                Log.d(LOG_TAG, "upload section faled: " + reason);
+                mUploadCounter.increase(false);
+            }
+        });
     }
-    
+
     private void updateSection() {
-    	CrtbWebService.getInstance().updateSection(null, new RpcCallback() {
-			
-			@Override
-			public void onSuccess(Object[] data) {
-				Log.d(LOG_TAG, "update section status success.");
-			}
-			
-			@Override
-			public void onFailed(String reason) {
-				Log.d(LOG_TAG, "update section status failed.");
-			}
-		});
+        CrtbWebService.getInstance().updateSection(null, new RpcCallback() {
+
+            @Override
+            public void onSuccess(Object[] data) {
+                Log.d(LOG_TAG, "update section status success.");
+            }
+
+            @Override
+            public void onFailed(String reason) {
+                Log.d(LOG_TAG, "update section status failed.");
+            }
+        });
     }
-    
+
     //上传测量数据
-	private void uploadTestResult() {
-		CrtbWebService.getInstance().uploadTestResult(null, new RpcCallback() {
+    private void uploadTestResult() {
+        CrtbWebService.getInstance().uploadTestResult(null, new RpcCallback() {
 
-			@Override
-			public void onSuccess(Object[] data) {
-				CrtbWebService.getInstance().confirmSubmitData(new RpcCallback() {
-					
-					@Override
-					public void onSuccess(Object[] data) {
-						Log.d(LOG_TAG, "upload test data success.");
-						showMessage(true);
-					}
-					
-					@Override
-					public void onFailed(String reason) {
-						Log.d(LOG_TAG, "confirm test data failed: " + reason);
-						showMessage(false);
-					}
-				});
-			}
+            @Override
+            public void onSuccess(Object[] data) {
+                CrtbWebService.getInstance().confirmSubmitData(new RpcCallback() {
 
-			@Override
-			public void onFailed(String reason) {
-				Log.d(LOG_TAG, "upload test data failed.");
-				showMessage(false);
-			}
-		});
-	}
-	
-	private void showMessage(boolean success) {
-		if (success) {
-			Toast.makeText(getApplicationContext(), "上传数据成功", Toast.LENGTH_SHORT).show();
-		} else {
-			Toast.makeText(getApplicationContext(), "上传数据失败", Toast.LENGTH_SHORT).show();
-		}
-	}
+                    @Override
+                    public void onSuccess(Object[] data) {
+                        Log.d(LOG_TAG, "upload test data success.");
+                        showMessage(true);
+                    }
+
+                    @Override
+                    public void onFailed(String reason) {
+                        Log.d(LOG_TAG, "confirm test data failed: " + reason);
+                        showMessage(false);
+                    }
+                });
+            }
+
+            @Override
+            public void onFailed(String reason) {
+                Log.d(LOG_TAG, "upload test data failed.");
+                showMessage(false);
+            }
+        });
+    }
+
+    private void showMessage(boolean success) {
+        if (success) {
+            Toast.makeText(getApplicationContext(), "上传数据成功", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(getApplicationContext(), "上传数据失败", Toast.LENGTH_SHORT).show();
+        }
+    }
 }
