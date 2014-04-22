@@ -43,7 +43,7 @@ public class TunnelSettlementTotalDataDao extends AbstractDao<TunnelSettlementTo
 		
 		return mDatabase.queryObjects(sql, TunnelSettlementTotalData.class);
 	}
-	
+
 	// 查询已经存在的测量点信息
 	public TunnelSettlementTotalData queryTunnelTotalData(int sheetId,int chainageId,String pntType) {
 		
@@ -110,5 +110,16 @@ public class TunnelSettlementTotalDataDao extends AbstractDao<TunnelSettlementTo
         }
 
         return point2;
+    }
+
+    public void updateDataStatus(int id, int dataStatus) {
+        IAccessDatabase db = getCurrentDb();
+        if (db != null) {
+            String sql = "UPDATE TunnelSettlementTotalData"
+                    + " SET DataStatus=" + dataStatus
+                    + " WHERE ID=?";
+            String[] args = new String[]{String.valueOf(id)};
+            db.execute(sql, args);
+        }
     }
 }

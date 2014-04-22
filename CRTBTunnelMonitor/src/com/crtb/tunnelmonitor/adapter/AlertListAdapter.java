@@ -13,7 +13,7 @@ import android.widget.TextView;
 import com.crtb.tunnelmonitor.activity.R;
 import com.crtb.tunnelmonitor.entity.AlertInfo;
 
-public class Myadapter extends BaseAdapter {
+public class AlertListAdapter extends BaseAdapter {
 	private List<AlertInfo> list;
 	private	LayoutInflater inflater;
 	private	Context context;
@@ -25,22 +25,22 @@ public class Myadapter extends BaseAdapter {
 	public void setselect(int select) {
 		this.select = select;
 	}
-	public Myadapter(Context cont,List<AlertInfo> list) {
+	public AlertListAdapter(Context cont,List<AlertInfo> list) {
 		// TODO Auto-generated constructor stub
 		context=cont;
 		this.list=list;
 	}
 	@Override
 	public int getCount() {
-		// TODO Auto-generated method stub
-		return list.size();
+		return list == null ? 0 : list.size();
 	}
 
 	public List<AlertInfo> getList() {
 		return list;
 	}
-	public void setList(List<AlertInfo> list) {
+	public void refreshData(List<AlertInfo> list) {
 		this.list = list;
+		notifyDataSetChanged();
 	}
 	@Override
 	public Object getItem(int arg0) {
@@ -67,13 +67,13 @@ public class Myadapter extends BaseAdapter {
 			TextView xinghao=(TextView) view.findViewById(R.id.xinghao);
 			xinghao.setText(list.get(pos).getXinghao());
 			TextView dianhao=(TextView) view.findViewById(R.id.dianhao);
-			dianhao.setText("点号："+list.get(pos).getDianhao());
+			dianhao.setText("点号："+list.get(pos).getPntType());
 			TextView chushi=(TextView) view.findViewById(R.id.chulifangshi);
 			chushi.setText("处理方式："+list.get(pos).getChuliFangshi());
 			TextView state=(TextView) view.findViewById(R.id.state);
-			state.setText("状态："+list.get(pos).getState());
+			state.setText("状态："+list.get(pos).getAlertStatusMsg());
 			TextView message=(TextView) view.findViewById(R.id.message);
-			message.setText(list.get(pos).getMessage());
+			message.setText(list.get(pos).getUTypeMsg());
 			TextView edtstate=(TextView) view.findViewById(R.id.edtstate);
 			edtstate.setText(list.get(pos).getEdtState());
 			

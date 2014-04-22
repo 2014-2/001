@@ -25,7 +25,7 @@ public class AlertHandlingInfoDao extends AbstractDao<AlertHandlingList> {
 		return _instance ;
 	}
 
-    public int insertItem(int alertId, int handling, Date handlingTime, String duePerson,
+    public int insertItem(int alertId, String handling, Date handlingTime, String duePerson,
             int alertStatus, int handlingInfo) {
     	
     	final IAccessDatabase mDatabase = getCurrentDb();
@@ -41,7 +41,28 @@ public class AlertHandlingInfoDao extends AbstractDao<AlertHandlingList> {
         ah.setDuePerson(duePerson);
         ah.setAlertStatus(alertStatus);
         ah.setHandlingInfo(handlingInfo);
-        
+
         return mDatabase.saveObject(ah);
+    }
+
+    public void deleteItemById(int id) {
+        IAccessDatabase db = getCurrentDb();
+        if (db != null) {
+            String sql = "DELETE FROM AlertHandlingList"
+                    + " WHERE ID=?";
+            String[] args = new String[]{String.valueOf(id)};
+            db.execute(sql, args);
+        }
+    }
+
+    public void updateAlertStatus(int id, int alertStatus) {
+        IAccessDatabase db = getCurrentDb();
+        if (db != null) {
+            String sql = "UPDATE AlertHandlingList"
+                    + " SET AlertStatus=" + alertStatus
+                    + " WHERE ID=?";
+            String[] args = new String[]{String.valueOf(id)};
+            db.execute(sql, args);
+        }
     }
 }

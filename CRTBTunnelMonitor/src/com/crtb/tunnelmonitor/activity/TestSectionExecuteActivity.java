@@ -256,7 +256,7 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 					if(dao.insert(item) == TunnelSettlementTotalDataDao.DB_EXECUTE_SUCCESS){
 						
 						if(type.equals(AppConfig.POINT_A)){
-							doWarring(holder,AlertUtils.checkPointSubsidenceExceed(item));
+							doWarring(holder, AlertUtils.getPointSubsidenceExceedMsg(item));
 						} else {
 							
 							if(type.equals(AppConfig.POINT_S1_1)
@@ -282,7 +282,7 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 					if(dao.update(item) == TunnelSettlementTotalDataDao.DB_EXECUTE_SUCCESS){
 						
 						if(type.equals(AppConfig.POINT_A)){
-							doWarring(holder,AlertUtils.checkPointSubsidenceExceed(item));
+							doWarring(holder, AlertUtils.getPointSubsidenceExceedMsg(item));
 						} else {
 							
 							if(type.equals(AppConfig.POINT_S1_1)
@@ -311,7 +311,7 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 	
 	private void doWarringLine(TestPointHolder holder){
 		
-		ArrayList<Integer> list = AlertUtils.checkLineConvergenceExceed(pS1,pS2);
+	    String[] list = AlertUtils.getLineConvergenceExceedMsg(pS1,pS2);
 
 		doWarring(holder, list);
 
@@ -319,34 +319,22 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 		pS2 = null;
 	}
 	
-	private void doWarring(TestPointHolder holder,ArrayList<Integer> list){
+	private void doWarring(TestPointHolder holder, String[] list){
 		
-		if(list == null || list.isEmpty()){
+		if(list == null || list.length == 0){
 			System.out.println("zhouwei : 检查拱顶 ------ 没有错误");
 			return ;
 		}
 		
 		holder.warringLayout.setVisibility(View.VISIBLE);
 		
-		for(int code : list){
+		for(String msg : list){
 			
 			TextView tv = new TextView(this);
 			tv.setTextColor(Color.RED);
 			tv.setTextSize(20);
 			
-			if(code == 0){
-				tv.setText("拱顶累计下沉值超限");
-			} else if(code == 1){
-				tv.setText("拱顶下沉速率超限");
-			} else if(code == 2){
-				tv.setText("收敛累计值超限");
-			} else if(code == 3){
-				tv.setText("收敛速率超限");
-			} else if(code == 4){
-				tv.setText("地表累计下沉值超限");
-			} else if(code == 5){
-				tv.setText("地表下沉速率超限");
-			}
+			tv.setText(msg);
 			
 			holder.warringLayout.addView(tv);
 		}

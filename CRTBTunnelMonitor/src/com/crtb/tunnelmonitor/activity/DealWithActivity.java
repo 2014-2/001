@@ -4,7 +4,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.*;
-import com.crtb.tunnelmonitor.adapter.Myadapter;
+import com.crtb.tunnelmonitor.adapter.AlertListAdapter;
 import com.crtb.tunnelmonitor.entity.AlertInfo;
 
 import java.text.SimpleDateFormat;

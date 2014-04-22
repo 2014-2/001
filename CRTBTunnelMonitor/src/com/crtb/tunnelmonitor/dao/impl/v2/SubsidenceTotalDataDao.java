@@ -73,4 +73,15 @@ public class SubsidenceTotalDataDao extends AbstractDao<SubsidenceTotalData> {
         
         return mDatabase.queryObjects(sql, SubsidenceTotalData.class);
     }
+
+    public void updateDataStatus(int id, int dataStatus) {
+        IAccessDatabase db = getCurrentDb();
+        if (db != null) {
+            String sql = "UPDATE SubsidenceTotalData"
+                    + " SET DataStatus=dataStatus"
+                    + " WHERE ID=?";
+            String[] args = new String[]{String.valueOf(id)};
+            db.execute(sql, args);
+        }
+    }
 }

@@ -208,7 +208,7 @@ public class WarningUploadActivity extends Activity {
             TextView time = (TextView)convertView.findViewById(R.id.warning_id);
             time.setText(info.getDate());
             TextView state = (TextView)convertView.findViewById(R.id.warning_state);
-            state.setText(info.getState());
+            state.setText(info.getAlertStatusMsg());
             TextView is_uploaded = (TextView)convertView.findViewById(R.id.warning_is_uploaded);
             is_uploaded.setText("已上传");
             return convertView;

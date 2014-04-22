@@ -24,8 +24,8 @@ public class AlertHandlingList implements Serializable {
 	@ColumnInt
 	private int AlertID;				//预警id
 	
-	@ColumnInt
-	private int Handling;				//处理内容
+	@ColumnString(length=255)
+	private String Handling;				//处理内容
 	
 	@ColumnDate
 	private Date HandlingTime;			//处理时间
@@ -61,11 +61,11 @@ public class AlertHandlingList implements Serializable {
 		AlertID = alertID;
 	}
 
-	public int getHandling() {
+	public String getHandling() {
 		return Handling;
 	}
 
-	public void setHandling(int handling) {
+	public void setHandling(String handling) {
 		Handling = handling;
 	}
 

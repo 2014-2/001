@@ -13,6 +13,7 @@ import com.crtb.tunnelmonitor.dao.impl.v2.AlertHandlingInfoDao;
 import com.crtb.tunnelmonitor.dao.impl.v2.AlertListDao;
 import com.crtb.tunnelmonitor.dao.impl.v2.SubsidenceTotalDataDao;
 import com.crtb.tunnelmonitor.dao.impl.v2.TunnelSettlementTotalDataDao;
+import com.crtb.tunnelmonitor.entity.AlertList;
 import com.crtb.tunnelmonitor.entity.SubsidenceTotalData;
 import com.crtb.tunnelmonitor.entity.TunnelSettlementTotalData;
 import com.crtb.tunnelmonitor.entity.AlertInfo;
@@ -20,6 +21,9 @@ import com.crtb.tunnelmonitor.entity.AlertInfo;
 public class AlertUtils {
 
     private static final String TAG = "AlertUtils";
+
+    // 对应  AlertList 表中的OriginalDataID列, 一条测线两测点数据id间的分隔符
+    public static final String ORIGINAL_ID_DIVIDER = ",";
 
     // 累计变形值阈值
     public static final double ACCUMULATIVE_THRESHOLD = 100; // mm
@@ -45,12 +49,38 @@ public class AlertUtils {
     // 5表示地表下沉速率超限
     public static final int DIBIAO_XIACHEN_SULV_EXCEEDING = 5;
 
-    public static final String[] EXCEEDIN_TYPES = {"拱顶累计下沉值超限", "拱顶下沉速率超限", "收敛累计值超限", "收敛速率超限", "地表累计下沉值超限", "地表下沉速率超限"};
+    public static final String[] U_TYPE_MSGS = {"拱顶累计下沉值超限", "拱顶下沉速率超限", "收敛累计值超限", "收敛速率超限", "地表累计下沉值超限", "地表下沉速率超限"};
 
     public static final int ALERT_STATUS_HANDLED = 0;
     public static final int ALERT_STATUS_OPEN = 1;
     public static final int ALERT_STATUS_HANDLING = 2;
-    public static final String[] ALERT_STATUSES = {"已消警", "开", "处理中"};
+    public static final String[] ALERT_STATUS_MSGS = {"已消警", "开", "处理中"};
+
+    public static String[] getPointSubsidenceExceedMsg(Object point) {
+        Exceeding ex = checkPointSubsidenceExceed(point);
+        return getMsgByExceeding(ex);
+    }
+
+    public static String[] getLineConvergenceExceedMsg(TunnelSettlementTotalData s_1,
+            TunnelSettlementTotalData s_2) {
+        Exceeding ex = checkLineConvergenceExceed(s_1, s_2);
+        return getMsgByExceeding(ex);
+    }
+
+    private static String[] getMsgByExceeding(Exceeding ex) {
+        StringBuilder sb1 = new StringBuilder();
+        if (ex.leijiType >= 0) {
+            sb1.append(U_TYPE_MSGS[ex.leijiType]).append(" ").append(ex.leijiValue).append("毫米");
+        }
+
+        StringBuilder sb2 = new StringBuilder();
+        if (ex.sulvType >= 0) {
+            sb2.append(U_TYPE_MSGS[ex.sulvType]).append(" ").append(ex.sulvValue).append("毫米/天");
+        }
+
+        return new String[] { sb1.toString(), sb2.toString() };
+    }
+
     /**
      * 检测 断面拱顶 或 地表测点 的 累计沉降 或 单次沉降速率 是否超限.
      * 
@@ -60,8 +90,8 @@ public class AlertUtils {
      *            故这里用一个方法以避免代码重复。
      * @return error list; if null or empty, it means no exceeding.
      */
-    public static ArrayList<Integer> checkPointSubsidenceExceed(Object point) {
-        ArrayList<Integer> errList = null;
+    public static Exceeding checkPointSubsidenceExceed(Object point) {
+        Exceeding ret = new Exceeding();
 
         int type = 0;
         List pastInfoList = null;
@@ -100,7 +130,6 @@ public class AlertUtils {
         }
 
         if (pastInfoList != null && pastInfoList.size() > 0) {
-            errList = new ArrayList<Integer>();
 
             Object firstInfo = pastInfoList.get(0);
 
@@ -121,7 +150,8 @@ public class AlertUtils {
                     if (accumulativeSubsidence >= ACCUMULATIVE_THRESHOLD) {
                         int uType = type == 1 ? GONGDING_LEIJI_XIACHEN_EXCEEDING
                                 : DIBIAO_LEIJI_XIACHEN_EXCEEDING;
-                        errList.add(uType);
+                        ret.leijiType = uType;
+                        ret.leijiValue = accumulativeSubsidence;
                         int alertId = -1;
                         if (type == 1) {
                             alertId = AlertListDao.defaultDao().insertItem((TunnelSettlementTotalData) point, 3/* default */,
@@ -130,7 +160,7 @@ public class AlertUtils {
                             alertId = AlertListDao.defaultDao().insertItem((SubsidenceTotalData) point, 3/* default */,
                                     uType, accumulativeSubsidence, ACCUMULATIVE_THRESHOLD, originalDataID);
                         }
-                        AlertHandlingInfoDao.defaultDao().insertItem(alertId, 0,
+                        AlertHandlingInfoDao.defaultDao().insertItem(alertId, null,
                                 thisTime, String.valueOf(chainageId) + pntType, 1/*报警*/, 01/*true*/);
                     }
                 }
@@ -156,7 +186,8 @@ public class AlertUtils {
                     if (subsidenceSpeed >= SPEED_THRESHOLD) {
                         int uType = type == 1 ? GONGDINGI_XIACHEN_SULV_EXCEEDING
                                 : DIBIAO_XIACHEN_SULV_EXCEEDING;
-                        errList.add(uType);
+                        ret.sulvType = uType;
+                        ret.sulvValue = subsidenceSpeed;
                         int alertId = -1;
                         if (type == 1) {
                             alertId = AlertListDao.defaultDao().insertItem((TunnelSettlementTotalData) point, 3/* default */,
@@ -165,14 +196,14 @@ public class AlertUtils {
                             alertId = AlertListDao.defaultDao().insertItem((SubsidenceTotalData) point, 3/* default */,
                                     uType, subsidenceSpeed, SPEED_THRESHOLD, originalDataID);
                         }
-                        AlertHandlingInfoDao.defaultDao().insertItem(alertId, 0,
+                        AlertHandlingInfoDao.defaultDao().insertItem(alertId, null,
                                 thisTime, String.valueOf(chainageId) + pntType, 1/*报警*/, 01/*true*/);
                     }
                 }
             }
 
         }
-        return errList;
+        return ret;
     }
 
     /**
@@ -182,11 +213,11 @@ public class AlertUtils {
      *            测线的另一个端点
      * @return error list; if null or empty, it means no exceeding.
      */
-    public static ArrayList<Integer> checkLineConvergenceExceed(TunnelSettlementTotalData s_1,
+    public static Exceeding checkLineConvergenceExceed(TunnelSettlementTotalData s_1,
             TunnelSettlementTotalData s_2) {
-        ArrayList<Integer> errList = new ArrayList<Integer>();
+        Exceeding ret = new Exceeding();
 
-        String originalDataID = s_1.getID() + "," + s_2.getID();
+        String originalDataID = s_1.getID() + ORIGINAL_ID_DIVIDER + s_2.getID();
 
         double lineThisLength = getLineLength(s_1, s_2);
         Date s_1ThisTime = s_1.getSurveyTime();
@@ -210,10 +241,11 @@ public class AlertUtils {
             double convergence = Math.abs(lineFirstLength - lineThisLength);
             if (convergence >= ACCUMULATIVE_THRESHOLD) {
                 int uType = SHOULIAN_LEIJI_EXCEEDING;
-                errList.add(uType);
+                ret.leijiType = uType;
+                ret.leijiValue = convergence;
                 int alertId = AlertListDao.defaultDao().insertItem(s_1, 3/* default */,
                         uType, convergence, ACCUMULATIVE_THRESHOLD, originalDataID);
-                AlertHandlingInfoDao.defaultDao().insertItem(alertId, 0,
+                AlertHandlingInfoDao.defaultDao().insertItem(alertId, null,
                         thisTimeDate, String.valueOf(chainageId) + s_1.getPntType(), 1/*报警*/, 01/*true*/);
             }
 
@@ -233,15 +265,16 @@ public class AlertUtils {
             double shoulianSpeed = deltaLenth / deltaTime;
             if (shoulianSpeed >= SPEED_THRESHOLD) {
                 int uType = SHOULIAN_SULV_EXCEEDING;
-                errList.add(uType);
+                ret.sulvType = uType;
+                ret.sulvValue = shoulianSpeed;
                 int alertId = AlertListDao.defaultDao().insertItem(s_1, 3/* default */, uType, shoulianSpeed,
                         SPEED_THRESHOLD, originalDataID);
-                AlertHandlingInfoDao.defaultDao().insertItem(alertId, 0,
+                AlertHandlingInfoDao.defaultDao().insertItem(alertId, null,
                         thisTimeDate, String.valueOf(chainageId) + s_1.getPntType(), 1/*报警*/, 1/*true*/);
             }
         }
 
-        return errList;
+        return ret;
     }
 
     public static double getLineLength(TunnelSettlementTotalData s_1, TunnelSettlementTotalData s_2) {
@@ -259,10 +292,12 @@ public class AlertUtils {
         return Math.sqrt(squar);
     }
 
-    public static List<AlertInfo> getAlertInfoList() {
+    public static ArrayList<AlertInfo> getAlertInfoList() {
         Log.d(TAG, "getAlertInfoList");
         ArrayList<AlertInfo> l = new ArrayList<AlertInfo>();
         String sql = "SELECT"
+                + " AlertList.ID AS alertId"
+                + " AlertHandlingList.ID AS alertHandlingId"
                 + " TunnelCrossSectionIndex.sectionName AS sectionName"
                 + " AlertList.AlertTime AS date"
                 + " AlertList.PntType AS pntType"
@@ -287,14 +322,18 @@ public class AlertUtils {
             try {
                 while (c.moveToNext()) {
                     AlertInfo ai = new AlertInfo();
-                    ai.setXinghao(c.getString(0));
-                    String dateStr = c.getString(1);
+                    ai.setAlertId(c.getInt(0));
+                    ai.setAlertHandlingId(c.getInt(1));
+                    ai.setXinghao(c.getString(2));
+                    String dateStr = c.getString(3);
                     ai.setDate(dateStr);
-                    ai.setDianhao(c.getString(2));
-                    int uType = c.getInt(3);
-                    ai.setMessage((uType >= 0 && uType < 6) ? EXCEEDIN_TYPES[uType] : "");
+                    ai.setPntType(c.getString(4));
+                    int uType = c.getInt(5);
+                    ai.setUType(uType);
+                    ai.setUTypeMsg((uType >= 0 && uType < 6) ? U_TYPE_MSGS[uType] : "");
                     int alertStatus = c.getInt(4);
-                    ai.setState((alertStatus >= 0 && alertStatus < 3) ? ALERT_STATUSES[alertStatus] : "");
+                    ai.setAlertStatus(alertStatus);
+                    ai.setAlertStatusMsg((alertStatus >= 0 && alertStatus < 3) ? ALERT_STATUS_MSGS[alertStatus] : "");
                     l.add(ai);
                 }
             } finally {
@@ -319,5 +358,57 @@ public class AlertUtils {
             }
         }
         return count;
+    }
+
+    /**
+     * 在UI处理Alert时，调用本方法
+     * 
+     * @param alertId
+     *            处理的Alert在数据库中的ID
+     * @param dataStatus
+     *            要更新的TunnelSettlementTotalData表或SubsidenceTotalData表的DataStatus列
+     * @param correction
+     *            要更新的TunnelSettlementTotalData表或SubsidenceTotalData表的DataCorrection列
+     * @param alertStatus
+     *            要新插入AlertHandlingList表的AlertStatus列
+     * @param handling
+     *            要新插入AlertHandlingList表的Handling列
+     * @param handlingTime
+     *            要新插入AlertHandlingList表的HandlingTime列
+     */
+    public static void handleAlert(int alertId, int dataStatus, float correction, int alertStatus,
+            String handling, Date handlingTime) {
+        AlertList al = AlertListDao.defaultDao().queryOneById(alertId);
+        String originalID = al.getOriginalDataID();
+        if (!TextUtils.isEmpty(originalID)) {
+            ArrayList<Integer> ids = new ArrayList<Integer>();
+            if (originalID.contains(ORIGINAL_ID_DIVIDER)) {
+                String[] idStrs = originalID.split(ORIGINAL_ID_DIVIDER);
+                for (String idStr : idStrs) {
+                    ids.add(Integer.valueOf(idStr));
+                }
+            } else {
+                ids.add(Integer.valueOf(originalID));
+            }
+
+            if (ids.size() == 1) {
+                TunnelSettlementTotalDataDao.defaultDao().updateDataStatus(ids.get(0), dataStatus);
+            } else {
+                for (int id : ids) {
+                    SubsidenceTotalDataDao.defaultDao().updateDataStatus(id, dataStatus);
+                }
+            }
+        }
+
+        String duePerson = String.valueOf(al.getCrossSectionID()) + al.getPntType();
+        AlertHandlingInfoDao.defaultDao().insertItem(alertId, handling, handlingTime, duePerson,
+                alertStatus, 1/* true */);
+    }
+
+    public static class Exceeding {
+        int leijiType = -1;
+        int sulvType = -1;
+        double leijiValue = -1;
+        double sulvValue = -1;
     }
 }

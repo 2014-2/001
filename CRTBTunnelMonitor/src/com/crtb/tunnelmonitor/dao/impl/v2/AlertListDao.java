@@ -40,6 +40,19 @@ public class AlertListDao extends AbstractDao<AlertList> {
 		return mDatabase.queryObjects(sql, AlertList.class);
 	}
 
+    public AlertList queryOneById(int id) {
+        final IAccessDatabase mDatabase = getCurrentDb();
+
+        if (mDatabase == null) {
+            return null;
+        }
+
+        String sql = "select * from AlertList where ID=?";
+        String[] args = new String[] { String.valueOf(id) };
+
+        return mDatabase.queryObject(sql, args, AlertList.class);
+    }
+
     /**
      * @param point 产生预警信息的那次测量的测量点信息
      * @param alertLevel
