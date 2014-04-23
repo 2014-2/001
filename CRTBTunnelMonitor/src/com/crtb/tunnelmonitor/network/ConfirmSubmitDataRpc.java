@@ -42,6 +42,12 @@ class ConfirmSubmitDataRpc extends AbstractRpc {
 		try {
 			Log.d(LOG_TAG, "response: " + response);
 			SoapObject result = (SoapObject) response;
+			int code = Integer.parseInt(result.getPropertyAsString(0));
+			if (code == 1) {
+				notifySuccess(null);
+			} else {
+				notifyFailed("confirm test data failed: " + code);
+			}
 			//TODO: Parse the response
 		} catch (Exception e) {
 			notifyFailed("Exception: " + e.getMessage());

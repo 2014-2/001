@@ -185,6 +185,7 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 		final TestPointHolder holder 	= new TestPointHolder() ;
 		View view = InjectCore.injectOriginalObject(holder);
 		
+
 		if(bean != null){
 			
 			// 存在的测量数据
@@ -249,6 +250,7 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 				obj.setSheetId(rawSheet.getID());
 				obj.setPntType(type); // 测量点类型
 				obj.setSurveyorID(Integer.valueOf(rawSheet.getCertificateID()));// 测量人员id
+				obj.setInfo("1");
 
 				TunnelSettlementTotalDataDao dao 	= TunnelSettlementTotalDataDao.defaultDao() ;
 				

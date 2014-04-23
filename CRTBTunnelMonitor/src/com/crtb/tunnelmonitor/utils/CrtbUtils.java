@@ -150,7 +150,7 @@ public final class CrtbUtils {
     	
     }
     
-    public static void fillTunnelTestRecord(TunnelSettlementTotalData data,PointUploadParameter outParamter){
+    public static void fillTunnelTestRecord(TunnelSettlementTotalData data, PointUploadParameter outParamter){
     	
     	if(data == null || outParamter == null){
     		return ;

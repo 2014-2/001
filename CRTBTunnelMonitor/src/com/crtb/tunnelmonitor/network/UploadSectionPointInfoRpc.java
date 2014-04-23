@@ -80,7 +80,7 @@ class UploadSectionPointInfoRpc extends AbstractRpc {
 			SoapObject result = (SoapObject) response;
 			int code = Integer.parseInt(result.getPropertyAsString(0));
 			if (code == 1) {
-				notifySuccess(null);
+				notifySuccess(new Object[] {mParameters.get(KEY_SECTION_CODE)});
 			} else {
 				notifyFailed("upload section data failed: code = " + code);
 			}
