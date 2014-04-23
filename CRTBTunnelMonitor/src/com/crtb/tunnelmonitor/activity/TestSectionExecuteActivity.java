@@ -47,9 +47,9 @@ import com.crtb.tunnelmonitor.utils.Time;
 public class TestSectionExecuteActivity extends WorkFlowActivity implements View.OnClickListener {
 	
     private static int DEBUG_TEST_NUM = 0;//TODO: remove, just for debug
-    private static double DEBUG_x = 2001.67;//TODO: remove, just for debug
-    private static double DEBUG_y = 3422.35;//TODO: remove, just for debug
-    private static double DEBUG_z = 4368.26;//TODO: remove, just for debug
+    private static double DEBUG_x = 2.67;//TODO: remove, just for debug
+    private static double DEBUG_y = 3.35;//TODO: remove, just for debug
+    private static double DEBUG_z = 1054.26;//TODO: remove, just for debug
 
 	public static final String KEY_TEST_SECTION_TYPE	= "_key_test_section_type" ;
 	
@@ -232,10 +232,10 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 					return;
 				}
 				
-				String x = String.format("%1$.4f", /*DEBUG_x + 10 * DEBUG_TEST_NUM*/ point.N);
-				String y = String.format("%1$.4f", /*DEBUG_y + 10 * DEBUG_TEST_NUM*/ point.E);
-				String z = String.format("%1$.4f", /*DEBUG_z + 10 * DEBUG_TEST_NUM*/ point.H);
-				//DEBUG_TEST_NUM++;//TODO: remove this line
+				String x = String.format("%1$.4f", DEBUG_x + 0.010d * DEBUG_TEST_NUM /*point.N*/);
+				String y = String.format("%1$.4f", DEBUG_y + 0.010d * DEBUG_TEST_NUM /*point.E*/);
+				String z = String.format("%1$.4f", DEBUG_z + 0.010d * DEBUG_TEST_NUM /*point.H*/);
+				DEBUG_TEST_NUM++;//TODO: remove this line
 				String time = Time.getDateEN() ;
 				
 				holder.mPointX.setText(x);

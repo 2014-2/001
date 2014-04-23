@@ -137,6 +137,7 @@ public class AlertUtils {
 
             if (!TextUtils.isEmpty(thisCoords[2])) {
                 double thisZ = Double.valueOf(thisCoords[2]);
+                Log.d(TAG, "this z: " + thisZ + " m");
                 String[] firstCoords = null;
                 if (type == 1) {
                     firstCoords = ((TunnelSettlementTotalData) firstInfo).getCoordinate()
@@ -148,14 +149,16 @@ public class AlertUtils {
                 if (firstCoords != null && firstCoords.length == 3
                         && !TextUtils.isEmpty(firstCoords[2])) {
                     double firstZ = Double.valueOf(firstCoords[2]);
+                    Log.d(TAG, "first z:" + firstZ + " m");
                     double accumulativeSubsidence = Math.abs(thisZ - firstZ);
                     accumulativeSubsidence *= 1000;//CHANGE TO MILLIMETER
-                    Log.d(TAG, "累计沉降： " + accumulativeSubsidence);
+                    Log.d(TAG, "累计沉降: " + accumulativeSubsidence + " mm");
                     if (accumulativeSubsidence >= ACCUMULATIVE_THRESHOLD) {
+                        accumulativeSubsidence = Math.round(accumulativeSubsidence);
                         int uType = type == 1 ? GONGDING_LEIJI_XIACHEN_EXCEEDING
                                 : DIBIAO_LEIJI_XIACHEN_EXCEEDING;
                         ret.leijiType = uType;
-                        ret.leijiValue = accumulativeSubsidence;
+                        ret.leijiValue = (long) accumulativeSubsidence;
                         int alertId = -1;
                         if (type == 1) {
                             alertId = AlertListDao.defaultDao().insertItem((TunnelSettlementTotalData) point, 3/* default */,
@@ -184,20 +187,29 @@ public class AlertUtils {
                         && !TextUtils.isEmpty(lastCoords[2]) && lastTime != null
                         && lastTime != null) {
                     double lastZ = Double.valueOf(lastCoords[2]);
+                    Log.d(TAG, "last z: " + lastZ + " m");
                     double deltaZ = Math.abs(thisZ - lastZ);
+                    Log.d(TAG, "delta z: " + deltaZ + " m");
                     deltaZ *= 1000;//CHANGE TO MILLIMETER
                     long deltaT = Math.abs(thisTime.getTime() - lastTime.getTime());
+                    Log.d(TAG, "delta t: " + deltaT + " ms");
                     if (deltaT < Time.ONE_HOUR) {
                         deltaT = Time.ONE_HOUR;//ONE HOUR at least to avoid infinity
                     }
-                    long deltaTInDay = (deltaT / Time.DAY_MILLISECEND_RATIO);
+                    double deltaTInDay = ((double)deltaT / Time.DAY_MILLISECEND_RATIO);
+                    double h = 1d/24d;
+                    if (deltaTInDay == 0) {
+                        deltaTInDay = h;
+                    }
+                    Log.d(TAG, "delta t in day: " + deltaTInDay + " day");
                     double subsidenceSpeed = deltaZ / deltaTInDay;
-                    Log.d(TAG, "沉降速率： " + subsidenceSpeed);
+                    Log.d(TAG, "沉降速率: " + subsidenceSpeed + " mm/d");
                     if (subsidenceSpeed >= SPEED_THRESHOLD) {
+                        subsidenceSpeed = Math.round(subsidenceSpeed);
                         int uType = type == 1 ? GONGDINGI_XIACHEN_SULV_EXCEEDING
                                 : DIBIAO_XIACHEN_SULV_EXCEEDING;
                         ret.sulvType = uType;
-                        ret.sulvValue = subsidenceSpeed;
+                        ret.sulvValue = (long) subsidenceSpeed;
                         int alertId = -1;
                         if (type == 1) {
                             alertId = AlertListDao.defaultDao().insertItem((TunnelSettlementTotalData) point, 3/* default */,
@@ -252,9 +264,10 @@ public class AlertUtils {
             double convergence = Math.abs(lineFirstLength - lineThisLength);
             convergence *= 1000; //CHANGE TO MILLIMETER
             if (convergence >= ACCUMULATIVE_THRESHOLD) {
+                convergence = Math.round(convergence);
                 int uType = SHOULIAN_LEIJI_EXCEEDING;
                 ret.leijiType = uType;
-                ret.leijiValue = convergence;
+                ret.leijiValue = (long) convergence;
                 int alertId = AlertListDao.defaultDao().insertItem(s_1, 3/* default */,
                         uType, convergence, ACCUMULATIVE_THRESHOLD, originalDataID);
                 AlertHandlingInfoDao.defaultDao().insertItem(alertId, null,
@@ -277,11 +290,17 @@ public class AlertUtils {
             if (deltaTime < Time.ONE_HOUR) {
                 deltaTime = Time.ONE_HOUR;//ONE HOUR at least to avoid infinity
             }
-            double shoulianSpeed = deltaLenth / (deltaTime / Time.DAY_MILLISECEND_RATIO);
+            double deltaTInDay = (deltaTime / Time.DAY_MILLISECEND_RATIO);
+            double h = 1d/24d;
+            if (deltaTInDay < h) {
+                deltaTInDay = h;
+            }
+            double shoulianSpeed = deltaLenth / deltaTInDay;
             if (shoulianSpeed >= SPEED_THRESHOLD) {
+                shoulianSpeed = Math.round(shoulianSpeed);
                 int uType = SHOULIAN_SULV_EXCEEDING;
                 ret.sulvType = uType;
-                ret.sulvValue = shoulianSpeed;
+                ret.sulvValue = (long) shoulianSpeed;
                 int alertId = AlertListDao.defaultDao().insertItem(s_1, 3/* default */, uType, shoulianSpeed,
                         SPEED_THRESHOLD, originalDataID);
                 AlertHandlingInfoDao.defaultDao().insertItem(alertId, null,
@@ -444,7 +463,7 @@ public class AlertUtils {
     public static class Exceeding {
         int leijiType = -1;
         int sulvType = -1;
-        double leijiValue = -1;
-        double sulvValue = -1;
+        long leijiValue = -1;
+        long sulvValue = -1;
     }
 }
