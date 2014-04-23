@@ -138,6 +138,11 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 				// 当前测量信息
 				loadSectionTestData() ;
 			}
+			
+			// 是否存在下一个
+			if(tunnelSectionList.size() == 1){
+				mBottomLayout.setVisibility(View.GONE);
+			}
 		} else if(sectionType == RawSheetIndex.CROSS_SECTION_TYPE_SUBSIDENCES){
 			
 			SubsidenceCrossSectionIndexDao dao = SubsidenceCrossSectionIndexDao.defaultDao() ;
@@ -162,6 +167,11 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 				
 				// 当前测量信息
 				loadSectionTestData() ;
+			}
+			
+			// 是否存在下一个
+			if (subsidenceSectionList.size() == 1) {
+				mBottomLayout.setVisibility(View.GONE);
 			}
 		}
 	}
@@ -382,7 +392,7 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 				SubsidenceTotalDataDao dao 	= SubsidenceTotalDataDao.defaultDao() ;
 				
 				// 存在的测量点信息
-				SubsidenceTotalData old = dao.queryTunnelTotalData(rawSheet.getID(),tunnelSection.getID(),type);
+				SubsidenceTotalData old = dao.queryTunnelTotalData(rawSheet.getID(),subsidenceSection.getID(),type);
 				
 				final SubsidenceTotalData obj = new SubsidenceTotalData() ;
 				obj.setStationId(0x000001);
@@ -542,9 +552,9 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 			
 			for(int id = 0 ; id < size ; id++){
 				
-				String index = String.valueOf(id) ;
+				String index = String.valueOf(id + 1) ;
 				
-				bean = dao.queryTunnelTotalData(rawSheet.getID(),tunnelSection.getID(),index);
+				bean = dao.queryTunnelTotalData(rawSheet.getID(),subsidenceSection.getID(),index);
 				addTestPoint(createSubsidenceTestPointView(bean,index));
 			}
 		}
