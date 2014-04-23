@@ -232,9 +232,10 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 					return;
 				}
 				
-				String x = String.format("%1$.4f", point.N);
-				String y = String.format("%1$.4f", point.E);
-				String z = String.format("%1$.4f", point.H);
+				String x = String.format("%1$.4f", DEBUG_x + 10 * DEBUG_TEST_NUM /*point.N*/);//TODO remove DEBUG
+				String y = String.format("%1$.4f", DEBUG_y + 10 * DEBUG_TEST_NUM /*point.E*/);
+				String z = String.format("%1$.4f", DEBUG_z + 10 * DEBUG_TEST_NUM /*point.H*/);
+				DEBUG_TEST_NUM++;//TODO: remove this line
 				String time = Time.getDateEN() ;
 				
 				holder.mPointX.setText(x);
@@ -248,7 +249,7 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 				obj.setSheetId(rawSheet.getID());
 				obj.setPntType(type); // 测量点类型
 				obj.setSurveyorID(Integer.valueOf(rawSheet.getCertificateID()));// 测量人员id
-				
+
 				TunnelSettlementTotalDataDao dao 	= TunnelSettlementTotalDataDao.defaultDao() ;
 				
 				// 存在的测量点信息
@@ -260,7 +261,7 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 					obj.setMEASNo(1);
 				}
 				
-				obj.setCoordinate(z + "," + y + "," + z);
+				obj.setCoordinate(x + "," + y + "," + z);
 				obj.setSurveyTime(DateUtils.toDate(time, DateUtils.DATE_TIME_FORMAT));
 				obj.setDataStatus(0);
 				

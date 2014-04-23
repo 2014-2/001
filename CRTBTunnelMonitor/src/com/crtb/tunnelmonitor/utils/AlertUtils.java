@@ -151,6 +151,7 @@ public class AlertUtils {
                         && !TextUtils.isEmpty(firstCoords[2])) {
                     double firstZ = Double.valueOf(firstCoords[2]);
                     double accumulativeSubsidence = Math.abs(thisZ - firstZ);
+                    Log.d(TAG, "累计沉降： " + accumulativeSubsidence);
                     if (accumulativeSubsidence >= ACCUMULATIVE_THRESHOLD) {
                         int uType = type == 1 ? GONGDING_LEIJI_XIACHEN_EXCEEDING
                                 : DIBIAO_LEIJI_XIACHEN_EXCEEDING;
@@ -169,7 +170,7 @@ public class AlertUtils {
                     }
                 }
 
-                Object lastInfo = pastInfoList.get(pastInfoList.size());
+                Object lastInfo = pastInfoList.get(pastInfoList.size() - 1);
                 String[] lastCoords = null;
                 Date lastTime = null;
                 if (type == 1) {
@@ -187,6 +188,7 @@ public class AlertUtils {
                     double deltaZ = Math.abs(thisZ - lastZ);
                     long deltaT = Math.abs(thisTime.getTime() - lastTime.getTime());
                     double subsidenceSpeed = deltaZ / (deltaT / Time.DAY_MILLISECEND_RATIO);
+                    Log.d(TAG, "沉降速率： " + subsidenceSpeed);
                     if (subsidenceSpeed >= SPEED_THRESHOLD) {
                         int uType = type == 1 ? GONGDINGI_XIACHEN_SULV_EXCEEDING
                                 : DIBIAO_XIACHEN_SULV_EXCEEDING;
@@ -254,7 +256,7 @@ public class AlertUtils {
                         thisTimeDate, String.valueOf(chainageId) + s_1.getPntType(), 1/*报警*/, 01/*true*/);
             }
 
-            TunnelSettlementTotalData s_1Last = s_1InfoList.get(s_1InfoList.size());
+            TunnelSettlementTotalData s_1Last = s_1InfoList.get(s_1InfoList.size() - 1);
             TunnelSettlementTotalData s_2Last = TunnelSettlementTotalDataDao.defaultDao()
                     .queryOppositePointOfALine(s_1Last, s_2.getPntType());
             double lineLastLength = getLineLength(s_1Last, s_2Last);
@@ -305,12 +307,12 @@ public class AlertUtils {
 
         ArrayList<AlertInfo> l = new ArrayList<AlertInfo>();
         String sql = "SELECT"
-                + " AlertList.ID AS alertId"
-                + " AlertHandlingList.ID AS alertHandlingId"
-                + " TunnelCrossSectionIndex.sectionName AS sectionName"
-                + " AlertList.AlertTime AS date"
-                + " AlertList.PntType AS pntType"
-                + " AlertList.Utype AS utype"
+                + " AlertList.ID AS alertId,"
+                + " AlertHandlingList.ID AS alertHandlingId,"
+                + " TunnelCrossSectionIndex.sectionName AS sectionName,"
+                + " AlertList.AlertTime AS date,"
+                + " AlertList.PntType AS pntType,"
+                + " AlertList.Utype AS utype,"
                 + " AlertHandlingList.AlertStatus AS status"
                 + " FROM AlertList LEFT JOIN AlertHandlingList"
                 + " ON AlertList.ID=AlertHandlingList.AlertID"
@@ -324,9 +326,15 @@ public class AlertUtils {
                 + " END,"
                 + " AlertList.AlertTime DESC";
 
+//        String sql2 = "SELECT *"
+//                + " FROM AlertList LEFT JOIN AlertHandlingList"
+//                + " ON AlertList.ID=AlertHandlingList.AlertID"
+//                + " ORDER BY"
+//                + " AlertList.AlertTime DESC";
+
         Cursor c = null;
         try {
-            c = AlertListDao.defaultDao().executeQuerySQL(sql, null);
+            c = AlertListDao.defaultDao().executeQuerySQL(sql2, null);
 
             if (c != null) {
                 Log.d(TAG, "cursor count: " + c.getCount());
@@ -334,14 +342,14 @@ public class AlertUtils {
                     AlertInfo ai = new AlertInfo();
                     ai.setAlertId(c.getInt(0));
                     ai.setAlertHandlingId(c.getInt(1));
-                    ai.setXinghao(c.getString(2));
-                    String dateStr = c.getString(3);
+//                    ai.setXinghao(c.getString(2));
+                    String dateStr = c.getString(2);
                     ai.setDate(dateStr);
-                    ai.setPntType(c.getString(4));
-                    int uType = c.getInt(5);
+                    ai.setPntType(c.getString(3));
+                    int uType = c.getInt(4);
                     ai.setUType(uType);
                     ai.setUTypeMsg((uType >= 0 && uType < 6) ? U_TYPE_MSGS[uType] : "");
-                    int alertStatus = c.getInt(4);
+                    int alertStatus = c.getInt(5);
                     ai.setAlertStatus(alertStatus);
                     ai.setAlertStatusMsg((alertStatus >= 0 && alertStatus < 3) ? ALERT_STATUS_MSGS[alertStatus]
                             : "");
@@ -359,6 +367,8 @@ public class AlertUtils {
     }
 
     public static int getAlertCountOfState(int state) {
+
+        Log.d(TAG, "getAlertCountOfState");
 
         // AlertListDao.defaultDao().createTable();
         // AlertHandlingInfoDao.defaultDao().createTable();
