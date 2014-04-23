@@ -92,28 +92,7 @@ public class DataUploadActivity extends FragmentActivity {
 
     private MenuPopupWindow menuWindow;
 
-    private CounterListener mSectionUploadListener = new CounterListener() {
-
-        @Override
-        public void done(final boolean success) {
-        	if (success) {
-                mTunnelFragment.refreshUI();
-            }
-            uploadStatus(success);
-        }
-    };
-    
-    private CounterListener mPointUploadListener = new CounterListener() {
-		
-		@Override
-		public void done(boolean success) {
-			
-		}
-	};
-
     private List<RawSheetData> mSelectedSheets;
-    private DataCounter mSectionUploadCounter;
-    private DataCounter mPointUploadCounter;
     private DataCounter mSheetUploadCounter;
 
     @Override
@@ -398,9 +377,11 @@ public class DataUploadActivity extends FragmentActivity {
 	            uploadStatus(success);
 			}
 		});
+        int uploadSectionCount = 0;
         for(RawSheetData sheetData: mSelectedSheets) {
         	List<TunnelCrossSectionIndex> sectionList = getUnUploadTunnelSections(sheetData.getSectionIds());
         	if (sectionList != null && sectionList.size() > 0) {
+        		uploadSectionCount += sectionList.size();
 	        	DataCounter sectionUploadCounter = new DataCounter("SectionUploadCounter", sectionList.size(), new CounterListener() {
 					@Override
 					public void done(boolean success) {
@@ -410,6 +391,11 @@ public class DataUploadActivity extends FragmentActivity {
 	        	for(TunnelCrossSectionIndex section : sectionList) {
 	        		uploadSection(section, sheetData.getRowId(), sectionUploadCounter);
 	        	}
+        	}
+        }
+        if (uploadSectionCount == 0) {
+        	for(int i =0 ; i < mSelectedSheets.size(); i++) {
+        		mSheetUploadCounter.increase(false);
         	}
         }
     }
@@ -490,20 +476,22 @@ public class DataUploadActivity extends FragmentActivity {
     private void uploadTestResult(String sectionCode, final TunnelSettlementTotalData point1, final TunnelSettlementTotalData point2, final TunnelSettlementTotalData point3, final DataCounter pointUploadCounter) {
         PointUploadParameter parameter = new PointUploadParameter();
         parameter.setSectionCode(sectionCode);
+//		String pointCodeList = sectionCode + "GD01" + "/" + sectionCode
+//				+ "SL01" + "#" + sectionCode + "SL02" + "/" + sectionCode
+//				+ "SL03" + "#" + sectionCode + "SL04";
 		String pointCodeList = sectionCode + "GD01" + "/" + sectionCode
-				+ "SL01" + "#" + sectionCode + "SL02" + "/" + sectionCode
-				+ "SL03" + "#" + sectionCode + "SL04";
+				+ "SL01" + "#" + sectionCode + "SL02";
 		parameter.setPointCodeList(pointCodeList);
 		parameter.setTunnelFaceDistance(50.0f);
 		parameter.setProcedure("02");
 		parameter.setMonitorModel("xxx");
 		parameter.setMeasureDate(new Date());
-		String valueList = "50/141.4249/141.4249";
+		String valueList = "50/141.4249";
 		parameter.setPointValueList(valueList);
-		String c1 = point1.getCoordinate().replace(",", "#");
-		String c2 = point2.getCoordinate().replace(",", "#");
-		String c3 = point3.getCoordinate().replace(",", "#");
-		String coordinate = "50#50#50/100#200#300#200#300#301/100#200#300#200#300#301";
+		String A = point1.getCoordinate().replace(",", "#");
+		String S1_1 = point2.getCoordinate().replace(",", "#");
+		String S1_2 = point3.getCoordinate().replace(",", "#");
+		String coordinate = A + "/" + S1_1 + "#" + S1_2; //"50#50#50/100#200#300#200#300#301/100#200#300#200#300#301";
 		String encncyptCoordinate = RSACoder.encnryptDes(coordinate, Constant.testDeskey);
 		parameter.setPointCoordinateList(encncyptCoordinate);
 		parameter.setSurveyorName("杨工");
