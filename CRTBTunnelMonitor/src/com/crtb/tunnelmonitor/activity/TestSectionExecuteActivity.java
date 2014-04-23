@@ -321,7 +321,7 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 			
 			TextView tv = new TextView(this);
 			tv.setTextColor(Color.RED);
-			tv.setTextSize(20);
+			tv.setTextSize(12);
 			
 			if(!StringUtils.isEmpty(msg)){
 				tv.setText(msg);
@@ -444,6 +444,9 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 				return ;
 			}
 			
+			// title
+			setTopbarTitle(tunnelSection.getSectionName());
+			
 			TunnelSettlementTotalData bean = null ;
 			
 			// A
@@ -549,6 +552,9 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 				e.printStackTrace() ;
 				showText("地表下沉隧道测量点错误");
 			}
+			
+			// title
+			setTopbarTitle(subsidenceSection.getSectionName());
 			
 			SubsidenceTotalDataDao dao = SubsidenceTotalDataDao.defaultDao();
 			SubsidenceTotalData bean = null ;

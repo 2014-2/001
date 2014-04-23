@@ -135,6 +135,9 @@ public class RecordActivity extends WorkFlowActivity implements OnPageChangeList
 			
 			Intent intent = new Intent() ;
 			
+			CommonObject.remove(RecordNewActivity.KEY_RECORD_TUNNEL_OBJECT);
+			CommonObject.remove(RecordNewSubsidenceActivity.KEY_RECORD_SUBSIDENCE_OBJECT);
+			
 			if(mPager.getCurrentItem() == TAB_ONE){
 				intent.setClass(RecordActivity.this, RecordNewActivity.class);
 			} else {

@@ -5,8 +5,6 @@ import java.util.List;
 import org.zw.android.framework.IAccessDatabase;
 import org.zw.android.framework.impl.ExecuteAsyncTaskImpl;
 
-import android.util.Log;
-
 import com.crtb.tunnelmonitor.AppHandler;
 import com.crtb.tunnelmonitor.BaseAsyncTask;
 import com.crtb.tunnelmonitor.entity.TunnelCrossSectionIndex;
@@ -58,7 +56,7 @@ public final class TunnelCrossSectionIndexDao extends AbstractDao<TunnelCrossSec
 			return null;
 		}
 		
-		String sql = "select * from TunnelCrossSectionIndex" ;
+		String sql = "select * from TunnelCrossSectionIndex order by Chainage ASC" ;
 		
 		return mDatabase.queryObjects(sql, TunnelCrossSectionIndex.class) ;
 	}

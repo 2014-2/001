@@ -21,7 +21,6 @@ import com.crtb.tunnelmonitor.AppHandler;
 import com.crtb.tunnelmonitor.AppPreferences;
 import com.crtb.tunnelmonitor.CommonObject;
 import com.crtb.tunnelmonitor.WorkFlowActivity;
-import com.crtb.tunnelmonitor.common.Constant;
 import com.crtb.tunnelmonitor.dao.impl.v2.ProjectIndexDao;
 import com.crtb.tunnelmonitor.entity.MenuSystemItem;
 import com.crtb.tunnelmonitor.entity.ProjectIndex;
@@ -186,7 +185,6 @@ public final class WorkActivity extends WorkFlowActivity {
 		mListView.onReload() ;
 	}
 	
-
 	@Override
 	protected void onSystemMenuClick(MenuSystemItem menu) {
 		
