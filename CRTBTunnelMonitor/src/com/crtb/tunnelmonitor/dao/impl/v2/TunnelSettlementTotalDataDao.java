@@ -122,4 +122,14 @@ public class TunnelSettlementTotalDataDao extends AbstractDao<TunnelSettlementTo
             db.execute(sql, args);
         }
     }
+    
+	public List<TunnelSettlementTotalData> queryUnUploadTunnelTotalDataBySheet(int sheetId) {
+		final IAccessDatabase mDatabase = getCurrentDb();
+		if (mDatabase == null) {
+			return null;
+		}
+		String sql = "select * from TunnelSettlementTotalData where SheetId = " + sheetId + " and Info = '1'";
+		return mDatabase.queryObjects(sql, TunnelSettlementTotalData.class);
+	}
+	
 }

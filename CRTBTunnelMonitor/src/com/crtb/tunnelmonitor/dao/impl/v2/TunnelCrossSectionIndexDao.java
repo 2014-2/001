@@ -71,7 +71,7 @@ public final class TunnelCrossSectionIndexDao extends AbstractDao<TunnelCrossSec
 			return null ;
 		}
 		
-		String sql = "select * from TunnelCrossSectionIndex where info == '1'" ;
+		String sql = "select * from TunnelCrossSectionIndex where info = '1'" ;
 		
 		return mDatabase.queryObjects(sql, TunnelCrossSectionIndex.class) ;
 	}

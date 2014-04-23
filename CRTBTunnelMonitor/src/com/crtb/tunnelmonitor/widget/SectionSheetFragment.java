@@ -3,6 +3,7 @@ package com.crtb.tunnelmonitor.widget;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.R.integer;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.os.Bundle;
@@ -113,6 +114,8 @@ public class SectionSheetFragment extends Fragment {
         if (rawSheets != null && rawSheets.size() > 0) {
             for (RawSheetIndex sheet : rawSheets) {
                 RawSheetData sheetData = new RawSheetData();
+                sheetData.setRowId(sheet.getID());
+                sheetData.setSectionIds(sheet.getCrossSectionIDs());
                 sheetData.setCreatedTime(CrtbUtils.formatDate(sheet.getCreateTime()));
                 switch (mSheetType) {
                     case TUNNEL_CROSS:
@@ -275,10 +278,28 @@ public class SectionSheetFragment extends Fragment {
     }
 
     public class RawSheetData {
+    	private int mRowId;
+    	private String mSectionIds;
         private String mCreatedTime;
         private boolean mIsUploaded;
         private boolean mIsChecked;
 
+        public void setRowId(int rowId) {
+        	mRowId = rowId;
+        }
+        
+        public int getRowId() {
+        	return mRowId;
+        }
+        
+        public void setSectionIds(String sectionIds) {
+        	mSectionIds = sectionIds;
+        }
+        
+        public String getSectionIds() {
+        	return mSectionIds;
+        }
+        
         public void setCreatedTime(String time) {
             mCreatedTime = time;
         }

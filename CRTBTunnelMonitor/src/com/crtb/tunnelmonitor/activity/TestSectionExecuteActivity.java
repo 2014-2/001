@@ -184,6 +184,7 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 			obj.setPntType(type); // 测量点类型
 			obj.setMEASNo(1);
 			obj.setSurveyorID(Integer.valueOf(rawSheet.getCertificateID()));// 测量人员id
+			obj.setInfo("1");
 		} else {
 			holder.insert = false ;
 		}
