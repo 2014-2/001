@@ -33,7 +33,7 @@ public final class CrtbWebService {
 	private static final String USRE_AUTH_URL = "http://61.237.239.144/fxkz/basedown";
 	private static final String DATA_UPLOAD_URL = "http://61.237.239.144/fxkz/testdata";
 	
-	private static final int RETRY_COUNT = 3;
+	private static final int RETRY_COUNT = 10;
 	private static final int CONNECITON_TIME_OUT = 10000;
 	
 	private static CrtbWebService sInstance;
