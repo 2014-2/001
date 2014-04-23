@@ -81,7 +81,10 @@ public class TunnelSettlementTotalDataDao extends AbstractDao<TunnelSettlementTo
                 + " AND pntType=\'"
                 + pntType
                 + "\' AND MEASNo<"
-                + String.valueOf(MEASNo) + " order by MEASNo ASC";
+                + String.valueOf(MEASNo)
+                + " AND DataStatus != "
+                + String.valueOf(1)
+                + " order by MEASNo ASC";
 
         return mDatabase.queryObjects(sql, TunnelSettlementTotalData.class);
     }

@@ -5,8 +5,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.zw.android.framework.IAccessDatabase;
-
 import android.database.Cursor;
 import android.database.sqlite.SQLiteException;
 import android.text.TextUtils;
@@ -323,18 +321,12 @@ public class AlertUtils {
                 + "   WHEN 1 THEN 0"
                 + "   WHEN 2 THEN 1"
                 + "   WHEN 0 THEN 2"
-                + " END,"
+                + " END DESC,"
                 + " AlertList.AlertTime DESC";
-
-//        String sql2 = "SELECT *"
-//                + " FROM AlertList LEFT JOIN AlertHandlingList"
-//                + " ON AlertList.ID=AlertHandlingList.AlertID"
-//                + " ORDER BY"
-//                + " AlertList.AlertTime DESC";
 
         Cursor c = null;
         try {
-            c = AlertListDao.defaultDao().executeQuerySQL(sql2, null);
+            c = AlertListDao.defaultDao().executeQuerySQL(sql, null);
 
             if (c != null) {
                 Log.d(TAG, "cursor count: " + c.getCount());
@@ -342,14 +334,14 @@ public class AlertUtils {
                     AlertInfo ai = new AlertInfo();
                     ai.setAlertId(c.getInt(0));
                     ai.setAlertHandlingId(c.getInt(1));
-//                    ai.setXinghao(c.getString(2));
-                    String dateStr = c.getString(2);
+                    ai.setXinghao(c.getString(2));
+                    String dateStr = c.getString(3);
                     ai.setDate(dateStr);
-                    ai.setPntType(c.getString(3));
-                    int uType = c.getInt(4);
+                    ai.setPntType(c.getString(4));
+                    int uType = c.getInt(5);
                     ai.setUType(uType);
                     ai.setUTypeMsg((uType >= 0 && uType < 6) ? U_TYPE_MSGS[uType] : "");
-                    int alertStatus = c.getInt(5);
+                    int alertStatus = c.getInt(6);
                     ai.setAlertStatus(alertStatus);
                     ai.setAlertStatusMsg((alertStatus >= 0 && alertStatus < 3) ? ALERT_STATUS_MSGS[alertStatus]
                             : "");
@@ -390,6 +382,7 @@ public class AlertUtils {
                 c.close();
             }
         }
+        Log.d(TAG, "getAlertCountOfState, return count: " + count);
         return count;
     }
 

@@ -232,6 +232,10 @@ public class WarningActivity extends Activity {
 
     private void handleAlert() {
         AlertInfo ai = (AlertInfo) adapter.getItem(mCheckedRaidoId);
+        if (ai == null) {
+            return;
+        }
+
         int alertId = ai.getAlertId();
         int dataStatus = 0;
         float correction = 0f;
@@ -253,6 +257,7 @@ public class WarningActivity extends Activity {
 
         int alertStatus = 0;//TODO : may also be 2, 需要将mBtnOnClickListener中deal_with_btn也要和complete_btn一样的逻辑
         String handling = mWarningRemarkView.getText().toString();
+        Log.d(TAG, "handleAlert 处理内容：" + handling);
         AlertUtils.handleAlert(alertId, dataStatus, correction, alertStatus, handling, new Date(
                 System.currentTimeMillis()));
     }
@@ -270,29 +275,29 @@ public class WarningActivity extends Activity {
         }
     }
 
-    public ArrayList<AlertInfo> getdata() {
-        AlertInfo.yixiao = 0;
-        ArrayList<AlertInfo> listt = new ArrayList<AlertInfo>();
-        AlertInfo infor;
-        for (int i = 0; i < s.length; i++) {
-            infor = new AlertInfo();
-            infor.setDate(getdate());
-            infor.setXinghao(s[i]);
-            infor.setPntType(ss[ran.nextInt(3)]);
-            infor.setChuliFangshi("自由处理");
-            infor.setAlertStatusMsg(sss[ran.nextInt(3)]);
-            infor.setUTypeMsg(s2[ran.nextInt(4)]);
-            infor.setEdtState(ssss[ran.nextInt(4)]);
-            infor.setState1(true);
-            if (infor.getAlertStatusMsg().equals("已消警")) {
-                AlertInfo.yixiao = AlertInfo.yixiao + 1;
-                System.out.println(AlertInfo.yixiao);
-
-            }
-            listt.add(infor);
-        }
-        return listt;
-    }
+//    public ArrayList<AlertInfo> getdata() {
+//        AlertInfo.yixiao = 0;
+//        ArrayList<AlertInfo> listt = new ArrayList<AlertInfo>();
+//        AlertInfo infor;
+//        for (int i = 0; i < s.length; i++) {
+//            infor = new AlertInfo();
+//            infor.setDate(getdate());
+//            infor.setXinghao(s[i]);
+//            infor.setPntType(ss[ran.nextInt(3)]);
+//            infor.setChuliFangshi("自由处理");
+//            infor.setAlertStatusMsg(sss[ran.nextInt(3)]);
+//            infor.setUTypeMsg(s2[ran.nextInt(4)]);
+//            infor.setEdtState(ssss[ran.nextInt(4)]);
+////            infor.setState1(true);
+//            if (infor.getAlertStatusMsg().equals("已消警")) {
+//                AlertInfo.yixiao = AlertInfo.yixiao + 1;
+//                System.out.println(AlertInfo.yixiao);
+//
+//            }
+//            listt.add(infor);
+//        }
+//        return listt;
+//    }
 
     public String getdate() {
         SimpleDateFormat simp = new SimpleDateFormat("yyyy-MM-dd hh:mm");
