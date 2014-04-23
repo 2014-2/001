@@ -223,8 +223,23 @@ public class SectionNewSubsidenceActivity extends WorkFlowActivity implements On
 			}
 
 			if (StringUtils.isEmpty(width)) {
-				showText("监测点个数不能为空");
+				showText("监测点不能为空");
 				return;
+			}
+			
+			int pc = 0 ;
+			
+			try{
+				if(!StringUtils.isEmpty(point)){
+					pc = Integer.valueOf(point);
+				}
+			}catch(Exception e){
+				e.printStackTrace() ;
+			}
+			
+			if(pc <= 0 || pc > 30){
+				showText("监测点个数只能为: 1-30");
+				return ;
 			}
 			
 			// 变形阀值

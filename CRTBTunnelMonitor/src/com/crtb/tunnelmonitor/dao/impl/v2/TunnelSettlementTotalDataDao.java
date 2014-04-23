@@ -5,8 +5,6 @@ import java.util.List;
 import org.zw.android.framework.IAccessDatabase;
 
 import com.crtb.tunnelmonitor.entity.TunnelSettlementTotalData;
-import com.crtb.tunnelmonitor.entity.TunnelSettlementTotalData;
-import com.crtb.tunnelmonitor.entity.TunnelSettlementTotalData;
 
 /**
  * 全站仪
