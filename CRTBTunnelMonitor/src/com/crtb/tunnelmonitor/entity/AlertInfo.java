@@ -4,7 +4,7 @@ package com.crtb.tunnelmonitor.entity;
 public class AlertInfo {
     public static int count = 0;
     public static int yixiao = 0;
-    public boolean state1;
+//    public boolean state1;
     public int alertId = -1;
     public int alertHandlingId = -1;
     public String xinghao;
@@ -17,13 +17,13 @@ public class AlertInfo {
     public String edtState;
     public String chuliFangshi;
 
-    public boolean isState1() {
-        return state1;
-    }
-
-    public void setState1(boolean state1) {
-        this.state1 = state1;
-    }
+//    public boolean isState1() {
+//        return state1;
+//    }
+//
+//    public void setState1(boolean state1) {
+//        this.state1 = state1;
+//    }
 
     public int getAlertId() {
         return alertId;

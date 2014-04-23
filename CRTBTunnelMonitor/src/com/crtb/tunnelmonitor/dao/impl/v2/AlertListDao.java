@@ -75,6 +75,7 @@ public class AlertListDao extends AbstractDao<AlertList> {
     public int insertItem(TunnelSettlementTotalData point, int alertLevel, int Utype,
             double UValue, double UMax, String originalDataID) {
 
+        Log.d(TAG, "AlertListDao insertItem");
         final IAccessDatabase mDatabase = getCurrentDb();
 
         if (mDatabase == null) {
@@ -99,7 +100,9 @@ public class AlertListDao extends AbstractDao<AlertList> {
         al.setUMax(UMax);
         al.setOriginalDataID(originalDataID);
 
-        return mDatabase.saveObject(al);
+        int ret = mDatabase.saveObject(al);
+        Log.d(TAG, "AlertListDao insertItem, ret: " + ret);
+        return ret;
     }
 
     /**
@@ -114,7 +117,7 @@ public class AlertListDao extends AbstractDao<AlertList> {
     public int insertItem(SubsidenceTotalData point, int alertLevel, int Utype, double UValue,
             double UMax, String originalDataID) {
 
-        Log.d(TAG, "insertItem");
+        Log.d(TAG, "AlertListDao insertItem");
         final IAccessDatabase mDatabase = getCurrentDb();
 
         if (mDatabase == null) {
@@ -133,7 +136,7 @@ public class AlertListDao extends AbstractDao<AlertList> {
         al.setOriginalDataID(originalDataID);
 
         int ret = mDatabase.saveObject(al);
-        Log.d(TAG, "insertItem, ret: " + ret);
+        Log.d(TAG, "AlertListDao insertItem, ret: " + ret);
         return ret;
     }
 

@@ -45,7 +45,7 @@ public class SubsidenceTotalDataDao extends AbstractDao<SubsidenceTotalData> {
 			return null ;
 		}
 			
-		String sql = "select * from SubsidenceTotalData where SheetId = ? and ChainageId = ? and PntType = ?" ;
+		String sql = "select * from SubsidenceTotalData where SheetId = ? and ChainageId = ? and PntType = ? order by MEASNo desc" ;
 			
 		return mDatabase.queryObject(sql, new String[]{String.valueOf(sheetId),String.valueOf(chainageId),pntType},SubsidenceTotalData.class);
 	}
@@ -60,15 +60,19 @@ public class SubsidenceTotalDataDao extends AbstractDao<SubsidenceTotalData> {
      */
     public List<SubsidenceTotalData> queryInfoBeforeMEASNo(int chainageId, String pntType,
             int MEASNo) {
-    	
-    	final IAccessDatabase mDatabase = getCurrentDb();
-		
-		if(mDatabase == null){
-			return null ;
-		}
-		
-        String sql = "select * from SubsidenceTotalData where chainageId=" + chainageId
-                + " AND pntType=" + pntType + " AND MEASNo < " + String.valueOf(MEASNo)
+
+        final IAccessDatabase mDatabase = getCurrentDb();
+
+        if (mDatabase == null) {
+            return null;
+        }
+
+        String sql = "select * from SubsidenceTotalData where"
+                + " chainageId=" + chainageId
+                + " AND pntType=" + pntType
+                + " AND MEASNo < " + String.valueOf(MEASNo)
+                + " AND DataStatus != "
+                + String.valueOf(1)
                 + " order by MEASNo ASC";
         
         return mDatabase.queryObjects(sql, SubsidenceTotalData.class);

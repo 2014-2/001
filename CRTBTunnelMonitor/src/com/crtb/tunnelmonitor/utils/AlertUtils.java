@@ -5,8 +5,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.zw.android.framework.IAccessDatabase;
-
 import android.database.Cursor;
 import android.database.sqlite.SQLiteException;
 import android.text.TextUtils;
@@ -151,6 +149,7 @@ public class AlertUtils {
                         && !TextUtils.isEmpty(firstCoords[2])) {
                     double firstZ = Double.valueOf(firstCoords[2]);
                     double accumulativeSubsidence = Math.abs(thisZ - firstZ);
+                    Log.d(TAG, "累计沉降： " + accumulativeSubsidence);
                     if (accumulativeSubsidence >= ACCUMULATIVE_THRESHOLD) {
                         int uType = type == 1 ? GONGDING_LEIJI_XIACHEN_EXCEEDING
                                 : DIBIAO_LEIJI_XIACHEN_EXCEEDING;
@@ -169,7 +168,7 @@ public class AlertUtils {
                     }
                 }
 
-                Object lastInfo = pastInfoList.get(pastInfoList.size());
+                Object lastInfo = pastInfoList.get(pastInfoList.size() - 1);
                 String[] lastCoords = null;
                 Date lastTime = null;
                 if (type == 1) {
@@ -186,7 +185,12 @@ public class AlertUtils {
                     double lastZ = Double.valueOf(lastCoords[2]);
                     double deltaZ = Math.abs(thisZ - lastZ);
                     long deltaT = Math.abs(thisTime.getTime() - lastTime.getTime());
-                    double subsidenceSpeed = deltaZ / (deltaT / Time.DAY_MILLISECEND_RATIO);
+                    if (deltaT < Time.ONE_HOUR) {
+                        deltaT = Time.ONE_HOUR;//ONE HOUR at least to avoid infinity
+                    }
+                    long deltaTInDay = (deltaT / Time.DAY_MILLISECEND_RATIO);
+                    double subsidenceSpeed = deltaZ / deltaTInDay;
+                    Log.d(TAG, "沉降速率： " + subsidenceSpeed);
                     if (subsidenceSpeed >= SPEED_THRESHOLD) {
                         int uType = type == 1 ? GONGDINGI_XIACHEN_SULV_EXCEEDING
                                 : DIBIAO_XIACHEN_SULV_EXCEEDING;
@@ -254,7 +258,7 @@ public class AlertUtils {
                         thisTimeDate, String.valueOf(chainageId) + s_1.getPntType(), 1/*报警*/, 01/*true*/);
             }
 
-            TunnelSettlementTotalData s_1Last = s_1InfoList.get(s_1InfoList.size());
+            TunnelSettlementTotalData s_1Last = s_1InfoList.get(s_1InfoList.size() - 1);
             TunnelSettlementTotalData s_2Last = TunnelSettlementTotalDataDao.defaultDao()
                     .queryOppositePointOfALine(s_1Last, s_2.getPntType());
             double lineLastLength = getLineLength(s_1Last, s_2Last);
@@ -265,9 +269,11 @@ public class AlertUtils {
             if (s_2LastTime.getTime() > lastTime) {
                 lastTime = s_2LastTime.getTime();
             }
-            double deltaTime = Math.abs((thisTime - lastTime))
-                    / Time.DAY_MILLISECEND_RATIO;
-            double shoulianSpeed = deltaLenth / deltaTime;
+            double deltaTime = Math.abs((thisTime - lastTime));
+            if (deltaTime < Time.ONE_HOUR) {
+                deltaTime = Time.ONE_HOUR;//ONE HOUR at least to avoid infinity
+            }
+            double shoulianSpeed = deltaLenth / (deltaTime / Time.DAY_MILLISECEND_RATIO);
             if (shoulianSpeed >= SPEED_THRESHOLD) {
                 int uType = SHOULIAN_SULV_EXCEEDING;
                 ret.sulvType = uType;
@@ -305,12 +311,12 @@ public class AlertUtils {
 
         ArrayList<AlertInfo> l = new ArrayList<AlertInfo>();
         String sql = "SELECT"
-                + " AlertList.ID AS alertId"
-                + " AlertHandlingList.ID AS alertHandlingId"
-                + " TunnelCrossSectionIndex.sectionName AS sectionName"
-                + " AlertList.AlertTime AS date"
-                + " AlertList.PntType AS pntType"
-                + " AlertList.Utype AS utype"
+                + " AlertList.ID AS alertId,"
+                + " AlertHandlingList.ID AS alertHandlingId,"
+                + " TunnelCrossSectionIndex.sectionName AS sectionName,"
+                + " AlertList.AlertTime AS date,"
+                + " AlertList.PntType AS pntType,"
+                + " AlertList.Utype AS utype,"
                 + " AlertHandlingList.AlertStatus AS status"
                 + " FROM AlertList LEFT JOIN AlertHandlingList"
                 + " ON AlertList.ID=AlertHandlingList.AlertID"
@@ -321,7 +327,7 @@ public class AlertUtils {
                 + "   WHEN 1 THEN 0"
                 + "   WHEN 2 THEN 1"
                 + "   WHEN 0 THEN 2"
-                + " END,"
+                + " END DESC,"
                 + " AlertList.AlertTime DESC";
 
         Cursor c = null;
@@ -341,7 +347,7 @@ public class AlertUtils {
                     int uType = c.getInt(5);
                     ai.setUType(uType);
                     ai.setUTypeMsg((uType >= 0 && uType < 6) ? U_TYPE_MSGS[uType] : "");
-                    int alertStatus = c.getInt(4);
+                    int alertStatus = c.getInt(6);
                     ai.setAlertStatus(alertStatus);
                     ai.setAlertStatusMsg((alertStatus >= 0 && alertStatus < 3) ? ALERT_STATUS_MSGS[alertStatus]
                             : "");
@@ -359,6 +365,8 @@ public class AlertUtils {
     }
 
     public static int getAlertCountOfState(int state) {
+
+        Log.d(TAG, "getAlertCountOfState");
 
         // AlertListDao.defaultDao().createTable();
         // AlertHandlingInfoDao.defaultDao().createTable();
@@ -380,6 +388,7 @@ public class AlertUtils {
                 c.close();
             }
         }
+        Log.d(TAG, "getAlertCountOfState, return count: " + count);
         return count;
     }
 
