@@ -172,48 +172,35 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 	
 	private View createTunnelTestPointView(TunnelSettlementTotalData bean,final String type){
 		
-		TunnelSettlementTotalData obj 	= bean ;
 		final TestPointHolder holder 	= new TestPointHolder() ;
-		
-		if(obj == null){
-			holder.insert	= true ;
-			obj = new TunnelSettlementTotalData() ;
-			obj.setStationId(0x000001);
-			obj.setChainageId(tunnelSection.getID());
-			obj.setSheetId(rawSheet.getID());
-			obj.setPntType(type); // 测量点类型
-			obj.setMEASNo(1);
-			obj.setSurveyorID(Integer.valueOf(rawSheet.getCertificateID()));// 测量人员id
-		} else {
-			holder.insert = false ;
-		}
-		
-		String coord = obj.getCoordinate() != null ? obj.getCoordinate() : "";
-		
 		View view = InjectCore.injectOriginalObject(holder);
+		
+		if(bean != null){
+			
+			// 存在的测量数据
+			String coord = bean.getCoordinate() != null ? bean.getCoordinate() : "";
+			
+			// 默认值
+			String[] str = coord.split(",");
+			if (str.length == 3) {
+				holder.mPointX.setText(str[0]);
+				holder.mPointY.setText(str[1]);
+				holder.mPointZ.setText(str[2]);
+			}
+			
+			// 测试时间
+			holder.mPointTime.setText(DateUtils.toDateString(bean.getSurveyTime(), DateUtils.PART_TIME_FORMAT));
+		}
 		
 		// 测点类型
 		holder.mPointType.setText(type);
 		
-		// 默认值
-		String[] str = coord.split(",");
-		if (str.length == 3) {
-			holder.mPointX.setText(str[0]);
-			holder.mPointY.setText(str[1]);
-			holder.mPointZ.setText(str[2]);
-		}
-
-		// 测试时间
-		holder.mPointTime.setText(DateUtils.toDateString(obj.getSurveyTime(), DateUtils.PART_TIME_FORMAT));
-		// 测量对象
-		final TunnelSettlementTotalData item = obj ;
 		// 测量
 		holder.mPointTestBnt.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
-			    DEBUG_TEST_NUM++;//TODO: remove, just for debug
-
+				
 				ISurveyProvider ts = TSSurveyProvider.getDefaultAdapter();
 				
 				if (ts == null) {
@@ -245,69 +232,51 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 				holder.mPointZ.setText(z);
 				holder.mPointTime.setText(time);
 				
+				TunnelSettlementTotalData obj = new TunnelSettlementTotalData() ;
+				obj.setStationId(0x000001);
+				obj.setChainageId(tunnelSection.getID());
+				obj.setSheetId(rawSheet.getID());
+				obj.setPntType(type); // 测量点类型
+				obj.setSurveyorID(Integer.valueOf(rawSheet.getCertificateID()));// 测量人员id
+				
 				TunnelSettlementTotalDataDao dao 	= TunnelSettlementTotalDataDao.defaultDao() ;
 				
-				if(holder.insert){
-					item.setMEASNo(1);
+				// 存在的测量点信息
+				TunnelSettlementTotalData old = dao.queryTunnelTotalData(rawSheet.getID(),tunnelSection.getID(),type);
+				
+				if(old != null){
+					obj.setMEASNo(old.getMEASNo() + 1);
 				} else {
-					item.setMEASNo(item.getMEASNo() + 1);
+					obj.setMEASNo(1);
 				}
 				
-				item.setCoordinate(z + "," + y + "," + z);
-				item.setSurveyTime(DateUtils.toDate(time, DateUtils.DATE_TIME_FORMAT));
-				item.setDataStatus(0);
+				obj.setCoordinate(z + "," + y + "," + z);
+				obj.setSurveyTime(DateUtils.toDate(time, DateUtils.DATE_TIME_FORMAT));
+				obj.setDataStatus(0);
 				
 				// 插入
-				if(holder.insert){
-					if(dao.insert(item) == TunnelSettlementTotalDataDao.DB_EXECUTE_SUCCESS){
+				if(dao.insert(obj) == TunnelSettlementTotalDataDao.DB_EXECUTE_SUCCESS){
+					
+					if(type.equals(AppConfig.POINT_A)){
+						doWarring(holder, AlertUtils.getPointSubsidenceExceedMsg(obj));
+					} else {
 						
-						if(type.equals(AppConfig.POINT_A)){
-							doWarring(holder, AlertUtils.getPointSubsidenceExceedMsg(item));
+						if(type.equals(AppConfig.POINT_S1_1)
+								|| type.equals(AppConfig.POINT_S2_1)
+								|| type.equals(AppConfig.POINT_S3_1)){
+							pS1	= obj ;
 						} else {
-							
-							if(type.equals(AppConfig.POINT_S1_1)
-									|| type.equals(AppConfig.POINT_S2_1)
-									|| type.equals(AppConfig.POINT_S3_1)){
-								pS1	= item ;
-							} else {
-								pS2	= item ;
-							}
-							
-							if(pS1 != null && pS2 != null){
-								doWarringLine(holder);
-							}
+							pS2	= obj ;
 						}
 						
-						showText("保存成功");
-					} else {
-						showText("保存失败");
-					}
-				} 
-				// 更新
-				else {
-					if(dao.update(item) == TunnelSettlementTotalDataDao.DB_EXECUTE_SUCCESS){
-						
-						if(type.equals(AppConfig.POINT_A)){
-							doWarring(holder, AlertUtils.getPointSubsidenceExceedMsg(item));
-						} else {
-							
-							if(type.equals(AppConfig.POINT_S1_1)
-									|| type.equals(AppConfig.POINT_S2_1)
-									|| type.equals(AppConfig.POINT_S3_1)){
-								pS1	= item ;
-							} else {
-								pS2	= item ;
-							}
-							
-							if(pS1 != null && pS2 != null){
-								doWarringLine(holder);
-							}
+						if(pS1 != null && pS2 != null){
+							doWarringLine(holder);
 						}
-						
-						showText("更新成功");
-					} else {
-						showText("更新失败");
 					}
+					
+					showText("保存成功");
+				} else {
+					showText("保存失败");
 				}
 			}
 		}) ;
@@ -341,49 +310,38 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 			tv.setTextColor(Color.RED);
 			tv.setTextSize(20);
 			
-			tv.setText(msg);
-			
-			holder.warringLayout.addView(tv);
+			if(!StringUtils.isEmpty(msg)){
+				tv.setText(msg);
+				holder.warringLayout.addView(tv);
+			}
 		}
 	}
 	
-	private View createSubsidenceTestPointView(SubsidenceTotalData bean,String type){
+	private View createSubsidenceTestPointView(SubsidenceTotalData bean,final String type){
 		
-		SubsidenceTotalData obj 	= bean ;
 		final TestPointHolder holder 	= new TestPointHolder() ;
-		
-		if(obj == null){
-			holder.insert	= true ;
-			obj = new SubsidenceTotalData() ;
-			obj.setStationId(0x000001);
-			obj.setChainageId(subsidenceSection.getID());
-			obj.setSheetId(rawSheet.getID());
-			obj.setPntType(type); // 测量点类型
-			obj.setMEASNo(1);
-			obj.setSurveyorID(Integer.valueOf(rawSheet.getCertificateID()));// 测量人员id
-		} else {
-			holder.insert = false ;
-		}
-		
-		String coord = obj.getCoordinate() != null ? obj.getCoordinate() : "";
 		
 		View view = InjectCore.injectOriginalObject(holder);
 		
 		// 测点类型
 		holder.mPointType.setText(type);
 		
-		// 默认值
-		String[] str = coord.split(",");
-		if (str.length == 3) {
-			holder.mPointX.setText(str[0]);
-			holder.mPointY.setText(str[1]);
-			holder.mPointZ.setText(str[2]);
-		}
+		if(bean != null){
+			
+			String coord = bean.getCoordinate() != null ? bean.getCoordinate() : "";
+			
+			// 默认值
+			String[] str = coord.split(",");
+			if (str.length == 3) {
+				holder.mPointX.setText(str[0]);
+				holder.mPointY.setText(str[1]);
+				holder.mPointZ.setText(str[2]);
+			}
 
-		// 测试时间
-		holder.mPointTime.setText(DateUtils.toDateString(obj.getSurveyTime(), DateUtils.PART_TIME_FORMAT));
-		// 测量对象
-		final SubsidenceTotalData item = obj ;
+			// 测试时间
+			holder.mPointTime.setText(DateUtils.toDateString(bean.getSurveyTime(), DateUtils.PART_TIME_FORMAT));
+		}
+		
 		// 测量
 		holder.mPointTestBnt.setOnClickListener(new View.OnClickListener() {
 			
@@ -423,31 +381,31 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 				
 				SubsidenceTotalDataDao dao 	= SubsidenceTotalDataDao.defaultDao() ;
 				
-				if(holder.insert){
-					item.setMEASNo(1);
+				// 存在的测量点信息
+				SubsidenceTotalData old = dao.queryTunnelTotalData(rawSheet.getID(),tunnelSection.getID(),type);
+				
+				final SubsidenceTotalData obj = new SubsidenceTotalData() ;
+				obj.setStationId(0x000001);
+				obj.setChainageId(subsidenceSection.getID());
+				obj.setSheetId(rawSheet.getID());
+				obj.setPntType(type); // 测量点类型
+				obj.setSurveyorID(Integer.valueOf(rawSheet.getCertificateID()));// 测量人员id
+				
+				if(old != null){
+					obj.setMEASNo(old.getMEASNo() + 1);
 				} else {
-					item.setMEASNo(item.getMEASNo() + 1);
+					obj.setMEASNo(1);
 				}
 				
-				item.setCoordinate(z + "," + y + "," + z);
-				item.setSurveyTime(DateUtils.toDate(time, DateUtils.DATE_TIME_FORMAT));
-				item.setDataStatus(0);
+				obj.setCoordinate(z + "," + y + "," + z);
+				obj.setSurveyTime(DateUtils.toDate(time, DateUtils.DATE_TIME_FORMAT));
+				obj.setDataStatus(0);
 				
 				// 插入
-				if(holder.insert){
-					if(dao.insert(item) == TunnelSettlementTotalDataDao.DB_EXECUTE_SUCCESS){
-						showText("保存成功");
-					} else {
-						showText("保存失败");
-					}
-				} 
-				// 更新
-				else {
-					if(dao.update(item) == TunnelSettlementTotalDataDao.DB_EXECUTE_SUCCESS){
-						showText("更新成功");
-					} else {
-						showText("更新失败");
-					}
+				if(dao.insert(obj) == TunnelSettlementTotalDataDao.DB_EXECUTE_SUCCESS){
+					showText("保存成功");
+				} else {
+					showText("保存失败");
 				}
 			}
 		}) ;
@@ -567,20 +525,28 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 		// 地表下沉断面测量---临时值
 		else if(sectionType == RawSheetIndex.CROSS_SECTION_TYPE_SUBSIDENCES){
 			
+			String points = subsidenceSection.getSurveyPnts();
+			int size = 0 ;
+			
+			try{
+				if(!StringUtils.isEmpty(points)){
+					size = Integer.valueOf(points) ;
+				}
+			} catch(Exception e){
+				e.printStackTrace() ;
+				showText("地表下沉隧道测量点错误");
+			}
+			
 			SubsidenceTotalDataDao dao = SubsidenceTotalDataDao.defaultDao();
 			SubsidenceTotalData bean = null ;
 			
-			// A
-			bean = dao.queryTunnelTotalData(rawSheet.getID(),tunnelSection.getID(),"2");
-			addTestPoint(createSubsidenceTestPointView(bean,"2"));
-			
-			// s1-1
-			bean = dao.queryTunnelTotalData(rawSheet.getID(),tunnelSection.getID(),"3");
-			addTestPoint(createSubsidenceTestPointView(bean,"3"));
-			
-			// s1-2
-			bean = dao.queryTunnelTotalData(rawSheet.getID(),tunnelSection.getID(),"4");
-			addTestPoint(createSubsidenceTestPointView(bean,"4"));
+			for(int id = 0 ; id < size ; id++){
+				
+				String index = String.valueOf(id) ;
+				
+				bean = dao.queryTunnelTotalData(rawSheet.getID(),tunnelSection.getID(),index);
+				addTestPoint(createSubsidenceTestPointView(bean,index));
+			}
 		}
 	}
 
@@ -646,9 +612,6 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 		
 	@InjectLayout(layout=R.layout.test_record_point_layout)
 	final class TestPointHolder {
-		
-		// 是否新数据
-		boolean insert = false ;
 		
 		@InjectView(id=R.id.test_point_type)
 		TextView mPointType ;

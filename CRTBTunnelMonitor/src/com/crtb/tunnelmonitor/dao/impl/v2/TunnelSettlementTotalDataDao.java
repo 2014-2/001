@@ -53,7 +53,7 @@ public class TunnelSettlementTotalDataDao extends AbstractDao<TunnelSettlementTo
 			return null ;
 		}
 		
-		String sql = "select * from TunnelSettlementTotalData where SheetId = ? and ChainageId = ? and PntType = ?" ;
+		String sql = "select * from TunnelSettlementTotalData where SheetId = ? and ChainageId = ? and PntType = ? order by MEASNo desc" ;
 		
 		return mDatabase.queryObject(sql, new String[]{String.valueOf(sheetId),String.valueOf(chainageId),pntType},TunnelSettlementTotalData.class);
 	}
