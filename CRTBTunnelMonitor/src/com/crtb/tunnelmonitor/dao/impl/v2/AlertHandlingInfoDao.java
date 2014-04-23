@@ -37,7 +37,7 @@ public class AlertHandlingInfoDao extends AbstractDao<AlertHandlingList> {
 
     public int insertItem(int alertId, String handling, Date handlingTime, String duePerson,
             int alertStatus, int handlingInfo) {
-        Log.d(TAG, "insertItem");
+        Log.d(TAG, "AlertHandlingInfoDao insertItem");
         final IAccessDatabase mDatabase = getCurrentDb();
 
         if (mDatabase == null) {
@@ -53,7 +53,7 @@ public class AlertHandlingInfoDao extends AbstractDao<AlertHandlingList> {
         ah.setHandlingInfo(handlingInfo);
 
         int ret = mDatabase.saveObject(ah);
-        Log.d(TAG, "insertItem ret: " + ret);
+        Log.d(TAG, "AlertHandlingInfoDao insertItem, ret: " + ret);
         return ret;
     }
 

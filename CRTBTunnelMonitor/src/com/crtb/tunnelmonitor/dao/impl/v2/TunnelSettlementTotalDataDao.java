@@ -67,19 +67,22 @@ public class TunnelSettlementTotalDataDao extends AbstractDao<TunnelSettlementTo
      *            本次测量是第几次测量
      * @return 查询到的测点信息List
      */
-    public List<TunnelSettlementTotalData> queryInfoBeforeMEASNo(int chainageId, String pntType,
-            int MEASNo) {
-    	
-    	final IAccessDatabase mDatabase = getCurrentDb();
-		
-		if(mDatabase == null){
-			return null ;
-		}
-		
-        String sql = "select * from TunnelSettlementTotalData where chainageId=" + chainageId
-                + " AND pntType=" + pntType + " AND MEASNo < " + String.valueOf(MEASNo)
-                + " order by MEASNo ASC";
-        
+    public List<TunnelSettlementTotalData> queryInfoBeforeMEASNo(
+            int chainageId, String pntType, int MEASNo) {
+
+        final IAccessDatabase mDatabase = getCurrentDb();
+
+        if (mDatabase == null) {
+            return null;
+        }
+
+        String sql = "select * from TunnelSettlementTotalData where chainageId="
+                + chainageId
+                + " AND pntType=\'"
+                + pntType
+                + "\' AND MEASNo<"
+                + String.valueOf(MEASNo) + " order by MEASNo ASC";
+
         return mDatabase.queryObjects(sql, TunnelSettlementTotalData.class);
     }
 
@@ -98,7 +101,7 @@ public class TunnelSettlementTotalDataDao extends AbstractDao<TunnelSettlementTo
                 + point1.getChainageId()
                 // 同一次测量
                 + " AND MEASNo=" + point1.getMEASNo()
-                + " AND pntType=" + point2Type;
+                + " AND pntType=\'" + point2Type + "\'";
 
         List<TunnelSettlementTotalData> list = mDatabase.queryObjects(sql,
                 TunnelSettlementTotalData.class);
