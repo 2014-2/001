@@ -8,6 +8,7 @@ import java.util.List;
 import org.zw.android.framework.IAccessDatabase;
 
 import android.database.Cursor;
+import android.database.sqlite.SQLiteException;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -347,7 +348,9 @@ public class AlertUtils {
                     l.add(ai);
                 }
             }
-        } finally {
+        } catch (SQLiteException e) {
+            Log.e(TAG, "getAlertInfoList", e);
+        }  finally {
             if (c != null) {
                 c.close();
             }
@@ -357,10 +360,11 @@ public class AlertUtils {
 
     public static int getAlertCountOfState(int state) {
 
-//        AlertListDao.defaultDao().createTable();
-//        AlertHandlingInfoDao.defaultDao().createTable();
+        // AlertListDao.defaultDao().createTable();
+        // AlertHandlingInfoDao.defaultDao().createTable();
         String sql = "SELECT * FROM AlertList INNER JOIN AlertHandlingList"
-                + " ON AlertList.ID=AlertHandlingList.AlertID" + " WHERE AlertStatus=?";
+                + " ON AlertList.ID=AlertHandlingList.AlertID"
+                + " WHERE AlertStatus=?";
         String[] args = new String[] { String.valueOf(state) };
         int count = 0;
         Cursor c = null;
@@ -369,6 +373,8 @@ public class AlertUtils {
             if (c != null) {
                 count = c.getCount();
             }
+        } catch (SQLiteException e) {
+            Log.e(TAG, "getAlertCountOfState", e);
         } finally {
             if (c != null) {
                 c.close();
