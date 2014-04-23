@@ -149,6 +149,7 @@ public class AlertUtils {
                         && !TextUtils.isEmpty(firstCoords[2])) {
                     double firstZ = Double.valueOf(firstCoords[2]);
                     double accumulativeSubsidence = Math.abs(thisZ - firstZ);
+                    accumulativeSubsidence *= 1000;//CHANGE TO MILLIMETER
                     Log.d(TAG, "累计沉降： " + accumulativeSubsidence);
                     if (accumulativeSubsidence >= ACCUMULATIVE_THRESHOLD) {
                         int uType = type == 1 ? GONGDING_LEIJI_XIACHEN_EXCEEDING
@@ -184,6 +185,7 @@ public class AlertUtils {
                         && lastTime != null) {
                     double lastZ = Double.valueOf(lastCoords[2]);
                     double deltaZ = Math.abs(thisZ - lastZ);
+                    deltaZ *= 1000;//CHANGE TO MILLIMETER
                     long deltaT = Math.abs(thisTime.getTime() - lastTime.getTime());
                     if (deltaT < Time.ONE_HOUR) {
                         deltaT = Time.ONE_HOUR;//ONE HOUR at least to avoid infinity
@@ -248,6 +250,7 @@ public class AlertUtils {
                     .queryOppositePointOfALine(s_1First, s_2.getPntType());
             double lineFirstLength = getLineLength(s_1First, s_2First);
             double convergence = Math.abs(lineFirstLength - lineThisLength);
+            convergence *= 1000; //CHANGE TO MILLIMETER
             if (convergence >= ACCUMULATIVE_THRESHOLD) {
                 int uType = SHOULIAN_LEIJI_EXCEEDING;
                 ret.leijiType = uType;
@@ -263,6 +266,7 @@ public class AlertUtils {
                     .queryOppositePointOfALine(s_1Last, s_2.getPntType());
             double lineLastLength = getLineLength(s_1Last, s_2Last);
             double deltaLenth = Math.abs(lineLastLength - lineThisLength);
+            deltaLenth *= 1000;
             Date s_1LastTime = s_1Last.getSurveyTime();
             Date s_2LastTime = s_2Last.getSurveyTime();
             double lastTime = s_1LastTime.getTime();
