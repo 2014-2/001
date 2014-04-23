@@ -45,7 +45,7 @@ public class SubsidenceTotalDataDao extends AbstractDao<SubsidenceTotalData> {
 			return null ;
 		}
 			
-		String sql = "select * from SubsidenceTotalData where SheetId = ? and ChainageId = ? and PntType = ?" ;
+		String sql = "select * from SubsidenceTotalData where SheetId = ? and ChainageId = ? and PntType = ? order by MEASNo desc" ;
 			
 		return mDatabase.queryObject(sql, new String[]{String.valueOf(sheetId),String.valueOf(chainageId),pntType},SubsidenceTotalData.class);
 	}
