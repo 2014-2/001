@@ -96,4 +96,15 @@ public class AlertListAdapter extends BaseAdapter {
         // return new TextView(context);
     }
 
+    public int getHandledCount() {
+        int c = 0;
+        if (list != null) {
+            for (AlertInfo ai : list) {
+                if (ai.alertStatus == 0) {
+                    c++;
+                }
+            }
+        }
+        return c;
+    }
 }

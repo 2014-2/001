@@ -100,9 +100,6 @@ public class WarningActivity extends Activity {
         alerts = AlertUtils.getAlertInfoList();
         adapter = new AlertListAdapter(this, alerts);
 
-        mAlertNum = adapter.getCount();
-        mHandledAlertNum = AlertUtils.getAlertCountOfState(AlertUtils.ALERT_STATUS_HANDLED);
-
         mHandleCompleteView= (RelativeLayout) findViewById(R.id.complete_warning_rl);
         mDealWayRadios = (RadioGroup) mHandleCompleteView.findViewById(R.id.radio_group);
         mDealWayBtnDiscard = (RadioButton) mDealWayRadios.findViewById(R.id.radio_button_void);
@@ -121,8 +118,14 @@ public class WarningActivity extends Activity {
         listviewInit();
 
         baojing = (TextView) findViewById(R.id.rizhi);
-        baojing.setText("报警日志：(" + mAlertNum + ")");
         yixiao = (TextView) findViewById(R.id.yixiaojing);
+        refreshNum();
+    }
+
+    private void refreshNum() {
+        mAlertNum = adapter == null ? 0 :adapter.getCount();
+        mHandledAlertNum = adapter == null ? 0 :adapter.getHandledCount();
+        baojing.setText("报警日志：(" + mAlertNum + ")");
         yixiao.setText("已消警：(" + mHandledAlertNum + ")");
     }
 
@@ -139,6 +142,7 @@ public class WarningActivity extends Activity {
                             adapter.notifyDataSetChanged();
                             alerts = AlertUtils.getAlertInfoList();
                             adapter.refreshData(alerts);
+                            refreshNum();
                             break;
                         case 1:
                             Toast.makeText(WarningActivity.this, " 已开始处理", 1000).show();
@@ -174,6 +178,7 @@ public class WarningActivity extends Activity {
                     mHandleCompleteView.setVisibility(View.GONE);
                     alerts = AlertUtils.getAlertInfoList();
                     adapter.refreshData(alerts);
+                    refreshNum();
                     break;
                 case R.id.complete_cancel:
                     cancelHandling();

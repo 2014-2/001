@@ -185,7 +185,11 @@ public class AlertUtils {
                     double lastZ = Double.valueOf(lastCoords[2]);
                     double deltaZ = Math.abs(thisZ - lastZ);
                     long deltaT = Math.abs(thisTime.getTime() - lastTime.getTime());
-                    double subsidenceSpeed = deltaZ / (deltaT / Time.DAY_MILLISECEND_RATIO);
+                    if (deltaT < Time.ONE_HOUR) {
+                        deltaT = Time.ONE_HOUR;//ONE HOUR at least to avoid infinity
+                    }
+                    long deltaTInDay = (deltaT / Time.DAY_MILLISECEND_RATIO);
+                    double subsidenceSpeed = deltaZ / deltaTInDay;
                     Log.d(TAG, "沉降速率： " + subsidenceSpeed);
                     if (subsidenceSpeed >= SPEED_THRESHOLD) {
                         int uType = type == 1 ? GONGDINGI_XIACHEN_SULV_EXCEEDING
@@ -265,9 +269,11 @@ public class AlertUtils {
             if (s_2LastTime.getTime() > lastTime) {
                 lastTime = s_2LastTime.getTime();
             }
-            double deltaTime = Math.abs((thisTime - lastTime))
-                    / Time.DAY_MILLISECEND_RATIO;
-            double shoulianSpeed = deltaLenth / deltaTime;
+            double deltaTime = Math.abs((thisTime - lastTime));
+            if (deltaTime < Time.ONE_HOUR) {
+                deltaTime = Time.ONE_HOUR;//ONE HOUR at least to avoid infinity
+            }
+            double shoulianSpeed = deltaLenth / (deltaTime / Time.DAY_MILLISECEND_RATIO);
             if (shoulianSpeed >= SPEED_THRESHOLD) {
                 int uType = SHOULIAN_SULV_EXCEEDING;
                 ret.sulvType = uType;
