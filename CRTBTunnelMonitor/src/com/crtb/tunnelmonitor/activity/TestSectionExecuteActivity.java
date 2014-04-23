@@ -233,10 +233,10 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 					return;
 				}
 				
-				String x = String.format("%1$.4f", DEBUG_x + 0.010d * DEBUG_TEST_NUM /*point.N*/);
-				String y = String.format("%1$.4f", DEBUG_y + 0.010d * DEBUG_TEST_NUM /*point.E*/);
-				String z = String.format("%1$.4f", DEBUG_z + 0.010d * DEBUG_TEST_NUM /*point.H*/);
-				DEBUG_TEST_NUM++;//TODO: remove this line
+				String x = String.format("%1$.4f", /*DEBUG_x + 0.010d * DEBUG_TEST_NUM*/ point.N);
+				String y = String.format("%1$.4f", /*DEBUG_y + 0.010d * DEBUG_TEST_NUM*/ point.E);
+				String z = String.format("%1$.4f", /*DEBUG_z + 0.010d * DEBUG_TEST_NUM*/ point.H);
+//				DEBUG_TEST_NUM++;//TODO: remove this line
 				String time = Time.getDateEN() ;
 				
 				holder.mPointX.setText(x);
