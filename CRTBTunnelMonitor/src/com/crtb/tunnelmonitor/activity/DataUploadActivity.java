@@ -49,49 +49,34 @@ import com.crtb.tunnelmonitor.entity.TunnelCrossSectionIndex;
 import com.crtb.tunnelmonitor.entity.TunnelSettlementTotalData;
 import com.crtb.tunnelmonitor.network.CrtbWebService;
 import com.crtb.tunnelmonitor.network.DataCounter;
-import com.crtb.tunnelmonitor.network.PointUploadParameter;
 import com.crtb.tunnelmonitor.network.DataCounter.CounterListener;
+import com.crtb.tunnelmonitor.network.PointUploadParameter;
 import com.crtb.tunnelmonitor.network.RpcCallback;
 import com.crtb.tunnelmonitor.network.SectionUploadParamter;
 import com.crtb.tunnelmonitor.utils.CrtbUtils;
 import com.crtb.tunnelmonitor.widget.SectionSheetFragment;
 import com.crtb.tunnelmonitor.widget.SectionSheetFragment.RawSheetData;
+
+
 public class DataUploadActivity extends FragmentActivity {
     private static final String LOG_TAG = "DataUploadActivity";
     private TextView mTopbarTitle;
-
     private ImageView cursor;
-
     private ViewPager mPager;
-
     private ArrayList<Fragment> mFragmentList;
-
     private SectionSheetFragment mTunnelFragment;
-
     private SectionSheetFragment mSubsidenceFragment;
-
     private TextView mTunnelTab;
-
     private TextView mSubsidenceTab;
-
     private LinearLayout mProgressOverlay;
-
     private ProgressBar mUploadProgress;
-
     private ImageView mUploadStatusIcon;
-
     private TextView mUploadStatusText;
-
     private boolean isUploading = true;
-
     private int bmpW;
-
     private int offset = 0;
-
     private int currIndex = 0;
-
     private MenuPopupWindow menuWindow;
-
     private List<RawSheetData> mSelectedSheets;
     private DataCounter mSheetUploadCounter;
 

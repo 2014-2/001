@@ -56,6 +56,15 @@ public class TunnelSettlementTotalDataDao extends AbstractDao<TunnelSettlementTo
 		return mDatabase.queryObject(sql, new String[]{String.valueOf(sheetId),String.valueOf(chainageId),pntType},TunnelSettlementTotalData.class);
 	}
 
+	public List<TunnelSettlementTotalData> queryTunnelTotalDatas(int sheetId, int chainageId) {
+		final IAccessDatabase mDatabase = getCurrentDb();
+		if (mDatabase == null) {
+			return null;
+		}
+		String sql = "select * from TunnelSettlementTotalData where SheetId = ? and ChainageId = ? order by MEASNo asc";
+		return mDatabase.queryObjects(sql, new String[] { String.valueOf(sheetId), String.valueOf(chainageId) }, TunnelSettlementTotalData.class);
+	}
+	
     /**
      * 查询 本次测量(MEASNo)之前的所有相同断面和相同测点类型的测点信息
      * 
