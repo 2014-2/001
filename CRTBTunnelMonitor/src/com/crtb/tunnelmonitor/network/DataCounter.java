@@ -26,7 +26,7 @@ public class DataCounter {
 		mListener = listener;
 	}
 
-	public void increase(boolean flag) {
+	public synchronized void increase(boolean flag) {
 		if (flag) {
 			mSuccessCount++;
 		} else {

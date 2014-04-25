@@ -1,0 +1,452 @@
+package com.crtb.tunnelmonitor.utils;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import com.crtb.tunnelmonitor.common.Constant;
+import com.crtb.tunnelmonitor.dao.impl.v2.RawSheetIndexDao;
+import com.crtb.tunnelmonitor.dao.impl.v2.TunnelCrossSectionIndexDao;
+import com.crtb.tunnelmonitor.dao.impl.v2.TunnelSettlementTotalDataDao;
+import com.crtb.tunnelmonitor.entity.RawSheetIndex;
+import com.crtb.tunnelmonitor.entity.TunnelCrossSectionIndex;
+import com.crtb.tunnelmonitor.entity.TunnelSettlementTotalData;
+import com.crtb.tunnelmonitor.network.CrtbWebService;
+import com.crtb.tunnelmonitor.network.DataCounter;
+import com.crtb.tunnelmonitor.network.PointUploadParameter;
+import com.crtb.tunnelmonitor.network.RpcCallback;
+import com.crtb.tunnelmonitor.network.SectionUploadParamter;
+import com.crtb.tunnelmonitor.network.DataCounter.CounterListener;
+
+import ICT.utils.RSACoder;
+import android.os.AsyncTask;
+import android.util.Log;
+
+
+public class DataManager {
+	private static final String LOG_TAG = "UploadDataLoader";
+	
+	public interface DataLoadListener {
+		/**
+		 * 数据加载完毕
+		 * 
+		 * @param uploadDataList 等待上传的数据
+		 */
+		public void done(List<UploadSheetData> uploadDataList);
+	}
+	
+	public interface DataUploadListener {
+		/**
+		 * 
+		 * @param success
+		 */
+		public void done(boolean success);
+	}
+	
+	
+	private DataLoadListener mLoadListener;
+	private DataUploadListener mUploadListener;
+	
+	public void loadData(DataLoadListener listener) {
+		mLoadListener = listener;
+		new DataLoadTask().execute();
+	}
+	
+	public void uploadData(List<UploadSheetData> sheetList, DataUploadListener uploadListener) {
+		mUploadListener = uploadListener;
+		new DataUploadTask().execute(sheetList);
+	}
+	
+	private class DataLoadTask extends AsyncTask<Void, Void, List<UploadSheetData>> {
+
+		@Override
+		protected List<UploadSheetData> doInBackground(Void... params) {
+			List<UploadSheetData> uploadSheetDatas = new ArrayList<UploadSheetData>();
+			//获取隧道内断面记录单
+			List<RawSheetIndex> rawSheets = RawSheetIndexDao.defaultDao().queryTunnelSectionRawSheetIndex();
+			if (rawSheets != null && rawSheets.size() > 0) {
+				for(RawSheetIndex sheet : rawSheets) {
+					UploadSheetData uploadSheetData = new UploadSheetData();
+					uploadSheetDatas.add(uploadSheetData);
+					uploadSheetData.setRawSheet(sheet);
+					List<UploadSectionData> uploadSectionDatas = new ArrayList<UploadSectionData>();
+					List<TunnelCrossSectionIndex>  unUploadSections = getUnUploadTunnelSections(sheet.getCrossSectionIDs());
+					for(TunnelCrossSectionIndex section : unUploadSections) {
+						UploadSectionData uploadSectionData = new UploadSectionData();
+						uploadSectionDatas.add(uploadSectionData);
+						uploadSectionData.setSection(section);
+						//断面的测量数据
+						List<UploadMeasureData> pointDatas = new ArrayList<UploadMeasureData>();
+						List<TunnelSettlementTotalData> unUploadPoints = getUnUploadTunnelSettlementTotalData(sheet.getID(), section.getID());
+						int measureNo = -1;
+						UploadMeasureData measureData = null;
+						for(TunnelSettlementTotalData point : unUploadPoints) {
+							if (measureNo != point.getMEASNo()) {
+								measureNo = point.getMEASNo();
+								measureData = new UploadMeasureData();
+								pointDatas.add(measureData);
+							}
+							measureData.addPoint(point);
+					    }
+						uploadSectionData.setUnUploadMeasureDatas(pointDatas);
+					}
+					uploadSheetData.setUnUpLoadSection(uploadSectionDatas);
+				}
+			}
+			return uploadSheetDatas;
+		}
+		
+		@Override
+		protected void onPostExecute(List<UploadSheetData> result) {
+			if (mLoadListener != null) {
+				mLoadListener.done(result);
+			}
+		}
+	}
+	
+	private class DataUploadTask extends AsyncTask<List<UploadSheetData>, Void, Void> {
+
+		@Override
+		protected Void doInBackground(List<UploadSheetData>... params) {
+			if (params != null && params.length > 0) {
+				List<UploadSheetData> sheetDataList = params[0];
+				if (sheetDataList != null && sheetDataList.size() > 0) {
+					//上传记录单
+					final DataCounter sheetUploadCounter = new DataCounter("SheetUploadCounter", sheetDataList.size(), new CounterListener() {
+						@Override
+						public void done(boolean success) {
+							if (mUploadListener != null) {
+								mUploadListener.done(success);
+							}
+						}
+					});
+					for(UploadSheetData sheetData : sheetDataList) {
+						List<UploadSectionData> sectionDataList = sheetData.getUnUploadSections();
+						if (sectionDataList != null && sectionDataList.size() > 0) {
+							DataCounter sectionUploadCounter = new DataCounter("SectionUploadCounter", sectionDataList.size(), new CounterListener() {
+								@Override
+								public void done(boolean success) {
+									sheetUploadCounter.increase(success);
+								}
+							});
+							for(UploadSectionData sectionData : sectionDataList) {
+								uploadSectionData(sectionData, sheetData.getRawSheet().getID(), sectionUploadCounter);
+							}
+						}
+					}
+				} 
+			}
+			return null;
+		}
+		
+		@Override
+		protected void onPostExecute(Void result) {
+		}
+		
+	}
+	
+    //上传断面数据
+    private void uploadSectionData(final UploadSectionData sectionData, final int sheetRowId, final DataCounter sectionUploadCounter) {
+    	final TunnelCrossSectionIndex section = sectionData.getSection();
+        SectionUploadParamter paramter = new SectionUploadParamter();
+        CrtbUtils.fillSectionParamter(section, paramter);
+        CrtbWebService.getInstance().uploadSection(paramter, new RpcCallback() {
+            @Override
+            public void onSuccess(Object[] data) {
+            	final String sectionCode = (String) data[0];
+            	List<UploadMeasureData> measureDataList = sectionData.getUnUploadPointDatas();
+            	if (measureDataList != null && measureDataList.size() > 0) {
+            		for(UploadMeasureData measureData : measureDataList) {
+            			 DataCounter pointUploadCounter = new DataCounter("MeasureDataUploadCounter", measureDataList.size(), new CounterListener() {
+         					@Override
+         					public void done(boolean success) {
+         						sectionUploadCounter.increase(success);
+         					}
+         				});
+            			uploadMeasureData(sectionCode, measureData, pointUploadCounter);
+            		}
+            	}
+            	//将断面状态设置为已上传
+                TunnelCrossSectionIndexDao dao = TunnelCrossSectionIndexDao.defaultDao();
+                section.setInfo("2");
+                dao.update(section);
+            }
+
+            @Override
+            public void onFailed(String reason) {
+                Log.d(LOG_TAG, "upload section faled: " + reason);
+                sectionUploadCounter.increase(false);
+            }
+        });
+    }
+    
+    //上传测量点数据
+    private void uploadMeasureData(String sectionCode, final UploadMeasureData measureData, final DataCounter pointUploadCounter) {
+        PointUploadParameter parameter = new PointUploadParameter();
+        parameter.setSectionCode(sectionCode);
+		parameter.setPointCodeList(measureData.getPointCodeList(sectionCode));
+		parameter.setTunnelFaceDistance(50.0f);
+		parameter.setProcedure("02");
+		parameter.setMonitorModel("xxx");
+		parameter.setMeasureDate(new Date());
+		String valueList = "50/141.4249";
+		parameter.setPointValueList(valueList);
+		parameter.setPointCoordinateList(measureData.getCoordinateList());
+		parameter.setSurveyorName("杨工");
+		parameter.setSurveyorId("111");
+		parameter.setRemark("yyy");
+    	CrtbWebService.getInstance().uploadTestResult(parameter, new RpcCallback() {
+
+            @Override
+            public void onSuccess(Object[] data) {
+                CrtbWebService.getInstance().confirmSubmitData(new RpcCallback() {
+
+                    @Override
+                    public void onSuccess(Object[] data) {
+                    	measureData.markAsUploaded();
+                        Log.d(LOG_TAG, "upload test data success.");
+                        pointUploadCounter.increase(true);
+                    }
+
+                    @Override
+                    public void onFailed(String reason) {
+                        Log.d(LOG_TAG, "confirm test data failed: " + reason);
+                        pointUploadCounter.increase(false);
+                    }
+                });
+            }
+
+            @Override
+            public void onFailed(String reason) {
+                Log.d(LOG_TAG, "upload test data failed.");
+                pointUploadCounter.increase(false);
+            }
+        });
+    }
+    /**
+     * 获取未上传隧道内断面列表
+     * 
+     * @param sectionRowIds 断面数据库ids
+     * @return
+     */
+    public List<TunnelCrossSectionIndex> getUnUploadTunnelSections(String sectionRowIds) {
+        TunnelCrossSectionIndexDao dao = TunnelCrossSectionIndexDao.defaultDao();
+        List<TunnelCrossSectionIndex> unUploadSectionList = new ArrayList<TunnelCrossSectionIndex>();
+        List<TunnelCrossSectionIndex> sectionList = dao.querySectionByIds(sectionRowIds);
+        if (sectionList != null && sectionList.size() > 0) {
+            for (TunnelCrossSectionIndex section : sectionList) {
+                // 1表示未上传, 2表示已上传
+                if ("1".equals(section.getInfo())) {
+                    unUploadSectionList.add(section);
+                }
+            }
+        }
+        return unUploadSectionList;
+    }
+    
+    /**
+     * 获取未上传隧道内断面测点数据列表
+     * 
+     * @param sheetId
+     * @param chainageId
+     * @return
+     */
+    public List<TunnelSettlementTotalData> getUnUploadTunnelSettlementTotalData(int sheetId, int chainageId) {
+    	TunnelSettlementTotalDataDao pointDao = TunnelSettlementTotalDataDao.defaultDao();
+    	List<TunnelSettlementTotalData> unUploadPointList = new ArrayList<TunnelSettlementTotalData>();
+    	List<TunnelSettlementTotalData> pointList = pointDao.queryTunnelTotalDatas(sheetId, chainageId);
+    	if (pointList != null && pointList.size() > 0) {
+    		for(TunnelSettlementTotalData point : pointList) {
+    			// 1表示未上传, 2表示已上传
+    			if ("1".equals(point.getInfo())) {
+    				unUploadPointList.add(point);
+    			}
+    		}
+    	}
+    	return unUploadPointList;
+    }
+	
+
+	public class UploadSheetData {
+		private RawSheetIndex mRawSheet;
+		private List<UploadSectionData> mUnUploadSections;
+		
+		UploadSheetData() {
+			mUnUploadSections = new ArrayList<UploadSectionData>();
+		}
+		
+		public void setRawSheet(RawSheetIndex rawSheet) {
+			mRawSheet = rawSheet;
+		}
+		
+		public RawSheetIndex getRawSheet() {
+			return mRawSheet;
+		}
+		
+		public void setUnUpLoadSection(List<UploadSectionData> unUploadSections) {
+			mUnUploadSections = unUploadSections;
+		}
+		
+		public List<UploadSectionData> getUnUploadSections() {
+			return mUnUploadSections;
+		}
+		
+		public boolean needUpload() {
+			boolean result = false;
+			if (mUnUploadSections != null && mUnUploadSections.size() > 0) {
+				result = true;
+			}
+			return result;
+		}
+	}
+	
+	public class UploadSectionData {
+		private TunnelCrossSectionIndex mSection;
+		private List<UploadMeasureData> mUnUploadMeasureDatas;
+		
+		public void setSection(TunnelCrossSectionIndex section) {
+			mSection = section;
+		}
+		
+		public TunnelCrossSectionIndex getSection() {
+			return mSection;
+		}
+		
+		public void setUnUploadMeasureDatas(List<UploadMeasureData> unUploadPointDatas) {
+			mUnUploadMeasureDatas = unUploadPointDatas;
+		}
+		
+		public List<UploadMeasureData> getUnUploadPointDatas() {
+			return mUnUploadMeasureDatas;
+		}
+		
+		public boolean needUpload() {
+			boolean result = false;
+			if ("1".equals(mSection.getInfo())) {
+				result = true;
+			}
+			if (mUnUploadMeasureDatas != null && mUnUploadMeasureDatas.size() > 0) {
+				result = true;
+			}
+			return result;
+		}
+		
+	}
+	
+	public class UploadMeasureData {
+    	private List<TunnelSettlementTotalData> mMeasurePoints = new ArrayList<TunnelSettlementTotalData>();
+    	
+    	public void addPoint(TunnelSettlementTotalData point) {
+    		mMeasurePoints.add(point);
+    	}
+    	
+    	public List<TunnelSettlementTotalData> getPoints() {
+    		return mMeasurePoints;
+    	}
+    	
+    	public TunnelSettlementTotalData getPointByType(String type) {
+    		TunnelSettlementTotalData result = null;
+    		for(TunnelSettlementTotalData point : mMeasurePoints) {
+    			if (type.equals(point.getPntType())) {
+    				result = point;
+    			}
+    		}
+    		return result;
+    	}
+    	
+    	public String getPointCodeList(String sectionCode) {
+    		String pointCodeList = "";
+    		final int pointCount = mMeasurePoints.size();
+    		switch (pointCount) {
+    		//全断面法
+			case 3:
+				pointCodeList = sectionCode + "GD01" + "/" + sectionCode
+				+ "SL01" + "#" + sectionCode + "SL02";
+				break;
+			//台阶法
+			case 5:
+				pointCodeList = sectionCode + "GD01" + "/" + sectionCode
+				+ "SL01" + "#" + sectionCode + "SL02" + "/" + sectionCode
+				+ "SL03" + "#" + sectionCode + "SL04";
+				break;
+			//三台阶法或双侧壁法
+			case 7:
+				pointCodeList = sectionCode + "GD01" + "/" + sectionCode
+				+ "SL01" + "#" + sectionCode + "SL02" + "/" + sectionCode
+				+ "SL03" + "#" + sectionCode + "SL04" + "/" + sectionCode
+				+ "SL05" + "#" + sectionCode + "SL06";
+				break;
+			default:
+				Log.d(LOG_TAG, "未知的开挖方法: 测点数目=" + pointCount);
+				break;
+			}
+    		return pointCodeList;
+    	}
+    	
+    	public String getCoordinateList() {
+    		String coordinateList = "";
+    		final int pointCount = mMeasurePoints.size();
+    		TunnelSettlementTotalData pointA, pointS1_1, pointS1_2, pointS2_1, pointS2_2, pointS3_1, pointS3_2;
+    		String A, S1_1, S1_2, S2_1, S2_2, S3_1, S3_2, coordinate;
+    		switch (pointCount) {
+    		//全断面法
+			case 3:
+				pointA = getPointByType("A");
+				pointS1_1 = getPointByType("S1-1");
+				pointS1_2 = getPointByType("S1-2");
+				A = pointA.getCoordinate().replace(",", "#");
+				S1_1 = pointS1_1.getCoordinate().replace(",", "#");
+				S1_2 = pointS1_2.getCoordinate().replace(",", "#");
+				coordinate = A + "/" + S1_1 + "#" + S1_2;
+				coordinateList = RSACoder.encnryptDes(coordinate, Constant.testDeskey);
+				break;
+			//台阶法
+			case 5:
+				pointA = getPointByType("A");
+				pointS1_1 = getPointByType("S1-1");
+				pointS1_2 = getPointByType("S1-2");
+				pointS2_1 = getPointByType("S2-1");
+				pointS2_2 = getPointByType("S2-2");
+				A = pointA.getCoordinate().replace(",", "#");
+				S1_1 = pointS1_1.getCoordinate().replace(",", "#");
+				S1_2 = pointS1_2.getCoordinate().replace(",", "#");
+				S2_1 = pointS2_1.getCoordinate().replace(",", "#");
+				S2_2 = pointS2_2.getCoordinate().replace(",", "#");
+				coordinate = A + "/" + S1_1 + "#" + S1_2 + "/" + S2_1 + "#" + S2_2;
+				coordinateList = RSACoder.encnryptDes(coordinate, Constant.testDeskey);
+				break;
+			//三台阶法或双侧壁法
+			case 7:
+				pointA = getPointByType("A");
+				pointS1_1 = getPointByType("S1-1");
+				pointS1_2 = getPointByType("S1-2");
+				pointS2_1 = getPointByType("S2-1");
+				pointS2_2 = getPointByType("S2-2");
+				pointS3_1 = getPointByType("S3-1");
+				pointS3_2 = getPointByType("S3-2");
+				A = pointA.getCoordinate().replace(",", "#");
+				S1_1 = pointS1_1.getCoordinate().replace(",", "#");
+				S1_2 = pointS1_2.getCoordinate().replace(",", "#");
+				S2_1 = pointS2_1.getCoordinate().replace(",", "#");
+				S2_2 = pointS2_2.getCoordinate().replace(",", "#");
+				S3_1 = pointS3_1.getCoordinate().replace(",", "#");
+				S3_2 = pointS3_2.getCoordinate().replace(",", "#");
+				coordinate =  A + "/" + S1_1 + "#" + S1_2 + "/" + S2_1 + "#" + S2_2 + "/" + S3_1 + "#" + S3_2;
+				coordinateList = RSACoder.encnryptDes(coordinate, Constant.testDeskey);
+				break;
+			default:
+				Log.d(LOG_TAG, "未知的开挖方法: 测点数目=" + pointCount);
+				break;
+			}
+    		return coordinateList;
+    	}
+    	
+    	public void markAsUploaded() {
+    		TunnelSettlementTotalDataDao dao = TunnelSettlementTotalDataDao.defaultDao();
+    		for(TunnelSettlementTotalData point : mMeasurePoints) {
+    			point.setInfo("2");
+    			dao.update(point);
+    		}
+    	}
+    }
+}

@@ -1,10 +1,8 @@
 package com.crtb.tunnelmonitor.activity;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
-import ICT.utils.RSACoder;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -20,7 +18,6 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -40,20 +37,12 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.crtb.tunnelmonitor.common.Constant;
 import com.crtb.tunnelmonitor.dao.impl.v2.ProjectIndexDao;
-import com.crtb.tunnelmonitor.dao.impl.v2.TunnelCrossSectionIndexDao;
-import com.crtb.tunnelmonitor.dao.impl.v2.TunnelSettlementTotalDataDao;
 import com.crtb.tunnelmonitor.entity.ProjectIndex;
-import com.crtb.tunnelmonitor.entity.TunnelCrossSectionIndex;
-import com.crtb.tunnelmonitor.entity.TunnelSettlementTotalData;
-import com.crtb.tunnelmonitor.network.CrtbWebService;
 import com.crtb.tunnelmonitor.network.DataCounter;
-import com.crtb.tunnelmonitor.network.DataCounter.CounterListener;
-import com.crtb.tunnelmonitor.network.PointUploadParameter;
-import com.crtb.tunnelmonitor.network.RpcCallback;
-import com.crtb.tunnelmonitor.network.SectionUploadParamter;
-import com.crtb.tunnelmonitor.utils.CrtbUtils;
+import com.crtb.tunnelmonitor.utils.DataManager;
+import com.crtb.tunnelmonitor.utils.DataManager.DataUploadListener;
+import com.crtb.tunnelmonitor.utils.DataManager.UploadSheetData;
 import com.crtb.tunnelmonitor.widget.SectionSheetFragment;
 import com.crtb.tunnelmonitor.widget.SectionSheetFragment.RawSheetData;
 
@@ -77,8 +66,6 @@ public class DataUploadActivity extends FragmentActivity {
     private int offset = 0;
     private int currIndex = 0;
     private MenuPopupWindow menuWindow;
-    private List<RawSheetData> mSelectedSheets;
-    private DataCounter mSheetUploadCounter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -291,16 +278,22 @@ public class DataUploadActivity extends FragmentActivity {
                         switch (mPager.getCurrentItem()) {
                             // 隧道内断面
                             case 0:
-                                List<RawSheetData> sheetDataList = mTunnelFragment.getSheets();
-                                mSelectedSheets = new ArrayList<RawSheetData>();
-                                if (sheetDataList != null || sheetDataList.size() > 0) {
-                                    for(RawSheetData sheetData : sheetDataList) {
-                                        if (sheetData.isChecked()) {
-                                            mSelectedSheets.add(sheetData);
-                                        }
-                                    }
-                                }
-                                uploadSectionList();
+                            	DataManager uploadManager = new DataManager();
+                            	List<UploadSheetData> uploadDataList = mTunnelFragment.getUploadData();
+                            	if (uploadDataList != null && uploadDataList.size() > 0) {
+                            		showProgressOverlay();
+	                            	uploadManager.uploadData(uploadDataList, new DataUploadListener() {
+										@Override
+										public void done(boolean success) {
+											if (success) {
+								                mTunnelFragment.refreshUI();
+								            }
+								            uploadStatus(success);
+										}
+									});
+                            	} else {
+                            		Toast.makeText(getApplicationContext(), "请先选择要上传的记录单", Toast.LENGTH_LONG).show();
+                            	}
                                 break;
                             case 1:
                                 break;
@@ -343,206 +336,5 @@ public class DataUploadActivity extends FragmentActivity {
             }
         }
         return true;
-    }
-
-    //上传所有断面数据
-    private void uploadSectionList() {
-        if (mSelectedSheets == null || mSelectedSheets.size() == 0) {
-        	Toast.makeText(getApplicationContext(), "请先选择要上传的记录单", Toast.LENGTH_LONG).show();
-        	return ;
-        } 
-        showProgressOverlay();
-        //mSectionUploadCounter = new DataCounter("SectionUpload", sectionList.size(), mSectionUploadListener);
-        mSheetUploadCounter = new DataCounter("SheetUploadCounter", mSelectedSheets.size(), new CounterListener() {
-			@Override
-			public void done(boolean success) {
-				if (success) {
-	                mTunnelFragment.refreshUI();
-	            }
-	            uploadStatus(success);
-			}
-		});
-        int uploadSectionCount = 0;
-        for(RawSheetData sheetData: mSelectedSheets) {
-        	List<TunnelCrossSectionIndex> sectionList = getUnUploadTunnelSections(sheetData.getSectionIds());
-        	if (sectionList != null && sectionList.size() > 0) {
-        		uploadSectionCount += sectionList.size();
-	        	DataCounter sectionUploadCounter = new DataCounter("SectionUploadCounter", sectionList.size(), new CounterListener() {
-					@Override
-					public void done(boolean success) {
-						mSheetUploadCounter.increase(success);
-					}
-				});
-	        	for(TunnelCrossSectionIndex section : sectionList) {
-	        		uploadSection(section, sheetData.getRowId(), sectionUploadCounter);
-	        	}
-        	}
-        }
-        if (uploadSectionCount == 0) {
-        	for(int i =0 ; i < mSelectedSheets.size(); i++) {
-        		mSheetUploadCounter.increase(false);
-        	}
-        }
-    }
-
-    //上传断面
-    private void uploadSection(final TunnelCrossSectionIndex section, final int sheetRowId, final DataCounter sectionUploadCounter) {
-        SectionUploadParamter paramter = new SectionUploadParamter();
-        CrtbUtils.fillSectionParamter(section, paramter);
-        CrtbWebService.getInstance().uploadSection(paramter, new RpcCallback() {
-            @Override
-            public void onSuccess(Object[] data) {
-                TunnelCrossSectionIndexDao dao = TunnelCrossSectionIndexDao.defaultDao();
-                section.setInfo("2");
-                dao.update(section);
-                DataCounter pointUploadCounter = new DataCounter("PointUploadCounter", 1, new CounterListener() {
-					@Override
-					public void done(boolean success) {
-						sectionUploadCounter.increase(success);
-					}
-				});
-                //查询测量点数据
-                TunnelSettlementTotalDataDao  pointDao = TunnelSettlementTotalDataDao.defaultDao();
-                TunnelSettlementTotalData point1 = pointDao.queryTunnelTotalData(sheetRowId, section.getID(), "A");
-                TunnelSettlementTotalData point2 = pointDao.queryTunnelTotalData(sheetRowId, section.getID(), "S1-1");
-                TunnelSettlementTotalData point3 = pointDao.queryTunnelTotalData(sheetRowId, section.getID(), "S1-2");
-                Log.d(LOG_TAG, "upload section success: id = " + section.getID() + ", code = " + data[0]);
-                final String sectionCode = (String) data[0];
-                uploadTestResult(sectionCode, point1, point2, point3, pointUploadCounter);
-            }
-
-            @Override
-            public void onFailed(String reason) {
-                Log.d(LOG_TAG, "upload section faled: " + reason);
-                sectionUploadCounter.increase(false);
-            }
-        });
-    }
-
-    /**
-     * 上传测量点数据
-     * 
-     * @param sheetDataList
-     */
-//    private void uploadPointList() {
-//    	if (mSelectedSheets == null || mSelectedSheets.size() == 0) {
-//        	Toast.makeText(getApplicationContext(), "请先选择要上传的记录单", Toast.LENGTH_LONG).show();
-//        	return ;
-//        }
-//    	List<TunnelSettlementTotalData> pointList = new ArrayList<TunnelSettlementTotalData>();
-//    	TunnelSettlementTotalDataDao dao = TunnelSettlementTotalDataDao.defaultDao();
-//    	for(RawSheetData sheetData : mSelectedSheets) {
-//    		pointList.addAll(dao.queryUnUploadTunnelTotalDataBySheet(sheetData.getRowId()));
-//    	}
-//    	if (pointList.size() > 0) {
-//    		mPointUploadCounter = new DataCounter("PointUploadCounter", pointList.size(), mPointUploadListener);
-//    		for(TunnelSettlementTotalData pointData : pointList) {
-//    			uploadTestResult();
-//    		}
-//    	}
-//    }
-    
-    private void updateSection() {
-        CrtbWebService.getInstance().updateSection(null, new RpcCallback() {
-
-            @Override
-            public void onSuccess(Object[] data) {
-                Log.d(LOG_TAG, "update section status success.");
-            }
-
-            @Override
-            public void onFailed(String reason) {
-                Log.d(LOG_TAG, "update section status failed.");
-            }
-        });
-    }
-
-    //上传测量数据
-    private void uploadTestResult(String sectionCode, final TunnelSettlementTotalData point1, final TunnelSettlementTotalData point2, final TunnelSettlementTotalData point3, final DataCounter pointUploadCounter) {
-        PointUploadParameter parameter = new PointUploadParameter();
-        parameter.setSectionCode(sectionCode);
-//		String pointCodeList = sectionCode + "GD01" + "/" + sectionCode
-//				+ "SL01" + "#" + sectionCode + "SL02" + "/" + sectionCode
-//				+ "SL03" + "#" + sectionCode + "SL04";
-		String pointCodeList = sectionCode + "GD01" + "/" + sectionCode
-				+ "SL01" + "#" + sectionCode + "SL02";
-		parameter.setPointCodeList(pointCodeList);
-		parameter.setTunnelFaceDistance(50.0f);
-		parameter.setProcedure("02");
-		parameter.setMonitorModel("xxx");
-		parameter.setMeasureDate(new Date());
-		String valueList = "50/141.4249";
-		parameter.setPointValueList(valueList);
-		String A = point1.getCoordinate().replace(",", "#");
-		String S1_1 = point2.getCoordinate().replace(",", "#");
-		String S1_2 = point3.getCoordinate().replace(",", "#");
-		String coordinate = A + "/" + S1_1 + "#" + S1_2; //"50#50#50/100#200#300#200#300#301/100#200#300#200#300#301";
-		String encncyptCoordinate = RSACoder.encnryptDes(coordinate, Constant.testDeskey);
-		parameter.setPointCoordinateList(encncyptCoordinate);
-		parameter.setSurveyorName("杨工");
-		parameter.setSurveyorId("111");
-		parameter.setRemark("yyy");
-    	CrtbWebService.getInstance().uploadTestResult(parameter, new RpcCallback() {
-
-            @Override
-            public void onSuccess(Object[] data) {
-                CrtbWebService.getInstance().confirmSubmitData(new RpcCallback() {
-
-                    @Override
-                    public void onSuccess(Object[] data) {
-                    	TunnelSettlementTotalDataDao dao = TunnelSettlementTotalDataDao.defaultDao();
-                    	point1.setInfo("2");
-                    	point2.setInfo("2");
-                    	point3.setInfo("2");
-                    	dao.update(point1);
-                    	dao.update(point2);
-                    	dao.update(point3);
-                        Log.d(LOG_TAG, "upload test data success.");
-                        pointUploadCounter.increase(true);
-                    }
-
-                    @Override
-                    public void onFailed(String reason) {
-                        Log.d(LOG_TAG, "confirm test data failed: " + reason);
-                        pointUploadCounter.increase(false);
-                    }
-                });
-            }
-
-            @Override
-            public void onFailed(String reason) {
-                Log.d(LOG_TAG, "upload test data failed.");
-                pointUploadCounter.increase(false);
-            }
-        });
-    }
-
-    private void showMessage(boolean success) {
-        if (success) {
-            Toast.makeText(getApplicationContext(), "上传数据成功", Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(getApplicationContext(), "上传数据失败", Toast.LENGTH_SHORT).show();
-        }
-    }
-    
-    /**
-     * 获取未上传隧道内断面列表
-     * 
-     * @param sectionRowIds 断面数据库ids
-     * @return
-     */
-    public List<TunnelCrossSectionIndex> getUnUploadTunnelSections(String sectionRowIds) {
-        TunnelCrossSectionIndexDao dao = TunnelCrossSectionIndexDao.defaultDao();
-        List<TunnelCrossSectionIndex> unUploadSectionList = new ArrayList<TunnelCrossSectionIndex>();
-        List<TunnelCrossSectionIndex> sectionList = dao.querySectionByIds(sectionRowIds);
-        if (sectionList != null && sectionList.size() > 0) {
-            for (TunnelCrossSectionIndex section : sectionList) {
-                // 1表示未上传, 2表示已上传
-                if ("1".equals(section.getInfo())) {
-                    unUploadSectionList.add(section);
-                }
-            }
-        }
-        return unUploadSectionList;
     }
 }
