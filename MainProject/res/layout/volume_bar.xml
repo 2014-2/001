@@ -3,7 +3,7 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content">
 
-    <com.byd.player.view.SoundVolumeView
+    <com.byd.videoplayer.view.SoundVolumeView
         android:id="@+id/volume_seek_bar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

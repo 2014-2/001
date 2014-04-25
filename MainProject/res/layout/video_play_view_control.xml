@@ -71,7 +71,7 @@
     </RelativeLayout>
 
         
-    <com.byd.player.view.SoundVolumeView
+    <com.byd.videoplayer.view.SoundVolumeView
         android:id="@+id/volume_seek_bar"
         android:layout_width="50dp"
         android:layout_height="300dp"

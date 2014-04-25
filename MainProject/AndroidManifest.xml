@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.byd.player"
+    package="com.byd.videoplayer"
     android:versionCode="1"
     android:versionName="1.0" >
 
@@ -20,7 +20,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name="com.byd.player.BrowserActivity"
+            android:name="com.byd.videoplayer.BrowserActivity"
             android:label="@string/video_page"
             android:screenOrientation="landscape"
             android:icon="@drawable/launch_video"
@@ -30,7 +30,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.byd.player.video.VideoPlayActivity" >
+        <activity android:name="com.byd.videoplayer.video.VideoPlayActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
@@ -46,33 +46,5 @@
 			    <data android:mimeType="application/mpeg*" />
 	        </intent-filter>
         </activity>
-        <activity
-            android:name="com.byd.player.audio.AudioListActivity"
-            android:icon="@drawable/launch_music"
-            android:label="@string/audio_page"
-            android:theme="@android:style/Theme.DeviceDefault"
-            android:launchMode="singleTask" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        <activity
-            android:name="com.byd.player.audio.AudioPlayerActivity"
-            android:theme="@android:style/Theme.DeviceDefault" />
-        <activity android:name="com.byd.player.AuxAudioPlayActivity"
-            android:launchMode="singleTask"
-            android:label="@string/audio_page">
-        </activity>
-  
-        <activity
-            android:name="com.byd.player.bluetooth.BTPlayerActivity"
-            android:theme="@android:style/Theme.DeviceDefault" 
-            android:screenOrientation="landscape" >
-        </activity>
-
-        <service android:name="com.byd.player.audio.AudioPlayerService" />
-        
     </application>
 </manifest>

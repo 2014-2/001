@@ -81,7 +81,7 @@
                     android:src="@drawable/icon_audio_play"
                     android:visibility="visible" />
 
-                <com.byd.player.view.VisualizeView
+                <com.byd.videoplayer.view.VisualizeView
                     android:id="@+id/audio_pause"
                     android:visibility="gone"
                     android:layout_width="20dp"

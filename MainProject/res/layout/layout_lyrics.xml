@@ -6,7 +6,7 @@
     android:paddingRight="10dp"
     android:orientation="vertical" >
 
-    <com.byd.player.lrc.LrcView
+    <com.byd.videoplayer.lrc.LrcView
         android:id="@+id/lrc_view"
         android:layout_width="match_parent"
         android:layout_height="220dp" />

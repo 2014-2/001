@@ -83,7 +83,7 @@
             android:layout_weight="1"
             android:gravity="center" >
 
-            <com.byd.player.view.CheckableImageView
+            <com.byd.videoplayer.view.CheckableImageView
                 android:id="@+id/btn_audio_random_play"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -96,7 +96,7 @@
             android:layout_weight="1"
             android:gravity="center" >
 
-            <com.byd.player.view.CheckableImageView
+            <com.byd.videoplayer.view.CheckableImageView
                 android:id="@+id/btn_audio_single_loop"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -136,7 +136,7 @@
                     android:src="@drawable/icon_audio_play"
                     android:visibility="visible" />
 
-                <com.byd.player.view.VisualizeView
+                <com.byd.videoplayer.view.VisualizeView
                     android:id="@+id/audio_pause"
                     android:visibility="gone"
                     android:layout_width="20dp"
@@ -164,7 +164,7 @@
             android:layout_weight="1"
             android:gravity="center" >
 
-            <com.byd.player.view.CheckableImageView
+            <com.byd.videoplayer.view.CheckableImageView
                 android:id="@+id/btn_audio_effect"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -177,7 +177,7 @@
             android:layout_weight="1"
             android:gravity="center" >
 
-            <com.byd.player.view.CheckableImageView
+            <com.byd.videoplayer.view.CheckableImageView
                 android:id="@+id/btn_audio_volume"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

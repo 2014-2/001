@@ -4,7 +4,7 @@
     android:layout_height="wrap_content"
     android:orientation="vertical" >
 
-    <com.byd.player.view.VerticalSeekBar
+    <com.byd.videoplayer.view.VerticalSeekBar
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/audio_volume_seekbar"
         android:layout_width="34dp"
