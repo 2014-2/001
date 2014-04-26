@@ -52,6 +52,8 @@ public class AlertListDao extends AbstractDao<AlertList> {
     }
 
     public AlertList queryOneById(int id) {
+        Log.d(TAG, "AlertListDao queryOneById, id: " + id);
+
         final IAccessDatabase mDatabase = getCurrentDb();
 
         if (mDatabase == null) {
@@ -66,6 +68,7 @@ public class AlertListDao extends AbstractDao<AlertList> {
 
     public AlertList queryOne(int sheetId, int chainageId, String pntType, String originalDataID) {
         final IAccessDatabase mDatabase = getCurrentDb();
+        Log.d(TAG, "AlertListDao queryOne, pntType: " + pntType);
 
         if (mDatabase == null) {
             return null;
@@ -82,14 +85,16 @@ public class AlertListDao extends AbstractDao<AlertList> {
     public int insertOrUpdate(TunnelSettlementTotalData point, int alertLevel, int Utype,
             double UValue, double UMax, String originalDataID) {
 
+        Log.d(TAG, "AlertListDao insertOrUpdate TunnelSettlementTotalData");
         int sheetId = point.getSheetId();
         int chainageId = point.getChainageId();
 
         String pntType = point.getPntType();
 
-        if (pntType != null && pntType.contains("_")) {// such as "S1_1" or
-                                                       // "S1_2"
-            pntType = pntType.substring(0, pntType.indexOf("_"));
+        if (pntType != null && pntType.length() > 2) {// such as "S1-1" or
+                                                       // "S1-2"
+            Log.d(TAG, "AlertListDao insertOrUpdate, pntType.contains(-)");
+            pntType = pntType.substring(0, pntType.length() - 2);
         }
 
         AlertList al = queryOne(sheetId, chainageId, pntType, originalDataID);
@@ -104,6 +109,7 @@ public class AlertListDao extends AbstractDao<AlertList> {
 
     public int insertOrUpdate(SubsidenceTotalData point, int alertLevel, int Utype, double UValue,
             double UMax, String originalDataID) {
+        Log.d(TAG, "AlertListDao insertOrUpdate SubsidenceTotalData");
 
         int sheetId = point.getSheetId();
         int chainageId = point.getChainageId();
@@ -132,7 +138,7 @@ public class AlertListDao extends AbstractDao<AlertList> {
     public int insertItem(TunnelSettlementTotalData point, int alertLevel, int Utype,
             double UValue, double UMax, String originalDataID) {
 
-        Log.d(TAG, "AlertListDao insertItem");
+        Log.d(TAG, "AlertListDao insertItem TunnelSettlementTotalData");
         final IAccessDatabase mDatabase = getCurrentDb();
 
         if (mDatabase == null) {
@@ -142,9 +148,10 @@ public class AlertListDao extends AbstractDao<AlertList> {
         AlertList al = new AlertList();
         String pntType = point.getPntType();
 
-        if (pntType != null && pntType.contains("_")) {// such as "S1_1" or
-                                                       // "S1_2"
-            pntType = pntType.substring(0, pntType.indexOf("_"));
+        if (pntType != null && pntType.length() > 2) {// such as "S1-1" or
+                                                       // "S1-2"
+            Log.d(TAG, "AlertListDao insertItem, pntType.contains(-)");
+            pntType = pntType.substring(0, pntType.length() - 2);
         }
 
         al.setSheetID(point.getSheetId());
@@ -175,7 +182,7 @@ public class AlertListDao extends AbstractDao<AlertList> {
     public int insertItem(SubsidenceTotalData point, int alertLevel, int Utype, double UValue,
             double UMax, String originalDataID) {
 
-        Log.d(TAG, "AlertListDao insertItem");
+        Log.d(TAG, "AlertListDao insertItem SubsidenceTotalData");
         final IAccessDatabase mDatabase = getCurrentDb();
 
         if (mDatabase == null) {
@@ -216,7 +223,7 @@ public class AlertListDao extends AbstractDao<AlertList> {
 
     public void updatePointAlertItem(TunnelSettlementTotalData point, int Utype, double UValue,
             String originalDataID) {
-
+        Log.d(TAG, "AlertListDao updatePointAlertItem TunnelSettlementTotalData");
         int sheetId = point.getSheetId();
         int chainageId = point.getChainageId();
 
@@ -225,7 +232,7 @@ public class AlertListDao extends AbstractDao<AlertList> {
 
     public void updatePointAlertItem(SubsidenceTotalData point, int Utype, double UValue,
             String originalDataID) {
-
+        Log.d(TAG, "AlertListDao updatePointAlertItem SubsidenceTotalData");
         int sheetId = point.getSheetId();
         int chainageId = point.getChainageId();
 

@@ -125,7 +125,7 @@ public class SubsidenceTotalDataDao extends AbstractDao<SubsidenceTotalData> {
         if (db != null) {
             String sql = "UPDATE SubsidenceTotalData"
                     + " SET DataStatus=dataStatus"
-                    + ((dataStatus == AlertUtils.POINT_DATASTATUS_CORRECTION) ? (" SET DataCorrection=" + correction) : "")
+                    + ((dataStatus == AlertUtils.POINT_DATASTATUS_CORRECTION) ? (", DataCorrection=" + correction) : "")
                     + " WHERE ID=?";
             String[] args = new String[]{String.valueOf(id)};
             db.execute(sql, args);

@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.zw.android.framework.IAccessDatabase;
 
+import android.util.Log;
+
 import com.crtb.tunnelmonitor.entity.TunnelSettlementTotalData;
 import com.crtb.tunnelmonitor.utils.AlertUtils;
 
@@ -170,11 +172,12 @@ public class TunnelSettlementTotalDataDao extends AbstractDao<TunnelSettlementTo
     }
 
     public void updateDataStatus(int id, int dataStatus, float correction) {
+        Log.d(TAG, "TunnelSettlementTotalData updateDataStatus");
         IAccessDatabase db = getCurrentDb();
         if (db != null) {
             String sql = "UPDATE TunnelSettlementTotalData"
                     + " SET DataStatus=" + dataStatus
-                    + ((dataStatus == AlertUtils.POINT_DATASTATUS_CORRECTION) ? (" SET DataCorrection=" + correction) : "")
+                    + ((dataStatus == AlertUtils.POINT_DATASTATUS_CORRECTION) ? (", DataCorrection=" + correction) : "")
                     + " WHERE ID=?";
             String[] args = new String[]{String.valueOf(id)};
             db.execute(sql, args);

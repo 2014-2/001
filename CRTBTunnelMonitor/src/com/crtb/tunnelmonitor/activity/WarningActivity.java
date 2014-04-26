@@ -46,15 +46,15 @@ public class WarningActivity extends Activity {
     private int clickedItem;
     private int handlingStep;
     private ArrayList<AlertInfo> alerts;
-    private LinearLayout rela;
+//    private LinearLayout rela;
     private AlertListAdapter adapter;
     private Random ran = new Random();
     private String s[] = new String[20];
-    private String ss[] = {"拱顶", "测线S1", "测线S2"};
-    private String sss[] = {"开","正在处理","已消警"};
-    private String ssss[] = {"", "", "", ""};
-    private String s2[] = {"拱顶的累计沉降值超限", "拱顶的单次下沉速率超限", "累计收敛值超限",
-            "地表的累计沉降值超限","地表的单次下沉速率超限" ,"单次收敛速率超限"};
+//    private String ss[] = {"拱顶", "测线S1", "测线S2"};
+//    private String sss[] = {"开","正在处理","已消警"};
+//    private String ssss[] = {"", "", "", ""};
+//    private String s2[] = {"拱顶的累计沉降值超限", "拱顶的单次下沉速率超限", "累计收敛值超限",
+//            "地表的累计沉降值超限","地表的单次下沉速率超限" ,"单次收敛速率超限"};
 
     private int mAlertNum;
     private int mHandledAlertNum;
@@ -172,12 +172,18 @@ public class WarningActivity extends Activity {
                     break;
                 case R.id.complete_ok:
                     //alerts.get(clickedItem).setAlertStatusMsg(sss[2]);
-                    handleAlert();
-                    handlingStep = 2;
-                    mHandleCompleteView.setVisibility(View.GONE);
-                    alerts = AlertUtils.getAlertInfoList();
-                    adapter.refreshData(alerts);
-                    refreshNum();
+                    if (mCheckedRaidoId == mDealWayBtnDiscard.getId()
+                            || mCheckedRaidoId == mDealWayBtnAsFirst.getId()
+                            || mCheckedRaidoId == mDealWayBtnCorrection.getId()) {
+                        handleAlert();
+                        handlingStep = 2;
+                        mHandleCompleteView.setVisibility(View.GONE);
+                        alerts = AlertUtils.getAlertInfoList();
+                        adapter.refreshData(alerts);
+                        refreshNum();
+                    } else {
+                        Toast.makeText(WarningActivity.this, "请选择处理方式！", Toast.LENGTH_LONG).show();
+                    }
                     break;
                 case R.id.complete_cancel:
                     cancelHandling();
@@ -239,14 +245,20 @@ public class WarningActivity extends Activity {
         AlertHandlingInfoDao.defaultDao().deleteItemById(
                 alerts.get(clickedItem).getAlertHandlingId());
 
-        AlertInfo ai = (AlertInfo) adapter.getItem(mCheckedRaidoId);
+        AlertInfo ai = (AlertInfo) adapter.getItem(clickedItem);
         if (ai == null) {
             return;
         }
 
+        float correction = 0f;
+
+        Editable e = mCorrectionView.getText();
+        if (e != null && e.length() > 0) {
+            correction = Float.valueOf(e.toString());
+        }
+
         int alertId = ai.getAlertId();
         int dataStatus = 0;
-        float correction = 0f;
         if (mCheckedRaidoId == mDealWayBtnDiscard.getId()) {
             Log.d(TAG, "Handling way: discard data");
             dataStatus = 1;
@@ -254,12 +266,11 @@ public class WarningActivity extends Activity {
             Log.d(TAG, "Handling way: As First line");
             dataStatus = 2;
         } else if (mCheckedRaidoId == mDealWayBtnCorrection.getId()) {
-            Log.d(TAG, "Handling way: As First line");
+            Log.d(TAG, "Handling way: Correction");
             dataStatus = 3;
-            Editable e = mCorrectionView.getText();
-            if (e != null && e.length() > 0) {
-                correction = Float.valueOf(e.toString());
-            }
+        } else if (correction != 0) {
+            Log.d(TAG, "Handling way: Correction");
+            dataStatus = 3;
         }
 
         int alertStatus = 0;//TODO : may also be 2?, if so, 需要将mBtnOnClickListener中deal_with_btn也要和complete_btn一样的逻辑

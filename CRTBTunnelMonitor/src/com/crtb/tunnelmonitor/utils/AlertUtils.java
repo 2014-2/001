@@ -231,10 +231,10 @@ public class AlertUtils {
                         ret.sulvValue = (long) subsidenceSpeed;
                         int alertId = -1;
                         if (type == 1) {
-                            alertId = AlertListDao.defaultDao().insertItem((TunnelSettlementTotalData) point, 3/* default */,
+                            alertId = AlertListDao.defaultDao().insertOrUpdate((TunnelSettlementTotalData) point, 3/* default */,
                                     uType, subsidenceSpeed, SPEED_THRESHOLD, originalDataID);
                         } else {
-                            alertId = AlertListDao.defaultDao().insertItem((SubsidenceTotalData) point, 3/* default */,
+                            alertId = AlertListDao.defaultDao().insertOrUpdate((SubsidenceTotalData) point, 3/* default */,
                                     uType, subsidenceSpeed, SPEED_THRESHOLD, originalDataID);
                         }
                         AlertHandlingInfoDao.defaultDao().insertIfNotExist(alertId, null,
@@ -468,6 +468,7 @@ public class AlertUtils {
      */
     public static void handleAlert(int alertId, int dataStatus, float correction, int alertStatus,
             String handling, Date handlingTime) {
+        Log.d(TAG, "handleAlert");
         AlertList al = AlertListDao.defaultDao().queryOneById(alertId);
         String originalID = al.getOriginalDataID();
         int chainageId = al.getCrossSectionID();
@@ -526,6 +527,7 @@ public class AlertUtils {
 
     public static void updatePointSubsidenceAlertsAfterCorrection(int chainageId, String pntType,
             int MEASNo) {
+        Log.d(TAG, "updatePointSubsidenceAlertsAfterCorrection, pntType: " + pntType);
         if (pntType.contains("A")) {//隧道内断面
             List<TunnelSettlementTotalData> ls = TunnelSettlementTotalDataDao.defaultDao()
                     .queryInfoAfterMEASNo(chainageId, pntType, MEASNo);
