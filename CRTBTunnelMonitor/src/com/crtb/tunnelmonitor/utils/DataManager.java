@@ -10,9 +10,11 @@ import android.util.Log;
 
 import com.crtb.tunnelmonitor.common.Constant;
 import com.crtb.tunnelmonitor.dao.impl.v2.RawSheetIndexDao;
+import com.crtb.tunnelmonitor.dao.impl.v2.TunnelCrossSectionExIndexDao;
 import com.crtb.tunnelmonitor.dao.impl.v2.TunnelCrossSectionIndexDao;
 import com.crtb.tunnelmonitor.dao.impl.v2.TunnelSettlementTotalDataDao;
 import com.crtb.tunnelmonitor.entity.RawSheetIndex;
+import com.crtb.tunnelmonitor.entity.TunnelCrossSectionExIndex;
 import com.crtb.tunnelmonitor.entity.TunnelCrossSectionIndex;
 import com.crtb.tunnelmonitor.entity.TunnelSettlementTotalData;
 import com.crtb.tunnelmonitor.network.CrtbWebService;
@@ -173,9 +175,20 @@ public class DataManager {
                     sectionUploadCounter.increase(true);
                 }
                 //将断面状态设置为已上传
-                TunnelCrossSectionIndexDao dao = TunnelCrossSectionIndexDao.defaultDao();
-                section.setInfo("2");
-                dao.update(section);
+				new Thread(new Runnable() {
+					@Override
+					public void run() {
+						TunnelCrossSectionIndexDao dao = TunnelCrossSectionIndexDao.defaultDao();
+						section.setInfo("2");
+						dao.update(section);
+						TunnelCrossSectionExIndexDao sectionExIndexDao = TunnelCrossSectionExIndexDao.defaultDao();
+						TunnelCrossSectionExIndex sectionExIndex = new TunnelCrossSectionExIndex();
+						sectionExIndex.setID(section.getID());
+						sectionExIndex.setSECTCODE(sectionCode);
+						sectionExIndexDao.insert(sectionExIndex);
+					}
+				}).start();
+               
             }
 
             @Override
@@ -195,8 +208,7 @@ public class DataManager {
         parameter.setProcedure("02");
         parameter.setMonitorModel("xxx");
         parameter.setMeasureDate(new Date());
-        String valueList = "50/141.4249";
-        parameter.setPointValueList(valueList);
+        parameter.setPointValueList(measureData.getValueList());
         parameter.setPointCoordinateList(measureData.getCoordinateList());
         parameter.setSurveyorName("杨工");
         parameter.setSurveyorId("111");
@@ -446,13 +458,63 @@ public class DataManager {
             }
             return coordinateList;
         }
-
-        public void markAsUploaded() {
-            TunnelSettlementTotalDataDao dao = TunnelSettlementTotalDataDao.defaultDao();
-            for(TunnelSettlementTotalData point : mMeasurePoints) {
-                point.setInfo("2");
-                dao.update(point);
+        
+        public String getValueList() {
+        	String valueList = "";
+            final int pointCount = mMeasurePoints.size();
+            TunnelSettlementTotalData pointA, pointS1_1, pointS1_2, pointS2_1, pointS2_2, pointS3_1, pointS3_2;
+            String[] cA; 
+            switch (pointCount) {
+                //全断面法
+                case 3:
+                    pointA = getPointByType("A");
+                    pointS1_1 = getPointByType("S1-1");
+                    pointS1_2 = getPointByType("S1-2");
+                    cA = pointA.getCoordinate().split(",");
+                    valueList = cA[2] + "/" + AlertUtils.getLineLength(pointS1_1, pointS1_2);
+                    break;
+                    //台阶法
+                case 5:
+                    pointA = getPointByType("A");
+                    pointS1_1 = getPointByType("S1-1");
+                    pointS1_2 = getPointByType("S1-2");
+                    pointS2_1 = getPointByType("S2-1");
+                    pointS2_2 = getPointByType("S2-2");
+                    cA = pointA.getCoordinate().split(",");
+                    valueList = cA[2] + "/" + AlertUtils.getLineLength(pointS1_1, pointS1_2) + "/" + AlertUtils.getLineLength(pointS2_1, pointS2_2);
+                    break;
+                    //三台阶法或双侧壁法
+                case 7:
+                    pointA = getPointByType("A");
+                    pointS1_1 = getPointByType("S1-1");
+                    pointS1_2 = getPointByType("S1-2");
+                    pointS2_1 = getPointByType("S2-1");
+                    pointS2_2 = getPointByType("S2-2");
+                    pointS3_1 = getPointByType("S3-1");
+                    pointS3_2 = getPointByType("S3-2");
+                    cA = pointA.getCoordinate().split(",");
+                    valueList = cA[2] + "/" + AlertUtils.getLineLength(pointS1_1, pointS1_2) 
+                    		+ "/" + AlertUtils.getLineLength(pointS2_1, pointS2_2)
+                    		+ "/" + AlertUtils.getLineLength(pointS3_1, pointS3_2);
+                    break;
+                default:
+                    Log.d(LOG_TAG, "未知的开挖方法: 测点数目=" + pointCount);
+                    break;
             }
+            return valueList;
         }
+
+		public void markAsUploaded() {
+			new Thread(new Runnable() {
+				@Override
+				public void run() {
+					TunnelSettlementTotalDataDao dao = TunnelSettlementTotalDataDao.defaultDao();
+					for (TunnelSettlementTotalData point : mMeasurePoints) {
+						point.setInfo("2");
+						dao.update(point);
+					}
+				}
+			}).start();
+		}
     }
 }

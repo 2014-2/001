@@ -170,7 +170,7 @@ public class DataUploadActivity extends FragmentActivity {
         mProgressOverlay.setVisibility(View.GONE);
     }
 
-    private void uploadStatus(boolean isSuccess) {
+    private void updateStatus(boolean isSuccess) {
         isUploading = false;
         mUploadStatusIcon.setVisibility(View.VISIBLE);
         if (isSuccess) {
@@ -252,13 +252,9 @@ public class DataUploadActivity extends FragmentActivity {
 
     class MenuPopupWindow extends PopupWindow {
         public RelativeLayout upload;
-
         private View mMenuView;
-
         private Intent intent;
-
         public Context c;
-
         AlertDialog dlg = null;
 
         public MenuPopupWindow(Activity context) {
@@ -284,11 +280,16 @@ public class DataUploadActivity extends FragmentActivity {
                             		showProgressOverlay();
 	                            	uploadManager.uploadData(uploadDataList, new DataUploadListener() {
 										@Override
-										public void done(boolean success) {
-											if (success) {
-								                mTunnelFragment.refreshUI();
-								            }
-								            uploadStatus(success);
+										public void done(final boolean success) {
+											runOnUiThread(new Runnable() {
+												@Override
+												public void run() {
+													if (success) {
+										                mTunnelFragment.refreshUI();
+										            }
+										            updateStatus(success);
+												}
+											});
 										}
 									});
                             	} else {
@@ -302,8 +303,7 @@ public class DataUploadActivity extends FragmentActivity {
                                 break;
                         }
                     } else {
-                        Toast.makeText(getApplicationContext(), "请先打开工作面",
-                                Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "请先打开工作面", Toast.LENGTH_SHORT).show();
                     }
                     menuWindow.dismiss();
                 }
