@@ -98,6 +98,12 @@ public class CrtbDialogSearchTest extends CrtbDialog {
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
 				
+				if(mHintDrop != null){
+					mHintDrop.dismiss() ;
+				}
+				
+				dismiss() ;
+				
 				RawSheetIndex bean = mListView.getItem(position);
 				
 				CommonObject.putObject(TestSectionExecuteActivity.KEY_TEST_OBJECT, bean) ;
@@ -106,8 +112,6 @@ public class CrtbDialogSearchTest extends CrtbDialog {
 				Intent intent = new Intent() ;
 				intent.setClass(mContext, TestSectionExecuteActivity.class);
 				mContext.startActivity(intent);
-				
-				dismiss() ;
 			}
 		}) ;
 	}
