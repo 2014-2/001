@@ -69,14 +69,18 @@ public class DataManager {
             if (rawSheets != null && rawSheets.size() > 0) {
                 for(RawSheetIndex sheet : rawSheets) {
                     UploadSheetData uploadSheetData = new UploadSheetData();
-                    uploadSheetDatas.add(uploadSheetData);
                     uploadSheetData.setRawSheet(sheet);
                     List<UploadSectionData> uploadSectionDatas = new ArrayList<UploadSectionData>();
-                    List<TunnelCrossSectionIndex>  unUploadSections = getUnUploadTunnelSections(sheet.getCrossSectionIDs());
-                    for(TunnelCrossSectionIndex section : unUploadSections) {
+                    List<TunnelCrossSectionIndex>  uploadSections = getUploadTunnelSections(sheet.getCrossSectionIDs());
+                    for(TunnelCrossSectionIndex section : uploadSections) {
                         UploadSectionData uploadSectionData = new UploadSectionData();
-                        uploadSectionDatas.add(uploadSectionData);
                         uploadSectionData.setSection(section);
+                        //该断面已上传
+                        if ("2".equals(section.getInfo())) {
+                        	TunnelCrossSectionExIndexDao sectionExIndexDao = TunnelCrossSectionExIndexDao.defaultDao();
+                        	TunnelCrossSectionExIndex sectionExIndex = sectionExIndexDao.querySectionById(section.getID());
+                        	uploadSectionData.setSectionCode(sectionExIndex.getSECTCODE());
+                        }
                         //断面的测量数据
                         List<UploadMeasureData> pointDatas = new ArrayList<UploadMeasureData>();
                         List<TunnelSettlementTotalData> unUploadPoints = getUnUploadTunnelSettlementTotalData(sheet.getID(), section.getID());
@@ -91,8 +95,12 @@ public class DataManager {
                             measureData.addPoint(point);
                         }
                         uploadSectionData.setUnUploadMeasureDatas(pointDatas);
+                        if (uploadSectionData.needUpload()) {
+                        	uploadSectionDatas.add(uploadSectionData);
+                        }
                     }
                     uploadSheetData.setUnUpLoadSection(uploadSectionDatas);
+                    uploadSheetDatas.add(uploadSheetData);
                 }
             }
             return uploadSheetDatas;
@@ -132,7 +140,12 @@ public class DataManager {
                                 }
                             });
                             for(UploadSectionData sectionData : sectionDataList) {
-                                uploadSectionData(sectionData, sheetData.getRawSheet().getID(), sectionUploadCounter);
+                            	if ("1".equals(sectionData.getSection().getInfo())) {
+                            		uploadSectionData(sectionData, sheetData.getRawSheet().getID(), sectionUploadCounter);
+                            	} else {
+                            		String sectionCode = sectionData.getSectionCode();
+                            		uploadSectionMeasureDatas(sectionCode, sectionData, sectionUploadCounter);
+                            	}
                             }
                         } else {
                             // 如果没有未上传的断面数据，则直接认为上传成功
@@ -159,21 +172,7 @@ public class DataManager {
             @Override
             public void onSuccess(Object[] data) {
                 final String sectionCode = (String) data[0];
-                List<UploadMeasureData> measureDataList = sectionData.getUnUploadPointDatas();
-                if (measureDataList != null && measureDataList.size() > 0) {
-                    for(UploadMeasureData measureData : measureDataList) {
-                        DataCounter pointUploadCounter = new DataCounter("MeasureDataUploadCounter", measureDataList.size(), new CounterListener() {
-                            @Override
-                            public void done(boolean success) {
-                                sectionUploadCounter.increase(success);
-                            }
-                        });
-                        uploadMeasureData(sectionCode, measureData, pointUploadCounter);
-                    }
-                } else {
-                    // 如果没有测点数据，则直接判断为上传断面成功
-                    sectionUploadCounter.increase(true);
-                }
+                uploadSectionMeasureDatas(sectionCode, sectionData, sectionUploadCounter);
                 //将断面状态设置为已上传
 				new Thread(new Runnable() {
 					@Override
@@ -199,6 +198,24 @@ public class DataManager {
         });
     }
 
+    private void uploadSectionMeasureDatas(String sectionCode, UploadSectionData sectionData, final DataCounter sectionUploadCounter) {
+         List<UploadMeasureData> measureDataList = sectionData.getUnUploadPointDatas();
+         if (measureDataList != null && measureDataList.size() > 0) {
+             for(UploadMeasureData measureData : measureDataList) {
+                 DataCounter pointUploadCounter = new DataCounter("MeasureDataUploadCounter", measureDataList.size(), new CounterListener() {
+                     @Override
+                     public void done(boolean success) {
+                         sectionUploadCounter.increase(success);
+                     }
+                 });
+                 uploadMeasureData(sectionCode, measureData, pointUploadCounter);
+             }
+         } else {
+             // 如果没有测点数据，则直接判断为上传断面成功
+             sectionUploadCounter.increase(true);
+         }
+    }
+    
     //上传测量点数据
     private void uploadMeasureData(String sectionCode, final UploadMeasureData measureData, final DataCounter pointUploadCounter) {
         PointUploadParameter parameter = new PointUploadParameter();
@@ -247,19 +264,9 @@ public class DataManager {
      * @param sectionRowIds 断面数据库ids
      * @return
      */
-    public List<TunnelCrossSectionIndex> getUnUploadTunnelSections(String sectionRowIds) {
+    public List<TunnelCrossSectionIndex> getUploadTunnelSections(String sectionRowIds) {
         TunnelCrossSectionIndexDao dao = TunnelCrossSectionIndexDao.defaultDao();
-        List<TunnelCrossSectionIndex> unUploadSectionList = new ArrayList<TunnelCrossSectionIndex>();
-        List<TunnelCrossSectionIndex> sectionList = dao.querySectionByIds(sectionRowIds);
-        if (sectionList != null && sectionList.size() > 0) {
-            for (TunnelCrossSectionIndex section : sectionList) {
-                // 1表示未上传, 2表示已上传
-                if ("1".equals(section.getInfo())) {
-                    unUploadSectionList.add(section);
-                }
-            }
-        }
-        return unUploadSectionList;
+        return dao.querySectionByIds(sectionRowIds);
     }
 
     /**
@@ -320,6 +327,7 @@ public class DataManager {
 
     public class UploadSectionData {
         private TunnelCrossSectionIndex mSection;
+        private String mSectionCode;
         private List<UploadMeasureData> mUnUploadMeasureDatas;
 
         public void setSection(TunnelCrossSectionIndex section) {
@@ -330,6 +338,14 @@ public class DataManager {
             return mSection;
         }
 
+        public void setSectionCode(String sectionCode) {
+        	mSectionCode = sectionCode;
+        }
+        
+        public String getSectionCode() {
+        	return mSectionCode;
+        }
+        
         public void setUnUploadMeasureDatas(List<UploadMeasureData> unUploadPointDatas) {
             mUnUploadMeasureDatas = unUploadPointDatas;
         }
