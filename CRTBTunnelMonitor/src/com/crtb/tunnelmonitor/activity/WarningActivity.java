@@ -17,6 +17,7 @@ import android.widget.RadioGroup.OnCheckedChangeListener;
 import com.crtb.tunnelmonitor.adapter.AlertListAdapter;
 import com.crtb.tunnelmonitor.dao.impl.v2.AlertHandlingInfoDao;
 import com.crtb.tunnelmonitor.entity.AlertInfo;
+import com.crtb.tunnelmonitor.utils.AlertManager;
 import com.crtb.tunnelmonitor.utils.AlertUtils;
 
 public class WarningActivity extends Activity {
@@ -171,8 +172,6 @@ public class WarningActivity extends Activity {
                     break;
                 case R.id.complete_ok:
                     //alerts.get(clickedItem).setAlertStatusMsg(sss[2]);
-                    //TODO: SHOULD WE DELETE THIS CURRENT AlertHandlingInfo form db?
-                    AlertHandlingInfoDao.defaultDao().deleteItemById(alerts.get(clickedItem).getAlertHandlingId());
                     handleAlert();
                     handlingStep = 2;
                     mHandleCompleteView.setVisibility(View.GONE);
@@ -236,6 +235,10 @@ public class WarningActivity extends Activity {
     }
 
     private void handleAlert() {
+        // TODO: SHOULD WE DELETE THIS CURRENT AlertHandlingInfo form db?
+        AlertHandlingInfoDao.defaultDao().deleteItemById(
+                alerts.get(clickedItem).getAlertHandlingId());
+
         AlertInfo ai = (AlertInfo) adapter.getItem(mCheckedRaidoId);
         if (ai == null) {
             return;
@@ -244,7 +247,6 @@ public class WarningActivity extends Activity {
         int alertId = ai.getAlertId();
         int dataStatus = 0;
         float correction = 0f;
-        String pntType = ai.getPntType();
         if (mCheckedRaidoId == mDealWayBtnDiscard.getId()) {
             Log.d(TAG, "Handling way: discard data");
             dataStatus = 1;
@@ -260,10 +262,10 @@ public class WarningActivity extends Activity {
             }
         }
 
-        int alertStatus = 0;//TODO : may also be 2, 需要将mBtnOnClickListener中deal_with_btn也要和complete_btn一样的逻辑
+        int alertStatus = 0;//TODO : may also be 2?, if so, 需要将mBtnOnClickListener中deal_with_btn也要和complete_btn一样的逻辑
         String handling = mWarningRemarkView.getText().toString();
         Log.d(TAG, "handleAlert 处理内容：" + handling);
-        AlertUtils.handleAlert(alertId, dataStatus, correction, alertStatus, handling, new Date(
+        new AlertManager().handleAlert(alertId, dataStatus, correction, alertStatus, handling, new Date(
                 System.currentTimeMillis()));
     }
 
