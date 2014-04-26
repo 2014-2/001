@@ -56,4 +56,20 @@ public class RawSheetIndexDao extends AbstractDao<RawSheetIndex> {
 		
 		return mDatabase.queryObjects(sql, new String[]{String.valueOf(RawSheetIndex.CROSS_SECTION_TYPE_SUBSIDENCES)}, RawSheetIndex.class);
 	} 
+	
+	// 搜索记录单
+	public List<RawSheetIndex> searchRawSheetIndex(String key,int type) {
+
+		final IAccessDatabase mDatabase = getCurrentDb();
+		
+		if(mDatabase == null){
+			return null ;
+		}
+		
+		String sql = "select * from RawSheetIndex where FACEDK like " + "'" + key + "%'" + " and CrossSectionType = ?";
+		
+		String[] param = {type == 0 ? String.valueOf(RawSheetIndex.CROSS_SECTION_TYPE_TUNNEL) : String.valueOf(RawSheetIndex.CROSS_SECTION_TYPE_SUBSIDENCES)};
+		
+		return mDatabase.queryObjects(sql, param, RawSheetIndex.class);
+	}
 }

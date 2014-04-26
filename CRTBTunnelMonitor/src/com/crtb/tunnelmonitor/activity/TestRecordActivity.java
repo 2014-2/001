@@ -30,6 +30,7 @@ import com.crtb.tunnelmonitor.CommonObject;
 import com.crtb.tunnelmonitor.WorkFlowActivity;
 import com.crtb.tunnelmonitor.entity.MenuSystemItem;
 import com.crtb.tunnelmonitor.entity.RawSheetIndex;
+import com.crtb.tunnelmonitor.mydefine.CrtbDialogSearchTest;
 import com.crtb.tunnelmonitor.widget.CrtbTestRecordSubsidenceListView;
 import com.crtb.tunnelmonitor.widget.CrtbTestRecordTunnelSectionListView;
 
@@ -146,6 +147,18 @@ public class TestRecordActivity extends WorkFlowActivity implements OnPageChange
 			}
 		} else if(name.equals(getString(R.string.common_search))){
 			
+			CrtbDialogSearchTest dialog = null ;
+			
+			// 隧道内测量
+			if(currIndex == 0){
+				dialog = new CrtbDialogSearchTest(this,mDisplayMetrics.heightPixels >> 1,0);
+			} 
+			// 地表下沉测量
+			else {
+				dialog = new CrtbDialogSearchTest(this,mDisplayMetrics.heightPixels >> 1,1);
+			}
+			
+			dialog.show() ;
 		}
 	}
 
