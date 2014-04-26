@@ -201,13 +201,13 @@ public class DataManager {
     private void uploadSectionMeasureDatas(String sectionCode, UploadSectionData sectionData, final DataCounter sectionUploadCounter) {
          List<UploadMeasureData> measureDataList = sectionData.getUnUploadPointDatas();
          if (measureDataList != null && measureDataList.size() > 0) {
+        	 DataCounter pointUploadCounter = new DataCounter("MeasureDataUploadCounter", measureDataList.size(), new CounterListener() {
+                 @Override
+                 public void done(boolean success) {
+                     sectionUploadCounter.increase(success);
+                 }
+             });
              for(UploadMeasureData measureData : measureDataList) {
-                 DataCounter pointUploadCounter = new DataCounter("MeasureDataUploadCounter", measureDataList.size(), new CounterListener() {
-                     @Override
-                     public void done(boolean success) {
-                         sectionUploadCounter.increase(success);
-                     }
-                 });
                  uploadMeasureData(sectionCode, measureData, pointUploadCounter);
              }
          } else {
