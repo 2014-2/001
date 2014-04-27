@@ -91,6 +91,10 @@
     <string name="data_download_success">下载成功!</string>
     <string name="data_download_fail">下载失败,连接超时!</string>
     
+    <string name="data_uploading_alert">上传中，请稍候</string>
+    <string name="data_upload_alert_success">上传预警成功!</string>
+    <string name="data_upload_alert_fail">上传预警信息失败,连接超时!</string>
+    
     <!-- 全站仪模块 -->
     <string name="bluetooth_connect">蓝牙连接</string>
     <string name="com_connect">串口连接</string>

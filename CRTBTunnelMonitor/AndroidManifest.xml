@@ -55,6 +55,7 @@
         <activity android:name="com.crtb.tunnelmonitor.activity.StationActivity" />
         <activity android:name="com.crtb.tunnelmonitor.activity.WarningUploadActivity" />
         <activity android:name="com.crtb.tunnelmonitor.activity.WorkInfoDownloadActivity" />
+        <activity android:name="com.crtb.tunnelmonitor.activity.ReviewWarningActivity" />
 
         <activity android:name="com.crtb.tunnelmonitor.activity.TotalStationNewBluetoothActivity"/>
         <!-- <activity android:name="com.crtb.tunnelmonitor.activity.ControlNewActivity"/> -->
