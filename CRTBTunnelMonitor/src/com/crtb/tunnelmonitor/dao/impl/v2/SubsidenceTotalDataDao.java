@@ -51,7 +51,7 @@ public class SubsidenceTotalDataDao extends AbstractDao<SubsidenceTotalData> {
 		 
 		return data != null;
 	}
-
+	
     public SubsidenceTotalData queryOneById(int id) {
     	
         final IAccessDatabase mDatabase = getCurrentDb();
@@ -66,19 +66,28 @@ public class SubsidenceTotalDataDao extends AbstractDao<SubsidenceTotalData> {
                 SubsidenceTotalData.class);
     }
 
-	// 查询已经存在的测量点信息
-	public SubsidenceTotalData queryTunnelTotalData(int sheetId,int chainageId,String pntType) {
-			
-		final IAccessDatabase mDatabase = getCurrentDb();
-			
-		if(mDatabase == null){
-			return null ;
-		}
-			
-		String sql = "select * from SubsidenceTotalData where SheetId = ? and ChainageId = ? and PntType = ? order by MEASNo desc" ;
-			
-		return mDatabase.queryObject(sql, new String[]{String.valueOf(sheetId),String.valueOf(chainageId),pntType},SubsidenceTotalData.class);
-	}
+    // 查询已经存在的测量点信息
+    public SubsidenceTotalData querySubsidenceTotalData(int sheetId, int chainageId, String pntType) {
+
+        final IAccessDatabase mDatabase = getCurrentDb();
+
+        if(mDatabase == null){
+            return null ;
+        }
+
+        String sql = "select * from SubsidenceTotalData where SheetId = ? and ChainageId = ? and PntType = ? order by MEASNo desc" ;
+
+        return mDatabase.queryObject(sql, new String[]{String.valueOf(sheetId),String.valueOf(chainageId),pntType},SubsidenceTotalData.class);
+    }
+
+    public List<SubsidenceTotalData> querySubsidenceTotalDatas(int sheetId, int chainageId) {
+        final IAccessDatabase mDatabase = getCurrentDb();
+        if (mDatabase == null) {
+            return null;
+        }
+        String sql = "select * from SubsidenceTotalData where SheetId = ? and ChainageId = ? order by MEASNo asc";
+        return mDatabase.queryObjects(sql, new String[] {String.valueOf(sheetId), String.valueOf(chainageId)}, SubsidenceTotalData.class);
+    }
 
     /**
      * 查询 本次测量(MEASNo)之前的所有相同断面和相同测点类型的测点信息
@@ -104,7 +113,7 @@ public class SubsidenceTotalDataDao extends AbstractDao<SubsidenceTotalData> {
                 + " AND DataStatus != "
                 + String.valueOf(AlertUtils.POINT_DATASTATUS_DISCARD)
                 + " order by MEASNo ASC";
-        
+
         return mDatabase.queryObjects(sql, SubsidenceTotalData.class);
     }
 

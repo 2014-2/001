@@ -7,6 +7,9 @@ import java.util.List;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.crtb.tunnelmonitor.dao.impl.v2.TunnelCrossSectionExIndexDao;
+import com.crtb.tunnelmonitor.entity.AlertInfo;
+import com.crtb.tunnelmonitor.entity.TunnelCrossSectionExIndex;
 import com.crtb.tunnelmonitor.network.CrtbWebService;
 import com.crtb.tunnelmonitor.network.DataCounter;
 import com.crtb.tunnelmonitor.network.DataCounter.CounterListener;
@@ -52,7 +55,26 @@ public class WarningDataManager {
 		@Override
 		protected List<UploadWarningData> doInBackground(Void... params) {
 			List<UploadWarningData> uploadWarningDataList = new ArrayList<UploadWarningData>();
-			// TODO Auto-generated method stub
+			ArrayList<AlertInfo> alertInfoList = AlertUtils.getAlertInfoList();
+			if (alertInfoList != null && alertInfoList.size() > 0) {
+				for(AlertInfo alertInfo : alertInfoList) {
+					UploadWarningData warningData = new UploadWarningData();
+					warningData.setAlertInfo(alertInfo);
+					warningData.setSectionCode(getSectionCodeById(alertInfo.getSectionId()));
+					uploadWarningDataList.add(warningData);
+				}
+			}
+			if (uploadWarningDataList.size() == 0) {
+				UploadWarningData fakeWarningData = new UploadWarningData();
+				AlertInfo fakeAlertInfo = new AlertInfo();
+				fakeAlertInfo.setPntType("A");
+				fakeAlertInfo.setAlertStatus(0);
+				fakeAlertInfo.setAlertStatusMsg("已销警");
+				fakeAlertInfo.setDate(CrtbUtils.formatDate(new Date()));
+				fakeWarningData.setAlertInfo(fakeAlertInfo);
+				fakeWarningData.setSectionCode("XPCL01SD00010001");
+				uploadWarningDataList.add(fakeWarningData);
+			}
 			return uploadWarningDataList;
 		}
 
@@ -65,6 +87,16 @@ public class WarningDataManager {
 
 	}
 
+	private String getSectionCodeById(int sectionId) {
+		String sectionCode = "";
+		TunnelCrossSectionExIndexDao sectionExIndexDao = TunnelCrossSectionExIndexDao.defaultDao();
+		TunnelCrossSectionExIndex sectionExIndex = sectionExIndexDao.querySectionById(sectionId);
+		if (sectionExIndex != null) {
+			sectionCode = sectionExIndex.getSECTCODE();
+		}
+		return sectionCode;
+	}
+	
 	private class DataUploadTask extends AsyncTask<List<UploadWarningData>, Void, Void> {
 
 		@Override
@@ -91,8 +123,8 @@ public class WarningDataManager {
 
     private void uploadWarningData(UploadWarningData warningData, final DataCounter warningUploadCounter) {
     	WarningUploadParameter parameter = new WarningUploadParameter();
-    	parameter.setSectionCode("XPCL01SD00010001");
-    	parameter.setPointCode("XPCL01SD00010001GD01");
+    	parameter.setSectionCode(warningData.getSectionCode());
+    	parameter.setPointCode(warningData.getPointCode());
     	parameter.setWarningLevel(1);
     	parameter.setTransformSpeed(6.0f);
     	parameter.setWarningPointValue(1.0f);
@@ -118,7 +150,41 @@ public class WarningDataManager {
         });
     }
     
-	public class UploadWarningData {
-
-	}
+    public class UploadWarningData {
+    	private AlertInfo mAlertInfo;
+    	private String mSectionCode;
+    	
+    	public void setAlertInfo(AlertInfo alertInfo) {
+    		mAlertInfo = alertInfo;
+    	}
+    	
+    	public AlertInfo getAlertInfo() {
+    		return mAlertInfo;
+    	}
+    	
+    	public void setSectionCode(String sectionCode) {
+    		mSectionCode = sectionCode;
+    	}
+    	
+    	public String getSectionCode() {
+    		return mSectionCode;
+    	}
+    	
+    	public String getPointCode() {
+    		String pointCode = "";
+    		if ("A".equals(mAlertInfo.getPntType())) {
+    			pointCode = mSectionCode + "GD01";
+    		}
+    		if ("S1".equals(mAlertInfo.getPntType())) {
+    			pointCode = mSectionCode + "SL01" + "#" + mSectionCode + "SL02";
+    		}
+    		if ("S2".equals(mAlertInfo.getPntType())) {
+    			pointCode = mSectionCode + "SL03" + "#" + mSectionCode + "SL04";
+    		}
+    		if ("S3".equals(mAlertInfo.getPntType())) {
+    			pointCode = mSectionCode + "SL05" + "#" + mSectionCode + "SL06";
+    		}
+    		return pointCode;
+    	}
+    }
 }

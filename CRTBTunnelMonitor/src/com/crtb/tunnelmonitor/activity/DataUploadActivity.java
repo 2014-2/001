@@ -39,12 +39,10 @@ import android.widget.Toast;
 
 import com.crtb.tunnelmonitor.dao.impl.v2.ProjectIndexDao;
 import com.crtb.tunnelmonitor.entity.ProjectIndex;
-import com.crtb.tunnelmonitor.network.DataCounter;
 import com.crtb.tunnelmonitor.utils.DataManager;
 import com.crtb.tunnelmonitor.utils.DataManager.DataUploadListener;
 import com.crtb.tunnelmonitor.utils.DataManager.UploadSheetData;
 import com.crtb.tunnelmonitor.widget.SectionSheetFragment;
-import com.crtb.tunnelmonitor.widget.SectionSheetFragment.RawSheetData;
 
 
 public class DataUploadActivity extends FragmentActivity {
@@ -274,27 +272,27 @@ public class DataUploadActivity extends FragmentActivity {
                         switch (mPager.getCurrentItem()) {
                             // 隧道内断面
                             case 0:
-                            	DataManager uploadManager = new DataManager();
-                            	List<UploadSheetData> uploadDataList = mTunnelFragment.getUploadData();
-                            	if (uploadDataList != null && uploadDataList.size() > 0) {
-                            		showProgressOverlay();
-	                            	uploadManager.uploadData(uploadDataList, new DataUploadListener() {
-										@Override
-										public void done(final boolean success) {
-											runOnUiThread(new Runnable() {
-												@Override
-												public void run() {
-													if (success) {
-										                mTunnelFragment.refreshUI();
-										            }
-										            updateStatus(success);
-												}
-											});
-										}
-									});
-                            	} else {
-                            		Toast.makeText(getApplicationContext(), "请先选择要上传的记录单", Toast.LENGTH_LONG).show();
-                            	}
+                                DataManager uploadManager = new DataManager();
+                                List<UploadSheetData> uploadDataList = mTunnelFragment.getUploadData();
+                                if (uploadDataList != null && uploadDataList.size() > 0) {
+                                    showProgressOverlay();
+                                    uploadManager.uploadData(uploadDataList, new DataUploadListener() {
+                                        @Override
+                                        public void done(final boolean success) {
+                                            runOnUiThread(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    if (success) {
+                                                        mTunnelFragment.refreshUI();
+                                                    }
+                                                    updateStatus(success);
+                                                }
+                                            });
+                                        }
+                                    });
+                                } else {
+                                    Toast.makeText(getApplicationContext(), "请先选择要上传的记录单", Toast.LENGTH_LONG).show();
+                                }
                                 break;
                             case 1:
                                 break;
