@@ -7,6 +7,8 @@ public class AlertInfo {
 //    public boolean state1;
     public int alertId = -1;
     public int alertHandlingId = -1;
+    public int sheetId = -1;
+    public int sectionId = -1;
     public String xinghao;
     public String date;
     public String pntType;
@@ -41,6 +43,22 @@ public class AlertInfo {
         this.alertHandlingId = alertHandlingId;
     }
 
+    public void setSheetId(int sheetId) {
+    	this.sheetId = sheetId;
+    }
+    
+    public int getSheetId() {
+    	return sheetId;
+    }
+    
+    public void setSectionId(int sectionId) {
+    	this.sectionId = sectionId;
+    }
+    
+    public int getSectionId() {
+    	return sectionId;
+    }
+    
     public String getChuliFangshi() {
         return chuliFangshi;
     }
