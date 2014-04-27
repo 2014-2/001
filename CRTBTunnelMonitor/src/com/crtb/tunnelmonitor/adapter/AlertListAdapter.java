@@ -86,7 +86,7 @@ public class AlertListAdapter extends BaseAdapter {
         TextView message = (TextView) view.findViewById(R.id.message);
         message.setText(list.get(pos).getUTypeMsg());
         TextView edtstate = (TextView) view.findViewById(R.id.edtstate);
-        edtstate.setText(list.get(pos).getEdtState());
+        edtstate.setText(list.get(pos).getHandling());
 
         return view;
         // }else{

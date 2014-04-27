@@ -1,14 +1,22 @@
 
 package com.crtb.tunnelmonitor.entity;
 
-public class AlertInfo {
+import java.io.Serializable;
+
+public class AlertInfo implements Serializable {
+    private static final long serialVersionUID = 1L;
     public static int count = 0;
     public static int yixiao = 0;
-//    public boolean state1;
+    //    public boolean state1;
     public int alertId = -1;
     public int alertHandlingId = -1;
     public int sheetId = -1;
     public int sectionId = -1;
+    public int alertLevel;
+    public double uvalue;
+	public String originalDataID;
+	public String handling;
+	public String handlingTime;
     public String xinghao;
     public String date;
     public String pntType;
@@ -16,16 +24,15 @@ public class AlertInfo {
     public int uType;
     public String alertStatusMsg;
     public int alertStatus;
-    public String edtState;
     public String chuliFangshi;
 
-//    public boolean isState1() {
-//        return state1;
-//    }
-//
-//    public void setState1(boolean state1) {
-//        this.state1 = state1;
-//    }
+    //    public boolean isState1() {
+    //        return state1;
+    //    }
+    //
+    //    public void setState1(boolean state1) {
+    //        this.state1 = state1;
+    //    }
 
     public int getAlertId() {
         return alertId;
@@ -44,19 +51,59 @@ public class AlertInfo {
     }
 
     public void setSheetId(int sheetId) {
-    	this.sheetId = sheetId;
+        this.sheetId = sheetId;
     }
-    
+
     public int getSheetId() {
-    	return sheetId;
+        return sheetId;
     }
-    
+
     public void setSectionId(int sectionId) {
-    	this.sectionId = sectionId;
+        this.sectionId = sectionId;
+    }
+
+    public int getSectionId() {
+        return sectionId;
+    }
+
+    public void setAlertLevel(int level) {
+    	this.alertLevel = level;
     }
     
-    public int getSectionId() {
-    	return sectionId;
+    public int getAlertLevel() {
+    	return alertLevel;
+    }
+    
+    public void setUValue(double uvalue) {
+    	this.uvalue = uvalue;
+    }
+    
+    public double getUValue() {
+    	return uvalue;
+    }
+    
+    public void setOriginalDataID(String id) {
+    	this.originalDataID = id;
+    }
+    
+    public String getOriginalDataID() {
+    	return originalDataID;
+    }
+    
+    public void setHandling(String handling) {
+    	this.handling = handling;
+    }
+    
+    public String getHandling() {
+    	return handling;
+    }
+    
+    public void setHandlingTime(String time) {
+    	handlingTime = time;
+    }
+    
+    public String getHandlingTime() {
+    	return handlingTime;
     }
     
     public String getChuliFangshi() {
@@ -121,13 +168,5 @@ public class AlertInfo {
 
     public void setAlertStatusMsg(String alertStatusMsg) {
         this.alertStatusMsg = alertStatusMsg;
-    }
-
-    public String getEdtState() {
-        return edtState;
-    }
-
-    public void setEdtState(String edtState) {
-        this.edtState = edtState;
     }
 }

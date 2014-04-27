@@ -303,40 +303,51 @@ public class AlertUtils {
                         thisTimeDate, String.valueOf(chainageId) + s_1.getPntType(), ALERT_STATUS_OPEN/*报警*/, 1/*true*/);
             }
 
-            TunnelSettlementTotalData s_1Last = s_1InfoList.get(s_1InfoList.size() - 1);
-            TunnelSettlementTotalData s_2Last = TunnelSettlementTotalDataDao.defaultDao()
-                    .queryOppositePointOfALine(s_1Last, s_2.getPntType());
-            float correction = s_1Last.getDataCorrection();
-            double lineLastLength = getLineLength(s_1Last, s_2Last);
-            double deltaLenth = lineThisLength - lineLastLength;
-            deltaLenth *= 1000;
-            deltaLenth += correction;
-            deltaLenth = Math.abs(deltaLenth);
-            Date s_1LastTime = s_1Last.getSurveyTime();
-            Date s_2LastTime = s_2Last.getSurveyTime();
-            double lastTime = s_1LastTime.getTime();
-            if (s_2LastTime.getTime() > lastTime) {
-                lastTime = s_2LastTime.getTime();
+            int s = s_1InfoList.size();
+            TunnelSettlementTotalData s_1Last = null;
+            TunnelSettlementTotalData s_2Last = null;
+            String s_2pntType = s_2.getPntType();
+            for (int i = 1; i <= s; i++) {
+                s_1Last = s_1InfoList.get(s - i);
+                s_2Last = TunnelSettlementTotalDataDao.defaultDao()
+                        .queryOppositePointOfALine(s_1Last, s_2pntType);
+                if (s_1Last != null && s_2Last != null) {
+                    break;
+                }
             }
-            double deltaTime = Math.abs((thisTime - lastTime));
-            if (deltaTime < Time.ONE_HOUR) {
-                deltaTime = Time.ONE_HOUR;//ONE HOUR at least to avoid infinity
-            }
-            double deltaTInDay = (deltaTime / Time.DAY_MILLISECEND_RATIO);
-            double h = 1d/24d;
-            if (deltaTInDay < h) {
-                deltaTInDay = h;
-            }
-            double shoulianSpeed = deltaLenth / deltaTInDay;
-            if (shoulianSpeed >= SPEED_THRESHOLD) {
-                shoulianSpeed = Math.round(shoulianSpeed);
-                int uType = SHOULIAN_SULV_EXCEEDING;
-                ret.sulvType = uType;
-                ret.sulvValue = (long) shoulianSpeed;
-                int alertId = AlertListDao.defaultDao().insertOrUpdate(s_1, 3/* default */, uType, shoulianSpeed,
-                        SPEED_THRESHOLD, originalDataID);
-                AlertHandlingInfoDao.defaultDao().insertIfNotExist(alertId, null,
-                        thisTimeDate, String.valueOf(chainageId) + s_1.getPntType(), ALERT_STATUS_OPEN/*报警*/, 1/*true*/);
+            if (s_1Last != null && s_2Last != null) {
+                float correction = s_1Last.getDataCorrection();
+                double lineLastLength = getLineLength(s_1Last, s_2Last);
+                double deltaLenth = lineThisLength - lineLastLength;
+                deltaLenth *= 1000;
+                deltaLenth += correction;
+                deltaLenth = Math.abs(deltaLenth);
+                Date s_1LastTime = s_1Last.getSurveyTime();
+                Date s_2LastTime = s_2Last.getSurveyTime();
+                double lastTime = s_1LastTime.getTime();
+                if (s_2LastTime.getTime() > lastTime) {
+                    lastTime = s_2LastTime.getTime();
+                }
+                double deltaTime = Math.abs((thisTime - lastTime));
+                if (deltaTime < Time.ONE_HOUR) {
+                    deltaTime = Time.ONE_HOUR;//ONE HOUR at least to avoid infinity
+                }
+                double deltaTInDay = (deltaTime / Time.DAY_MILLISECEND_RATIO);
+                double h = 1d/24d;
+                if (deltaTInDay < h) {
+                    deltaTInDay = h;
+                }
+                double shoulianSpeed = deltaLenth / deltaTInDay;
+                if (shoulianSpeed >= SPEED_THRESHOLD) {
+                    shoulianSpeed = Math.round(shoulianSpeed);
+                    int uType = SHOULIAN_SULV_EXCEEDING;
+                    ret.sulvType = uType;
+                    ret.sulvValue = (long) shoulianSpeed;
+                    int alertId = AlertListDao.defaultDao().insertOrUpdate(s_1, 3/* default */, uType, shoulianSpeed,
+                            SPEED_THRESHOLD, originalDataID);
+                    AlertHandlingInfoDao.defaultDao().insertIfNotExist(alertId, null,
+                            thisTimeDate, String.valueOf(chainageId) + s_1.getPntType(), ALERT_STATUS_OPEN/*报警*/, 1/*true*/);
+                }
             }
         }
 
@@ -386,7 +397,12 @@ public class AlertUtils {
                 + " AlertList.Utype AS utype,"
                 + " AlertHandlingList.AlertStatus AS status,"
                 + " AlertList.SheetID AS sheetId,"
-                + " AlertList.CrossSectionID AS sectionId"
+                + " AlertList.CrossSectionID AS sectionId,"
+                + " AlertList.AlertLeverl AS alertLevel,"
+                + " AlertList.UValue AS uvalue,"
+                + " AlertList.OriginalDataID AS originalDataID,"
+                + " AlertHandlingList.Handling AS handling,"
+                + " AlertHandlingList.HandlingTime AS handlingTime"
                 + " FROM AlertList LEFT JOIN AlertHandlingList"
                 + " ON AlertList.ID=AlertHandlingList.AlertID"
                 + " LEFT JOIN TunnelCrossSectionIndex"
@@ -422,6 +438,11 @@ public class AlertUtils {
                             : "");
                     ai.setSheetId(c.getInt(7));
                     ai.setSectionId(c.getInt(8));
+                    ai.setAlertLevel(c.getInt(9));
+                    ai.setUValue(c.getDouble(10));
+                    ai.setOriginalDataID(c.getString(11));
+                    ai.setHandling(c.getString(12));
+                    ai.setHandlingTime(c.getString(13));
                     l.add(ai);
                 }
             }

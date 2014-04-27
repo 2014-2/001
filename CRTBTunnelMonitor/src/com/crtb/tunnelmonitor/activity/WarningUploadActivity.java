@@ -1,5 +1,6 @@
 package com.crtb.tunnelmonitor.activity;
 
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -32,12 +33,15 @@ import android.widget.PopupWindow;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.crtb.tunnelmonitor.entity.AlertInfo;
 import com.crtb.tunnelmonitor.network.CrtbWebService;
 import com.crtb.tunnelmonitor.network.RpcCallback;
 import com.crtb.tunnelmonitor.utils.WarningDataManager;
 import com.crtb.tunnelmonitor.utils.WarningDataManager.UploadWarningData;
 import com.crtb.tunnelmonitor.utils.WarningDataManager.WarningLoadListener;
+import com.crtb.tunnelmonitor.utils.WarningDataManager.WarningUploadListener;
 
 public class WarningUploadActivity extends Activity {
     private static final String LOG_TAG = "WarningUploadActivity";
@@ -161,15 +165,45 @@ public class WarningUploadActivity extends Activity {
             chakan.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    //TODO：
+                    List<AlertInfo> checkedData = getCheckedAlertInfo();
+                    if (checkedData != null && checkedData.size() > 0) {
+                        Intent intent = new Intent(WarningUploadActivity.this,ReviewWarningActivity.class);
+                        intent.putExtra("alert_info", (Serializable)checkedData);
+                        startActivity(intent);
+                    } else {
+                        Toast.makeText(getApplicationContext(), "请选中预警信息再点击查看",Toast.LENGTH_SHORT).show();
+                    }
                     menuWindow.dismiss();
                 }
             });
             shangchuan.setOnClickListener(new OnClickListener() {
-
                 @Override
-                public void onClick(View v) {
-                    uploadWarningData();
+				public void onClick(View v) {
+					WarningDataManager dataManager = new WarningDataManager();
+					List<UploadWarningData> uploadWarningDataList = new ArrayList<UploadWarningData>();
+					List<WarningUploadData> warningDataList = mAdapter.getWarningData();
+					if (warningDataList != null && warningDataList.size() > 0) {
+						for (WarningUploadData uploadData : warningDataList) {
+							if (uploadData.isChecked()) {
+								uploadWarningDataList.add(uploadData.getUploadWarningData());
+							}
+						}
+						if (uploadWarningDataList.size() > 0) {
+							showProgressOverlay();
+							dataManager.uploadData(uploadWarningDataList,
+									new WarningUploadListener() {
+										@Override
+										public void done(final boolean success) {
+											runOnUiThread(new Runnable() {
+												@Override
+												public void run() {
+													updateStatus(success);
+												}
+											});
+										}
+									});
+						}
+					}
                     menuWindow.dismiss();
                 }
             });
@@ -184,6 +218,17 @@ public class WarningUploadActivity extends Activity {
             setBackgroundDrawable(dw);
             setOutsideTouchable(true);
         };
+    }
+
+    private List<AlertInfo> getCheckedAlertInfo() {
+        List<AlertInfo> checkedData = new ArrayList<AlertInfo>();
+        List<WarningUploadData> allData = mAdapter.getWarningData();
+        for (WarningUploadData data : allData) {
+            if (data.isChecked()) {
+                checkedData.add(data.getUploadWarningData().getAlertInfo());
+            }
+        }
+        return checkedData;
     }
 
     @Override
@@ -259,6 +304,10 @@ public class WarningUploadActivity extends Activity {
             }
         }
 
+        public List<WarningUploadData> getWarningData() {
+            return mWarningDataList;
+        }
+
         public void revertCheck(int position) {
             WarningUploadData warningUploadData = mWarningDataList.get(position);
             warningUploadData.setChecked(!warningUploadData.isChecked());
@@ -312,7 +361,7 @@ public class WarningUploadActivity extends Activity {
         }
     }
 
-    private class WarningUploadData {
+    public class WarningUploadData {
         private UploadWarningData mUploadWarningData;
         private boolean mIsChecked;
 

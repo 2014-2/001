@@ -8,8 +8,10 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.crtb.tunnelmonitor.dao.impl.v2.TunnelCrossSectionExIndexDao;
+import com.crtb.tunnelmonitor.dao.impl.v2.TunnelSettlementTotalDataDao;
 import com.crtb.tunnelmonitor.entity.AlertInfo;
 import com.crtb.tunnelmonitor.entity.TunnelCrossSectionExIndex;
+import com.crtb.tunnelmonitor.entity.TunnelSettlementTotalData;
 import com.crtb.tunnelmonitor.network.CrtbWebService;
 import com.crtb.tunnelmonitor.network.DataCounter;
 import com.crtb.tunnelmonitor.network.DataCounter.CounterListener;
@@ -64,17 +66,17 @@ public class WarningDataManager {
 					uploadWarningDataList.add(warningData);
 				}
 			}
-			if (uploadWarningDataList.size() == 0) {
-				UploadWarningData fakeWarningData = new UploadWarningData();
-				AlertInfo fakeAlertInfo = new AlertInfo();
-				fakeAlertInfo.setPntType("A");
-				fakeAlertInfo.setAlertStatus(0);
-				fakeAlertInfo.setAlertStatusMsg("已销警");
-				fakeAlertInfo.setDate(CrtbUtils.formatDate(new Date()));
-				fakeWarningData.setAlertInfo(fakeAlertInfo);
-				fakeWarningData.setSectionCode("XPCL01SD00010001");
-				uploadWarningDataList.add(fakeWarningData);
-			}
+//			if (uploadWarningDataList.size() == 0) {
+//				UploadWarningData fakeWarningData = new UploadWarningData();
+//				AlertInfo fakeAlertInfo = new AlertInfo();
+//				fakeAlertInfo.setPntType("A");
+//				fakeAlertInfo.setAlertStatus(0);
+//				fakeAlertInfo.setAlertStatusMsg("已销警");
+//				fakeAlertInfo.setDate(CrtbUtils.formatDate(new Date()));
+//				fakeWarningData.setAlertInfo(fakeAlertInfo);
+//				fakeWarningData.setSectionCode("XPCL01SD00010001");
+//				uploadWarningDataList.add(fakeWarningData);
+//			}
 			return uploadWarningDataList;
 		}
 
@@ -122,18 +124,39 @@ public class WarningDataManager {
 	}
 
     private void uploadWarningData(UploadWarningData warningData, final DataCounter warningUploadCounter) {
+    	final AlertInfo alertInfo = warningData.getAlertInfo();
     	WarningUploadParameter parameter = new WarningUploadParameter();
     	parameter.setSectionCode(warningData.getSectionCode());
     	parameter.setPointCode(warningData.getPointCode());
-    	parameter.setWarningLevel(1);
-    	parameter.setTransformSpeed(6.0f);
-    	parameter.setWarningPointValue(1.0f);
-    	parameter.setWarningDate(new Date());
+    	parameter.setWarningLevel(alertInfo.getAlertLevel());
+    	parameter.setTransformSpeed((float)alertInfo.getUValue());
+    	String originalID = alertInfo.getOriginalDataID();
+    	List<Integer> ids = new ArrayList<Integer>();
+        if (originalID.contains(AlertUtils.ORIGINAL_ID_DIVIDER)) {
+            String[] idStrs = originalID.split(AlertUtils.ORIGINAL_ID_DIVIDER);
+            for (String idStr : idStrs) {
+                ids.add(Integer.valueOf(idStr));
+            }
+        } else {
+            ids.add(Integer.valueOf(originalID));
+        }
+        float pointValue = 0.0f;
+        TunnelSettlementTotalDataDao dao = TunnelSettlementTotalDataDao.defaultDao();
+        if (ids.size() == 1) {
+        	TunnelSettlementTotalData point = dao.queryOneById(ids.get(0));
+        	pointValue = Float.parseFloat(point.getCoordinate().split(",")[2]);
+        } else {
+        	TunnelSettlementTotalData point1 = dao.queryOneById(ids.get(0));
+        	TunnelSettlementTotalData point2 = dao.queryOneById(ids.get(1));
+        	pointValue = (float) AlertUtils.getLineLength(point1, point2);
+        }
+    	parameter.setWarningPointValue(pointValue);
+    	parameter.setWarningDate(CrtbUtils.parseDate(alertInfo.getDate()));
     	parameter.setWarningPerson("杨工");
-    	parameter.setWarningDescription("abc");
-    	parameter.setWarningEndTime(new Date());
-    	parameter.setWarningResult(0);
-    	parameter.setRemark("kkk");
+    	parameter.setWarningDescription(alertInfo.getAlertStatusMsg());
+    	parameter.setWarningEndTime(CrtbUtils.parseDate(alertInfo.getHandlingTime()));
+    	parameter.setWarningResult(alertInfo.getAlertStatus());
+    	parameter.setRemark(alertInfo.getHandling());
         CrtbWebService.getInstance().uploadWarningData(parameter, new RpcCallback() {
 
             @Override

@@ -12,6 +12,7 @@
     <string name="edit_control_point_title">编辑控制点</string>
     <string name="upload_warning_data">上传预警信息</string>
     <string name="download_work_data">下载工作面</string>
+    <string name="review_warning_title">查看预警信息</string>
 
     <!-- common -->
     <string name="common_create_new">新建</string>
@@ -94,6 +95,10 @@
     <string name="data_uploading_alert">上传中，请稍候</string>
     <string name="data_upload_alert_success">上传预警成功!</string>
     <string name="data_upload_alert_fail">上传预警信息失败,连接超时!</string>
+
+    <string name="alert_point_type">点号：%s</string>
+    <string name="alert_state">状态：%s</string>
+    <string name="alert_handle_method">处理方式：%s</string>
     
     <!-- 全站仪模块 -->
     <string name="bluetooth_connect">蓝牙连接</string>
