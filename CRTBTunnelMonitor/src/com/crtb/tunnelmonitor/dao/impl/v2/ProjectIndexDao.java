@@ -110,6 +110,18 @@ public final class ProjectIndexDao extends AbstractDao<ProjectIndex> {
 		return db.queryObject(sql, null,ProjectIndex.class);
 	}
 	
+	public String getCurrentWorkDbPath(){
+		
+		// 当前项目名称
+		final IAccessDatabase db = getCurrentDb();
+
+		if (db == null) {
+			return null;
+		}
+		
+		return db.getDatabasePath() ;
+	}
+	
 	public void updateCurrentWorkPlan(ProjectIndex bean){
 		AppPreferences.getPreferences().putCurrentProject(bean.getDbName());
 	}
@@ -131,6 +143,80 @@ public final class ProjectIndexDao extends AbstractDao<ProjectIndex> {
 		}
 		
 		return hasWorkPlan();
+	}
+	
+	// 导入数据库
+	public int inportDb(String dbName){
+		
+		final CrtbUser user = CrtbLicenseDao.defaultDao().queryCrtbUser() ;
+		
+		// 非注册用户
+		if(user.getUsertype() == CrtbUser.LICENSE_TYPE_DEFAULT){
+			
+			String sql = "select * from CrtbProject where username = ?" ;
+			
+			List<CrtbProject> list = getDefaultDb().queryObjects(sql, new String[]{user.getUsername()}, CrtbProject.class);
+			
+			if(list != null && list.size() >= MAX_PROJECTINDEX){
+				Log.e(TAG, "error : 非注册用户,不能保存2个以上的工作面");
+				return 100 ;
+			}
+		}
+		
+		final IAccessDatabase db = openDb(dbName);
+		
+		String sql = "select * from ProjectIndex" ;
+		
+		ProjectIndex obj = db.queryObject(sql, null, ProjectIndex.class);
+		
+		if(obj != null){
+			
+			CrtbProject pro = new CrtbProject() ;
+			pro.setUsername(user.getUsername());
+			
+			// 第一次保存工作面对应的数据库名称
+			pro.setDbName(dbName);
+			
+			pro.setProjectId(obj.getId());
+			pro.setProjectName(obj.getProjectName());
+			pro.setCreateTime(obj.getCreateTime());
+			pro.setStartChainage(obj.getStartChainage());
+			pro.setEndChainage(obj.getEndChainage());
+			pro.setLastOpenTime(obj.getLastOpenTime());
+			pro.setInfo(obj.getInfo());
+			
+			pro.setChainagePrefix(obj.getChainagePrefix());
+			
+			pro.setGDLimitVelocity(obj.getGDLimitVelocity());
+			pro.setGDLimitTotalSettlement(obj.getGDLimitTotalSettlement());
+			pro.setGDCreateTime(obj.getGDCreateTime());
+			pro.setGDInfo(obj.getGDInfo());
+			
+			pro.setSLLimitVelocity(obj.getSLLimitVelocity());
+			pro.setSLLimitTotalSettlement(obj.getSLLimitTotalSettlement());
+			pro.setSLCreateTime(obj.getSLCreateTime());
+			pro.setSLInfo(obj.getSLInfo());
+			
+			pro.setDBLimitVelocity(obj.getDBLimitVelocity());
+			pro.setDBLimitTotalSettlement(obj.getDBLimitTotalSettlement());
+			pro.setDBCreateTime(obj.getDBCreateTime());
+			pro.setDBInfo(obj.getDBInfo());
+			
+			pro.setConstructionFirm(obj.getConstructionFirm());
+			pro.setLimitedTotalSubsidenceTime(obj.getLimitedTotalSubsidenceTime());
+			
+			// 保存失败
+			if(getDefaultDb().saveObject(pro) < 0){
+				
+				db.execute("delete from ProjectIndex where Id = ", new String[]{String.valueOf(obj.getId())});
+			
+				return DB_EXECUTE_FAILED ;
+			}
+			
+			return DB_EXECUTE_SUCCESS ;
+		}
+		
+		return DB_EXECUTE_FAILED ;
 	}
 
 	@Override

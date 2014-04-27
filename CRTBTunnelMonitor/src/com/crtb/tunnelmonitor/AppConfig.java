@@ -31,4 +31,9 @@ public final class AppConfig {
 	
 	// load all surveyer
 	public static final String ACTION_RELOAD_ALL_SURVEYER 		= "action.reload.all.surveyer" ;
+	
+	// export file dir name
+	public static final String DB_ROOT							= "/crtb_db/" ;
+	public static final String DB_EXPORT_DIR					= "/crtb_export/" ;
+	public static final String DB_INPORT_DIR					= "/crtb_inport/" ;
 }

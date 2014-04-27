@@ -30,7 +30,7 @@
                     android:layout_width="fill_parent"
                     android:layout_height="8dp"
                     android:layout_marginTop="5dp"
-                    android:background="#ffff00"/>
+                    android:background="@drawable/ic_connect_bg"/>
 
                 <TextView
                     android:id="@+id/hint_text"

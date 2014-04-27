@@ -19,6 +19,7 @@ import com.crtb.tunnelmonitor.entity.SubsidenceCrossSectionIndex;
 import com.crtb.tunnelmonitor.entity.SurveyerInformation;
 import com.crtb.tunnelmonitor.entity.TotalStationIndex;
 import com.crtb.tunnelmonitor.entity.TunnelCrossSectionIndex;
+import com.crtb.tunnelmonitor.utils.CrtbDbFileUtils;
 
 public class AppCRTBApplication extends Application {
 	
@@ -74,6 +75,9 @@ public class AppCRTBApplication extends Application {
 		
 		// default user
 		CrtbLicenseDao.registDefaultUser(this);
+		
+		// sdcard db file
+		CrtbDbFileUtils.initCrtbDbFiles(this);
 	}
 	
 	public IFrameworkFacade getFrameworkFacade(){

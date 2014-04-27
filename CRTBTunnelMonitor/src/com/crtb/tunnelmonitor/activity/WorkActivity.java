@@ -24,9 +24,12 @@ import com.crtb.tunnelmonitor.WorkFlowActivity;
 import com.crtb.tunnelmonitor.dao.impl.v2.ProjectIndexDao;
 import com.crtb.tunnelmonitor.entity.MenuSystemItem;
 import com.crtb.tunnelmonitor.entity.ProjectIndex;
+import com.crtb.tunnelmonitor.mydefine.CrtbDialogConnecting;
 import com.crtb.tunnelmonitor.mydefine.CrtbDialogDelete;
+import com.crtb.tunnelmonitor.mydefine.CrtbDialogFileBrowse;
 import com.crtb.tunnelmonitor.mydefine.CrtbDialogDelete.IButtonOnClick;
 import com.crtb.tunnelmonitor.mydefine.CrtbDialogHint;
+import com.crtb.tunnelmonitor.utils.CrtbDbFileUtils;
 import com.crtb.tunnelmonitor.widget.CrtbWorkPlanListView;
 
 /**
@@ -46,6 +49,8 @@ public final class WorkActivity extends WorkFlowActivity {
 	
 	// delete dialog
 	private CrtbDialogHint 	mWarringDialog ;
+	private CrtbDialogConnecting	mProgressDialog ;
+	private String mProgressText ;
 	
 	BroadcastReceiver mReceiver ;
 	
@@ -132,8 +137,31 @@ public final class WorkActivity extends WorkFlowActivity {
 			protected void dispose(Message msg) {
 				
 				switch(msg.what){
-				case 0 :
-					mListView.onReload() ;
+				case MSG_TASK_START :
+					
+					if(mProgressDialog == null){
+						mProgressDialog	= new CrtbDialogConnecting(WorkActivity.this) ;
+					}
+					
+					if(!mProgressDialog.isShowing()){
+						mProgressDialog.showDialog(mProgressText);
+					}
+					
+					break ;
+				case MSG_TASK_END :
+					
+					if(mProgressDialog != null){
+						mProgressDialog.dismiss() ;
+					}
+					
+					break ;
+					
+				case MSG_EXPORT_DB_SUCCESS :
+					CrtbDialogHint dialog = new CrtbDialogHint(WorkActivity.this, R.drawable.ic_reslut_sucess, "数据库导出完成");
+					dialog.show() ;
+					break ;
+				case MSG_EXPORT_DB_FAILED :
+					showText("数据库导出错误!");
 					break ;
 				}
 			}
@@ -141,14 +169,6 @@ public final class WorkActivity extends WorkFlowActivity {
 		};
 	}
 	
-	
-	private void loadData(){
-		
-		// insert data
-		
-		mHanlder.sendMessage(0);
-	}
-
 	private void loadSystemMenu(){
 		
 		List<MenuSystemItem> systems = new ArrayList<MenuSystemItem>();
@@ -158,7 +178,7 @@ public final class WorkActivity extends WorkFlowActivity {
 		item.setName(getString(R.string.common_create_new));
 		systems.add(item);
 		
-		// 
+		// 是否能导出
 		if(ProjectIndexDao.defaultWorkPlanDao().hasExport()){
 			item = new MenuSystemItem() ;
 			item.setIcon(R.drawable.ic_menu_export);
@@ -197,6 +217,18 @@ public final class WorkActivity extends WorkFlowActivity {
 			Intent intent = new Intent() ;
 			intent.setClass(this, WorkNewActivity.class);
 			startActivity(intent);
+		} else if(name.equals(getString(R.string.common_inport))){
+			
+			CrtbDialogFileBrowse browse = new CrtbDialogFileBrowse(WorkActivity.this, mDisplayMetrics.heightPixels >> 1);
+			browse.show() ;
+			
+		} else if(name.equals(getString(R.string.common_export))){
+			
+			mProgressText	= "正在导出文件,请稍等..." ;
+			String path 	= ProjectIndexDao.defaultWorkPlanDao().getCurrentWorkDbPath() ;
+			String dbname 	= AppPreferences.getPreferences().getCurrentProject();
+			
+			CrtbDbFileUtils.exportDb(path, dbname, mHanlder);
 		}
 	}
 
@@ -215,4 +247,6 @@ public final class WorkActivity extends WorkFlowActivity {
 		
 		mListView.setCacheColorHint(Color.TRANSPARENT);
 	}
+	
+	
 }
