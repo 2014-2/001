@@ -38,6 +38,7 @@ import com.crtb.tunnelmonitor.network.RpcCallback;
 import com.crtb.tunnelmonitor.utils.WarningDataManager;
 import com.crtb.tunnelmonitor.utils.WarningDataManager.UploadWarningData;
 import com.crtb.tunnelmonitor.utils.WarningDataManager.WarningLoadListener;
+import com.crtb.tunnelmonitor.utils.WarningDataManager.WarningUploadListener;
 
 public class WarningUploadActivity extends Activity {
     private static final String LOG_TAG = "WarningUploadActivity";
@@ -169,6 +170,27 @@ public class WarningUploadActivity extends Activity {
 
                 @Override
                 public void onClick(View v) {
+                	WarningDataManager dataManager = new WarningDataManager();
+                	List<UploadWarningData> uploadWarningDataList = new ArrayList<UploadWarningData>();
+                	List<WarningUploadData> warningDataList = mAdapter.getWarningDataList();
+                	if (warningDataList != null && warningDataList.size() > 0) {
+                		for(WarningUploadData uploadData : warningDataList) {
+                			if (uploadData.isChecked()) {
+                				uploadWarningDataList.add(uploadData.getUploadWarningData());
+                			}
+                		}
+                	}
+                	dataManager.uploadData(uploadWarningDataList, new WarningUploadListener() {
+						@Override
+						public void done(final boolean success) {
+							runOnUiThread(new Runnable() {
+								@Override
+								public void run() {
+									updateStatus(success);
+								}
+							});
+						}
+					});
                     uploadWarningData();
                     menuWindow.dismiss();
                 }
@@ -258,7 +280,11 @@ public class WarningUploadActivity extends Activity {
                 notifyDataSetChanged();
             }
         }
-
+       
+        public List<WarningUploadData> getWarningDataList() {
+        	return mWarningDataList;
+        }
+        
         public void revertCheck(int position) {
             WarningUploadData warningUploadData = mWarningDataList.get(position);
             warningUploadData.setChecked(!warningUploadData.isChecked());
