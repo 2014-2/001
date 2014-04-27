@@ -177,31 +177,33 @@ public class WarningUploadActivity extends Activity {
                 }
             });
             shangchuan.setOnClickListener(new OnClickListener() {
-
                 @Override
-                public void onClick(View v) {
-                    WarningDataManager dataManager = new WarningDataManager();
-                    List<UploadWarningData> uploadWarningDataList = new ArrayList<UploadWarningData>();
-                    List<WarningUploadData> warningDataList = mAdapter.getWarningData();
-                    if (warningDataList != null && warningDataList.size() > 0) {
-                        for(WarningUploadData uploadData : warningDataList) {
-                            if (uploadData.isChecked()) {
-                                uploadWarningDataList.add(uploadData.getUploadWarningData());
-                            }
-                        }
-                    }
-                    dataManager.uploadData(uploadWarningDataList, new WarningUploadListener() {
-                        @Override
-                        public void done(final boolean success) {
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    updateStatus(success);
-                                }
-                            });
-                        }
-                    });
-                    uploadWarningData();
+				public void onClick(View v) {
+					WarningDataManager dataManager = new WarningDataManager();
+					List<UploadWarningData> uploadWarningDataList = new ArrayList<UploadWarningData>();
+					List<WarningUploadData> warningDataList = mAdapter.getWarningData();
+					if (warningDataList != null && warningDataList.size() > 0) {
+						for (WarningUploadData uploadData : warningDataList) {
+							if (uploadData.isChecked()) {
+								uploadWarningDataList.add(uploadData.getUploadWarningData());
+							}
+						}
+						if (uploadWarningDataList.size() > 0) {
+							showProgressOverlay();
+							dataManager.uploadData(uploadWarningDataList,
+									new WarningUploadListener() {
+										@Override
+										public void done(final boolean success) {
+											runOnUiThread(new Runnable() {
+												@Override
+												public void run() {
+													updateStatus(success);
+												}
+											});
+										}
+									});
+						}
+					}
                     menuWindow.dismiss();
                 }
             });

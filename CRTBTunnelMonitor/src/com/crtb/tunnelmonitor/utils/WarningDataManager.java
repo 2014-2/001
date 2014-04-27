@@ -66,17 +66,17 @@ public class WarningDataManager {
 					uploadWarningDataList.add(warningData);
 				}
 			}
-			if (uploadWarningDataList.size() == 0) {
-				UploadWarningData fakeWarningData = new UploadWarningData();
-				AlertInfo fakeAlertInfo = new AlertInfo();
-				fakeAlertInfo.setPntType("A");
-				fakeAlertInfo.setAlertStatus(0);
-				fakeAlertInfo.setAlertStatusMsg("已销警");
-				fakeAlertInfo.setDate(CrtbUtils.formatDate(new Date()));
-				fakeWarningData.setAlertInfo(fakeAlertInfo);
-				fakeWarningData.setSectionCode("XPCL01SD00010001");
-				uploadWarningDataList.add(fakeWarningData);
-			}
+//			if (uploadWarningDataList.size() == 0) {
+//				UploadWarningData fakeWarningData = new UploadWarningData();
+//				AlertInfo fakeAlertInfo = new AlertInfo();
+//				fakeAlertInfo.setPntType("A");
+//				fakeAlertInfo.setAlertStatus(0);
+//				fakeAlertInfo.setAlertStatusMsg("已销警");
+//				fakeAlertInfo.setDate(CrtbUtils.formatDate(new Date()));
+//				fakeWarningData.setAlertInfo(fakeAlertInfo);
+//				fakeWarningData.setSectionCode("XPCL01SD00010001");
+//				uploadWarningDataList.add(fakeWarningData);
+//			}
 			return uploadWarningDataList;
 		}
 
