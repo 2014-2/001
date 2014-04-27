@@ -248,7 +248,6 @@ public class AlertUtils {
     }
 
     /**
-     * TODO: consider DataCorrection?
      *
      * @param s_1
      *            测线的其中一个端点
@@ -282,12 +281,17 @@ public class AlertUtils {
         List<TunnelSettlementTotalData> s_1InfoList = TunnelSettlementTotalDataDao.defaultDao()
                 .queryInfoBeforeMEASNo(chainageId, s_1.getPntType(), s_1.getMEASNo());
         if (s_1InfoList != null && s_1InfoList.size() > 0) {
+            
+            float sumOfCorrections = calculateSumOfDataCorrectionsOfTunnelSettlementTotalDatas(s_1InfoList);
+
             TunnelSettlementTotalData s_1First = s_1InfoList.get(0);
             TunnelSettlementTotalData s_2First = TunnelSettlementTotalDataDao.defaultDao()
                     .queryOppositePointOfALine(s_1First, s_2.getPntType());
             double lineFirstLength = getLineLength(s_1First, s_2First);
-            double convergence = Math.abs(lineFirstLength - lineThisLength);
+            double convergence = lineThisLength - lineFirstLength;
             convergence *= 1000; //CHANGE TO MILLIMETER
+            convergence += sumOfCorrections;
+            convergence = Math.abs(convergence);
             if (convergence >= ACCUMULATIVE_THRESHOLD) {
                 convergence = Math.round(convergence);
                 int uType = SHOULIAN_LEIJI_EXCEEDING;
@@ -302,9 +306,12 @@ public class AlertUtils {
             TunnelSettlementTotalData s_1Last = s_1InfoList.get(s_1InfoList.size() - 1);
             TunnelSettlementTotalData s_2Last = TunnelSettlementTotalDataDao.defaultDao()
                     .queryOppositePointOfALine(s_1Last, s_2.getPntType());
+            float correction = s_1Last.getDataCorrection();
             double lineLastLength = getLineLength(s_1Last, s_2Last);
-            double deltaLenth = Math.abs(lineLastLength - lineThisLength);
+            double deltaLenth = lineThisLength - lineLastLength;
             deltaLenth *= 1000;
+            deltaLenth += correction;
+            deltaLenth = Math.abs(deltaLenth);
             Date s_1LastTime = s_1Last.getSurveyTime();
             Date s_2LastTime = s_2Last.getSurveyTime();
             double lastTime = s_1LastTime.getTime();
@@ -491,18 +498,23 @@ public class AlertUtils {
                 if (pntType.contains("A")) {//隧道内断面
                     TunnelSettlementTotalDataDao.defaultDao().updateDataStatus(ids.get(0), dataStatus, correction);
 
-                    //STEP 4
-                    TunnelSettlementTotalData p = TunnelSettlementTotalDataDao.defaultDao().queryOneById(ids.get(0));
-                    if (p != null) {
-                        measNo = p.getMEASNo();
+                    if (dataStatus == POINT_DATASTATUS_CORRECTION && correction != 0) {
+                        //STEP 4
+                        TunnelSettlementTotalData p = TunnelSettlementTotalDataDao.defaultDao().queryOneById(ids.get(0));
+                        if (p != null) {
+                            measNo = p.getMEASNo();
+                        }
                     }
                 } else {//地表沉降
                     SubsidenceTotalDataDao.defaultDao().updateDataStatus(ids.get(0), dataStatus, correction);
 
-                    //STEP 4
-                    SubsidenceTotalData p = SubsidenceTotalDataDao.defaultDao().queryOneById(ids.get(0));
-                    if (p != null) {
-                        measNo = p.getMEASNo();
+                    if (dataStatus == POINT_DATASTATUS_CORRECTION && correction != 0) {
+                        // STEP 4
+                        SubsidenceTotalData p = SubsidenceTotalDataDao.defaultDao().queryOneById(
+                                ids.get(0));
+                        if (p != null) {
+                            measNo = p.getMEASNo();
+                        }
                     }
                 }
 
@@ -512,8 +524,12 @@ public class AlertUtils {
             } else {//测线
                 for (int id : ids) {
                     TunnelSettlementTotalDataDao.defaultDao().updateDataStatus(id, dataStatus, correction);
-
-                    //TODO: STEP 4 ?
+                }
+                //测线的DataCorrection存在第一个点中，即SX_1
+                if (dataStatus == POINT_DATASTATUS_CORRECTION && correction != 0) {
+                    // STEP 4
+                    TunnelSettlementTotalData s_1 = TunnelSettlementTotalDataDao.defaultDao().queryOneById(ids.get(0));
+                    updateLineConvergenceAlertsAfterCorrection(chainageId, s_1.getPntType(), s_1.getMEASNo());
                 }
             }
         }
@@ -522,7 +538,7 @@ public class AlertUtils {
         AlertHandlingInfoDao.defaultDao().insertItem(alertId, handling, handlingTime, duePerson,
                 alertStatus, 1/* true */);
 
-        //step 3 ignored for now
+        //TODO: step 3 ignored for now, XXXARCHING（桌面版使用，android可预留设计）
     }
 
     public static void updatePointSubsidenceAlertsAfterCorrection(int chainageId, String pntType,
@@ -549,7 +565,19 @@ public class AlertUtils {
 
     public static void updateLineConvergenceAlertsAfterCorrection(int chainageId, String pntType,
             int MEASNo) {
-        //TODO
+        Log.d(TAG, "updateLineConvergenceAlertsAfterCorrection, pntType: " + pntType);
+        if (pntType.contains("S") && pntType.endsWith("1")) {//测线左点
+            String oppositePntType = pntType.substring(0, pntType.length() - 1) + "2";
+            List<TunnelSettlementTotalData> ls = TunnelSettlementTotalDataDao.defaultDao()
+                    .queryInfoAfterMEASNo(chainageId, pntType, MEASNo);
+            if (ls != null && ls.size() > 0) {
+                for (TunnelSettlementTotalData s_1 : ls) {
+                    TunnelSettlementTotalData s_2 = TunnelSettlementTotalDataDao.defaultDao()
+                    .queryOppositePointOfALine(s_1, oppositePntType);//拿到测线右点
+                    checkLineConvergenceExceed(s_1, s_2);
+                }
+            }
+        }
     }
 
     /**
