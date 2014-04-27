@@ -21,7 +21,6 @@ public class AlertInfo {
     public int uType;
     public String alertStatusMsg;
     public int alertStatus;
-    public String edtState;
     public String chuliFangshi;
 
 //    public boolean isState1() {
@@ -166,13 +165,5 @@ public class AlertInfo {
 
     public void setAlertStatusMsg(String alertStatusMsg) {
         this.alertStatusMsg = alertStatusMsg;
-    }
-
-    public String getEdtState() {
-        return edtState;
-    }
-
-    public void setEdtState(String edtState) {
-        this.edtState = edtState;
     }
 }
