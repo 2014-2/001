@@ -30,10 +30,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.crtb.tunnelmonitor.entity.AlertInfo;
 import com.crtb.tunnelmonitor.network.CrtbWebService;
 import com.crtb.tunnelmonitor.network.RpcCallback;
 import com.crtb.tunnelmonitor.utils.WarningDataManager;
+import com.crtb.tunnelmonitor.utils.WarningDataManager.UploadWarningData;
 import com.crtb.tunnelmonitor.utils.WarningDataManager.WarningLoadListener;
 
 public class WarningUploadActivity extends Activity {
@@ -77,11 +77,11 @@ public class WarningUploadActivity extends Activity {
     	WarningDataManager dataManager = new WarningDataManager();
         dataManager.loadData(new WarningLoadListener() {
 			@Override
-			public void done(List<AlertInfo> uploadDataList) {
+			public void done(List<UploadWarningData> uploadDataList) {
 				List<WarningUploadData> warningDataList = new ArrayList<WarningUploadData>();
-				for(AlertInfo alertInfo : uploadDataList) {
+				for(UploadWarningData uploadWarningData : uploadDataList) {
 					WarningUploadData warningData = new WarningUploadData();
-					warningData.setAlertInfo(alertInfo);
+					warningData.setUploadWarningData(uploadWarningData);
 					warningData.setChecked(false);
 					warningDataList.add(warningData);
 				}
@@ -240,8 +240,8 @@ public class WarningUploadActivity extends Activity {
         
         private void bindView(WarningUploadData warningData, View convertView) {
         	ViewHolder holder = (ViewHolder)convertView.getTag();
-        	holder.mWarningTime.setText(warningData.getAlertInfo().getDate());
-        	holder.mWarningState.setText(warningData.getAlertInfo().getAlertStatusMsg());
+        	holder.mWarningTime.setText(warningData.getUploadWarningData().getAlertInfo().getDate());
+        	holder.mWarningState.setText(warningData.getUploadWarningData().getAlertInfo().getAlertStatusMsg());
         	if (warningData.isUploaded()) {
         		holder.mWarningUpload.setText("已上传");
         	} else {
@@ -256,15 +256,15 @@ public class WarningUploadActivity extends Activity {
     }
     
     private class WarningUploadData {
-    	private AlertInfo mAlertInfo;
+    	private UploadWarningData mUploadWarningData;
     	private boolean mIsChecked;
     	
-    	public void setAlertInfo(AlertInfo alertInfo) {
-    		mAlertInfo = alertInfo;
+    	public void setUploadWarningData(UploadWarningData uploadWarningData) {
+    		mUploadWarningData = uploadWarningData;
     	}
     	
-    	public AlertInfo getAlertInfo() {
-    		return mAlertInfo;
+    	public UploadWarningData getUploadWarningData() {
+    		return mUploadWarningData;
     	}
     	
     	public boolean isUploaded() {

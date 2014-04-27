@@ -384,7 +384,9 @@ public class AlertUtils {
                 + " AlertList.AlertTime AS date,"
                 + " AlertList.PntType AS pntType,"
                 + " AlertList.Utype AS utype,"
-                + " AlertHandlingList.AlertStatus AS status"
+                + " AlertHandlingList.AlertStatus AS status,"
+                + " AlertList.SheetID AS sheetId,"
+                + " AlertList.CrossSectionID AS sectionId"
                 + " FROM AlertList LEFT JOIN AlertHandlingList"
                 + " ON AlertList.ID=AlertHandlingList.AlertID"
                 + " LEFT JOIN TunnelCrossSectionIndex"
@@ -418,6 +420,8 @@ public class AlertUtils {
                     ai.setAlertStatus(alertStatus);
                     ai.setAlertStatusMsg((alertStatus >= 0 && alertStatus < 3) ? ALERT_STATUS_MSGS[alertStatus]
                             : "");
+                    ai.setSheetId(c.getInt(7));
+                    ai.setSectionId(c.getInt(8));
                     l.add(ai);
                 }
             }
