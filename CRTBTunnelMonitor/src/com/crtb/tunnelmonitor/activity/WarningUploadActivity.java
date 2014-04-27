@@ -21,6 +21,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
@@ -33,11 +34,8 @@ import com.crtb.tunnelmonitor.network.RpcCallback;
 
 public class WarningUploadActivity extends Activity {
     private static final String LOG_TAG = "WarningUploadActivity";
-
     private MenuPopupWindow menuWindow;
-
     private ListView mlvWarningList;
-
     private List<AlertInfo> mWarningInfos;
 
     private Random ran = new Random();
@@ -144,11 +142,11 @@ public class WarningUploadActivity extends Activity {
     public ArrayList<AlertInfo> getdata() {
         AlertInfo.yixiao = 0;
         ArrayList<AlertInfo> listt = new ArrayList<AlertInfo>();
-//        yujingInfors infor;
-//        for (int i = 0; i < s.length; i++) {
-//            infor = new yujingInfors();
-//            infor.setDate(getdate());
-//            infor.setXinghao(s[i]);
+        AlertInfo infor;
+        for (int i = 0; i < s.length; i++) {
+            infor = new AlertInfo();
+            infor.setDate(getdate());
+            infor.setXinghao(s[i]);
 //            infor.setDianhao(ss[ran.nextInt(3)]);
 //            infor.setChuliFangshi("自由处理");
 //            infor.setState(sss[ran.nextInt(3)]);
@@ -160,8 +158,8 @@ public class WarningUploadActivity extends Activity {
 //                System.out.println(yujingInfors.yixiao);
 //
 //            }
-//            listt.add(infor);
-//        }
+            listt.add(infor);
+        }
         return listt;
     }
 
@@ -179,23 +177,27 @@ public class WarningUploadActivity extends Activity {
         return simp.format(new Date());
     }
 
+    private static class ViewHolder {
+    	TextView mWarningTime;
+    	TextView mWarningState;
+    	TextView mWarningUpload;
+    	ImageView mWarningCheck;
+    }
+    
     class WarningUploadAdapter extends BaseAdapter {
 
         @Override
         public int getCount() {
-            // TODO Auto-generated method stub
             return mWarningInfos.size();
         }
 
         @Override
         public Object getItem(int position) {
-            // TODO Auto-generated method stub
             return mWarningInfos.get(position);
         }
 
         @Override
         public long getItemId(int position) {
-            // TODO Auto-generated method stub
             return position;
         }
 
@@ -203,16 +205,25 @@ public class WarningUploadActivity extends Activity {
         public View getView(int position, View convertView, ViewGroup parent) {
             if (convertView == null) {
                 convertView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.layout_warning_upload_item, null);
+                ViewHolder holder = new ViewHolder();
+                holder.mWarningTime = (TextView)convertView.findViewById(R.id.warning_id);
+                holder.mWarningState = (TextView)convertView.findViewById(R.id.warning_state);
+                holder.mWarningUpload = (TextView)convertView.findViewById(R.id.warning_is_uploaded);
+                holder.mWarningCheck = (ImageView)convertView.findViewById(R.id.checked_switch);
+                convertView.setTag(holder);
             }
-            AlertInfo info = mWarningInfos.get(position);
-            TextView time = (TextView)convertView.findViewById(R.id.warning_id);
-            time.setText(info.getDate());
-            TextView state = (TextView)convertView.findViewById(R.id.warning_state);
-            state.setText(info.getAlertStatusMsg());
-            TextView is_uploaded = (TextView)convertView.findViewById(R.id.warning_is_uploaded);
-            is_uploaded.setText("已上传");
+            bindView(null, convertView);
             return convertView;
         }
-
+        
+        private void bindView(Object data, View convertView) {
+        	ViewHolder holder = (ViewHolder)convertView.getTag();
+        	holder.mWarningTime.setText("xxx");
+        	holder.mWarningState.setText("已销警");
+        	holder.mWarningUpload.setText("未上传");
+        	holder.mWarningCheck.setImageResource(R.drawable.yes);
+        }
     }
+    
+    
 }
