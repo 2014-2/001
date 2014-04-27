@@ -1,5 +1,6 @@
 package com.crtb.tunnelmonitor.activity;
 
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -32,7 +33,9 @@ import android.widget.PopupWindow;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.crtb.tunnelmonitor.entity.AlertInfo;
 import com.crtb.tunnelmonitor.network.CrtbWebService;
 import com.crtb.tunnelmonitor.network.RpcCallback;
 import com.crtb.tunnelmonitor.utils.WarningDataManager;
@@ -161,7 +164,14 @@ public class WarningUploadActivity extends Activity {
             chakan.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    //TODO：
+                    List<AlertInfo> checkedData = getCheckedAlertInfo();
+                    if (checkedData != null && checkedData.size() > 0) {
+                        Intent intent = new Intent(WarningUploadActivity.this,ReviewWarningActivity.class);
+                        intent.putExtra("alert_info", (Serializable)checkedData);
+                        startActivity(intent);
+                    } else {
+                        Toast.makeText(getApplicationContext(), "请选中预警信息再点击查看",Toast.LENGTH_SHORT).show();
+                    }
                     menuWindow.dismiss();
                 }
             });
@@ -184,6 +194,17 @@ public class WarningUploadActivity extends Activity {
             setBackgroundDrawable(dw);
             setOutsideTouchable(true);
         };
+    }
+
+    private List<AlertInfo> getCheckedAlertInfo() {
+        List<AlertInfo> checkedData = new ArrayList<AlertInfo>();
+        List<WarningUploadData> allData = mAdapter.getWarningData();
+        for (WarningUploadData data : allData) {
+            if (data.isChecked()) {
+                checkedData.add(data.getUploadWarningData().getAlertInfo());
+            }
+        }
+        return checkedData;
     }
 
     @Override
@@ -259,6 +280,10 @@ public class WarningUploadActivity extends Activity {
             }
         }
 
+        public List<WarningUploadData> getWarningData() {
+            return mWarningDataList;
+        }
+
         public void revertCheck(int position) {
             WarningUploadData warningUploadData = mWarningDataList.get(position);
             warningUploadData.setChecked(!warningUploadData.isChecked());
@@ -312,7 +337,7 @@ public class WarningUploadActivity extends Activity {
         }
     }
 
-    private class WarningUploadData {
+    public class WarningUploadData {
         private UploadWarningData mUploadWarningData;
         private boolean mIsChecked;
 
