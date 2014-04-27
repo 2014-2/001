@@ -14,44 +14,53 @@ import com.crtb.tunnelmonitor.entity.SubsidenceCrossSectionIndex;
  */
 public final class SubsidenceCrossSectionIndexDao extends AbstractDao<SubsidenceCrossSectionIndex> {
 
-	private static SubsidenceCrossSectionIndexDao _instance;
+    private static SubsidenceCrossSectionIndexDao _instance;
 
-	private SubsidenceCrossSectionIndexDao() {
+    private SubsidenceCrossSectionIndexDao() {
 
-	}
+    }
 
-	public static SubsidenceCrossSectionIndexDao defaultDao() {
+    public static SubsidenceCrossSectionIndexDao defaultDao() {
 
-		if (_instance == null) {
-			_instance = new SubsidenceCrossSectionIndexDao();
-		}
+        if (_instance == null) {
+            _instance = new SubsidenceCrossSectionIndexDao();
+        }
 
-		return _instance;
-	}
-	
-	public List<SubsidenceCrossSectionIndex> queryAllSection(){
-		
-		final IAccessDatabase mDatabase = getCurrentDb();
-		
-		if(mDatabase == null){
-			return null ;
-		}
-		
-		String sql = "select * from SubsidenceCrossSectionIndex" ;
-		
-		return mDatabase.queryObjects(sql, SubsidenceCrossSectionIndex.class) ;
-	}
-	
-	public SubsidenceCrossSectionIndex querySectionIndex(String id){
-		
-		final IAccessDatabase mDatabase = getCurrentDb();
-		
-		if(mDatabase == null){
-			return null ;
-		}
-		
-		String sql = "select * from SubsidenceCrossSectionIndex where ID = ?" ;
-		
-		return mDatabase.queryObject(sql,new String[]{id}, SubsidenceCrossSectionIndex.class) ;
-	}
+        return _instance;
+    }
+
+    public List<SubsidenceCrossSectionIndex> queryAllSection(){
+
+        final IAccessDatabase mDatabase = getCurrentDb();
+
+        if(mDatabase == null){
+            return null ;
+        }
+
+        String sql = "select * from SubsidenceCrossSectionIndex" ;
+
+        return mDatabase.queryObjects(sql, SubsidenceCrossSectionIndex.class) ;
+    }
+
+    public SubsidenceCrossSectionIndex querySectionIndex(String id){
+
+        final IAccessDatabase mDatabase = getCurrentDb();
+
+        if(mDatabase == null){
+            return null ;
+        }
+
+        String sql = "select * from SubsidenceCrossSectionIndex where ID = ?" ;
+
+        return mDatabase.queryObject(sql,new String[]{id}, SubsidenceCrossSectionIndex.class) ;
+    }
+
+    public List<SubsidenceCrossSectionIndex> querySectionByIds(String rowIds) {
+        final IAccessDatabase mDatabase = getCurrentDb();
+        if (mDatabase == null) {
+            return null;
+        }
+        String sql = "select * from SubsidenceCrossSectionIndex where ID IN (" + rowIds + ")";
+        return mDatabase.queryObjects(sql, SubsidenceCrossSectionIndex.class);
+    }
 }

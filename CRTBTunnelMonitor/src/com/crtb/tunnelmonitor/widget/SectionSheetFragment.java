@@ -77,19 +77,26 @@ public class SectionSheetFragment extends Fragment {
     }
 
     private void loadData() {
-    	 DataManager dataManager = new DataManager();
-         dataManager.loadData(new DataLoadListener() {
- 			@Override
- 			public void done(List<UploadSheetData> uploadDataList) {
- 				if (uploadDataList != null && uploadDataList.size() > 0 ) {
- 					List<RawSheetData> sheetDataList = new ArrayList<RawSheetData>();
- 					for(UploadSheetData sheetData : uploadDataList) {
- 						sheetDataList.add(new RawSheetData(sheetData));
- 					}
- 					mAdapter.setSheetList(sheetDataList);
- 				}
- 			}
- 		});
+        DataManager dataManager = new DataManager();
+        dataManager.loadData(new DataLoadListener() {
+            @Override
+            public void done(List<UploadSheetData> uploadDataList) {
+                switch (mSheetType) {
+                    case TUNNEL_CROSS:
+                        if (uploadDataList != null && uploadDataList.size() > 0 ) {
+                            List<RawSheetData> sheetDataList = new ArrayList<RawSheetData>();
+                            for(UploadSheetData sheetData : uploadDataList) {
+                                sheetDataList.add(new RawSheetData(sheetData));
+                            }
+                            mAdapter.setSheetList(sheetDataList);
+                        }
+                        break;
+                    case SUBSIDENCE_CROSS:
+                        // TODO: 显示读取到的地表下沉断面工作单
+                        break;
+                }
+            }
+        });
     }
 
     public void refreshUI() {
@@ -113,14 +120,14 @@ public class SectionSheetFragment extends Fragment {
         }
 
         public List<UploadSheetData> getUploadData() {
-        	List<UploadSheetData> uploadDataList = new ArrayList<UploadSheetData>();
-        	if (mSheetDataList != null && mSheetDataList.size() > 0) {
-        		for(RawSheetData data : mSheetDataList) {
-        			if (data.isChecked()) {
-        				uploadDataList.add(data.getUploadData());
-        			}
-        		}
-        	}
+            List<UploadSheetData> uploadDataList = new ArrayList<UploadSheetData>();
+            if (mSheetDataList != null && mSheetDataList.size() > 0) {
+                for(RawSheetData data : mSheetDataList) {
+                    if (data.isChecked()) {
+                        uploadDataList.add(data.getUploadData());
+                    }
+                }
+            }
             return uploadDataList;
         }
 
@@ -183,17 +190,17 @@ public class SectionSheetFragment extends Fragment {
     }
 
     public class RawSheetData {
-    	private UploadSheetData mUploadData;
+        private UploadSheetData mUploadData;
         private boolean mIsChecked;
 
         public RawSheetData(UploadSheetData uploadData) {
-        	mUploadData = uploadData;
+            mUploadData = uploadData;
         }
-        
+
         public UploadSheetData getUploadData() {
-        	return mUploadData;
+            return mUploadData;
         }
-        
+
         public String getCreatedTime() {
             return CrtbUtils.formatDate(mUploadData.getRawSheet().getCreateTime());
         }

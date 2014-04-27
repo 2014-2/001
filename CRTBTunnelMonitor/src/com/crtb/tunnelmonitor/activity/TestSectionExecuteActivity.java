@@ -395,7 +395,7 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 				SubsidenceTotalDataDao dao 	= SubsidenceTotalDataDao.defaultDao() ;
 				
 				// 存在的测量点信息
-				SubsidenceTotalData old = dao.queryTunnelTotalData(rawSheet.getID(),subsidenceSection.getID(),type);
+				SubsidenceTotalData old = dao.querySubsidenceTotalData(rawSheet.getID(),subsidenceSection.getID(),type);
 				
 				final SubsidenceTotalData obj = new SubsidenceTotalData() ;
 				obj.setStationId(0x000001);
@@ -563,7 +563,7 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 				
 				String index = String.valueOf(id + 1) ;
 				
-				bean = dao.queryTunnelTotalData(rawSheet.getID(),subsidenceSection.getID(),index);
+				bean = dao.querySubsidenceTotalData(rawSheet.getID(),subsidenceSection.getID(),index);
 				addTestPoint(createSubsidenceTestPointView(bean,index));
 			}
 		}

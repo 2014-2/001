@@ -8,47 +8,56 @@ import com.crtb.tunnelmonitor.entity.SubsidenceTotalData;
 
 public class SubsidenceTotalDataDao extends AbstractDao<SubsidenceTotalData> {
 
-	private static SubsidenceTotalDataDao _instance ;
-	
-	private SubsidenceTotalDataDao(){
-		
-	}
-	
-	public static SubsidenceTotalDataDao defaultDao(){
-		
-		if(_instance == null){
-			_instance	= new SubsidenceTotalDataDao() ;
-		}
-		
-		return _instance ;
-	}
-	
-	public List<SubsidenceTotalData> queryAllSection(){
-		
-		final IAccessDatabase mDatabase = getCurrentDb();
-		
-		if(mDatabase == null){
-			return null ;
-		}
-		
-		String sql = "select * from SubsidenceTotalData" ;
-		
-		return mDatabase.queryObjects(sql, SubsidenceTotalData.class) ;
-	}
-	
-	// 查询已经存在的测量点信息
-	public SubsidenceTotalData queryTunnelTotalData(int sheetId,int chainageId,String pntType) {
-			
-		final IAccessDatabase mDatabase = getCurrentDb();
-			
-		if(mDatabase == null){
-			return null ;
-		}
-			
-		String sql = "select * from SubsidenceTotalData where SheetId = ? and ChainageId = ? and PntType = ? order by MEASNo desc" ;
-			
-		return mDatabase.queryObject(sql, new String[]{String.valueOf(sheetId),String.valueOf(chainageId),pntType},SubsidenceTotalData.class);
-	}
+    private static SubsidenceTotalDataDao _instance ;
+
+    private SubsidenceTotalDataDao(){
+
+    }
+
+    public static SubsidenceTotalDataDao defaultDao(){
+
+        if(_instance == null){
+            _instance	= new SubsidenceTotalDataDao() ;
+        }
+
+        return _instance ;
+    }
+
+    public List<SubsidenceTotalData> queryAllSection(){
+
+        final IAccessDatabase mDatabase = getCurrentDb();
+
+        if(mDatabase == null){
+            return null ;
+        }
+
+        String sql = "select * from SubsidenceTotalData" ;
+
+        return mDatabase.queryObjects(sql, SubsidenceTotalData.class) ;
+    }
+
+    // 查询已经存在的测量点信息
+    public SubsidenceTotalData querySubsidenceTotalData(int sheetId, int chainageId, String pntType) {
+
+        final IAccessDatabase mDatabase = getCurrentDb();
+
+        if(mDatabase == null){
+            return null ;
+        }
+
+        String sql = "select * from SubsidenceTotalData where SheetId = ? and ChainageId = ? and PntType = ? order by MEASNo desc" ;
+
+        return mDatabase.queryObject(sql, new String[]{String.valueOf(sheetId),String.valueOf(chainageId),pntType},SubsidenceTotalData.class);
+    }
+
+    public List<SubsidenceTotalData> querySubsidenceTotalDatas(int sheetId, int chainageId) {
+        final IAccessDatabase mDatabase = getCurrentDb();
+        if (mDatabase == null) {
+            return null;
+        }
+        String sql = "select * from SubsidenceTotalData where SheetId = ? and ChainageId = ? order by MEASNo asc";
+        return mDatabase.queryObjects(sql, new String[] {String.valueOf(sheetId), String.valueOf(chainageId)}, SubsidenceTotalData.class);
+    }
 
     /**
      * 查询 本次测量(MEASNo)之前的所有相同断面和相同测点类型的测点信息
@@ -74,7 +83,7 @@ public class SubsidenceTotalDataDao extends AbstractDao<SubsidenceTotalData> {
                 + " AND DataStatus != "
                 + String.valueOf(1)
                 + " order by MEASNo ASC";
-        
+
         return mDatabase.queryObjects(sql, SubsidenceTotalData.class);
     }
 
