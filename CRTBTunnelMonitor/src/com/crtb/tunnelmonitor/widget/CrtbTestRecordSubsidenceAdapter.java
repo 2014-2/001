@@ -39,8 +39,11 @@ public class CrtbTestRecordSubsidenceAdapter extends CrtbEntityAdapter<RawSheetI
 			
 			if(index == position){
 				item.setChecked(!item.isChecked());
-				dao.update(item);
+			} else {
+				item.setChecked(false);
 			}
+			
+			dao.update(item);
 		}
 		
 		notifyDataSetChanged() ;

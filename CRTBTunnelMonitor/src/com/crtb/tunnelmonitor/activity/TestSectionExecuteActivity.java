@@ -111,7 +111,7 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 		if(rawSheets == null 
 				|| rawSheets.isEmpty() 
 				|| rawSheetIndex + 1 >= rawSheets.size()){
-			showText("已经是最后一条测量单");
+			showText("已经是最后一个断面");
 			return false ;
 		}
 		
@@ -134,7 +134,7 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 		if(rawSheets == null 
 				|| rawSheets.isEmpty() 
 				|| rawSheetIndex <= 0){
-			showText("已经是第一条测量单");
+			showText("已经是第一个断面");
 			return false ;
 		}
 		
