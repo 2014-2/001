@@ -46,7 +46,7 @@ public final class CrtbTestRecordSubsidenceListView extends CrtbBaseListView {
 		return mAdapter.getItem(position);
 	}
 	
-	public RawSheetIndex getSelectedSection(){
+	public List<RawSheetIndex> getSelectedSection(){
 		return mAdapter.getSelectedSection();
 	}
 	

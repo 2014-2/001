@@ -1,5 +1,8 @@
 package com.crtb.tunnelmonitor.widget;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.zw.android.framework.ioc.InjectCore;
 import org.zw.android.framework.ioc.InjectLayout;
 import org.zw.android.framework.ioc.InjectView;
@@ -43,16 +46,18 @@ public class CrtbTestRecordTunnelSectionAdapter extends CrtbEntityAdapter<RawShe
 		notifyDataSetChanged() ;
 	}
 	
-	protected RawSheetIndex getSelectedSection(){
+	protected List<RawSheetIndex> getSelectedSection(){
+		
+		List<RawSheetIndex> list = new ArrayList<RawSheetIndex>();
 		
 		for(RawSheetIndex item : mList){
 			
 			if(item.isChecked()){
-				return item ;
+				list.add(item);
 			}
 		}
 		
-		return null ;
+		return list ;
 	}
 
 	@Override

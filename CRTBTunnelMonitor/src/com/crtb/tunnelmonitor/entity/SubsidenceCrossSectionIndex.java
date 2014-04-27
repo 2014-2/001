@@ -68,7 +68,9 @@ public class SubsidenceCrossSectionIndex implements Serializable {
 	@ColumnString(length = 255)
 	private String ROCKGRADE;			// 围岩级别
 	
-	private boolean used;
+	private boolean used;				// 是否使用 ---------扩展
+	
+	private boolean hasTestData;		// 是否存在测量数据----扩展
 
 	public int getID() {
 		return ID;
@@ -80,6 +82,14 @@ public class SubsidenceCrossSectionIndex implements Serializable {
 
 	public double getChainage() {
 		return Chainage;
+	}
+
+	public boolean isHasTestData() {
+		return hasTestData;
+	}
+
+	public void setHasTestData(boolean hasTestData) {
+		this.hasTestData = hasTestData;
 	}
 
 	public void setChainage(double chainage) {

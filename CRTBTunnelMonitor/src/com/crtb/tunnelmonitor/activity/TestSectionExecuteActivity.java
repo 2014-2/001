@@ -3,6 +3,7 @@ package com.crtb.tunnelmonitor.activity;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.zw.android.framework.impl.ExecuteAsyncTaskImpl;
 import org.zw.android.framework.ioc.InjectCore;
 import org.zw.android.framework.ioc.InjectLayout;
 import org.zw.android.framework.ioc.InjectView;
@@ -11,6 +12,7 @@ import org.zw.android.framework.util.StringUtils;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Message;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -22,6 +24,8 @@ import com.crtb.tssurveyprovider.Coordinate3D;
 import com.crtb.tssurveyprovider.ISurveyProvider;
 import com.crtb.tssurveyprovider.TSSurveyProvider;
 import com.crtb.tunnelmonitor.AppConfig;
+import com.crtb.tunnelmonitor.AppHandler;
+import com.crtb.tunnelmonitor.BaseAsyncTask;
 import com.crtb.tunnelmonitor.CommonObject;
 import com.crtb.tunnelmonitor.WorkFlowActivity;
 import com.crtb.tunnelmonitor.dao.impl.v2.SubsidenceCrossSectionIndexDao;
@@ -33,6 +37,7 @@ import com.crtb.tunnelmonitor.entity.SubsidenceCrossSectionIndex;
 import com.crtb.tunnelmonitor.entity.SubsidenceTotalData;
 import com.crtb.tunnelmonitor.entity.TunnelCrossSectionIndex;
 import com.crtb.tunnelmonitor.entity.TunnelSettlementTotalData;
+import com.crtb.tunnelmonitor.mydefine.CrtbDialogConnecting;
 import com.crtb.tunnelmonitor.utils.AlertUtils;
 import com.crtb.tunnelmonitor.utils.CrtbUtils;
 import com.crtb.tunnelmonitor.utils.Time;
@@ -46,14 +51,11 @@ import com.crtb.tunnelmonitor.utils.Time;
 @InjectLayout(layout=R.layout.activity_testrecord_execute)
 public class TestSectionExecuteActivity extends WorkFlowActivity implements View.OnClickListener {
 	
-    private static int DEBUG_TEST_NUM = 0;//TODO: remove, just for debug
-    private static double DEBUG_x = 2.67;//TODO: remove, just for debug
-    private static double DEBUG_y = 3.35;//TODO: remove, just for debug
-    private static double DEBUG_z = 1054.26;//TODO: remove, just for debug
-
-	public static final String KEY_TEST_SECTION_TYPE	= "_key_test_section_type" ;
-	
-	public static final String KEY_TEST_OBJECT	= "_key_test_object" ;
+	// 测量列表
+	public static final String KEY_TEST_RAWSHEET_LIST	= "_key_test_rawsheet_list" ;
+	static final int MSG_ERROR_CONNECT	= 1 ;
+	static final int MSG_TEST_ERROR		= 2 ;
+	static final int MSG_TEST_SUCCESS	= 3 ;
 	
 	@InjectView(id=R.id.test_bottom_layout)
 	private LinearLayout mBottomLayout ;
@@ -67,16 +69,19 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 	@InjectView(id=R.id.test_container_layout)
 	private LinearLayout mContainerLayout ;
 	
-	private int sectionType ;
-	private RawSheetIndex rawSheet ;
-	private final List<TunnelCrossSectionIndex> tunnelSectionList = new ArrayList<TunnelCrossSectionIndex>();
-	private final List<SubsidenceCrossSectionIndex> subsidenceSectionList = new ArrayList<SubsidenceCrossSectionIndex>();
+	private int					rawSheetIndex;// 当前测量单索引
+	private RawSheetIndex		rawSheetBean;// 当前测量单
+	private List<RawSheetIndex> rawSheets ; // 测量数据
 	
 	private int sectionIndex ;
 	private TunnelCrossSectionIndex tunnelSection ;
 	private SubsidenceCrossSectionIndex subsidenceSection ;
+	private final List<TunnelCrossSectionIndex> tunnelSectionList = new ArrayList<TunnelCrossSectionIndex>();
+	private final List<SubsidenceCrossSectionIndex> subsidenceSectionList = new ArrayList<SubsidenceCrossSectionIndex>();
 	
 	private TunnelSettlementTotalData pS1,pS2 ;
+	
+	private CrtbDialogConnecting connectDialog ;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -85,19 +90,76 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 		// add by wei.zhou
 		InjectCore.injectUIProperty(this);
 		
-		Object bean = CommonObject.findObject(KEY_TEST_OBJECT);
-		sectionType = CommonObject.findInteger(KEY_TEST_SECTION_TYPE);
+		Object bean = CommonObject.findObject(KEY_TEST_RAWSHEET_LIST);
+		
+		rawSheetIndex	= 0 ;
+		rawSheetBean	= null ;
 		
 		// 测量数据
-		rawSheet = (RawSheetIndex)bean ;
+		if(bean instanceof List<?>){
+			rawSheets 		= (List<RawSheetIndex>) bean ;
+			rawSheetBean	= rawSheets.get(rawSheetIndex);
+		}
 		
-		// set title
-		setTopbarTitle(CrtbUtils.formatSectionName(rawSheet.getPrefix(), (float)rawSheet.getFACEDK()));
+		// 加载测量数据
+		loadRawSheetIndexInfo(rawSheetBean);
+	}
+	
+	// 下一个测量单
+	private boolean loadNextRawSheetIndex(){
 		
+		if(rawSheets == null 
+				|| rawSheets.isEmpty() 
+				|| rawSheetIndex + 1 >= rawSheets.size()){
+			showText("已经是最后一条测量单");
+			return false ;
+		}
+		
+		// 下一条数据
+		rawSheetIndex += 1;
+		
+		rawSheetBean 	= rawSheets.get(rawSheetIndex);
+		sectionIndex	= 0 ;
+		tunnelSection	= null ;
+		subsidenceSection = null ;
 		tunnelSectionList.clear() ;
 		subsidenceSectionList.clear() ;
 		
-		String sectionIds = rawSheet.getCrossSectionIDs() ;
+		return true ;
+	}
+	
+	// 上一个测量单
+	private boolean loadPreRawSheetIndex(){
+		
+		if(rawSheets == null 
+				|| rawSheets.isEmpty() 
+				|| rawSheetIndex <= 0){
+			showText("已经是第一条测量单");
+			return false ;
+		}
+		
+		// 下一条数据
+		rawSheetIndex-- ;
+		
+		rawSheetBean 	= rawSheets.get(rawSheetIndex);
+		sectionIndex	= 0 ;
+		tunnelSection	= null ;
+		subsidenceSection = null ;
+		tunnelSectionList.clear() ;
+		subsidenceSectionList.clear() ;
+		
+		return true ;
+	}
+	
+	private void loadRawSheetIndexInfo(RawSheetIndex bean){
+		
+		if(bean == null){
+			showText("没有测量数据");
+			return ;
+		}
+		
+		int type			= bean.getCrossSectionType() ;
+		String sectionIds 	= bean.getCrossSectionIDs() ;
 		
 		if(StringUtils.isEmpty(sectionIds)){
 			showText("没有断面信息");
@@ -106,11 +168,11 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 			String[] ids = sectionIds.split(",");
 			
 			// 加载断面信息
-			loadSections(ids);
+			loadSections(ids,type);
 		}
 	}
 	
-	private void loadSections(String[] ids){
+	private void loadSections(String[] ids,int sectionType){
 		
 		if(sectionType == RawSheetIndex.CROSS_SECTION_TYPE_TUNNEL){
 			
@@ -128,7 +190,6 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 			if(tunnelSectionList.size() > 0){
 				
 				sectionIndex = 0 ;
-				mBottomLayout.setVisibility(View.VISIBLE);
 				mLeftBnt.setOnClickListener(this);
 				mNextBnt.setOnClickListener(this);
 				
@@ -137,11 +198,6 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 				
 				// 当前测量信息
 				loadSectionTestData() ;
-			}
-			
-			// 是否存在下一个
-			if(tunnelSectionList.size() == 1){
-				mBottomLayout.setVisibility(View.GONE);
 			}
 		} else if(sectionType == RawSheetIndex.CROSS_SECTION_TYPE_SUBSIDENCES){
 			
@@ -159,7 +215,6 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 			if(subsidenceSectionList.size() > 0){
 				
 				sectionIndex = 0 ;
-				mBottomLayout.setVisibility(View.VISIBLE);
 				mLeftBnt.setOnClickListener(this);
 				mNextBnt.setOnClickListener(this);
 				
@@ -167,11 +222,6 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 				
 				// 当前测量信息
 				loadSectionTestData() ;
-			}
-			
-			// 是否存在下一个
-			if (subsidenceSectionList.size() == 1) {
-				mBottomLayout.setVisibility(View.GONE);
 			}
 		}
 	}
@@ -211,12 +261,25 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 			
 			@Override
 			public void onClick(View v) {
+				connectSurveyProvider(holder,type,RawSheetIndex.CROSS_SECTION_TYPE_TUNNEL);
+			}
+		}) ;
+		
+		return view ;
+	}
+	
+	// 异步测量
+	private void connectSurveyProvider(final TestPointHolder holder,final String type,final int sectionType){
+		
+		ExecuteAsyncTaskImpl.defaultSyncExecutor().executeTask(new BaseAsyncTask(mHanlder){
+			
+			@Override
+			public void process() {
 				
 				ISurveyProvider ts = TSSurveyProvider.getDefaultAdapter();
 				
 				if (ts == null) {
-					Toast.makeText(TestSectionExecuteActivity.this, "请先连接全站仪",
-							Toast.LENGTH_SHORT).show();
+					sendMessage(MSG_ERROR_CONNECT);
 					return;
 				}
 
@@ -224,8 +287,7 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 				try {
 					int nret = ts.GetCoord(0, 0, point);
 					if (nret != 1) {
-						Toast.makeText(TestSectionExecuteActivity.this, "测量失败",
-								Toast.LENGTH_SHORT).show();
+						sendMessage(MSG_TEST_ERROR);
 						return;
 					}
 				} catch (InterruptedException e) {
@@ -233,70 +295,159 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 					return;
 				}
 				
-				String x = String.format("%1$.4f", /*DEBUG_x + 0.010d * DEBUG_TEST_NUM*/ point.N);
-				String y = String.format("%1$.4f", /*DEBUG_y + 0.010d * DEBUG_TEST_NUM*/ point.E);
-				String z = String.format("%1$.4f", /*DEBUG_z + 0.010d * DEBUG_TEST_NUM*/ point.H);
-//				DEBUG_TEST_NUM++;//TODO: remove this line
+				String x = String.format("%1$.4f", point.N);
+				String y = String.format("%1$.4f", point.E);
+				String z = String.format("%1$.4f", point.H);
 				String time = Time.getDateEN() ;
 				
-				holder.mPointX.setText(x);
-				holder.mPointY.setText(y);
-				holder.mPointZ.setText(z);
-				holder.mPointTime.setText(time);
+				TestInfo info = new TestInfo() ;
+				info.holder	= holder ;
+				info.type	= type ;// 测点类型
+				info.sectionType	= sectionType ;// 断面类型
 				
-				TunnelSettlementTotalData obj = new TunnelSettlementTotalData() ;
-				obj.setStationId(0x000001);
-				obj.setChainageId(tunnelSection.getID());
-				obj.setSheetId(rawSheet.getID());
-				obj.setPntType(type); // 测量点类型
-				obj.setSurveyorID(Integer.valueOf(rawSheet.getCertificateID()));// 测量人员id
-				obj.setInfo("1");
+				info.x 		= x ;
+				info.y		= y ;
+				info.z		= z ;
+				info.time	= time ;
+				
+				sendMessage(MSG_TEST_SUCCESS,info);
+			}
+		}) ;
+	}
+	
+	@Override
+	protected AppHandler getHandler() {
+		return new AppHandler(this){
 
-				TunnelSettlementTotalDataDao dao 	= TunnelSettlementTotalDataDao.defaultDao() ;
+			@Override
+			protected void dispose(Message msg) {
 				
-				// 存在的测量点信息
-				TunnelSettlementTotalData old = dao.queryTunnelTotalData(rawSheet.getID(),tunnelSection.getID(),type);
-				
-				if(old != null){
-					obj.setMEASNo(old.getMEASNo() + 1);
-				} else {
-					obj.setMEASNo(1);
-				}
-				
-				obj.setCoordinate(x + "," + y + "," + z);
-				obj.setSurveyTime(DateUtils.toDate(time, DateUtils.DATE_TIME_FORMAT));
-				obj.setDataStatus(0);
-				
-				// 插入
-				if(dao.insert(obj) == TunnelSettlementTotalDataDao.DB_EXECUTE_SUCCESS){
+				switch(msg.what){
+				case MSG_TASK_START :
 					
-					if(type.equals(AppConfig.POINT_A)){
-						doWarring(holder, AlertUtils.getPointSubsidenceExceedMsg(obj));
-					} else {
+					if(connectDialog == null){
+						connectDialog	= new CrtbDialogConnecting(TestSectionExecuteActivity.this);
+					}
+					
+					if(!connectDialog.isShowing()){
+						connectDialog.showDialog("正在从全站仪获取数据!") ;
+					}
+					break ;
+				case MSG_TASK_END :
+					
+					if(connectDialog != null){
+						connectDialog.dismiss() ;
+					}
+					
+					break ;
+				case MSG_ERROR_CONNECT :
+					Toast.makeText(TestSectionExecuteActivity.this, "请先连接全站仪",
+							Toast.LENGTH_SHORT).show();
+					break ;
+				case MSG_TEST_ERROR :
+					Toast.makeText(TestSectionExecuteActivity.this, "测量失败",
+							Toast.LENGTH_SHORT).show();
+					break ;
+				case MSG_TEST_SUCCESS :
+					
+					TestInfo info = (TestInfo)msg.obj ;
+					
+					info.holder.mPointX.setText(info.x);
+					info.holder.mPointY.setText(info.y);
+					info.holder.mPointZ.setText(info.z);
+					info.holder.mPointTime.setText(info.time);
+					
+					// 隧道内断面
+					if(info.sectionType == RawSheetIndex.CROSS_SECTION_TYPE_TUNNEL){
 						
-						if(type.equals(AppConfig.POINT_S1_1)
-								|| type.equals(AppConfig.POINT_S2_1)
-								|| type.equals(AppConfig.POINT_S3_1)){
-							pS1	= obj ;
+						TunnelSettlementTotalData obj = new TunnelSettlementTotalData() ;
+						obj.setStationId(0x000001);
+						obj.setChainageId(tunnelSection.getID());
+						obj.setSheetId(rawSheetBean.getID());
+						obj.setPntType(info.type); // 测量点类型
+						obj.setSurveyorID(Integer.valueOf(rawSheetBean.getCertificateID()));// 测量人员id
+						obj.setInfo("1");
+
+						TunnelSettlementTotalDataDao dao 	= TunnelSettlementTotalDataDao.defaultDao() ;
+						
+						// 存在的测量点信息
+						TunnelSettlementTotalData old = dao.queryTunnelTotalData(rawSheetBean.getID(),tunnelSection.getID(),info.type);
+						
+						if(old != null){
+							obj.setMEASNo(old.getMEASNo() + 1);
 						} else {
-							pS2	= obj ;
+							obj.setMEASNo(1);
 						}
 						
-						if(pS1 != null && pS2 != null){
-							doWarringLine(holder);
+						obj.setCoordinate(info.x + "," + info.y + "," + info.z);
+						obj.setSurveyTime(DateUtils.toDate(info.time, DateUtils.DATE_TIME_FORMAT));
+						obj.setDataStatus(0);
+						
+						// 插入
+						if(dao.insert(obj) == TunnelSettlementTotalDataDao.DB_EXECUTE_SUCCESS){
+							
+							if(info.type.equals(AppConfig.POINT_A)){
+								doWarring(info.holder, AlertUtils.getPointSubsidenceExceedMsg(obj));
+							} else {
+								
+								if(info.type.equals(AppConfig.POINT_S1_1)
+										|| info.type.equals(AppConfig.POINT_S2_1)
+										|| info.type.equals(AppConfig.POINT_S3_1)){
+									pS1	= obj ;
+								} else {
+									pS2	= obj ;
+								}
+								
+								if(pS1 != null && pS2 != null){
+									doWarringLine(info.holder);
+								}
+							}
+							
+							showText("保存成功");
+						} else {
+							showText("保存失败");
+						}
+					} 
+					// 地表下沉
+					else {
+						
+						SubsidenceTotalDataDao dao 	= SubsidenceTotalDataDao.defaultDao() ;
+						
+						// 存在的测量点信息
+						SubsidenceTotalData old = dao.queryTunnelTotalData(rawSheetBean.getID(),subsidenceSection.getID(),info.type);
+						
+						final SubsidenceTotalData obj = new SubsidenceTotalData() ;
+						obj.setStationId(0x000001);
+						obj.setChainageId(subsidenceSection.getID());
+						obj.setSheetId(rawSheetBean.getID());
+						obj.setPntType(info.type); // 测量点类型
+						obj.setSurveyorID(Integer.valueOf(rawSheetBean.getCertificateID()));// 测量人员id
+						
+						if(old != null){
+							obj.setMEASNo(old.getMEASNo() + 1);
+						} else {
+							obj.setMEASNo(1);
+						}
+						
+						obj.setCoordinate(info.z + "," + info.y + "," + info.z);
+						obj.setSurveyTime(DateUtils.toDate(info.time, DateUtils.DATE_TIME_FORMAT));
+						obj.setDataStatus(0);
+						
+						// 插入
+						if(dao.insert(obj) == TunnelSettlementTotalDataDao.DB_EXECUTE_SUCCESS){
+							showText("保存成功");
+						} else {
+							showText("保存失败");
 						}
 					}
 					
-					showText("保存成功");
-				} else {
-					showText("保存失败");
+					break ;
 				}
 			}
-		}) ;
-		
-		return view ;
+			
+		};
 	}
-	
+
 	private void doWarringLine(TestPointHolder holder){
 		
 	    String[] list = AlertUtils.getLineConvergenceExceedMsg(pS1,pS2);
@@ -360,66 +511,7 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 			
 			@Override
 			public void onClick(View v) {
-				
-				ISurveyProvider ts = TSSurveyProvider.getDefaultAdapter();
-				
-				if (ts == null) {
-					Toast.makeText(TestSectionExecuteActivity.this, "请先连接全站仪",
-							Toast.LENGTH_SHORT).show();
-					return;
-				}
-
-				Coordinate3D point = new Coordinate3D(null);
-				try {
-					int nret = ts.GetCoord(0, 0, point);
-					if (nret != 1) {
-						Toast.makeText(TestSectionExecuteActivity.this, "测量失败",
-								Toast.LENGTH_SHORT).show();
-						return;
-					}
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-					return;
-				}
-				
-				String x = String.format("%1$.4f", point.N);
-				String y = String.format("%1$.4f", point.E);
-				String z = String.format("%1$.4f", point.H);
-				String time = Time.getDateEN() ;
-				
-				holder.mPointX.setText(x);
-				holder.mPointY.setText(y);
-				holder.mPointZ.setText(z);
-				holder.mPointTime.setText(time);
-				
-				SubsidenceTotalDataDao dao 	= SubsidenceTotalDataDao.defaultDao() ;
-				
-				// 存在的测量点信息
-				SubsidenceTotalData old = dao.queryTunnelTotalData(rawSheet.getID(),subsidenceSection.getID(),type);
-				
-				final SubsidenceTotalData obj = new SubsidenceTotalData() ;
-				obj.setStationId(0x000001);
-				obj.setChainageId(subsidenceSection.getID());
-				obj.setSheetId(rawSheet.getID());
-				obj.setPntType(type); // 测量点类型
-				obj.setSurveyorID(Integer.valueOf(rawSheet.getCertificateID()));// 测量人员id
-				
-				if(old != null){
-					obj.setMEASNo(old.getMEASNo() + 1);
-				} else {
-					obj.setMEASNo(1);
-				}
-				
-				obj.setCoordinate(z + "," + y + "," + z);
-				obj.setSurveyTime(DateUtils.toDate(time, DateUtils.DATE_TIME_FORMAT));
-				obj.setDataStatus(0);
-				
-				// 插入
-				if(dao.insert(obj) == TunnelSettlementTotalDataDao.DB_EXECUTE_SUCCESS){
-					showText("保存成功");
-				} else {
-					showText("保存失败");
-				}
+				connectSurveyProvider(holder,type,RawSheetIndex.CROSS_SECTION_TYPE_SUBSIDENCES);
 			}
 		}) ;
 		
@@ -430,6 +522,12 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 		
 		// 删除所以的测量点view
 		mContainerLayout.removeAllViews() ;
+		
+		if(rawSheetBean == null){
+			return ;
+		}
+		
+		int sectionType = rawSheetBean.getCrossSectionType() ;
 		
 		if(sectionType == RawSheetIndex.CROSS_SECTION_TYPE_TUNNEL){
 			
@@ -450,91 +548,91 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 			TunnelSettlementTotalData bean = null ;
 			
 			// A
-			bean = dao.queryTunnelTotalData(rawSheet.getID(),tunnelSection.getID(), AppConfig.POINT_A);
+			bean = dao.queryTunnelTotalData(rawSheetBean.getID(),tunnelSection.getID(), AppConfig.POINT_A);
 			addTestPoint(createTunnelTestPointView(bean,AppConfig.POINT_A));
 			
 			// 全断面法(A,S1(1,2))
 			if(type == 0){
 				
 				// S1-1
-				bean = dao.queryTunnelTotalData(rawSheet.getID(),tunnelSection.getID(), AppConfig.POINT_S1_1);
+				bean = dao.queryTunnelTotalData(rawSheetBean.getID(),tunnelSection.getID(), AppConfig.POINT_S1_1);
 				addTestPoint(createTunnelTestPointView(bean,AppConfig.POINT_S1_1));
 				
 				// S1-2
-				bean = dao.queryTunnelTotalData(rawSheet.getID(),tunnelSection.getID(), AppConfig.POINT_S1_2);
+				bean = dao.queryTunnelTotalData(rawSheetBean.getID(),tunnelSection.getID(), AppConfig.POINT_S1_2);
 				addTestPoint(createTunnelTestPointView(bean,AppConfig.POINT_S1_2));
 			} 
 			// 台阶法(A,S1(1,2),S2(1,2))
 			else if(type == 1){
 				
 				// S1-1
-				bean = dao.queryTunnelTotalData(rawSheet.getID(),tunnelSection.getID(), AppConfig.POINT_S1_1);
+				bean = dao.queryTunnelTotalData(rawSheetBean.getID(),tunnelSection.getID(), AppConfig.POINT_S1_1);
 				addTestPoint(createTunnelTestPointView(bean,AppConfig.POINT_S1_1));
 				
 				// S1-2
-				bean = dao.queryTunnelTotalData(rawSheet.getID(),tunnelSection.getID(), AppConfig.POINT_S1_2);
+				bean = dao.queryTunnelTotalData(rawSheetBean.getID(),tunnelSection.getID(), AppConfig.POINT_S1_2);
 				addTestPoint(createTunnelTestPointView(bean,AppConfig.POINT_S1_2));
 				
 				// S2-1
-				bean = dao.queryTunnelTotalData(rawSheet.getID(),tunnelSection.getID(), AppConfig.POINT_S2_1);
+				bean = dao.queryTunnelTotalData(rawSheetBean.getID(),tunnelSection.getID(), AppConfig.POINT_S2_1);
 				addTestPoint(createTunnelTestPointView(bean,AppConfig.POINT_S2_1));
 				
 				// S2-2
-				bean = dao.queryTunnelTotalData(rawSheet.getID(),tunnelSection.getID(), AppConfig.POINT_S2_2);
+				bean = dao.queryTunnelTotalData(rawSheetBean.getID(),tunnelSection.getID(), AppConfig.POINT_S2_2);
 				addTestPoint(createTunnelTestPointView(bean,AppConfig.POINT_S2_2));
 			} 
 			// 三台阶法(A,S1(1,2),S2(1,2),S3(1,2))
 			else if(type == 2){
 				
 				// S1-1
-				bean = dao.queryTunnelTotalData(rawSheet.getID(),tunnelSection.getID(), AppConfig.POINT_S1_1);
+				bean = dao.queryTunnelTotalData(rawSheetBean.getID(),tunnelSection.getID(), AppConfig.POINT_S1_1);
 				addTestPoint(createTunnelTestPointView(bean,AppConfig.POINT_S1_1));
 				
 				// S1-2
-				bean = dao.queryTunnelTotalData(rawSheet.getID(),tunnelSection.getID(), AppConfig.POINT_S1_2);
+				bean = dao.queryTunnelTotalData(rawSheetBean.getID(),tunnelSection.getID(), AppConfig.POINT_S1_2);
 				addTestPoint(createTunnelTestPointView(bean,AppConfig.POINT_S1_2));
 				
 				// S2-1
-				bean = dao.queryTunnelTotalData(rawSheet.getID(),tunnelSection.getID(), AppConfig.POINT_S2_1);
+				bean = dao.queryTunnelTotalData(rawSheetBean.getID(),tunnelSection.getID(), AppConfig.POINT_S2_1);
 				addTestPoint(createTunnelTestPointView(bean,AppConfig.POINT_S2_1));
 				
 				// S2-2
-				bean = dao.queryTunnelTotalData(rawSheet.getID(),tunnelSection.getID(), AppConfig.POINT_S2_2);
+				bean = dao.queryTunnelTotalData(rawSheetBean.getID(),tunnelSection.getID(), AppConfig.POINT_S2_2);
 				addTestPoint(createTunnelTestPointView(bean,AppConfig.POINT_S2_2));
 				
 				// S3-1
-				bean = dao.queryTunnelTotalData(rawSheet.getID(),tunnelSection.getID(), AppConfig.POINT_S3_1);
+				bean = dao.queryTunnelTotalData(rawSheetBean.getID(),tunnelSection.getID(), AppConfig.POINT_S3_1);
 				addTestPoint(createTunnelTestPointView(bean,AppConfig.POINT_S3_1));
 				
 				// S3-2
-				bean = dao.queryTunnelTotalData(rawSheet.getID(),tunnelSection.getID(), AppConfig.POINT_S3_2);
+				bean = dao.queryTunnelTotalData(rawSheetBean.getID(),tunnelSection.getID(), AppConfig.POINT_S3_2);
 				addTestPoint(createTunnelTestPointView(bean,AppConfig.POINT_S3_2));
 			} 
 			// 双侧壁法(A,S1(1,2),S2(1,2),S3(1,2))
 			else if(type == 3){
 				
 				// S1-1
-				bean = dao.queryTunnelTotalData(rawSheet.getID(),tunnelSection.getID(), AppConfig.POINT_S1_1);
+				bean = dao.queryTunnelTotalData(rawSheetBean.getID(),tunnelSection.getID(), AppConfig.POINT_S1_1);
 				addTestPoint(createTunnelTestPointView(bean,AppConfig.POINT_S1_1));
 				
 				// S1-2
-				bean = dao.queryTunnelTotalData(rawSheet.getID(),tunnelSection.getID(), AppConfig.POINT_S1_2);
+				bean = dao.queryTunnelTotalData(rawSheetBean.getID(),tunnelSection.getID(), AppConfig.POINT_S1_2);
 				addTestPoint(createTunnelTestPointView(bean,AppConfig.POINT_S1_2));
 				
 				// S2-1
-				bean = dao.queryTunnelTotalData(rawSheet.getID(),tunnelSection.getID(), AppConfig.POINT_S2_1);
+				bean = dao.queryTunnelTotalData(rawSheetBean.getID(),tunnelSection.getID(), AppConfig.POINT_S2_1);
 				addTestPoint(createTunnelTestPointView(bean,AppConfig.POINT_S2_1));
 				
 				// S2-2
-				bean = dao.queryTunnelTotalData(rawSheet.getID(),tunnelSection.getID(), AppConfig.POINT_S2_2);
+				bean = dao.queryTunnelTotalData(rawSheetBean.getID(),tunnelSection.getID(), AppConfig.POINT_S2_2);
 				addTestPoint(createTunnelTestPointView(bean,AppConfig.POINT_S2_2));
 				
 				// S3-1
-				bean = dao.queryTunnelTotalData(rawSheet.getID(),tunnelSection.getID(), AppConfig.POINT_S3_1);
+				bean = dao.queryTunnelTotalData(rawSheetBean.getID(),tunnelSection.getID(), AppConfig.POINT_S3_1);
 				addTestPoint(createTunnelTestPointView(bean,AppConfig.POINT_S3_1));
 				
 				// S3-2
-				bean = dao.queryTunnelTotalData(rawSheet.getID(),tunnelSection.getID(), AppConfig.POINT_S3_2);
+				bean = dao.queryTunnelTotalData(rawSheetBean.getID(),tunnelSection.getID(), AppConfig.POINT_S3_2);
 				addTestPoint(createTunnelTestPointView(bean,AppConfig.POINT_S3_2));
 			}
 		} 
@@ -563,7 +661,7 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 				
 				String index = String.valueOf(id + 1) ;
 				
-				bean = dao.queryTunnelTotalData(rawSheet.getID(),subsidenceSection.getID(),index);
+				bean = dao.queryTunnelTotalData(rawSheetBean.getID(),subsidenceSection.getID(),index);
 				addTestPoint(createSubsidenceTestPointView(bean,index));
 			}
 		}
@@ -572,56 +670,97 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 	@Override
 	public void onClick(View v) {
 		
+		int sectionType = 0 ;
+		
 		switch(v.getId()){
 		case R.id.test_bnt_left_section :
 			
-			if(sectionIndex <= 0){
-				showText("已经是第一条数据");
+			if(rawSheetBean == null){
 				return ;
 			}
 			
-			if(sectionType == RawSheetIndex.CROSS_SECTION_TYPE_TUNNEL){
-				
-				sectionIndex-- ;
-				tunnelSection = tunnelSectionList.get(sectionIndex);
-				
-				loadSectionTestData();
-			} else if(sectionType == RawSheetIndex.CROSS_SECTION_TYPE_SUBSIDENCES){
-				sectionIndex-- ;
-				subsidenceSection = subsidenceSectionList.get(sectionIndex);
-				
-				loadSectionTestData();
-			}
-			break ;
-		case R.id.test_bnt_next_section :
+			// 当前测量单类型
+			sectionType = rawSheetBean.getCrossSectionType() ; 
 			
 			if(sectionType == RawSheetIndex.CROSS_SECTION_TYPE_TUNNEL){
 				
-				if(sectionIndex >= tunnelSectionList.size() - 1){
-					showText("已经是最后一条数据");
-					return ;
-				}
-				
-				if(sectionIndex + 1 < tunnelSectionList.size()){
-					sectionIndex++ ;
-					tunnelSection = tunnelSectionList.get(sectionIndex);
+				// 第一个断面
+				if(sectionIndex <= 0){
 					
+					// 上一个测量单
+					if(loadPreRawSheetIndex()){
+						loadRawSheetIndexInfo(rawSheetBean);
+					}
+				} else {
+					
+					// 上一个断面
+					sectionIndex-- ;
+					tunnelSection = tunnelSectionList.get(sectionIndex);
 					loadSectionTestData();
 				}
-				
 			} else if(sectionType == RawSheetIndex.CROSS_SECTION_TYPE_SUBSIDENCES){
 				
-				if(sectionIndex >= subsidenceSectionList.size() - 1){
-					showText("已经是最后一条数据");
-					return ;
-				}
-				
-				if(sectionIndex + 1 < subsidenceSectionList.size()){
+				if(sectionIndex <= 0){
 					
-					sectionIndex++ ;
+					// 上一个测量单
+					if(loadPreRawSheetIndex()){
+						loadRawSheetIndexInfo(rawSheetBean);
+					}
+				} else {
+					// 上一个断面
+					sectionIndex-- ;
 					subsidenceSection = subsidenceSectionList.get(sectionIndex);
-					
 					loadSectionTestData();
+				}
+			}
+			
+			break ;
+		case R.id.test_bnt_next_section :
+			
+			if(rawSheetBean == null){
+				return ;
+			}
+			
+			// 当前测量单类型
+			sectionType = rawSheetBean.getCrossSectionType() ; 
+			
+			if(sectionType == RawSheetIndex.CROSS_SECTION_TYPE_TUNNEL){
+				
+				// 最后一个断面
+				if(sectionIndex >= tunnelSectionList.size() - 1){
+					
+					// 下一个测量单
+					if(loadNextRawSheetIndex()){
+						loadRawSheetIndexInfo(rawSheetBean);
+					}
+				} else {
+					
+					// 当前测量单的下一个断面
+					if(sectionIndex + 1 < tunnelSectionList.size()){
+						
+						sectionIndex++ ;
+						tunnelSection = tunnelSectionList.get(sectionIndex);
+						loadSectionTestData();
+					}
+				}
+			} else if(sectionType == RawSheetIndex.CROSS_SECTION_TYPE_SUBSIDENCES){
+				
+				// 最后一个断面
+				if(sectionIndex >= subsidenceSectionList.size() - 1){
+					
+					// 下一个测量单
+					if(loadNextRawSheetIndex()){
+						loadRawSheetIndexInfo(rawSheetBean);
+					}
+				} else {
+					
+					// 下一个断面
+					if(sectionIndex + 1 < subsidenceSectionList.size()){
+						
+						sectionIndex++ ;
+						subsidenceSection = subsidenceSectionList.get(sectionIndex);
+						loadSectionTestData();
+					}
 				}
 			}
 			
@@ -652,5 +791,17 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 		
 		@InjectView(id=R.id.test_warring_layout)
 		LinearLayout warringLayout ;
+	}
+	
+	final class TestInfo {
+		
+		TestPointHolder holder ;
+		String type ;
+		int sectionType;
+		
+		String x ;
+		String y ;
+		String z ;
+		String time ;
 	}
 }

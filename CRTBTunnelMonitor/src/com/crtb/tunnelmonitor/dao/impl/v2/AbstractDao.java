@@ -20,6 +20,9 @@ public abstract class AbstractDao<T> {
 	public static final int DB_EXECUTE_SUCCESS	= 1 ; // 执行成功
 	public static final int DB_EXECUTE_FAILED	= -1 ; //执行失败
 	
+	public static final int MAX_PROJECTINDEX	= 2 ; // 最大工作面
+	public static final int MAX_SECTION_COUNT	= 10 ; // 最大断面
+	
 	static final String TAG						= "AbstractDao" ;
 	static final String PROJECT_PREFIX			= "crtb_" ;
 

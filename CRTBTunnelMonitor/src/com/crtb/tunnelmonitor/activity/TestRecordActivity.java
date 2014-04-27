@@ -87,7 +87,7 @@ public class TestRecordActivity extends WorkFlowActivity implements OnPageChange
 		loadSystemMenu();
 		
 		// clear cache
-		CommonObject.remove(TestSectionExecuteActivity.KEY_TEST_OBJECT);
+		CommonObject.remove(TestSectionExecuteActivity.KEY_TEST_RAWSHEET_LIST);
 	}
 	
 	private void loadSystemMenu(){
@@ -116,14 +116,13 @@ public class TestRecordActivity extends WorkFlowActivity implements OnPageChange
 			
 			if(currIndex == 0){
 				
-				RawSheetIndex bean = mTestTunnelSectionList.getSelectedSection() ;
+				List<RawSheetIndex> list = mTestTunnelSectionList.getSelectedSection() ;
 				
-				if(bean == null){
+				if(list.isEmpty()){
 					showText("请选择测量单");
 				} else {
 					
-					CommonObject.putObject(TestSectionExecuteActivity.KEY_TEST_OBJECT, bean) ;
-					CommonObject.putInteger(TestSectionExecuteActivity.KEY_TEST_SECTION_TYPE, RawSheetIndex.CROSS_SECTION_TYPE_TUNNEL);
+					CommonObject.putObject(TestSectionExecuteActivity.KEY_TEST_RAWSHEET_LIST, list) ;
 					
 					Intent intent = new Intent() ;
 					intent.setClass(TestRecordActivity.this, TestSectionExecuteActivity.class);
@@ -131,14 +130,13 @@ public class TestRecordActivity extends WorkFlowActivity implements OnPageChange
 				}
 			} else {
 				
-				RawSheetIndex bean = mTestSubsidenceList.getSelectedSection() ;
+				List<RawSheetIndex> list = mTestSubsidenceList.getSelectedSection() ;
 				
-				if(bean == null){
+				if(list.isEmpty()){
 					showText("请选择测量单");
 				} else {
 					
-					CommonObject.putObject(TestSectionExecuteActivity.KEY_TEST_OBJECT, bean) ;
-					CommonObject.putInteger(TestSectionExecuteActivity.KEY_TEST_SECTION_TYPE, RawSheetIndex.CROSS_SECTION_TYPE_SUBSIDENCES);
+					CommonObject.putObject(TestSectionExecuteActivity.KEY_TEST_RAWSHEET_LIST, list) ;
 					
 					Intent intent = new Intent() ;
 					intent.setClass(TestRecordActivity.this, TestSectionExecuteActivity.class);

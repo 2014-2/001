@@ -1,5 +1,8 @@
 package com.crtb.tunnelmonitor.mydefine;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.zw.android.framework.util.StringUtils;
 
 import android.content.Context;
@@ -106,8 +109,10 @@ public class CrtbDialogSearchTest extends CrtbDialog {
 				
 				RawSheetIndex bean = mListView.getItem(position);
 				
-				CommonObject.putObject(TestSectionExecuteActivity.KEY_TEST_OBJECT, bean) ;
-				CommonObject.putInteger(TestSectionExecuteActivity.KEY_TEST_SECTION_TYPE, bean.getCrossSectionType());
+				List<RawSheetIndex> list = new ArrayList<RawSheetIndex>();
+				list.add(bean);
+				
+				CommonObject.putObject(TestSectionExecuteActivity.KEY_TEST_RAWSHEET_LIST, list) ;
 				
 				Intent intent = new Intent() ;
 				intent.setClass(mContext, TestSectionExecuteActivity.class);

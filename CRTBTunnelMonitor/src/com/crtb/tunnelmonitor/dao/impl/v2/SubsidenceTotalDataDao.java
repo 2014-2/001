@@ -36,8 +36,24 @@ public class SubsidenceTotalDataDao extends AbstractDao<SubsidenceTotalData> {
 		
 		return mDatabase.queryObjects(sql, SubsidenceTotalData.class) ;
 	}
+	
+	public boolean checkSectionTestData(int id){
+		
+		final IAccessDatabase mDatabase = getCurrentDb();
+
+		if (mDatabase == null) {
+			return false;
+		}
+		
+		String sql = "select * from SubsidenceTotalData where ChainageId = ? limit 0,1";
+		
+		SubsidenceTotalData data = mDatabase.queryObject(sql, new String[] {String.valueOf(id) }, SubsidenceTotalData.class) ;
+		 
+		return data != null;
+	}
 
     public SubsidenceTotalData queryOneById(int id) {
+    	
         final IAccessDatabase mDatabase = getCurrentDb();
 
         if (mDatabase == null) {

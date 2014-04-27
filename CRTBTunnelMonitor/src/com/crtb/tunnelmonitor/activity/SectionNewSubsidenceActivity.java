@@ -33,6 +33,7 @@ import android.widget.TextView;
 
 import com.crtb.tunnelmonitor.CommonObject;
 import com.crtb.tunnelmonitor.WorkFlowActivity;
+import com.crtb.tunnelmonitor.dao.impl.v2.ProjectIndexDao;
 import com.crtb.tunnelmonitor.dao.impl.v2.SubsidenceCrossSectionIndexDao;
 import com.crtb.tunnelmonitor.entity.SubsidenceCrossSectionIndex;
 import com.crtb.tunnelmonitor.entity.ProjectIndex;
@@ -277,7 +278,16 @@ public class SectionNewSubsidenceActivity extends WorkFlowActivity implements On
 				subsidence.setInfo(remark);
 				
 				// insert
-				SubsidenceCrossSectionIndexDao.defaultDao().insert(subsidence);
+				int code = SubsidenceCrossSectionIndexDao.defaultDao().insert(subsidence);
+				
+				// 保存数据
+				if(code == 100){
+					showText("非注册用户,不能保存10个以上的断面");
+					return ;
+				} else if(code == ProjectIndexDao.DB_EXECUTE_FAILED){
+					showText("保存失败");
+					return ;
+				}
 			} else {
 				
 				subsidence.setChainagePrefix(prefix);

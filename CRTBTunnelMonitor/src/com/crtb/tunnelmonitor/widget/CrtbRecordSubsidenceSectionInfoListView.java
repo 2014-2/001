@@ -4,10 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Context;
+import android.os.Message;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.AdapterView;
 
+import com.crtb.tunnelmonitor.AppHandler;
 import com.crtb.tunnelmonitor.dao.impl.v2.SubsidenceCrossSectionIndexDao;
 import com.crtb.tunnelmonitor.entity.SubsidenceCrossSectionIndex;
 
@@ -68,24 +70,43 @@ public class CrtbRecordSubsidenceSectionInfoListView extends CrtbBaseListView {
 	}
 
 	@Override
-	public void onReload() {
-		
-		List<SubsidenceCrossSectionIndex> list = SubsidenceCrossSectionIndexDao.defaultDao().queryAllSection();
+	protected AppHandler getAppHandler() {
+		return new AppHandler(getContext()){
 
-		if(list != null && sectionIds != null){
-			
-			for(SubsidenceCrossSectionIndex item : list){
+			@SuppressWarnings("unchecked")
+			@Override
+			protected void dispose(Message msg) {
 				
-				for(String id : sectionIds){
+				switch(msg.what){
+				case MSG_QUERY_SUBSIDENCE_SECTION_SUCCESS :
 					
-					if(id.equals(String.valueOf(item.getID()))){
-						item.setUsed(true);
+					List<SubsidenceCrossSectionIndex> list = (ArrayList<SubsidenceCrossSectionIndex>)msg.obj ;
+					
+					if(list != null && sectionIds != null){
+						
+						for(SubsidenceCrossSectionIndex item : list){
+							
+							for(String id : sectionIds){
+								
+								if(id.equals(String.valueOf(item.getID()))){
+									item.setUsed(true);
+								}
+							}
+						}
 					}
+					
+					mAdapter.loadEntityDatas(list);
+					
+					break ;
 				}
 			}
-		}
-		
-		mAdapter.loadEntityDatas(list);
+			
+		};
+	}
+
+	@Override
+	public void onReload() {
+		SubsidenceCrossSectionIndexDao.defaultDao().queryAllSection(mHandler);
 	}
 	
 }

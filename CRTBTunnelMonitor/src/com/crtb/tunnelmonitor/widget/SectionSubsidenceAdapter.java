@@ -34,7 +34,7 @@ public class SectionSubsidenceAdapter extends CrtbEntityAdapter<SubsidenceCrossS
 		}
 		
 		holder.chainage.setText(item.getSectionName());
-		holder.excavation.setText("无");
+		holder.excavation.setText(item.isHasTestData() ? "有" : "无" );
 		
 		return convertView;
 	}

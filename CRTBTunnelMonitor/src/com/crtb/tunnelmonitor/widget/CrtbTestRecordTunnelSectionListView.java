@@ -46,7 +46,7 @@ public final class CrtbTestRecordTunnelSectionListView extends CrtbBaseListView 
 		return mAdapter.getItem(position);
 	}
 	
-	public RawSheetIndex getSelectedSection(){
+	public List<RawSheetIndex> getSelectedSection(){
 		return mAdapter.getSelectedSection();
 	}
 	

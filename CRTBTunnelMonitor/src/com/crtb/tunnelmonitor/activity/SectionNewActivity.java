@@ -36,6 +36,7 @@ import android.widget.TextView;
 
 import com.crtb.tunnelmonitor.CommonObject;
 import com.crtb.tunnelmonitor.WorkFlowActivity;
+import com.crtb.tunnelmonitor.dao.impl.v2.ProjectIndexDao;
 import com.crtb.tunnelmonitor.dao.impl.v2.TunnelCrossSectionIndexDao;
 import com.crtb.tunnelmonitor.entity.TunnelCrossSectionIndex;
 import com.crtb.tunnelmonitor.entity.ProjectIndex;
@@ -338,7 +339,16 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 				// excavation
 				sectionInfo.setExcavateMethod((String)section_new_sp.getSelectedItem());
 				
-				TunnelCrossSectionIndexDao.defaultDao().insert(sectionInfo);
+				int code = TunnelCrossSectionIndexDao.defaultDao().insert(sectionInfo);
+				
+				// 保存数据
+				if(code == 100){
+					showText("非注册用户,不能保存10个以上的断面");
+					return ;
+				} else if(code == ProjectIndexDao.DB_EXECUTE_FAILED){
+					showText("保存失败");
+					return ;
+				}
 			} else {
 				
 				// base info

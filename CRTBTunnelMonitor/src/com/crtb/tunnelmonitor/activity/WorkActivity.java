@@ -159,7 +159,7 @@ public final class WorkActivity extends WorkFlowActivity {
 		systems.add(item);
 		
 		// 
-		if(ProjectIndexDao.defaultWorkPlanDao().hasWorkPlan()){
+		if(ProjectIndexDao.defaultWorkPlanDao().hasExport()){
 			item = new MenuSystemItem() ;
 			item.setIcon(R.drawable.ic_menu_export);
 			item.setName(getString(R.string.common_export));

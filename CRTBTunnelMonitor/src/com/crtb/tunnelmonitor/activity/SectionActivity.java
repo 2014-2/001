@@ -32,6 +32,7 @@ import com.crtb.tunnelmonitor.dao.impl.v2.TunnelCrossSectionIndexDao;
 import com.crtb.tunnelmonitor.entity.MenuSystemItem;
 import com.crtb.tunnelmonitor.entity.SubsidenceCrossSectionIndex;
 import com.crtb.tunnelmonitor.entity.TunnelCrossSectionIndex;
+import com.crtb.tunnelmonitor.mydefine.CrtbDialogHint;
 import com.crtb.tunnelmonitor.mydefine.CrtbDialogResult;
 import com.crtb.tunnelmonitor.widget.SectionSubsidenceListView;
 import com.crtb.tunnelmonitor.widget.SectionTunnelListView;
@@ -162,19 +163,25 @@ public class SectionActivity extends WorkFlowActivity implements OnPageChangeLis
 				
 			} else if(position == 1){
 				
-				int code = SubsidenceCrossSectionIndexDao.defaultDao().delete(section);
-				
-				CrtbDialogResult dialog = null ;
-				
-				if(code == SubsidenceCrossSectionIndexDao.DB_EXECUTE_SUCCESS){
-					dialog = new CrtbDialogResult(SectionActivity.this, R.drawable.ic_reslut_sucess, "删除成功");
-					mSectionSubsidenceList.onReload() ;
-				} else {
-					dialog = new CrtbDialogResult(SectionActivity.this, R.drawable.ic_reslut_error, "删除失败");
-				}
-				
-				if(dialog != null){
-					dialog.show() ;
+				if(section.isHasTestData()){
+					CrtbDialogHint hint = new CrtbDialogHint(SectionActivity.this, R.drawable.ic_warnning, "该断面存在测量数据,不可删除!");
+					hint.show() ;
+				} else{
+					
+					int code = SubsidenceCrossSectionIndexDao.defaultDao().delete(section);
+					
+					CrtbDialogResult dialog = null ;
+					
+					if(code == SubsidenceCrossSectionIndexDao.DB_EXECUTE_SUCCESS){
+						dialog = new CrtbDialogResult(SectionActivity.this, R.drawable.ic_reslut_sucess, "删除成功");
+						mSectionSubsidenceList.onReload() ;
+					} else {
+						dialog = new CrtbDialogResult(SectionActivity.this, R.drawable.ic_reslut_error, "删除失败");
+					}
+					
+					if(dialog != null){
+						dialog.show() ;
+					}
 				}
 			}
 		}

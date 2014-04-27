@@ -120,6 +120,18 @@ public final class ProjectIndexDao extends AbstractDao<ProjectIndex> {
 		
 		return list != null && list.size() > 0 ;
 	}
+	
+	public boolean hasExport(){
+		
+		final CrtbUser user = CrtbLicenseDao.defaultDao().queryCrtbUser() ;
+		
+		// 非注册用户
+		if(user.getUsertype() == CrtbUser.LICENSE_TYPE_DEFAULT){
+			return false ;
+		}
+		
+		return hasWorkPlan();
+	}
 
 	@Override
 	public int insert(ProjectIndex bean) {
@@ -133,8 +145,8 @@ public final class ProjectIndexDao extends AbstractDao<ProjectIndex> {
 			
 			List<CrtbProject> list = getDefaultDb().queryObjects(sql, new String[]{user.getUsername()}, CrtbProject.class);
 			
-			if(list != null && list.size() >= 4){
-				Log.e(TAG, "error : 非注册用户,不能保存4个以上的工作面");
+			if(list != null && list.size() >= MAX_PROJECTINDEX){
+				Log.e(TAG, "error : 非注册用户,不能保存2个以上的工作面");
 				return 100 ;
 			}
 		}
