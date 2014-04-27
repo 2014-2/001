@@ -20,7 +20,10 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
@@ -30,15 +33,14 @@ import android.widget.Toast;
 import com.crtb.tunnelmonitor.entity.AlertInfo;
 import com.crtb.tunnelmonitor.network.CrtbWebService;
 import com.crtb.tunnelmonitor.network.RpcCallback;
+import com.crtb.tunnelmonitor.utils.WarningDataManager;
+import com.crtb.tunnelmonitor.utils.WarningDataManager.WarningLoadListener;
 
 public class WarningUploadActivity extends Activity {
     private static final String LOG_TAG = "WarningUploadActivity";
-
     private MenuPopupWindow menuWindow;
-
     private ListView mlvWarningList;
-
-    private List<AlertInfo> mWarningInfos;
+    private WarningUploadAdapter mAdapter;
 
     private Random ran = new Random();
     private String s[] = new String[20];
@@ -60,10 +62,34 @@ public class WarningUploadActivity extends Activity {
 
     private void init() {
         mlvWarningList = (ListView) findViewById(R.id.warning_list);
-        mWarningInfos = getdata();
-        mlvWarningList.setAdapter(new WarningUploadAdapter());
+        mlvWarningList.setOnItemClickListener(new OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				mAdapter.revertCheck(position);
+			}
+		});
+        mAdapter = new WarningUploadAdapter();
+        mlvWarningList.setAdapter(mAdapter);
+        loadData();
     }
 
+    private void loadData() {
+    	WarningDataManager dataManager = new WarningDataManager();
+        dataManager.loadData(new WarningLoadListener() {
+			@Override
+			public void done(List<AlertInfo> uploadDataList) {
+				List<WarningUploadData> warningDataList = new ArrayList<WarningUploadData>();
+				for(AlertInfo alertInfo : uploadDataList) {
+					WarningUploadData warningData = new WarningUploadData();
+					warningData.setAlertInfo(alertInfo);
+					warningData.setChecked(false);
+					warningDataList.add(warningData);
+				}
+				mAdapter.setWarningData(warningDataList);
+			}
+		});
+    }
+    
     class MenuPopupWindow extends PopupWindow {
         public RelativeLayout chakan;
         public RelativeLayout shangchuan;
@@ -141,30 +167,6 @@ public class WarningUploadActivity extends Activity {
         });
     }
 
-    public ArrayList<AlertInfo> getdata() {
-        AlertInfo.yixiao = 0;
-        ArrayList<AlertInfo> listt = new ArrayList<AlertInfo>();
-//        yujingInfors infor;
-//        for (int i = 0; i < s.length; i++) {
-//            infor = new yujingInfors();
-//            infor.setDate(getdate());
-//            infor.setXinghao(s[i]);
-//            infor.setDianhao(ss[ran.nextInt(3)]);
-//            infor.setChuliFangshi("自由处理");
-//            infor.setState(sss[ran.nextInt(3)]);
-//            infor.setMessage(s2[ran.nextInt(4)]);
-//            infor.setEdtState(ssss[ran.nextInt(4)]);
-//            infor.setState1(true);
-//            if (infor.getState().equals("已消警")) {
-//                yujingInfors.yixiao = yujingInfors.yixiao + 1;
-//                System.out.println(yujingInfors.yixiao);
-//
-//            }
-//            listt.add(infor);
-//        }
-        return listt;
-    }
-
     public void initB() {
         for (int i = 0; i < s.length; i++) {
             s[i] = "DK+"
@@ -179,23 +181,45 @@ public class WarningUploadActivity extends Activity {
         return simp.format(new Date());
     }
 
-    class WarningUploadAdapter extends BaseAdapter {
-
+    private static class ViewHolder {
+    	TextView mWarningTime;
+    	TextView mWarningState;
+    	TextView mWarningUpload;
+    	ImageView mWarningCheck;
+    }
+    
+    private class WarningUploadAdapter extends BaseAdapter {
+    	private List<WarningUploadData> mWarningDataList;
+    	
+    	WarningUploadAdapter() {
+    		mWarningDataList = new ArrayList<WarningUploadData>();
+    	}
+    	
+    	public void setWarningData(List<WarningUploadData> warningDataList) {
+    		if (warningDataList != null) {
+    			mWarningDataList = warningDataList;
+    			notifyDataSetChanged();
+    		}
+    	}
+    	
+    	public void revertCheck(int position) {
+    		WarningUploadData warningUploadData = mWarningDataList.get(position);
+    		warningUploadData.setChecked(!warningUploadData.isChecked());
+            notifyDataSetChanged();
+        }
+    	
         @Override
         public int getCount() {
-            // TODO Auto-generated method stub
-            return mWarningInfos.size();
+            return mWarningDataList.size();
         }
 
         @Override
         public Object getItem(int position) {
-            // TODO Auto-generated method stub
-            return mWarningInfos.get(position);
+            return mWarningDataList.get(position);
         }
 
         @Override
         public long getItemId(int position) {
-            // TODO Auto-generated method stub
             return position;
         }
 
@@ -203,16 +227,56 @@ public class WarningUploadActivity extends Activity {
         public View getView(int position, View convertView, ViewGroup parent) {
             if (convertView == null) {
                 convertView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.layout_warning_upload_item, null);
+                ViewHolder holder = new ViewHolder();
+                holder.mWarningTime = (TextView)convertView.findViewById(R.id.warning_id);
+                holder.mWarningState = (TextView)convertView.findViewById(R.id.warning_state);
+                holder.mWarningUpload = (TextView)convertView.findViewById(R.id.warning_is_uploaded);
+                holder.mWarningCheck = (ImageView)convertView.findViewById(R.id.checked_switch);
+                convertView.setTag(holder);
             }
-            AlertInfo info = mWarningInfos.get(position);
-            TextView time = (TextView)convertView.findViewById(R.id.warning_id);
-            time.setText(info.getDate());
-            TextView state = (TextView)convertView.findViewById(R.id.warning_state);
-            state.setText(info.getAlertStatusMsg());
-            TextView is_uploaded = (TextView)convertView.findViewById(R.id.warning_is_uploaded);
-            is_uploaded.setText("已上传");
+            bindView(mWarningDataList.get(position), convertView);
             return convertView;
         }
+        
+        private void bindView(WarningUploadData warningData, View convertView) {
+        	ViewHolder holder = (ViewHolder)convertView.getTag();
+        	holder.mWarningTime.setText(warningData.getAlertInfo().getDate());
+        	holder.mWarningState.setText(warningData.getAlertInfo().getAlertStatusMsg());
+        	if (warningData.isUploaded()) {
+        		holder.mWarningUpload.setText("已上传");
+        	} else {
+        		holder.mWarningUpload.setText("未上传");
+        	}
+        	if (warningData.isChecked()) {
+        		holder.mWarningCheck.setImageResource(R.drawable.yes);
+        	} else {
+        		holder.mWarningCheck.setImageResource(R.drawable.no);
+        	}
+        }
+    }
+    
+    private class WarningUploadData {
+    	private AlertInfo mAlertInfo;
+    	private boolean mIsChecked;
+    	
+    	public void setAlertInfo(AlertInfo alertInfo) {
+    		mAlertInfo = alertInfo;
+    	}
+    	
+    	public AlertInfo getAlertInfo() {
+    		return mAlertInfo;
+    	}
+    	
+    	public boolean isUploaded() {
+    		return false;
+    	}
+    	
+    	public void setChecked(boolean checked) {
+            mIsChecked = checked;
+        }
 
+        public boolean isChecked() {
+            return mIsChecked;
+        }
     }
 }

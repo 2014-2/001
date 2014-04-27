@@ -4,7 +4,10 @@ import java.util.List;
 
 import org.zw.android.framework.IAccessDatabase;
 
+import android.util.Log;
+
 import com.crtb.tunnelmonitor.entity.TunnelSettlementTotalData;
+import com.crtb.tunnelmonitor.utils.AlertUtils;
 
 /**
  * 全站仪
@@ -42,7 +45,21 @@ public class TunnelSettlementTotalDataDao extends AbstractDao<TunnelSettlementTo
 		return mDatabase.queryObjects(sql, TunnelSettlementTotalData.class);
 	}
 
-	// 查询已经存在的测量点信息
+    public TunnelSettlementTotalData queryOneById(int id) {
+        final IAccessDatabase mDatabase = getCurrentDb();
+
+        if (mDatabase == null) {
+            return null;
+        }
+
+        String sql = "select * from TunnelSettlementTotalData where ID = ?";
+
+        return mDatabase.queryObject(sql, new String[] { String.valueOf(id) },
+                TunnelSettlementTotalData.class);
+
+    }
+
+    // 查询已经存在的测量点信息
 	public TunnelSettlementTotalData queryTunnelTotalData(int sheetId,int chainageId,String pntType) {
 		
 		final IAccessDatabase mDatabase = getCurrentDb();
@@ -89,13 +106,41 @@ public class TunnelSettlementTotalDataDao extends AbstractDao<TunnelSettlementTo
                 + chainageId
                 + " AND pntType=\'"
                 + pntType
-                + "\' AND MEASNo<"
-                + String.valueOf(MEASNo)
-                + " AND DataStatus != "
-                + String.valueOf(1)
+                + "\' AND MEASNo<?"
+                + " AND DataStatus != ?"
                 + " order by MEASNo ASC";
 
-        return mDatabase.queryObjects(sql, TunnelSettlementTotalData.class);
+        String[] args = new String[] {String.valueOf(MEASNo), String.valueOf(AlertUtils.POINT_DATASTATUS_DISCARD)};
+        return mDatabase.queryObjects(sql, args, TunnelSettlementTotalData.class);
+    }
+
+    /**
+     * 查询 本次测量(MEASNo)之后的所有相同断面和相同测点类型的测点信息
+     * 
+     * @param chainageId
+     *            断面里程ID
+     * @param pntType
+     *            测点类型
+     * @param MEASNo
+     *            本次测量是第几次测量
+     * @return 查询到的测点信息List
+     */
+    public List<TunnelSettlementTotalData> queryInfoAfterMEASNo(int chainageId, String pntType,
+            int MEASNo) {
+
+        final IAccessDatabase mDatabase = getCurrentDb();
+
+        if (mDatabase == null) {
+            return null;
+        }
+
+        String sql = "select * from TunnelSettlementTotalData where chainageId=" + chainageId
+                + " AND pntType=\'" + pntType + "\' AND MEASNo>?" + " AND DataStatus != ?"
+                + " order by MEASNo ASC";
+
+        String[] args = new String[] { String.valueOf(MEASNo),
+                String.valueOf(AlertUtils.POINT_DATASTATUS_DISCARD) };
+        return mDatabase.queryObjects(sql, args, TunnelSettlementTotalData.class);
     }
 
     public TunnelSettlementTotalData queryOppositePointOfALine(TunnelSettlementTotalData point1,
@@ -112,10 +157,11 @@ public class TunnelSettlementTotalDataDao extends AbstractDao<TunnelSettlementTo
                 // 同一个断面
                 + point1.getChainageId()
                 // 同一次测量
-                + " AND MEASNo=" + point1.getMEASNo()
+                + " AND MEASNo=?"
                 + " AND pntType=\'" + point2Type + "\'";
 
         List<TunnelSettlementTotalData> list = mDatabase.queryObjects(sql,
+                new String[] { String.valueOf(point1.getMEASNo()) },
                 TunnelSettlementTotalData.class);
 
         if (list != null && list.size() == 1) {
@@ -125,11 +171,13 @@ public class TunnelSettlementTotalDataDao extends AbstractDao<TunnelSettlementTo
         return point2;
     }
 
-    public void updateDataStatus(int id, int dataStatus) {
+    public void updateDataStatus(int id, int dataStatus, float correction) {
+        Log.d(TAG, "TunnelSettlementTotalData updateDataStatus");
         IAccessDatabase db = getCurrentDb();
         if (db != null) {
             String sql = "UPDATE TunnelSettlementTotalData"
                     + " SET DataStatus=" + dataStatus
+                    + ((dataStatus == AlertUtils.POINT_DATASTATUS_CORRECTION) ? (", DataCorrection=" + correction) : "")
                     + " WHERE ID=?";
             String[] args = new String[]{String.valueOf(id)};
             db.execute(sql, args);

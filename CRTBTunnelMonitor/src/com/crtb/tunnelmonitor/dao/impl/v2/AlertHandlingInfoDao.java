@@ -35,6 +35,34 @@ public class AlertHandlingInfoDao extends AbstractDao<AlertHandlingList> {
         db.createTable(AlertHandlingList.class);
     }
 
+    public AlertHandlingList queryOne(int alertId,
+            int alertStatus) {
+        final IAccessDatabase db = getCurrentDb();
+
+        if (db == null) {
+            return null;
+        }
+
+        String sql = "SELECT * from AlertHandlingList WHERE"
+                + " AlertID=?"
+                + " AND AlertStatus=?";
+
+        String[] args = new String[] {
+                String.valueOf(alertId), String.valueOf(alertStatus)
+        };
+
+        return db.queryObject(sql, args, AlertHandlingList.class);
+    }
+
+    public int insertIfNotExist(int alertId, String handling, Date handlingTime, String duePerson,
+            int alertStatus, int handlingInfo) {
+        int id = -1;
+        if (queryOne(alertId, alertStatus) == null) {
+            id = insertItem(alertId, handling, handlingTime, duePerson, alertStatus, handlingInfo);
+        }
+        return id;
+    }
+
     public int insertItem(int alertId, String handling, Date handlingTime, String duePerson,
             int alertStatus, int handlingInfo) {
         Log.d(TAG, "AlertHandlingInfoDao insertItem");
