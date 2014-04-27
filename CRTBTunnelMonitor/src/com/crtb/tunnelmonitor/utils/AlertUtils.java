@@ -397,7 +397,12 @@ public class AlertUtils {
                 + " AlertList.Utype AS utype,"
                 + " AlertHandlingList.AlertStatus AS status,"
                 + " AlertList.SheetID AS sheetId,"
-                + " AlertList.CrossSectionID AS sectionId"
+                + " AlertList.CrossSectionID AS sectionId,"
+                + " AlertList.AlertLeverl AS alertLevel,"
+                + " AlertList.UValue AS uvalue,"
+                + " AlertList.OriginalDataID AS originalDataID,"
+                + " AlertHandlingList.Handling AS handling,"
+                + " AlertHandlingList.HandlingTime AS handlingTime"
                 + " FROM AlertList LEFT JOIN AlertHandlingList"
                 + " ON AlertList.ID=AlertHandlingList.AlertID"
                 + " LEFT JOIN TunnelCrossSectionIndex"
@@ -433,6 +438,11 @@ public class AlertUtils {
                             : "");
                     ai.setSheetId(c.getInt(7));
                     ai.setSectionId(c.getInt(8));
+                    ai.setAlertLevel(c.getInt(9));
+                    ai.setUValue(c.getDouble(10));
+                    ai.setOriginalDataID(c.getString(11));
+                    ai.setHandling(c.getString(12));
+                    ai.setHandlingTime(c.getString(13));
                     l.add(ai);
                 }
             }

@@ -75,7 +75,7 @@
     </LinearLayout>
 
     <EditText
-        android:id="@+id/alert_edt_state"
+        android:id="@+id/alert_handling"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:enabled="false" />

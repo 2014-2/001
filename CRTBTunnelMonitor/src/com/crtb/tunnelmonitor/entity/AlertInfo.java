@@ -12,6 +12,11 @@ public class AlertInfo implements Serializable {
     public int alertHandlingId = -1;
     public int sheetId = -1;
     public int sectionId = -1;
+    public int alertLevel;
+    public double uvalue;
+	public String originalDataID;
+	public String handling;
+	public String handlingTime;
     public String xinghao;
     public String date;
     public String pntType;
@@ -62,6 +67,46 @@ public class AlertInfo implements Serializable {
         return sectionId;
     }
 
+    public void setAlertLevel(int level) {
+    	this.alertLevel = level;
+    }
+    
+    public int getAlertLevel() {
+    	return alertLevel;
+    }
+    
+    public void setUValue(double uvalue) {
+    	this.uvalue = uvalue;
+    }
+    
+    public double getUValue() {
+    	return uvalue;
+    }
+    
+    public void setOriginalDataID(String id) {
+    	this.originalDataID = id;
+    }
+    
+    public String getOriginalDataID() {
+    	return originalDataID;
+    }
+    
+    public void setHandling(String handling) {
+    	this.handling = handling;
+    }
+    
+    public String getHandling() {
+    	return handling;
+    }
+    
+    public void setHandlingTime(String time) {
+    	handlingTime = time;
+    }
+    
+    public String getHandlingTime() {
+    	return handlingTime;
+    }
+    
     public String getChuliFangshi() {
         return chuliFangshi;
     }

@@ -69,7 +69,7 @@ public class ReviewWarningActivity extends Activity {
                 holder.mTvState = (TextView)convertView.findViewById(R.id.alert_state);
                 holder.mTvHandleMethod = (TextView)convertView
                         .findViewById(R.id.alert_handle_method);
-                holder.mEtEdtState = (EditText)convertView.findViewById(R.id.alert_edt_state);
+                holder.mEtHandling = (EditText)convertView.findViewById(R.id.alert_handling);
                 convertView.setTag(holder);
             }
             bindView(alertInfo, convertView);
@@ -84,7 +84,7 @@ public class ReviewWarningActivity extends Activity {
             holder.mTvTypeMsg.setText(alertInfo.getUTypeMsg());
             holder.mTvState.setText(getString(R.string.alert_state, alertInfo.getAlertStatusMsg()));
             holder.mTvHandleMethod.setText(getString(R.string.alert_handle_method, alertInfo.getChuliFangshi()));
-            holder.mEtEdtState.setText(alertInfo.getEdtState());
+            holder.mEtHandling.setText(alertInfo.getHandling());
         }
     }
 
@@ -95,6 +95,6 @@ public class ReviewWarningActivity extends Activity {
         TextView mTvTypeMsg;
         TextView mTvState;
         TextView mTvHandleMethod;
-        EditText mEtEdtState;
+        EditText mEtHandling;
     }
 }
