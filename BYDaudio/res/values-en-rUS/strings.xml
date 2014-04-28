@@ -38,6 +38,11 @@
     <string name="title_audio_usb">USB music</string>
     <string name="delete_all">Delete all</string>
     <string name="last_song">That is the last song!</string>
+    <string name="confirm_delete">Delete?</string>
+    <string name="delete_song_title">Delete Song</string>
+    <string name="deleting_song">Deleting...</string>
+    <string name="search_song_title">Search Song</string>
+    <string name="searching_song">Searching Song...</string>
 
     <string name="audio_fx_none">None</string>
     <string name="audio_fx_classical">Classical</string>

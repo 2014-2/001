@@ -506,7 +506,7 @@ OnItemLongClickListener, SearchListener, DeleteListener {
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-            builder.setTitle("DELETE").setMessage("音乐文件将从文件系统彻底删除。请确认是否删除？");
+            builder.setTitle("DELETE").setMessage(R.string.confirm_delete);
 
             builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                 @Override
@@ -562,8 +562,8 @@ OnItemLongClickListener, SearchListener, DeleteListener {
                     if (mProgressDialog == null) {
                         mProgressDialog = new ProgressDialog(AudioListActivity.this);
                         mProgressDialog.setCancelable(false);
-                        mProgressDialog.setTitle("閸掔娀娅庡灞炬锤");
-                        mProgressDialog.setMessage("濮濓絽婀崚鐘绘珟濮濆本娲�鐠囬鈼㈤崐锟�.");
+                        mProgressDialog.setTitle(R.string.delete_song_title);
+                        mProgressDialog.setMessage(getApplicationContext().getString(R.string.deleting_song));
                     }
                     if (!mProgressDialog.isShowing()) {
                         mProgressDialog.show();
@@ -573,8 +573,8 @@ OnItemLongClickListener, SearchListener, DeleteListener {
                     if (mProgressDialog == null) {
                         mProgressDialog = new ProgressDialog(AudioListActivity.this);
                         mProgressDialog.setCancelable(false);
-                        mProgressDialog.setTitle("閹兼粎鍌ㄥ灞炬锤");
-                        mProgressDialog.setMessage("濮濓絽婀幖婊呭偍濮濆本娲�鐠囬鈼㈤崐锟�.");
+                        mProgressDialog.setTitle(R.string.search_song_title);
+                        mProgressDialog.setMessage(getApplicationContext().getString(R.string.searching_song));
                     }
                     if (!mProgressDialog.isShowing()) {
                         mProgressDialog.show();
