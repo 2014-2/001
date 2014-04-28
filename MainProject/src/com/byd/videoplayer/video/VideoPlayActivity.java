@@ -4,8 +4,10 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
@@ -61,6 +63,8 @@ import com.byd.videoplayer.view.SoundVolumeView;
  */
 public class VideoPlayActivity extends Activity {
 
+   public static final String ACTION_SUSPEND_BROADCAST = "com.android.suspend.BroadcastReceiver";
+   
 	public static final String POINT = "POINT";
 	private final static int REPEAT_NONE = 0;
 	private final static int REPEAT_ALL = 1;
@@ -380,6 +384,56 @@ public class VideoPlayActivity extends Activity {
 		sv_ctrlbar = (SoundVolumeView) controlView.findViewById(R.id.volume_seek_bar);
 		sv_ctrlbar.updateVolumeView();
 		updateErrorIcon();
+		
+		registerSuspendBroadcast();
+	}
+	
+	
+	/**
+	 * 麻烦实现一下暂停恢复功能：按下某个暂停硬件后，发出broadcast，我们如果在播放,收到stop broadcast后暂停。
+                 如果我们之前是被暂停的，收到recover broadcast后继续播放 4/27/2014
+	 * @author Des
+	 *
+	 */
+	class SuspendReceiver extends BroadcastReceiver {
+
+       @Override
+       public void onReceive(Context context, Intent intent) {
+           String action = intent.getAction();
+           if(ACTION_SUSPEND_BROADCAST.equals(action)) {
+               String operation = intent.getStringExtra("command");
+               if("stop".equals(operation)) {
+                   if (!isPaused && !mMediaPlayer.isUrlEmpty()) {
+                       mMediaPlayer.pause();
+                       btnPlayPause.setImageResource(R.drawable.button_play);
+                       hideControllerDelay();
+                       isPaused = true;
+                   }
+               } else if("recover".equals(operation)) {
+                   if (isPaused && !mMediaPlayer.isUrlEmpty()) {
+                       mMediaPlayer.start();
+                       btnPlayPause.setImageResource(R.drawable.button_pause);
+                       hideControllerDelay();
+                       isPaused = false;
+                   }
+               }
+           }
+       }
+   }
+	
+	private SuspendReceiver mSuspendReceiver;
+	private void registerSuspendBroadcast() {
+	    if(mSuspendReceiver == null) {
+	        mSuspendReceiver = new SuspendReceiver();
+	        IntentFilter filter = new IntentFilter(ACTION_SUSPEND_BROADCAST);
+	        registerReceiver(mSuspendReceiver, filter);
+	    }
+	}
+	private void unregisterSuspendBroadcast() {
+	    if(mSuspendReceiver != null) {
+	        unregisterReceiver(mSuspendReceiver);
+	    }
+	    mSuspendReceiver = null;
 	}
 	
 	/**
@@ -621,6 +675,7 @@ public class VideoPlayActivity extends Activity {
 		}
 		mVideoView.removeAllViews();
 		mMediaPlayer = null;
+		unregisterSuspendBroadcast();
 		super.onDestroy();
 	}
 
@@ -664,6 +719,7 @@ public class VideoPlayActivity extends Activity {
 			titleWindow.update(0, 0, 0, 0);
 			isControllerShow = false;
 		}
+		dismissProgress();
 	}
 
 	private void hideControllerDelay() {
