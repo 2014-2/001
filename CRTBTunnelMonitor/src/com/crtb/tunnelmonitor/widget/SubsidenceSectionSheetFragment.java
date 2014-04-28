@@ -19,26 +19,15 @@ import android.widget.TextView;
 
 import com.crtb.tunnelmonitor.activity.R;
 import com.crtb.tunnelmonitor.utils.CrtbUtils;
-import com.crtb.tunnelmonitor.utils.DataManager;
-import com.crtb.tunnelmonitor.utils.DataManager.DataLoadListener;
-import com.crtb.tunnelmonitor.utils.DataManager.UploadSheetData;
+import com.crtb.tunnelmonitor.utils.SubsidenceDataManager;
+import com.crtb.tunnelmonitor.utils.SubsidenceDataManager.UploadSheetData;
 
 @SuppressLint("ValidFragment")
-public class SectionSheetFragment extends Fragment {
-    public static final int TUNNEL_CROSS = 0;
-
-    public static final int SUBSIDENCE_CROSS = 1;
-
-    private int mSheetType;
-
+public class SubsidenceSectionSheetFragment extends Fragment {
     private ListView mSheetList;
     private SheetAdapter mAdapter;
 
-    public SectionSheetFragment() {
-    }
-
-    public SectionSheetFragment(int mSheetType) {
-        this.mSheetType = mSheetType;
+    public SubsidenceSectionSheetFragment() {
     }
 
     @Override
@@ -76,28 +65,22 @@ public class SectionSheetFragment extends Fragment {
         loadData();
     }
 
-    private void loadData() {
-        DataManager dataManager = new DataManager();
-        dataManager.loadData(new DataLoadListener() {
-            @Override
-            public void done(List<UploadSheetData> uploadDataList) {
-                switch (mSheetType) {
-                    case TUNNEL_CROSS:
-                        if (uploadDataList != null && uploadDataList.size() > 0 ) {
-                            List<RawSheetData> sheetDataList = new ArrayList<RawSheetData>();
-                            for(UploadSheetData sheetData : uploadDataList) {
-                                sheetDataList.add(new RawSheetData(sheetData));
-                            }
-                            mAdapter.setSheetList(sheetDataList);
-                        }
-                        break;
-                    case SUBSIDENCE_CROSS:
-                        // TODO: 显示读取到的地表下沉断面工作单
-                        break;
-                }
-            }
-        });
-    }
+	private void loadData() {
+		SubsidenceDataManager subsidenceDataManager = new SubsidenceDataManager();
+		subsidenceDataManager
+				.loadData(new SubsidenceDataManager.DataLoadListener() {
+					@Override
+					public void done(List<UploadSheetData> uploadDataList) {
+						if (uploadDataList != null && uploadDataList.size() > 0) {
+							List<RawSheetData> sheetDataList = new ArrayList<RawSheetData>();
+							for (UploadSheetData sheetData : uploadDataList) {
+								sheetDataList.add(new RawSheetData(sheetData));
+							}
+							mAdapter.setSheetList(sheetDataList);
+						}
+					}
+				});
+	}
 
     public void refreshUI() {
         loadData();

@@ -275,7 +275,8 @@ public class SectionNewSubsidenceActivity extends WorkFlowActivity implements On
 				subsidence.setDBU0(Float.valueOf(dbu0));
 				subsidence.setDBLimitVelocity(Float.valueOf(dbl));
 				subsidence.setDBU0Time(DateUtils.toDate(buildtime,DateUtils.PART_TIME_FORMAT));
-				subsidence.setInfo(remark);
+				//TODO: info被用来标记数据是否上传：1表示未上传, 2表示已上传
+				subsidence.setInfo("1");
 				
 				// insert
 				int code = SubsidenceCrossSectionIndexDao.defaultDao().insert(subsidence);

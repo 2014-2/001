@@ -42,7 +42,9 @@ import com.crtb.tunnelmonitor.entity.ProjectIndex;
 import com.crtb.tunnelmonitor.utils.DataManager;
 import com.crtb.tunnelmonitor.utils.DataManager.DataUploadListener;
 import com.crtb.tunnelmonitor.utils.DataManager.UploadSheetData;
-import com.crtb.tunnelmonitor.widget.SectionSheetFragment;
+import com.crtb.tunnelmonitor.utils.SubsidenceDataManager;
+import com.crtb.tunnelmonitor.widget.SubsidenceSectionSheetFragment;
+import com.crtb.tunnelmonitor.widget.TunnelSectionSheetFragment;
 
 
 public class DataUploadActivity extends FragmentActivity {
@@ -51,8 +53,8 @@ public class DataUploadActivity extends FragmentActivity {
     private ImageView cursor;
     private ViewPager mPager;
     private ArrayList<Fragment> mFragmentList;
-    private SectionSheetFragment mTunnelFragment;
-    private SectionSheetFragment mSubsidenceFragment;
+    private TunnelSectionSheetFragment mTunnelFragment;
+    private SubsidenceSectionSheetFragment mSubsidenceFragment;
     private TextView mTunnelTab;
     private TextView mSubsidenceTab;
     private LinearLayout mProgressOverlay;
@@ -107,10 +109,8 @@ public class DataUploadActivity extends FragmentActivity {
 
         mFragmentList = new ArrayList<Fragment>();
 
-        mTunnelFragment = new SectionSheetFragment(SectionSheetFragment.TUNNEL_CROSS);
-        mSubsidenceFragment = new SectionSheetFragment(
-                SectionSheetFragment.SUBSIDENCE_CROSS);
-
+        mTunnelFragment = new TunnelSectionSheetFragment();
+        mSubsidenceFragment = new SubsidenceSectionSheetFragment();
         mFragmentList.add(mTunnelFragment);
         mFragmentList.add(mSubsidenceFragment);
 
@@ -295,6 +295,27 @@ public class DataUploadActivity extends FragmentActivity {
                                 }
                                 break;
                             case 1:
+                            	 SubsidenceDataManager subsidenceDataManager = new SubsidenceDataManager();
+                                 List<com.crtb.tunnelmonitor.utils.SubsidenceDataManager.UploadSheetData> uploadDataList1 = mSubsidenceFragment.getUploadData();
+                                 if (uploadDataList1 != null && uploadDataList1.size() > 0) {
+                                     showProgressOverlay();
+                                     subsidenceDataManager.uploadData(uploadDataList1, new com.crtb.tunnelmonitor.utils.SubsidenceDataManager.DataUploadListener() {
+                                         @Override
+                                         public void done(final boolean success) {
+                                             runOnUiThread(new Runnable() {
+                                                 @Override
+                                                 public void run() {
+                                                     if (success) {
+                                                    	 mSubsidenceFragment.refreshUI();
+                                                     }
+                                                     updateStatus(success);
+                                                 }
+                                             });
+                                         }
+                                     });
+                                 } else {
+                                     Toast.makeText(getApplicationContext(), "请先选择要上传的记录单", Toast.LENGTH_LONG).show();
+                                 }
                                 break;
                                 // TODO:地标下沉断面
                             default:

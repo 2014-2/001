@@ -131,12 +131,15 @@ public final class CrtbUtils {
     }
     
     public static void fillSectionParamter(SubsidenceCrossSectionIndex section,SectionUploadParamter outParamter){
-    	
     	if(section == null || outParamter == null){
     		return ;
     	}
     	outParamter.setSectionName(section.getSectionName());
-    	//outParamter.setSectioCode(section.get) // ?
+    	CrtbAppConfig config = CrtbAppConfig.getInstance();
+    	int sectionSequence = config.getSectionSequence() + 1;
+    	config.setSectionSequence(sectionSequence);
+    	String sectionCode = CrtbWebService.getInstance().getSiteCode() + String.format("%04d",  sectionSequence);
+    	outParamter.setSectioCode(sectionCode);
     	outParamter.setChainage(String.valueOf(section.getChainage()));
     	// outParamter.setDigMethod(String.valueOf(section.getExcavateMethod()));
     	outParamter.setWidth(section.getWidth());
@@ -147,7 +150,6 @@ public final class CrtbUtils {
     	outParamter.setPointList(section.getSurveyPnts());
     	outParamter.setFirstMeasureDate(section.getInbuiltTime());
     	outParamter.setRemark(section.getInfo());
-    	
     }
     
     public static void fillTunnelTestRecord(TunnelSettlementTotalData data, PointUploadParameter outParamter){
