@@ -112,6 +112,7 @@ public class RecordActivity extends WorkFlowActivity implements OnPageChangeList
 		// clear object
 		CommonObject.remove(RecordNewActivity.KEY_RECORD_TUNNEL_OBJECT);
 		CommonObject.remove(RecordNewSubsidenceActivity.KEY_RECORD_SUBSIDENCE_OBJECT);
+		CommonObject.remove(TestSectionExecuteActivity.KEY_TEST_RAWSHEET_LIST);
 	}
 	
 	public void loadSystemMenu(){
@@ -155,9 +156,17 @@ public class RecordActivity extends WorkFlowActivity implements OnPageChangeList
 			
 			final RawSheetIndex info = (RawSheetIndex) bean ;
 			
-			// 打开
+			// 打开---> 测量
 			if(position == 0){
 				
+				List<RawSheetIndex> list = new ArrayList<RawSheetIndex>();
+				list.add(info);
+				
+				CommonObject.putObject(TestSectionExecuteActivity.KEY_TEST_RAWSHEET_LIST, list) ;
+				
+				Intent intent = new Intent() ;
+				intent.setClass(this, TestSectionExecuteActivity.class);
+				startActivity(intent);
 			} 
 			// 编辑
 			else if(position == 1){
