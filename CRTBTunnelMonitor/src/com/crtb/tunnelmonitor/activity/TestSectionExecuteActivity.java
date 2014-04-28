@@ -271,48 +271,51 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 	// 异步测量
 	private void connectSurveyProvider(final TestPointHolder holder,final String type,final int sectionType){
 		
-		ExecuteAsyncTaskImpl.defaultSyncExecutor().executeTask(new BaseAsyncTask(mHanlder){
+		// 暂时去掉优化
+		/*ExecuteAsyncTaskImpl.defaultSyncExecutor().executeTask(new BaseAsyncTask(mHanlder){
 			
 			@Override
 			public void process() {
 				
-				ISurveyProvider ts = TSSurveyProvider.getDefaultAdapter();
 				
-				if (ts == null) {
-					sendMessage(MSG_ERROR_CONNECT);
-					return;
-				}
-
-				Coordinate3D point = new Coordinate3D(null);
-				try {
-					int nret = ts.GetCoord(0, 0, point);
-					if (nret != 1) {
-						sendMessage(MSG_TEST_ERROR);
-						return;
-					}
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-					return;
-				}
-				
-				String x = String.format("%1$.4f", point.N);
-				String y = String.format("%1$.4f", point.E);
-				String z = String.format("%1$.4f", point.H);
-				String time = Time.getDateEN() ;
-				
-				TestInfo info = new TestInfo() ;
-				info.holder	= holder ;
-				info.type	= type ;// 测点类型
-				info.sectionType	= sectionType ;// 断面类型
-				
-				info.x 		= x ;
-				info.y		= y ;
-				info.z		= z ;
-				info.time	= time ;
-				
-				sendMessage(MSG_TEST_SUCCESS,info);
 			}
-		}) ;
+		}) ;*/
+		
+		ISurveyProvider ts = TSSurveyProvider.getDefaultAdapter();
+		
+		if (ts == null) {
+			mHanlder.sendMessage(MSG_ERROR_CONNECT);
+			return;
+		}
+
+		Coordinate3D point = new Coordinate3D(null);
+		try {
+			int nret = ts.GetCoord(0, 0, point);
+			if (nret != 1) {
+				mHanlder.sendMessage(MSG_TEST_ERROR);
+				return;
+			}
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+			return;
+		}
+		
+		String x = String.format("%1$.4f", point.N);
+		String y = String.format("%1$.4f", point.E);
+		String z = String.format("%1$.4f", point.H);
+		String time = Time.getDateEN() ;
+		
+		TestInfo info = new TestInfo() ;
+		info.holder	= holder ;
+		info.type	= type ;// 测点类型
+		info.sectionType	= sectionType ;// 断面类型
+		
+		info.x 		= x ;
+		info.y		= y ;
+		info.z		= z ;
+		info.time	= time ;
+		
+		mHanlder.sendMessage(MSG_TEST_SUCCESS,info);
 	}
 	
 	@Override
