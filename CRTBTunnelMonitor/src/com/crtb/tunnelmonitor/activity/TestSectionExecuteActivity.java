@@ -51,7 +51,12 @@ import com.crtb.tunnelmonitor.utils.Time;
 @InjectLayout(layout=R.layout.activity_testrecord_execute)
 public class TestSectionExecuteActivity extends WorkFlowActivity implements View.OnClickListener {
 	
-	// 测量列表
+//    private static int COUNT = 0;//TODO: REMOVE: JUST FOR DEBUG
+//    private static double X = 2.3614D;
+//    private static double Y = 3.7607D;
+//    private static double Z = 1378.1012D;
+
+    // 测量列表
 	public static final String KEY_TEST_RAWSHEET_LIST	= "_key_test_rawsheet_list" ;
 	static final int MSG_ERROR_CONNECT	= 1 ;
 	static final int MSG_TEST_ERROR		= 2 ;
@@ -303,6 +308,11 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 		String x = String.format("%1$.4f", point.N);
 		String y = String.format("%1$.4f", point.E);
 		String z = String.format("%1$.4f", point.H);
+//		String x = String.format("%1$.4f", X - COUNT * 0.05);
+//		String y = String.format("%1$.4f", Y - COUNT * 0.05);
+//		String z = String.format("%1$.4f", Z - COUNT * 0.05);
+//		COUNT++;
+
 		String time = Time.getDateEN() ;
 		
 		TestInfo info = new TestInfo() ;
@@ -390,7 +400,7 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 						if(dao.insert(obj) == TunnelSettlementTotalDataDao.DB_EXECUTE_SUCCESS){
 							
 							if(info.type.equals(AppConfig.POINT_A)){
-								doWarring(info.holder, AlertUtils.getPointSubsidenceExceedMsg(obj));
+								doWarning(info.holder, AlertUtils.getPointSubsidenceExceedMsg(obj));
 							} else {
 								
 								if(info.type.equals(AppConfig.POINT_S1_1)
@@ -402,7 +412,7 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 								}
 								
 								if(pS1 != null && pS2 != null){
-									doWarringLine(info.holder);
+									doWarningLine(info.holder);
 								}
 							}
 							
@@ -432,12 +442,13 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 							obj.setMEASNo(1);
 						}
 						
-						obj.setCoordinate(info.z + "," + info.y + "," + info.z);
+						obj.setCoordinate(info.x + "," + info.y + "," + info.z);
 						obj.setSurveyTime(DateUtils.toDate(info.time, DateUtils.DATE_TIME_FORMAT));
 						obj.setDataStatus(0);
 						
 						// 插入
 						if(dao.insert(obj) == TunnelSettlementTotalDataDao.DB_EXECUTE_SUCCESS){
+						    doWarning(info.holder, AlertUtils.getPointSubsidenceExceedMsg(obj));
 							showText("保存成功");
 						} else {
 							showText("保存失败");
@@ -451,17 +462,17 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 		};
 	}
 
-	private void doWarringLine(TestPointHolder holder){
+	private void doWarningLine(TestPointHolder holder){
 		
 	    String[] list = AlertUtils.getLineConvergenceExceedMsg(pS1,pS2);
 
-		doWarring(holder, list);
+		doWarning(holder, list);
 
 		pS1 = null;
 		pS2 = null;
 	}
 	
-	private void doWarring(TestPointHolder holder, String[] list){
+	private void doWarning(TestPointHolder holder, String[] list){
 		
 		if(list == null || list.length == 0){
 			System.out.println("zhouwei : 检查拱顶 ------ 没有错误");
