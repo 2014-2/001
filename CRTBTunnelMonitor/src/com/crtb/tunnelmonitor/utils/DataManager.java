@@ -224,7 +224,7 @@ public class DataManager {
         parameter.setTunnelFaceDistance(50.0f);
         parameter.setProcedure("02");
         parameter.setMonitorModel("xxx");
-        parameter.setMeasureDate(new Date());
+        parameter.setMeasureDate(measureData.getMeasureDate());
         parameter.setPointValueList(measureData.getValueList());
         parameter.setPointCoordinateList(measureData.getCoordinateList());
         parameter.setSurveyorName("杨工");
@@ -370,6 +370,15 @@ public class DataManager {
     public class UploadMeasureData {
         private List<TunnelSettlementTotalData> mMeasurePoints = new ArrayList<TunnelSettlementTotalData>();
 
+        public Date getMeasureDate() {
+        	Date mesureDate = null;
+        	if (mMeasurePoints != null && mMeasurePoints.size() > 0) {
+        		TunnelSettlementTotalData point = mMeasurePoints.get(0);
+        		mesureDate = point.getSurveyTime();
+        	}
+        	return mesureDate;
+        }
+        
         public void addPoint(TunnelSettlementTotalData point) {
             mMeasurePoints.add(point);
         }
