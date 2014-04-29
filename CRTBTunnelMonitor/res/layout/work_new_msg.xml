@@ -23,14 +23,15 @@
 
                 <TextView
                     style="@style/work_plan_label"
-                    android:text="工作面 " />
+                    android:layout_width="80dp"
+                    android:text="工作面名称" />
 
                 <EditText
                     android:id="@+id/ed_work_new_name"
                     style="@style/crtb_input_edit_text"
-                    android:layout_width="200dp"
+                    android:layout_width="190dp"
                     android:layout_height="42dip"
-                    android:layout_marginLeft="21dp"
+                    android:layout_marginLeft="10dp"
                     android:inputType="textPersonName"
                     android:maxLength="20" />
 
@@ -50,18 +51,19 @@
 
                 <TextView
                     style="@style/work_plan_label"
+                    android:layout_width="80dp"
                     android:text="建立时间" />
 
                 <EditText
                     android:id="@+id/ed_work_new_calendar"
                     style="@style/crtb_input_edit_text"
-                    android:layout_width="200dp"
+                    android:layout_width="190dp"
                     android:layout_height="42dip"
                     android:layout_marginLeft="10dp"
-                    android:editable="false" 
+                    android:editable="false"
                     android:focusable="false"
                     android:singleLine="true"
-                    android:text="2014-04-12 00:00:00"/>
+                    android:text="2014-04-12 00:00:00" />
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -79,12 +81,13 @@
 
                 <TextView
                     style="@style/work_plan_label"
+                    android:layout_width="80dp"
                     android:text="施工单位" />
 
                 <EditText
                     android:id="@+id/ed_work_new_unit"
                     style="@style/crtb_input_edit_text"
-                    android:layout_width="200dp"
+                    android:layout_width="190dp"
                     android:layout_height="42dip"
                     android:layout_marginLeft="10dp" />
 
@@ -104,12 +107,13 @@
 
                 <TextView
                     style="@style/work_plan_label"
+                    android:layout_width="80dp"
                     android:text="里程前缀" />
 
                 <EditText
                     android:id="@+id/ed_work_new_prefix"
                     style="@style/crtb_input_edit_text"
-                    android:layout_width="200dp"
+                    android:layout_width="190dp"
                     android:layout_height="42dip"
                     android:layout_marginLeft="10dp"
                     android:maxLength="5"
@@ -131,12 +135,13 @@
 
                 <TextView
                     style="@style/work_plan_label"
+                    android:layout_width="80dp"
                     android:text="起始里程" />
 
                 <EditText
                     android:id="@+id/ed_work_new_start"
                     style="@style/crtb_input_edit_text"
-                    android:layout_width="200dp"
+                    android:layout_width="190dp"
                     android:layout_height="42dip"
                     android:layout_marginLeft="10dp"
                     android:inputType="number" />
@@ -157,12 +162,13 @@
 
                 <TextView
                     style="@style/work_plan_label"
+                    android:layout_width="80dp"
                     android:text="终止里程" />
 
                 <EditText
                     android:id="@+id/ed_work_new_end"
                     style="@style/crtb_input_edit_text"
-                    android:layout_width="200dp"
+                    android:layout_width="190dp"
                     android:layout_height="42dip"
                     android:layout_marginLeft="10dp"
                     android:inputType="number" />

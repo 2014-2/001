@@ -31,6 +31,7 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 
 	public static final String KEY_CURRENT_WORKPLAN = "_key_current_workplan";
 
+	private TextView mTitle ;
 	/** 工作面 */
 	private TextView mWorkSection;
 	/** 断面 */
@@ -96,10 +97,7 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 	/** 初始化控件 */
 	private void initView() {
 		
-		TextView title = (TextView) findViewById(R.id.tv_topbar_title);
-		String name = AppPreferences.getPreferences().getCurrentSimpleProjectName();
-		title.setText(StringUtils.isEmpty(name) ? getString(R.string.main_title) : name);
-		
+		mTitle = (TextView) findViewById(R.id.tv_topbar_title);
 		mWorkSection = (TextView) findViewById(R.id.worksection);
 		mCrossSection = (TextView) findViewById(R.id.crosssection);
 		mSheet = (TextView) findViewById(R.id.sheet);
@@ -136,7 +134,11 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 	@Override
 	protected void onResume() {
 		super.onResume();
+		
 		mCurrentWorkPlan = ProjectIndexDao.defaultWorkPlanDao().queryEditWorkPlan();
+		
+		String name = AppPreferences.getPreferences().getCurrentSimpleProjectName();
+		mTitle.setText(StringUtils.isEmpty(name) ? getString(R.string.main_title) : name);
 	}
 	
 	@Override

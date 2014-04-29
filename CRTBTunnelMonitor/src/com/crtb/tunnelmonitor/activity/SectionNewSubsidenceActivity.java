@@ -35,9 +35,8 @@ import com.crtb.tunnelmonitor.CommonObject;
 import com.crtb.tunnelmonitor.WorkFlowActivity;
 import com.crtb.tunnelmonitor.dao.impl.v2.ProjectIndexDao;
 import com.crtb.tunnelmonitor.dao.impl.v2.SubsidenceCrossSectionIndexDao;
-import com.crtb.tunnelmonitor.entity.SubsidenceCrossSectionIndex;
 import com.crtb.tunnelmonitor.entity.ProjectIndex;
-import com.crtb.tunnelmonitor.mydefine.CrtbDateDialogUtils;
+import com.crtb.tunnelmonitor.entity.SubsidenceCrossSectionIndex;
 import com.crtb.tunnelmonitor.utils.CrtbUtils;
 
 /**
@@ -193,10 +192,10 @@ public class SectionNewSubsidenceActivity extends WorkFlowActivity implements On
 			this.finish();// 关闭当前界面
 			break;
 		case R.id.section_new_et_calendar:
-			CrtbDateDialogUtils.setAnyDateDialog(this, DSection_createtime, DateUtils.getCurrtentTimes());
+			//CrtbDateDialogUtils.setAnyDateDialog(this, DSection_createtime, DateUtils.getCurrtentTimes());
 			break ;
 		case R.id.DSection_SetTime:
-			CrtbDateDialogUtils.setAnyDateDialog(this, DSection_SetTime, DateUtils.getCurrtentTimes());
+			//CrtbDateDialogUtils.setAnyDateDialog(this, DSection_SetTime, DateUtils.getCurrtentTimes());
 			break ;
 		case R.id.work_btn_queding: // 数据库
 			

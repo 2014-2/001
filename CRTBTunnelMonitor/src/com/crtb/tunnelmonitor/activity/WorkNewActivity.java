@@ -376,18 +376,18 @@ public class WorkNewActivity extends WorkFlowActivity implements OnClickListener
 			break;
 		case R.id.ed_work_new_calendar :
 			
-			CrtbDateDialogUtils.setAnyDateDialog(this, mWorkPlanCalendar, DateUtils.getCurrtentTimes());
+			// CrtbDateDialogUtils.setAnyDateDialog(this, mWorkPlanCalendar, DateUtils.getCurrtentTimes());
 			
 			break ;
 		case R.id.vault_trans_date :
 			
-			CrtbDateDialogUtils.setAnyDateDialog(this, mWorkPlanCalendar, DateUtils.getCurrtentTimes());
+			//CrtbDateDialogUtils.setAnyDateDialog(this, mWorkPlanCalendar, DateUtils.getCurrtentTimes());
 			
 			break;
 			
 		case R.id.circum_astringe_date :
 			
-			CrtbDateDialogUtils.setAnyDateDialog(this, mAstringeDate, DateUtils.getCurrtentTimes());
+			//CrtbDateDialogUtils.setAnyDateDialog(this, mAstringeDate, DateUtils.getCurrtentTimes());
 			
 			break;
 		}
