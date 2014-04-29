@@ -46,6 +46,8 @@ public class AudioPlayerService extends Service {
 
     private WheelKeyReceiver mWheelKeyReceiver;
 
+    private PlayPauseReceiver mPlayPauseReceiver;
+
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(android.os.Message msg) {
@@ -71,7 +73,7 @@ public class AudioPlayerService extends Service {
 
     public interface OnPlayPauseListener {
         /**
-         * 閹绢厽鏂侀幋鏍ㄦ畯閸嬫粓鐓舵稊锟�         * 
+         * 閹绢厽鏂侀幋鏍ㄦ畯閸嬫粓鐓舵稊锟�         *
          * @param isPlay true娴狅綀銆冮棅鍏呯瀵拷顫愰幘顓熸杹閿涘畺alse娴狅綀銆冮棅鍏呯鐞氼偅娈忛崑锟�         */
         public void onPlayPause(boolean isPlay);
     }
@@ -278,6 +280,11 @@ public class AudioPlayerService extends Service {
         filter.addAction("com.canbus.action.CAR_SETTING");
         filter.addCategory("com.canbus.action.CAR_SETTING.WHEEL_KEY");
         registerReceiver(mWheelKeyReceiver, filter);
+
+        mPlayPauseReceiver = new PlayPauseReceiver();
+        IntentFilter filter2 = new IntentFilter();
+        filter2.addAction("com.android.suspend.BroadcastReceiver");
+        registerReceiver(mPlayPauseReceiver, filter2);
     }
 
     @Override
@@ -365,6 +372,7 @@ public class AudioPlayerService extends Service {
         mSongPosition = -1;
         mSongChangedListenerList.clear();
         unregisterReceiver(mWheelKeyReceiver);
+        unregisterReceiver(mPlayPauseReceiver);
     }
 
     private final class PreparedListener implements OnPreparedListener {
@@ -415,6 +423,28 @@ public class AudioPlayerService extends Service {
                     case Canbus.WHEEL_KEY_SEEK_DOWN_SHORT:
                         forceChangeToNext();
                         break;
+                }
+            }
+        }
+    }
+
+    class PlayPauseReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if ("com.android.suspend.BroadcastReceiver".equals(action)) {
+                String valueStr = intent.getStringExtra("command");
+                if("stop".equals(valueStr)) {
+                    mPlayer.pause();
+                    if (null != mPlayPauseListener) {
+                        mPlayPauseListener.onPlayPause(false);
+                    }
+                } else if ("recover".equals(valueStr)) {
+                    mPlayer.start();
+                    if (null != mPlayPauseListener) {
+                        mPlayPauseListener.onPlayPause(true);
+                    }
                 }
             }
         }
