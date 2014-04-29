@@ -91,6 +91,7 @@
             android:orientation="horizontal" >
 
             <TextView
+                android:id="@+id/section_new_et_s2_label"
                 style="@style/work_plan_label"
                 android:text="S2" />
 
@@ -99,19 +100,19 @@
                 android:layout_width="100dip"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="12dip" />
-            
+
             <TextView
-                style="@style/work_plan_label"
                 android:id="@+id/section_new_et_s3_label"
-                android:text="S3" 
-                android:visibility="invisible"/>
+                style="@style/work_plan_label"
+                android:text="S3"
+                android:visibility="invisible" />
 
             <EditText
                 android:id="@+id/section_new_et_s3"
                 android:layout_width="100dip"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dip" 
-                android:visibility="invisible"/>
+                android:layout_marginLeft="10dip"
+                android:visibility="invisible" />
         </LinearLayout>
     </RelativeLayout>
 

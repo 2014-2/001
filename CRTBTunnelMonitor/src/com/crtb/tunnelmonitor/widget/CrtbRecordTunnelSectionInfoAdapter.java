@@ -19,8 +19,16 @@ import com.crtb.tunnelmonitor.entity.TunnelCrossSectionIndex;
  */
 public final class CrtbRecordTunnelSectionInfoAdapter extends CrtbEntityAdapter<TunnelCrossSectionIndex> {
 
+	
+	private float defaultChainage = 0 ;
+	
 	protected CrtbRecordTunnelSectionInfoAdapter(Context context) {
 		super(context);
+	}
+	
+	protected void setChainage(float value){
+		defaultChainage	= value ;
+		notifyDataSetChanged() ;
 	}
 
 	protected void changeStatus(int position){
@@ -74,7 +82,7 @@ public final class CrtbRecordTunnelSectionInfoAdapter extends CrtbEntityAdapter<
 		}
 		
 		holder.chainage.setText(item.getSectionName());
-		holder.distance.setText(String.valueOf((int)item.getChainage()));
+		holder.distance.setText(String.valueOf((int)(defaultChainage - item.getChainage())));
 		
 		if(item.isUsed()){
 			holder.status.setBackgroundResource(R.drawable.use);

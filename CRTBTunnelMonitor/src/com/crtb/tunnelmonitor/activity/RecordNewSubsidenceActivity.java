@@ -17,6 +17,8 @@ import android.os.Parcelable;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -82,6 +84,9 @@ public class RecordNewSubsidenceActivity extends WorkFlowActivity implements OnP
 	@InjectView(id=R.id.record_C,parent="mBaseInfoLayout")
 	private EditText record_C;
 	
+	@InjectView(id=R.id.record_buildtime,parent="mBaseInfoLayout")
+	private EditText record_buildtime;
+	
 	@InjectView(id=R.id.record_dotype,parent="mBaseInfoLayout")
 	private EditText record_dotype;
 	
@@ -120,6 +125,37 @@ public class RecordNewSubsidenceActivity extends WorkFlowActivity implements OnP
 		
 		// load default
 		loadDefault();
+		
+		// chainage change
+		record_Chainage.addTextChangedListener(new TextWatcher() {
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before,
+					int count) {
+
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+
+				String str = s.toString().trim();
+
+				if (!StringUtils.isEmpty(str)) {
+					sectionListView.setChainage(Float.valueOf(str));
+				}
+			}
+		});
+
+		String str = record_Chainage.getText().toString().trim();
+		if (!StringUtils.isEmpty(str)) {
+			sectionListView.setChainage(Float.valueOf(str));
+		}
     }
     
     private void loadDefault(){
@@ -135,6 +171,11 @@ public class RecordNewSubsidenceActivity extends WorkFlowActivity implements OnP
 			record_Card.setText(recordInfo.getCertificateID());
 			record_C.setText(String.valueOf(recordInfo.getTEMPERATURE()));
 			record_dotype.setText(recordInfo.getFACEDESCRIPTION());
+			
+			record_buildtime.setText(DateUtils.toDateString(recordInfo.getCreateTime(),DateUtils.PART_TIME_FORMAT)) ;
+    	
+    	} else {
+    		record_buildtime.setText(DateUtils.toDateString(DateUtils.getCurrtentTimes(),DateUtils.PART_TIME_FORMAT)) ;
     	}
     }
     
@@ -148,8 +189,6 @@ public class RecordNewSubsidenceActivity extends WorkFlowActivity implements OnP
 			break;
 		case R.id.work_btn_queding: // 数据库
 			
-			// default 
-			String currentTime 	= DateUtils.toDateString(DateUtils.getCurrtentTimes(), DateUtils.DATE_TIME_FORMAT) ;
 						
 			// base
 			String prefix		= section_new_et_prefix.getEditableText().toString().trim() ;
@@ -158,6 +197,7 @@ public class RecordNewSubsidenceActivity extends WorkFlowActivity implements OnP
 			String idcard 		= record_Card.getEditableText().toString().trim();
 			String temperature 	= record_C.getEditableText().toString().trim();
 			String descr 		= record_dotype.getEditableText().toString().trim();
+			String currentTime 	= record_buildtime.getEditableText().toString().trim() ;
 
 			if (StringUtils.isEmpty(chainage)) {
 				showText("撑子面里程不能为空");

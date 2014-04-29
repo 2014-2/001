@@ -44,6 +44,10 @@ public class CrtbRecordTunnelSectionInfoListView extends CrtbBaseListView {
 		}) ;
 	}
 	
+	public void setChainage(float value){
+		mAdapter.setChainage(value);
+	}
+	
 	public TunnelCrossSectionIndex getItem(int position){
 		return mAdapter.getItem(position);
 	}

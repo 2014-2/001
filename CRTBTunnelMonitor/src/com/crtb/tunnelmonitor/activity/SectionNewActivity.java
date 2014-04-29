@@ -109,6 +109,9 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 	@InjectView(id=R.id.section_new_et_s1,parent="mExcavationInfoLayout")
 	private EditText section_new_et_s1;
 	
+	@InjectView(id=R.id.section_new_et_s2_label,parent="mExcavationInfoLayout")
+	private TextView section_new_et_s2_label;
+	
 	@InjectView(id=R.id.section_new_et_s2,parent="mExcavationInfoLayout")
 	private EditText section_new_et_s2;
 	
@@ -181,12 +184,28 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 					int position, long id) {
 				
 				if(position == 0){
+					section_new_et_s2_label.setVisibility(View.INVISIBLE);
+					section_new_et_s2.setVisibility(View.INVISIBLE);
+					section_new_et_s3_label.setVisibility(View.INVISIBLE);
+					section_new_et_s3.setVisibility(View.INVISIBLE);
 					section_method.setBackgroundResource(R.drawable.ic_full_face);
 				} else if(position == 1){
+					section_new_et_s2_label.setVisibility(View.VISIBLE);
+					section_new_et_s2.setVisibility(View.VISIBLE);
+					section_new_et_s3_label.setVisibility(View.INVISIBLE);
+					section_new_et_s3.setVisibility(View.INVISIBLE);
 					section_method.setBackgroundResource(R.drawable.ic_step_method);
 				} else if(position == 2){
+					section_new_et_s2_label.setVisibility(View.VISIBLE);
+					section_new_et_s2.setVisibility(View.VISIBLE);
+					section_new_et_s3_label.setVisibility(View.VISIBLE);
+					section_new_et_s3.setVisibility(View.VISIBLE);
 					section_method.setBackgroundResource(R.drawable.ic_three_step);
 				} else if(position == 3){
+					section_new_et_s2_label.setVisibility(View.VISIBLE);
+					section_new_et_s2.setVisibility(View.VISIBLE);
+					section_new_et_s3_label.setVisibility(View.VISIBLE);
+					section_new_et_s3.setVisibility(View.VISIBLE);
 					section_method.setBackgroundResource(R.drawable.ic_dual_slope_method);
 				} 
 			}
@@ -245,6 +264,17 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 			section_new_et_width.setText(String.valueOf(sectionInfo.getWidth()));
 			
 			section_new_sp.setSelection(CrtbUtils.getExcavateMethod(sectionInfo.getExcavateMethod()));
+			
+			section_new_leiji_gd.setText(String.valueOf(sectionInfo.getGDU0()));
+			section_new_leiji_sl.setText(String.valueOf(sectionInfo.getSLU0()));
+			section_new_single_gd.setText(String.valueOf(sectionInfo.getGDVelocity()));
+			section_new_single_sl.setText(String.valueOf(sectionInfo.getSLLimitVelocity()));
+			
+			section_new_createtime1.setText(DateUtils.toDateString(sectionInfo.getGDU0Time()));
+			section_new_createtime2.setText(DateUtils.toDateString(sectionInfo.getSLU0Time()));
+			
+			section_new_remark_gd.setText(sectionInfo.getGDU0Description());
+			section_new_remark_sl.setText(sectionInfo.getSLU0Description());
 		}
 	}
 
@@ -291,10 +321,10 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 			
 			break;
 		case R.id.section_new_et_calendar :
-			CrtbDateDialogUtils.setAnyDateDialog(this, section_new_et_calendar, DateUtils.getCurrtentTimes());
+			//CrtbDateDialogUtils.setAnyDateDialog(this, section_new_et_calendar, DateUtils.getCurrtentTimes());
 			break ;
 		case R.id.section_new_createtime_gd :
-			CrtbDateDialogUtils.setAnyDateDialog(this, section_new_createtime1, DateUtils.getCurrtentTimes());
+			//CrtbDateDialogUtils.setAnyDateDialog(this, section_new_createtime1, DateUtils.getCurrtentTimes());
 			break ;
 		case R.id.section_new_createtime_sl :
 			CrtbDateDialogUtils.setAnyDateDialog(this, section_new_createtime2, DateUtils.getCurrtentTimes());
@@ -323,6 +353,37 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 				return ;
 			}
 			
+			String gdlj	= section_new_leiji_gd.getEditableText().toString().trim() ;
+			String zblj	= section_new_leiji_sl.getEditableText().toString().trim() ;
+			String gdsl	= section_new_single_gd.getEditableText().toString().trim() ;
+			String zbsl	= section_new_single_sl.getEditableText().toString().trim() ;
+			
+			String gdtime	= section_new_createtime1.getEditableText().toString().trim() ;
+			String zbtime	= section_new_createtime2.getEditableText().toString().trim() ;
+			
+			String gddes	= section_new_remark_gd.getEditableText().toString().trim() ;
+			String zbdes	= section_new_remark_sl.getEditableText().toString().trim() ;
+			
+			if(StringUtils.isEmpty(gdlj)){
+				showText("拱顶极限值必须大于0");
+				return ;
+			}
+			
+			if(StringUtils.isEmpty(zblj)){
+				showText("周边收敛极限值必须大于0");
+				return ;
+			}
+			
+			if(StringUtils.isEmpty(gdsl)){
+				showText("拱顶下沉变形极限值必须大于0");
+				return ;
+			}
+			
+			if(StringUtils.isEmpty(zbsl)){
+				showText("周边收敛变形极限值必须大于0");
+				return ;
+			}
+			
 			if(sectionInfo == null){
 				
 				sectionInfo = new TunnelCrossSectionIndex() ;
@@ -335,6 +396,16 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 				sectionInfo.setWidth(Float.valueOf(width));
 				//TODO: 表示数据未上传
 				sectionInfo.setInfo("1"); 
+				
+				sectionInfo.setGDU0(Float.valueOf(gdlj));
+				sectionInfo.setGDVelocity(Float.valueOf(gdsl));
+				sectionInfo.setGDU0Time(DateUtils.toDate(gdtime, DateUtils.PART_TIME_FORMAT));
+				sectionInfo.setGDU0Description(gddes);
+				
+				sectionInfo.setSLU0(Float.valueOf(zblj));
+				sectionInfo.setSLLimitVelocity(Float.valueOf(zbsl));
+				sectionInfo.setSLU0Time(DateUtils.toDate(zbtime, DateUtils.PART_TIME_FORMAT));
+				sectionInfo.setSLU0Description(zbdes);
 				
 				// excavation
 				sectionInfo.setExcavateMethod((String)section_new_sp.getSelectedItem());
@@ -360,6 +431,16 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 				
 				// excavation
 				sectionInfo.setExcavateMethod((String)section_new_sp.getSelectedItem());
+				
+				sectionInfo.setGDU0(Float.valueOf(gdlj));
+				sectionInfo.setGDVelocity(Float.valueOf(gdsl));
+				sectionInfo.setGDU0Time(DateUtils.toDate(gdtime, DateUtils.PART_TIME_FORMAT));
+				sectionInfo.setGDU0Description(gddes);
+				
+				sectionInfo.setSLU0(Float.valueOf(zblj));
+				sectionInfo.setSLLimitVelocity(Float.valueOf(zbsl));
+				sectionInfo.setSLU0Time(DateUtils.toDate(zbtime, DateUtils.PART_TIME_FORMAT));
+				sectionInfo.setSLU0Description(zbdes);
 				
 				TunnelCrossSectionIndexDao.defaultDao().update(sectionInfo);
 			}
