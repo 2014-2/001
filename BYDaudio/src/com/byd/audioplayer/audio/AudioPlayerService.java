@@ -305,7 +305,7 @@ public class AudioPlayerService extends Service {
                     try {
                         mPlayer.setDataSource(song.getFilePath());
                         mPlayingSong = song;
-                        mPlayer.prepareAsync();
+                        mPlayer.prepare();
                     } catch (IllegalStateException e) {
                         // TODO Auto-generated catch block
                         e.printStackTrace();
@@ -436,14 +436,18 @@ public class AudioPlayerService extends Service {
             if ("com.android.suspend.BroadcastReceiver".equals(action)) {
                 String valueStr = intent.getStringExtra("command");
                 if("stop".equals(valueStr)) {
-                    mPlayer.pause();
-                    if (null != mPlayPauseListener) {
-                        mPlayPauseListener.onPlayPause(false);
+                    if (mPlayer != null && mPlayer.isPlaying()) {
+                        mPlayer.pause();
+                        if (null != mPlayPauseListener) {
+                            mPlayPauseListener.onPlayPause(false);
+                        }
                     }
                 } else if ("recover".equals(valueStr)) {
-                    mPlayer.start();
-                    if (null != mPlayPauseListener) {
-                        mPlayPauseListener.onPlayPause(true);
+                    if (mPlayer != null && !mPlayer.isPlaying()) {
+                        mPlayer.start();
+                        if (null != mPlayPauseListener) {
+                            mPlayPauseListener.onPlayPause(true);
+                        }
                     }
                 }
             }
