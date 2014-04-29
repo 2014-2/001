@@ -146,7 +146,9 @@ public final class CrtbUtils {
     	outParamter.setTotalU0Limit(section.getDBU0());
     	outParamter.setModifiedTime(section.getDBU0Time());
     	outParamter.setU0Remark(section.getDBU0Description());
-    	outParamter.setWallRockLevel(Integer.valueOf(section.getLithologic()));
+    	//TODO: 暂时取不到数据，使用固定值3
+    	//outParamter.setWallRockLevel(Integer.valueOf(section.getLithologic()));
+    	outParamter.setWallRockLevel(3);
     	outParamter.setPointList(section.getSurveyPnts());
     	outParamter.setFirstMeasureDate(section.getInbuiltTime());
     	outParamter.setRemark(section.getInfo());
