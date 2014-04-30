@@ -96,7 +96,7 @@
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="10dp"
                 android:gravity="center"
-                android:text="Z"
+                android:text="H"
                 android:textColor="@color/black" />
 
             <EditText

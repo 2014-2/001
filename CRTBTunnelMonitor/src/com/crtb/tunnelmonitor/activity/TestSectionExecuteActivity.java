@@ -3,7 +3,6 @@ package com.crtb.tunnelmonitor.activity;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.zw.android.framework.impl.ExecuteAsyncTaskImpl;
 import org.zw.android.framework.ioc.InjectCore;
 import org.zw.android.framework.ioc.InjectLayout;
 import org.zw.android.framework.ioc.InjectView;
@@ -25,7 +24,6 @@ import com.crtb.tssurveyprovider.ISurveyProvider;
 import com.crtb.tssurveyprovider.TSSurveyProvider;
 import com.crtb.tunnelmonitor.AppConfig;
 import com.crtb.tunnelmonitor.AppHandler;
-import com.crtb.tunnelmonitor.BaseAsyncTask;
 import com.crtb.tunnelmonitor.CommonObject;
 import com.crtb.tunnelmonitor.WorkFlowActivity;
 import com.crtb.tunnelmonitor.dao.impl.v2.SubsidenceCrossSectionIndexDao;
@@ -235,7 +233,7 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 		mContainerLayout.addView(view);
 	}
 	
-	private View createTunnelTestPointView(TunnelSettlementTotalData bean,final String type){
+	private View createTunnelTestPointView(TunnelSettlementTotalData bean,final String type,String typeName){
 		
 		final TestPointHolder holder 	= new TestPointHolder() ;
 		View view = InjectCore.injectOriginalObject(holder);
@@ -259,7 +257,12 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 		}
 		
 		// 测点类型
-		holder.mPointType.setText(type);
+		if(StringUtils.isEmpty(typeName)){
+			holder.mPointType.setText(type);
+		} else {
+			holder.mPointType.setText(typeName);
+		}
+		
 		
 		// 测量
 		holder.mPointTestBnt.setOnClickListener(new View.OnClickListener() {
@@ -563,91 +566,91 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 			
 			// A
 			bean = dao.queryTunnelTotalData(rawSheetBean.getID(),tunnelSection.getID(), AppConfig.POINT_A);
-			addTestPoint(createTunnelTestPointView(bean,AppConfig.POINT_A));
+			addTestPoint(createTunnelTestPointView(bean,AppConfig.POINT_A,tunnelSection.getPointAName()));
 			
 			// 全断面法(A,S1(1,2))
 			if(type == 0){
 				
 				// S1-1
 				bean = dao.queryTunnelTotalData(rawSheetBean.getID(),tunnelSection.getID(), AppConfig.POINT_S1_1);
-				addTestPoint(createTunnelTestPointView(bean,AppConfig.POINT_S1_1));
+				addTestPoint(createTunnelTestPointView(bean,AppConfig.POINT_S1_1,tunnelSection.getPointS1Name()));
 				
 				// S1-2
 				bean = dao.queryTunnelTotalData(rawSheetBean.getID(),tunnelSection.getID(), AppConfig.POINT_S1_2);
-				addTestPoint(createTunnelTestPointView(bean,AppConfig.POINT_S1_2));
+				addTestPoint(createTunnelTestPointView(bean,AppConfig.POINT_S1_2,tunnelSection.getPointS1Name()));
 			} 
 			// 台阶法(A,S1(1,2),S2(1,2))
 			else if(type == 1){
 				
 				// S1-1
 				bean = dao.queryTunnelTotalData(rawSheetBean.getID(),tunnelSection.getID(), AppConfig.POINT_S1_1);
-				addTestPoint(createTunnelTestPointView(bean,AppConfig.POINT_S1_1));
+				addTestPoint(createTunnelTestPointView(bean,AppConfig.POINT_S1_1,tunnelSection.getPointS1Name()));
 				
 				// S1-2
 				bean = dao.queryTunnelTotalData(rawSheetBean.getID(),tunnelSection.getID(), AppConfig.POINT_S1_2);
-				addTestPoint(createTunnelTestPointView(bean,AppConfig.POINT_S1_2));
+				addTestPoint(createTunnelTestPointView(bean,AppConfig.POINT_S1_2,tunnelSection.getPointS1Name()));
 				
 				// S2-1
 				bean = dao.queryTunnelTotalData(rawSheetBean.getID(),tunnelSection.getID(), AppConfig.POINT_S2_1);
-				addTestPoint(createTunnelTestPointView(bean,AppConfig.POINT_S2_1));
+				addTestPoint(createTunnelTestPointView(bean,AppConfig.POINT_S2_1,tunnelSection.getPointS2Name()));
 				
 				// S2-2
 				bean = dao.queryTunnelTotalData(rawSheetBean.getID(),tunnelSection.getID(), AppConfig.POINT_S2_2);
-				addTestPoint(createTunnelTestPointView(bean,AppConfig.POINT_S2_2));
+				addTestPoint(createTunnelTestPointView(bean,AppConfig.POINT_S2_2,tunnelSection.getPointS2Name()));
 			} 
 			// 三台阶法(A,S1(1,2),S2(1,2),S3(1,2))
 			else if(type == 2){
 				
 				// S1-1
 				bean = dao.queryTunnelTotalData(rawSheetBean.getID(),tunnelSection.getID(), AppConfig.POINT_S1_1);
-				addTestPoint(createTunnelTestPointView(bean,AppConfig.POINT_S1_1));
+				addTestPoint(createTunnelTestPointView(bean,AppConfig.POINT_S1_1,tunnelSection.getPointS1Name()));
 				
 				// S1-2
 				bean = dao.queryTunnelTotalData(rawSheetBean.getID(),tunnelSection.getID(), AppConfig.POINT_S1_2);
-				addTestPoint(createTunnelTestPointView(bean,AppConfig.POINT_S1_2));
+				addTestPoint(createTunnelTestPointView(bean,AppConfig.POINT_S1_2,tunnelSection.getPointS1Name()));
 				
 				// S2-1
 				bean = dao.queryTunnelTotalData(rawSheetBean.getID(),tunnelSection.getID(), AppConfig.POINT_S2_1);
-				addTestPoint(createTunnelTestPointView(bean,AppConfig.POINT_S2_1));
+				addTestPoint(createTunnelTestPointView(bean,AppConfig.POINT_S2_1,tunnelSection.getPointS2Name()));
 				
 				// S2-2
 				bean = dao.queryTunnelTotalData(rawSheetBean.getID(),tunnelSection.getID(), AppConfig.POINT_S2_2);
-				addTestPoint(createTunnelTestPointView(bean,AppConfig.POINT_S2_2));
+				addTestPoint(createTunnelTestPointView(bean,AppConfig.POINT_S2_2,tunnelSection.getPointS2Name()));
 				
 				// S3-1
 				bean = dao.queryTunnelTotalData(rawSheetBean.getID(),tunnelSection.getID(), AppConfig.POINT_S3_1);
-				addTestPoint(createTunnelTestPointView(bean,AppConfig.POINT_S3_1));
+				addTestPoint(createTunnelTestPointView(bean,AppConfig.POINT_S3_1,tunnelSection.getPointS3Name()));
 				
 				// S3-2
 				bean = dao.queryTunnelTotalData(rawSheetBean.getID(),tunnelSection.getID(), AppConfig.POINT_S3_2);
-				addTestPoint(createTunnelTestPointView(bean,AppConfig.POINT_S3_2));
+				addTestPoint(createTunnelTestPointView(bean,AppConfig.POINT_S3_2,tunnelSection.getPointS3Name()));
 			} 
 			// 双侧壁法(A,S1(1,2),S2(1,2),S3(1,2))
 			else if(type == 3){
 				
 				// S1-1
 				bean = dao.queryTunnelTotalData(rawSheetBean.getID(),tunnelSection.getID(), AppConfig.POINT_S1_1);
-				addTestPoint(createTunnelTestPointView(bean,AppConfig.POINT_S1_1));
+				addTestPoint(createTunnelTestPointView(bean,AppConfig.POINT_S1_1,tunnelSection.getPointS1Name()));
 				
 				// S1-2
 				bean = dao.queryTunnelTotalData(rawSheetBean.getID(),tunnelSection.getID(), AppConfig.POINT_S1_2);
-				addTestPoint(createTunnelTestPointView(bean,AppConfig.POINT_S1_2));
+				addTestPoint(createTunnelTestPointView(bean,AppConfig.POINT_S1_2,tunnelSection.getPointS1Name()));
 				
 				// S2-1
 				bean = dao.queryTunnelTotalData(rawSheetBean.getID(),tunnelSection.getID(), AppConfig.POINT_S2_1);
-				addTestPoint(createTunnelTestPointView(bean,AppConfig.POINT_S2_1));
+				addTestPoint(createTunnelTestPointView(bean,AppConfig.POINT_S2_1,tunnelSection.getPointS2Name()));
 				
 				// S2-2
 				bean = dao.queryTunnelTotalData(rawSheetBean.getID(),tunnelSection.getID(), AppConfig.POINT_S2_2);
-				addTestPoint(createTunnelTestPointView(bean,AppConfig.POINT_S2_2));
+				addTestPoint(createTunnelTestPointView(bean,AppConfig.POINT_S2_2,tunnelSection.getPointS2Name()));
 				
 				// S3-1
 				bean = dao.queryTunnelTotalData(rawSheetBean.getID(),tunnelSection.getID(), AppConfig.POINT_S3_1);
-				addTestPoint(createTunnelTestPointView(bean,AppConfig.POINT_S3_1));
+				addTestPoint(createTunnelTestPointView(bean,AppConfig.POINT_S3_1,tunnelSection.getPointS3Name()));
 				
 				// S3-2
 				bean = dao.queryTunnelTotalData(rawSheetBean.getID(),tunnelSection.getID(), AppConfig.POINT_S3_2);
-				addTestPoint(createTunnelTestPointView(bean,AppConfig.POINT_S3_2));
+				addTestPoint(createTunnelTestPointView(bean,AppConfig.POINT_S3_2,tunnelSection.getPointS3Name()));
 			}
 		} 
 		// 地表下沉断面测量---临时值

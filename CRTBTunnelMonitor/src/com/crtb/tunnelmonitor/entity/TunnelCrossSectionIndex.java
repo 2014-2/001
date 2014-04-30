@@ -49,6 +49,18 @@ public class TunnelCrossSectionIndex implements Serializable {
 
     @ColumnString(length = 255)
     private String SurveyPntName; 		// 测点编号
+    
+    @ColumnString(length = 128)
+    private String pointAName; 			// A 点名称
+    
+    @ColumnString(length = 128)
+    private String pointS1Name; 		// S1 点名称
+    
+    @ColumnString(length = 128)
+    private String pointS2Name; 		// S2 点名称
+    
+    @ColumnString(length = 128)
+    private String pointS3Name; 		// S3 点名称
 
     //////////////////////变形阀值///////////////////////////
 
@@ -98,7 +110,39 @@ public class TunnelCrossSectionIndex implements Serializable {
         ID = iD;
     }
 
-    public String getSectionName() {
+    public String getPointAName() {
+		return pointAName;
+	}
+
+	public void setPointAName(String pointAName) {
+		this.pointAName = pointAName;
+	}
+
+	public String getPointS1Name() {
+		return pointS1Name;
+	}
+
+	public void setPointS1Name(String pointS1Name) {
+		this.pointS1Name = pointS1Name;
+	}
+
+	public String getPointS2Name() {
+		return pointS2Name;
+	}
+
+	public void setPointS2Name(String pointS2Name) {
+		this.pointS2Name = pointS2Name;
+	}
+
+	public String getPointS3Name() {
+		return pointS3Name;
+	}
+
+	public void setPointS3Name(String pointS3Name) {
+		this.pointS3Name = pointS3Name;
+	}
+
+	public String getSectionName() {
         return sectionName;
     }
 

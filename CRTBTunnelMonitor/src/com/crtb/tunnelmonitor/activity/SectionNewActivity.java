@@ -265,6 +265,11 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 			
 			section_new_sp.setSelection(CrtbUtils.getExcavateMethod(sectionInfo.getExcavateMethod()));
 			
+			section_new_et_a.setText(sectionInfo.getPointAName());
+			section_new_et_s1.setText(sectionInfo.getPointS1Name());
+			section_new_et_s2.setText(sectionInfo.getPointS2Name());
+			section_new_et_s3.setText(sectionInfo.getPointS3Name());
+			
 			section_new_leiji_gd.setText(String.valueOf(sectionInfo.getGDU0()));
 			section_new_leiji_sl.setText(String.valueOf(sectionInfo.getSLU0()));
 			section_new_single_gd.setText(String.valueOf(sectionInfo.getGDVelocity()));
@@ -353,6 +358,11 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 				return ;
 			}
 			
+			String pointA	= section_new_et_a.getText().toString().trim() ;
+			String pointS1	= section_new_et_s1.getText().toString().trim() ;
+			String pointS2	= section_new_et_s2.getText().toString().trim() ;
+			String pointS3	= section_new_et_s3.getText().toString().trim() ;
+			
 			String gdlj	= section_new_leiji_gd.getEditableText().toString().trim() ;
 			String zblj	= section_new_leiji_sl.getEditableText().toString().trim() ;
 			String gdsl	= section_new_single_gd.getEditableText().toString().trim() ;
@@ -397,6 +407,11 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 				//TODO: 表示数据未上传
 				sectionInfo.setInfo("1"); 
 				
+				sectionInfo.setPointAName(pointA);
+				sectionInfo.setPointS1Name(pointS1);
+				sectionInfo.setPointS2Name(pointS2);
+				sectionInfo.setPointS3Name(pointS3);
+				
 				sectionInfo.setGDU0(Float.valueOf(gdlj));
 				sectionInfo.setGDVelocity(Float.valueOf(gdsl));
 				sectionInfo.setGDU0Time(DateUtils.toDate(gdtime, DateUtils.PART_TIME_FORMAT));
@@ -431,6 +446,11 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 				
 				// excavation
 				sectionInfo.setExcavateMethod((String)section_new_sp.getSelectedItem());
+				
+				sectionInfo.setPointAName(pointA);
+				sectionInfo.setPointS1Name(pointS1);
+				sectionInfo.setPointS2Name(pointS2);
+				sectionInfo.setPointS3Name(pointS3);
 				
 				sectionInfo.setGDU0(Float.valueOf(gdlj));
 				sectionInfo.setGDVelocity(Float.valueOf(gdsl));
