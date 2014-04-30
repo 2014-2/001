@@ -98,6 +98,7 @@ public class RecordNewSubsidenceActivity extends WorkFlowActivity implements OnP
 	private CrtbRecordSubsidenceSectionInfoListView sectionListView;
     
 	private RawSheetIndex recordInfo = null;
+	private boolean editRawSheet , editSection ;
 	
 	private ProjectIndex mCurrentWorkPlan;
     
@@ -162,6 +163,8 @@ public class RecordNewSubsidenceActivity extends WorkFlowActivity implements OnP
     	
     	if(recordInfo != null){
     		
+    		editRawSheet	= true ;
+    		
     		setTopbarTitle("编辑地表下沉断面记录单");
     		sectionListView.setSectionIds(recordInfo.getCrossSectionIDs());
 			
@@ -175,6 +178,7 @@ public class RecordNewSubsidenceActivity extends WorkFlowActivity implements OnP
 			record_buildtime.setText(DateUtils.toDateString(recordInfo.getCreateTime(),DateUtils.PART_TIME_FORMAT)) ;
     	
     	} else {
+    		editRawSheet	= false ;
     		record_buildtime.setText(DateUtils.toDateString(DateUtils.getCurrtentTimes(),DateUtils.PART_TIME_FORMAT)) ;
     	}
     }
@@ -189,6 +193,10 @@ public class RecordNewSubsidenceActivity extends WorkFlowActivity implements OnP
 			break;
 		case R.id.work_btn_queding: // 数据库
 			
+			if(editRawSheet && !editSection){
+				showText("你不能保存,请进入选择断面");
+				return ;
+			}
 						
 			// base
 			String prefix		= section_new_et_prefix.getEditableText().toString().trim() ;
@@ -361,6 +369,7 @@ public class RecordNewSubsidenceActivity extends WorkFlowActivity implements OnP
         
         if(index == 1){
         	sectionListView.onResume() ;
+        	editSection	= true ;
         }
     }
 
