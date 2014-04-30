@@ -39,6 +39,8 @@ import com.crtb.tunnelmonitor.entity.TunnelSettlementTotalData;
 import com.crtb.tunnelmonitor.network.CrtbWebService;
 import com.crtb.tunnelmonitor.network.RpcCallback;
 import com.crtb.tunnelmonitor.network.SectionStatus;
+import com.crtb.tunnelmonitor.utils.DataDownloadManager;
+import com.crtb.tunnelmonitor.utils.DataDownloadManager.DownloadListener;
 
 public class WorkInfoDownloadActivity extends Activity {
     private static final String LOG_TAG = "WorkInfoDownloadActivity";
@@ -129,105 +131,6 @@ public class WorkInfoDownloadActivity extends Activity {
         }
     }
 
-    //下载断面编码数据
-    private void downloadSectionCodeList(SectionStatus status) {
-        mPointCount = 0;
-        mFlag = true;
-        onDownLoadStarted();
-        CrtbWebService.getInstance().getSectionCodeList(status, new RpcCallback() {
-
-            @Override
-            public void onSuccess(Object[] data) {
-                Log.d(LOG_TAG, "download section code list success.");
-                List<String> sectionCodeList = Arrays.asList((String[])data);
-                downloadSectionList(sectionCodeList);
-            }
-
-            @Override
-            public void onFailed(String reason) {
-                mFlag = false;
-                onDownLoadFinished(mFlag);
-                Log.d(LOG_TAG, "download section code list failed.");
-            }
-        });
-    }
-
-    //下载断面详细数据
-    private void downloadSectionList(List<String> codeList) {
-        for(String sectionCode : codeList) {
-            downloadSection(sectionCode);
-        }
-    }
-
-    private void downloadSection(final String sectionCode) {
-        CrtbWebService.getInstance().getSectionInfo(sectionCode, new RpcCallback() {
-
-            @Override
-            public void onSuccess(Object[] data) {
-                TunnelCrossSectionIndex[] sectionInfo = (TunnelCrossSectionIndex[])data;
-                final TunnelCrossSectionIndex section = sectionInfo[0];
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        TunnelCrossSectionIndexDao dao = TunnelCrossSectionIndexDao.defaultDao();
-                        dao.insert(section);
-                    }
-                }).start();
-                List<String> pointCodeList = Arrays.asList(section.getSurveyPntName().split(","));
-                mPointCount += pointCodeList.size();
-                downloadPointList(pointCodeList);
-            }
-
-            @Override
-            public void onFailed(String reason) {
-                // TODO Auto-generated method stub
-                Log.d(LOG_TAG, "downloadSection failed: " + reason);
-                mFlag = false;
-            }
-        });
-    }
-
-    //TODO:  It's not work yet.
-    private void downloadPointList(List<String> pointCodeList) {
-        for(String pointCode : pointCodeList) {
-            downloadPoint(pointCode);
-        }
-    }
-
-    private void downloadPoint(String pointCode) {
-        CrtbWebService.getInstance().getPointInfo(pointCode, new RpcCallback() {
-
-            @Override
-            public void onSuccess(Object[] data) {
-                final List<TunnelSettlementTotalData> pointTestDataList = Arrays.asList((TunnelSettlementTotalData[])data);
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        TunnelSettlementTotalDataDao dao = TunnelSettlementTotalDataDao.defaultDao();
-                        for(TunnelSettlementTotalData testPointData : pointTestDataList) {
-                            dao.insert(testPointData);
-                        }
-                    }
-                }).start();
-                mPointCount--;
-                if (mPointCount == 0) {
-                    onDownLoadFinished(mFlag);
-                }
-                Log.d(LOG_TAG, "download point success.");
-            }
-
-            @Override
-            public void onFailed(String reason) {
-                mFlag = false;
-                mPointCount--;
-                if (mPointCount == 0) {
-                    onDownLoadFinished(mFlag);
-                }
-                Log.d(LOG_TAG, "download point failed: " + reason);
-            }
-        });
-    }
-
     class MenuPopupWindow extends PopupWindow {
         public RelativeLayout xiazai;
         private View mMenuView;
@@ -249,7 +152,14 @@ public class WorkInfoDownloadActivity extends Activity {
                 public void onClick(View v) {
                     ProjectIndex currentProject = ProjectIndexDao.defaultWorkPlanDao().queryEditWorkPlan();
                     if (currentProject != null) {
-                        downloadSectionCodeList(SectionStatus.VALID);
+                    	showProgressOverlay();
+                    	DataDownloadManager downloadManager = new DataDownloadManager();
+                    	downloadManager.downloadData(new DownloadListener() {
+							@Override
+							public void done(boolean success) {
+								updateStatus(success);
+							}
+						});
                     } else {
                         Toast.makeText(getApplicationContext(), "请先打开工作面", Toast.LENGTH_SHORT).show();
                     }
@@ -318,14 +228,5 @@ public class WorkInfoDownloadActivity extends Activity {
             isUpload.setText("已上传");
             return convertView;
         }
-    }
-
-    private void onDownLoadStarted() {
-        showProgressOverlay();
-    }
-
-    private void onDownLoadFinished(boolean flag) {
-        String siteName = CrtbWebService.getInstance().getSiteName();
-        updateStatus(flag);
     }
 }
