@@ -65,6 +65,20 @@ public class SubsidenceTotalDataDao extends AbstractDao<SubsidenceTotalData> {
         return mDatabase.queryObject(sql, new String[] { String.valueOf(id) },
                 SubsidenceTotalData.class);
     }
+    
+    // 删除测量单的所有测量数据
+    public void removeSubsidenceTotalDataBySheetId(int sheetid){
+    	
+    	final IAccessDatabase mDatabase = getCurrentDb();
+
+        if (mDatabase == null) {
+            return;
+        }
+        
+        String sql = "delete from SubsidenceTotalData where SheetId = ?";
+        
+        mDatabase.execute(sql, new String[]{String.valueOf(sheetid)});
+    }
 
     // 查询已经存在的测量点信息
     public SubsidenceTotalData querySubsidenceTotalData(int sheetId, int chainageId, String pntType) {

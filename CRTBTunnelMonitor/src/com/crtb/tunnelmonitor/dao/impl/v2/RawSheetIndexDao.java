@@ -72,4 +72,22 @@ public class RawSheetIndexDao extends AbstractDao<RawSheetIndex> {
 		
 		return mDatabase.queryObjects(sql, param, RawSheetIndex.class);
 	}
+
+	@Override
+	public int delete(RawSheetIndex bean) {
+		
+		int code = super.delete(bean);
+		
+		if(code == DB_EXECUTE_SUCCESS){
+			
+			// 删除测量数据
+			TunnelSettlementTotalDataDao.defaultDao().removeTotalDataBySheetId(bean.getID());
+			SubsidenceTotalDataDao.defaultDao().removeSubsidenceTotalDataBySheetId(bean.getID());
+			
+			return DB_EXECUTE_SUCCESS ;
+		}
+		
+		return DB_EXECUTE_FAILED;
+	}
+	
 }

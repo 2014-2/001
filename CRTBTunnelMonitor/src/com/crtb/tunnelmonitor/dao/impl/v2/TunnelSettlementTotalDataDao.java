@@ -46,7 +46,8 @@ public class TunnelSettlementTotalDataDao extends AbstractDao<TunnelSettlementTo
 	}
 
     public TunnelSettlementTotalData queryOneById(int id) {
-        final IAccessDatabase mDatabase = getCurrentDb();
+       
+    	final IAccessDatabase mDatabase = getCurrentDb();
 
         if (mDatabase == null) {
             return null;
@@ -57,6 +58,20 @@ public class TunnelSettlementTotalDataDao extends AbstractDao<TunnelSettlementTo
         return mDatabase.queryObject(sql, new String[] { String.valueOf(id) },
                 TunnelSettlementTotalData.class);
 
+    }
+    
+    // 删除测量单的所有测量数据
+    public void removeTotalDataBySheetId(int sheetid){
+    	
+    	final IAccessDatabase mDatabase = getCurrentDb();
+
+        if (mDatabase == null) {
+            return;
+        }
+        
+        String sql = "delete from TunnelSettlementTotalData where SheetId = ?";
+        
+        mDatabase.execute(sql, new String[]{String.valueOf(sheetid)});
     }
 
     // 查询已经存在的测量点信息

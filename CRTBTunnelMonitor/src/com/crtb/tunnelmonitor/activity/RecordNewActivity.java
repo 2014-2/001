@@ -292,7 +292,6 @@ public class RecordNewActivity extends WorkFlowActivity implements OnPageChangeL
 			@Override
 			public void destroyItem(View arg0, int arg1, Object arg2) {
 				((ViewPager) arg0).removeView((View) list.get(arg1));
-
 			}
 
 			@Override
@@ -349,9 +348,11 @@ public class RecordNewActivity extends WorkFlowActivity implements OnPageChangeL
 
     @Override
     public void onPageSelected(int index) {
+    	
         int single = (int) (b.getWidth() + offSet * 2);
         TranslateAnimation ta = new TranslateAnimation(currIndex * single,
                 single * index, 0, 0);
+        
         ta.setFillAfter(true);
         ta.setDuration(200);
         cursor.startAnimation(ta);

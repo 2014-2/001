@@ -22,7 +22,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:layout_centerInParent="true"
-                android:text="创建时间"
+                android:text="记录单名称"
                 android:textColor="#FF000000" />
         </RelativeLayout>
 

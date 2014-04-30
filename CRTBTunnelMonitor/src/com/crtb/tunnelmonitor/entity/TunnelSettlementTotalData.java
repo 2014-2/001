@@ -3,7 +3,6 @@ package com.crtb.tunnelmonitor.entity;
 import java.io.Serializable;
 import java.util.Date;
 
-import org.zw.android.framework.db.ColumnBoolean;
 import org.zw.android.framework.db.ColumnDate;
 import org.zw.android.framework.db.ColumnFloat;
 import org.zw.android.framework.db.ColumnInt;
