@@ -19,6 +19,15 @@ public class CrtbRecordTunnelSectionAdapter extends CrtbEntityAdapter<RawSheetIn
 	protected CrtbRecordTunnelSectionAdapter(Context context) {
 		super(context);
 	}
+	
+	protected boolean isNewestRawSheetIndex(RawSheetIndex bean){
+		
+		if(mList.isEmpty()){
+			return false ;
+		}
+		
+		return mList.indexOf(bean) == 0 ;
+	}
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {

@@ -38,7 +38,7 @@ public class RawSheetIndexDao extends AbstractDao<RawSheetIndex> {
 			return null ;
 		}
 		
-		String sql = "select * from RawSheetIndex where CrossSectionType = ? ";
+		String sql = "select * from RawSheetIndex where CrossSectionType = ? ORDER BY ID DESC";
 		
 		return mDatabase.queryObjects(sql, new String[]{String.valueOf(RawSheetIndex.CROSS_SECTION_TYPE_TUNNEL)}, RawSheetIndex.class);
 	}
@@ -52,10 +52,40 @@ public class RawSheetIndexDao extends AbstractDao<RawSheetIndex> {
 			return null ;
 		}
 		
-		String sql = "select * from RawSheetIndex where CrossSectionType = ? ";
+		String sql = "select * from RawSheetIndex where CrossSectionType = ? ORDER BY ID DESC";
 		
 		return mDatabase.queryObjects(sql, new String[]{String.valueOf(RawSheetIndex.CROSS_SECTION_TYPE_SUBSIDENCES)}, RawSheetIndex.class);
-	} 
+	}
+	
+	// 是否最新记录单
+	public boolean isNewestRawSheetIndex(RawSheetIndex bean){
+		
+		if(bean == null){
+			return false ;
+		}
+		
+		final IAccessDatabase mDatabase = getCurrentDb();
+		
+		if(mDatabase == null){
+			return false ;
+		}
+		
+		String sql = "select * from RawSheetIndex where CrossSectionType = ? ORDER BY ID DESC limit 0,2";
+		
+		RawSheetIndex old = null ;
+		
+		if(bean.getCrossSectionType() == RawSheetIndex.CROSS_SECTION_TYPE_TUNNEL){
+			old	= mDatabase.queryObject(sql, new String[]{String.valueOf(RawSheetIndex.CROSS_SECTION_TYPE_TUNNEL)}, RawSheetIndex.class);
+		} else {
+			old	= mDatabase.queryObject(sql, new String[]{String.valueOf(RawSheetIndex.CROSS_SECTION_TYPE_SUBSIDENCES)}, RawSheetIndex.class);
+		}
+		
+		if(old == null){
+			return false ;
+		}
+		
+		return old.getID() == bean.getID() ;
+	}
 	
 	// 搜索记录单
 	public List<RawSheetIndex> searchRawSheetIndex(String key,int type) {

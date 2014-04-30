@@ -17,7 +17,6 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.crtb.tssurveyprovider.Coordinate3D;
 import com.crtb.tssurveyprovider.ISurveyProvider;
@@ -26,6 +25,7 @@ import com.crtb.tunnelmonitor.AppConfig;
 import com.crtb.tunnelmonitor.AppHandler;
 import com.crtb.tunnelmonitor.CommonObject;
 import com.crtb.tunnelmonitor.WorkFlowActivity;
+import com.crtb.tunnelmonitor.dao.impl.v2.RawSheetIndexDao;
 import com.crtb.tunnelmonitor.dao.impl.v2.SubsidenceCrossSectionIndexDao;
 import com.crtb.tunnelmonitor.dao.impl.v2.SubsidenceTotalDataDao;
 import com.crtb.tunnelmonitor.dao.impl.v2.TunnelCrossSectionIndexDao;
@@ -59,6 +59,7 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 	static final int MSG_ERROR_CONNECT	= 1 ;
 	static final int MSG_TEST_ERROR		= 2 ;
 	static final int MSG_TEST_SUCCESS	= 3 ;
+	static final int MSG_ERROR_NOT_TEST	= 4 ;
 	
 	@InjectView(id=R.id.test_bottom_layout)
 	private LinearLayout mBottomLayout ;
@@ -75,6 +76,7 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 	private int					rawSheetIndex;// 当前测量单索引
 	private RawSheetIndex		rawSheetBean;// 当前测量单
 	private List<RawSheetIndex> rawSheets ; // 测量数据
+	private boolean 			rawSheetCanTest ; // 是否能够测量
 	
 	private int sectionIndex ;
 	private TunnelCrossSectionIndex tunnelSection ;
@@ -127,6 +129,7 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 		subsidenceSection = null ;
 		tunnelSectionList.clear() ;
 		subsidenceSectionList.clear() ;
+		rawSheetCanTest	= false  ;
 		
 		return true ;
 	}
@@ -150,17 +153,21 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 		subsidenceSection = null ;
 		tunnelSectionList.clear() ;
 		subsidenceSectionList.clear() ;
+		rawSheetCanTest	= false  ;
 		
 		return true ;
 	}
 	
 	private void loadRawSheetIndexInfo(RawSheetIndex bean){
 		
+		rawSheetCanTest	= false ;
+		
 		if(bean == null){
 			showText("没有测量数据");
 			return ;
 		}
 		
+		rawSheetCanTest		= RawSheetIndexDao.defaultDao().isNewestRawSheetIndex(bean);
 		int type			= bean.getCrossSectionType() ;
 		String sectionIds 	= bean.getCrossSectionIDs() ;
 		
@@ -289,6 +296,11 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 			}
 		}) ;*/
 		
+		if(!rawSheetCanTest){
+			mHanlder.sendMessage(MSG_ERROR_NOT_TEST);
+			return ;
+		}
+		
 		ISurveyProvider ts = TSSurveyProvider.getDefaultAdapter();
 		
 		if (ts == null) {
@@ -367,12 +379,13 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 					
 					break ;
 				case MSG_ERROR_CONNECT :
-					Toast.makeText(TestSectionExecuteActivity.this, "请先连接全站仪",
-							Toast.LENGTH_SHORT).show();
+					showText("请先连接全站仪");
 					break ;
 				case MSG_TEST_ERROR :
-					Toast.makeText(TestSectionExecuteActivity.this, "测量失败",
-							Toast.LENGTH_SHORT).show();
+					showText("测量失败");
+					break ;
+				case MSG_ERROR_NOT_TEST :
+					showText("该记录不是最新记录单,不能测量");
 					break ;
 				case MSG_TEST_SUCCESS :
 					

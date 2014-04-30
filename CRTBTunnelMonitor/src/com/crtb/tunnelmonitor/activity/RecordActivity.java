@@ -33,6 +33,7 @@ import com.crtb.tunnelmonitor.entity.MenuSystemItem;
 import com.crtb.tunnelmonitor.entity.RawSheetIndex;
 import com.crtb.tunnelmonitor.mydefine.CrtbDialogDelete;
 import com.crtb.tunnelmonitor.mydefine.CrtbDialogDelete.IButtonOnClick;
+import com.crtb.tunnelmonitor.mydefine.CrtbDialogHint;
 import com.crtb.tunnelmonitor.mydefine.CrtbDialogResult;
 import com.crtb.tunnelmonitor.widget.CrtbRecordSubsidenceListView;
 import com.crtb.tunnelmonitor.widget.CrtbRecordTunnelSectionListView;
@@ -197,50 +198,67 @@ public class RecordActivity extends WorkFlowActivity implements OnPageChangeList
 				// 隧道内
 				if(info.getCrossSectionType() == RawSheetIndex.CROSS_SECTION_TYPE_TUNNEL){
 					
-					CrtbDialogDelete delete = new CrtbDialogDelete(RecordActivity.this,R.drawable.ic_warnning,"执行该操作将删除操作面的全部数据,不可恢复!");
-					
-					delete.setButtonClick(new IButtonOnClick() {
+					// 是否最后一条数据
+					if(mTunnelSectionList.isLastRawSheetIndex(info)){
 						
-						@Override
-						public void onClick(int id) {
+						CrtbDialogDelete delete = new CrtbDialogDelete(RecordActivity.this,R.drawable.ic_warnning,"执行该操作将删除操作面的全部数据,不可恢复!");
+						
+						delete.setButtonClick(new IButtonOnClick() {
 							
-							if(id == CrtbDialogDelete.BUTTON_ID_CONFIRM){
+							@Override
+							public void onClick(int id) {
 								
-								int code = RawSheetIndexDao.defaultDao().delete(info) ;
-								
-								if(code == RawSheetIndexDao.DB_EXECUTE_SUCCESS){
-									CrtbDialogResult.createDeleteSuccessDialog(RecordActivity.this).show();
-									mTunnelSectionList.onReload() ;
+								if(id == CrtbDialogDelete.BUTTON_ID_CONFIRM){
+									
+									int code = RawSheetIndexDao.defaultDao().delete(info) ;
+									
+									if(code == RawSheetIndexDao.DB_EXECUTE_SUCCESS){
+										CrtbDialogResult.createDeleteSuccessDialog(RecordActivity.this).show();
+										mTunnelSectionList.onReload() ;
+									}
 								}
 							}
-						}
-					}) ;
-					
-					delete.show(); 
+						}) ;
+						
+						delete.show(); 
+						
+					} else {
+						
+						CrtbDialogHint hint = new CrtbDialogHint(RecordActivity.this,R.drawable.ic_warnning, "你不能删除以往的数据");
+						hint.show() ;
+					}
 				}
 				// 地表下沉
 				else if(info.getCrossSectionType() == RawSheetIndex.CROSS_SECTION_TYPE_SUBSIDENCES){
 					
-					CrtbDialogDelete delete = new CrtbDialogDelete(RecordActivity.this,R.drawable.ic_warnning,"执行该操作将删除操作面的全部数据,不可恢复!");
-					
-					delete.setButtonClick(new IButtonOnClick() {
+					// 是否最后一条数据
+					if(mSubsidenceSectionList.isLastRawSheetIndex(info)){
 						
-						@Override
-						public void onClick(int id) {
+						CrtbDialogDelete delete = new CrtbDialogDelete(RecordActivity.this,R.drawable.ic_warnning,"执行该操作将删除操作面的全部数据,不可恢复!");
+						
+						delete.setButtonClick(new IButtonOnClick() {
 							
-							if(id == CrtbDialogDelete.BUTTON_ID_CONFIRM){
+							@Override
+							public void onClick(int id) {
 								
-								int code = RawSheetIndexDao.defaultDao().delete(info) ;
-								
-								if(code == RawSheetIndexDao.DB_EXECUTE_SUCCESS){
-									CrtbDialogResult.createDeleteSuccessDialog(RecordActivity.this).show();
-									mSubsidenceSectionList.onReload() ;
+								if(id == CrtbDialogDelete.BUTTON_ID_CONFIRM){
+									
+									int code = RawSheetIndexDao.defaultDao().delete(info) ;
+									
+									if(code == RawSheetIndexDao.DB_EXECUTE_SUCCESS){
+										CrtbDialogResult.createDeleteSuccessDialog(RecordActivity.this).show();
+										mSubsidenceSectionList.onReload() ;
+									}
 								}
 							}
-						}
-					}) ;
-					
-					delete.show(); 
+						}) ;
+						
+						delete.show(); 
+						
+					} else {
+						CrtbDialogHint hint = new CrtbDialogHint(RecordActivity.this,R.drawable.ic_warnning, "你不能删除以往的数据");
+						hint.show() ;
+					}
 				}
 			}
 		}

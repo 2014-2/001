@@ -33,6 +33,10 @@ public class CrtbRecordSubsidenceListView extends CrtbBaseListView {
 	public RawSheetIndex getItem(int position){
 		return mAdapter.getItem(position);
 	}
+	
+	public boolean isLastRawSheetIndex(RawSheetIndex bean){
+		return mAdapter.isNewestRawSheetIndex(bean);
+	}
 
 	@Override
 	public void onResume() {
