@@ -61,7 +61,7 @@
                 android:layout_height="50dip"
                 android:layout_marginRight="35dp"
                 android:layout_weight="1"
-                android:inputType="number"
+                android:inputType="numberDecimal"
                 android:text="0" />
         </LinearLayout>
 
@@ -83,7 +83,7 @@
                 android:layout_height="50dip"
                 android:layout_marginRight="35dp"
                 android:layout_weight="1"
-                android:inputType="number"
+                android:inputType="numberDecimal"
                 android:text="0" />
         </LinearLayout>
 
@@ -105,7 +105,7 @@
                 android:layout_height="50dip"
                 android:layout_marginRight="35dip"
                 android:layout_weight="1"
-                android:inputType="number"
+                android:inputType="numberDecimal"
                 android:text="0" />
         </LinearLayout>
 

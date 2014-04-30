@@ -21,6 +21,7 @@ import android.widget.Toast;
 import com.crtb.tunnelmonitor.common.Constant;
 import com.crtb.tunnelmonitor.dao.impl.v2.ControlPointsInfoDao;
 import com.crtb.tunnelmonitor.entity.ControlPointsIndex;
+import com.crtb.tunnelmonitor.utils.CrtbTextUtils;
 
 public class ControlNewActivityTwo extends Activity implements OnClickListener {
 
@@ -86,9 +87,9 @@ public class ControlNewActivityTwo extends Activity implements OnClickListener {
         mNote = (EditText) findViewById(R.id.point_info);
         if (bEdit) {
             mName.setText(info.getName());
-            mPointX.setText(String.valueOf(info.getX()));
-            mPointY.setText(String.valueOf(info.getY()));
-            mPointZ.setText(String.valueOf(info.getZ()));
+            mPointX.setText(CrtbTextUtils.formatNumber(info.getX()));
+            mPointY.setText(CrtbTextUtils.formatNumber(info.getY()));
+            mPointZ.setText(CrtbTextUtils.formatNumber(info.getZ()));
             mNote.setText(info.getInfo());
         }
         mOk.setOnClickListener(this);
