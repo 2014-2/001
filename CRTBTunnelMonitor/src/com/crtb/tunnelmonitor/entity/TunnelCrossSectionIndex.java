@@ -39,8 +39,8 @@ public class TunnelCrossSectionIndex implements Serializable {
     @ColumnDate
     private Date InBuiltTime; 			// 埋设时间
 
-    @ColumnFloat
-    private float Width; 				// 断面宽度
+    @ColumnDouble
+    private double Width; 				// 断面宽度
 
     //////////////////////开挖方式//////////////////////////
 
@@ -166,15 +166,15 @@ public class TunnelCrossSectionIndex implements Serializable {
         InBuiltTime = inBuiltTime;
     }
 
-    public float getWidth() {
-        return Width;
-    }
+    public double getWidth() {
+		return Width;
+	}
 
-    public void setWidth(float width) {
-        Width = width;
-    }
+	public void setWidth(double width) {
+		Width = width;
+	}
 
-    public String getExcavateMethod() {
+	public String getExcavateMethod() {
         return ExcavateMethod;
     }
 

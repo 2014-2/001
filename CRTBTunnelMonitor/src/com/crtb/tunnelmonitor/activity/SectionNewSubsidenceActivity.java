@@ -160,12 +160,40 @@ public class SectionNewSubsidenceActivity extends WorkFlowActivity implements On
 				temp = edt.toString();
 				
 				if(!StringUtils.isEmpty(temp)){
-					float f 	= Double.valueOf(temp).floatValue();
+					double f 	= CrtbUtils.formatDouble(temp);
 					String pre 	= section_new_et_prefix.getEditableText().toString().trim();
 					DSection_name.setText(CrtbUtils.formatSectionName(pre,f));
 				} else {
 					DSection_name.setText("");
 				}
+			}
+		}) ;
+		
+		DSection_Width.addTextChangedListener(new TextWatcher() {
+			
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+				
+			}
+			
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+				
+			}
+			
+			@Override
+			public void afterTextChanged(Editable edt) {
+				
+				String temp = edt.toString();
+				
+				int posDot = temp.indexOf(".");
+				
+				if(posDot >= 0){
+					if (temp.length() - posDot - 1 > 4) {
+						edt.delete(posDot + 5, posDot + 6);
+					}
+				}	
 			}
 		}) ;
 		
@@ -274,9 +302,9 @@ public class SectionNewSubsidenceActivity extends WorkFlowActivity implements On
 				
 				///////////baase info//////////
 				subsidence.setChainagePrefix(prefix);
-				subsidence.setChainage(Float.valueOf(chainage));
+				subsidence.setChainage(CrtbUtils.formatDouble(chainage));
 				subsidence.setSectionName(name);
-				subsidence.setWidth(Integer.valueOf(width));
+				subsidence.setWidth(CrtbUtils.formatDouble(width));
 				subsidence.setInbuiltTime(DateUtils.toDate(date, DateUtils.PART_TIME_FORMAT));
 				subsidence.setSurveyPnts(point);
 				
@@ -301,9 +329,9 @@ public class SectionNewSubsidenceActivity extends WorkFlowActivity implements On
 			} else {
 				
 				subsidence.setChainagePrefix(prefix);
-				subsidence.setChainage(Float.valueOf(chainage));
+				subsidence.setChainage(CrtbUtils.formatDouble(chainage));
 				subsidence.setSectionName(name);
-				subsidence.setWidth(Integer.valueOf(width));
+				subsidence.setWidth(CrtbUtils.formatDouble(width));
 				subsidence.setInbuiltTime(DateUtils.toDate(date, DateUtils.PART_TIME_FORMAT));
 				subsidence.setSurveyPnts(point);
 

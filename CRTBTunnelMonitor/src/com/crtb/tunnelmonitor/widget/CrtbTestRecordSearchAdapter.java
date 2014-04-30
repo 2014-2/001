@@ -34,7 +34,7 @@ public final class CrtbTestRecordSearchAdapter extends CrtbEntityAdapter<RawShee
 		}
 		
 		holder.recordNo.setText(String.valueOf(item.getID()));
-		holder.recordName.setText(CrtbUtils.formatSectionName(item.getPrefix(),(float)item.getFACEDK()));
+		holder.recordName.setText(CrtbUtils.formatSectionName(item.getPrefix(),item.getFACEDK()));
 		
 		return convertView ;
 	}

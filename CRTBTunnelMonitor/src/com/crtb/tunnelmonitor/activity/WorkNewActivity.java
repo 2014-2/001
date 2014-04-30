@@ -17,6 +17,8 @@ import android.os.Parcelable;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -34,7 +36,7 @@ import com.crtb.tunnelmonitor.CommonObject;
 import com.crtb.tunnelmonitor.WorkFlowActivity;
 import com.crtb.tunnelmonitor.dao.impl.v2.ProjectIndexDao;
 import com.crtb.tunnelmonitor.entity.ProjectIndex;
-import com.crtb.tunnelmonitor.mydefine.CrtbDateDialogUtils;
+import com.crtb.tunnelmonitor.utils.CrtbUtils;
 
 @InjectLayout(layout=R.layout.activity_work_new)
 public class WorkNewActivity extends WorkFlowActivity implements OnClickListener {
@@ -146,6 +148,37 @@ public class WorkNewActivity extends WorkFlowActivity implements OnClickListener
 			mVaultTransDate.setText(date);
 			mAstringeDate.setText(date);
 		}
+		
+		TextWatcher watcher = new TextWatcher() {
+			
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+				
+			}
+			
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+				
+			}
+			
+			@Override
+			public void afterTextChanged(Editable edt) {
+				
+				String temp = edt.toString();
+				
+				int posDot = temp.indexOf(".");
+				
+				if(posDot >= 0){
+					if (temp.length() - posDot - 1 > 4) {
+						edt.delete(posDot + 5, posDot + 6);
+					}
+				}
+			}
+		};
+		
+		mWorkPlanStart.addTextChangedListener(watcher) ;
+		mWorkPlanEnd.addTextChangedListener(watcher) ;
 	}
 	
 	private void loadDefaultData(ProjectIndex bean){
@@ -154,8 +187,8 @@ public class WorkNewActivity extends WorkFlowActivity implements OnClickListener
 		mWorkPlanCalendar.setText(DateUtils.toDateString(bean.getCreateTime(),DateUtils.PART_TIME_FORMAT));
 		mWorkPlanUnit.setText(bean.getConstructionFirm());
 		mWorkPlanPrefix.setText(bean.getChainagePrefix());
-		mWorkPlanStart.setText(String.valueOf((int)bean.getStartChainage()));
-		mWorkPlanEnd.setText(String.valueOf((int)bean.getEndChainage()));
+		mWorkPlanStart.setText(String.valueOf(bean.getStartChainage()));
+		mWorkPlanEnd.setText(String.valueOf(bean.getEndChainage()));
 		
 		// 拱顶
 		mVaultTransMax.setText(String.valueOf(bean.getGDLimitTotalSettlement()));
@@ -244,8 +277,8 @@ public class WorkNewActivity extends WorkFlowActivity implements OnClickListener
 				return ;
 			}
 			
-			float sm	= Float.valueOf(start);
-			float em	= Float.valueOf(end);
+			double sm	= CrtbUtils.formatDouble(start);
+			double em	= CrtbUtils.formatDouble(end);
 			
 			if(em <= sm){
 				showText("结束里程必须大于开始里程");

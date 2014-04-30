@@ -22,13 +22,13 @@
 
             <EditText
                 android:id="@+id/section_new_et_chainage_prefix"
-                android:layout_width="60dp"
+                android:layout_width="92dp"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
                 android:editable="false"
                 android:focusable="false"
                 android:singleLine="true"
-                android:text="DK" />
+                android:textSize="16sp"/>
 
             <EditText
                 android:id="@+id/section_new_et_Chainage"

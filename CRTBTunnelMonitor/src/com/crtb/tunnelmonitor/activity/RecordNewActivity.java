@@ -34,6 +34,7 @@ import com.crtb.tunnelmonitor.WorkFlowActivity;
 import com.crtb.tunnelmonitor.dao.impl.v2.RawSheetIndexDao;
 import com.crtb.tunnelmonitor.entity.ProjectIndex;
 import com.crtb.tunnelmonitor.entity.RawSheetIndex;
+import com.crtb.tunnelmonitor.utils.CrtbUtils;
 import com.crtb.tunnelmonitor.widget.CrtbRecordTunnelSectionInfoListView;
 
 /**
@@ -251,7 +252,7 @@ public class RecordNewActivity extends WorkFlowActivity implements OnPageChangeL
 				// 基本信息
 				recordInfo.setCrossSectionType(RawSheetIndex.CROSS_SECTION_TYPE_TUNNEL);
 				recordInfo.setPrefix(prefix);
-				recordInfo.setFACEDK(Double.valueOf(chainage));
+				recordInfo.setFACEDK(CrtbUtils.formatDouble(chainage));
 				recordInfo.setCreateTime(DateUtils.toDate(currentTime,DateUtils.PART_TIME_FORMAT));
 				recordInfo.setSurveyer(person);
 				recordInfo.setCertificateID(idcard);
@@ -265,7 +266,7 @@ public class RecordNewActivity extends WorkFlowActivity implements OnPageChangeL
 				// 基本信息
 				recordInfo.setCrossSectionType(RawSheetIndex.CROSS_SECTION_TYPE_TUNNEL);
 				recordInfo.setPrefix(prefix);
-				recordInfo.setFACEDK(Double.valueOf(chainage));
+				recordInfo.setFACEDK(CrtbUtils.formatDouble(chainage));
 				recordInfo.setCreateTime(DateUtils.toDate(currentTime,DateUtils.PART_TIME_FORMAT));
 				recordInfo.setSurveyer(person);
 				recordInfo.setCertificateID(idcard);

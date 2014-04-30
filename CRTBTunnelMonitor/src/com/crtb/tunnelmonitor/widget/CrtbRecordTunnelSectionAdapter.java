@@ -45,7 +45,7 @@ public class CrtbRecordTunnelSectionAdapter extends CrtbEntityAdapter<RawSheetIn
 		}
 		
 		holder.chainage.setText(DateUtils.toDateString(item.getCreateTime(),DateUtils.DATE_TIME_FORMAT));
-		holder.excavation.setText(CrtbUtils.formatSectionName(item.getPrefix(), (float)item.getFACEDK()));
+		holder.excavation.setText(CrtbUtils.formatSectionName(item.getPrefix(), item.getFACEDK()));
 		
 		return convertView;
 	}

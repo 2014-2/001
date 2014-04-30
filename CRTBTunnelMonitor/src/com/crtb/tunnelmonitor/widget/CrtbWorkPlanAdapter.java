@@ -42,8 +42,8 @@ public final class CrtbWorkPlanAdapter extends CrtbEntityAdapter<ProjectIndex> {
 		}
 		
 		holder.workplanName.setText(item.getProjectName());
-		holder.startMileage.setText(CrtbUtils.formatSectionName(item.getChainagePrefix(),(float)item.getStartChainage()));
-		holder.endMileage.setText(CrtbUtils.formatSectionName(item.getChainagePrefix(),(float)item.getEndChainage()));
+		holder.startMileage.setText(CrtbUtils.formatSectionName(item.getChainagePrefix(),item.getStartChainage()));
+		holder.endMileage.setText(CrtbUtils.formatSectionName(item.getChainagePrefix(),item.getEndChainage()));
 		
 		return convertView;
 	}

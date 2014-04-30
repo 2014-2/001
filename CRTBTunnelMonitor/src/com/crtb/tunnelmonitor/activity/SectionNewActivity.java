@@ -175,8 +175,11 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 		section_new_et_prefix.setText(mCurrentWorkPlan.getChainagePrefix());
 		
 		// spinner
-		section_new_sp.setAdapter(ArrayAdapter.createFromResource(this, R.array.section_excavation,  
-                android.R.layout.simple_list_item_single_choice)) ;
+		ArrayAdapter<?> adapter = ArrayAdapter.createFromResource(this, R.array.section_excavation,  
+                android.R.layout.simple_spinner_item) ;
+		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		section_new_sp.setAdapter(adapter) ;
+		
 		section_new_sp.setOnItemSelectedListener(new OnItemSelectedListener() {
 
 			@Override
@@ -249,12 +252,40 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 				temp = edt.toString();
 				
 				if(!StringUtils.isEmpty(temp)){
-					float f 	= Double.valueOf(temp).floatValue();
+					double f 	= CrtbUtils.formatDouble(temp);
 					String pre 	= section_new_et_prefix.getEditableText().toString().trim();
 					section_new_et_name.setText(CrtbUtils.formatSectionName(pre,f));
 				} else {
 					section_new_et_name.setText("");
 				}
+			}
+		}) ;
+		
+		section_new_et_width.addTextChangedListener(new TextWatcher() {
+			
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+				
+			}
+			
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+				
+			}
+			
+			@Override
+			public void afterTextChanged(Editable edt) {
+				
+				String temp = edt.toString();
+				
+				int posDot = temp.indexOf(".");
+				
+				if(posDot >= 0){
+					if (temp.length() - posDot - 1 > 4) {
+						edt.delete(posDot + 5, posDot + 6);
+					}
+				}	
 			}
 		}) ;
 		
@@ -385,22 +416,22 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 			String zbdes	= section_new_remark_sl.getEditableText().toString().trim() ;
 			
 			if(StringUtils.isEmpty(gdlj)){
-				showText("拱顶极限值必须大于0");
+				showText("拱顶下沉累计变形量不能为空");
 				return ;
 			}
 			
 			if(StringUtils.isEmpty(zblj)){
-				showText("周边收敛极限值必须大于0");
+				showText("周边收敛累计变形量不能为空");
 				return ;
 			}
 			
 			if(StringUtils.isEmpty(gdsl)){
-				showText("拱顶下沉变形极限值必须大于0");
+				showText("拱顶下沉变形速率不能为空");
 				return ;
 			}
 			
 			if(StringUtils.isEmpty(zbsl)){
-				showText("周边收敛变形极限值必须大于0");
+				showText("周边收敛变形速率不能为空");
 				return ;
 			}
 			
@@ -413,7 +444,7 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 				sectionInfo.setChainage(Float.valueOf(chainage));
 				sectionInfo.setSectionName(name);
 				sectionInfo.setInBuiltTime(DateUtils.toDate(date, DateUtils.PART_TIME_FORMAT));
-				sectionInfo.setWidth(Float.valueOf(width));
+				sectionInfo.setWidth(CrtbUtils.formatDouble(width));
 				//TODO: 表示数据未上传
 				sectionInfo.setInfo("1"); 
 				
@@ -449,10 +480,10 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 				
 				// base info
 				sectionInfo.setChainagePrefix(prefix);
-				sectionInfo.setChainage(Float.valueOf(chainage));
+				sectionInfo.setChainage(CrtbUtils.formatDouble(chainage));
 				sectionInfo.setSectionName(name);
 				sectionInfo.setInBuiltTime(DateUtils.toDate(date, DateUtils.PART_TIME_FORMAT));
-				sectionInfo.setWidth(Float.valueOf(width));
+				sectionInfo.setWidth(CrtbUtils.formatDouble(width));
 				
 				// excavation
 				sectionInfo.setExcavateMethod((String)section_new_sp.getSelectedItem());

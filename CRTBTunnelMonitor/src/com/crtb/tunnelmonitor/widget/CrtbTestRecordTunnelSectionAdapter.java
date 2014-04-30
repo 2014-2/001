@@ -78,7 +78,7 @@ public class CrtbTestRecordTunnelSectionAdapter extends CrtbEntityAdapter<RawShe
 		}
 		
 		holder.recordNo.setText(String.valueOf(item.getID()));
-		holder.recordName.setText(CrtbUtils.formatSectionName(item.getPrefix(),(float)item.getFACEDK()));
+		holder.recordName.setText(CrtbUtils.formatSectionName(item.getPrefix(),item.getFACEDK()));
 		
 		if(!item.isChecked()){
 			holder.status.setBackgroundResource(R.drawable.no);

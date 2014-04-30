@@ -1,5 +1,6 @@
 package com.crtb.tunnelmonitor.utils;
 
+import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -17,18 +18,25 @@ public final class CrtbUtils {
 	static DecimalFormat df = new DecimalFormat("#.0000");
 	private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	
-	public static float formatFloat(float value){
-		return Float.valueOf(df.format(value));
+	public static double formatDouble(double value){
+		return formatDouble(String.valueOf(value)) ; 
 	}
 	
-	public static String formatSectionName(String pre, float value){
+	public static double formatDouble(String value){
+		BigDecimal b = new BigDecimal(value);
+		return b.setScale(4,BigDecimal.ROUND_DOWN).doubleValue() ;
+	}
+	
+	public static String formatSectionName(String pre, double value){
 		
-		float v	= formatFloat(value);
+		String str	= String.valueOf(value);
+		double v	= formatDouble(value);
 		
-		String km = String.valueOf((int)(v / 1000));
-		String m = String.valueOf(v % 1000);
+		String km 	= String.valueOf((int)(v / 1000));
+		String m 	= String.valueOf((int)(v % 1000));
+		String desc	= str.indexOf(".") >= 0 ? str.substring(str.indexOf(".")) : "" ;
 		
-		return pre + km + "+" + m ;
+		return pre + km + "+" + m + desc;
 	}
 	
     public static Date parseDate(String text) {
@@ -120,7 +128,7 @@ public final class CrtbUtils {
     	//TODO:类型编码不对
     	//outParamter.setDigMethod(String.valueOf(section.getExcavateMethod()));
     	outParamter.setDigMethod("QD");
-    	outParamter.setWidth(section.getWidth());
+    	outParamter.setWidth((int)section.getWidth());
     	//TODO:暂时取不到数据,使用"50.0f"
     	//outParamter.setTotalU0Limit(section.getGDU0());
     	outParamter.setTotalU0Limit(50.0f);
@@ -159,7 +167,7 @@ public final class CrtbUtils {
     	outParamter.setChainage(String.valueOf(section.getChainage()));
     	//outParamter.setDigMethod(String.valueOf(section.getExcavateMethod()));
     	outParamter.setDigMethod("QD");
-    	outParamter.setWidth(section.getWidth());
+    	outParamter.setWidth((int)section.getWidth());
     	outParamter.setTotalU0Limit(section.getDBU0());
     	outParamter.setModifiedTime(section.getDBU0Time());
     	outParamter.setU0Remark(section.getDBU0Description());

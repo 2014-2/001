@@ -32,8 +32,8 @@ public class SubsidenceCrossSectionIndex implements Serializable {
 	@ColumnDate
 	private Date InbuiltTime;			// 埋设时间
 	
-	@ColumnInt
-	private int Width;					// 断面宽度
+	@ColumnDouble
+	private double Width;				// 断面宽度
 	
 	@ColumnString(length=255)
 	private String sectionName ;		// 断面名称
@@ -104,11 +104,11 @@ public class SubsidenceCrossSectionIndex implements Serializable {
 		InbuiltTime = inbuiltTime;
 	}
 
-	public int getWidth() {
+	public double getWidth() {
 		return Width;
 	}
 
-	public void setWidth(int width) {
+	public void setWidth(double width) {
 		Width = width;
 	}
 

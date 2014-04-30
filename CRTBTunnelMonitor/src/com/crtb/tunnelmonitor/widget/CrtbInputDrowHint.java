@@ -43,7 +43,7 @@ public final class CrtbInputDrowHint extends PopupWindow {
 		String value = null ;
 		
 		try{
-			value	= CrtbUtils.formatSectionName(mPrifex,Float.valueOf(content)) ;
+			value	= CrtbUtils.formatSectionName(mPrifex,CrtbUtils.formatDouble(content)) ;
 		}catch(Exception e){
 			e.printStackTrace() ;
 			value = content ;
