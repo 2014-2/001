@@ -140,8 +140,16 @@ public final class CrtbUtils {
     	config.setSectionSequence(sectionSequence);
     	String sectionCode = CrtbWebService.getInstance().getSiteCode() + String.format("%04d",  sectionSequence);
     	outParamter.setSectioCode(sectionCode);
+    	StringBuilder sb = new StringBuilder();
+    	final int totalCount = Integer.parseInt(section.getSurveyPnts());
+    	for(int i = 1; i <= totalCount; i++) {
+    		sb.append(sectionCode + "DB" + String.format("%02d", i) + "/");
+    	}
+    	sb.deleteCharAt(sb.lastIndexOf("/"));
+    	outParamter.setPointList(sb.toString());
     	outParamter.setChainage(String.valueOf(section.getChainage()));
-    	// outParamter.setDigMethod(String.valueOf(section.getExcavateMethod()));
+    	//outParamter.setDigMethod(String.valueOf(section.getExcavateMethod()));
+    	outParamter.setDigMethod("QD");
     	outParamter.setWidth(section.getWidth());
     	outParamter.setTotalU0Limit(section.getDBU0());
     	outParamter.setModifiedTime(section.getDBU0Time());
@@ -149,7 +157,6 @@ public final class CrtbUtils {
     	//TODO: 暂时取不到数据，使用固定值3
     	//outParamter.setWallRockLevel(Integer.valueOf(section.getLithologic()));
     	outParamter.setWallRockLevel(3);
-    	outParamter.setPointList(section.getSurveyPnts());
     	outParamter.setFirstMeasureDate(section.getInbuiltTime());
     	outParamter.setRemark(section.getInfo());
     }
