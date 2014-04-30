@@ -18,11 +18,3 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
-
--libraryjars libs/android-support-v4.jar
--dontwarn android.support.v4.**
--keep class android.support.v4.**
-
--libraryjars libs/ksoap2-3.2.0.jar
--dontwarn org.xmlpull.v1.**
--keep class org.xmlpull.v1.**
