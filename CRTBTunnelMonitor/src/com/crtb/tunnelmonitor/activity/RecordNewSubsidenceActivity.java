@@ -143,12 +143,22 @@ public class RecordNewSubsidenceActivity extends WorkFlowActivity implements OnP
 			}
 
 			@Override
-			public void afterTextChanged(Editable s) {
+			public void afterTextChanged(Editable edt) {
+				
+				String temp = edt.toString();
+				
+				int posDot = temp.indexOf(".");
+				
+				if(posDot >= 0){
+					if (temp.length() - posDot - 1 > 4) {
+						edt.delete(posDot + 5, posDot + 6);
+					}
+				}
+				
+				temp = edt.toString();	
 
-				String str = s.toString().trim();
-
-				if (!StringUtils.isEmpty(str)) {
-					sectionListView.setChainage(Float.valueOf(str));
+				if (!StringUtils.isEmpty(temp)) {
+					sectionListView.setChainage(Float.valueOf(temp));
 				}
 			}
 		});

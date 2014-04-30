@@ -1,5 +1,6 @@
 package com.crtb.tunnelmonitor.utils;
 
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -12,12 +13,20 @@ import com.crtb.tunnelmonitor.network.PointUploadParameter;
 import com.crtb.tunnelmonitor.network.SectionUploadParamter;
 
 public final class CrtbUtils {
+	
+	static DecimalFormat df = new DecimalFormat("#.0000");
 	private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	
+	public static float formatFloat(float value){
+		return Float.valueOf(df.format(value));
+	}
 	
 	public static String formatSectionName(String pre, float value){
 		
-		String km = String.valueOf((int)(value / 1000));
-		String m = String.valueOf((int)(value % 1000));
+		float v	= formatFloat(value);
+		
+		String km = String.valueOf((int)(v / 1000));
+		String m = String.valueOf(v % 1000);
 		
 		return pre + km + "+" + m ;
 	}

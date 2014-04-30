@@ -238,8 +238,18 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 				
 				String temp = edt.toString();
 				
+				int posDot = temp.indexOf(".");
+				
+				if(posDot >= 0){
+					if (temp.length() - posDot - 1 > 4) {
+						edt.delete(posDot + 5, posDot + 6);
+					}
+				}
+				
+				temp = edt.toString();
+				
 				if(!StringUtils.isEmpty(temp)){
-					float f 	= Float.valueOf(temp);
+					float f 	= Double.valueOf(temp).floatValue();
 					String pre 	= section_new_et_prefix.getEditableText().toString().trim();
 					section_new_et_name.setText(CrtbUtils.formatSectionName(pre,f));
 				} else {

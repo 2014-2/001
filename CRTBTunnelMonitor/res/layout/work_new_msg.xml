@@ -144,7 +144,7 @@
                     android:layout_width="190dp"
                     android:layout_height="42dip"
                     android:layout_marginLeft="10dp"
-                    android:inputType="number" />
+                    android:inputType="numberDecimal" />
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -171,7 +171,7 @@
                     android:layout_width="190dp"
                     android:layout_height="42dip"
                     android:layout_marginLeft="10dp"
-                    android:inputType="number" />
+                    android:inputType="numberDecimal" />
 
                 <ImageView
                     android:layout_width="wrap_content"
