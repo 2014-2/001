@@ -295,14 +295,24 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 			mHanlder.sendMessage(MSG_ERROR_CONNECT);
 			return;
 		}
-
+		
 		Coordinate3D point = new Coordinate3D(null);
+		
 		try {
 			int nret = ts.GetCoord(0, 0, point);
+			
 			if (nret != 1) {
 				mHanlder.sendMessage(MSG_TEST_ERROR);
 				return;
 			}
+			
+			if((int)point.N == 0 
+					|| (int)point.E == 0 
+					|| (int)point.H == 0){
+				mHanlder.sendMessage(MSG_ERROR_CONNECT);
+				return ;
+			}
+			
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 			return;
