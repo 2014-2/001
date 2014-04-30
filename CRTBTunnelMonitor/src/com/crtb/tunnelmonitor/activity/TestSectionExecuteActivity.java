@@ -583,7 +583,7 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 			}
 			
 			// title
-			setTopbarTitle(tunnelSection.getSectionName());
+			setTopbarTitle(tunnelSection.getSectionName() + " (" + (sectionIndex + 1) + "/" + tunnelSectionList.size() + ")");
 			
 			// TunnelSettlementTotalData bean = null ;
 			
@@ -692,7 +692,7 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 			}
 			
 			// title
-			setTopbarTitle(subsidenceSection.getSectionName());
+			setTopbarTitle(subsidenceSection.getSectionName() + " (" + (sectionIndex + 1) + "/" + subsidenceSectionList.size() + ")");
 			
 			//SubsidenceTotalDataDao dao = SubsidenceTotalDataDao.defaultDao();
 			//SubsidenceTotalData bean = null ;
