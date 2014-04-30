@@ -43,7 +43,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
         android:layout_marginTop="10dp"
-        android:text="累计速率极限值(毫米)" />
+        android:text="变形速率值（毫米/天）" />
 
     <RelativeLayout
         android:layout_width="fill_parent"
