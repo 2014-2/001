@@ -38,10 +38,10 @@ import android.widget.Toast;
 import com.crtb.tunnelmonitor.entity.AlertInfo;
 import com.crtb.tunnelmonitor.network.CrtbWebService;
 import com.crtb.tunnelmonitor.network.RpcCallback;
-import com.crtb.tunnelmonitor.utils.WarningDataManager;
-import com.crtb.tunnelmonitor.utils.WarningDataManager.UploadWarningData;
-import com.crtb.tunnelmonitor.utils.WarningDataManager.WarningLoadListener;
-import com.crtb.tunnelmonitor.utils.WarningDataManager.WarningUploadListener;
+import com.crtb.tunnelmonitor.task.WarningDataManager;
+import com.crtb.tunnelmonitor.task.WarningDataManager.UploadWarningData;
+import com.crtb.tunnelmonitor.task.WarningDataManager.WarningLoadListener;
+import com.crtb.tunnelmonitor.task.WarningDataManager.WarningUploadListener;
 
 public class WarningUploadActivity extends Activity {
     private static final String LOG_TAG = "WarningUploadActivity";

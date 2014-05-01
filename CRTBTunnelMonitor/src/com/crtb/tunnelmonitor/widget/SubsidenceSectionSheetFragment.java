@@ -18,9 +18,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.crtb.tunnelmonitor.activity.R;
+import com.crtb.tunnelmonitor.task.SubsidenceDataManager;
+import com.crtb.tunnelmonitor.task.SubsidenceDataManager.UploadSheetData;
 import com.crtb.tunnelmonitor.utils.CrtbUtils;
-import com.crtb.tunnelmonitor.utils.SubsidenceDataManager;
-import com.crtb.tunnelmonitor.utils.SubsidenceDataManager.UploadSheetData;
 
 @SuppressLint("ValidFragment")
 public class SubsidenceSectionSheetFragment extends Fragment {

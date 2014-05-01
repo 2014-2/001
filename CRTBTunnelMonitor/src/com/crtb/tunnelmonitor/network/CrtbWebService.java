@@ -158,7 +158,7 @@ public final class CrtbWebService {
 	public void getZoneAndSiteCode(final RpcCallback callback) {
 		long randomCode = getRandomCode();
 		if (randomCode == 0) {
-			throw new IllegalStateException("invalid random code.");
+			//throw new IllegalStateException("invalid random code.");
 		}
 		GetZoneAndSiteCodeRpc rpc = new GetZoneAndSiteCodeRpc(randomCode, new RpcCallbackWrapper(new RpcCallback() {
 			

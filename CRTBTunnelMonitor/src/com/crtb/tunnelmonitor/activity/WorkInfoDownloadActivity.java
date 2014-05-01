@@ -39,8 +39,8 @@ import com.crtb.tunnelmonitor.entity.TunnelSettlementTotalData;
 import com.crtb.tunnelmonitor.network.CrtbWebService;
 import com.crtb.tunnelmonitor.network.RpcCallback;
 import com.crtb.tunnelmonitor.network.SectionStatus;
-import com.crtb.tunnelmonitor.utils.DataDownloadManager;
-import com.crtb.tunnelmonitor.utils.DataDownloadManager.DownloadListener;
+import com.crtb.tunnelmonitor.task.DataDownloadManager;
+import com.crtb.tunnelmonitor.task.DataDownloadManager.DownloadListener;
 
 public class WorkInfoDownloadActivity extends Activity {
     private static final String LOG_TAG = "WorkInfoDownloadActivity";

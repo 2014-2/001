@@ -1,4 +1,4 @@
-package com.crtb.tunnelmonitor.utils;
+package com.crtb.tunnelmonitor.task;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -17,6 +17,8 @@ import com.crtb.tunnelmonitor.network.DataCounter;
 import com.crtb.tunnelmonitor.network.DataCounter.CounterListener;
 import com.crtb.tunnelmonitor.network.RpcCallback;
 import com.crtb.tunnelmonitor.network.WarningUploadParameter;
+import com.crtb.tunnelmonitor.utils.AlertUtils;
+import com.crtb.tunnelmonitor.utils.CrtbUtils;
 
 public class WarningDataManager {
 	private static final String LOG_TAG = "WarningDataManager";

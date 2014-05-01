@@ -39,10 +39,10 @@ import android.widget.Toast;
 
 import com.crtb.tunnelmonitor.dao.impl.v2.ProjectIndexDao;
 import com.crtb.tunnelmonitor.entity.ProjectIndex;
-import com.crtb.tunnelmonitor.utils.DataManager;
-import com.crtb.tunnelmonitor.utils.DataManager.DataUploadListener;
-import com.crtb.tunnelmonitor.utils.DataManager.UploadSheetData;
-import com.crtb.tunnelmonitor.utils.SubsidenceDataManager;
+import com.crtb.tunnelmonitor.task.SubsidenceDataManager;
+import com.crtb.tunnelmonitor.task.TunnelDataManager;
+import com.crtb.tunnelmonitor.task.TunnelDataManager.DataUploadListener;
+import com.crtb.tunnelmonitor.task.TunnelDataManager.UploadSheetData;
 import com.crtb.tunnelmonitor.widget.SubsidenceSectionSheetFragment;
 import com.crtb.tunnelmonitor.widget.TunnelSectionSheetFragment;
 
@@ -272,34 +272,34 @@ public class DataUploadActivity extends FragmentActivity {
                         switch (mPager.getCurrentItem()) {
                             // 隧道内断面
                             case 0:
-                                DataManager uploadManager = new DataManager();
-                                List<UploadSheetData> uploadDataList = mTunnelFragment.getUploadData();
-                                if (uploadDataList != null && uploadDataList.size() > 0) {
-                                    showProgressOverlay();
-                                    uploadManager.uploadData(uploadDataList, new DataUploadListener() {
-                                        @Override
-                                        public void done(final boolean success) {
-                                            runOnUiThread(new Runnable() {
-                                                @Override
-                                                public void run() {
-                                                    if (success) {
-                                                        mTunnelFragment.refreshUI();
-                                                    }
-                                                    updateStatus(success);
-                                                }
-                                            });
-                                        }
-                                    });
-                                } else {
-                                    Toast.makeText(getApplicationContext(), "请先选择要上传的记录单", Toast.LENGTH_LONG).show();
-                                }
+//                                TunnelDataManager uploadManager = new TunnelDataManager();
+//                                List<UploadSheetData> uploadDataList = mTunnelFragment.getUploadData();
+//                                if (uploadDataList != null && uploadDataList.size() > 0) {
+//                                    showProgressOverlay();
+//                                    uploadManager.uploadData(uploadDataList, new DataUploadListener() {
+//                                        @Override
+//                                        public void done(final boolean success) {
+//                                            runOnUiThread(new Runnable() {
+//                                                @Override
+//                                                public void run() {
+//                                                    if (success) {
+//                                                        mTunnelFragment.refreshUI();
+//                                                    }
+//                                                    updateStatus(success);
+//                                                }
+//                                            });
+//                                        }
+//                                    });
+//                                } else {
+//                                    Toast.makeText(getApplicationContext(), "请先选择要上传的记录单", Toast.LENGTH_LONG).show();
+//                                }
                                 break;
                             case 1:
                             	 SubsidenceDataManager subsidenceDataManager = new SubsidenceDataManager();
-                                 List<com.crtb.tunnelmonitor.utils.SubsidenceDataManager.UploadSheetData> uploadDataList1 = mSubsidenceFragment.getUploadData();
+                                 List<com.crtb.tunnelmonitor.task.SubsidenceDataManager.UploadSheetData> uploadDataList1 = mSubsidenceFragment.getUploadData();
                                  if (uploadDataList1 != null && uploadDataList1.size() > 0) {
                                      showProgressOverlay();
-                                     subsidenceDataManager.uploadData(uploadDataList1, new com.crtb.tunnelmonitor.utils.SubsidenceDataManager.DataUploadListener() {
+                                     subsidenceDataManager.uploadData(uploadDataList1, new com.crtb.tunnelmonitor.task.SubsidenceDataManager.DataUploadListener() {
                                          @Override
                                          public void done(final boolean success) {
                                              runOnUiThread(new Runnable() {

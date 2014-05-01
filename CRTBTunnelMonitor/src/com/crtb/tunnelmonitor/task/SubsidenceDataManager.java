@@ -1,4 +1,4 @@
-package com.crtb.tunnelmonitor.utils;
+package com.crtb.tunnelmonitor.task;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -21,6 +21,7 @@ import com.crtb.tunnelmonitor.network.DataCounter.CounterListener;
 import com.crtb.tunnelmonitor.network.PointUploadParameter;
 import com.crtb.tunnelmonitor.network.RpcCallback;
 import com.crtb.tunnelmonitor.network.SectionUploadParamter;
+import com.crtb.tunnelmonitor.utils.CrtbUtils;
 
 /**
  * 地表下沉断面数据加载,上传
