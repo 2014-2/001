@@ -7,10 +7,11 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import android.util.Log;
-
+import com.crtb.tunnelmonitor.AppCRTBApplication;
 import com.crtb.tunnelmonitor.dao.impl.v2.ProjectIndexDao;
 import com.crtb.tunnelmonitor.entity.ProjectIndex;
 import com.crtb.tunnelmonitor.entity.SubsidenceCrossSectionIndex;
+import com.crtb.tunnelmonitor.entity.SurveyerInformation;
 import com.crtb.tunnelmonitor.entity.TunnelCrossSectionIndex;
 import com.crtb.tunnelmonitor.entity.TunnelSettlementTotalData;
 import com.crtb.tunnelmonitor.network.CrtbWebService;
@@ -121,17 +122,20 @@ public final class CrtbUtils {
     	config.setSectionSequence(sectionSequence);
     	String sectionCode = CrtbWebService.getInstance().getSiteCode() + String.format("%04d",  sectionSequence);
     	outParamter.setSectioCode(sectionCode);
-    	String digMethod = section.getExcavateMethod();
+    	String digMethod = getExcavateMethodByStr(section.getExcavateMethod());
     	outParamter.setDigMethod(digMethod);
     	String pointList = "";
-    	//全断面法
-    	if ("QD".equals(digMethod)) {
+    	if ("QD".equals(digMethod)) {//全断面法
     		pointList = sectionCode + "GD01" + "/" + sectionCode + "SL01" + "#" + sectionCode + "SL02";
-    	} else if ("ST".equals(digMethod)) { //三台阶法
+    	} else if ("ST".equals(digMethod) || "SC".equals(digMethod)) { //三台阶法或又侧壁法
     		pointList = sectionCode + "GD01" + "/" + sectionCode + "SL01" + "#" + sectionCode + "SL02" 
     	                                     + "/" + sectionCode + "SL03" + "#" + sectionCode + "SL04"
     	                                     + "/" + sectionCode + "SL05" + "#" + sectionCode + "SL06";
-    	} else {
+    	} else if ("DT".equals(digMethod)) {//台阶法
+    		pointList = sectionCode + "GD01" + "/" + sectionCode + "SL01" + "#" + sectionCode + "SL02" 
+                    + "/" + sectionCode + "SL03" + "#" + sectionCode + "SL04";
+    	}
+    	else {
     		Log.e("upload", "unknown dig method: " + digMethod);
     	}
     	//outParamter.setPointList(section.getSurveyPntName());
@@ -215,5 +219,15 @@ public final class CrtbUtils {
         }
 
         return pre;
+    }
+
+    public static String getSurveyorName() {
+        SurveyerInformation s = AppCRTBApplication.getInstance().getCurPerson();
+        return s != null ? s.getSurveyerName() : "";
+    }
+
+    public static String getSurveyorCertificateID() {
+        SurveyerInformation s = AppCRTBApplication.getInstance().getCurPerson();
+        return s != null ? s.getCertificateID() : "";
     }
 }
