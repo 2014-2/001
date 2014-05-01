@@ -6,9 +6,11 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import com.crtb.tunnelmonitor.AppCRTBApplication;
 import com.crtb.tunnelmonitor.dao.impl.v2.ProjectIndexDao;
 import com.crtb.tunnelmonitor.entity.ProjectIndex;
 import com.crtb.tunnelmonitor.entity.SubsidenceCrossSectionIndex;
+import com.crtb.tunnelmonitor.entity.SurveyerInformation;
 import com.crtb.tunnelmonitor.entity.TunnelCrossSectionIndex;
 import com.crtb.tunnelmonitor.entity.TunnelSettlementTotalData;
 import com.crtb.tunnelmonitor.network.CrtbWebService;
@@ -204,5 +206,15 @@ public final class CrtbUtils {
         }
 
         return pre;
+    }
+
+    public static String getSurveyorName() {
+        SurveyerInformation s = AppCRTBApplication.getInstance().getCurPerson();
+        return s != null ? s.getSurveyerName() : "";
+    }
+
+    public static String getSurveyorCertificateID() {
+        SurveyerInformation s = AppCRTBApplication.getInstance().getCurPerson();
+        return s != null ? s.getCertificateID() : "";
     }
 }

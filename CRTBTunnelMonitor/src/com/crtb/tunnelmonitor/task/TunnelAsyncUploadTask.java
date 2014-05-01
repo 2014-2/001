@@ -86,8 +86,8 @@ public class TunnelAsyncUploadTask extends AsyncUploadTask {
         parameter.setMeasureDate(measureData.getMeasureDate());
         parameter.setPointValueList(measureData.getValueList());
         parameter.setPointCoordinateList(measureData.getCoordinateList());
-        parameter.setSurveyorName("杨工");
-        parameter.setSurveyorId("111");
+        parameter.setSurveyorName(CrtbUtils.getSurveyorName());
+        parameter.setSurveyorId(CrtbUtils.getSurveyorCertificateID());
         parameter.setRemark("yyy");
         CrtbWebService.getInstance().uploadTestResult(parameter, new RpcCallback() {
 
