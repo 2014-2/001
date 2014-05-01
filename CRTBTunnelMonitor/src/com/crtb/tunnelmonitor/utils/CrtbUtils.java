@@ -127,9 +127,7 @@ public final class CrtbUtils {
     	//TODO: 值要保持一至
     	//outParamter.setChainage(String.valueOf(section.getChainage()));
     	outParamter.setChainage(formatSectionName(getSectionPrefix(), section.getChainage()));
-    	//TODO:类型编码不对
-    	//outParamter.setDigMethod(String.valueOf(section.getExcavateMethod()));
-    	outParamter.setDigMethod("QD");
+    	outParamter.setDigMethod(section.getExcavateMethod());
     	outParamter.setWidth((int)section.getWidth());
     	//TODO:暂时取不到数据,使用"50.0f"
     	//outParamter.setTotalU0Limit(section.getGDU0());
