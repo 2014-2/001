@@ -52,8 +52,8 @@ public class TunnelAsyncQueryTask extends AsyncQueryTask {
                          }
                          measureData.addMeasurePoint(point);
                      }
+                     section.setMeasureData(measureDataList);
                 }
-                section.setMeasureData(measureDataList);
                 if (section.needUpload()) {
                 	sections.add(section);
                 }

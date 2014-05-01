@@ -18,9 +18,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.crtb.tunnelmonitor.activity.R;
-import com.crtb.tunnelmonitor.task.SubsidenceDataManager;
-import com.crtb.tunnelmonitor.task.SubsidenceDataManager.UploadSheetData;
-import com.crtb.tunnelmonitor.utils.CrtbUtils;
+import com.crtb.tunnelmonitor.task.AsyncQueryTask.QueryLisenter;
+import com.crtb.tunnelmonitor.task.SheetRecord;
+import com.crtb.tunnelmonitor.task.SubsidenceAsyncQueryTask;
 
 @SuppressLint("ValidFragment")
 public class SubsidenceSectionSheetFragment extends Fragment {
@@ -65,49 +65,59 @@ public class SubsidenceSectionSheetFragment extends Fragment {
         loadData();
     }
 
-	private void loadData() {
-		SubsidenceDataManager subsidenceDataManager = new SubsidenceDataManager();
-		subsidenceDataManager
-				.loadData(new SubsidenceDataManager.DataLoadListener() {
-					@Override
-					public void done(List<UploadSheetData> uploadDataList) {
-						if (uploadDataList != null && uploadDataList.size() > 0) {
-							List<RawSheetData> sheetDataList = new ArrayList<RawSheetData>();
-							for (UploadSheetData sheetData : uploadDataList) {
-								sheetDataList.add(new RawSheetData(sheetData));
-							}
-							mAdapter.setSheetList(sheetDataList);
-						}
-					}
-				});
-	}
+//	private void loadData() {
+//		SubsidenceDataManager subsidenceDataManager = new SubsidenceDataManager();
+//		subsidenceDataManager
+//				.loadData(new SubsidenceDataManager.DataLoadListener() {
+//					@Override
+//					public void done(List<UploadSheetData> uploadDataList) {
+//						if (uploadDataList != null && uploadDataList.size() > 0) {
+//							List<RawSheetData> sheetDataList = new ArrayList<RawSheetData>();
+//							for (UploadSheetData sheetData : uploadDataList) {
+//								sheetDataList.add(new RawSheetData(sheetData));
+//							}
+//							mAdapter.setSheetList(sheetDataList);
+//						}
+//					}
+//				});
+//	}
+    
+    private void loadData() {
+    	SubsidenceAsyncQueryTask queryTask  = new SubsidenceAsyncQueryTask(new QueryLisenter() {
+			@Override
+			public void done(List<SheetRecord> records) {
+				mAdapter.setData(records);
+			}
+		});
+    	queryTask.execute();
+    }
 
     public void refreshUI() {
         loadData();
     }
 
-    public List<UploadSheetData> getUploadData() {
+    public List<SheetRecord> getUploadData() {
         return mAdapter.getUploadData();
     }
 
     class SheetAdapter extends BaseAdapter {
-        private List<RawSheetData> mSheetDataList;
+        private List<SheetRecord> mSheetRecords;
 
         SheetAdapter() {
-            mSheetDataList = new ArrayList<RawSheetData>();
+        	mSheetRecords = new ArrayList<SheetRecord>();
         }
 
-        public void setSheetList(List<RawSheetData> sheetDataList) {
-            mSheetDataList = sheetDataList;
+        public void setData(List<SheetRecord> sheetRecords) {
+        	mSheetRecords = sheetRecords;
             notifyDataSetChanged();
         }
 
-        public List<UploadSheetData> getUploadData() {
-            List<UploadSheetData> uploadDataList = new ArrayList<UploadSheetData>();
-            if (mSheetDataList != null && mSheetDataList.size() > 0) {
-                for(RawSheetData data : mSheetDataList) {
-                    if (data.isChecked()) {
-                        uploadDataList.add(data.getUploadData());
+        public List<SheetRecord> getUploadData() {
+            List<SheetRecord> uploadDataList = new ArrayList<SheetRecord>();
+            if (mSheetRecords != null && mSheetRecords.size() > 0) {
+                for(SheetRecord record : mSheetRecords) {
+                    if (record.isChecked()) {
+                        uploadDataList.add(record);
                     }
                 }
             }
@@ -116,12 +126,12 @@ public class SubsidenceSectionSheetFragment extends Fragment {
 
         @Override
         public int getCount() {
-            return mSheetDataList.size();
+            return mSheetRecords.size();
         }
 
         @Override
         public Object getItem(int position) {
-            return mSheetDataList.get(position);
+            return mSheetRecords.get(position);
         }
 
         @Override
@@ -130,14 +140,14 @@ public class SubsidenceSectionSheetFragment extends Fragment {
         }
 
         public void revertCheck(int position) {
-            RawSheetData sheetData = mSheetDataList.get(position);
+        	SheetRecord sheetData = mSheetRecords.get(position);
             sheetData.setChecked(!sheetData.isChecked());
             notifyDataSetChanged();
         }
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            RawSheetData sheetData = mSheetDataList.get(position);
+        	SheetRecord record = mSheetRecords.get(position);
             if (convertView == null) {
                 convertView = LayoutInflater.from(getActivity()).inflate(R.layout.layout_section_item, null);
                 RawSheetDataHolder holder = new RawSheetDataHolder();
@@ -146,11 +156,11 @@ public class SubsidenceSectionSheetFragment extends Fragment {
                 holder.ivIsChecked = (ImageView)convertView.findViewById(R.id.checked_switch);
                 convertView.setTag(holder);
             }
-            bindView(sheetData, convertView);
+            bindView(record, convertView);
             return convertView;
         }
 
-        private void bindView(RawSheetData data, View convertView) {
+        private void bindView(SheetRecord data, View convertView) {
             RawSheetDataHolder holder = (RawSheetDataHolder)convertView.getTag();
             holder.tvCreatedTime.setText(data.getCreatedTime());
             if (data.isUploaded()) {
@@ -172,32 +182,32 @@ public class SubsidenceSectionSheetFragment extends Fragment {
         ImageView ivIsChecked;
     }
 
-    public class RawSheetData {
-        private UploadSheetData mUploadData;
-        private boolean mIsChecked;
-
-        public RawSheetData(UploadSheetData uploadData) {
-            mUploadData = uploadData;
-        }
-
-        public UploadSheetData getUploadData() {
-            return mUploadData;
-        }
-
-        public String getCreatedTime() {
-            return CrtbUtils.formatDate(mUploadData.getRawSheet().getCreateTime());
-        }
-
-        public boolean isUploaded() {
-            return !mUploadData.needUpload();
-        }
-
-        public void setChecked(boolean checked) {
-            mIsChecked = checked;
-        }
-
-        public boolean isChecked() {
-            return mIsChecked;
-        }
-    }
+//    public class RawSheetData {
+//        private UploadSheetData mUploadData;
+//        private boolean mIsChecked;
+//
+//        public RawSheetData(UploadSheetData uploadData) {
+//            mUploadData = uploadData;
+//        }
+//
+//        public UploadSheetData getUploadData() {
+//            return mUploadData;
+//        }
+//
+//        public String getCreatedTime() {
+//            return CrtbUtils.formatDate(mUploadData.getRawSheet().getCreateTime());
+//        }
+//
+//        public boolean isUploaded() {
+//            return !mUploadData.needUpload();
+//        }
+//
+//        public void setChecked(boolean checked) {
+//            mIsChecked = checked;
+//        }
+//
+//        public boolean isChecked() {
+//            return mIsChecked;
+//        }
+//    }
 }
