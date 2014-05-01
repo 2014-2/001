@@ -83,6 +83,10 @@ public final class CrtbWebService {
 		return mSiteCode;
 	}
 	
+	public boolean isLogined() {
+		return (mRandomCode != 0) ? true : false;
+	}
+	
 	public void login(final String account, final String password, final RpcCallback callback) {
 		GetPublicKeyRpc rpc = new GetPublicKeyRpc(account, Constant.testPhysical, new RpcCallbackWrapper(new RpcCallback() {
 			@Override

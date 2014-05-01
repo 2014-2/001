@@ -159,18 +159,22 @@ public final class CrtbUtils {
     	outParamter.setSectioCode(sectionCode);
     	StringBuilder sb = new StringBuilder();
     	final int totalCount = Integer.parseInt(section.getSurveyPnts());
-    	for(int i = 1; i <= totalCount; i++) {
+    	for(int i = 0; i < totalCount; i++) {
     		sb.append(sectionCode + "DB" + String.format("%02d", i) + "/");
     	}
     	sb.deleteCharAt(sb.lastIndexOf("/"));
     	outParamter.setPointList(sb.toString());
-    	outParamter.setChainage(String.valueOf(section.getChainage()));
+    	//FIX:需要将里程转换成DK-XXX
+    	//outParamter.setChainage(String.valueOf(section.getChainage()));
     	//outParamter.setDigMethod(String.valueOf(section.getExcavateMethod()));
+    	outParamter.setChainage(section.getSectionName());
     	outParamter.setDigMethod("QD");
     	outParamter.setWidth((int)section.getWidth());
     	outParamter.setTotalU0Limit(section.getDBU0());
     	outParamter.setModifiedTime(section.getDBU0Time());
-    	outParamter.setU0Remark(section.getDBU0Description());
+    	//TODO: 暂时取不到数据，使用固定值：
+    	//outParamter.setU0Remark(section.getDBU0Description());
+    	outParamter.setU0Remark("xxx");
     	//TODO: 暂时取不到数据，使用固定值3
     	//outParamter.setWallRockLevel(Integer.valueOf(section.getLithologic()));
     	outParamter.setWallRockLevel(3);
