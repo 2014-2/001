@@ -111,6 +111,38 @@ public final class CrtbUtils {
     	
     	return "无" ;
     }
+
+    public static String getExcavateMethodCode(String method){
+        
+        if(method == null){
+            return "" ;
+        }
+        
+        //DT-台阶法
+        //ST-三台阶法
+        //QD-全断面法
+        //HX-环行开挖
+        //ZG-中壁
+        //JC-交叉
+        //SC-双侧壁法
+        //DB-地表下沉
+        
+        if(method.equals("QD") 
+                || method.equals("全断面法")){
+            return "QD" ;
+        } else if(method.equals("DT")
+                || method.equals("台阶法")){
+            return "DT" ;
+        } else if(method.equals("ST")
+                || method.equals("三台阶法")){
+            return "ST" ;
+        } else if(method.equals("SC")
+                || method.equals("双侧壁法")){
+            return "SC" ;
+        }
+        
+        return "" ;
+    }
     
     public static void fillSectionParamter(TunnelCrossSectionIndex section,SectionUploadParamter outParamter){
     	if(section == null || outParamter == null){
@@ -122,7 +154,7 @@ public final class CrtbUtils {
     	config.setSectionSequence(sectionSequence);
     	String sectionCode = CrtbWebService.getInstance().getSiteCode() + String.format("%04d",  sectionSequence);
     	outParamter.setSectioCode(sectionCode);
-    	String digMethod = getExcavateMethodByStr(section.getExcavateMethod());
+    	String digMethod = getExcavateMethodCode(section.getExcavateMethod());
     	outParamter.setDigMethod(digMethod);
     	String pointList = "";
     	if ("QD".equals(digMethod)) {//全断面法
