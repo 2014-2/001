@@ -30,6 +30,7 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.crtb.tunnelmonitor.AppCRTBApplication;
 import com.crtb.tunnelmonitor.AppConfig;
 import com.crtb.tunnelmonitor.common.Constant;
 import com.crtb.tunnelmonitor.dao.impl.v2.SurveyerInformationDao;
@@ -64,14 +65,19 @@ public class LoginActivity extends Activity implements OnClickListener {
 	// add by wei.zhou
 	private List<SurveyerInformation> mAllSurveyer ; 
 	private BroadcastReceiver mReceiver ;
+
+    private AppCRTBApplication mApp;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
-		
+		mApp = AppCRTBApplication.getInstance();
+		mAllSurveyer = SurveyerInformationDao.defaultDao().queryAllSurveyerInformation();
+		mApp.setPersonList(mAllSurveyer);
+
 		initView();
-		
+
 		mReceiver	= new BroadcastReceiver() {
 			
 			@Override
@@ -105,9 +111,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 	    
 		// 点击事件
 		login_btn.setOnClickListener(this);
-		
-		mAllSurveyer = SurveyerInformationDao.defaultDao().queryAllSurveyerInformation();
-	    
+
 		mArrow.setOnClickListener(new OnClickListener() {
 			
 			@Override
@@ -212,7 +216,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 				
 				//login(Constant.testUsername,Constant.testPassword);
 				
-				SurveyerInformation info = SurveyerInformationDao.defaultDao().querySurveyerByName(name);
+				final SurveyerInformation info = SurveyerInformationDao.defaultDao().querySurveyerByName(name);
 				
 				if(info != null && info.getCertificateID().equals(card)){
 					OnClickListener listener=new OnClickListener() {
@@ -223,6 +227,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 			    			intent.putExtra(Constant.LOGIN_TYPE
 			    					, Constant.SERVER_USER);
 			    			startActivity(intent);
+			    			mApp.setCurPerson(info);
 						}
 					};
 					showDialog(true,listener);

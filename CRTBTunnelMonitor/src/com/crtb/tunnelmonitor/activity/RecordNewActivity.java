@@ -29,11 +29,13 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.crtb.tunnelmonitor.AppCRTBApplication;
 import com.crtb.tunnelmonitor.CommonObject;
 import com.crtb.tunnelmonitor.WorkFlowActivity;
 import com.crtb.tunnelmonitor.dao.impl.v2.RawSheetIndexDao;
 import com.crtb.tunnelmonitor.entity.ProjectIndex;
 import com.crtb.tunnelmonitor.entity.RawSheetIndex;
+import com.crtb.tunnelmonitor.entity.SurveyerInformation;
 import com.crtb.tunnelmonitor.mydefine.CrtbDateDialogUtils;
 import com.crtb.tunnelmonitor.utils.CrtbUtils;
 import com.crtb.tunnelmonitor.widget.CrtbRecordTunnelSectionInfoListView;
@@ -171,7 +173,19 @@ public class RecordNewActivity extends WorkFlowActivity implements OnPageChangeL
     }
     
     private void loadDefault(){
-    	
+        record_Person.setEnabled(true);
+        record_Card.setEnabled(true);
+        AppCRTBApplication app = AppCRTBApplication.getInstance();
+        if (!app.isbLocaUser()) {
+            SurveyerInformation p =  app.getCurPerson();
+            if (p != null) {
+                record_Person.setText(p.getSurveyerName());
+                record_Card.setText(p.getCertificateID());
+                record_Person.setEnabled(false);
+                record_Card.setEnabled(false);
+            }
+        }
+        
     	if(recordInfo != null){
     		
     		editRawSheet	= true ;
@@ -183,6 +197,8 @@ public class RecordNewActivity extends WorkFlowActivity implements OnPageChangeL
 			record_Chainage.setText(String.valueOf(recordInfo.getFACEDK()));
 			record_Person.setText(recordInfo.getSurveyer());
 			record_Card.setText(recordInfo.getCertificateID());
+			record_Person.setEnabled(false);
+			record_Card.setEnabled(false);
 			record_C.setText(String.valueOf(recordInfo.getTEMPERATURE()));
 			record_dotype.setText(recordInfo.getFACEDESCRIPTION());
 			record_buildtime.setText(DateUtils.toDateString(recordInfo.getCreateTime(),DateUtils.PART_TIME_FORMAT)) ;
