@@ -4,11 +4,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import ICT.utils.RSACoder;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.crtb.tunnelmonitor.common.Constant;
 import com.crtb.tunnelmonitor.dao.impl.v2.RawSheetIndexDao;
 import com.crtb.tunnelmonitor.dao.impl.v2.SubsidenceCrossSectionExIndexDao;
 import com.crtb.tunnelmonitor.dao.impl.v2.SubsidenceCrossSectionIndexDao;
@@ -17,7 +15,6 @@ import com.crtb.tunnelmonitor.entity.RawSheetIndex;
 import com.crtb.tunnelmonitor.entity.SubsidenceCrossSectionExIndex;
 import com.crtb.tunnelmonitor.entity.SubsidenceCrossSectionIndex;
 import com.crtb.tunnelmonitor.entity.SubsidenceTotalData;
-import com.crtb.tunnelmonitor.entity.TunnelSettlementTotalData;
 import com.crtb.tunnelmonitor.network.CrtbWebService;
 import com.crtb.tunnelmonitor.network.DataCounter;
 import com.crtb.tunnelmonitor.network.DataCounter.CounterListener;
@@ -371,180 +368,69 @@ public class SubsidenceDataManager {
 
 	    }
 
-	    public class UploadMeasureData {
-	        private List<SubsidenceTotalData> mMeasurePoints = new ArrayList<SubsidenceTotalData>();
+	public class UploadMeasureData {
+		private List<SubsidenceTotalData> mMeasurePoints = new ArrayList<SubsidenceTotalData>();
 
-	        public Date getMeasureDate() {
-	        	Date mesureDate = null;
-	        	if (mMeasurePoints != null && mMeasurePoints.size() > 0) {
-	        		SubsidenceTotalData point = mMeasurePoints.get(0);
-	        		mesureDate = point.getSurveyTime();
-	        	}
-	        	return mesureDate;
-	        }
-	        
-	        public void addPoint(SubsidenceTotalData point) {
-	            mMeasurePoints.add(point);
-	        }
-
-	        public List<SubsidenceTotalData> getPoints() {
-	            return mMeasurePoints;
-	        }
-
-	        public TunnelSettlementTotalData getPointByType(String type) {
-//	            TunnelSettlementTotalData result = null;
-//	            for(TunnelSettlementTotalData point : mMeasurePoints) {
-//	                if (type.equals(point.getPntType())) {
-//	                    result = point;
-//	                }
-//	            }
-	            return null;
-	        }
-
-	        public String getPointCodeList(String sectionCode) {
-	            String pointCodeList = "";
-	            final int pointCount = mMeasurePoints.size();
-	            switch (pointCount) {
-	                //全断面法
-	                case 3:
-	                    pointCodeList = sectionCode + "GD01" + "/" + sectionCode
-	                    + "SL01" + "#" + sectionCode + "SL02";
-	                    break;
-	                    //台阶法
-	                case 5:
-	                    pointCodeList = sectionCode + "GD01" + "/" + sectionCode
-	                    + "SL01" + "#" + sectionCode + "SL02" + "/" + sectionCode
-	                    + "SL03" + "#" + sectionCode + "SL04";
-	                    break;
-	                    //三台阶法或双侧壁法
-	                case 7:
-	                    pointCodeList = sectionCode + "GD01" + "/" + sectionCode
-	                    + "SL01" + "#" + sectionCode + "SL02" + "/" + sectionCode
-	                    + "SL03" + "#" + sectionCode + "SL04" + "/" + sectionCode
-	                    + "SL05" + "#" + sectionCode + "SL06";
-	                    break;
-	                default:
-	                    Log.d(LOG_TAG, "未知的开挖方法: 测点数目=" + pointCount);
-	                    break;
-	            }
-	            return pointCodeList;
-	        }
-
-	        public String getCoordinateList() {
-	            String coordinateList = "";
-	            final int pointCount = mMeasurePoints.size();
-	            TunnelSettlementTotalData pointA, pointS1_1, pointS1_2, pointS2_1, pointS2_2, pointS3_1, pointS3_2;
-	            String A, S1_1, S1_2, S2_1, S2_2, S3_1, S3_2, coordinate;
-	            switch (pointCount) {
-	                //全断面法
-	                case 3:
-	                    pointA = getPointByType("A");
-	                    pointS1_1 = getPointByType("S1-1");
-	                    pointS1_2 = getPointByType("S1-2");
-	                    A = pointA.getCoordinate().replace(",", "#");
-	                    S1_1 = pointS1_1.getCoordinate().replace(",", "#");
-	                    S1_2 = pointS1_2.getCoordinate().replace(",", "#");
-	                    coordinate = A + "/" + S1_1 + "#" + S1_2;
-	                    coordinateList = RSACoder.encnryptDes(coordinate, Constant.testDeskey);
-	                    break;
-	                    //台阶法
-	                case 5:
-	                    pointA = getPointByType("A");
-	                    pointS1_1 = getPointByType("S1-1");
-	                    pointS1_2 = getPointByType("S1-2");
-	                    pointS2_1 = getPointByType("S2-1");
-	                    pointS2_2 = getPointByType("S2-2");
-	                    A = pointA.getCoordinate().replace(",", "#");
-	                    S1_1 = pointS1_1.getCoordinate().replace(",", "#");
-	                    S1_2 = pointS1_2.getCoordinate().replace(",", "#");
-	                    S2_1 = pointS2_1.getCoordinate().replace(",", "#");
-	                    S2_2 = pointS2_2.getCoordinate().replace(",", "#");
-	                    coordinate = A + "/" + S1_1 + "#" + S1_2 + "/" + S2_1 + "#" + S2_2;
-	                    coordinateList = RSACoder.encnryptDes(coordinate, Constant.testDeskey);
-	                    break;
-	                    //三台阶法或双侧壁法
-	                case 7:
-	                    pointA = getPointByType("A");
-	                    pointS1_1 = getPointByType("S1-1");
-	                    pointS1_2 = getPointByType("S1-2");
-	                    pointS2_1 = getPointByType("S2-1");
-	                    pointS2_2 = getPointByType("S2-2");
-	                    pointS3_1 = getPointByType("S3-1");
-	                    pointS3_2 = getPointByType("S3-2");
-	                    A = pointA.getCoordinate().replace(",", "#");
-	                    S1_1 = pointS1_1.getCoordinate().replace(",", "#");
-	                    S1_2 = pointS1_2.getCoordinate().replace(",", "#");
-	                    S2_1 = pointS2_1.getCoordinate().replace(",", "#");
-	                    S2_2 = pointS2_2.getCoordinate().replace(",", "#");
-	                    S3_1 = pointS3_1.getCoordinate().replace(",", "#");
-	                    S3_2 = pointS3_2.getCoordinate().replace(",", "#");
-	                    coordinate =  A + "/" + S1_1 + "#" + S1_2 + "/" + S2_1 + "#" + S2_2 + "/" + S3_1 + "#" + S3_2;
-	                    coordinateList = RSACoder.encnryptDes(coordinate, Constant.testDeskey);
-	                    break;
-	                default:
-	                    Log.d(LOG_TAG, "未知的开挖方法: 测点数目=" + pointCount);
-	                    break;
-	            }
-	            return coordinateList;
-	        }
-	        
-	        public String getValueList() {
-	        	String valueList = "";
-	            final int pointCount = mMeasurePoints.size();
-	            TunnelSettlementTotalData pointA, pointS1_1, pointS1_2, pointS2_1, pointS2_2, pointS3_1, pointS3_2;
-	            String[] cA; 
-	            switch (pointCount) {
-	                //全断面法
-	                case 3:
-	                    pointA = getPointByType("A");
-	                    pointS1_1 = getPointByType("S1-1");
-	                    pointS1_2 = getPointByType("S1-2");
-	                    cA = pointA.getCoordinate().split(",");
-	                    valueList = cA[2] + "/" + AlertUtils.getLineLength(pointS1_1, pointS1_2);
-	                    break;
-	                    //台阶法
-	                case 5:
-	                    pointA = getPointByType("A");
-	                    pointS1_1 = getPointByType("S1-1");
-	                    pointS1_2 = getPointByType("S1-2");
-	                    pointS2_1 = getPointByType("S2-1");
-	                    pointS2_2 = getPointByType("S2-2");
-	                    cA = pointA.getCoordinate().split(",");
-	                    valueList = cA[2] + "/" + AlertUtils.getLineLength(pointS1_1, pointS1_2) + "/" + AlertUtils.getLineLength(pointS2_1, pointS2_2);
-	                    break;
-	                    //三台阶法或双侧壁法
-	                case 7:
-	                    pointA = getPointByType("A");
-	                    pointS1_1 = getPointByType("S1-1");
-	                    pointS1_2 = getPointByType("S1-2");
-	                    pointS2_1 = getPointByType("S2-1");
-	                    pointS2_2 = getPointByType("S2-2");
-	                    pointS3_1 = getPointByType("S3-1");
-	                    pointS3_2 = getPointByType("S3-2");
-	                    cA = pointA.getCoordinate().split(",");
-	                    valueList = cA[2] + "/" + AlertUtils.getLineLength(pointS1_1, pointS1_2) 
-	                    		+ "/" + AlertUtils.getLineLength(pointS2_1, pointS2_2)
-	                    		+ "/" + AlertUtils.getLineLength(pointS3_1, pointS3_2);
-	                    break;
-	                default:
-	                    Log.d(LOG_TAG, "未知的开挖方法: 测点数目=" + pointCount);
-	                    break;
-	            }
-	            return valueList;
-	        }
-
-			public void markAsUploaded() {
-				new Thread(new Runnable() {
-					@Override
-					public void run() {
-						SubsidenceTotalDataDao dao = SubsidenceTotalDataDao.defaultDao();
-						for (SubsidenceTotalData point : mMeasurePoints) {
-							point.setInfo("2");
-							dao.update(point);
-						}
-					}
-				}).start();
+		public Date getMeasureDate() {
+			Date mesureDate = null;
+			if (mMeasurePoints != null && mMeasurePoints.size() > 0) {
+				SubsidenceTotalData point = mMeasurePoints.get(0);
+				mesureDate = point.getSurveyTime();
 			}
-	    }
+			return mesureDate;
+		}
+
+		public void addPoint(SubsidenceTotalData point) {
+			mMeasurePoints.add(point);
+		}
+
+		public List<SubsidenceTotalData> getPoints() {
+			return mMeasurePoints;
+		}
+
+		public String getPointCodeList(String sectionCode) {
+			StringBuilder sb = new StringBuilder();
+			final int totalCount = mMeasurePoints.size();
+			for (int i = 0; i < totalCount; i++) {
+				sb.append(sectionCode + "DB" + String.format("%02d", i) + "/");
+			}
+			sb.deleteCharAt(sb.lastIndexOf("/"));
+
+			return sb.toString();
+		}
+
+		public String getCoordinateList() {
+			final int pointCount = mMeasurePoints.size();
+			StringBuilder sb = new StringBuilder();
+			for (int i = 0; i < pointCount; i++) {
+				sb.append(mMeasurePoints.get(i).getCoordinate().replace(",", "#") + "/");
+			}
+			sb.deleteCharAt(sb.lastIndexOf("/"));
+			return sb.toString();
+		}
+
+		public String getValueList() {
+			final int pointCount = mMeasurePoints.size();
+			StringBuilder sb = new StringBuilder();
+			for (int i = 0; i < pointCount; i++) {
+				sb.append(mMeasurePoints.get(i).getCoordinate().split(",")[2] + "/");
+			}
+			sb.deleteCharAt(sb.lastIndexOf("/"));
+			return sb.toString();
+		}
+
+		public void markAsUploaded() {
+			new Thread(new Runnable() {
+				@Override
+				public void run() {
+					SubsidenceTotalDataDao dao = SubsidenceTotalDataDao.defaultDao();
+					for (SubsidenceTotalData point : mMeasurePoints) {
+						point.setInfo("2");
+						dao.update(point);
+					}
+				}
+			}).start();
+		}
+	}
 
 }
