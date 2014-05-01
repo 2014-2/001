@@ -12,6 +12,7 @@
     <string name="edit_control_point_title">编辑控制点</string>
     <string name="upload_warning_data">上传预警信息</string>
     <string name="download_work_data">下载工作面</string>
+    <string name="download_work_site">下载工点</string>
     <string name="review_warning_title">查看预警信息</string>
 
     <!-- common -->

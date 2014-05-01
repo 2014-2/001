@@ -33,7 +33,7 @@
             android:layout_gravity="center_vertical"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="工作面名称"
+            android:text="工点名称"
             android:textColor="#FF000000" />
 
         <TextView

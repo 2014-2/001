@@ -45,6 +45,27 @@ public class DataDownloadManager {
 		downloadSectionCodeList(SectionStatus.VALID);
 	}
 	
+	//TODO: 下载工点数据
+	public void downloadWorkSites(final DownloadListener listener) {
+		CrtbWebService.getInstance().getZoneAndSiteCode(new RpcCallback() {
+			
+			@Override
+			public void onSuccess(Object[] data) {
+				String zoneCode = (String) data[0];
+				String zoneName = (String) data[1];
+				String siteCode = (String) data[2];
+				String siteName = (String) data[3];
+			}
+			
+			@Override
+			public void onFailed(String reason) {
+				if (listener != null) {
+					listener.done(false);
+				}
+			}
+		});
+	}
+	
 	
     //下载断面编码数据
     private void downloadSectionCodeList(SectionStatus status) {

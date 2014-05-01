@@ -73,7 +73,7 @@ public class WorkInfoDownloadActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_workinfo_download);
         TextView title=(TextView) findViewById(R.id.tv_topbar_title);
-        title.setText(R.string.download_work_data);
+        title.setText(R.string.download_work_site);
         init();
         initProgressOverlay();
     }

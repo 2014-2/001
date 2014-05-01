@@ -33,7 +33,7 @@
                 android:layout_marginLeft="10dip"
                 android:layout_marginTop="10dip"
                 android:layout_toRightOf="@id/image_xz"
-                android:text="下载"
+                android:text="加载工点"
                 android:textColor="#d1d1d1"
                 android:textSize="20sp" />
         </RelativeLayout>
