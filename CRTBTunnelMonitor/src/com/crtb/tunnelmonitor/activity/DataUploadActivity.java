@@ -39,7 +39,10 @@ import android.widget.Toast;
 
 import com.crtb.tunnelmonitor.dao.impl.v2.ProjectIndexDao;
 import com.crtb.tunnelmonitor.entity.ProjectIndex;
+import com.crtb.tunnelmonitor.task.AsyncUploadTask.UploadListener;
+import com.crtb.tunnelmonitor.task.SheetRecord;
 import com.crtb.tunnelmonitor.task.SubsidenceDataManager;
+import com.crtb.tunnelmonitor.task.TunnelAsyncUploadTask;
 import com.crtb.tunnelmonitor.task.TunnelDataManager;
 import com.crtb.tunnelmonitor.task.TunnelDataManager.DataUploadListener;
 import com.crtb.tunnelmonitor.task.TunnelDataManager.UploadSheetData;
@@ -272,6 +275,22 @@ public class DataUploadActivity extends FragmentActivity {
                         switch (mPager.getCurrentItem()) {
                             // 隧道内断面
                             case 0:
+                                List<SheetRecord> sheetRecords = mTunnelFragment.getUploadData();
+                                if (sheetRecords != null && sheetRecords.size() > 0) {
+                                    showProgressOverlay();
+                                    TunnelAsyncUploadTask uploadTask  = new TunnelAsyncUploadTask(new UploadListener() {
+    									@Override
+    									public void done(boolean success) {
+    										 if (success) {
+                                                 mTunnelFragment.refreshUI();
+                                             }
+                                             updateStatus(success);
+    									}
+    								});
+                                    uploadTask.execute(sheetRecords);
+                                } else {
+                                    Toast.makeText(getApplicationContext(), "请先选择要上传的记录单", Toast.LENGTH_LONG).show();
+                                }
 //                                TunnelDataManager uploadManager = new TunnelDataManager();
 //                                List<UploadSheetData> uploadDataList = mTunnelFragment.getUploadData();
 //                                if (uploadDataList != null && uploadDataList.size() > 0) {
