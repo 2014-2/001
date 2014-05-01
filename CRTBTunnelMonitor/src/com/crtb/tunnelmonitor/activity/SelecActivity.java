@@ -37,16 +37,16 @@ public class SelecActivity extends Activity implements OnClickListener{
         mApp = AppCRTBApplication.getInstance();
         // mApp.getDatabase().ConnectDB();
         /*测试代码*/
-        List<SurveyerInformation> testList = new ArrayList<SurveyerInformation>();
-        SurveyerInformation test = new SurveyerInformation();
-        test.setCertificateID("511325197812155213");
-        test.setId(1);
-        test.setInfo("测试");
-        test.setProjectID(1);
-        test.setSurveyerName("测试员");
-        testList.add(test);
-        mApp.setPersonList(testList);
-        mApp.setCurPerson(test);
+//        List<SurveyerInformation> testList = new ArrayList<SurveyerInformation>();
+//        SurveyerInformation test = new SurveyerInformation();
+//        test.setCertificateID("511325197812155213");
+//        test.setId(1);
+//        test.setInfo("测试");
+//        test.setProjectID(1);
+//        test.setSurveyerName("测试员");
+//        testList.add(test);
+//        mApp.setPersonList(testList);
+//        mApp.setCurPerson(test);
         /*测试代码*/
 		/** 
 		 * 部工管中心在线升级库  
