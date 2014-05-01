@@ -82,7 +82,7 @@ public final class CrtbRecordTunnelSectionInfoAdapter extends CrtbEntityAdapter<
 		}
 		
 		holder.chainage.setText(item.getSectionName());
-		holder.distance.setText(String.valueOf((int)(defaultChainage - item.getChainage())));
+		holder.distance.setText(String.valueOf(defaultChainage - item.getChainage()));
 		
 		if(item.isUsed()){
 			holder.status.setBackgroundResource(R.drawable.use);

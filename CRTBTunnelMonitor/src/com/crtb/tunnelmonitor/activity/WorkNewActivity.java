@@ -36,6 +36,7 @@ import com.crtb.tunnelmonitor.CommonObject;
 import com.crtb.tunnelmonitor.WorkFlowActivity;
 import com.crtb.tunnelmonitor.dao.impl.v2.ProjectIndexDao;
 import com.crtb.tunnelmonitor.entity.ProjectIndex;
+import com.crtb.tunnelmonitor.mydefine.CrtbDateDialogUtils;
 import com.crtb.tunnelmonitor.utils.CrtbUtils;
 
 @InjectLayout(layout=R.layout.activity_work_new)
@@ -409,18 +410,18 @@ public class WorkNewActivity extends WorkFlowActivity implements OnClickListener
 			break;
 		case R.id.ed_work_new_calendar :
 			
-			// CrtbDateDialogUtils.setAnyDateDialog(this, mWorkPlanCalendar, DateUtils.getCurrtentTimes());
+			CrtbDateDialogUtils.setAnyDateDialog(this, mWorkPlanCalendar, DateUtils.getCurrtentTimes());
 			
 			break ;
 		case R.id.vault_trans_date :
 			
-			//CrtbDateDialogUtils.setAnyDateDialog(this, mWorkPlanCalendar, DateUtils.getCurrtentTimes());
+			CrtbDateDialogUtils.setAnyDateDialog(this, mWorkPlanCalendar, DateUtils.getCurrtentTimes());
 			
 			break;
 			
 		case R.id.circum_astringe_date :
 			
-			//CrtbDateDialogUtils.setAnyDateDialog(this, mAstringeDate, DateUtils.getCurrtentTimes());
+			CrtbDateDialogUtils.setAnyDateDialog(this, mAstringeDate, DateUtils.getCurrtentTimes());
 			
 			break;
 		}

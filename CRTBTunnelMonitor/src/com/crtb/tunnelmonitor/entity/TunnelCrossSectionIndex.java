@@ -13,6 +13,8 @@ import org.zw.android.framework.db.Table;
 import org.zw.android.framework.db.core.ColumnPrimaryKey;
 import org.zw.android.framework.db.core.ColumnPrimaryKey.PrimaryKeyType;
 
+import com.crtb.tunnelmonitor.utils.CrtbUtils;
+
 /**
  * 隧道内断面
  * 
@@ -33,14 +35,13 @@ public class TunnelCrossSectionIndex implements Serializable {
     @ColumnDouble
     private double Chainage; 			// 断面里程值
 
-    @ColumnString(length=255)
-    private String sectionName ;		// 断面名称
-
     @ColumnDate
     private Date InBuiltTime; 			// 埋设时间
 
     @ColumnDouble
     private double Width; 				// 断面宽度
+    
+    private String sectionName ;		// 断面名称
 
     //////////////////////开挖方式//////////////////////////
 
@@ -142,12 +143,13 @@ public class TunnelCrossSectionIndex implements Serializable {
 		this.pointS3Name = pointS3Name;
 	}
 
-	public String getSectionName() {
-        return sectionName;
-    }
+	public void setSectionName(String sectionName) {
+		this.sectionName = sectionName;
+	}
 
-    public void setSectionName(String sectionName) {
-        this.sectionName = sectionName;
+	public String getSectionName() {
+		return sectionName == null ? 
+				CrtbUtils.formatSectionName(ChainagePrefix, Chainage) : sectionName;
     }
 
     public double getChainage() {

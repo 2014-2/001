@@ -34,6 +34,7 @@ import com.crtb.tunnelmonitor.WorkFlowActivity;
 import com.crtb.tunnelmonitor.dao.impl.v2.RawSheetIndexDao;
 import com.crtb.tunnelmonitor.entity.ProjectIndex;
 import com.crtb.tunnelmonitor.entity.RawSheetIndex;
+import com.crtb.tunnelmonitor.mydefine.CrtbDateDialogUtils;
 import com.crtb.tunnelmonitor.utils.CrtbUtils;
 import com.crtb.tunnelmonitor.widget.CrtbRecordSubsidenceSectionInfoListView;
 
@@ -85,7 +86,7 @@ public class RecordNewSubsidenceActivity extends WorkFlowActivity implements OnP
 	@InjectView(id=R.id.record_C,parent="mBaseInfoLayout")
 	private EditText record_C;
 	
-	@InjectView(id=R.id.record_buildtime,parent="mBaseInfoLayout")
+	@InjectView(id=R.id.record_buildtime,parent="mBaseInfoLayout",onClick="this")
 	private EditText record_buildtime;
 	
 	@InjectView(id=R.id.record_dotype,parent="mBaseInfoLayout")
@@ -202,6 +203,9 @@ public class RecordNewSubsidenceActivity extends WorkFlowActivity implements OnP
 			setResult(RESULT_CANCELED, IntentCancel);
 			this.finish();// 关闭当前界面
 			break;
+		case R.id.record_buildtime :
+			CrtbDateDialogUtils.setAnyDateDialog(this, record_buildtime, DateUtils.getCurrtentTimes());
+			break ;
 		case R.id.work_btn_queding: // 数据库
 			
 			if(editRawSheet && !editSection){

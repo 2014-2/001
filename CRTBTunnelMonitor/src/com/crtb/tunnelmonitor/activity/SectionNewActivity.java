@@ -38,8 +38,8 @@ import com.crtb.tunnelmonitor.CommonObject;
 import com.crtb.tunnelmonitor.WorkFlowActivity;
 import com.crtb.tunnelmonitor.dao.impl.v2.ProjectIndexDao;
 import com.crtb.tunnelmonitor.dao.impl.v2.TunnelCrossSectionIndexDao;
-import com.crtb.tunnelmonitor.entity.TunnelCrossSectionIndex;
 import com.crtb.tunnelmonitor.entity.ProjectIndex;
+import com.crtb.tunnelmonitor.entity.TunnelCrossSectionIndex;
 import com.crtb.tunnelmonitor.mydefine.CrtbDateDialogUtils;
 import com.crtb.tunnelmonitor.utils.CrtbUtils;
 
@@ -367,10 +367,10 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 			
 			break;
 		case R.id.section_new_et_calendar :
-			//CrtbDateDialogUtils.setAnyDateDialog(this, section_new_et_calendar, DateUtils.getCurrtentTimes());
+			CrtbDateDialogUtils.setAnyDateDialog(this, section_new_et_calendar, DateUtils.getCurrtentTimes());
 			break ;
 		case R.id.section_new_createtime_gd :
-			//CrtbDateDialogUtils.setAnyDateDialog(this, section_new_createtime1, DateUtils.getCurrtentTimes());
+			CrtbDateDialogUtils.setAnyDateDialog(this, section_new_createtime1, DateUtils.getCurrtentTimes());
 			break ;
 		case R.id.section_new_createtime_sl :
 			CrtbDateDialogUtils.setAnyDateDialog(this, section_new_createtime2, DateUtils.getCurrtentTimes());
@@ -441,8 +441,7 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 				
 				// base info
 				sectionInfo.setChainagePrefix(prefix);
-				sectionInfo.setChainage(Float.valueOf(chainage));
-				sectionInfo.setSectionName(name);
+				sectionInfo.setChainage(CrtbUtils.formatDouble(chainage));
 				sectionInfo.setInBuiltTime(DateUtils.toDate(date, DateUtils.PART_TIME_FORMAT));
 				sectionInfo.setWidth(CrtbUtils.formatDouble(width));
 				//TODO: 表示数据未上传
@@ -481,7 +480,6 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 				// base info
 				sectionInfo.setChainagePrefix(prefix);
 				sectionInfo.setChainage(CrtbUtils.formatDouble(chainage));
-				sectionInfo.setSectionName(name);
 				sectionInfo.setInBuiltTime(DateUtils.toDate(date, DateUtils.PART_TIME_FORMAT));
 				sectionInfo.setWidth(CrtbUtils.formatDouble(width));
 				

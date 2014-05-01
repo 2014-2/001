@@ -13,6 +13,8 @@ import org.zw.android.framework.db.Table;
 import org.zw.android.framework.db.core.ColumnPrimaryKey;
 import org.zw.android.framework.db.core.ColumnPrimaryKey.PrimaryKeyType;
 
+import com.crtb.tunnelmonitor.utils.CrtbUtils;
+
 /**
  * 地表下沉断面
  * 
@@ -35,7 +37,6 @@ public class SubsidenceCrossSectionIndex implements Serializable {
 	@ColumnDouble
 	private double Width;				// 断面宽度
 	
-	@ColumnString(length=255)
 	private String sectionName ;		// 断面名称
 	
 	@ColumnString(length = 255)
@@ -113,8 +114,9 @@ public class SubsidenceCrossSectionIndex implements Serializable {
 	}
 
 	public String getSectionName() {
-		return sectionName;
-	}
+		return sectionName == null ? 
+				CrtbUtils.formatSectionName(ChainagePrefix, Chainage) : sectionName;
+    }
 
 	public void setSectionName(String sectionName) {
 		this.sectionName = sectionName;

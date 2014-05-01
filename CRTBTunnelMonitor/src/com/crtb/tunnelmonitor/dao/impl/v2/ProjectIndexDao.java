@@ -345,13 +345,25 @@ public final class ProjectIndexDao extends AbstractDao<ProjectIndex> {
 			pro.setConstructionFirm(bean.getConstructionFirm());
 			pro.setLimitedTotalSubsidenceTime(bean.getLimitedTotalSubsidenceTime());
 			
+			int code = getDefaultDb().updateObject(pro) ;
+			
 			// 更新失败
-			if(getDefaultDb().updateObject(pro) < 0){
+			if(code < 0){
 				
 				Log.e(TAG, "error :更新工作面失败 ");
 				
 				return DB_EXECUTE_FAILED ;
 			}
+			
+			String[] param = new String[]{bean.getChainagePrefix()} ;
+			
+			// 更新所有表中里程前缀
+			// 1. 隧道内断面
+			db.execute("update TunnelCrossSectionIndex set ChainagePrefix = ?",param);
+			// 2. 地表下沉断面
+			db.execute("update SubsidenceCrossSectionIndex set ChainagePrefix = ?",param);
+			// 3. 记录单
+			db.execute("update RawSheetIndex set prefix = ?",param);
 			
 			return DB_EXECUTE_SUCCESS ;
 		}

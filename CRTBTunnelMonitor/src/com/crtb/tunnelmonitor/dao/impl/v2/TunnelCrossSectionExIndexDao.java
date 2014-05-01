@@ -2,10 +2,7 @@ package com.crtb.tunnelmonitor.dao.impl.v2;
 
 import org.zw.android.framework.IAccessDatabase;
 
-import android.R.integer;
-
 import com.crtb.tunnelmonitor.entity.TunnelCrossSectionExIndex;
-import com.crtb.tunnelmonitor.entity.TunnelCrossSectionIndex;
 
 public class TunnelCrossSectionExIndexDao extends AbstractDao<TunnelCrossSectionExIndex> {
 
@@ -25,10 +22,13 @@ public class TunnelCrossSectionExIndexDao extends AbstractDao<TunnelCrossSection
 	}
 	
 	public TunnelCrossSectionExIndex querySectionById(int rowId) {
+		
 		final IAccessDatabase mDatabase = getCurrentDb();
+		
 		if (mDatabase == null) {
 			return null;
 		}
+		
 		String sql = "select * from TunnelCrossSectionExIndex where ID = ?";
 		return mDatabase.queryObject(sql, new String[] { String.valueOf(rowId) }, TunnelCrossSectionExIndex.class);
 	}
