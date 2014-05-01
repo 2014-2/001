@@ -20,7 +20,16 @@ public class TunnelCrossSectionExIndexDao extends AbstractDao<TunnelCrossSection
 
 		return _instance;
 	}
-	
+
+    public void insertIfNotExist(int sectionId, String sectionCode) {
+        if (queryOneBySectionCode(sectionCode) == null) {
+            TunnelCrossSectionExIndex obj = new TunnelCrossSectionExIndex();
+            obj.setSECTCODE(sectionCode);
+            obj.setID(sectionId);
+            insert(obj);
+        }
+    }
+
 	public TunnelCrossSectionExIndex querySectionById(int rowId) {
 		
 		final IAccessDatabase mDatabase = getCurrentDb();
@@ -31,6 +40,18 @@ public class TunnelCrossSectionExIndexDao extends AbstractDao<TunnelCrossSection
 		
 		String sql = "select * from TunnelCrossSectionExIndex where ID = ?";
 		return mDatabase.queryObject(sql, new String[] { String.valueOf(rowId) }, TunnelCrossSectionExIndex.class);
+	}
+
+	public TunnelCrossSectionExIndex queryOneBySectionCode(String sectionCode) {
+	    
+	    final IAccessDatabase mDatabase = getCurrentDb();
+	    
+	    if (mDatabase == null) {
+	        return null;
+	    }
+	    
+	    String sql = "select * from TunnelCrossSectionExIndex where SECTCODE = ?";
+	    return mDatabase.queryObject(sql, new String[] { sectionCode }, TunnelCrossSectionExIndex.class);
 	}
 	
 }

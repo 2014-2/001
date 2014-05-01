@@ -7,8 +7,10 @@ import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 
+import com.crtb.tunnelmonitor.dao.impl.v2.SubsidenceCrossSectionExIndexDao;
 import com.crtb.tunnelmonitor.dao.impl.v2.SubsidenceCrossSectionIndexDao;
 import com.crtb.tunnelmonitor.dao.impl.v2.SubsidenceTotalDataDao;
+import com.crtb.tunnelmonitor.dao.impl.v2.TunnelCrossSectionExIndexDao;
 import com.crtb.tunnelmonitor.dao.impl.v2.TunnelCrossSectionIndexDao;
 import com.crtb.tunnelmonitor.dao.impl.v2.TunnelSettlementTotalDataDao;
 import com.crtb.tunnelmonitor.entity.SubsidenceCrossSectionIndex;
@@ -122,7 +124,7 @@ public class DataDownloadManager {
             public void onSuccess(Object[] data) {
                 TunnelCrossSectionIndex[] sectionInfo = (TunnelCrossSectionIndex[])data;
                 final TunnelCrossSectionIndex section = sectionInfo[0];
-                storeTunnelSection(section);
+                storeTunnelSection(sectionCode, section);
                 List<String> pointCodeList = Arrays.asList(section.getSurveyPntName().split(","));
                 if (pointCodeList != null && pointCodeList.size() > 0) {
                 	DataCounter pointDownloadCounter = new DataCounter("PointDownloadCounter", pointCodeList.size(), new CounterListener() {
@@ -166,12 +168,15 @@ public class DataDownloadManager {
         });
     }
     
-    private void storeTunnelSection(final TunnelCrossSectionIndex section) {
+    private void storeTunnelSection(final String sectionCode, final TunnelCrossSectionIndex section) {
     	 new Thread(new Runnable() {
              @Override
              public void run() {
                  TunnelCrossSectionIndexDao dao = TunnelCrossSectionIndexDao.defaultDao();
-                 dao.insert(section);
+                 int id = dao.insertOrUpdate(section);
+                 if (id >=0) {
+                     TunnelCrossSectionExIndexDao.defaultDao().insertIfNotExist(id, sectionCode);
+                 }
              }
          }).start();
     }
@@ -188,12 +193,15 @@ public class DataDownloadManager {
         }).start();
     }
     
-    private void storeSubsidenceSection(final SubsidenceCrossSectionIndex section) {
+    private void storeSubsidenceSection(final String sectionCode, final SubsidenceCrossSectionIndex section) {
    	 new Thread(new Runnable() {
             @Override
             public void run() {
-            	SubsidenceCrossSectionIndexDao dao = SubsidenceCrossSectionIndexDao.defaultDao();
-                dao.insert(section);
+                SubsidenceCrossSectionIndexDao dao = SubsidenceCrossSectionIndexDao.defaultDao();
+                int id = dao.insertOrUpdate(section);
+                if (id >= 0) {
+                    SubsidenceCrossSectionExIndexDao.defaultDao().insertIfNotExist(id, sectionCode);
+                }
             }
         }).start();
    }
