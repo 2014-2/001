@@ -11,6 +11,7 @@ import com.crtb.tunnelmonitor.AppHandler;
 import com.crtb.tunnelmonitor.BaseAsyncTask;
 import com.crtb.tunnelmonitor.entity.CrtbUser;
 import com.crtb.tunnelmonitor.entity.SubsidenceCrossSectionIndex;
+import com.crtb.tunnelmonitor.entity.TunnelCrossSectionIndex;
 
 /**
  * 地表下沉断面DAO
@@ -34,7 +35,19 @@ public final class SubsidenceCrossSectionIndexDao extends AbstractDao<Subsidence
 
 		return _instance;
 	}
-	
+
+    public int insertOrUpdate(SubsidenceCrossSectionIndex bean) {
+        if (bean == null) {
+            return -1;
+        }
+        SubsidenceCrossSectionIndex obj = querySectionIndexByChainage(bean.getChainage());
+        if (obj != null) {
+            return update(bean);
+        } else {
+            return insert(bean);
+        }
+    }
+
 	@Override
 	public int insert(SubsidenceCrossSectionIndex bean) {
 		
@@ -115,6 +128,18 @@ public final class SubsidenceCrossSectionIndexDao extends AbstractDao<Subsidence
         String sql = "select * from SubsidenceCrossSectionIndex where ID = ?" ;
 
         return mDatabase.queryObject(sql,new String[]{id}, SubsidenceCrossSectionIndex.class) ;
+    }
+
+    public SubsidenceCrossSectionIndex querySectionIndexByChainage(double chainage) {
+        final IAccessDatabase mDatabase = getCurrentDb();
+        
+        if(mDatabase == null){
+            return null ;
+        }
+        
+        String sql = "select * from SubsidenceCrossSectionIndex where Chainage = ?" ;
+        
+        return mDatabase.queryObject(sql,new String[]{String.valueOf(chainage)}, SubsidenceCrossSectionIndex.class) ;
     }
 
     public List<SubsidenceCrossSectionIndex> querySectionByIds(String rowIds) {

@@ -34,7 +34,19 @@ public final class TunnelCrossSectionIndexDao extends AbstractDao<TunnelCrossSec
 		
 		return _instance ;
 	}
-	
+
+    public int insertOrUpdate(TunnelCrossSectionIndex bean) {
+        if (bean == null) {
+            return -1;
+        }
+        TunnelCrossSectionIndex obj = querySectionIndexByChainage(bean.getChainage());
+        if (obj != null) {
+            return update(bean);
+        } else {
+            return insert(bean);
+        }
+    }
+
 	@Override
 	public int insert(TunnelCrossSectionIndex bean) {
 		
@@ -112,7 +124,21 @@ public final class TunnelCrossSectionIndexDao extends AbstractDao<TunnelCrossSec
 		
 		return mDatabase.queryObject(sql,new String[]{id}, TunnelCrossSectionIndex.class) ;
 	}
-	
+
+    public TunnelCrossSectionIndex querySectionIndexByChainage(double chainage) {
+
+        final IAccessDatabase mDatabase = getCurrentDb();
+
+        if (mDatabase == null) {
+            return null;
+        }
+
+        String sql = "select * from TunnelCrossSectionIndex where Chainage = ?";
+
+        return mDatabase.queryObject(sql, new String[] { String.valueOf(chainage) },
+                TunnelCrossSectionIndex.class);
+    }
+
 	public List<TunnelCrossSectionIndex> querySectionByIds(String rowIds) {
 		final IAccessDatabase mDatabase = getCurrentDb();
 		if (mDatabase == null) {
