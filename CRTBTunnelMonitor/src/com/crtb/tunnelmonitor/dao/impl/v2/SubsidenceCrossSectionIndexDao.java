@@ -42,7 +42,8 @@ public final class SubsidenceCrossSectionIndexDao extends AbstractDao<Subsidence
         }
         SubsidenceCrossSectionIndex obj = querySectionIndexByChainage(bean.getChainage());
         if (obj != null) {
-            return update(bean);
+            update(bean);
+            return obj.getID();
         } else {
             return insert(bean);
         }

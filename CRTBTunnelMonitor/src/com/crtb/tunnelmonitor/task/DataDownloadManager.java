@@ -5,6 +5,7 @@ import java.util.List;
 
 import android.os.Handler;
 import android.os.Looper;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.crtb.tunnelmonitor.dao.impl.v2.SubsidenceCrossSectionExIndexDao;
@@ -22,6 +23,7 @@ import com.crtb.tunnelmonitor.network.DataCounter;
 import com.crtb.tunnelmonitor.network.DataCounter.CounterListener;
 import com.crtb.tunnelmonitor.network.RpcCallback;
 import com.crtb.tunnelmonitor.network.SectionStatus;
+import com.crtb.tunnelmonitor.utils.CrtbUtils;
 
 
 public class DataDownloadManager {
@@ -37,9 +39,11 @@ public class DataDownloadManager {
 
 	private DownloadListener mListener;
 	private Handler mHandler;
+    protected String mSectionPrefix;
 	
 	public DataDownloadManager() {
 		mHandler = new Handler(Looper.getMainLooper());
+		mSectionPrefix = CrtbUtils.getSectionPrefix();
 	}
 	
 	public void downloadData(DownloadListener listener) {
@@ -124,20 +128,25 @@ public class DataDownloadManager {
             public void onSuccess(Object[] data) {
                 TunnelCrossSectionIndex[] sectionInfo = (TunnelCrossSectionIndex[])data;
                 final TunnelCrossSectionIndex section = sectionInfo[0];
-                storeTunnelSection(sectionCode, section);
-                List<String> pointCodeList = Arrays.asList(section.getSurveyPntName().split(","));
-                if (pointCodeList != null && pointCodeList.size() > 0) {
-                	DataCounter pointDownloadCounter = new DataCounter("PointDownloadCounter", pointCodeList.size(), new CounterListener() {
-						@Override
-						public void done(boolean success) {
-							sectionDownloadCounter.increase(success, "SectionList");
-						}
-					});
-                	 for(String pointCode : pointCodeList) {
-                         downloadPoint(sectionCode, pointCode, pointDownloadCounter);
-                     }
-                } else {
-                	sectionDownloadCounter.increase(true, "SectionList");
+                if (section != null) {
+                    if (TextUtils.isEmpty(section.getChainagePrefix())) {
+                        section.setChainagePrefix(mSectionPrefix);
+                    }
+                    storeTunnelSection(sectionCode, section);
+                    List<String> pointCodeList = Arrays.asList(section.getSurveyPntName().split(","));
+                    if (pointCodeList != null && pointCodeList.size() > 0) {
+                        DataCounter pointDownloadCounter = new DataCounter("PointDownloadCounter", pointCodeList.size(), new CounterListener() {
+                            @Override
+                            public void done(boolean success) {
+                                sectionDownloadCounter.increase(success, "SectionList");
+                            }
+                        });
+                        for(String pointCode : pointCodeList) {
+                            downloadPoint(sectionCode, pointCode, pointDownloadCounter);
+                        }
+                    } else {
+                        sectionDownloadCounter.increase(true, "SectionList");
+                    }
                 }
             }
 
