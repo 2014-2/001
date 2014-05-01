@@ -34,7 +34,9 @@ public class ServersActivity extends Activity implements OnClickListener{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_servers);
         initView();
-        login();
+        if (!CrtbWebService.getInstance().isLogined()) {
+        	login();
+        }
     }
 
     /** 初始化控件 */
@@ -107,7 +109,6 @@ public class ServersActivity extends Activity implements OnClickListener{
 			@Override
 			public void onSuccess(Object[] data) {
 				Log.d(LOG_TAG, "login success.");
-				downloadZoneAndSiteCode();
 			}
 			
 			@Override
@@ -117,19 +118,19 @@ public class ServersActivity extends Activity implements OnClickListener{
 		});
     }
     
-    private void downloadZoneAndSiteCode() {
-    	CrtbWebService.getInstance().getZoneAndSiteCode(new RpcCallback() {
-			
-			@Override
-			public void onSuccess(Object[] data) {
-				Log.d(LOG_TAG, "download zone code and site code success.");
-			}
-			
-			@Override
-			public void onFailed(String reason) {
-				Log.d(LOG_TAG, "download zone code and site code failed.");
-			}
-		});
-    }
+//    private void downloadZoneAndSiteCode() {
+//    	CrtbWebService.getInstance().getZoneAndSiteCode(new RpcCallback() {
+//			
+//			@Override
+//			public void onSuccess(Object[] data) {
+//				Log.d(LOG_TAG, "download zone code and site code success.");
+//			}
+//			
+//			@Override
+//			public void onFailed(String reason) {
+//				Log.d(LOG_TAG, "download zone code and site code failed.");
+//			}
+//		});
+//    }
     
 }

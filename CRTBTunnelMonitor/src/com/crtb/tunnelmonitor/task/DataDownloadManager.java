@@ -14,10 +14,12 @@ import com.crtb.tunnelmonitor.dao.impl.v2.SubsidenceTotalDataDao;
 import com.crtb.tunnelmonitor.dao.impl.v2.TunnelCrossSectionExIndexDao;
 import com.crtb.tunnelmonitor.dao.impl.v2.TunnelCrossSectionIndexDao;
 import com.crtb.tunnelmonitor.dao.impl.v2.TunnelSettlementTotalDataDao;
+import com.crtb.tunnelmonitor.dao.impl.v2.WorkSiteDao;
 import com.crtb.tunnelmonitor.entity.SubsidenceCrossSectionIndex;
 import com.crtb.tunnelmonitor.entity.SubsidenceTotalData;
 import com.crtb.tunnelmonitor.entity.TunnelCrossSectionIndex;
 import com.crtb.tunnelmonitor.entity.TunnelSettlementTotalData;
+import com.crtb.tunnelmonitor.entity.WorkSite;
 import com.crtb.tunnelmonitor.network.CrtbWebService;
 import com.crtb.tunnelmonitor.network.DataCounter;
 import com.crtb.tunnelmonitor.network.DataCounter.CounterListener;
@@ -54,13 +56,18 @@ public class DataDownloadManager {
 	//TODO: 下载工点数据
 	public void downloadWorkSites(final DownloadListener listener) {
 		CrtbWebService.getInstance().getZoneAndSiteCode(new RpcCallback() {
-			
 			@Override
 			public void onSuccess(Object[] data) {
 				String zoneCode = (String) data[0];
 				String zoneName = (String) data[1];
 				String siteCode = (String) data[2];
 				String siteName = (String) data[3];
+				WorkSiteDao dao = WorkSiteDao.defaultDao();
+				WorkSite site = new WorkSite();
+				site.setSiteCode(siteCode);
+				site.setSiteName(siteName);
+				site.setDownloadFlag(1);
+				dao.insert(site);
 			}
 			
 			@Override

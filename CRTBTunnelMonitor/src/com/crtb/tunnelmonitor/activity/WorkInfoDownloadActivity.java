@@ -154,7 +154,7 @@ public class WorkInfoDownloadActivity extends Activity {
                     if (currentProject != null) {
                     	showProgressOverlay();
                     	DataDownloadManager downloadManager = new DataDownloadManager();
-                    	downloadManager.downloadData(new DownloadListener() {
+                    	downloadManager.downloadWorkSites(new DownloadListener() {
 							@Override
 							public void done(boolean success) {
 								updateStatus(success);
