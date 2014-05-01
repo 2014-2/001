@@ -62,12 +62,14 @@ public class DataDownloadManager {
 				String zoneName = (String) data[1];
 				String siteCode = (String) data[2];
 				String siteName = (String) data[3];
-				WorkSiteDao dao = WorkSiteDao.defaultDao();
 				WorkSite site = new WorkSite();
 				site.setSiteCode(siteCode);
 				site.setSiteName(siteName);
 				site.setDownloadFlag(1);
-				dao.insert(site);
+				storeWorkSite(site);
+				if (listener != null) {
+					listener.done(true);
+				}
 			}
 			
 			@Override
@@ -232,5 +234,16 @@ public class DataDownloadManager {
                 }
             }
         }).start();
+    }
+    
+    private void storeWorkSite(final WorkSite site) {
+    	new Thread(new Runnable() {
+			@Override
+			public void run() {
+				WorkSiteDao dao = WorkSiteDao.defaultDao();
+				dao.insert(site);
+			}
+		}).start();
+    	
     }
 }
