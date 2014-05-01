@@ -6,6 +6,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import com.crtb.tunnelmonitor.dao.impl.v2.ProjectIndexDao;
+import com.crtb.tunnelmonitor.entity.ProjectIndex;
 import com.crtb.tunnelmonitor.entity.SubsidenceCrossSectionIndex;
 import com.crtb.tunnelmonitor.entity.TunnelCrossSectionIndex;
 import com.crtb.tunnelmonitor.entity.TunnelSettlementTotalData;
@@ -124,7 +126,7 @@ public final class CrtbUtils {
     	outParamter.setPointList(pointList);
     	//TODO: 值要保持一至
     	//outParamter.setChainage(String.valueOf(section.getChainage()));
-    	outParamter.setChainage(section.getSectionName());
+    	outParamter.setChainage(formatSectionName(getSectionPrefix(), section.getChainage()));
     	//TODO:类型编码不对
     	//outParamter.setDigMethod(String.valueOf(section.getExcavateMethod()));
     	outParamter.setDigMethod("QD");
@@ -167,7 +169,7 @@ public final class CrtbUtils {
     	//FIX:需要将里程转换成DK-XXX
     	//outParamter.setChainage(String.valueOf(section.getChainage()));
     	//outParamter.setDigMethod(String.valueOf(section.getExcavateMethod()));
-    	outParamter.setChainage(section.getSectionName());
+    	outParamter.setChainage(formatSectionName(getSectionPrefix(), section.getChainage()));
     	outParamter.setDigMethod("QD");
     	outParamter.setWidth((int)section.getWidth());
     	outParamter.setTotalU0Limit(section.getDBU0());
@@ -195,5 +197,14 @@ public final class CrtbUtils {
     	//outParamter.setProcedure(data.getFacedescription());
     	// outParamter.setMonitorModel(data.get)
     }
-	
+
+    public static String getSectionPrefix() {
+        String pre = "";
+        ProjectIndex currentProject = ProjectIndexDao.defaultWorkPlanDao().queryEditWorkPlan();
+        if (currentProject != null) {
+            pre = currentProject.getChainagePrefix();
+        }
+
+        return pre;
+    }
 }
