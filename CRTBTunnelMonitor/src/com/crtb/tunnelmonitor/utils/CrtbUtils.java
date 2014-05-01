@@ -6,6 +6,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import android.util.Log;
+
 import com.crtb.tunnelmonitor.dao.impl.v2.ProjectIndexDao;
 import com.crtb.tunnelmonitor.entity.ProjectIndex;
 import com.crtb.tunnelmonitor.entity.SubsidenceCrossSectionIndex;
@@ -119,15 +121,24 @@ public final class CrtbUtils {
     	config.setSectionSequence(sectionSequence);
     	String sectionCode = CrtbWebService.getInstance().getSiteCode() + String.format("%04d",  sectionSequence);
     	outParamter.setSectioCode(sectionCode);
-    	//使用自己编码的方式
-    	String pointList = sectionCode + "GD01" + "/" + sectionCode + "SL01" + "#" 
-    	+ sectionCode + "SL02" + "/" + sectionCode + "SL03" + "#" + sectionCode + "SL04";
+    	String digMethod = section.getExcavateMethod();
+    	outParamter.setDigMethod(digMethod);
+    	String pointList = "";
+    	//全断面法
+    	if ("QD".equals(digMethod)) {
+    		pointList = sectionCode + "GD01" + "/" + sectionCode + "SL01" + "#" + sectionCode + "SL02";
+    	} else if ("ST".equals(digMethod)) { //三台阶法
+    		pointList = sectionCode + "GD01" + "/" + sectionCode + "SL01" + "#" + sectionCode + "SL02" 
+    	                                     + "/" + sectionCode + "SL03" + "#" + sectionCode + "SL04"
+    	                                     + "/" + sectionCode + "SL05" + "#" + sectionCode + "SL06";
+    	} else {
+    		Log.e("upload", "unknown dig method: " + digMethod);
+    	}
     	//outParamter.setPointList(section.getSurveyPntName());
     	outParamter.setPointList(pointList);
     	//TODO: 值要保持一至
     	//outParamter.setChainage(String.valueOf(section.getChainage()));
     	outParamter.setChainage(formatSectionName(getSectionPrefix(), section.getChainage()));
-    	outParamter.setDigMethod(section.getExcavateMethod());
     	outParamter.setWidth((int)section.getWidth());
     	//TODO:暂时取不到数据,使用"50.0f"
     	//outParamter.setTotalU0Limit(section.getGDU0());
