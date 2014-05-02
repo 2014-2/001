@@ -4,6 +4,11 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import ICT.utils.RSACoder;
+
+import android.util.Log;
+
+import com.crtb.tunnelmonitor.common.Constant;
 import com.crtb.tunnelmonitor.dao.impl.v2.SubsidenceTotalDataDao;
 import com.crtb.tunnelmonitor.entity.SubsidenceTotalData;
 
@@ -44,7 +49,9 @@ public class SubsidenceMeasureData extends MeasureData {
 			sb.append(mMeasurePoints.get(i).getCoordinate().replace(",", "#") + "/");
 		}
 		sb.deleteCharAt(sb.lastIndexOf("/"));
-		return sb.toString();
+		Log.d("SubsidenceMeasureData", sb.toString());
+		String coordinate = sb.toString();
+		return RSACoder.encnryptDes(coordinate, Constant.testDeskey);
 	}
 
 	@Override
