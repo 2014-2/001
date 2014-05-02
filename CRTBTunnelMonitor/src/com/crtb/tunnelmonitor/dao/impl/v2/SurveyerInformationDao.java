@@ -118,4 +118,23 @@ public class SurveyerInformationDao extends AbstractDao<SurveyerInformation> {
 		
 		return mDatabase.queryObjects(sql, SurveyerInformation.class);
 	}
+
+    public int getRowIdByCertificateID(String certificateID) {
+        int id = -1;
+        if (certificateID != null) {
+            final IAccessDatabase mDatabase = getDefaultDb();
+
+            if (mDatabase != null) {
+                String sql = "select * from SurveyerInformation where CertificateID = ?";
+                String[] args = new String[] { certificateID };
+                SurveyerInformation obj = mDatabase.queryObject(sql, args,
+                        SurveyerInformation.class);
+                if (obj != null) {
+                    id = obj.getId();
+                }
+            }
+        }
+
+        return id;
+    }
 }

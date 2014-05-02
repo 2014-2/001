@@ -28,6 +28,7 @@ import com.crtb.tunnelmonitor.WorkFlowActivity;
 import com.crtb.tunnelmonitor.dao.impl.v2.RawSheetIndexDao;
 import com.crtb.tunnelmonitor.dao.impl.v2.SubsidenceCrossSectionIndexDao;
 import com.crtb.tunnelmonitor.dao.impl.v2.SubsidenceTotalDataDao;
+import com.crtb.tunnelmonitor.dao.impl.v2.SurveyerInformationDao;
 import com.crtb.tunnelmonitor.dao.impl.v2.TunnelCrossSectionIndexDao;
 import com.crtb.tunnelmonitor.dao.impl.v2.TunnelSettlementTotalDataDao;
 import com.crtb.tunnelmonitor.entity.RawSheetIndex;
@@ -404,7 +405,8 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 						obj.setChainageId(tunnelSection.getID());
 						obj.setSheetId(rawSheetBean.getID());
 						obj.setPntType(info.type); // 测量点类型
-						obj.setSurveyorID(Integer.valueOf(rawSheetBean.getCertificateID()));// 测量人员id
+						obj.setSurveyorID(SurveyerInformationDao.defaultDao().getRowIdByCertificateID(
+						        rawSheetBean.getCertificateID()));// 测量人员id
 						obj.setInfo("1");
 
 						TunnelSettlementTotalDataDao dao 	= TunnelSettlementTotalDataDao.defaultDao() ;
@@ -460,8 +462,9 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 						obj.setChainageId(subsidenceSection.getID());
 						obj.setSheetId(rawSheetBean.getID());
 						obj.setPntType(info.type); // 测量点类型
-						obj.setSurveyorID(Integer.valueOf(rawSheetBean.getCertificateID()));// 测量人员id
-						
+						obj.setSurveyorID(SurveyerInformationDao.defaultDao().getRowIdByCertificateID(
+						        rawSheetBean.getCertificateID()));// 测量人员id
+
 						if(old != null){
 							obj.setMEASNo(old.getMEASNo() + 1);
 						} else {
