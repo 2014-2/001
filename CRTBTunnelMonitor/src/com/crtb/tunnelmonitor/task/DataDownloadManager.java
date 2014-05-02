@@ -48,13 +48,12 @@ public class DataDownloadManager {
 		mSectionPrefix = CrtbUtils.getSectionPrefix();
 	}
 	
-	public void downloadData(DownloadListener listener) {
+	public void downloadWorkSite(WorkSite workSite, DownloadListener listener) {
 		mListener = listener;
 		downloadSectionCodeList(SectionStatus.VALID);
 	}
 	
-	//TODO: 下载工点数据
-	public void downloadWorkSites(final DownloadListener listener) {
+	public void downloadWorkSiteList(final DownloadListener listener) {
 		CrtbWebService.getInstance().getZoneAndSiteCode(new RpcCallback() {
 			@Override
 			public void onSuccess(Object[] data) {
@@ -66,7 +65,8 @@ public class DataDownloadManager {
 				site.setSiteCode(siteCode);
 				site.setSiteName(siteName);
 				site.setDownloadFlag(1);
-				storeWorkSite(site);
+				WorkSiteDao dao = WorkSiteDao.defaultDao();
+				dao.insert(site);
 				if (listener != null) {
 					listener.done(true);
 				}
@@ -236,14 +236,14 @@ public class DataDownloadManager {
         }).start();
     }
     
-    private void storeWorkSite(final WorkSite site) {
+    private void storeWorkSite(final WorkSite site, final DataCounter workSiteCounter) {
     	new Thread(new Runnable() {
 			@Override
 			public void run() {
 				WorkSiteDao dao = WorkSiteDao.defaultDao();
 				dao.insert(site);
+				workSiteCounter.increase(true);
 			}
 		}).start();
-    	
     }
 }

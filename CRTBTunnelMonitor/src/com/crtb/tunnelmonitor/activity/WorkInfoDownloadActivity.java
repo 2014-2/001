@@ -59,13 +59,6 @@ public class WorkInfoDownloadActivity extends Activity {
 
     private TextView mDownloadStatusText;
 
-    private List<WorkSite> mWorkSites;
-
-    private int mPointCount = 0;
-    private boolean mFlag = true;
-
-    // private ProgressDialog mProgressDialog;
-
     private boolean isDownloading = true;
     private int longPressedItemPosition = -1;
     private static final int CONTEXT_MENU_DOWNLOAD_WORKSITE = 0;
@@ -88,16 +81,22 @@ public class WorkInfoDownloadActivity extends Activity {
 
     private void init() {
         mlvWorkInfos = (ListView) findViewById(R.id.lv_workinfo);
-
-        mWorkSites = WorkSiteDao.defaultDao().queryAllWorkSite();
-        if (mWorkSites == null) {
-            mWorkSites = new ArrayList<WorkSite>();
-        }
-
         mAdapter = new WorkSitesAdapter();
         mlvWorkInfos.setAdapter(mAdapter);
+        registerForContextMenu(mlvWorkInfos);
+        loadData();
     }
 
+	private void loadData() {
+		List<WorkSite> workSites = WorkSiteDao.defaultDao().queryAllWorkSite();
+		if (workSites == null) {
+			workSites = new ArrayList<WorkSite>();
+		}
+		if (workSites != null && workSites.size() > 0) {
+			mAdapter.setData(workSites);
+		}
+	}
+    
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
@@ -109,7 +108,7 @@ public class WorkInfoDownloadActivity extends Activity {
                 workSiteName = item.getSiteName();
             }
         }
-        menu.setHeaderTitle("点击开始下载工点 " + workSiteName);
+        menu.setHeaderTitle(workSiteName);
         menu.add(0, CONTEXT_MENU_DOWNLOAD_WORKSITE, 0, "下载");
     }
 
@@ -119,7 +118,14 @@ public class WorkInfoDownloadActivity extends Activity {
             if (longPressedItemPosition >= 0 && mAdapter != null) {
                 WorkSite workSite = (WorkSite) mAdapter.getItem(longPressedItemPosition);
                 if (item != null) {
-                    // TODO: start download and show progress
+                	showProgressOverlay();
+                    DataDownloadManager downloadManager = new DataDownloadManager();
+                    downloadManager.downloadWorkSite(workSite, new DownloadListener() {
+						@Override
+						public void done(boolean success) {
+							updateStatus(success);
+						}
+					});
                 }
             }
         }
@@ -197,10 +203,11 @@ public class WorkInfoDownloadActivity extends Activity {
                     if (currentProject != null) {
                         showProgressOverlay();
                         DataDownloadManager downloadManager = new DataDownloadManager();
-                        downloadManager.downloadWorkSites(new DownloadListener() {
+                        downloadManager.downloadWorkSiteList(new DownloadListener() {
                             @Override
                             public void done(boolean success) {
                                 updateStatus(success);
+                                loadData();
                             }
                         });
                     } else {
@@ -241,7 +248,19 @@ public class WorkInfoDownloadActivity extends Activity {
     }
 
     class WorkSitesAdapter extends BaseAdapter {
-
+    	private List<WorkSite> mWorkSites;
+    	
+    	WorkSitesAdapter() {
+    		mWorkSites = new ArrayList<WorkSite>();
+    	}
+    	
+    	public void setData(List<WorkSite> workSites) {
+    		if (workSites != null) {
+    			mWorkSites = workSites;
+    			notifyDataSetChanged();
+    		}
+    	}
+    	
         @Override
         public int getCount() {
             return mWorkSites.size();
