@@ -148,7 +148,7 @@ public final class CrtbUtils {
     	if(section == null || outParamter == null){
     		return ;
     	}
-    	outParamter.setSectionName(section.getSectionName());
+    	outParamter.setSectionName(section.getSectionName().split("\\.")[0]);
     	CrtbAppConfig config = CrtbAppConfig.getInstance();
     	int sectionSequence = config.getSectionSequence() + 1;
     	config.setSectionSequence(sectionSequence);
@@ -174,7 +174,7 @@ public final class CrtbUtils {
     	outParamter.setPointList(pointList);
     	//TODO: 值要保持一至
     	//outParamter.setChainage(String.valueOf(section.getChainage()));
-    	outParamter.setChainage(formatSectionName(getSectionPrefix(), section.getChainage()));
+    	outParamter.setChainage(formatSectionName(getSectionPrefix(), section.getChainage()).split("\\.")[0]);
     	outParamter.setWidth((int)section.getWidth());
     	//TODO:暂时取不到数据,使用"50.0f"
     	//outParamter.setTotalU0Limit(section.getGDU0());
@@ -198,7 +198,7 @@ public final class CrtbUtils {
     	if(section == null || outParamter == null){
     		return ;
     	}
-    	outParamter.setSectionName(section.getSectionName());
+    	outParamter.setSectionName(section.getSectionName().split("\\.")[0]);
     	CrtbAppConfig config = CrtbAppConfig.getInstance();
     	int sectionSequence = config.getSectionSequence() + 1;
     	config.setSectionSequence(sectionSequence);
@@ -214,7 +214,7 @@ public final class CrtbUtils {
     	//FIX:需要将里程转换成DK-XXX
     	//outParamter.setChainage(String.valueOf(section.getChainage()));
     	//outParamter.setDigMethod(String.valueOf(section.getExcavateMethod()));
-    	outParamter.setChainage(formatSectionName(getSectionPrefix(), section.getChainage()));
+    	outParamter.setChainage(formatSectionName(getSectionPrefix(), section.getChainage()).split("\\.")[0]);
     	outParamter.setDigMethod("QD");
     	outParamter.setWidth((int)section.getWidth());
     	outParamter.setTotalU0Limit(section.getDBU0());

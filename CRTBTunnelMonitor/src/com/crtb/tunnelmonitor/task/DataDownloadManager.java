@@ -68,6 +68,7 @@ public class DataDownloadManager {
 							site.setSiteCode(workSite.getSiteCode());
 							site.setSiteName(workSite.getSiteName());
 							site.setDownloadFlag(1);
+							site.setProjectId(-1);
 							WorkSiteIndexDao dao = WorkSiteIndexDao.defaultDao();
 							dao.insert(site);
 						}

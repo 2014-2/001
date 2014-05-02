@@ -139,11 +139,21 @@ public final class CrtbWebService {
 			
 			@Override
 			public void onSuccess(Object[] data) {
+				WorkZone[] workZoneList = (WorkZone[]) data;
+				if (workZoneList != null && workZoneList.length > 0) {
+					WorkZone workZone = workZoneList[0];
+					List<WorkSite> workSites = workZone.getWorkSites();
+					for (WorkSite workSite : workSites) {
+						setZoneCode(workZone.getZoneCode());
+						setSiteCode(workSite.getSiteCode());
+						break;
+					}
+				}
 				if (callback != null) {
 					callback.onSuccess(data);
 				}
 			}
-			
+
 			@Override
 			public void onFailed(String reason) {
 				if (callback != null) {

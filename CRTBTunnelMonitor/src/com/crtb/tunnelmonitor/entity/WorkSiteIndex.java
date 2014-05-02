@@ -15,6 +15,9 @@ public class WorkSiteIndex implements Serializable {
 	@ColumnInt
 	private int ID;				// id
 	
+	@ColumnInt
+	private int projectId; 	// 工程id
+	
 	@ColumnString(length = 256)
 	private String siteName;	// 工点名称
 	
@@ -30,6 +33,7 @@ public class WorkSiteIndex implements Serializable {
 	@ColumnInt
 	private int downloadFlag; 	// 下载标识：1 表示未下载，2表示已下载
 
+	
 	public int getID() {
 		return ID;
 	}
@@ -76,6 +80,14 @@ public class WorkSiteIndex implements Serializable {
 
 	public void setZoneCode(String zoneCode) {
 		this.zoneCode = zoneCode;
+	}
+
+	public int getProjectId() {
+		return projectId;
+	}
+
+	public void setProjectId(int projectId) {
+		this.projectId = projectId;
 	}
 	
 }
