@@ -9,6 +9,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
@@ -41,8 +42,10 @@ import com.crtb.tunnelmonitor.entity.ProjectIndex;
 import com.crtb.tunnelmonitor.entity.SiteProjectMapping;
 import com.crtb.tunnelmonitor.entity.WorkSiteIndex;
 import com.crtb.tunnelmonitor.network.CrtbWebService;
+import com.crtb.tunnelmonitor.task.AsyncQueryTask;
 import com.crtb.tunnelmonitor.task.DataDownloadManager;
 import com.crtb.tunnelmonitor.task.DataDownloadManager.DownloadListener;
+import com.crtb.tunnelmonitor.task.WorkSite;
 
 public class WorkInfoDownloadActivity extends Activity {
     private static final String LOG_TAG = "WorkInfoDownloadActivity";
@@ -117,7 +120,7 @@ public class WorkInfoDownloadActivity extends Activity {
     public boolean onContextItemSelected(MenuItem item) {
         if (item.getItemId() == CONTEXT_MENU_DOWNLOAD_WORKSITE) {
             if (longPressedItemPosition >= 0 && mAdapter != null) {
-                WorkSiteIndex workSite = (WorkSiteIndex) mAdapter.getItem(longPressedItemPosition);
+                final WorkSiteIndex workSite = (WorkSiteIndex) mAdapter.getItem(longPressedItemPosition);
                 if (item != null) {
                 	CrtbWebService.getInstance().setZoneCode(workSite.getZoneCode());
                 	CrtbWebService.getInstance().setSiteCode(workSite.getSiteCode());
@@ -127,6 +130,9 @@ public class WorkInfoDownloadActivity extends Activity {
 						@Override
 						public void done(boolean success) {
 							updateStatus(success);
+							if (success) {
+								new UpdateTask().execute(workSite);
+							}
 						}
 					});
                 }
@@ -314,5 +320,21 @@ public class WorkInfoDownloadActivity extends Activity {
                     mappedToCurProject ? R.color.blue : android.R.color.transparent));
             return convertView;
         }
+    }
+    
+    private class UpdateTask extends AsyncTask<WorkSiteIndex, Void, Void> {
+
+		@Override
+		protected Void doInBackground(WorkSiteIndex... params) {
+			WorkSiteIndex workSite = params[0];
+			workSite.setDownloadFlag(2);
+			WorkSiteIndexDao.defaultDao().update(workSite);
+			return null;
+		}
+    	
+		@Override
+		protected void onPostExecute(Void result) {
+			loadData();
+		}
     }
 }
