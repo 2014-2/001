@@ -69,7 +69,7 @@ public class DataDownloadManager {
 							site.setSiteName(workSite.getSiteName());
 							site.setDownloadFlag(1);
 							WorkSiteIndexDao dao = WorkSiteIndexDao.defaultDao();
-							dao.insert(site);
+							dao.insetOrUpdate(site);
 						}
 					}
 				}
