@@ -91,7 +91,7 @@ class GetMonitorValueInfoRpc extends AbstractRpc {
 			if (dataCount > 0) {
 				notifySuccess(pointTestDataList.toArray(new TunnelSettlementTotalData[dataCount]));
 			} else {
-				notifyFailed("empty test data.");
+				notifySuccess(null);
 			}
 		} catch (Exception e) {
 			notifyFailed("Exception: " + e.getMessage());

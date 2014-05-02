@@ -179,8 +179,10 @@ public class DataDownloadManager {
 
             @Override
             public void onSuccess(Object[] data) {
-                final List<TunnelSettlementTotalData> pointTestDataList = Arrays.asList((TunnelSettlementTotalData[])data);
-                storeTunnelPoints(pointTestDataList);
+            	if (data != null && data.length > 0) {
+            		final List<TunnelSettlementTotalData> pointTestDataList = Arrays.asList((TunnelSettlementTotalData[])data);
+            		storeTunnelPoints(pointTestDataList);
+            	}
                 pointDownloadCounter.increase(true, sectionCode);
                 Log.d(LOG_TAG, "download point success.");
             }
