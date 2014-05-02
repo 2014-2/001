@@ -24,6 +24,19 @@ public class SiteProjectMappingDao extends AbstractDao<SiteProjectMapping> {
         return _instance;
     }
 
+    public void insertOrUpdate(int projectId, int workSiteId) {
+    	SiteProjectMapping mapping = queryOneByProjectId(projectId);
+    	if (mapping != null) {
+    		mapping.setWorkSiteId(workSiteId);
+    		update(mapping);
+    	} else {
+    		mapping = new SiteProjectMapping();
+    		mapping.setProjectId(projectId);
+    		mapping.setWorkSiteId(workSiteId);
+    		insert(mapping);
+    	}
+    }
+    
     public List<SiteProjectMapping> queryAllMapping() {
         final IAccessDatabase mDatabase = getCurrentDb();
         if (mDatabase == null) {
@@ -40,6 +53,16 @@ public class SiteProjectMappingDao extends AbstractDao<SiteProjectMapping> {
         }
         String sql = "select * from SiteProjectMapping where workSiteId = ?";
         String[] args = new String[] { String.valueOf(workSiteId) };
+        return mDatabase.queryObject(sql, args, SiteProjectMapping.class);
+    }
+    
+    public SiteProjectMapping queryOneByProjectId(int projectId) {
+        final IAccessDatabase mDatabase = getCurrentDb();
+        if (mDatabase == null) {
+            return null;
+        }
+        String sql = "select * from SiteProjectMapping where projectId = ?";
+        String[] args = new String[] { String.valueOf(projectId) };
         return mDatabase.queryObject(sql, args, SiteProjectMapping.class);
     }
 }

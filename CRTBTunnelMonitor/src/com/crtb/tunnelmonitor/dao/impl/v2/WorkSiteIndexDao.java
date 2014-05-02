@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.zw.android.framework.IAccessDatabase;
 
+import com.crtb.tunnelmonitor.entity.SiteProjectMapping;
 import com.crtb.tunnelmonitor.entity.WorkSiteIndex;
 
 public class WorkSiteIndexDao extends AbstractDao<WorkSiteIndex> {
@@ -12,7 +13,7 @@ public class WorkSiteIndexDao extends AbstractDao<WorkSiteIndex> {
 	private WorkSiteIndexDao() {
 
 	}
-	
+
 	public static WorkSiteIndexDao defaultDao() {
 		if (_instance == null) {
 			_instance = new WorkSiteIndexDao();
@@ -28,5 +29,15 @@ public class WorkSiteIndexDao extends AbstractDao<WorkSiteIndex> {
 		String sql = "select * from WorkSiteIndex order by ID ASC";
 		return mDatabase.queryObjects(sql, WorkSiteIndex.class);
 	}
-	
+
+	public WorkSiteIndex queryWorkSiteById(int id) {
+		final IAccessDatabase mDatabase = getCurrentDb();
+		if (mDatabase == null) {
+			return null;
+		}
+		String sql = "select * from WorkSiteIndex where ID = ?";
+		String[] args = new String[] { String.valueOf(id) };
+		return mDatabase.queryObject(sql, args, WorkSiteIndex.class);
+	}
+
 }

@@ -42,10 +42,8 @@ import com.crtb.tunnelmonitor.entity.ProjectIndex;
 import com.crtb.tunnelmonitor.entity.SiteProjectMapping;
 import com.crtb.tunnelmonitor.entity.WorkSiteIndex;
 import com.crtb.tunnelmonitor.network.CrtbWebService;
-import com.crtb.tunnelmonitor.task.AsyncQueryTask;
 import com.crtb.tunnelmonitor.task.DataDownloadManager;
 import com.crtb.tunnelmonitor.task.DataDownloadManager.DownloadListener;
-import com.crtb.tunnelmonitor.task.WorkSite;
 
 public class WorkInfoDownloadActivity extends Activity {
     private static final String LOG_TAG = "WorkInfoDownloadActivity";
@@ -124,6 +122,7 @@ public class WorkInfoDownloadActivity extends Activity {
                 if (item != null) {
                 	CrtbWebService.getInstance().setZoneCode(workSite.getZoneCode());
                 	CrtbWebService.getInstance().setSiteCode(workSite.getSiteCode());
+                	SiteProjectMappingDao.defaultDao().insertOrUpdate(curProjectId, workSite.getID());
                 	showProgressOverlay();
                     DataDownloadManager downloadManager = new DataDownloadManager();
                     downloadManager.downloadWorkSite(workSite, new DownloadListener() {
