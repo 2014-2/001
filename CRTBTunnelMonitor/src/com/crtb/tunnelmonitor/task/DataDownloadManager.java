@@ -14,12 +14,12 @@ import com.crtb.tunnelmonitor.dao.impl.v2.SubsidenceTotalDataDao;
 import com.crtb.tunnelmonitor.dao.impl.v2.TunnelCrossSectionExIndexDao;
 import com.crtb.tunnelmonitor.dao.impl.v2.TunnelCrossSectionIndexDao;
 import com.crtb.tunnelmonitor.dao.impl.v2.TunnelSettlementTotalDataDao;
-import com.crtb.tunnelmonitor.dao.impl.v2.WorkSiteDao;
+import com.crtb.tunnelmonitor.dao.impl.v2.WorkSiteIndexDao;
 import com.crtb.tunnelmonitor.entity.SubsidenceCrossSectionIndex;
 import com.crtb.tunnelmonitor.entity.SubsidenceTotalData;
 import com.crtb.tunnelmonitor.entity.TunnelCrossSectionIndex;
 import com.crtb.tunnelmonitor.entity.TunnelSettlementTotalData;
-import com.crtb.tunnelmonitor.entity.WorkSite;
+import com.crtb.tunnelmonitor.entity.WorkSiteIndex;
 import com.crtb.tunnelmonitor.network.CrtbWebService;
 import com.crtb.tunnelmonitor.network.DataCounter;
 import com.crtb.tunnelmonitor.network.DataCounter.CounterListener;
@@ -48,25 +48,31 @@ public class DataDownloadManager {
 		mSectionPrefix = CrtbUtils.getSectionPrefix();
 	}
 	
-	public void downloadWorkSite(WorkSite workSite, DownloadListener listener) {
+	public void downloadWorkSite(WorkSiteIndex workSite, DownloadListener listener) {
 		mListener = listener;
-		downloadSectionCodeList(SectionStatus.VALID);
+		downloadSectionCodeList(workSite.getSiteCode(), SectionStatus.VALID);
 	}
 	
 	public void downloadWorkSiteList(final DownloadListener listener) {
 		CrtbWebService.getInstance().getZoneAndSiteCode(new RpcCallback() {
 			@Override
 			public void onSuccess(Object[] data) {
-				String zoneCode = (String) data[0];
-				String zoneName = (String) data[1];
-				String siteCode = (String) data[2];
-				String siteName = (String) data[3];
-				WorkSite site = new WorkSite();
-				site.setSiteCode(siteCode);
-				site.setSiteName(siteName);
-				site.setDownloadFlag(1);
-				WorkSiteDao dao = WorkSiteDao.defaultDao();
-				dao.insert(site);
+				WorkZone[] workZoneList = (WorkZone[]) data;
+				if (workZoneList != null && workZoneList.length > 0) {
+					for(WorkZone workZone : workZoneList) {
+						List<WorkSite> workSites = workZone.getWorkSites();
+						for(WorkSite workSite : workSites) {
+							WorkSiteIndex site = new WorkSiteIndex();
+							site.setZoneCode(workZone.getZoneCode());
+							site.setZoneName(workZone.getZoneName());
+							site.setSiteCode(workSite.getSiteCode());
+							site.setSiteName(workSite.getSiteName());
+							site.setDownloadFlag(1);
+							WorkSiteIndexDao dao = WorkSiteIndexDao.defaultDao();
+							dao.insert(site);
+						}
+					}
+				}
 				if (listener != null) {
 					listener.done(true);
 				}
@@ -83,7 +89,7 @@ public class DataDownloadManager {
 	
 	
     //下载断面编码数据
-    private void downloadSectionCodeList(SectionStatus status) {
+    private void downloadSectionCodeList(String siteCode, SectionStatus status) {
     	//3 = 断面编码下载 + 断面下载 
     	final DataCounter downloadCounter = new DataCounter("DownloadCounter)", 2, new CounterListener() {
 			@Override
@@ -98,7 +104,7 @@ public class DataDownloadManager {
 				}
 			}
 		});
-        CrtbWebService.getInstance().getSectionCodeList(status, new RpcCallback() {
+        CrtbWebService.getInstance().getSectionCodeList(siteCode, status, new RpcCallback() {
 
             @Override
             public void onSuccess(Object[] data) {
@@ -236,11 +242,11 @@ public class DataDownloadManager {
         }).start();
     }
     
-    private void storeWorkSite(final WorkSite site, final DataCounter workSiteCounter) {
+    private void storeWorkSite(final WorkSiteIndex site, final DataCounter workSiteCounter) {
     	new Thread(new Runnable() {
 			@Override
 			public void run() {
-				WorkSiteDao dao = WorkSiteDao.defaultDao();
+				WorkSiteIndexDao dao = WorkSiteIndexDao.defaultDao();
 				dao.insert(site);
 				workSiteCounter.increase(true);
 			}

@@ -36,10 +36,11 @@ import android.widget.Toast;
 
 import com.crtb.tunnelmonitor.dao.impl.v2.ProjectIndexDao;
 import com.crtb.tunnelmonitor.dao.impl.v2.SiteProjectMappingDao;
-import com.crtb.tunnelmonitor.dao.impl.v2.WorkSiteDao;
+import com.crtb.tunnelmonitor.dao.impl.v2.WorkSiteIndexDao;
 import com.crtb.tunnelmonitor.entity.ProjectIndex;
 import com.crtb.tunnelmonitor.entity.SiteProjectMapping;
-import com.crtb.tunnelmonitor.entity.WorkSite;
+import com.crtb.tunnelmonitor.entity.WorkSiteIndex;
+import com.crtb.tunnelmonitor.network.CrtbWebService;
 import com.crtb.tunnelmonitor.task.DataDownloadManager;
 import com.crtb.tunnelmonitor.task.DataDownloadManager.DownloadListener;
 
@@ -88,9 +89,9 @@ public class WorkInfoDownloadActivity extends Activity {
     }
 
 	private void loadData() {
-		List<WorkSite> workSites = WorkSiteDao.defaultDao().queryAllWorkSite();
+		List<WorkSiteIndex> workSites = WorkSiteIndexDao.defaultDao().queryAllWorkSite();
 		if (workSites == null) {
-			workSites = new ArrayList<WorkSite>();
+			workSites = new ArrayList<WorkSiteIndex>();
 		}
 		if (workSites != null && workSites.size() > 0) {
 			mAdapter.setData(workSites);
@@ -103,7 +104,7 @@ public class WorkInfoDownloadActivity extends Activity {
         longPressedItemPosition = info.position;
         String workSiteName = "";
         if (mAdapter != null) {
-            WorkSite item = (WorkSite) mAdapter.getItem(longPressedItemPosition);
+            WorkSiteIndex item = (WorkSiteIndex) mAdapter.getItem(longPressedItemPosition);
             if (item != null) {
                 workSiteName = item.getSiteName();
             }
@@ -116,8 +117,10 @@ public class WorkInfoDownloadActivity extends Activity {
     public boolean onContextItemSelected(MenuItem item) {
         if (item.getItemId() == CONTEXT_MENU_DOWNLOAD_WORKSITE) {
             if (longPressedItemPosition >= 0 && mAdapter != null) {
-                WorkSite workSite = (WorkSite) mAdapter.getItem(longPressedItemPosition);
+                WorkSiteIndex workSite = (WorkSiteIndex) mAdapter.getItem(longPressedItemPosition);
                 if (item != null) {
+                	CrtbWebService.getInstance().setZoneCode(workSite.getZoneCode());
+                	CrtbWebService.getInstance().setSiteCode(workSite.getSiteCode());
                 	showProgressOverlay();
                     DataDownloadManager downloadManager = new DataDownloadManager();
                     downloadManager.downloadWorkSite(workSite, new DownloadListener() {
@@ -248,13 +251,13 @@ public class WorkInfoDownloadActivity extends Activity {
     }
 
     class WorkSitesAdapter extends BaseAdapter {
-    	private List<WorkSite> mWorkSites;
+    	private List<WorkSiteIndex> mWorkSites;
     	
     	WorkSitesAdapter() {
-    		mWorkSites = new ArrayList<WorkSite>();
+    		mWorkSites = new ArrayList<WorkSiteIndex>();
     	}
     	
-    	public void setData(List<WorkSite> workSites) {
+    	public void setData(List<WorkSiteIndex> workSites) {
     		if (workSites != null) {
     			mWorkSites = workSites;
     			notifyDataSetChanged();
@@ -282,7 +285,7 @@ public class WorkInfoDownloadActivity extends Activity {
                 convertView = LayoutInflater.from(getApplicationContext()).inflate(
                         R.layout.layout_workinfo_download_item, null);
             }
-            WorkSite workSite = mWorkSites.get(position);
+            WorkSiteIndex workSite = mWorkSites.get(position);
             int workSiteId = workSite.getID();
             TextView id = (TextView) convertView.findViewById(R.id.workplan_id);
             id.setText(String.valueOf(workSiteId));

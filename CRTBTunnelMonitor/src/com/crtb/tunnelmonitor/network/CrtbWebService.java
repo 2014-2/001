@@ -24,6 +24,10 @@ import android.os.Looper;
 import android.util.Log;
 
 import com.crtb.tunnelmonitor.common.Constant;
+import com.crtb.tunnelmonitor.dao.impl.v2.WorkSiteIndexDao;
+import com.crtb.tunnelmonitor.entity.WorkSiteIndex;
+import com.crtb.tunnelmonitor.task.WorkSite;
+import com.crtb.tunnelmonitor.task.WorkZone;
 import com.crtb.tunnelmonitor.utils.CrtbAppConfig;
 
 public final class CrtbWebService {
@@ -41,9 +45,7 @@ public final class CrtbWebService {
 	
 	private long mRandomCode;
 	private String mZoneCode;
-	private String mZoneName;
 	private String mSiteCode;
-	private String mSiteName;
 	
 	private CrtbWebService() {
 		mHandler = new Handler(Looper.getMainLooper());
@@ -54,33 +56,6 @@ public final class CrtbWebService {
 			sInstance = new CrtbWebService();
 		}
 		return sInstance;
-	}
-	
-	/**
-	 * 获取工区的名字
-	 * 
-	 * @return 工作名字
-	 */
-	public String getZoneName() {
-		return mZoneName;
-	}
-	
-	/**
-	 * 获取站点的名字
-	 * 
-	 * @return 站点名字
-	 */
-	public String getSiteName() {
-		return mSiteName;
-	}
-	
-	/**
-	 * 获取工点编号
-	 * 
-	 * @return
-	 */
-	public String getSiteCode() {
-		return mSiteCode;
 	}
 	
 	public boolean isLogined() {
@@ -158,20 +133,12 @@ public final class CrtbWebService {
 	public void getZoneAndSiteCode(final RpcCallback callback) {
 		long randomCode = getRandomCode();
 		if (randomCode == 0) {
-			//throw new IllegalStateException("invalid random code.");
+			throw new IllegalStateException("invalid random code.");
 		}
 		GetZoneAndSiteCodeRpc rpc = new GetZoneAndSiteCodeRpc(randomCode, new RpcCallbackWrapper(new RpcCallback() {
 			
 			@Override
 			public void onSuccess(Object[] data) {
-				String zoneCode = (String) data[0];
-				String zoneName = (String) data[1];
-				String siteCode = (String) data[2];
-				String siteName = (String) data[3];
-				setZoneCode(zoneCode);
-				setZoneName(zoneName);
-				setSiteCode(siteCode);
-				setSiteName(siteName);
 				if (callback != null) {
 					callback.onSuccess(data);
 				}
@@ -195,13 +162,20 @@ public final class CrtbWebService {
 	 */
 	public void getSurveyors(final RpcCallback callback) {
 		getZoneAndSiteCode(new RpcCallback() {
-			
 			@Override
 			public void onSuccess(Object[] data) {
-				String zoneCode = (String) data[0];
-				GetSurveyorsRpc rpc = new GetSurveyorsRpc(zoneCode, getRandomCode(), new RpcCallbackWrapper(callback));
-				RpcSendTask task = new RpcSendTask(rpc, USRE_AUTH_URL);
-				task.execute();
+				WorkZone[] workZoneList = (WorkZone[]) data;
+				if (workZoneList != null && workZoneList.length > 0) {
+					WorkZone workZone = workZoneList[0];
+					String zoneCode = workZone.getZoneCode();
+					GetSurveyorsRpc rpc = new GetSurveyorsRpc(zoneCode, getRandomCode(), new RpcCallbackWrapper(callback));
+					RpcSendTask task = new RpcSendTask(rpc, USRE_AUTH_URL);
+					task.execute();
+				} else {
+					if (callback != null) {
+						callback.onFailed("get zone code failed!");
+					}
+				}
 			}
 			
 			@Override
@@ -219,15 +193,15 @@ public final class CrtbWebService {
 	 * @param status
 	 * @param callback
 	 */
-	public void getSectionCodeList(SectionStatus status, final RpcCallback callback) {
-		GetSectInfosRpc rpc = new GetSectInfosRpc(getSiteCode(), status.value(), getRandomCode(), new RpcCallbackWrapper(new RpcCallback() {
+	public void getSectionCodeList(final String siteCode, SectionStatus status, final RpcCallback callback) {
+		GetSectInfosRpc rpc = new GetSectInfosRpc(siteCode, status.value(), getRandomCode(), new RpcCallbackWrapper(new RpcCallback() {
 			
 			@Override
 			public void onSuccess(Object[] data) {
 				List<String> sectionCodeList = Arrays.asList((String[])data);
 				List<Integer> sequenceList = new ArrayList<Integer>();
 				for(String sectionCode : sectionCodeList) {
-					sequenceList.add(Integer.parseInt(sectionCode.replace(getSiteCode(), "")));
+					sequenceList.add(Integer.parseInt(sectionCode.replace(siteCode, "")));
 				}
 				CrtbAppConfig config = CrtbAppConfig.getInstance();
 				config.setSectionSequence(Collections.max(sequenceList));
@@ -265,8 +239,8 @@ public final class CrtbWebService {
 	 * @param status
 	 * @param callback
 	 */
-	public void getPointCodeList(String sectionCode, PointStatus status, RpcCallback callback) {
-		GetTestCodesRpc rpc = new GetTestCodesRpc(sectionCode, status.value(), getRandomCode(), new RpcCallbackWrapper(callback));
+	public void getPointCodeList(PointStatus status, RpcCallback callback) {
+		GetTestCodesRpc rpc = new GetTestCodesRpc(getSiteCode(), status.value(), getRandomCode(), new RpcCallbackWrapper(callback));
 		RpcSendTask task = new RpcSendTask(rpc, USRE_AUTH_URL);
 		task.execute();
 	}
@@ -289,10 +263,8 @@ public final class CrtbWebService {
 	 * @param callback
 	 */
 	public void uploadSection(SectionUploadParamter parameter, RpcCallback callback) {
-		String zoneCode = getZoneCode();
-		String siteCode = getSiteCode();
 		long randomCode = getRandomCode();
-		UploadSectionPointInfoRpc rpc = new UploadSectionPointInfoRpc(zoneCode, siteCode, randomCode, parameter, new RpcCallbackWrapper(callback));
+		UploadSectionPointInfoRpc rpc = new UploadSectionPointInfoRpc(getZoneCode(), getSiteCode(), randomCode, parameter, new RpcCallbackWrapper(callback));
 		RpcSendTask task = new RpcSendTask(rpc, DATA_UPLOAD_URL);
 		task.execute();
 	}
@@ -304,10 +276,8 @@ public final class CrtbWebService {
 	 * @param callback
 	 */
 	public void updateSection(Object section, RpcCallback callback) {
-		String zoneCode = getZoneCode();
-		String siteCode = getSiteCode();
 		long randomCode = getRandomCode();
-		UploadRemoveSectionTestDataRpc rpc = new UploadRemoveSectionTestDataRpc(zoneCode, siteCode, randomCode, new RpcCallbackWrapper(callback));
+		UploadRemoveSectionTestDataRpc rpc = new UploadRemoveSectionTestDataRpc(getZoneCode(), getSiteCode(), randomCode, new RpcCallbackWrapper(callback));
 		RpcSendTask task = new RpcSendTask(rpc, DATA_UPLOAD_URL);
 		task.execute();
 		
@@ -430,26 +400,6 @@ public final class CrtbWebService {
 		mRandomCode = randomCode;
 	}
 	
-	private String getZoneCode() {
-		return mZoneCode;
-	}
-	
-	private void setZoneCode(String zoneCode) {
-		mZoneCode = zoneCode;
-	}
-	
-	private void setZoneName(String zoneName) {
-		mZoneName = zoneName;
-	}
-	
-	private void setSiteCode(String siteCode) {
-		mSiteCode = siteCode;
-	}
-	
-	private void setSiteName(String siteName) {
-		mSiteName = siteName;
-	}
-	
 	private static final class MarshalFloat implements Marshal {
 
 		@Override
@@ -470,6 +420,22 @@ public final class CrtbWebService {
 			// TODO Auto-generated method stub
 			writer.text(obj.toString());
 		}
+	}
+
+	public String getZoneCode() {
+		return mZoneCode;
+	}
+
+	public void setZoneCode(String zoneCode) {
+		mZoneCode = zoneCode;
+	}
+
+	public String getSiteCode() {
+		return mSiteCode;
+	}
+
+	public void setSiteCode(String siteCode) {
+		mSiteCode = siteCode;
 	}
 	
 }

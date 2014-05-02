@@ -7,6 +7,9 @@ import org.ksoap2.serialization.SoapObject;
 
 import android.util.Log;
 
+import com.crtb.tunnelmonitor.task.WorkSite;
+import com.crtb.tunnelmonitor.task.WorkZone;
+
 class GetZoneAndSiteCodeRpc extends AbstractRpc {
 	private static final String LOG_TAG = "GetZoneAndSiteCodeRpc";
 	private static final String KEY_RANDOM_CODE = "随机码";
@@ -44,14 +47,21 @@ class GetZoneAndSiteCodeRpc extends AbstractRpc {
 			//getZoneAndSiteCodeResponse{return=anyType{item=XPCL01SG05GQ01#一工区; item=XPCL01SD0001#跃龙门隧道; }; }
 			SoapObject result = (SoapObject) response;
 			SoapObject data = (SoapObject) result.getProperty(0);
-			String[] zoneAndSiteCode = new String[4];
-			String[] zoneInfo = data.getPropertyAsString(0).split("#");
-			String[] siteInfo = data.getPropertyAsString(1).split("#");
-			zoneAndSiteCode[0] = zoneInfo[0];
-			zoneAndSiteCode[1] = zoneInfo[1];
-			zoneAndSiteCode[2] = siteInfo[0];
-			zoneAndSiteCode[3] = siteInfo[1];
-			notifySuccess(zoneAndSiteCode);
+			WorkZone workZone = new WorkZone();
+			final int totalCount = data.getPropertyCount();
+			if (totalCount > 0) {
+				String[] zoneInfo = data.getPropertyAsString(0).split("#");
+				workZone.setZoneCode(zoneInfo[0]);
+				workZone.setZoneName(zoneInfo[1]);
+				for(int i = 1; i < totalCount; i++) {
+					WorkSite workSite = new WorkSite();
+					String[] siteInfo = data.getPropertyAsString(1).split("#");
+					workSite.setSiteCode(siteInfo[0]);
+					workSite.setSiteName(siteInfo[1]);
+					workZone.addWorkSite(workSite);
+				}
+			}
+			notifySuccess(new WorkZone[]{workZone});
 		} catch (Exception e) {
 			notifyFailed("Exception: " + e.getMessage());
 			e.printStackTrace();
