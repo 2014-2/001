@@ -319,9 +319,9 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 				return;
 			}
 			
-			if((int)point.N == 0 
-					|| (int)point.E == 0 
-					|| (int)point.H == 0){
+			if(point.N == 0d 
+					|| point.E == 0d 
+					|| point.H == 0d){
 				mHanlder.sendMessage(MSG_ERROR_CONNECT);
 				return ;
 			}
