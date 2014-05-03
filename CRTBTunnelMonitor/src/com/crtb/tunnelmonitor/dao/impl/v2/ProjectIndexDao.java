@@ -137,6 +137,10 @@ public final class ProjectIndexDao extends AbstractDao<ProjectIndex> {
 		
 		final CrtbUser user = CrtbLicenseDao.defaultDao().queryCrtbUser() ;
 		
+		if(user == null){
+			return false ;
+		}
+		
 		// 非注册用户
 		if(user.getUsertype() == CrtbUser.LICENSE_TYPE_DEFAULT){
 			return false ;
@@ -149,6 +153,10 @@ public final class ProjectIndexDao extends AbstractDao<ProjectIndex> {
 	public int inportDb(String dbName){
 		
 		final CrtbUser user = CrtbLicenseDao.defaultDao().queryCrtbUser() ;
+		
+		if(user == null){
+			return DB_EXECUTE_FAILED ;
+		}
 		
 		// 非注册用户
 		if(user.getUsertype() == CrtbUser.LICENSE_TYPE_DEFAULT){
@@ -223,6 +231,10 @@ public final class ProjectIndexDao extends AbstractDao<ProjectIndex> {
 	public int insert(ProjectIndex bean) {
 		
 		final CrtbUser user = CrtbLicenseDao.defaultDao().queryCrtbUser() ;
+		
+		if(user == null){
+			return DB_EXECUTE_FAILED ;
+		}
 		
 		// 非注册用户
 		if(user.getUsertype() == CrtbUser.LICENSE_TYPE_DEFAULT){
