@@ -133,7 +133,7 @@ public final class CrtbWebService {
 	public void getZoneAndSiteCode(final RpcCallback callback) {
 		long randomCode = getRandomCode();
 		if (randomCode == 0) {
-			throw new IllegalStateException("invalid random code.");
+			Log.e(TAG, "getZoneAndSiteCode() get called before logined.");
 		}
 		GetZoneAndSiteCodeRpc rpc = new GetZoneAndSiteCodeRpc(randomCode, new RpcCallbackWrapper(new RpcCallback() {
 			
@@ -330,7 +330,6 @@ public final class CrtbWebService {
 		@Override
 		protected Void doInBackground(Void... params) {
 			SoapObject rpcMessage = mRpc.getRpcMessage(NAMESPACE);
-			Log.d(TAG, "sending request: " + rpcMessage.toString());
 			SoapSerializationEnvelope soapEnvelope = new SoapSerializationEnvelope(
 					SoapEnvelope.VER11);
 			soapEnvelope.bodyOut = rpcMessage;
@@ -344,6 +343,7 @@ public final class CrtbWebService {
 			HttpTransportSE localHttpTransportSE = new HttpTransportSE(mUrl, CONNECITON_TIME_OUT);
 			Object response = null;
 			for (int i = 0; i < RETRY_COUNT; i++) {
+				Log.d(TAG, "sending request: " + rpcMessage.toString());
 				try {
 					localHttpTransportSE.call(NAMESPACE + rpcMessage.getName(), soapEnvelope);
 				} catch (Exception e) {
