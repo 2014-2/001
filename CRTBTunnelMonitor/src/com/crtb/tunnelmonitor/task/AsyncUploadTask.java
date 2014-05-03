@@ -54,6 +54,7 @@ public abstract class AsyncUploadTask extends AsyncTask<List<SheetRecord>, Void,
                         	if (!section.isUpload()) {
                         		uploadSection(section, record.getRawSheet().getID(), sectionUploadCounter);
                         	} else {
+                        		Log.d(LOG_TAG, "section is already uploaded: section_code: " + section.getSectionCode());
                         		uploadMeasureDataList(section.getSectionCode(), section.getMeasureData(), sectionUploadCounter);
                         	}
                         }

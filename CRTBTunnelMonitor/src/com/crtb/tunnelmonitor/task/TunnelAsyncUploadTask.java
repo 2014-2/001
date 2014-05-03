@@ -46,6 +46,7 @@ public class TunnelAsyncUploadTask extends AsyncUploadTask {
 						sectionExIndexDao.insert(sectionExIndex);
 					}
 				}).start();
+				Log.d(LOG_TAG, "upload section success: section_code: " + sectionCode);
 				uploadMeasureDataList(sectionCode, section.getMeasureData(), sectionUploadCounter);
             }
 

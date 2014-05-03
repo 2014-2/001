@@ -2,6 +2,8 @@ package com.crtb.tunnelmonitor.network;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.ksoap2.serialization.SoapObject;
 import org.zw.android.framework.util.DateUtils;
@@ -76,7 +78,7 @@ class GetSectInfoByCodeRpc extends AbstractRpc {
 			try {
 				String chainage = data.getPropertyAsString(i++);
 				String[] chainageInfo = chainage.substring(2).split("\\+");
-				final float total = Float.parseFloat(chainageInfo[0]) * 1000 + Float.parseFloat(chainageInfo[1]);
+				final float total = getlastNumber(chainageInfo[0]) * 1000 + Float.parseFloat(chainageInfo[1]);
 				section.setChainage(total);
 			} catch (NullPointerException e) {
 				// ignore
@@ -153,4 +155,14 @@ class GetSectInfoByCodeRpc extends AbstractRpc {
 		}
 	}
 
+	private static int getlastNumber(String prefix) {
+		int lastNumberInt = 0;
+		Pattern p = Pattern.compile("[^0-9]+([0-9]+)$");
+		Matcher matcher = p.matcher(prefix);
+		if (matcher.find()) {
+		    String someNumberStr = matcher.group(1);
+		    lastNumberInt = Integer.parseInt(someNumberStr);
+		}
+		return lastNumberInt;
+	}
 }
