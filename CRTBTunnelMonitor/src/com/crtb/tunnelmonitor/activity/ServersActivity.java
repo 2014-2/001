@@ -50,6 +50,9 @@ public class ServersActivity extends Activity implements OnClickListener {
 			Toast.makeText(getApplicationContext(), "请先打开工作面", Toast.LENGTH_SHORT).show();
 			finish();
 		} else {
+			if (!CrtbWebService.getInstance().isLogined()) {
+				login();
+			}
 			SiteProjectMapping mapping = SiteProjectMappingDao.defaultDao().queryOneByProjectId(currentProject.getId());
 			if (mapping == null) {
 				Toast.makeText(getApplicationContext(), "请先下载工点数据", Toast.LENGTH_SHORT).show();
@@ -60,9 +63,6 @@ public class ServersActivity extends Activity implements OnClickListener {
 				} else {
 					CrtbWebService.getInstance().setZoneCode(workSiteIndex.getZoneCode());
 					CrtbWebService.getInstance().setSiteCode(workSiteIndex.getSiteCode());
-					if (!CrtbWebService.getInstance().isLogined()) {
-						login();
-					}
 				}
 			}
 		}
