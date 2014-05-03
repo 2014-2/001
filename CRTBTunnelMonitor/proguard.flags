@@ -4,7 +4,9 @@
 -dontoptimize
 -dontwarn com.google.**
 -dontwarn android.support.**
--dontwarn com.crtb.**
+-dontwarn com.crtb.log.**
+-dontwarn com.crtb.tssurveyprovider.**
+-dontwarn com.crtb.utils.**
 -dontwarn com.rebcenter.**
 -dontwarn org.**
 -keep class com.google.**{*;}
@@ -15,6 +17,7 @@
 -keep class com.rebcenter.**{*;}
 -keep class android.**{*;}
 -keep class org.**{*;}
+-keepattributes *Annotation*
 -libraryjars libs/android-support-v4.jar
 -libraryjars libs/commons-codec-1.4.jar
 -libraryjars libs/ksoap2-3.2.0.jar
