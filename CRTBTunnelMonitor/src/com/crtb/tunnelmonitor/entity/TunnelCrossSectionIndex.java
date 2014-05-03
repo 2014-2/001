@@ -41,7 +41,7 @@ public class TunnelCrossSectionIndex implements Serializable {
     @ColumnDouble
     private double Width; 				// 断面宽度
 
-    @ColumnString(length=255)
+//    @ColumnString(length=255) //NOT A COLUMN IN THE DB TABLE
     private String sectionName;         // 断面名称
 
     //////////////////////开挖方式//////////////////////////

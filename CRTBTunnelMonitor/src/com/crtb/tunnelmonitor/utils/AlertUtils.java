@@ -387,11 +387,13 @@ public class AlertUtils {
     public static ArrayList<AlertInfo> getAlertInfoList() {
         Log.d(TAG, "getAlertInfoList");
 
+        String prefix = CrtbUtils.getSectionPrefix();
+
         ArrayList<AlertInfo> l = new ArrayList<AlertInfo>();
         String sql = "SELECT"
                 + " AlertList.ID AS alertId,"
                 + " AlertHandlingList.ID AS alertHandlingId,"
-                + " TunnelCrossSectionIndex.sectionName AS sectionName,"
+                + " TunnelCrossSectionIndex.Chainage AS chainage,"
                 + " AlertList.AlertTime AS date,"
                 + " AlertList.PntType AS pntType,"
                 + " AlertList.Utype AS utype,"
@@ -425,7 +427,7 @@ public class AlertUtils {
                     AlertInfo ai = new AlertInfo();
                     ai.setAlertId(c.getInt(0));
                     ai.setAlertHandlingId(c.getInt(1));
-                    ai.setXinghao(c.getString(2));
+                    ai.setXinghao(CrtbUtils.formatSectionName(prefix, c.getDouble(2)));
                     String dateStr = c.getString(3);
                     ai.setDate(dateStr);
                     ai.setPntType(c.getString(4));
