@@ -19,7 +19,7 @@ import com.crtb.tunnelmonitor.entity.SubsidenceCrossSectionIndex;
  */
 public class CrtbRecordSubsidenceSectionInfoAdapter extends CrtbEntityAdapter<SubsidenceCrossSectionIndex> {
 
-	private float defChainage = 0 ;
+	private double defChainage = 0 ;
 	
 	protected CrtbRecordSubsidenceSectionInfoAdapter(Context context) {
 		super(context);
@@ -39,7 +39,7 @@ public class CrtbRecordSubsidenceSectionInfoAdapter extends CrtbEntityAdapter<Su
 		notifyDataSetChanged() ;
 	}
 	
-	public void setChainage(float value){
+	public void setChainage(double value){
 		defChainage	= value ;
 		notifyDataSetChanged() ;
 	}

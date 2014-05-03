@@ -19,14 +19,13 @@ import com.crtb.tunnelmonitor.entity.TunnelCrossSectionIndex;
  */
 public final class CrtbRecordTunnelSectionInfoAdapter extends CrtbEntityAdapter<TunnelCrossSectionIndex> {
 
-	
-	private float defaultChainage = 0 ;
+	private double defaultChainage = 0 ;
 	
 	protected CrtbRecordTunnelSectionInfoAdapter(Context context) {
 		super(context);
 	}
 	
-	protected void setChainage(float value){
+	protected void setChainage(double value){
 		defaultChainage	= value ;
 		notifyDataSetChanged() ;
 	}

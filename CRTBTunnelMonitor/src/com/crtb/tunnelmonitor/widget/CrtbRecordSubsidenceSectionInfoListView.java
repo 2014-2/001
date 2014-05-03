@@ -47,7 +47,7 @@ public class CrtbRecordSubsidenceSectionInfoListView extends CrtbBaseListView {
 		return mAdapter.getSelectedSection();
 	}
 	
-	public void setChainage(float value){
+	public void setChainage(double value){
 		mAdapter.setChainage(value);
 	}
 	

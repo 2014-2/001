@@ -169,7 +169,7 @@ public class RecordNewSubsidenceActivity extends WorkFlowActivity implements OnP
 
 		String str = record_Chainage.getText().toString().trim();
 		if (!StringUtils.isEmpty(str)) {
-			sectionListView.setChainage(Float.valueOf(str));
+			sectionListView.setChainage(CrtbUtils.formatDouble(str));
 		}
     }
     
