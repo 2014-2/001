@@ -13,6 +13,11 @@
 -keep class android.support.**{*;}
 -keep class com.crtb.log.**{*;}
 -keep class com.crtb.tssurveyprovider.**{*;}
+########################
+####add by wei.zhou 2014-05-03
+-keep class com.crtb.tunnelmonitor.entity.**{*;}
+-keep class com.crtb.tunnelmonitor.activity.**{*;}
+########################
 -keep class com.crtb.utils.**{*;}
 -keep class com.rebcenter.**{*;}
 -keep class android.**{*;}
