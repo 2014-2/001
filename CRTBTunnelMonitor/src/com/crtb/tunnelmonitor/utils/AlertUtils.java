@@ -21,6 +21,8 @@ import com.crtb.tunnelmonitor.entity.AlertInfo;
 
 public class AlertUtils {
 
+    private static int COUNT = 0;//TODO: REMOVE, JUST FOR DEBUG
+
     private static final String TAG = "AlertUtils";
 
     // 对应  AlertList 表中的OriginalDataID列, 一条测线两测点数据id间的分隔符
@@ -61,6 +63,7 @@ public class AlertUtils {
     public static final int POINT_DATASTATUS_DISCARD = 1;
     public static final int POINT_DATASTATUS_AS_FIRSTLINE = 2;
     public static final int POINT_DATASTATUS_CORRECTION = 3;
+
 
     public static String[] getPointSubsidenceExceedMsg(Object point) {
         Exceeding ex = checkPointSubsidenceExceed(point);
@@ -167,8 +170,8 @@ public class AlertUtils {
                     accumulativeSubsidence *= 1000;//CHANGE TO MILLIMETER
                     Log.d(TAG, "累计沉降: " + accumulativeSubsidence + " mm");
                     accumulativeSubsidence += sumOfDataCorrection;
-                    accumulativeSubsidence = Math.abs(accumulativeSubsidence);
-                    if (accumulativeSubsidence >= ACCUMULATIVE_THRESHOLD) {
+//                    accumulativeSubsidence = Math.abs(accumulativeSubsidence);
+                    if (Math.abs(accumulativeSubsidence) >= ACCUMULATIVE_THRESHOLD) {
                         accumulativeSubsidence = Math.round(accumulativeSubsidence);
                         int uType = type == 1 ? GONGDING_LEIJI_XIACHEN_EXCEEDING
                                 : DIBIAO_LEIJI_XIACHEN_EXCEEDING;
@@ -209,7 +212,7 @@ public class AlertUtils {
                     Log.d(TAG, "delta z: " + deltaZ + " m");
                     deltaZ *= 1000;//CHANGE TO MILLIMETER
                     deltaZ += thisDataCorrection;
-                    deltaZ = Math.abs(deltaZ);
+//                    deltaZ = Math.abs(deltaZ);
                     long deltaT = Math.abs(thisTime.getTime() - lastTime.getTime());
                     Log.d(TAG, "delta t: " + deltaT + " ms");
                     if (deltaT < Time.ONE_HOUR) {
@@ -223,7 +226,7 @@ public class AlertUtils {
                     Log.d(TAG, "delta t in day: " + deltaTInDay + " day");
                     double subsidenceSpeed = deltaZ / deltaTInDay;
                     Log.d(TAG, "沉降速率: " + subsidenceSpeed + " mm/d");
-                    if (subsidenceSpeed >= SPEED_THRESHOLD) {
+                    if (Math.abs(subsidenceSpeed) >= SPEED_THRESHOLD) {
                         subsidenceSpeed = Math.round(subsidenceSpeed);
                         int uType = type == 1 ? GONGDINGI_XIACHEN_SULV_EXCEEDING
                                 : DIBIAO_XIACHEN_SULV_EXCEEDING;
@@ -281,32 +284,43 @@ public class AlertUtils {
         List<TunnelSettlementTotalData> s_1InfoList = TunnelSettlementTotalDataDao.defaultDao()
                 .queryInfoBeforeMEASNo(chainageId, s_1.getPntType(), s_1.getMEASNo());
         if (s_1InfoList != null && s_1InfoList.size() > 0) {
-            
-            float sumOfCorrections = calculateSumOfDataCorrectionsOfTunnelSettlementTotalDatas(s_1InfoList);
-
-            TunnelSettlementTotalData s_1First = s_1InfoList.get(0);
-            TunnelSettlementTotalData s_2First = TunnelSettlementTotalDataDao.defaultDao()
-                    .queryOppositePointOfALine(s_1First, s_2.getPntType());
-            double lineFirstLength = getLineLength(s_1First, s_2First);
-            double convergence = lineThisLength - lineFirstLength;
-            convergence *= 1000; //CHANGE TO MILLIMETER
-            convergence += sumOfCorrections;
-            convergence = Math.abs(convergence);
-            if (convergence >= ACCUMULATIVE_THRESHOLD) {
-                convergence = Math.round(convergence);
-                int uType = SHOULIAN_LEIJI_EXCEEDING;
-                ret.leijiType = uType;
-                ret.leijiValue = (long) convergence;
-                int alertId = AlertListDao.defaultDao().insertOrUpdate(s_1, 3/* default */,
-                        uType, convergence, ACCUMULATIVE_THRESHOLD, originalDataID);
-                AlertHandlingInfoDao.defaultDao().insertIfNotExist(alertId, null,
-                        thisTimeDate, String.valueOf(chainageId) + s_1.getPntType(), ALERT_STATUS_OPEN/*报警*/, 1/*true*/);
-            }
 
             int s = s_1InfoList.size();
+            String s_2pntType = s_2.getPntType();
+
+            float sumOfCorrections = calculateSumOfDataCorrectionsOfTunnelSettlementTotalDatas(s_1InfoList);
+
+            TunnelSettlementTotalData s_1First = null;
+            TunnelSettlementTotalData s_2First = null;
+            for (int i = 0; i < s; i++) {
+                s_1First = s_1InfoList.get(i);
+                s_2First = TunnelSettlementTotalDataDao.defaultDao()
+                        .queryOppositePointOfALine(s_1First, s_2pntType);
+                if (s_1First != null && s_2First != null) {
+                    break;
+                }
+            }
+
+            if (s_1First != null && s_2First != null) {
+                double lineFirstLength = getLineLength(s_1First, s_2First);
+                double convergence = lineThisLength - lineFirstLength;
+                convergence *= 1000; //CHANGE TO MILLIMETER
+                convergence += sumOfCorrections;
+//                convergence = Math.abs(convergence);
+                if (Math.abs(convergence) >= ACCUMULATIVE_THRESHOLD) {
+                    convergence = Math.round(convergence);
+                    int uType = SHOULIAN_LEIJI_EXCEEDING;
+                    ret.leijiType = uType;
+                    ret.leijiValue = (long) convergence;
+                    int alertId = AlertListDao.defaultDao().insertOrUpdate(s_1, 3/* default */,
+                            uType, convergence, ACCUMULATIVE_THRESHOLD, originalDataID);
+                    AlertHandlingInfoDao.defaultDao().insertIfNotExist(alertId, null,
+                            thisTimeDate, String.valueOf(chainageId) + s_1.getPntType(), ALERT_STATUS_OPEN/*报警*/, 1/*true*/);
+                }
+            }
+
             TunnelSettlementTotalData s_1Last = null;
             TunnelSettlementTotalData s_2Last = null;
-            String s_2pntType = s_2.getPntType();
             for (int i = 1; i <= s; i++) {
                 s_1Last = s_1InfoList.get(s - i);
                 s_2Last = TunnelSettlementTotalDataDao.defaultDao()
@@ -321,7 +335,7 @@ public class AlertUtils {
                 double deltaLenth = lineThisLength - lineLastLength;
                 deltaLenth *= 1000;
                 deltaLenth += correction;
-                deltaLenth = Math.abs(deltaLenth);
+//                deltaLenth = Math.abs(deltaLenth);
                 Date s_1LastTime = s_1Last.getSurveyTime();
                 Date s_2LastTime = s_2Last.getSurveyTime();
                 double lastTime = s_1LastTime.getTime();
@@ -338,7 +352,7 @@ public class AlertUtils {
                     deltaTInDay = h;
                 }
                 double shoulianSpeed = deltaLenth / deltaTInDay;
-                if (shoulianSpeed >= SPEED_THRESHOLD) {
+                if (Math.abs(shoulianSpeed) >= SPEED_THRESHOLD) {
                     shoulianSpeed = Math.round(shoulianSpeed);
                     int uType = SHOULIAN_SULV_EXCEEDING;
                     ret.sulvType = uType;
@@ -361,6 +375,7 @@ public class AlertUtils {
      */
     public static double getLineLength(TunnelSettlementTotalData s_1, TunnelSettlementTotalData s_2) {
 
+//        return 1 + 0.2 * COUNT++;//TODO: REMOVE,JUST FOR DEBUG
         if (s_1 == null || s_2 == null) {
             return 0;
         }

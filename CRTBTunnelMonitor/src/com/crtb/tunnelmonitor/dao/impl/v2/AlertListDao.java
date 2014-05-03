@@ -66,18 +66,18 @@ public class AlertListDao extends AbstractDao<AlertList> {
         return mDatabase.queryObject(sql, args, AlertList.class);
     }
 
-    public AlertList queryOne(int sheetId, int chainageId, String pntType, String originalDataID) {
+    public AlertList queryOne(int sheetId, int chainageId, String originalDataID, int uType) {
         final IAccessDatabase mDatabase = getCurrentDb();
-        Log.d(TAG, "AlertListDao queryOne, pntType: " + pntType);
+        Log.d(TAG, "AlertListDao queryOne, uType: " + uType);
 
         if (mDatabase == null) {
             return null;
         }
 
         String sql = "select * from AlertList where SheetID=? AND CrossSectionID=?"
-                + " AND PntType=\'" + pntType + "\'" + " AND originalDataID=\'" + originalDataID
-                + "\'";
-        String[] args = new String[] { String.valueOf(sheetId), String.valueOf(chainageId) };
+                + " AND Utype=?"
+                + " AND originalDataID=\'" + originalDataID + "\'";
+        String[] args = new String[] { String.valueOf(sheetId), String.valueOf(chainageId), String.valueOf(uType) };
 
         return mDatabase.queryObject(sql, args, AlertList.class);
     }
@@ -89,15 +89,15 @@ public class AlertListDao extends AbstractDao<AlertList> {
         int sheetId = point.getSheetId();
         int chainageId = point.getChainageId();
 
-        String pntType = point.getPntType();
+//        String pntType = point.getPntType();
 
-        if (pntType != null && pntType.length() > 2) {// such as "S1-1" or
-                                                       // "S1-2"
-            Log.d(TAG, "AlertListDao insertOrUpdate, pntType.contains(-)");
-            pntType = pntType.substring(0, pntType.length() - 2);
-        }
+//        if (pntType != null && pntType.length() > 2) {// such as "S1-1" or
+//                                                       // "S1-2"
+//            Log.d(TAG, "AlertListDao insertOrUpdate, pntType.contains(-)");
+//            pntType = pntType.substring(0, pntType.length() - 2);
+//        }
 
-        AlertList al = queryOne(sheetId, chainageId, pntType, originalDataID);
+        AlertList al = queryOne(sheetId, chainageId, originalDataID, Utype);
 
         if (al != null) {
             updatePointAlertItem(point, Utype, UValue, originalDataID);
@@ -113,9 +113,9 @@ public class AlertListDao extends AbstractDao<AlertList> {
 
         int sheetId = point.getSheetId();
         int chainageId = point.getChainageId();
-        String pntType = point.getPntType();
+//        String pntType = point.getPntType();
 
-        AlertList al = queryOne(sheetId, chainageId, pntType, originalDataID);
+        AlertList al = queryOne(sheetId, chainageId, originalDataID, Utype);
 
         if (al != null) {
             updatePointAlertItem(point, Utype, UValue, originalDataID);
