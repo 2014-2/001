@@ -40,8 +40,9 @@ public class TunnelCrossSectionIndex implements Serializable {
 
     @ColumnDouble
     private double Width; 				// 断面宽度
-    
-    private String sectionName ;		// 断面名称
+
+    @ColumnString(length=255)
+    private String sectionName;         // 断面名称
 
     //////////////////////开挖方式//////////////////////////
 
