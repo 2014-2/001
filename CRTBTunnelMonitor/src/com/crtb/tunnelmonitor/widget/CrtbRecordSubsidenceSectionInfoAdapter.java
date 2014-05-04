@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.crtb.tunnelmonitor.activity.R;
 import com.crtb.tunnelmonitor.entity.SubsidenceCrossSectionIndex;
+import com.crtb.tunnelmonitor.utils.CrtbUtils;
 
 /**
  * 
@@ -81,7 +82,7 @@ public class CrtbRecordSubsidenceSectionInfoAdapter extends CrtbEntityAdapter<Su
 		}
 		
 		holder.chainage.setText(item.getSectionName());
-		holder.distance.setText(String.valueOf(defChainage - item.getChainage()));
+		holder.distance.setText(String.valueOf(CrtbUtils.formatDouble(defChainage - item.getChainage())));
 		
 		if(item.isUsed()){
 			holder.status.setBackgroundResource(R.drawable.use);

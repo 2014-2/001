@@ -163,7 +163,7 @@ public class RecordNewSubsidenceActivity extends WorkFlowActivity implements OnP
 				temp = edt.toString();	
 
 				if (!StringUtils.isEmpty(temp)) {
-					sectionListView.setChainage(Float.valueOf(temp));
+					sectionListView.setChainage(CrtbUtils.formatDouble(temp));
 				}
 			}
 		});

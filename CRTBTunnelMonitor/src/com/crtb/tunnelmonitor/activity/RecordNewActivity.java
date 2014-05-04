@@ -162,7 +162,7 @@ public class RecordNewActivity extends WorkFlowActivity implements OnPageChangeL
 				temp = edt.toString();	
 				
 				if(!StringUtils.isEmpty(temp)){
-					sectionListView.setChainage(Float.valueOf(temp)) ;
+					sectionListView.setChainage(CrtbUtils.formatDouble(temp)) ;
 				}
 			}
 		}) ;
