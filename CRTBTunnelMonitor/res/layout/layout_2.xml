@@ -35,7 +35,8 @@
             android:layout_toLeftOf="@id/start"
             android:inputType="numberDecimal"
             android:singleLine="true"
-            android:maxLength="5" />
+            android:maxLength="5"
+            android:text="100" />
     </RelativeLayout>
 
     <TextView
@@ -69,7 +70,8 @@
             android:layout_toLeftOf="@id/start"
             android:inputType="numberDecimal"
             android:singleLine="true"
-            android:maxLength="5" />
+            android:maxLength="5"
+            android:text="5" />
     </RelativeLayout>
 
     <LinearLayout

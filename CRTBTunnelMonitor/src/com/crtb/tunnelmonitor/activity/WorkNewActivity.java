@@ -141,6 +141,9 @@ public class WorkNewActivity extends WorkFlowActivity implements OnClickListener
 		mWorkPlanBean = CommonObject.findObject(WorkNewActivity.KEY_WORKPLAN_OBJECT);
 		
 		if(mWorkPlanBean != null){
+			
+			setTopbarTitle("编辑工作面");
+			
 			loadDefaultData(mWorkPlanBean);
 		} else {
 			// default 

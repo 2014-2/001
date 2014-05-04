@@ -309,8 +309,8 @@ public class SectionNewSubsidenceActivity extends WorkFlowActivity implements On
 				subsidence.setSurveyPnts(point);
 				
 				//
-				subsidence.setDBU0(Float.valueOf(dbu0));
-				subsidence.setDBLimitVelocity(Float.valueOf(dbl));
+				subsidence.setDBU0(CrtbUtils.formatFloat(dbu0));
+				subsidence.setDBLimitVelocity(CrtbUtils.formatFloat(dbl));
 				subsidence.setDBU0Time(DateUtils.toDate(buildtime,DateUtils.PART_TIME_FORMAT));
 				//TODO: info被用来标记数据是否上传：1表示未上传, 2表示已上传
 				subsidence.setInfo("1");
@@ -335,8 +335,8 @@ public class SectionNewSubsidenceActivity extends WorkFlowActivity implements On
 				subsidence.setSurveyPnts(point);
 
 				//
-				subsidence.setDBU0(Float.valueOf(dbu0));
-				subsidence.setDBLimitVelocity(Float.valueOf(dbl));
+				subsidence.setDBU0(CrtbUtils.formatFloat(dbu0));
+				subsidence.setDBLimitVelocity(CrtbUtils.formatFloat(dbl));
 				subsidence.setDBU0Time(DateUtils.toDate(buildtime,DateUtils.PART_TIME_FORMAT));
 				subsidence.setInfo(remark);
 
@@ -407,69 +407,6 @@ public class SectionNewSubsidenceActivity extends WorkFlowActivity implements On
         @Override
         public Object instantiateItem(View arg0, int arg1) {
             ((ViewPager) arg0).addView(listViews.get(arg1), 0);
-
-//			AppCRTBApplication CurApp = ((AppCRTBApplication)getApplicationContext());
-//			WorkInfos Curw = CurApp.GetCurWork();
-//			
-//			DSection_Chainage = (EditText) findViewById(R.id.DSection_Chainage);
-//			DSection_name = (EditText) findViewById(R.id.DSection_name);
-//			DSection_createtime = (EditText) findViewById(R.id.DSection_createtime);
-//			DSection_Width = (EditText) findViewById(R.id.DSection_Width);
-//			DSection_PointCount = (EditText) findViewById(R.id.DSection_PointCount);
-//
-//			DSection_Value1 = (EditText) findViewById(R.id.DSection_Value1);
-//			DSection_Value2 = (EditText) findViewById(R.id.DSection_Value2);
-//			DSection_SetTime = (EditText) findViewById(R.id.DSection_SetTime);
-//			DSection_Info = (EditText) findViewById(R.id.DSection_Info);
-//			
-//			DSection_Chainage.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-//				
-//				@Override
-//				public void onFocusChange(View v, boolean hasFocus) {
-//					//if(!hasFocus)
-//					{
-//						String sChainage = DSection_Chainage.getText().toString().trim();
-//						if (sChainage.length() > 0) {
-//							AppCRTBApplication CurApp = ((AppCRTBApplication)getApplicationContext());
-//							DSection_name.setText(CurApp.GetSectionName(Double.valueOf(sChainage).doubleValue()));
-//						}
-//						else {
-//							DSection_name.setText("");
-//						}
-//					}
-//				}
-//			});
-//
-//			// 获取手机的当前时间
-//			final String time = Time.getDateEN();
-//			// 设置文本框里面的字体大小
-//			DSection_createtime.setTextSize(11);
-//			if (arg1 == 0) {
-//				if (editInfo != null) {
-//					DSection_Chainage.setText(editInfo.getChainage().toString());
-//					DSection_Chainage.setFocusableInTouchMode(false);
-//					DSection_name.setText(CurApp.GetSectionName(editInfo.getChainage().doubleValue()));
-//					DSection_name.setFocusableInTouchMode(false);
-//					DSection_createtime.setText(editInfo.getInbuiltTime().toString());
-//					DSection_createtime.setFocusableInTouchMode(false);
-//					DSection_Width.setText(Integer.toString(editInfo.getWidth()));
-//					DSection_Width.setFocusableInTouchMode(false);
-//					DSection_PointCount.setText(editInfo.getSurveyPnts());
-//					DSection_PointCount.setFocusableInTouchMode(false);
-//				}
-//				else {
-//					// 跟改文本框赋值时间
-//					DSection_createtime.setText(time);
-//				}
-//			}
-//			else
-//			if (arg1 == 1) {
-//				DSection_Value1.setText(Curw.getGDLimitTotalSettlement().toString());
-//				DSection_Value2.setText(Curw.getGDLimitVelocity().toString());
-//				DSection_SetTime.setTextSize(11);
-//				DSection_SetTime.setText(time);
-//			}
-            
             return listViews.get(arg1);
         }
 

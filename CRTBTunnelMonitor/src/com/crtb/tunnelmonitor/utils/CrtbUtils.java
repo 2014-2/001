@@ -32,6 +32,11 @@ public final class CrtbUtils {
 		return b.setScale(4,BigDecimal.ROUND_DOWN).doubleValue() ;
 	}
 	
+	public static float formatFloat(String value){
+		BigDecimal b = new BigDecimal(value);
+		return b.setScale(4,BigDecimal.ROUND_DOWN).floatValue() ;
+	}
+	
 	public static String formatSectionName(String pre, double value){
 		
 		String str	= String.valueOf(value);
