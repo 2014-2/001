@@ -369,12 +369,12 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 				return;
 			}
 			
-//			if(point.N == 0d 
-//					|| point.E == 0d 
-//					|| point.H == 0d){
-//				mHanlder.sendMessage(MSG_ERROR_CONNECT);
-//				return ;
-//			}
+			if(point.N == 0d 
+					|| point.E == 0d 
+					|| point.H == 0d){
+				mHanlder.sendMessage(MSG_ERROR_CONNECT);
+				return ;
+			}
 			
 		} catch (InterruptedException e) {
 			e.printStackTrace();
