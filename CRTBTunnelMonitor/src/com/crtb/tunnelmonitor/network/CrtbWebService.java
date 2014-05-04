@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.ksoap2.SoapEnvelope;
 import org.ksoap2.serialization.Marshal;
@@ -24,9 +25,6 @@ import android.os.Looper;
 import android.util.Log;
 
 import com.crtb.tunnelmonitor.common.Constant;
-import com.crtb.tunnelmonitor.dao.impl.v2.WorkSiteIndexDao;
-import com.crtb.tunnelmonitor.entity.WorkSiteIndex;
-import com.crtb.tunnelmonitor.task.WorkSite;
 import com.crtb.tunnelmonitor.task.WorkZone;
 import com.crtb.tunnelmonitor.utils.CrtbAppConfig;
 
@@ -42,6 +40,7 @@ public final class CrtbWebService {
 	
 	private static CrtbWebService sInstance;
 	private Handler mHandler;
+	private static AtomicInteger sTransactionId = new AtomicInteger(0); 
 	
 	private long mRandomCode;
 	private String mZoneCode;
@@ -329,6 +328,7 @@ public final class CrtbWebService {
 		
 		@Override
 		protected Void doInBackground(Void... params) {
+			final int transactionId = sTransactionId.incrementAndGet();
 			SoapObject rpcMessage = mRpc.getRpcMessage(NAMESPACE);
 			SoapSerializationEnvelope soapEnvelope = new SoapSerializationEnvelope(
 					SoapEnvelope.VER11);
@@ -343,14 +343,14 @@ public final class CrtbWebService {
 			HttpTransportSE localHttpTransportSE = new HttpTransportSE(mUrl, CONNECITON_TIME_OUT);
 			Object response = null;
 			for (int i = 0; i < RETRY_COUNT; i++) {
-				Log.d(TAG, "sending request: " + rpcMessage.toString());
+				Log.d(TAG, "sending request(" + transactionId + "): " + rpcMessage.toString());
 				try {
 					localHttpTransportSE.call(NAMESPACE + rpcMessage.getName(), soapEnvelope);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
 				response = soapEnvelope.bodyIn;
-				Log.d(TAG, "received response: " + response);
+				Log.d(TAG, "received response("+ transactionId +"): " + response);
 				if (response != null) {
 					break;
 				}
