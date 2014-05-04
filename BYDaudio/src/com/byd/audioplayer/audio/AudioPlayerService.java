@@ -18,13 +18,20 @@ import android.media.audiofx.Equalizer;
 import android.os.Binder;
 import android.os.Handler;
 import android.os.IBinder;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.byd.audioplayer.R;
 import com.byd.audioplayer.config.Constants;
 
 public class AudioPlayerService extends Service {
+    private static final String LOG_TAG = AudioPlayerService.class.getSimpleName();
+
     private static final int HANDLER_MSG_UPDATE = 1;
+
+    public static final String ACTION_SUSPEND_BROADCAST = "com.android.suspend.BroadcastReceiver";
+
+    public static final String ACTION_CAR_SETTING = "com.canbus.action.CAR_SETTING";
 
     public static MediaPlayer mPlayer = null;
 
@@ -46,7 +53,7 @@ public class AudioPlayerService extends Service {
 
     private WheelKeyReceiver mWheelKeyReceiver;
 
-    private PlayPauseReceiver mPlayPauseReceiver;
+    private SuspendReceiver mSuspendReceiver;
 
     private Handler handler = new Handler() {
         @Override
@@ -275,16 +282,18 @@ public class AudioPlayerService extends Service {
         int audioFx = Constants.getAudioFx(getApplicationContext());
         setEqualizer(audioFx);
 
-        mWheelKeyReceiver = new WheelKeyReceiver();
-        IntentFilter filter = new IntentFilter();
-        filter.addAction("com.canbus.action.CAR_SETTING");
-        filter.addCategory("com.canbus.action.CAR_SETTING.WHEEL_KEY");
-        registerReceiver(mWheelKeyReceiver, filter);
+        if (mWheelKeyReceiver == null) {
+            mWheelKeyReceiver = new WheelKeyReceiver();
+            IntentFilter filter = new IntentFilter(ACTION_CAR_SETTING);
+            filter.addCategory("com.canbus.action.CAR_SETTING.WHEEL_KEY");
+            registerReceiver(mWheelKeyReceiver, filter);
+        }
 
-        mPlayPauseReceiver = new PlayPauseReceiver();
-        IntentFilter filter2 = new IntentFilter();
-        filter2.addAction("com.android.suspend.BroadcastReceiver");
-        registerReceiver(mPlayPauseReceiver, filter2);
+        if (mSuspendReceiver == null) {
+            mSuspendReceiver = new SuspendReceiver();
+            IntentFilter filter2 = new IntentFilter(ACTION_SUSPEND_BROADCAST);
+            registerReceiver(mSuspendReceiver, filter2);
+        }
     }
 
     @Override
@@ -372,7 +381,7 @@ public class AudioPlayerService extends Service {
         mSongPosition = -1;
         mSongChangedListenerList.clear();
         unregisterReceiver(mWheelKeyReceiver);
-        unregisterReceiver(mPlayPauseReceiver);
+        unregisterReceiver(mSuspendReceiver);
     }
 
     private final class PreparedListener implements OnPreparedListener {
@@ -428,13 +437,15 @@ public class AudioPlayerService extends Service {
         }
     }
 
-    class PlayPauseReceiver extends BroadcastReceiver {
+    class SuspendReceiver extends BroadcastReceiver {
 
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
-            if ("com.android.suspend.BroadcastReceiver".equals(action)) {
-                String valueStr = intent.getStringExtra("command");
+            Log.d(LOG_TAG, "suspend action = " + action);
+            String valueStr = intent.getStringExtra("command");
+            Log.d(LOG_TAG, "suspend action command = " + valueStr);
+            if (ACTION_SUSPEND_BROADCAST.equals(action)) {
                 if("stop".equals(valueStr)) {
                     if (mPlayer != null && mPlayer.isPlaying()) {
                         mPlayer.pause();
