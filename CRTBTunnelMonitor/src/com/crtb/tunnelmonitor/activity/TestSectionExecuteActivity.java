@@ -85,6 +85,10 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 	private final List<TunnelCrossSectionIndex> tunnelSectionList = new ArrayList<TunnelCrossSectionIndex>();
 	private final List<SubsidenceCrossSectionIndex> subsidenceSectionList = new ArrayList<SubsidenceCrossSectionIndex>();
 	
+	// 测量临时数据
+	private final List<TunnelSettlementTotalData> tempTunnelData = new ArrayList<TunnelSettlementTotalData>();
+	private final List<SubsidenceTotalData> tempSubsidenceData = new ArrayList<SubsidenceTotalData>();
+	
 	private TunnelSettlementTotalData pS1,pS2 ;
 	
 	private CrtbDialogConnecting connectDialog ;
@@ -100,6 +104,8 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 		
 		rawSheetIndex	= 0 ;
 		rawSheetBean	= null ;
+		tempTunnelData.clear() ;
+		tempSubsidenceData.clear() ;
 		
 		// 测量数据
 		if(bean instanceof List<?>){
@@ -241,13 +247,54 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 		mContainerLayout.addView(view);
 	}
 	
+	private TunnelSettlementTotalData findTunnelData(String ptype){
+		
+		if(tunnelSection == null || ptype == null){
+			return null ;
+		}
+		
+		int sid = tunnelSection.getID() ;
+		
+		for(TunnelSettlementTotalData bean : tempTunnelData){
+			
+			String type = bean.getPntType() ;
+			
+			if(bean.getChainageId() == sid && type != null && type.equals(ptype)){
+				return bean ;
+			}
+		}
+		
+		return null ;
+	}
+	
+	private SubsidenceTotalData findSubsidenceData(String ptype){
+		
+		if(subsidenceSection == null || ptype == null){
+			return null ;
+		}
+		
+		int sid = subsidenceSection.getID() ;
+		
+		for(SubsidenceTotalData bean : tempSubsidenceData){
+			
+			String type = bean.getPntType() ;
+			
+			if(bean.getChainageId() == sid && type != null && type.equals(ptype)){
+				return bean ;
+			}
+		}
+		
+		return null ;
+	}
+	
 	private View createTunnelTestPointView(final String type,String typeName,String suffix){
 		
 		final TestPointHolder holder 	= new TestPointHolder() ;
 		View view = InjectCore.injectOriginalObject(holder);
 		
-
-		/*if(bean != null){
+		// 从已经测量的数据中查找
+		TunnelSettlementTotalData bean = findTunnelData(type);
+		if(bean != null){
 			
 			// 存在的测量数据
 			String coord = bean.getCoordinate() != null ? bean.getCoordinate() : "";
@@ -262,14 +309,17 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 			
 			// 测试时间
 			holder.mPointTime.setText(DateUtils.toDateString(bean.getSurveyTime(), DateUtils.PART_TIME_FORMAT));
-			
-		}*/
+		}
 		
 		// 测点类型
 		if(StringUtils.isEmpty(typeName)){
 			holder.mPointType.setText(type);
 		} else {
-			holder.mPointType.setText(typeName + "-" + suffix);
+			if(StringUtils.isEmpty(suffix)){
+				holder.mPointType.setText(typeName);
+			} else {
+				holder.mPointType.setText(typeName + "-" + suffix);
+			}
 		}
 		
 		// 测量
@@ -319,12 +369,12 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 				return;
 			}
 			
-			if(point.N == 0d 
-					|| point.E == 0d 
-					|| point.H == 0d){
-				mHanlder.sendMessage(MSG_ERROR_CONNECT);
-				return ;
-			}
+//			if(point.N == 0d 
+//					|| point.E == 0d 
+//					|| point.H == 0d){
+//				mHanlder.sendMessage(MSG_ERROR_CONNECT);
+//				return ;
+//			}
 			
 		} catch (InterruptedException e) {
 			e.printStackTrace();
@@ -427,6 +477,9 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 						// 插入
 						if(dao.insert(obj) == TunnelSettlementTotalDataDao.DB_EXECUTE_SUCCESS){
 							
+							// 保存测量数据
+							tempTunnelData.add(obj);
+							
 							if(info.type.equals(AppConfig.POINT_A)){
 								doWarning(info.holder, AlertUtils.getPointSubsidenceExceedMsg(obj));
 							} else {
@@ -477,8 +530,13 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 						
 						// 插入
 						if(dao.insert(obj) == TunnelSettlementTotalDataDao.DB_EXECUTE_SUCCESS){
+							
+							// 保存临时数据
+							tempSubsidenceData.add(obj);
+							
 						    doWarning(info.holder, AlertUtils.getPointSubsidenceExceedMsg(obj));
 							showText("保存成功");
+							
 						} else {
 							showText("保存失败");
 						}
@@ -533,7 +591,10 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 		// 测点类型
 		holder.mPointType.setText(type);
 		
-		/*if(bean != null){
+		// 从已经测量的数据中查找
+		SubsidenceTotalData bean = findSubsidenceData(type);
+		
+		if(bean != null){
 			
 			String coord = bean.getCoordinate() != null ? bean.getCoordinate() : "";
 			
@@ -547,7 +608,7 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 
 			// 测试时间
 			holder.mPointTime.setText(DateUtils.toDateString(bean.getSurveyTime(), DateUtils.PART_TIME_FORMAT));
-		}*/
+		}
 		
 		// 测量
 		holder.mPointTestBnt.setOnClickListener(new View.OnClickListener() {
