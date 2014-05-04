@@ -83,6 +83,8 @@ class GetMonitorValueInfoRpc extends AbstractRpc {
 				//TODO: 解析剩下的数据
 				pointTestData.setCoordinate(coordinate);
 				pointTestData.setSurveyTime(CrtbUtils.parseDate(time));
+				//将测量点数据标记火已上传
+				pointTestData.setInfo("2");
 				//TODO: 无法获取此数据，暂时用0代替
 				pointTestData.setSurveyorID(0);
 				pointTestDataList.add(pointTestData);
