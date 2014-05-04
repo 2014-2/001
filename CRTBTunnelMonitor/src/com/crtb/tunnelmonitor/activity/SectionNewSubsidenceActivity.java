@@ -1,6 +1,7 @@
 package com.crtb.tunnelmonitor.activity;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.zw.android.framework.ioc.InjectCore;
@@ -224,6 +225,9 @@ public class SectionNewSubsidenceActivity extends WorkFlowActivity implements On
 
 	@Override
 	public void onClick(View v) {
+		
+		Date curdate = null ;
+		
 		switch (v.getId()) {
 		case R.id.work_btn_quxiao:
 			Intent IntentCancel = new Intent();
@@ -231,10 +235,24 @@ public class SectionNewSubsidenceActivity extends WorkFlowActivity implements On
 			this.finish();// 关闭当前界面
 			break;
 		case R.id.section_new_et_calendar:
-			CrtbDateDialogUtils.setAnyDateDialog(this, DSection_createtime, DateUtils.getCurrtentTimes());
+			
+			curdate = DateUtils.toDate(DSection_createtime.getEditableText().toString().trim(), DateUtils.PART_TIME_FORMAT);
+			
+			if(curdate == null){
+				curdate	= DateUtils.getCurrtentTimes() ;
+			}
+			
+			CrtbDateDialogUtils.setAnyDateDialog(this, DSection_createtime, curdate);
 			break ;
 		case R.id.DSection_SetTime:
-			CrtbDateDialogUtils.setAnyDateDialog(this, DSection_SetTime, DateUtils.getCurrtentTimes());
+			
+			curdate = DateUtils.toDate(DSection_SetTime.getEditableText().toString().trim(), DateUtils.PART_TIME_FORMAT);
+			
+			if(curdate == null){
+				curdate	= DateUtils.getCurrtentTimes() ;
+			}
+			
+			CrtbDateDialogUtils.setAnyDateDialog(this, DSection_SetTime, curdate);
 			break ;
 		case R.id.work_btn_queding: // 数据库
 			

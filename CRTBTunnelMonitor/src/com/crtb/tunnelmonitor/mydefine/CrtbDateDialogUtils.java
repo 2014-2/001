@@ -28,6 +28,10 @@ public final class CrtbDateDialogUtils {
 
 	public static DatePickerDialog setAnyDateDialog(final Activity activity,
 			final TextView text, Date date) {
+		
+		if(date == null){
+			date = DateUtils.getCurrtentTimes() ;
+		}
 
 		final int mYear = DateUtils.getDateTime(date)[0];
 		final int mMonth = DateUtils.getDateTime(date)[1];
@@ -41,8 +45,8 @@ public final class CrtbDateDialogUtils {
 					TimePickerDialog timePicker ;
 
 					@Override
-					public void onDateSet(DatePicker view, int year,
-							int monthOfYear, int dayOfMonth) {
+					public void onDateSet(DatePicker view, final int year,
+							final int monthOfYear, final int dayOfMonth) {
 						
 						if(timePicker == null){
 							timePicker = new TimePickerDialog(activity, new OnTimeSetListener() {
@@ -50,9 +54,9 @@ public final class CrtbDateDialogUtils {
 								@Override
 								public void onTimeSet(TimePicker arg0, int hour,
 										int minute) {
-									text.setText(mYear + "-"
-											+ DateUtils.pad(mMonth + 1) + "-"
-											+ DateUtils.pad(mDay) + " "
+									text.setText(year + "-"
+											+ DateUtils.pad(monthOfYear + 1) + "-"
+											+ DateUtils.pad(dayOfMonth) + " "
 											+ DateUtils.pad(hour) + ":"
 											+ DateUtils.pad(minute));
 								}

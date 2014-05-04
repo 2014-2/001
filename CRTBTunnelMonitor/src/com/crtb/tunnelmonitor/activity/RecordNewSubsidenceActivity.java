@@ -1,6 +1,7 @@
 package com.crtb.tunnelmonitor.activity;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 import org.zw.android.framework.ioc.InjectCore;
 import org.zw.android.framework.ioc.InjectLayout;
@@ -220,7 +221,14 @@ public class RecordNewSubsidenceActivity extends WorkFlowActivity implements OnP
 			this.finish();// 关闭当前界面
 			break;
 		case R.id.record_buildtime :
-			CrtbDateDialogUtils.setAnyDateDialog(this, record_buildtime, DateUtils.getCurrtentTimes());
+			
+			Date curdate = DateUtils.toDate(record_buildtime.getEditableText().toString().trim(), DateUtils.PART_TIME_FORMAT);
+			
+			if(curdate == null){
+				curdate	= DateUtils.getCurrtentTimes() ;
+			}
+			
+			CrtbDateDialogUtils.setAnyDateDialog(this, record_buildtime, curdate);
 			break ;
 		case R.id.work_btn_queding: // 数据库
 			

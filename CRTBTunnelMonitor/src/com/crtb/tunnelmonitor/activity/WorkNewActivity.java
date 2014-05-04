@@ -1,6 +1,7 @@
 package com.crtb.tunnelmonitor.activity;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.zw.android.framework.ioc.InjectCore;
@@ -235,6 +236,9 @@ public class WorkNewActivity extends WorkFlowActivity implements OnClickListener
 
 	@Override
 	public void onClick(View v) {
+		
+		Date curdate = null ;
+		
 		switch (v.getId()) {
 		case R.id.work_btn_quxiao:
 			Intent IntentCancel = new Intent();
@@ -413,18 +417,36 @@ public class WorkNewActivity extends WorkFlowActivity implements OnClickListener
 			break;
 		case R.id.ed_work_new_calendar :
 			
-			CrtbDateDialogUtils.setAnyDateDialog(this, mWorkPlanCalendar, DateUtils.getCurrtentTimes());
+			curdate = DateUtils.toDate(mWorkPlanCalendar.getEditableText().toString().trim(), DateUtils.PART_TIME_FORMAT);
+			
+			if(curdate == null){
+				curdate	= DateUtils.getCurrtentTimes() ;
+			}
+			
+			CrtbDateDialogUtils.setAnyDateDialog(this, mWorkPlanCalendar, curdate);
 			
 			break ;
 		case R.id.vault_trans_date :
 			
-			CrtbDateDialogUtils.setAnyDateDialog(this, mWorkPlanCalendar, DateUtils.getCurrtentTimes());
+			curdate = DateUtils.toDate(mVaultTransDate.getEditableText().toString().trim(), DateUtils.PART_TIME_FORMAT);
+			
+			if(curdate == null){
+				curdate	= DateUtils.getCurrtentTimes() ;
+			}
+			
+			CrtbDateDialogUtils.setAnyDateDialog(this, mVaultTransDate, curdate);
 			
 			break;
 			
 		case R.id.circum_astringe_date :
 			
-			CrtbDateDialogUtils.setAnyDateDialog(this, mAstringeDate, DateUtils.getCurrtentTimes());
+			curdate = DateUtils.toDate(mAstringeDate.getEditableText().toString().trim(), DateUtils.PART_TIME_FORMAT);
+			
+			if(curdate == null){
+				curdate	= DateUtils.getCurrtentTimes() ;
+			}
+			
+			CrtbDateDialogUtils.setAnyDateDialog(this, mAstringeDate, curdate);
 			
 			break;
 		}

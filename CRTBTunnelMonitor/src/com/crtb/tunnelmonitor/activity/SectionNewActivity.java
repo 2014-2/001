@@ -1,6 +1,7 @@
 package com.crtb.tunnelmonitor.activity;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.zw.android.framework.ioc.InjectCore;
@@ -358,6 +359,9 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 
 	@Override
 	public void onClick(View v) {
+		
+		Date curdate = null ;
+		
 		switch (v.getId()) {
 		case R.id.work_btn_quxiao:
 			
@@ -367,13 +371,34 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 			
 			break;
 		case R.id.section_new_et_calendar :
-			CrtbDateDialogUtils.setAnyDateDialog(this, section_new_et_calendar, DateUtils.getCurrtentTimes());
+			
+			curdate = DateUtils.toDate(section_new_et_calendar.getEditableText().toString().trim(), DateUtils.PART_TIME_FORMAT);
+			
+			if(curdate == null){
+				curdate	= DateUtils.getCurrtentTimes() ;
+			}
+			
+			CrtbDateDialogUtils.setAnyDateDialog(this, section_new_et_calendar, curdate);
 			break ;
 		case R.id.section_new_createtime_gd :
-			CrtbDateDialogUtils.setAnyDateDialog(this, section_new_createtime1, DateUtils.getCurrtentTimes());
+			
+			curdate = DateUtils.toDate(section_new_createtime1.getEditableText().toString().trim(), DateUtils.PART_TIME_FORMAT);
+			
+			if(curdate == null){
+				curdate	= DateUtils.getCurrtentTimes() ;
+			}
+			
+			CrtbDateDialogUtils.setAnyDateDialog(this, section_new_createtime1, curdate);
 			break ;
 		case R.id.section_new_createtime_sl :
-			CrtbDateDialogUtils.setAnyDateDialog(this, section_new_createtime2, DateUtils.getCurrtentTimes());
+			
+			curdate = DateUtils.toDate(section_new_createtime2.getEditableText().toString().trim(), DateUtils.PART_TIME_FORMAT);
+			
+			if(curdate == null){
+				curdate	= DateUtils.getCurrtentTimes() ;
+			}
+			
+			CrtbDateDialogUtils.setAnyDateDialog(this, section_new_createtime2, curdate);
 			break ;
 		case R.id.work_btn_queding: // 数据库
 			

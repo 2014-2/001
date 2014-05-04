@@ -26,6 +26,7 @@ public final class CrtbDialogFileBrowse extends CrtbDialog {
 	private List<File>		mList ;
 	private AppHandler		mHanlder ;
 	private CrtbDialogConnecting	mProgressDialog ;
+	private TextView		mTitle ;
 
 	public CrtbDialogFileBrowse(final Context context,int height) {
 		super(context);
@@ -69,9 +70,6 @@ public final class CrtbDialogFileBrowse extends CrtbDialog {
 			
 		};
 		
-		if(mList == null || mList.isEmpty()){
-			Toast.makeText(context, "没有可导入的文件", Toast.LENGTH_LONG).show() ;
-		}
 	}
 
 	@Override
@@ -83,6 +81,8 @@ public final class CrtbDialogFileBrowse extends CrtbDialog {
 		ViewGroup.LayoutParams lp = container.getLayoutParams() ;
 		lp.width 	= ViewGroup.LayoutParams.MATCH_PARENT ;
 		lp.height 	= mHeight ;
+		
+		mTitle		= (TextView) findViewById(R.id.hint_text);
 
 		ListView lv = (ListView)findViewById(R.id.inport_listview);
 		final FileAdapter	adapter = new FileAdapter(getContext());
@@ -101,6 +101,11 @@ public final class CrtbDialogFileBrowse extends CrtbDialog {
 				CrtbDbFileUtils.inportDb(getContext(), file.getAbsolutePath(), mHanlder);
 			}
 		}) ;
+		
+		if(mList == null || mList.isEmpty()){
+			mTitle.setText("没有可导入的文件");
+			Toast.makeText(getContext(), "没有可导入的文件", Toast.LENGTH_LONG).show() ;
+		}
 	}
 	
 	class FileAdapter extends CrtbBaseAdapter {
