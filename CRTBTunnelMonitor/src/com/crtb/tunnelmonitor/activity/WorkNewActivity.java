@@ -188,8 +188,15 @@ public class WorkNewActivity extends WorkFlowActivity implements OnClickListener
 	
 	private void loadDefaultData(ProjectIndex bean){
 		
+		// 创建时间
+		String buildTime = DateUtils.toDateString(bean.getCreateTime(),DateUtils.PART_TIME_FORMAT) ;
+		
+		if(StringUtils.isEmpty(buildTime)){
+			buildTime	= DateUtils.toDateString(DateUtils.getCurrtentTimes(),DateUtils.PART_TIME_FORMAT) ;
+		}
+		
 		mWorkPlanName.setText(bean.getProjectName());
-		mWorkPlanCalendar.setText(DateUtils.toDateString(bean.getCreateTime(),DateUtils.PART_TIME_FORMAT));
+		mWorkPlanCalendar.setText(buildTime);
 		mWorkPlanUnit.setText(bean.getConstructionFirm());
 		mWorkPlanPrefix.setText(bean.getChainagePrefix());
 		mWorkPlanStart.setText(String.valueOf(bean.getStartChainage()));
