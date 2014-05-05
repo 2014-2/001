@@ -395,19 +395,26 @@ public class AudioPlayerService extends Service {
     OnAudioFocusChangeListener afChangeListener = new OnAudioFocusChangeListener() {
         @Override
         public void onAudioFocusChange(int focusChange) {
+            Log.d(LOG_TAG, "AudioFocus focusChange:" + focusChange);
             switch (focusChange) {
                 case AudioManager.AUDIOFOCUS_GAIN:
+                case AudioManager.AUDIOFOCUS_GAIN_TRANSIENT:
+                case AudioManager.AUDIOFOCUS_GAIN_TRANSIENT_EXCLUSIVE:
+                case AudioManager.AUDIOFOCUS_GAIN_TRANSIENT_MAY_DUCK:
                     if (mPlayer != null && !mPlayer.isPlaying()) {
                         mPlayer.start();
+                        if (null != mPlayPauseListener) {
+                            mPlayPauseListener.onPlayPause(true);
+                        }
                     }
                     break;
                 case AudioManager.AUDIOFOCUS_LOSS:
-                    mPlayer.stop();
-                    am.abandonAudioFocus(afChangeListener);
-                    stopSelf();
-                    break;
                 case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT:
+                case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK:
                     mPlayer.pause();
+                    if (null != mPlayPauseListener) {
+                        mPlayPauseListener.onPlayPause(false);
+                    }
                     break;
             }
         }
