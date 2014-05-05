@@ -276,24 +276,32 @@ public class StationActivity extends Activity {
         public void onClick(View v) {
             int id = v.getId();
             int ret;
-            
-            TotalStationIndex tsInfo = mStations.get(mPosition);
-            
-            // 全站仪品牌
-            TotalStationType t = Enum.valueOf(TotalStationType.class, tsInfo.getTotalstationType());
-            TSCommandType tsCmdType = TSCommandType.NoneTS;
-            switch (t) {
-						case Leica: 
-							tsCmdType = TSCommandType.LeicaGEOCOM;
-							break;
-						case LeicaTPS: 
-							tsCmdType = TSCommandType.LeicaGSI16;
-							break;
 
-						default:
-							break;
-						}
-     
+            TotalStationIndex tsInfo = mStations.get(mPosition);
+
+            // 全站仪品牌
+            TSCommandType tsCmdType = TSCommandType.NoneTS;
+            TotalStationType t = null;
+            try {
+                t = Enum.valueOf(TotalStationType.class, tsInfo.getTotalstationType());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            if (t != null) {
+                switch (t) {
+                    case Leica:
+                        tsCmdType = TSCommandType.LeicaGEOCOM;
+                        break;
+                    case LeicaTPS:
+                        tsCmdType = TSCommandType.LeicaGSI16;
+                        break;
+
+                    default:
+                        break;
+                }
+            }
+
             // 全站仪参数数组
             String [] tsParams;
             
