@@ -103,7 +103,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginRight="20dp"
                     android:password="true" 
-                    android:text="123"/>
+                    android:text="123456"/>
             </LinearLayout>
         </RelativeLayout>
     </LinearLayout>

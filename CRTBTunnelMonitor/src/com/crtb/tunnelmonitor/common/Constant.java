@@ -76,7 +76,7 @@ public class Constant {
 	
 	//测试用
 	public static final String testUsername = "cl19h1";
-	public static final String testPassword = "123";
+	public static final String testPassword = "123456";
 	public static final String testPhysical= "04:4b:ff:07:de:23";
 	public static final String testDeskey = "crtb1234";
 	public static final String testPublicKey = "MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAMFUtGx6lOnO5dLxy/1uNqUAzG7mhRKkWFJEZ9QWup+Y1+bgRoz2xdlL1ZqwpFi3AYbFrCa37zK1A5WbCvq37j0CAwEAAQ==";
