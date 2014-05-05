@@ -5,7 +5,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 import org.ksoap2.SoapEnvelope;
 import org.ksoap2.serialization.Marshal;
@@ -19,7 +20,6 @@ import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlSerializer;
 
 import ICT.utils.RSACoder;
-import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
@@ -35,12 +35,13 @@ public final class CrtbWebService {
 	private static final String USRE_AUTH_URL = "http://61.237.239.144/fxkz/basedown";
 	private static final String DATA_UPLOAD_URL = "http://61.237.239.144/fxkz/testdata";
 	
-	private static final int RETRY_COUNT = 10;
+	private static final int RETRY_COUNT = 11;
 	private static final int CONNECITON_TIME_OUT = 10000;
 	
 	private static CrtbWebService sInstance;
 	private Handler mHandler;
-	private static AtomicInteger sTransactionId = new AtomicInteger(0); 
+	private static long sTransactionId = 1L;
+	private final Executor mRpcExecutor;
 	
 	private long mRandomCode;
 	private String mZoneCode;
@@ -48,6 +49,7 @@ public final class CrtbWebService {
 	
 	private CrtbWebService() {
 		mHandler = new Handler(Looper.getMainLooper());
+		mRpcExecutor = Executors.newSingleThreadExecutor();
 	}
 	
 	public static synchronized CrtbWebService getInstance() {
@@ -96,8 +98,9 @@ public final class CrtbWebService {
 				}
 			}
 		}));
-		RpcSendTask task = new RpcSendTask(rpc, USRE_AUTH_URL);
-		task.execute();
+		sendRequest(rpc, USRE_AUTH_URL);
+		//RpcSendTask task = new RpcSendTask(rpc, USRE_AUTH_URL);
+		//task.execute();
 	}
 	/**
 	 * 
@@ -107,8 +110,9 @@ public final class CrtbWebService {
 	 */
 	public void getPublicKey(String account, String macAddress, RpcCallback callback) {
 		GetPublicKeyRpc rpc = new GetPublicKeyRpc(account, macAddress, new RpcCallbackWrapper(callback));
-		RpcSendTask task = new RpcSendTask(rpc, USRE_AUTH_URL);
-		task.execute();
+		sendRequest(rpc, USRE_AUTH_URL);
+		//RpcSendTask task = new RpcSendTask(rpc, USRE_AUTH_URL);
+		//task.execute();
 	}
 	
 	/**
@@ -120,8 +124,9 @@ public final class CrtbWebService {
 	 */
 	public void verifyAppUser(String account, String encnryptPassword, String encnryptPublicKey, RpcCallback callback) {
 		VerifyAppUserRpc rpc = new VerifyAppUserRpc(account, encnryptPassword, Constant.testPhysical, encnryptPublicKey, new RpcCallbackWrapper(callback));
-		RpcSendTask task = new RpcSendTask(rpc, USRE_AUTH_URL);
-		task.execute();
+		sendRequest(rpc, USRE_AUTH_URL);
+		//RpcSendTask task = new RpcSendTask(rpc, USRE_AUTH_URL);
+		//task.execute();
 	}
 	/**
 	 * 
@@ -150,8 +155,9 @@ public final class CrtbWebService {
 				}
 			}
 		}));
-		RpcSendTask task = new RpcSendTask(rpc, USRE_AUTH_URL);
-		task.execute();
+		sendRequest(rpc, USRE_AUTH_URL);
+		//RpcSendTask task = new RpcSendTask(rpc, USRE_AUTH_URL);
+		//task.execute();
 	}
 	
 	/**
@@ -168,8 +174,9 @@ public final class CrtbWebService {
 					WorkZone workZone = workZoneList[0];
 					String zoneCode = workZone.getZoneCode();
 					GetSurveyorsRpc rpc = new GetSurveyorsRpc(zoneCode, getRandomCode(), new RpcCallbackWrapper(callback));
-					RpcSendTask task = new RpcSendTask(rpc, USRE_AUTH_URL);
-					task.execute();
+					sendRequest(rpc, USRE_AUTH_URL);
+					//RpcSendTask task = new RpcSendTask(rpc, USRE_AUTH_URL);
+					//task.execute();
 				} else {
 					if (callback != null) {
 						callback.onFailed("get zone code failed!");
@@ -216,8 +223,9 @@ public final class CrtbWebService {
 				}
 			}
 		}));
-		RpcSendTask task = new RpcSendTask(rpc, USRE_AUTH_URL);
-		task.execute();
+		sendRequest(rpc, USRE_AUTH_URL);
+		//RpcSendTask task = new RpcSendTask(rpc, USRE_AUTH_URL);
+		//task.execute();
 	}
 	
 	/**
@@ -228,8 +236,9 @@ public final class CrtbWebService {
 	 */
 	public void getSectionInfo(String sectionCode, RpcCallback callback) {
 		GetSectInfoByCodeRpc rpc = new GetSectInfoByCodeRpc(sectionCode, getRandomCode(), new RpcCallbackWrapper(callback));
-		RpcSendTask task = new RpcSendTask(rpc, USRE_AUTH_URL);
-		task.execute();
+		sendRequest(rpc, USRE_AUTH_URL);
+		//RpcSendTask task = new RpcSendTask(rpc, USRE_AUTH_URL);
+		//task.execute();
 	}
 	
 	/**
@@ -240,8 +249,9 @@ public final class CrtbWebService {
 	 */
 	public void getPointCodeList(PointStatus status, RpcCallback callback) {
 		GetTestCodesRpc rpc = new GetTestCodesRpc(getSiteCode(), status.value(), getRandomCode(), new RpcCallbackWrapper(callback));
-		RpcSendTask task = new RpcSendTask(rpc, USRE_AUTH_URL);
-		task.execute();
+		sendRequest(rpc, USRE_AUTH_URL);
+		//RpcSendTask task = new RpcSendTask(rpc, USRE_AUTH_URL);
+		//task.execute();
 	}
 	/**
 	 * 获取测量信息
@@ -251,8 +261,9 @@ public final class CrtbWebService {
 	 */
 	public void getPointInfo(String pointCode, RpcCallback callback) {
 		GetMonitorValueInfoRpc rpc = new GetMonitorValueInfoRpc(pointCode, getRandomCode(), new RpcCallbackWrapper(callback));
-		RpcSendTask task = new RpcSendTask(rpc, USRE_AUTH_URL);
-		task.execute();
+		sendRequest(rpc, USRE_AUTH_URL);
+		//RpcSendTask task = new RpcSendTask(rpc, USRE_AUTH_URL);
+		//task.execute();
 	}
 	
 	/**
@@ -264,8 +275,9 @@ public final class CrtbWebService {
 	public void uploadSection(SectionUploadParamter parameter, RpcCallback callback) {
 		long randomCode = getRandomCode();
 		UploadSectionPointInfoRpc rpc = new UploadSectionPointInfoRpc(getZoneCode(), getSiteCode(), randomCode, parameter, new RpcCallbackWrapper(callback));
-		RpcSendTask task = new RpcSendTask(rpc, DATA_UPLOAD_URL);
-		task.execute();
+		sendRequest(rpc, DATA_UPLOAD_URL);
+		//RpcSendTask task = new RpcSendTask(rpc, DATA_UPLOAD_URL);
+		//task.execute();
 	}
 	
 	/**
@@ -277,8 +289,9 @@ public final class CrtbWebService {
 	public void updateSection(Object section, RpcCallback callback) {
 		long randomCode = getRandomCode();
 		UploadRemoveSectionTestDataRpc rpc = new UploadRemoveSectionTestDataRpc(getZoneCode(), getSiteCode(), randomCode, new RpcCallbackWrapper(callback));
-		RpcSendTask task = new RpcSendTask(rpc, DATA_UPLOAD_URL);
-		task.execute();
+		sendRequest(rpc, DATA_UPLOAD_URL);
+		//RpcSendTask task = new RpcSendTask(rpc, DATA_UPLOAD_URL);
+		//task.execute();
 		
 	}
 	/**
@@ -290,8 +303,9 @@ public final class CrtbWebService {
 	public void uploadTestResult(PointUploadParameter parameter, RpcCallback callback) {
 		final long randomCode = getRandomCode();
 		UploadTestResultDataRpc rpc = new UploadTestResultDataRpc(randomCode, parameter, new RpcCallbackWrapper(callback));
-		RpcSendTask task = new RpcSendTask(rpc, DATA_UPLOAD_URL);
-		task.execute();
+		sendRequest(rpc, DATA_UPLOAD_URL);
+		//RpcSendTask task = new RpcSendTask(rpc, DATA_UPLOAD_URL);
+		//task.execute();
 	}
 	
 	/**
@@ -302,8 +316,9 @@ public final class CrtbWebService {
 	public void uploadWarningData(WarningUploadParameter parameter, RpcCallback callback) {
 		long randomCode = getRandomCode();
 		UploadWarningDataRpc rpc = new UploadWarningDataRpc(randomCode, parameter, new RpcCallbackWrapper(callback));
-		RpcSendTask task = new RpcSendTask(rpc, DATA_UPLOAD_URL);
-		task.execute();
+		sendRequest(rpc, DATA_UPLOAD_URL);
+		//RpcSendTask task = new RpcSendTask(rpc, DATA_UPLOAD_URL);
+		///task.execute();
 	}
 	
 	/**
@@ -313,52 +328,93 @@ public final class CrtbWebService {
 	 */
 	public void confirmSubmitData(RpcCallback callback) {
 		ConfirmSubmitDataRpc rpc = new ConfirmSubmitDataRpc(getRandomCode(), new RpcCallbackWrapper(callback));
-		RpcSendTask task = new RpcSendTask(rpc, DATA_UPLOAD_URL);
-		task.execute();
+		sendRequest(rpc, DATA_UPLOAD_URL);
+		//RpcSendTask task = new RpcSendTask(rpc, DATA_UPLOAD_URL);
+		//task.execute();
 	}
 	
-	private class RpcSendTask extends AsyncTask<Void, Void, Void> {
-		private AbstractRpc mRpc;
-		private String mUrl;
-		
-		RpcSendTask(AbstractRpc rpc, String url) {
-			mRpc = rpc;
-			mUrl = url;
-		}
-		
-		@Override
-		protected Void doInBackground(Void... params) {
-			final int transactionId = sTransactionId.incrementAndGet();
-			SoapObject rpcMessage = mRpc.getRpcMessage(NAMESPACE);
-			SoapSerializationEnvelope soapEnvelope = new SoapSerializationEnvelope(
-					SoapEnvelope.VER11);
-			soapEnvelope.bodyOut = rpcMessage;
-			// soapEnvelope.dotNet = true;
-			soapEnvelope.encodingStyle = "UTF-8";
-			// Register Marshaler
-			// For date marshaling
-			Marshal dateMarshal = new MarshalDate();
-			dateMarshal.register(soapEnvelope);
-			new MarshalFloat().register(soapEnvelope);
-			HttpTransportSE localHttpTransportSE = new HttpTransportSE(mUrl, CONNECITON_TIME_OUT);
-			Object response = null;
-			for (int i = 0; i < RETRY_COUNT; i++) {
-				Log.d(TAG, "sending request(" + transactionId + "): " + rpcMessage.toString());
-				try {
-					localHttpTransportSE.call(NAMESPACE + rpcMessage.getName(), soapEnvelope);
-				} catch (Exception e) {
-					e.printStackTrace();
+	private void sendRequest(final AbstractRpc rpc, final String url) {
+		mRpcExecutor.execute(new Runnable() {
+			@Override
+			public void run() {
+				final long transactionId = sTransactionId++;
+				SoapObject rpcMessage = rpc.getRpcMessage(NAMESPACE);
+				SoapSerializationEnvelope soapEnvelope = new SoapSerializationEnvelope(
+						SoapEnvelope.VER11);
+				soapEnvelope.bodyOut = rpcMessage;
+				// soapEnvelope.dotNet = true;
+				soapEnvelope.encodingStyle = "UTF-8";
+				// Register Marshaler
+				// For date marshaling
+				Marshal dateMarshal = new MarshalDate();
+				dateMarshal.register(soapEnvelope);
+				new MarshalFloat().register(soapEnvelope);
+				HttpTransportSE localHttpTransportSE = new HttpTransportSE(url, CONNECITON_TIME_OUT);
+				Object response = null;
+				Log.d(TAG, "sending request(" + transactionId +"): " + rpcMessage.toString());
+				for (int i = 0; i < RETRY_COUNT; i++) {
+					try {
+						localHttpTransportSE.call(NAMESPACE + rpcMessage.getName(), soapEnvelope);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+					response = soapEnvelope.bodyIn;
+					if (i == 0) {
+						Log.d(TAG, "received response("+ transactionId +"): " + response);
+					} else {
+						Log.d(TAG, "received response("+ transactionId +") - retry:" + i + ": "+ response);
+					}
+					if (response != null) {
+						break;
+					}
 				}
-				response = soapEnvelope.bodyIn;
-				Log.d(TAG, "received response("+ transactionId +"): " + response);
-				if (response != null) {
-					break;
-				}
+				rpc.onResponse(response);
 			}
-			mRpc.onResponse(response);
-			return null;
-		}
+		});
 	}
+	
+//	private class RpcSendTask extends AsyncTask<Void, Void, Void> {
+//		private AbstractRpc mRpc;
+//		private String mUrl;
+//		
+//		RpcSendTask(AbstractRpc rpc, String url) {
+//			mRpc = rpc;
+//			mUrl = url;
+//		}
+//		
+//		@Override
+//		protected Void doInBackground(Void... params) {
+//			final int transactionId = sTransactionId.incrementAndGet();
+//			SoapObject rpcMessage = mRpc.getRpcMessage(NAMESPACE);
+//			SoapSerializationEnvelope soapEnvelope = new SoapSerializationEnvelope(
+//					SoapEnvelope.VER11);
+//			soapEnvelope.bodyOut = rpcMessage;
+//			// soapEnvelope.dotNet = true;
+//			soapEnvelope.encodingStyle = "UTF-8";
+//			// Register Marshaler
+//			// For date marshaling
+//			Marshal dateMarshal = new MarshalDate();
+//			dateMarshal.register(soapEnvelope);
+//			new MarshalFloat().register(soapEnvelope);
+//			HttpTransportSE localHttpTransportSE = new HttpTransportSE(mUrl, CONNECITON_TIME_OUT);
+//			Object response = null;
+//			for (int i = 0; i < RETRY_COUNT; i++) {
+//				Log.d(TAG, "sending request(" + transactionId + "): " + rpcMessage.toString());
+//				try {
+//					localHttpTransportSE.call(NAMESPACE + rpcMessage.getName(), soapEnvelope);
+//				} catch (Exception e) {
+//					e.printStackTrace();
+//				}
+//				response = soapEnvelope.bodyIn;
+//				Log.d(TAG, "received response("+ transactionId +"): " + response);
+//				if (response != null) {
+//					break;
+//				}
+//			}
+//			mRpc.onResponse(response);
+//			return null;
+//		}
+//	}
 
 	private class RpcCallbackWrapper implements RpcCallback {
 		private RpcCallback mCallback;
