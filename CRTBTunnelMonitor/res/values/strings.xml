@@ -97,8 +97,7 @@
     <string name="data_upload_alert_success">上传预警成功!</string>
     <string name="data_upload_alert_fail">上传预警信息失败,连接超时!</string>
     
-    <string name="server_login">登录中</string>
-    <string name="server_please_wait">请稍候…</string>
+    <string name="server_please_wait">登录中,请稍候…</string>
     <string name="server_login_success">登录成功</string>
     <string name="server_login_failed">登录失败</string>
 

@@ -38,8 +38,7 @@ public class ServerSettingActivity extends WorkFlowActivity {
             public void onClick(View v) {
                 login(mServerIp.getText().toString(), mUserName.getText().toString(), mPassword.getText().toString());
                 if (mProgressDialog == null) {
-                    mProgressDialog = ProgressDialog.show(ServerSettingActivity.this,
-                            getString(R.string.server_login),
+                    mProgressDialog = ProgressDialog.show(ServerSettingActivity.this, null,
                             getString(R.string.server_please_wait),
                             true, false);
                 }
