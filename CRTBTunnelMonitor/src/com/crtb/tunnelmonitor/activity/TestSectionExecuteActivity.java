@@ -461,21 +461,30 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 
 						TunnelSettlementTotalDataDao dao 	= TunnelSettlementTotalDataDao.defaultDao() ;
 						
-						// 存在的测量点信息
-						TunnelSettlementTotalData old = dao.queryTunnelTotalData(rawSheetBean.getID(),tunnelSection.getID(),info.type);
-						
-						if(old != null){
-							obj.setMEASNo(old.getMEASNo() + 1);
-						} else {
-							obj.setMEASNo(1);
-						}
-						
 						obj.setCoordinate(info.x + "," + info.y + "," + info.z);
 						obj.setSurveyTime(DateUtils.toDate(info.time, DateUtils.DATE_TIME_FORMAT));
 						obj.setDataStatus(0);
 						
-						// 插入
-						if(dao.insert(obj) == TunnelSettlementTotalDataDao.DB_EXECUTE_SUCCESS){
+						int err = TunnelSettlementTotalDataDao.DB_EXECUTE_FAILED;
+						// 存在的测量点信息
+						TunnelSettlementTotalData old = dao.queryTunnelTotalData(rawSheetBean.getID(),tunnelSection.getID(),info.type);
+						if (old != null) {
+						    //UPDATE
+						    obj.setMEASNo(old.getMEASNo());
+						    err = dao.update(obj);
+						} else {
+						    //INSERT NEW
+						    List<TunnelSettlementTotalData> l = dao.queryAllOrderByMEASNoDesc();
+						    if(l != null && l.size() > 0) {
+						        TunnelSettlementTotalData last = l.get(0);
+						        obj.setMEASNo(last.getMEASNo() + 1);
+						    } else {
+						        obj.setMEASNo(1);
+						    }
+						    err = dao.insert(obj);
+						}
+						
+						if(err == TunnelSettlementTotalDataDao.DB_EXECUTE_SUCCESS){
 							
 							// 保存测量数据
 							tempTunnelData.add(obj);
@@ -518,18 +527,29 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 						obj.setSurveyorID(SurveyerInformationDao.defaultDao().getRowIdByCertificateID(
 						        rawSheetBean.getCertificateID()));// 测量人员id
 
-						if(old != null){
-							obj.setMEASNo(old.getMEASNo() + 1);
-						} else {
-							obj.setMEASNo(1);
-						}
-						
 						obj.setCoordinate(info.x + "," + info.y + "," + info.z);
 						obj.setSurveyTime(DateUtils.toDate(info.time, DateUtils.DATE_TIME_FORMAT));
 						obj.setDataStatus(0);
+
+						int err = TunnelSettlementTotalDataDao.DB_EXECUTE_FAILED;
+
+                        if (old != null) {
+                            //UPDATE
+                            obj.setMEASNo(old.getMEASNo());
+                            err = dao.update(obj);
+                        } else {
+                            //INSERT NEW
+                            List<SubsidenceTotalData> l = dao.queryAllOrderByMEASNoDesc();
+                            if (l != null && l.size() > 0) {
+                                SubsidenceTotalData last = l.get(0);
+                                obj.setMEASNo(last.getMEASNo() + 1);
+                            } else {
+                                obj.setMEASNo(1);
+                            }
+                            err = dao.insert(obj);
+                        }
 						
-						// 插入
-						if(dao.insert(obj) == TunnelSettlementTotalDataDao.DB_EXECUTE_SUCCESS){
+						if(err == TunnelSettlementTotalDataDao.DB_EXECUTE_SUCCESS){
 							
 							// 保存临时数据
 							tempSubsidenceData.add(obj);
