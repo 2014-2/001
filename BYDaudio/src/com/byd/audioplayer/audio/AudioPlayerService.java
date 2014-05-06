@@ -306,7 +306,7 @@ public class AudioPlayerService extends Service {
             case Constants.PlayerCommand.PLAY:
                 mSongPosition = intent.getIntExtra(Constants.MUSIC_SONG_POSITION, -1);
                 Song song = AudioPlayerManager.getInstance().getSongAtPosition(mSongPosition);
-                if (!song.equals(mPlayingSong)) {
+                if (song != null && !song.equals(mPlayingSong)) {
                     if (isPlaying()) {
                         mPlayer.stop();
                     }
@@ -399,7 +399,6 @@ public class AudioPlayerService extends Service {
             switch (focusChange) {
                 case AudioManager.AUDIOFOCUS_GAIN:
                 case AudioManager.AUDIOFOCUS_GAIN_TRANSIENT:
-                case AudioManager.AUDIOFOCUS_GAIN_TRANSIENT_EXCLUSIVE:
                 case AudioManager.AUDIOFOCUS_GAIN_TRANSIENT_MAY_DUCK:
                     if (mPlayer != null && !mPlayer.isPlaying()) {
                         mPlayer.start();
