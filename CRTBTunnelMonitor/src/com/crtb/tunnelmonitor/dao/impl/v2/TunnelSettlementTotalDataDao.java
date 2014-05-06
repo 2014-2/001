@@ -32,7 +32,7 @@ public class TunnelSettlementTotalDataDao extends AbstractDao<TunnelSettlementTo
 		return _instance ;
 	}
 	
-	public List<TunnelSettlementTotalData> queryAllRawSheetIndex() {
+	public List<TunnelSettlementTotalData> queryAllOrderByMEASNoDesc() {
 		
 		final IAccessDatabase mDatabase = getCurrentDb();
 		
@@ -40,7 +40,7 @@ public class TunnelSettlementTotalDataDao extends AbstractDao<TunnelSettlementTo
 			return null ;
 		}
 		
-		String sql = "select * from TunnelSettlementTotalData";
+		String sql = "select * from TunnelSettlementTotalData ORDER BY MEASNo DESC";
 		
 		return mDatabase.queryObjects(sql, TunnelSettlementTotalData.class);
 	}

@@ -24,7 +24,7 @@ public class SubsidenceTotalDataDao extends AbstractDao<SubsidenceTotalData> {
 		return _instance ;
 	}
 	
-	public List<SubsidenceTotalData> queryAllSection(){
+	public List<SubsidenceTotalData> queryAllOrderByMEASNoDesc(){
 		
 		final IAccessDatabase mDatabase = getCurrentDb();
 		
@@ -32,7 +32,7 @@ public class SubsidenceTotalDataDao extends AbstractDao<SubsidenceTotalData> {
 			return null ;
 		}
 		
-		String sql = "select * from SubsidenceTotalData" ;
+		String sql = "select * from SubsidenceTotalData ORDER BY MEASNo DESC" ;
 		
 		return mDatabase.queryObjects(sql, SubsidenceTotalData.class) ;
 	}
