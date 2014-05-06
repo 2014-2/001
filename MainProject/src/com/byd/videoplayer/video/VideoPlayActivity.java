@@ -76,7 +76,7 @@ public class VideoPlayActivity extends Activity {
 	private TextView playedTextView = null;
 	private GestureDetector mGestureDetector = null;
 
-	private ImageButton btnPlayPause = null;
+	public static ImageButton btnPlayPause = null;
 	/**播放条*/
 	private PopupWindow controlerWindow = null;
 	private PopupWindow titleWindow = null;
@@ -88,7 +88,7 @@ public class VideoPlayActivity extends Activity {
 	private final static int TIME = 5000;
 
 	private boolean isControllerShow = true;
-	private boolean isPaused = false;
+	public static boolean isPaused = false;
 	private boolean isFullScreen = false;
 	private String mVideoUrl;
 	private String mediaName;

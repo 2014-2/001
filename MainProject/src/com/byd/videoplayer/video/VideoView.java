@@ -18,6 +18,8 @@ package com.byd.videoplayer.video;
 
 import java.io.IOException;
 
+import com.byd.videoplayer.R;
+
 import android.content.Context;
 import android.content.Intent;
 import android.media.AudioManager;
@@ -594,6 +596,8 @@ public class VideoView extends SurfaceView implements MediaPlayerControl {
 		   audioManager.requestAudioFocus(afChangeListener, 
 		            AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
 			mMediaPlayer.start();
+			VideoPlayActivity.btnPlayPause.setImageResource(R.drawable.button_pause);
+            VideoPlayActivity.isPaused = false;
 			mStartWhenPrepared = false;
 		} else {
 			mStartWhenPrepared = true;
@@ -604,6 +608,8 @@ public class VideoView extends SurfaceView implements MediaPlayerControl {
 		if (mMediaPlayer != null && mIsPrepared) {
 			if (mMediaPlayer.isPlaying()) {
 				mMediaPlayer.pause();
+                VideoPlayActivity.btnPlayPause.setImageResource(R.drawable.button_play);
+                VideoPlayActivity.isPaused = true;
 				audioManager.abandonAudioFocus(afChangeListener);
 			}
 		}
