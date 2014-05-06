@@ -109,6 +109,8 @@
     <string name="alert_handle_method">处理方式：%s</string>
     
     <!-- 全站仪模块 -->
+    <string name="edit">编辑</string>
+    <string name="delete">删除</string>
     <string name="bluetooth_connect">蓝牙连接</string>
     <string name="com_connect">串口连接</string>
     <string name="disconnect">断开连接</string>

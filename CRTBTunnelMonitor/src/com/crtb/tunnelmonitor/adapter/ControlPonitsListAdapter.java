@@ -23,32 +23,32 @@ public class ControlPonitsListAdapter extends BaseAdapter {
     }
     @Override
     public int getCount() {
-        return listinfos.size();
+        return listinfos == null ? 0 : listinfos.size();
     }
 
     @Override
     public Object getItem(int arg0) {
-        return listinfos.get(arg0);
+        return listinfos == null ? null : listinfos.get(arg0);
     }
 
     @Override
     public long getItemId(int position) {
         return position;
     }
-    
-    public void remove(TotalStationIndex bean){
-    	
-//    	for(TotalStationIndex info : listinfos){
-//    		
-//    		if(info.getId() == bean.getId()){
-//    			listinfos.remove(info);
-//    			break ;
-//    		}
-//    	}
-//    	
-    	notifyDataSetChanged() ;
+
+    public void remove(TotalStationIndex bean) {
+
+        for (TotalStationIndex info : listinfos) {
+
+            if (info.getID() == bean.getID()) {
+                listinfos.remove(info);
+                break;
+            }
+        }
+
+        notifyDataSetChanged();
     }
-    
+
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         LayoutInflater lay;
@@ -57,15 +57,15 @@ public class ControlPonitsListAdapter extends BaseAdapter {
             convertView=lay.inflate(R.layout.listinfos_pic, null);
         }
         TextView name=(TextView) convertView.findViewById(R.id.t1);
-        ImageView start=(ImageView) convertView.findViewById(R.id.t2);
+//        ImageView start=(ImageView) convertView.findViewById(R.id.t2);
         name.setTextColor(Color.BLACK);
         //start.setTextColor(Color.BLACK);
         name.setText(listinfos.get(position).getName());
-        if (listinfos.get(position).isChecked()) {
-            start.setImageResource(R.drawable.yes);
-        } else {
-            start.setImageResource(R.drawable.no);
-        }
+//        if (listinfos.get(position).isChecked()) {
+//            start.setImageResource(R.drawable.yes);
+//        } else {
+//            start.setImageResource(R.drawable.no);
+//        }
         return convertView;
     }
 }

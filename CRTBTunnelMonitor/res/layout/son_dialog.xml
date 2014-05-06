@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/huise"
+    android:baselineAligned="false"
     android:orientation="horizontal" >
 
     <RelativeLayout
@@ -37,6 +38,7 @@
         </RelativeLayout>
     </RelativeLayout>
 
+    <!--
     <RelativeLayout
         android:id="@+id/cr2"
         android:layout_width="0dp"
@@ -100,5 +102,5 @@
                 android:textSize="20sp" />
         </RelativeLayout>
     </RelativeLayout>
-
+    -->
 </LinearLayout>

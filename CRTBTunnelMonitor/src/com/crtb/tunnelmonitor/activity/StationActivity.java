@@ -46,7 +46,7 @@ public class StationActivity extends Activity {
      */
     private ListView listview;
     private Intent intent;
-    public static ControlPonitsListAdapter adapter;
+    public ControlPonitsListAdapter adapter;
     int iListPos = -1;
     private OnClickListener itemsOnClick;
     private View vie;
@@ -81,30 +81,30 @@ public class StationActivity extends Activity {
                 return true;
             }
         });
-        listview.setOnItemClickListener(new OnItemClickListener() {
-
-            @Override
-            public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
-                    long arg3) {
-                TotalStationIndex item = mStations.get(arg2);
-                boolean bCheck = item.isChecked() ;
-                item.setChecked(!bCheck);
-                mStations.set(arg2, item);
-                
-                // 更新数据库
-                TotalStationInfoDao.defaultDao().update(item);
-                
-//                if (bCheck) {
-//                    for (int i = 0; i < mStations.size(); i++) {
-//                        if (i != arg2) {
-//                            mStations.get(i).setChecked(false);
-//                        }
-//                    }
-//                }
-                
-                adapter.notifyDataSetChanged();
-            }
-        });
+//        listview.setOnItemClickListener(new OnItemClickListener() {
+//
+//            @Override
+//            public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
+//                    long arg3) {
+//                TotalStationIndex item = mStations.get(arg2);
+//                boolean bCheck = item.isChecked() ;
+//                item.setChecked(!bCheck);
+//                mStations.set(arg2, item);
+//                
+//                // 更新数据库
+//                TotalStationInfoDao.defaultDao().update(item);
+//                
+////                if (bCheck) {
+////                    for (int i = 0; i < mStations.size(); i++) {
+////                        if (i != arg2) {
+////                            mStations.get(i).setChecked(false);
+////                        }
+////                    }
+////                }
+//                
+//                adapter.notifyDataSetChanged();
+//            }
+//        });
     }
 
     public boolean Connect() {
@@ -241,10 +241,10 @@ public class StationActivity extends Activity {
     }
 
     class ConnectPopupWindow extends PopupWindow implements OnClickListener {
+        private TextView edit;
+        private TextView delete;
         private TextView bluetooth;
-
         private TextView com;
-
         private TextView disconnect;
 
         private Context mContext;
@@ -253,12 +253,19 @@ public class StationActivity extends Activity {
 
         private int mPosition;
 
+        private AlertDialog dlg;
+
         public ConnectPopupWindow(Context context, int position) {
             mContext = context;
+            dlg = new AlertDialog.Builder(mContext).create();
             mPosition = position;
             LayoutInflater inflater = (LayoutInflater)mContext
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             mConnectView = inflater.inflate(R.layout.layout_total_station_popup, null);
+            edit = (TextView)mConnectView.findViewById(R.id.edit);
+            edit.setOnClickListener(this);
+            delete = (TextView)mConnectView.findViewById(R.id.delete);
+            delete.setOnClickListener(this);
             bluetooth = (TextView)mConnectView.findViewById(R.id.bluetooth_connect);
             bluetooth.setOnClickListener(this);
             com = (TextView)mConnectView.findViewById(R.id.com_connect);
@@ -306,8 +313,19 @@ public class StationActivity extends Activity {
             String [] tsParams;
             
             switch (id) {
+                case R.id.edit://编辑
+                  Intent intent = new Intent(StationActivity.this, TotalStationNewBluetoothActivity.class);
+                  Bundle mBundle = new Bundle();
+                  mBundle.putSerializable(Constant.Select_TotalStationRowClickItemsName_Data, tsInfo);
+                  mBundle.putBoolean("edit", true);
+                  intent.putExtras(mBundle);
+                  startActivityForResult(intent, 0);
+                    break;
+                case R.id.delete://删除
+                    showExitGameAlert();
+                    break;
                 case R.id.bluetooth_connect: // 蓝牙连接
-                	tsParams = new String[] {tsInfo.getName(), tsInfo.getInfo()};
+                    tsParams = new String[] {tsInfo.getName(), tsInfo.getInfo()};
                     ret = connect(TSConnectType.Bluetooth, tsCmdType, tsParams);
                     if (ret == 1) {
                         // mStations.get(position)
@@ -315,7 +333,7 @@ public class StationActivity extends Activity {
                     }
                     break;
                 case R.id.com_connect:// 串口连接
-                	tsParams = new String[] {tsInfo.getName(), String.valueOf( tsInfo.getBaudRate())};
+                    tsParams = new String[] {tsInfo.getName(), String.valueOf( tsInfo.getBaudRate())};
                     ret = connect(TSConnectType.RS232, tsCmdType, tsParams);
                     if (ret == 1) {
                         // mStations.get(position)
@@ -335,120 +353,8 @@ public class StationActivity extends Activity {
                 this.dismiss();
             }
         }
-    }
-
-    class SonPopupWindow extends PopupWindow {
-        private RelativeLayout xinjian;
-        public RelativeLayout bianji;
-        public RelativeLayout delete;
-        private View mMenuView;
-        private Intent intent;
-        public Context c;
-        AlertDialog dlg = null;
-
-        public SonPopupWindow(Activity context, OnClickListener itemsOnClick,
-                final int num, final int currIndex) {
-            super(context);
-            this.c = context;
-            dlg = new AlertDialog.Builder(c).create();
-            LayoutInflater inflater = (LayoutInflater) context
-                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            mMenuView = inflater.inflate(R.layout.son_dialog, null);
-            xinjian = (RelativeLayout) mMenuView.findViewById(R.id.cr1);
-            bianji = (RelativeLayout) mMenuView.findViewById(R.id.cr2);
-            delete = (RelativeLayout) mMenuView.findViewById(R.id.cr3);
-
-            xinjian.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(c, TotalStationNewBluetoothActivity.class);
-                    Bundle mBundle = new Bundle();
-                    mBundle.putParcelable(
-                            Constant.Select_TotalStationRowClickItemsName_Data,
-                            null);
-
-                    intent.putExtras(mBundle);
-                    ((Activity) c).startActivityForResult(intent, 0);
-                }
-            });
-            bianji.setOnClickListener(new OnClickListener() {
-
-                // @SuppressLint("ShowToast")
-                @Override
-                public void onClick(View v) {
-                    List<TotalStationIndex> tmpList = ((StationActivity) c).mStations;
-                    TotalStationIndex tmp = null;
-                    if (tmpList == null) {
-                        Toast.makeText(c, "请选择需要编辑的全站仪", 3000)
-                        .show();
-                        return;
-                    } else {
-                        for (int i = 0; i < tmpList.size(); i++) {
-                            if (tmpList.get(i).isChecked()) {
-                                tmp = tmpList.get(i);
-                                break;
-                            }
-                        }
-                    }
-                    if (tmp == null) {
-                        Toast.makeText(c, "请选择需要编辑的全站仪", 3000)
-                        .show();
-                        return;
-                    }
-                    Intent intent = new Intent(c, TotalStationNewBluetoothActivity.class);
-                    Bundle mBundle = new Bundle();
-                    mBundle.putSerializable(Constant.Select_TotalStationRowClickItemsName_Data, tmp);
-                    mBundle.putBoolean("edit", true);
-                    intent.putExtras(mBundle);
-                    ((Activity) c).startActivityForResult(intent, 0);
-                }
-            });
-            delete.setOnClickListener(new OnClickListener() {
-
-                @Override
-                public void onClick(View v) {
-                	
-                	dismiss();
-                	 
-                	boolean finded = false;
-                	
-                	// 删除当前选中的全站仪
-					List<TotalStationIndex> list = TotalStationInfoDao
-							.defaultDao().queryAllTotalStations();
-					
-					if (list == null) {
-						return;
-					}
-                	
-                	for (TotalStationIndex info : list) {
-						if (info.isChecked()) {
-							finded = true;
-							break;
-						}
-					}
-
-					if (!finded) {
-						showDialog("请先选择要删除的全站仪");
-						return;
-					}
-					
-                    showExitGameAlert();
-                }
-            });
-            setContentView(mMenuView);
-            setWidth(LayoutParams.FILL_PARENT);
-            setHeight(LayoutParams.WRAP_CONTENT);
-            // 设置SelectPicPopupWindow弹出窗体可点击
-            setFocusable(true);
-            // 实例化一个ColorDrawable颜色为半透明
-            ColorDrawable dw = new ColorDrawable(0xFF000000);
-            // 设置SelectPicPopupWindow弹出窗体的背景
-            setBackgroundDrawable(dw);
-            setOutsideTouchable(true);
-        };
-
+        
         private void showExitGameAlert() {
-           
             dlg.show();
             Window window = dlg.getWindow();
             // *** 主要就是在这里实现这种效果的.
@@ -466,37 +372,19 @@ public class StationActivity extends Activity {
             public void onClick(View v) {
                 switch (v.getId()) {
                     case R.id.ok:
-					// 测试
 
-					boolean finded = false;
-					// 删除当前选中的全站仪
-					List<TotalStationIndex> list = TotalStationInfoDao
-							.defaultDao().queryAllTotalStations();
+                        TotalStationIndex tsInfo =  (TotalStationIndex) adapter.getItem(mPosition);
+                        if (tsInfo != null) {
+                            if (!tsInfo.isUsed()) {
+                                TotalStationInfoDao.defaultDao().delete(tsInfo);
+                                adapter.remove(tsInfo);
+                                showDialog("操作成功");
+                            } else {
+                                showDialog("当前全站仪正在使用中，无法删除");
+                            }
+                        }
 
-					if (list == null) {
-						dlg.dismiss() ;
-						return;
-					}
-
-					for (TotalStationIndex info : list) {
-
-						if (info.isChecked()) {
-
-							if (!info.isUsed()) {
-								TotalStationInfoDao.defaultDao().delete(info);
-								StationActivity.adapter.remove(info);
-								
-								showDialog("操作成功");
-							} else {
-								showDialog("当前全站仪正在使用中，无法删除");
-							}
-
-							break;
-						}
-					}
-					
-					dlg.dismiss() ;
-                    	
+                        dlg.dismiss();
 
                         //                        AppCRTBApplication app = (AppCRTBApplication) SonPopupWindow.this.c
                         //                        .getApplicationContext();
@@ -540,6 +428,119 @@ public class StationActivity extends Activity {
 
             }
         };
+    }
+
+    class SonPopupWindow extends PopupWindow {
+        private RelativeLayout xinjian;
+//        public RelativeLayout bianji;
+//        public RelativeLayout delete;
+        private View mMenuView;
+        private Intent intent;
+        public Context c;
+        AlertDialog dlg = null;
+
+        public SonPopupWindow(Activity context, OnClickListener itemsOnClick,
+                final int num, final int currIndex) {
+            super(context);
+            this.c = context;
+            dlg = new AlertDialog.Builder(c).create();
+            LayoutInflater inflater = (LayoutInflater) context
+                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            mMenuView = inflater.inflate(R.layout.son_dialog, null);
+            xinjian = (RelativeLayout) mMenuView.findViewById(R.id.cr1);
+//            bianji = (RelativeLayout) mMenuView.findViewById(R.id.cr2);
+//            delete = (RelativeLayout) mMenuView.findViewById(R.id.cr3);
+
+            xinjian.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(c, TotalStationNewBluetoothActivity.class);
+                    Bundle mBundle = new Bundle();
+                    mBundle.putParcelable(
+                            Constant.Select_TotalStationRowClickItemsName_Data,
+                            null);
+
+                    intent.putExtras(mBundle);
+                    ((Activity) c).startActivityForResult(intent, 0);
+                }
+            });
+//            bianji.setOnClickListener(new OnClickListener() {
+//
+//                // @SuppressLint("ShowToast")
+//                @Override
+//                public void onClick(View v) {
+//                    List<TotalStationIndex> tmpList = ((StationActivity) c).mStations;
+//                    TotalStationIndex tmp = null;
+//                    if (tmpList == null) {
+//                        Toast.makeText(c, "请选择需要编辑的全站仪", 3000)
+//                        .show();
+//                        return;
+//                    } else {
+//                        for (int i = 0; i < tmpList.size(); i++) {
+//                            if (tmpList.get(i).isChecked()) {
+//                                tmp = tmpList.get(i);
+//                                break;
+//                            }
+//                        }
+//                    }
+//                    if (tmp == null) {
+//                        Toast.makeText(c, "请选择需要编辑的全站仪", 3000)
+//                        .show();
+//                        return;
+//                    }
+//                    Intent intent = new Intent(c, TotalStationNewBluetoothActivity.class);
+//                    Bundle mBundle = new Bundle();
+//                    mBundle.putSerializable(Constant.Select_TotalStationRowClickItemsName_Data, tmp);
+//                    mBundle.putBoolean("edit", true);
+//                    intent.putExtras(mBundle);
+//                    ((Activity) c).startActivityForResult(intent, 0);
+//                }
+//            });
+//            delete.setOnClickListener(new OnClickListener() {
+//
+//                @Override
+//                public void onClick(View v) {
+//                	
+//                	dismiss();
+//                	 
+//                	boolean finded = false;
+//                	
+//                	// 删除当前选中的全站仪
+//					List<TotalStationIndex> list = TotalStationInfoDao
+//							.defaultDao().queryAllTotalStations();
+//					
+//					if (list == null) {
+//						return;
+//					}
+//                	
+//                	for (TotalStationIndex info : list) {
+//						if (info.isChecked()) {
+//							finded = true;
+//							break;
+//						}
+//					}
+//
+//					if (!finded) {
+//						showDialog("请先选择要删除的全站仪");
+//						return;
+//					}
+//					
+//                    showExitGameAlert();
+//                }
+//            });
+            setContentView(mMenuView);
+            setWidth(LayoutParams.FILL_PARENT);
+            setHeight(LayoutParams.WRAP_CONTENT);
+            // 设置SelectPicPopupWindow弹出窗体可点击
+            setFocusable(true);
+            // 实例化一个ColorDrawable颜色为半透明
+            ColorDrawable dw = new ColorDrawable(0xFF000000);
+            // 设置SelectPicPopupWindow弹出窗体的背景
+            setBackgroundDrawable(dw);
+            setOutsideTouchable(true);
+        };
+
+
     }
 
     private void showDialog(String text) {
