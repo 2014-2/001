@@ -1,16 +1,19 @@
 package com.crtb.tunnelmonitor.activity;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.crtb.tunnelmonitor.WorkFlowActivity;
+import com.crtb.tunnelmonitor.network.CrtbWebService;
+import com.crtb.tunnelmonitor.network.RpcCallback;
 import com.crtb.tunnelmonitor.utils.CrtbAppConfig;
 
 public class ServerSettingActivity extends WorkFlowActivity {
+	private static final String LOG_TAG = "ServerSettingActivity";
 	private EditText mServerIp;
     private EditText mUserName;
     private EditText mPassword;
@@ -29,11 +32,7 @@ public class ServerSettingActivity extends WorkFlowActivity {
 		mOk.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				CrtbAppConfig appConfig = CrtbAppConfig.getInstance();
-				appConfig.setServerAddress(mServerIp.getText().toString());
-				appConfig.setUserName(mUserName.getText().toString());
-				appConfig.setPassword(mPassword.getText().toString());
-				Toast.makeText(ServerSettingActivity.this, "设置成功", Toast.LENGTH_SHORT).show();
+				login(mServerIp.getText().toString(), mUserName.getText().toString(), mPassword.getText().toString());
 				finish();
 			}
 		});
@@ -52,4 +51,26 @@ public class ServerSettingActivity extends WorkFlowActivity {
 		title.setText(R.string.server_setting);
 	}
 	
+	private void login(final String serverAddress, final String userName, final String password) {
+		CrtbWebService.getInstance().login(userName, password, new RpcCallback() {
+
+			@Override
+			public void onSuccess(Object[] data) {
+				Log.d(LOG_TAG, "login success.");
+				storeSettings(serverAddress, userName, password);
+			}
+
+			@Override
+			public void onFailed(String reason) {
+				Log.d(LOG_TAG, "login failed: " + reason);
+			}
+		});
+	}
+	
+	private void storeSettings(String serverAddress, String userName, String password) {
+		CrtbAppConfig appConfig = CrtbAppConfig.getInstance();
+		appConfig.setServerAddress(serverAddress);
+		appConfig.setUserName(userName);
+		appConfig.setPassword(password);
+	}
 }
