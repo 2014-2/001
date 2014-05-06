@@ -62,7 +62,7 @@
     <string name="ok">确定</string>
     <string name="control_point_manage">控制点管理</string>
     <string name="main_title">隧道进口</string>
-    <string name="server_setting">服务器参数设置</string>
+    <string name="server_setting">用户登录</string>
     <string name="user_book">用户手册</string>
 
     <string name="deal_way_void">数据作废</string>
@@ -96,6 +96,10 @@
     <string name="data_uploading_alert">上传中，请稍候</string>
     <string name="data_upload_alert_success">上传预警成功!</string>
     <string name="data_upload_alert_fail">上传预警信息失败,连接超时!</string>
+    
+    <string name="server_please_wait">登录中,请稍候…</string>
+    <string name="server_login_success">登录成功</string>
+    <string name="server_login_failed">登录失败</string>
 
     <string name="alert_point_type">点号：%s</string>
     <string name="alert_state">状态：%s</string>
