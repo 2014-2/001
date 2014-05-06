@@ -211,6 +211,7 @@ public class VideoPlayActivity extends Activity {
                         mMediaPlayer.start();
                         btnPlayPause.setImageResource(R.drawable.button_pause);
                         hideControllerDelay();
+                        mHandler.sendEmptyMessage(PROGRESS_CHANGED);
                         isPaused = false;
                     }
                     else {
