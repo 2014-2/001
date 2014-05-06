@@ -48,6 +48,7 @@ public final class CrtbWebService {
 	private String mSiteCode;
 	
 	private CrtbWebService() {
+		System.setProperty("http.keepAlive", "false");
 		mHandler = new Handler(Looper.getMainLooper());
 		mRpcExecutor = Executors.newSingleThreadExecutor();
 	}
