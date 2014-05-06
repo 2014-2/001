@@ -100,6 +100,9 @@
     <string name="server_please_wait">登录中,请稍候…</string>
     <string name="server_login_success">登录成功</string>
     <string name="server_login_failed">登录失败</string>
+    <string name="tester_loading">正在下载测量员信息，请稍候…</string>
+    <string name="tester_load_success">获取测量员成功</string>
+    <string name="tester_load_failed">获取测量员失败</string>
 
     <string name="alert_point_type">点号：%s</string>
     <string name="alert_state">状态：%s</string>
