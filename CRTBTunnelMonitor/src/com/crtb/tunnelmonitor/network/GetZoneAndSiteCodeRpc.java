@@ -55,7 +55,7 @@ class GetZoneAndSiteCodeRpc extends AbstractRpc {
 				workZone.setZoneName(zoneInfo[1]);
 				for(int i = 1; i < totalCount; i++) {
 					WorkSite workSite = new WorkSite();
-					String[] siteInfo = data.getPropertyAsString(1).split("#");
+					String[] siteInfo = data.getPropertyAsString(i).split("#");
 					workSite.setSiteCode(siteInfo[0]);
 					workSite.setSiteName(siteInfo[1]);
 					workZone.addWorkSite(workSite);
