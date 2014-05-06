@@ -8,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -19,8 +18,8 @@ import com.byd.audioplayer.utils.ToastUtils;
 public class AudioAdapter extends BaseAdapter implements DataListener {
 
     private final static int[] AUDIO_ITEM_BGS = new int[] { R.drawable.bg_audio_item1,
-            R.drawable.bg_audio_item1, R.drawable.bg_audio_item1, R.drawable.bg_audio_item2,
-            R.drawable.bg_audio_item2, R.drawable.bg_audio_item2, };
+        R.drawable.bg_audio_item1, R.drawable.bg_audio_item1, R.drawable.bg_audio_item2,
+        R.drawable.bg_audio_item2, R.drawable.bg_audio_item2, };
 
     private List<AudioItem> mData = new ArrayList<AudioItem>();
     private Context mContext = null;
@@ -159,7 +158,7 @@ public class AudioAdapter extends BaseAdapter implements DataListener {
         if (!isSearchMode()) {
             result = AudioLoaderManager.getInstance().getViewSongs();
             if (result == null || result.isEmpty()) {
-                ToastUtils.showToast(mContext, "Î´ÕÒµ½Ïà¹Ø¸èÇú");
+                ToastUtils.showToast(mContext, "æœªæ‰¾åˆ°ç›¸å…³æ­Œæ›²");
             }
             setData(result);
         }

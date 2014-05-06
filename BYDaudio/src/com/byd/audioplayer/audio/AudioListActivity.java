@@ -43,10 +43,11 @@ import com.byd.audioplayer.utils.ToastUtils;
 import com.byd.audioplayer.utils.VideoContentObserver;
 
 /**
- * 閸氼垰濮〢udio List妞ょ敻娼伴敍灞惧瘹鐎规瓰efault閻ㄥ嫰銆夐棃銏㈡畱閺傝纭堕敍锟� * Intent intent = new Intent();
+ * 启动Audio List页面，指定default的页面的方法：
+ * Intent intent = new Intent();
  * intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
- * intent.setClassName("com.byd.audioplayer.audio", "com.byd.audioplayer.audio.AudioListActivity");
- * intent.putExtra("audio_page", number); // number: 0-閺堫剙婀� 1-sdcard, 2-usb, 3-aux, 4-閹靛婧�
+ * intent.setClassName("com.byd.player.audio", "com.byd.player.audio.AudioListActivity");
+ * intent.putExtra("audio_page", number); // number: 0-本地, 1-sdcard, 2-usb, 3-aux, 4-手机
  * startActivity(intent)
  */
 public class AudioListActivity extends BaseActivity implements OnItemClickListener,
@@ -78,7 +79,7 @@ OnItemLongClickListener, SearchListener, DeleteListener {
     private final int[] TAB_SELECTED_BGS_ZH = new int[] { R.drawable.bg_audio_local_selected,
             R.drawable.bg_sdcard_selcted, R.drawable.bg_usb_selected, R.drawable.bg_aux_selected,
             R.drawable.bg_mobile_selected, };
-    
+
     private final int[] TAB_NORMAL_BGS_EN = new int[] { R.drawable.bg_audio_local_normal_en,
             R.drawable.bg_sdcard_normal_en, R.drawable.bg_usb_normal, R.drawable.bg_aux_normal,
             R.drawable.bg_mobile_normal_en, };
@@ -409,20 +410,20 @@ OnItemLongClickListener, SearchListener, DeleteListener {
                 findViewById(TAB_IDS[i]).setEnabled(false);
                 if(true == isZh())
                 {
-                	findViewById(TAB_IDS[i]).setBackgroundResource(TAB_SELECTED_BGS_ZH[i]);
+                    findViewById(TAB_IDS[i]).setBackgroundResource(TAB_SELECTED_BGS_ZH[i]);
                 }
                 else {
-                	findViewById(TAB_IDS[i]).setBackgroundResource(TAB_SELECTED_BGS_EN[i]);
-				}
+                    findViewById(TAB_IDS[i]).setBackgroundResource(TAB_SELECTED_BGS_EN[i]);
+                }
             } else {
                 findViewById(TAB_IDS[i]).setEnabled(true);
                 if(true == isZh())
                 {
-                	findViewById(TAB_IDS[i]).setBackgroundResource(TAB_NORMAL_BGS_ZH[i]);
+                    findViewById(TAB_IDS[i]).setBackgroundResource(TAB_NORMAL_BGS_ZH[i]);
                 }
                 else {
-                	findViewById(TAB_IDS[i]).setBackgroundResource(TAB_NORMAL_BGS_EN[i]);
-				}
+                    findViewById(TAB_IDS[i]).setBackgroundResource(TAB_NORMAL_BGS_EN[i]);
+                }
             }
         }
         updateHeadTitle();
@@ -593,7 +594,7 @@ OnItemLongClickListener, SearchListener, DeleteListener {
     @Override
     public void onSearchComplete(List<Song> result) {
         if (result == null || result.isEmpty()) {
-            ToastUtils.showToast(this, "閺堫亝鎮崇槐銏犲煂閻╃鍙у灞炬锤");
+            ToastUtils.showToast(this, "未搜索到相关歌曲");
         } else {
             mAdapter.setData(result);
         }
@@ -611,36 +612,36 @@ OnItemLongClickListener, SearchListener, DeleteListener {
             findViewById(TAB_IDS[tabIndex]).setEnabled(false);
             if(true == isZh())
             {
-            	findViewById(TAB_IDS[tabIndex]).setBackgroundResource(TAB_SELECTED_BGS_ZH[tabIndex]);
+                findViewById(TAB_IDS[tabIndex]).setBackgroundResource(TAB_SELECTED_BGS_ZH[tabIndex]);
             }else {
-            	findViewById(TAB_IDS[tabIndex]).setBackgroundResource(TAB_SELECTED_BGS_EN[tabIndex]);
-			}
-            
+                findViewById(TAB_IDS[tabIndex]).setBackgroundResource(TAB_SELECTED_BGS_EN[tabIndex]);
+            }
+
             findViewById(TAB_IDS[4]).setEnabled(true);
-            
+
             if(true == isZh())
             {
-            	findViewById(TAB_IDS[4]).setBackgroundResource(TAB_NORMAL_BGS_ZH[4]);
+                findViewById(TAB_IDS[4]).setBackgroundResource(TAB_NORMAL_BGS_ZH[4]);
             }else {
-            	findViewById(TAB_IDS[4]).setBackgroundResource(TAB_NORMAL_BGS_EN[4]);
-			}
+                findViewById(TAB_IDS[4]).setBackgroundResource(TAB_NORMAL_BGS_EN[4]);
+            }
         } else if (requestCode == REQCODE_AUX)
         {
             final int tabIndex = AudioLoaderManager.getInstance().getViewType();
             findViewById(TAB_IDS[tabIndex]).setEnabled(false);
             if(true == isZh())
             {
-            	findViewById(TAB_IDS[tabIndex]).setBackgroundResource(TAB_SELECTED_BGS_ZH[tabIndex]);
+                findViewById(TAB_IDS[tabIndex]).setBackgroundResource(TAB_SELECTED_BGS_ZH[tabIndex]);
             }else {
-            	findViewById(TAB_IDS[tabIndex]).setBackgroundResource(TAB_SELECTED_BGS_EN[tabIndex]);
-			}
+                findViewById(TAB_IDS[tabIndex]).setBackgroundResource(TAB_SELECTED_BGS_EN[tabIndex]);
+            }
             findViewById(TAB_IDS[3]).setEnabled(true);
             if(true == isZh())
             {
-            	findViewById(TAB_IDS[3]).setBackgroundResource(TAB_NORMAL_BGS_ZH[3]);
+                findViewById(TAB_IDS[3]).setBackgroundResource(TAB_NORMAL_BGS_ZH[3]);
             }else {
-            	findViewById(TAB_IDS[3]).setBackgroundResource(TAB_NORMAL_BGS_EN[3]);
-			}
+                findViewById(TAB_IDS[3]).setBackgroundResource(TAB_NORMAL_BGS_EN[3]);
+            }
         } else if (requestCode == REQUEST_CODE_PLAY) {
             if (null == mOnSongChangedListener) {
                 mOnSongChangedListener = new OnSongChangedListener() {
@@ -653,7 +654,7 @@ OnItemLongClickListener, SearchListener, DeleteListener {
             AudioPlayerService.setOnSongChangedListener(mOnSongChangedListener);
         }
     }
-    
+
     private boolean isZh() {
         Locale locale = getResources().getConfiguration().locale;
         String language = locale.getLanguage();

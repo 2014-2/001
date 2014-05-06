@@ -71,25 +71,27 @@ public class AudioPlayerService extends Service {
 
     public interface OnUpdateListener {
         /**
-         * 閺囧瓨鏌婇棅鍏呯閹绢厽鏂佹潻娑樺
+         * 更新音乐播放进度
          * 
-         * @param current 瑜版挸澧犻幘顓熸杹閺冨爼妫�
+         * @param current 当前播放时间
          */
         public void onUpdate(int current);
     }
 
     public interface OnPlayPauseListener {
         /**
-         * 閹绢厽鏂侀幋鏍ㄦ畯閸嬫粓鐓舵稊锟�         *
-         * @param isPlay true娴狅綀銆冮棅鍏呯瀵拷顫愰幘顓熸杹閿涘畺alse娴狅綀銆冮棅鍏呯鐞氼偅娈忛崑锟�         */
+         * 播放或暂停音乐
+         * 
+         * @param isPlay true代表音乐开始播放，false代表音乐被暂停
+         */
         public void onPlayPause(boolean isPlay);
     }
 
     public interface OnSongChangedListener {
         /**
-         * 濮濆本娲搁崚鍥ㄥ床
+         * 歌曲切换
          * 
-         * @param newPosition 閸掑洦宕查崚鎵畱濮濆本娲搁崷銊╃叾娑旀劕鍨悰銊よ厬閻ㄥ嫮鍌ㄥ鏇氱秴缂冿拷
+         * @param newPosition 切换到的歌曲在音乐列表中的索引位置
          */
         public void onSongChanged(int newPosition);
     }
@@ -123,17 +125,18 @@ public class AudioPlayerService extends Service {
     }
 
     /**
-     * 閼惧嘲褰囧灞炬锤閹粯妞傞梻鎾毐鎼达拷
+     * 获取歌曲总时间长度
      * 
-     * @return 濮濆本娲搁惃鍕闂傛挳鏆辨惔锟�     */
+     * @return 歌曲的时间长度
+     */
     public int getAudioDuration() {
         return mPlayer.getDuration();
     }
 
     /**
-     * 閼惧嘲褰囧灞炬锤瑜版挸澧犻幘顓熸杹閺冨爼妫�
+     * 获取歌曲当前播放时间
      * 
-     * @return 濮濆本娲歌ぐ鎾冲閹绢厽鏂侀弮鍫曟？
+     * @return 歌曲当前播放时间
      */
     public int getAudioCurrent(){
         return mPlayer.getCurrentPosition();
