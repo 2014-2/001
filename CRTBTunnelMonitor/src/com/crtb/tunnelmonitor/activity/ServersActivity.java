@@ -3,8 +3,6 @@ package com.crtb.tunnelmonitor.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.TextView;
@@ -17,10 +15,6 @@ import com.crtb.tunnelmonitor.entity.ProjectIndex;
 import com.crtb.tunnelmonitor.entity.SiteProjectMapping;
 import com.crtb.tunnelmonitor.entity.WorkSiteIndex;
 import com.crtb.tunnelmonitor.network.CrtbWebService;
-import com.crtb.tunnelmonitor.network.RpcCallback;
-import com.crtb.tunnelmonitor.task.DataDownloadManager;
-import com.crtb.tunnelmonitor.task.DataDownloadManager.DownloadListener;
-import com.crtb.tunnelmonitor.utils.CrtbAppConfig;
 
 /**
  * 服务器
@@ -50,9 +44,6 @@ public class ServersActivity extends Activity implements OnClickListener {
 			Toast.makeText(getApplicationContext(), "请先打开工作面", Toast.LENGTH_SHORT).show();
 			finish();
 		} else {
-			if (!CrtbWebService.getInstance().isLogined()) {
-				login();
-			}
 			SiteProjectMapping mapping = SiteProjectMappingDao.defaultDao().queryOneByProjectId(currentProject.getId());
 			if (mapping == null) {
 				Toast.makeText(getApplicationContext(), "请先下载工点数据", Toast.LENGTH_SHORT).show();
@@ -72,12 +63,10 @@ public class ServersActivity extends Activity implements OnClickListener {
 	private void initView() {
 		TextView title = (TextView) findViewById(R.id.tv_topbar_title);
 		title.setText(R.string.server_interact);
-
 		mParameter = (TextView) findViewById(R.id.parameter);
 		mDataUpload = (TextView) findViewById(R.id.data_upload);
 		mWarnUpload = (TextView) findViewById(R.id.warn_upload);
 		mWorkInfoDownload = (TextView) findViewById(R.id.workinfo_download);
-		//
 		mParameter.setOnClickListener(this);
 		mDataUpload.setOnClickListener(this);
 		mWarnUpload.setOnClickListener(this);
@@ -124,42 +113,5 @@ public class ServersActivity extends Activity implements OnClickListener {
 		Intent intent = new Intent(this, WorkInfoDownloadActivity.class);
 		startActivity(intent);
 	}
-
-	private void login() {
-		CrtbAppConfig config = CrtbAppConfig.getInstance();
-		String userName = config.getUserName();
-		String password = config.getPassword();
-		if (TextUtils.isEmpty(userName) || TextUtils.isEmpty(password)) {
-			Toast.makeText(this, "未设置服务器参数", Toast.LENGTH_SHORT).show();
-			return;
-		}
-		CrtbWebService.getInstance().login(userName, password, new RpcCallback() {
-
-			@Override
-			public void onSuccess(Object[] data) {
-				Log.d(LOG_TAG, "login success.");
-			}
-
-			@Override
-			public void onFailed(String reason) {
-				Log.d(LOG_TAG, "login failed: " + reason);
-			}
-		});
-	}
-
-//	private void downloadZoneAndSiteCode() {
-//		CrtbWebService.getInstance().getZoneAndSiteCode(new RpcCallback() {
-//
-//			@Override
-//			public void onSuccess(Object[] data) {
-//				Log.d(LOG_TAG, "download zone code and site code success.");
-//			}
-//
-//			@Override
-//			public void onFailed(String reason) {
-//				Log.d(LOG_TAG, "download zone code and site code failed.");
-//			}
-//		});
-//	}
 
 }
