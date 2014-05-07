@@ -31,6 +31,7 @@ public class AppCRTBApplication extends Application {
 	private String publickey;//加密公钥
 	private List<SurveyerInformation> personList = null;
 	private SurveyerInformation CurPerson = null;
+	private int CurUsedStationId = 0;//当前连接的station的 id
 
 	private boolean bLocaUser;
 	
@@ -100,7 +101,15 @@ public class AppCRTBApplication extends Application {
 		CurPerson = curPerson;
 	}
 
-//	public boolean IsValidWork(WorkInfos Value)
+    public int getCurUsedStationId() {
+        return CurUsedStationId;
+    }
+
+    public void setCurUsedStationId(int curUsedStationId) {
+        CurUsedStationId = curUsedStationId;
+    }
+
+    //	public boolean IsValidWork(WorkInfos Value)
 //	{
 //		if(Value.getProjectName().trim().length() <= 0)
 //		{
