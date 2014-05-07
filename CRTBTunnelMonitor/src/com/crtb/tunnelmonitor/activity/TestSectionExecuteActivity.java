@@ -49,11 +49,12 @@ import com.crtb.tunnelmonitor.utils.Time;
  */
 @InjectLayout(layout=R.layout.activity_testrecord_execute)
 public class TestSectionExecuteActivity extends WorkFlowActivity implements View.OnClickListener {
-	
-//    private static int COUNT = 0;//TODO: REMOVE: JUST FOR DEBUG
-//    private static double X = 2.3614D;
-//    private static double Y = 3.7607D;
-//    private static double Z = 1378.1012D;
+
+    private static boolean DEBUG = false;//DEBUG FLAG, set to true to generate fake data
+    private static int COUNT = 0;//TODO: REMOVE: JUST FOR DEBUG
+    private static double X = 2.3614D;
+    private static double Y = 3.7607D;
+    private static double Z = 1378.1012D;
 
     // 测量列表
 	public static final String KEY_TEST_RAWSHEET_LIST	= "_key_test_rawsheet_list" ;
@@ -351,43 +352,48 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 			mHanlder.sendMessage(MSG_ERROR_NOT_TEST);
 			return ;
 		}
-		
-		ISurveyProvider ts = TSSurveyProvider.getDefaultAdapter();
-		
-		if (ts == null) {
-			mHanlder.sendMessage(MSG_ERROR_CONNECT);
-			return;
+
+		String x, y, z;
+
+		if (!DEBUG) {
+		    ISurveyProvider ts = TSSurveyProvider.getDefaultAdapter();
+		    
+		    if (ts == null) {
+		        mHanlder.sendMessage(MSG_ERROR_CONNECT);
+		        return;
+		    }
+		    
+		    Coordinate3D point = new Coordinate3D(null);
+		    
+		    try {
+		        int nret = ts.GetCoord(0, 0, point);
+		        
+		        if (nret != 1) {
+		            mHanlder.sendMessage(MSG_TEST_ERROR);
+		            return;
+		        }
+		        
+		        if(point.N == 0d 
+		                || point.E == 0d 
+		                || point.H == 0d){
+		            mHanlder.sendMessage(MSG_ERROR_CONNECT);
+		            return ;
+		        }
+		        
+		    } catch (InterruptedException e) {
+		        e.printStackTrace();
+		        return;
+		    }
+
+		    x = String.format("%1$.4f", point.N);
+		    y = String.format("%1$.4f", point.E);
+		    z = String.format("%1$.4f", point.H);
+		} else {
+		    x = String.format("%1$.4f", X - COUNT * 0.05);
+		    y = String.format("%1$.4f", Y - COUNT * 0.05);
+		    z = String.format("%1$.4f", Z - COUNT * 0.05);
+		    COUNT++;
 		}
-		
-		Coordinate3D point = new Coordinate3D(null);
-		
-		try {
-			int nret = ts.GetCoord(0, 0, point);
-			
-			if (nret != 1) {
-				mHanlder.sendMessage(MSG_TEST_ERROR);
-				return;
-			}
-			
-			if(point.N == 0d 
-					|| point.E == 0d 
-					|| point.H == 0d){
-				mHanlder.sendMessage(MSG_ERROR_CONNECT);
-				return ;
-			}
-			
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-			return;
-		}
-		
-		String x = String.format("%1$.4f", point.N);
-		String y = String.format("%1$.4f", point.E);
-		String z = String.format("%1$.4f", point.H);
-//		String x = String.format("%1$.4f", X - COUNT * 0.05);
-//		String y = String.format("%1$.4f", Y - COUNT * 0.05);
-//		String z = String.format("%1$.4f", Z - COUNT * 0.05);
-//		COUNT++;
 
 		String time = Time.getDateEN() ;
 		
@@ -530,6 +536,7 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 						obj.setCoordinate(info.x + "," + info.y + "," + info.z);
 						obj.setSurveyTime(DateUtils.toDate(info.time, DateUtils.DATE_TIME_FORMAT));
 						obj.setDataStatus(0);
+						obj.setInfo("1");
 
 						int err = TunnelSettlementTotalDataDao.DB_EXECUTE_FAILED;
 
