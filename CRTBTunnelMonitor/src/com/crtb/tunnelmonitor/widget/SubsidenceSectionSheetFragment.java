@@ -6,6 +6,7 @@ import java.util.List;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,6 +27,7 @@ import com.crtb.tunnelmonitor.task.SubsidenceAsyncQueryTask;
 public class SubsidenceSectionSheetFragment extends Fragment {
     private ListView mSheetList;
     private SheetAdapter mAdapter;
+    private Handler mHandler = new Handler();
 
     public SubsidenceSectionSheetFragment() {
     }
@@ -93,7 +95,12 @@ public class SubsidenceSectionSheetFragment extends Fragment {
     }
 
     public void refreshUI() {
-        loadData();
+    	mHandler.postDelayed(new Runnable() {
+			@Override
+			public void run() {
+				 loadData();
+			}
+		}, 1000);
     }
 
     public List<SheetRecord> getUploadData() {
