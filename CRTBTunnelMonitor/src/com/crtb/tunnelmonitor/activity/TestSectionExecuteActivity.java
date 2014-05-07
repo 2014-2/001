@@ -545,8 +545,8 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
                         if (old != null) {
                             //UPDATE
                             obj.setMEASNo(old.getMEASNo());
-                            err = dao.update(obj);
                             obj.setID(old.getID());
+                            err = dao.update(obj);
                         } else {
                             //INSERT NEW
                             int lastMEASNo = 0;
