@@ -474,13 +474,13 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 						    err = dao.update(obj);
 						} else {
 						    //INSERT NEW
-						    List<TunnelSettlementTotalData> l = dao.queryAllOrderByMEASNoDesc();
+						    int lastMEASNo = 0;
+						    List<TunnelSettlementTotalData> l = dao.queryAllOrderByMEASNoDesc(info.type);
 						    if(l != null && l.size() > 0) {
 						        TunnelSettlementTotalData last = l.get(0);
-						        obj.setMEASNo(last.getMEASNo() + 1);
-						    } else {
-						        obj.setMEASNo(1);
+						        lastMEASNo = last.getMEASNo();
 						    }
+						    obj.setMEASNo(lastMEASNo + 1);
 						    err = dao.insert(obj);
 						}
 						
@@ -539,13 +539,13 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
                             err = dao.update(obj);
                         } else {
                             //INSERT NEW
-                            List<SubsidenceTotalData> l = dao.queryAllOrderByMEASNoDesc();
+                            int lastMEASNo = 0;
+                            List<SubsidenceTotalData> l = dao.queryAllOrderByMEASNoDesc(info.type);
                             if (l != null && l.size() > 0) {
                                 SubsidenceTotalData last = l.get(0);
-                                obj.setMEASNo(last.getMEASNo() + 1);
-                            } else {
-                                obj.setMEASNo(1);
+                                lastMEASNo = last.getMEASNo();
                             }
+                            obj.setMEASNo(lastMEASNo + 1);
                             err = dao.insert(obj);
                         }
 						

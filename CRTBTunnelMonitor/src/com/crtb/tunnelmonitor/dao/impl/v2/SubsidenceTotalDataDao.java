@@ -23,20 +23,21 @@ public class SubsidenceTotalDataDao extends AbstractDao<SubsidenceTotalData> {
 		
 		return _instance ;
 	}
-	
-	public List<SubsidenceTotalData> queryAllOrderByMEASNoDesc(){
-		
-		final IAccessDatabase mDatabase = getCurrentDb();
-		
-		if(mDatabase == null){
-			return null ;
-		}
-		
-		String sql = "select * from SubsidenceTotalData ORDER BY MEASNo DESC" ;
-		
-		return mDatabase.queryObjects(sql, SubsidenceTotalData.class) ;
-	}
-	
+
+    public List<SubsidenceTotalData> queryAllOrderByMEASNoDesc(String pntType) {
+
+        final IAccessDatabase mDatabase = getCurrentDb();
+
+        if (mDatabase == null) {
+            return null;
+        }
+
+        String sql = "select * from SubsidenceTotalData where PntType=? ORDER BY MEASNo DESC";
+        String[] args = new String[] { pntType };
+
+        return mDatabase.queryObjects(sql, args, SubsidenceTotalData.class);
+    }
+
 	public boolean checkSectionTestData(int id){
 		
 		final IAccessDatabase mDatabase = getCurrentDb();

@@ -31,19 +31,20 @@ public class TunnelSettlementTotalDataDao extends AbstractDao<TunnelSettlementTo
 		
 		return _instance ;
 	}
-	
-	public List<TunnelSettlementTotalData> queryAllOrderByMEASNoDesc() {
-		
-		final IAccessDatabase mDatabase = getCurrentDb();
-		
-		if(mDatabase == null){
-			return null ;
-		}
-		
-		String sql = "select * from TunnelSettlementTotalData ORDER BY MEASNo DESC";
-		
-		return mDatabase.queryObjects(sql, TunnelSettlementTotalData.class);
-	}
+
+    public List<TunnelSettlementTotalData> queryAllOrderByMEASNoDesc(String pntType) {
+
+        final IAccessDatabase mDatabase = getCurrentDb();
+
+        if (mDatabase == null) {
+            return null;
+        }
+
+        String sql = "select * from TunnelSettlementTotalData where PntType=? ORDER BY MEASNo DESC";
+        String[] args = new String[] { pntType };
+
+        return mDatabase.queryObjects(sql, args, TunnelSettlementTotalData.class);
+    }
 
     public TunnelSettlementTotalData queryOneById(int id) {
        
