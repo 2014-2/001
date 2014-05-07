@@ -21,6 +21,7 @@ import android.widget.TextView;
 import com.crtb.tssurveyprovider.Coordinate3D;
 import com.crtb.tssurveyprovider.ISurveyProvider;
 import com.crtb.tssurveyprovider.TSSurveyProvider;
+import com.crtb.tunnelmonitor.AppCRTBApplication;
 import com.crtb.tunnelmonitor.AppConfig;
 import com.crtb.tunnelmonitor.AppHandler;
 import com.crtb.tunnelmonitor.CommonObject;
@@ -457,7 +458,7 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 					if(info.sectionType == RawSheetIndex.CROSS_SECTION_TYPE_TUNNEL){
 						
 						TunnelSettlementTotalData obj = new TunnelSettlementTotalData() ;
-						obj.setStationId(0x000001);
+						obj.setStationId(AppCRTBApplication.getInstance().getCurUsedStationId());
 						obj.setChainageId(tunnelSection.getID());
 						obj.setSheetId(rawSheetBean.getID());
 						obj.setPntType(info.type); // 测量点类型
@@ -526,7 +527,7 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 						SubsidenceTotalData old = dao.querySubsidenceTotalData(rawSheetBean.getID(),subsidenceSection.getID(),info.type);
 						
 						final SubsidenceTotalData obj = new SubsidenceTotalData() ;
-						obj.setStationId(0x000001);
+						obj.setStationId(AppCRTBApplication.getInstance().getCurUsedStationId());
 						obj.setChainageId(subsidenceSection.getID());
 						obj.setSheetId(rawSheetBean.getID());
 						obj.setPntType(info.type); // 测量点类型
