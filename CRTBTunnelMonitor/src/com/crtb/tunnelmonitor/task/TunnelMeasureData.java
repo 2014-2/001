@@ -5,10 +5,17 @@ import java.util.Date;
 import java.util.List;
 
 import ICT.utils.RSACoder;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.crtb.tunnelmonitor.common.Constant;
+import com.crtb.tunnelmonitor.dao.impl.v2.RawSheetIndexDao;
+import com.crtb.tunnelmonitor.dao.impl.v2.TotalStationInfoDao;
+import com.crtb.tunnelmonitor.dao.impl.v2.TunnelCrossSectionIndexDao;
 import com.crtb.tunnelmonitor.dao.impl.v2.TunnelSettlementTotalDataDao;
+import com.crtb.tunnelmonitor.entity.RawSheetIndex;
+import com.crtb.tunnelmonitor.entity.TotalStationIndex;
+import com.crtb.tunnelmonitor.entity.TunnelCrossSectionIndex;
 import com.crtb.tunnelmonitor.entity.TunnelSettlementTotalData;
 import com.crtb.tunnelmonitor.utils.AlertUtils;
 
@@ -16,6 +23,8 @@ public class TunnelMeasureData extends MeasureData {
 	private static final String LOG_TAG = "TunnelMeasureData";
 
 	private List<TunnelSettlementTotalData> mMeasurePoints = new ArrayList<TunnelSettlementTotalData>();
+	private String mMointorModel = null;
+	private float mFaceDistance = 0f;
 
 	public void addMeasurePoint(TunnelSettlementTotalData point) {
 		mMeasurePoints.add(point);
@@ -163,6 +172,40 @@ public class TunnelMeasureData extends MeasureData {
 		}
 		return valueList;
 	}
+
+    public float getFaceDistance() {
+        TunnelSettlementTotalData first = mMeasurePoints.size() > 0 ? mMeasurePoints.get(0) : null;
+        if (first != null) {
+            int chainageId = first.getChainageId();
+            TunnelCrossSectionIndex section = TunnelCrossSectionIndexDao.defaultDao()
+                    .querySectionById(chainageId);
+            if (section != null) {
+                double chainage = section.getChainage();
+
+                int sheetId = first.getSheetId();
+                RawSheetIndex sheet = RawSheetIndexDao.defaultDao().queryOneById(sheetId);
+                if (sheet != null) {
+                    double facedk = sheet.getFACEDK();
+                    mFaceDistance = (float) (facedk - chainage);
+                }
+            }
+
+        }
+        return mFaceDistance;
+    }
+
+    public String getMonitorModel() {
+        if (TextUtils.isEmpty(mMointorModel)) {
+            int id = mMeasurePoints.size() > 0 ? mMeasurePoints.get(0).getStationId() : -1;
+            if (id >= 0) {
+                TotalStationIndex station = TotalStationInfoDao.defaultDao().queryOneById(id);
+                if (station != null) {
+                    mMointorModel = station.getName();
+                }
+            }
+        }
+        return mMointorModel;
+    }
 
 	@Override
 	public void markAsUploaded() {

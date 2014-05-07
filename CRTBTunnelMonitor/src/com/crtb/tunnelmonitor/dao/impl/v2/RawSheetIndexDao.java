@@ -28,7 +28,20 @@ public class RawSheetIndexDao extends AbstractDao<RawSheetIndex> {
 		
 		return _instance ;
 	}
-	
+
+    public RawSheetIndex queryOneById(int id) {
+
+        final IAccessDatabase mDatabase = getCurrentDb();
+
+        if (mDatabase == null) {
+            return null;
+        }
+
+        String sql = "select * from RawSheetIndex where ID=?";
+        String[] args = new String[] { String.valueOf(id) };
+        return mDatabase.queryObject(sql, args, RawSheetIndex.class);
+    }
+
 	// 隧道内记录单
 	public List<RawSheetIndex> queryTunnelSectionRawSheetIndex() {
 		

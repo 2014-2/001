@@ -80,9 +80,9 @@ public class SubsidenceAsyncUploadTask extends AsyncUploadTask {
 		PointUploadParameter parameter = new PointUploadParameter();
         parameter.setSectionCode(sectionCode);
         parameter.setPointCodeList(measureData.getPointCodeList(sectionCode));
-        parameter.setTunnelFaceDistance(50.0f);
+        parameter.setTunnelFaceDistance(measureData.getFaceDistance());
         parameter.setProcedure("02");
-        parameter.setMonitorModel("xxx");
+        parameter.setMonitorModel(measureData.getMonitorModel());
         parameter.setMeasureDate(measureData.getMeasureDate());
         parameter.setPointValueList(measureData.getValueList());
         parameter.setPointCoordinateList(measureData.getCoordinateList());

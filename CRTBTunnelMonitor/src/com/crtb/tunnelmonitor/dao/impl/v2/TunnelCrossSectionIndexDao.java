@@ -140,7 +140,17 @@ public final class TunnelCrossSectionIndexDao extends AbstractDao<TunnelCrossSec
                 TunnelCrossSectionIndex.class);
     }
 
-	public List<TunnelCrossSectionIndex> querySectionByIds(String rowIds) {
+    public TunnelCrossSectionIndex querySectionById(int id) {
+        final IAccessDatabase mDatabase = getCurrentDb();
+        if (mDatabase == null) {
+            return null;
+        }
+        String sql = "select * from TunnelCrossSectionIndex where ID=?";
+        String[] args = new String[] { String.valueOf(id) };
+        return mDatabase.queryObject(sql, args, TunnelCrossSectionIndex.class);
+    }
+
+    public List<TunnelCrossSectionIndex> querySectionByIds(String rowIds) {
 		final IAccessDatabase mDatabase = getCurrentDb();
 		if (mDatabase == null) {
 			return null;

@@ -11,7 +11,6 @@ import com.crtb.tunnelmonitor.AppHandler;
 import com.crtb.tunnelmonitor.BaseAsyncTask;
 import com.crtb.tunnelmonitor.entity.CrtbUser;
 import com.crtb.tunnelmonitor.entity.SubsidenceCrossSectionIndex;
-import com.crtb.tunnelmonitor.entity.TunnelCrossSectionIndex;
 
 /**
  * 地表下沉断面DAO
@@ -153,5 +152,15 @@ public final class SubsidenceCrossSectionIndexDao extends AbstractDao<Subsidence
         
         String sql = "select * from SubsidenceCrossSectionIndex where ID IN (" + rowIds + ")";
         return mDatabase.queryObjects(sql, SubsidenceCrossSectionIndex.class);
+    }
+
+    public SubsidenceCrossSectionIndex querySectionById(int id) {
+        final IAccessDatabase mDatabase = getCurrentDb();
+        if (mDatabase == null) {
+            return null;
+        }
+        String sql = "select * from SubsidenceCrossSectionIndex where ID=?";
+        String[] args = new String[] { String.valueOf(id) };
+        return mDatabase.queryObject(sql, args, SubsidenceCrossSectionIndex.class);
     }
 }
