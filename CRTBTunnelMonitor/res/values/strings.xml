@@ -69,6 +69,9 @@
     <string name="deal_way_first">数据作为首行</string>
     <string name="deal_way_add">添加改正值</string>
 
+    <!-- 预警模块 -->
+    <string name="millimeter">毫米</string>
+
 
     <!-- 升级模块 -->
     <string name="update_title">软件升级</string>
