@@ -106,6 +106,7 @@
     <string name="tester_loading">正在下载测量员信息，请稍候…</string>
     <string name="tester_load_success">获取测量员成功</string>
     <string name="tester_load_failed">获取测量员失败</string>
+    <string name="tester_load_timeout">获取测量员超时</string>
 
     <string name="alert_point_type">点号：%s</string>
     <string name="alert_state">状态：%s</string>

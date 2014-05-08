@@ -7,6 +7,8 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,6 +31,8 @@ import com.crtb.tunnelmonitor.network.RpcCallback;
 import com.crtb.tunnelmonitor.utils.CrtbAppConfig;
 
 public class TesterLoadActivity extends Activity implements OnClickListener {
+
+    protected static final int MSG_LOAD_SURVEYORS_TIMEOUT = 0;
 
     private Button mLoad;
 
@@ -94,10 +98,25 @@ public class TesterLoadActivity extends Activity implements OnClickListener {
                 }
                 mProgressDialog.show();
                 login(name, pwd);
-
+                mHandler.sendEmptyMessageDelayed(MSG_LOAD_SURVEYORS_TIMEOUT, 10000);
                 break;
         }
     }
+
+    private Handler mHandler = new Handler() {
+
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+            case MSG_LOAD_SURVEYORS_TIMEOUT:
+                if (mProgressDialog != null && mProgressDialog.isShowing()) {
+                    mProgressDialog.dismiss();
+                    Toast.makeText(TesterLoadActivity.this, R.string.tester_load_timeout,
+                            Toast.LENGTH_LONG).show();
+                }
+            }
+        }
+    };
 
     private void login(final String username, final String password) {
 
