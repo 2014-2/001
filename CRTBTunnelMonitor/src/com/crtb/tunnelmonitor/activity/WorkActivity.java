@@ -83,12 +83,6 @@ public final class WorkActivity extends WorkFlowActivity {
 			// current edit workplan
 			ProjectIndexDao.defaultWorkPlanDao().updateCurrentWorkPlan(bean);
 			
-			// start new MainActivity
-//			Intent intent = new Intent() ;
-//			intent.setClass(WorkActivity.this, MainActivity.class);
-//			intent.putExtra(Constant.LOGIN_TYPE, Constant.LOCAL_USER);
-//			startActivity(intent);
-			
 			finish() ;
 			
 		} else if(position == 1){
@@ -163,6 +157,9 @@ public final class WorkActivity extends WorkFlowActivity {
 				case MSG_EXPORT_DB_FAILED :
 					showText("数据库导出错误!");
 					break ;
+				case MSG_INPORT_DB_SUCCESS :
+					mListView.onReload() ;
+					break ;
 				}
 			}
 			
@@ -219,7 +216,7 @@ public final class WorkActivity extends WorkFlowActivity {
 			startActivity(intent);
 		} else if(name.equals(getString(R.string.common_inport))){
 			
-			CrtbDialogFileBrowse browse = new CrtbDialogFileBrowse(WorkActivity.this, mDisplayMetrics.heightPixels >> 1);
+			CrtbDialogFileBrowse browse = new CrtbDialogFileBrowse(WorkActivity.this, mDisplayMetrics.heightPixels >> 1,mHanlder);
 			browse.show() ;
 			
 		} else if(name.equals(getString(R.string.common_export))){
@@ -247,6 +244,4 @@ public final class WorkActivity extends WorkFlowActivity {
 		
 		mListView.setCacheColorHint(Color.TRANSPARENT);
 	}
-	
-	
 }

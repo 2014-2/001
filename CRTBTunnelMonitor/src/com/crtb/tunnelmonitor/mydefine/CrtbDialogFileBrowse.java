@@ -20,6 +20,12 @@ import com.crtb.tunnelmonitor.activity.R;
 import com.crtb.tunnelmonitor.utils.CrtbDbFileUtils;
 import com.crtb.tunnelmonitor.widget.CrtbBaseAdapter;
 
+/**
+ * 数据库文件导入对话框
+ * 
+ * @author zhouwei
+ *
+ */
 public final class CrtbDialogFileBrowse extends CrtbDialog {
 	
 	private int			 	mHeight = 300 ;
@@ -27,10 +33,12 @@ public final class CrtbDialogFileBrowse extends CrtbDialog {
 	private AppHandler		mHanlder ;
 	private CrtbDialogConnecting	mProgressDialog ;
 	private TextView		mTitle ;
+	private AppHandler		mHomeHandler ;
 
-	public CrtbDialogFileBrowse(final Context context,int height) {
+	public CrtbDialogFileBrowse(final Context context,int height,AppHandler handler) {
 		super(context);
 		
+		mHomeHandler = handler ;
 		mHeight	= height ;
 		mList	= CrtbDbFileUtils.getInportFiles() ;
 		mHanlder= new AppHandler(context){
@@ -58,11 +66,16 @@ public final class CrtbDialogFileBrowse extends CrtbDialog {
 					
 					break ;
 					
-				case MSG_EXPORT_DB_SUCCESS :
+				case MSG_INPORT_DB_SUCCESS :
+					
 					CrtbDialogHint dialog = new CrtbDialogHint(context, R.drawable.ic_reslut_sucess, "数据库导入完成");
 					dialog.show() ;
+					
+					// 通知UI
+					mHomeHandler.sendMessage(MSG_INPORT_DB_SUCCESS);
+					
 					break ;
-				case MSG_EXPORT_DB_FAILED :
+				case MSG_INPORT_DB_FAILED :
 					Toast.makeText(context, "数据库导入错误!", Toast.LENGTH_LONG).show() ;
 					break ;
 				}
