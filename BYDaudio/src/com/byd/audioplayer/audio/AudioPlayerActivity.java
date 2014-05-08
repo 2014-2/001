@@ -42,6 +42,7 @@ import com.byd.audioplayer.audio.AudioPlayerService.OnPlayPauseListener;
 import com.byd.audioplayer.audio.AudioPlayerService.OnSongChangedListener;
 import com.byd.audioplayer.audio.AudioPlayerService.OnUpdateListener;
 import com.byd.audioplayer.audio.AudioPlayerService.PlayerBinder;
+import com.byd.audioplayer.audio.AudioPlayerService.onServiceStopListener;
 import com.byd.audioplayer.bluetooth.BTPlayerActivity.PlayerReceiver;
 import com.byd.audioplayer.config.Constants;
 import com.byd.audioplayer.lrc.LrcContent;
@@ -648,11 +649,11 @@ public class AudioPlayerActivity extends BaseActivity {
             ImageView v = new ImageView(this);
             if(true == isZh())
             {
-            	v.setImageResource(R.drawable.toast_order_play);
+                v.setImageResource(R.drawable.toast_order_play);
             }else {
-            	v.setImageResource(R.drawable.toast_order_play_en);
-			}
-            
+                v.setImageResource(R.drawable.toast_order_play_en);
+            }
+
             mToastOrderPlay.setView(v);
             mToastOrderPlay.setDuration(2000);
         }
@@ -662,10 +663,10 @@ public class AudioPlayerActivity extends BaseActivity {
             ImageView v = new ImageView(this);
             if(true == isZh())
             {
-            	v.setImageResource(R.drawable.toast_random_play);
+                v.setImageResource(R.drawable.toast_random_play);
             }else {
-            	v.setImageResource(R.drawable.toast_random_play_en);
-			}
+                v.setImageResource(R.drawable.toast_random_play_en);
+            }
             mToastRandomPlay.setView(v);
             mToastRandomPlay.setDuration(2000);
         }
@@ -675,10 +676,10 @@ public class AudioPlayerActivity extends BaseActivity {
             ImageView v = new ImageView(this);
             if(true == isZh())
             {
-            	v.setImageResource(R.drawable.toast_list_loop);
+                v.setImageResource(R.drawable.toast_list_loop);
             }else {
-            	v.setImageResource(R.drawable.toast_list_loop_en);
-			}
+                v.setImageResource(R.drawable.toast_list_loop_en);
+            }
             mToastListLoop.setView(v);
             mToastListLoop.setDuration(2000);
         }
@@ -688,10 +689,10 @@ public class AudioPlayerActivity extends BaseActivity {
             ImageView v = new ImageView(this);
             if(true == isZh())
             {
-            	v.setImageResource(R.drawable.toast_single_play);
+                v.setImageResource(R.drawable.toast_single_play);
             }else {
-            	v.setImageResource(R.drawable.toast_single_play_en);
-			}
+                v.setImageResource(R.drawable.toast_single_play_en);
+            }
             mToastSingleLoop.setView(v);
             mToastSingleLoop.setDuration(2000);
         }
@@ -835,13 +836,18 @@ public class AudioPlayerActivity extends BaseActivity {
                     updatePlayPauseBtn(isPlay);
                 }
             });
+            mService.setOnServiceStopListener(new onServiceStopListener() {
+                @Override
+                public void onServiceStop() {
+                    AudioPlayerActivity.this.finish();
+                }
+            });
             mService.setOnSongChangedListener(onSongChangeListener);
         }
 
         @Override
         public void onServiceDisconnected(ComponentName name) {
             // TODO Auto-generated method stub
-
         }
     }
 
@@ -850,7 +856,7 @@ public class AudioPlayerActivity extends BaseActivity {
         SimpleDateFormat format = new SimpleDateFormat("mm:ss");
         return format.format(date);
     }
-    
+
     private boolean isZh() {
         Locale locale = getResources().getConfiguration().locale;
         String language = locale.getLanguage();

@@ -38,6 +38,7 @@
     <string name="title_audio_usb">USB音乐</string>
     <string name="delete_all">全部删除</string>
     <string name="last_song">已经是最后一首歌曲</string>
+    <string name="external_storage_removed">歌曲所在外部存储设备已被移除</string>
     <string name="confirm_delete">是否删除?</string>
     <string name="delete_song_title">删除歌曲</string>
     <string name="deleting_song">歌曲删除中...</string>

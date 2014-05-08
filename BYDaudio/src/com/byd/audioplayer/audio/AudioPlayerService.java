@@ -41,6 +41,8 @@ public class AudioPlayerService extends Service {
 
     private OnPlayPauseListener mPlayPauseListener;
 
+    private onServiceStopListener mServiceStopListener;
+
     private static ArrayList<OnSongChangedListener> mSongChangedListenerList = new ArrayList<AudioPlayerService.OnSongChangedListener>();
 
     private Song mPlayingSong;
@@ -54,6 +56,8 @@ public class AudioPlayerService extends Service {
     private WheelKeyReceiver mWheelKeyReceiver;
 
     private SuspendReceiver mSuspendReceiver;
+
+    private StorageMountReceiver mStorageMountReceiver;
 
     private Handler handler = new Handler() {
         @Override
@@ -96,6 +100,13 @@ public class AudioPlayerService extends Service {
         public void onSongChanged(int newPosition);
     }
 
+    public interface onServiceStopListener {
+        /**
+         * AudioPlayerService终止时调用
+         */
+        public void onServiceStop();
+    }
+
     public class PlayerBinder extends Binder {
         AudioPlayerService getService() {
             return AudioPlayerService.this;
@@ -108,6 +119,10 @@ public class AudioPlayerService extends Service {
 
     public void setOnPlayPauseListener(OnPlayPauseListener listener) {
         mPlayPauseListener = listener;
+    }
+
+    public void setOnServiceStopListener(onServiceStopListener listener) {
+        mServiceStopListener = listener;
     }
 
     public static void setOnSongChangedListener(OnSongChangedListener listener) {
@@ -155,6 +170,7 @@ public class AudioPlayerService extends Service {
         } else if (!isPlayOrderChecked && isLoopModeChecked) {
             status = Constants.getLoopMode(getApplicationContext());
         }
+        mSongPosition = AudioPlayerManager.getInstance().getCurrentPlayingSongPosition();
         switch (status) {
             case Constants.PlayOrder.ORDER_PLAY:
                 mSongPosition++;
@@ -285,6 +301,10 @@ public class AudioPlayerService extends Service {
         int audioFx = Constants.getAudioFx(getApplicationContext());
         setEqualizer(audioFx);
 
+        registerReceivers();
+    }
+
+    private void registerReceivers() {
         if (mWheelKeyReceiver == null) {
             mWheelKeyReceiver = new WheelKeyReceiver();
             IntentFilter filter = new IntentFilter(ACTION_CAR_SETTING);
@@ -297,6 +317,22 @@ public class AudioPlayerService extends Service {
             IntentFilter filter2 = new IntentFilter(ACTION_SUSPEND_BROADCAST);
             registerReceiver(mSuspendReceiver, filter2);
         }
+        if (mStorageMountReceiver == null) {
+            mStorageMountReceiver = new StorageMountReceiver();
+            IntentFilter filter3 = new IntentFilter();
+            filter3.addAction(Intent.ACTION_MEDIA_MOUNTED);
+            filter3.addAction(Intent.ACTION_MEDIA_EJECT);
+            filter3.addAction(Intent.ACTION_MEDIA_REMOVED);
+            filter3.addAction(Intent.ACTION_MEDIA_UNMOUNTED);
+            filter3.addDataScheme("file");
+            registerReceiver(mStorageMountReceiver, filter3);
+        }
+    }
+
+    private void unregisterReceivers() {
+        unregisterReceiver(mWheelKeyReceiver);
+        unregisterReceiver(mSuspendReceiver);
+        unregisterReceiver(mStorageMountReceiver);
     }
 
     @Override
@@ -383,8 +419,10 @@ public class AudioPlayerService extends Service {
         }
         mSongPosition = -1;
         mSongChangedListenerList.clear();
-        unregisterReceiver(mWheelKeyReceiver);
-        unregisterReceiver(mSuspendReceiver);
+        if (mServiceStopListener != null) {
+            mServiceStopListener.onServiceStop();
+        }
+        unregisterReceivers();
     }
 
     private final class PreparedListener implements OnPreparedListener {
@@ -472,5 +510,33 @@ public class AudioPlayerService extends Service {
                 }
             }
         }
+    }
+
+    class StorageMountReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            Log.d(LOG_TAG, "Storage Mount Action is: " + action);
+            String path = intent.getData().getPath();
+            // 重新刷新播放歌曲列表
+            AudioPlayerManager.getInstance().storageStatusChange(mPlayingSong);
+            if (Intent.ACTION_MEDIA_MOUNTED.equals(action)) {
+                Log.d(LOG_TAG, "external storage insert");
+                Log.d(LOG_TAG, "Storage path is: " + path);
+            } else if (Intent.ACTION_MEDIA_EJECT.equals(action)
+                    || Intent.ACTION_MEDIA_REMOVED.equals(action)
+                    || Intent.ACTION_MEDIA_UNMOUNTED.equals(action)) {
+                Log.d(LOG_TAG, "external storage remove");
+                Log.d(LOG_TAG, "Storage path is: " + path);
+                if (mPlayingSong.getFilePath().contains(path)) {
+                    Log.d(LOG_TAG, "Playing song has been removed");
+                    stopSelf();
+                    Toast.makeText(getApplicationContext(), R.string.external_storage_removed,
+                            Toast.LENGTH_SHORT).show();
+                }
+            }
+        }
+
     }
 }

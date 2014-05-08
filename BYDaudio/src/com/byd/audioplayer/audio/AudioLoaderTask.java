@@ -98,6 +98,7 @@ public class AudioLoaderTask extends AsyncQueryHandler {
             mAudioManager.clearData(mType);
             mAudioManager.add(result, mType);
             mAudioManager.notifyDataChange();
+            AudioPlayerManager.getInstance().notifyDataSetChanged(mType);
             super.onPostExecute(result);
         }
     }

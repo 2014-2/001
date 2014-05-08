@@ -118,7 +118,7 @@ public class AudioAdapter extends BaseAdapter implements DataListener {
             viewHolder.mIamgeAlbum.setImageResource(R.drawable.ablum_null);
         }
         Song song = AudioPlayerManager.getInstance().getCurrentPlaySong();
-        if (AudioPlayerService.mPlayer != null
+        if (AudioPlayerService.mPlayer != null && song != null
                 && song.getFilePath().equals(item.getSong().getFilePath())
                 && song.getFileName().endsWith(item.getSong().getFileName())) {
             if (AudioPlayerService.mPlayer.isPlaying()) {

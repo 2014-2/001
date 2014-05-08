@@ -84,42 +84,42 @@ public class AudioLoaderManager {
 
     public void clearData(int type) {
         switch (type) {
-        case INTERNAL_TYPE:
-            for (Song song : mInteralSongs) {
-                song.free();
-            }
-            mInteralSongs.clear();
-            break;
-        case EXTERNAL_SDCARD_TYPE:
-            for (Song song : mExtenalSDCARDSongs) {
-                song.free();
-            }
-            mExtenalSDCARDSongs.clear();
-            break;
-        case EXTERNAL_USB_TYPE:
-            for (Song song : mExtenalUSBSongs) {
-                song.free();
-            }
-            mExtenalUSBSongs.clear();
-            break;
-        default:
-            break;
+            case INTERNAL_TYPE:
+                for (Song song : mInteralSongs) {
+                    song.free();
+                }
+                mInteralSongs.clear();
+                break;
+            case EXTERNAL_SDCARD_TYPE:
+                for (Song song : mExtenalSDCARDSongs) {
+                    song.free();
+                }
+                mExtenalSDCARDSongs.clear();
+                break;
+            case EXTERNAL_USB_TYPE:
+                for (Song song : mExtenalUSBSongs) {
+                    song.free();
+                }
+                mExtenalUSBSongs.clear();
+                break;
+            default:
+                break;
         }
     }
 
     public void add(Song song, int type) {
         switch (type) {
-        case INTERNAL_TYPE:
-            mInteralSongs.add(song);
-            break;
-        case EXTERNAL_SDCARD_TYPE:
-            mExtenalSDCARDSongs.add(song);
-            break;
-        case EXTERNAL_USB_TYPE:
-            mExtenalUSBSongs.add(song);
-            break;
-        default:
-            break;
+            case INTERNAL_TYPE:
+                mInteralSongs.add(song);
+                break;
+            case EXTERNAL_SDCARD_TYPE:
+                mExtenalSDCARDSongs.add(song);
+                break;
+            case EXTERNAL_USB_TYPE:
+                mExtenalUSBSongs.add(song);
+                break;
+            default:
+                break;
         }
     }
 
@@ -128,30 +128,43 @@ public class AudioLoaderManager {
             return;
         }
         switch (type) {
-        case INTERNAL_TYPE:
-            mInteralSongs.addAll(songs);
-            break;
-        case EXTERNAL_SDCARD_TYPE:
-            mExtenalSDCARDSongs.addAll(songs);
-            break;
-        case EXTERNAL_USB_TYPE:
-            mExtenalUSBSongs.addAll(songs);
-            break;
-        default:
-            break;
+            case INTERNAL_TYPE:
+                mInteralSongs.addAll(songs);
+                break;
+            case EXTERNAL_SDCARD_TYPE:
+                mExtenalSDCARDSongs.addAll(songs);
+                break;
+            case EXTERNAL_USB_TYPE:
+                mExtenalUSBSongs.addAll(songs);
+                break;
+            default:
+                break;
         }
     }
 
     public List<Song> getViewSongs() {
         switch (mViewType) {
-        case INTERNAL_TYPE:
-            return mInteralSongs;
-        case EXTERNAL_SDCARD_TYPE:
-            return mExtenalSDCARDSongs;
-        case EXTERNAL_USB_TYPE:
-            return mExtenalUSBSongs;
-        default:
-            return null;
+            case INTERNAL_TYPE:
+                return mInteralSongs;
+            case EXTERNAL_SDCARD_TYPE:
+                return mExtenalSDCARDSongs;
+            case EXTERNAL_USB_TYPE:
+                return mExtenalUSBSongs;
+            default:
+                return null;
+        }
+    }
+
+    public List<Song> getSongsByStorage(int storageType) {
+        switch (storageType) {
+            case INTERNAL_TYPE:
+                return mInteralSongs;
+            case EXTERNAL_SDCARD_TYPE:
+                return mExtenalSDCARDSongs;
+            case EXTERNAL_USB_TYPE:
+                return mExtenalUSBSongs;
+            default:
+                return null;
         }
     }
 
@@ -195,15 +208,15 @@ public class AudioLoaderManager {
 
     public void deleteSongs(List<Song> songs, DeleteListener listener) {
         switch (mViewType) {
-        case INTERNAL_TYPE:
-            mInteralSongs.removeAll(songs);
-            break;
-        case EXTERNAL_SDCARD_TYPE:
-            mExtenalSDCARDSongs.removeAll(songs);
-            break;
-        case EXTERNAL_USB_TYPE:
-            mExtenalUSBSongs.removeAll(songs);
-            break;
+            case INTERNAL_TYPE:
+                mInteralSongs.removeAll(songs);
+                break;
+            case EXTERNAL_SDCARD_TYPE:
+                mExtenalSDCARDSongs.removeAll(songs);
+                break;
+            case EXTERNAL_USB_TYPE:
+                mExtenalUSBSongs.removeAll(songs);
+                break;
         }
 
         for (Song song : songs) {

@@ -3,10 +3,25 @@ package com.byd.audioplayer.audio;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.os.Handler;
+import android.os.Message;
+
 public class AudioPlayerManager {
     private static AudioPlayerManager sInstance = new AudioPlayerManager();
     private List<Song> mPlayerList = new ArrayList<Song>();
     private int mPlayerPosition = -1;
+
+    private int mStorageType = 0;
+
+    private ReloadSongListHandler mHandler;
+
+    class ReloadSongListHandler extends Handler {
+        public Song mPlayingSong;
+
+        public ReloadSongListHandler(Song playingSong) {
+            mPlayingSong = playingSong;
+        }
+    }
 
     private AudioPlayerManager() {
     }
@@ -15,7 +30,8 @@ public class AudioPlayerManager {
         return sInstance;
     }
 
-    public void setPlayerList(List<Song> songs) {
+    public void setPlayerList(int type, List<Song> songs) {
+        mStorageType = type;
         if (songs == null || songs.isEmpty()) {
             return;
         }
@@ -23,6 +39,32 @@ public class AudioPlayerManager {
         mPlayerList.clear();
         mPlayerList.addAll(songs);
         mPlayerPosition = 0;
+    }
+
+    public void storageStatusChange(Song playingSong) {
+        mHandler = new ReloadSongListHandler(playingSong) {
+
+            @Override
+            public void handleMessage(Message msg) {
+                List<Song> songs;
+                songs = AudioLoaderManager.getInstance().getSongsByStorage(mStorageType);
+                int playingSongPosition = -1;
+                for (int i = 0; i < songs.size(); i++) {
+                    Song song = songs.get(i);
+                    if (song.getFilePath().equals(mPlayingSong.getFilePath())) {
+                        playingSongPosition = i;
+                    }
+                }
+                setPlayerList(mStorageType, songs);
+                setPlayerPosition(playingSongPosition);
+            }
+        };
+    }
+
+    public void notifyDataSetChanged(int storageType) {
+        if (mHandler != null && storageType == mStorageType) {
+            mHandler.sendEmptyMessage(0);
+        }
     }
 
     public void setPlayerPosition(int pos) {
@@ -56,6 +98,10 @@ public class AudioPlayerManager {
 
     public Song getCurrentPlaySong() {
         return getSongAtPosition(mPlayerPosition);
+    }
+
+    public int getCurrentPlayingSongPosition() {
+        return mPlayerPosition;
     }
 
     public Song getSongAtPosition(int pos) {

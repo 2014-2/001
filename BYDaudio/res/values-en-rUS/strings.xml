@@ -38,6 +38,7 @@
     <string name="title_audio_usb">USB music</string>
     <string name="delete_all">Delete all</string>
     <string name="last_song">That is the last song!</string>
+    <string name="external_storage_removed">External storage which this song in has been removed</string>
     <string name="confirm_delete">Delete?</string>
     <string name="delete_song_title">Delete Song</string>
     <string name="deleting_song">Deleting...</string>

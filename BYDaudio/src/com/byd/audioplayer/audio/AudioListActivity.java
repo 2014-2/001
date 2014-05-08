@@ -466,7 +466,8 @@ OnItemLongClickListener, SearchListener, DeleteListener {
             return;
         } else {
             List<Song> songs = AudioLoaderManager.getInstance().getViewSongs();
-            AudioPlayerManager.getInstance().setPlayerList(songs);
+            AudioPlayerManager.getInstance().setPlayerList(
+                    AudioLoaderManager.getInstance().getViewType(), songs);
             AudioPlayerManager.getInstance().setPlayerPosition(pos);
 
             Intent intent = new Intent(this, AudioPlayerActivity.class);
