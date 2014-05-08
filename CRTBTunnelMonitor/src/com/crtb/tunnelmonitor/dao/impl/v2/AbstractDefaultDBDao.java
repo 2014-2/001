@@ -12,7 +12,6 @@ import android.util.Log;
  */
 public abstract class AbstractDefaultDBDao<T> extends AbstractDao<T> {
 	
-	
 	static final String TAG						= "AbstractDefaultDBDao" ;
 	
 	protected AbstractDefaultDBDao(){
