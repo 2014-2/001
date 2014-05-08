@@ -47,9 +47,9 @@ public final class ProjectIndexDao extends AbstractDao<ProjectIndex> {
 			return null ;
 		}
 		
-		String sql = "select * from CrtbProject where username = ?" ;
+		String sql = "select * from CrtbProject" ;
 		
-		List<CrtbProject> list = mDatabase.queryObjects(sql, new String[]{user.getUsername()}, CrtbProject.class);
+		List<CrtbProject> list = mDatabase.queryObjects(sql, CrtbProject.class);
 		
 		if(list == null){
 			return null ;
@@ -161,9 +161,9 @@ public final class ProjectIndexDao extends AbstractDao<ProjectIndex> {
 		// 非注册用户
 		if(user.getUsertype() == CrtbUser.LICENSE_TYPE_DEFAULT){
 			
-			String sql = "select * from CrtbProject where username = ?" ;
+			String sql = "select * from CrtbProject" ;
 			
-			List<CrtbProject> list = getDefaultDb().queryObjects(sql, new String[]{user.getUsername()}, CrtbProject.class);
+			List<CrtbProject> list = getDefaultDb().queryObjects(sql, CrtbProject.class);
 			
 			if(list != null && list.size() >= MAX_PROJECTINDEX){
 				Log.e(TAG, "error : 非注册用户,不能保存2个以上的工作面");

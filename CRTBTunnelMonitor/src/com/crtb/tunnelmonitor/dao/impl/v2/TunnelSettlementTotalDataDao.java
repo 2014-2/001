@@ -3,6 +3,7 @@ package com.crtb.tunnelmonitor.dao.impl.v2;
 import java.util.List;
 
 import org.zw.android.framework.IAccessDatabase;
+import org.zw.android.framework.db.core.SQLiteParamUtils;
 
 import android.util.Log;
 
@@ -10,7 +11,7 @@ import com.crtb.tunnelmonitor.entity.TunnelSettlementTotalData;
 import com.crtb.tunnelmonitor.utils.AlertUtils;
 
 /**
- * 全站仪
+ * 隧道内测量数据
  * 
  * @author zhouwei
  *
@@ -41,9 +42,9 @@ public class TunnelSettlementTotalDataDao extends AbstractDao<TunnelSettlementTo
         }
 
         String sql = "select * from TunnelSettlementTotalData where PntType=? ORDER BY MEASNo DESC";
-        String[] args = new String[] { pntType };
+        String[] args = SQLiteParamUtils.toParamemter(pntType);
 
-        return mDatabase.queryObjects(sql, args, TunnelSettlementTotalData.class);
+        return mDatabase.queryObjects(sql, args,TunnelSettlementTotalData.class);
     }
 
     public TunnelSettlementTotalData queryOneById(int id) {
@@ -56,9 +57,7 @@ public class TunnelSettlementTotalDataDao extends AbstractDao<TunnelSettlementTo
 
         String sql = "select * from TunnelSettlementTotalData where ID = ?";
 
-        return mDatabase.queryObject(sql, new String[] { String.valueOf(id) },
-                TunnelSettlementTotalData.class);
-
+        return mDatabase.queryObject(sql, SQLiteParamUtils.toParamemter(id), TunnelSettlementTotalData.class);
     }
     
     // 删除测量单的所有测量数据
@@ -84,18 +83,24 @@ public class TunnelSettlementTotalDataDao extends AbstractDao<TunnelSettlementTo
 			return null ;
 		}
 		
-		String sql = "select * from TunnelSettlementTotalData where SheetId = ? and ChainageId = ? and PntType = ? order by MEASNo desc" ;
+		String sql 	= "select * from TunnelSettlementTotalData where SheetId = ? and ChainageId = ? and PntType = ? order by MEASNo desc" ;
+		String[] args = SQLiteParamUtils.toParamemter(sheetId,chainageId,pntType);
 		
-		return mDatabase.queryObject(sql, new String[]{String.valueOf(sheetId),String.valueOf(chainageId),pntType},TunnelSettlementTotalData.class);
+		return mDatabase.queryObject(sql, args,TunnelSettlementTotalData.class);
 	}
 
 	public List<TunnelSettlementTotalData> queryTunnelTotalDatas(int sheetId, int chainageId) {
+		
 		final IAccessDatabase mDatabase = getCurrentDb();
+		
 		if (mDatabase == null) {
 			return null;
 		}
+		
 		String sql = "select * from TunnelSettlementTotalData where SheetId = ? and ChainageId = ? order by MEASNo asc";
-		return mDatabase.queryObjects(sql, new String[] { String.valueOf(sheetId), String.valueOf(chainageId) }, TunnelSettlementTotalData.class);
+		String[] args = SQLiteParamUtils.toParamemter(sheetId,chainageId);
+		
+		return mDatabase.queryObjects(sql, args, TunnelSettlementTotalData.class);
 	}
 	
     /**
@@ -127,6 +132,7 @@ public class TunnelSettlementTotalDataDao extends AbstractDao<TunnelSettlementTo
                 + " order by MEASNo ASC";
 
         String[] args = new String[] {String.valueOf(MEASNo), String.valueOf(AlertUtils.POINT_DATASTATUS_DISCARD)};
+        
         return mDatabase.queryObjects(sql, args, TunnelSettlementTotalData.class);
     }
 
@@ -156,11 +162,11 @@ public class TunnelSettlementTotalDataDao extends AbstractDao<TunnelSettlementTo
 
         String[] args = new String[] { String.valueOf(MEASNo),
                 String.valueOf(AlertUtils.POINT_DATASTATUS_DISCARD) };
+        
         return mDatabase.queryObjects(sql, args, TunnelSettlementTotalData.class);
     }
 
-    public TunnelSettlementTotalData queryOppositePointOfALine(TunnelSettlementTotalData point1,
-            String point2Type) {
+    public TunnelSettlementTotalData queryOppositePointOfALine(TunnelSettlementTotalData point1, String point2Type) {
     	
     	final IAccessDatabase mDatabase = getCurrentDb();
 		
@@ -188,24 +194,34 @@ public class TunnelSettlementTotalDataDao extends AbstractDao<TunnelSettlementTo
     }
 
     public void updateDataStatus(int id, int dataStatus, float correction) {
+    	
         Log.d(TAG, "TunnelSettlementTotalData updateDataStatus");
+        
         IAccessDatabase db = getCurrentDb();
+        
         if (db != null) {
+        	
             String sql = "UPDATE TunnelSettlementTotalData"
                     + " SET DataStatus=" + dataStatus
                     + ((dataStatus == AlertUtils.POINT_DATASTATUS_CORRECTION) ? (", DataCorrection=" + correction) : "")
                     + " WHERE ID=?";
+            
             String[] args = new String[]{String.valueOf(id)};
+            
             db.execute(sql, args);
         }
     }
     
 	public List<TunnelSettlementTotalData> queryUnUploadTunnelTotalDataBySheet(int sheetId) {
+		
 		final IAccessDatabase mDatabase = getCurrentDb();
+		
 		if (mDatabase == null) {
 			return null;
 		}
+		
 		String sql = "select * from TunnelSettlementTotalData where SheetId = " + sheetId + " and Info = '1'";
+		
 		return mDatabase.queryObjects(sql, TunnelSettlementTotalData.class);
 	}
 	

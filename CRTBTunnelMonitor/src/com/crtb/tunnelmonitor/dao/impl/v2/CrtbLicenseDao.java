@@ -1,6 +1,7 @@
 package com.crtb.tunnelmonitor.dao.impl.v2;
 
 import org.zw.android.framework.IAccessDatabase;
+import org.zw.android.framework.db.core.SQLiteParamUtils;
 import org.zw.android.framework.util.StringUtils;
 
 import android.content.Context;
@@ -59,7 +60,7 @@ public final class CrtbLicenseDao extends AbstractDefaultDBDao<CrtbUser>{
 		
 		String sql = "select * from CrtbUser where username = ? " ;
 		
-		CrtbUser user = db.queryObject(sql, new String[]{username}, CrtbUser.class);
+		CrtbUser user = db.queryObject(sql, SQLiteParamUtils.toParamemter(username), CrtbUser.class);
 		
 		if(user == null){
 			
@@ -129,8 +130,10 @@ public final class CrtbLicenseDao extends AbstractDefaultDBDao<CrtbUser>{
 			// 查询注册用户
 			String sql = "select * from CrtbUser where username <> ? " ;
 			
+			String[] args = SQLiteParamUtils.toParamemter(mDefaultUsername) ;
+			
 			// 注册用户
-			CrtbUser user = db.queryObject(sql, new String[]{mDefaultUsername}, CrtbUser.class);
+			CrtbUser user = db.queryObject(sql, args, CrtbUser.class);
 			
 			if(user != null){
 				mCrtbUser	= user ;
@@ -138,7 +141,7 @@ public final class CrtbLicenseDao extends AbstractDefaultDBDao<CrtbUser>{
 			// 默认注册用户
 			else {
 				sql = "select * from CrtbUser where username = ? " ;
-				mCrtbUser	= db.queryObject(sql, new String[]{mDefaultUsername}, CrtbUser.class);
+				mCrtbUser	= db.queryObject(sql, args, CrtbUser.class);
 			}
 		}
 		

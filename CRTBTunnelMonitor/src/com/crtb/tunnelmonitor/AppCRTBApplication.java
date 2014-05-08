@@ -77,6 +77,9 @@ public class AppCRTBApplication extends Application {
 		// default user
 		CrtbLicenseDao.registDefaultUser(this);
 		
+		// debug add by wei.zhou
+		// CrtbLicenseDao.defaultDao().registLicense(this, "zhouwei", "987654321");
+		
 		// sdcard db file
 		CrtbDbFileUtils.initCrtbDbFiles(this);
 	}
