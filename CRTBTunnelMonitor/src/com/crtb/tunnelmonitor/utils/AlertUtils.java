@@ -93,6 +93,20 @@ public class AlertUtils {
         return new String[] { sb1.toString(), sb2.toString() };
     }
 
+    public static String getAlertValueUnit(int alertType) {
+        switch (alertType) {
+        case GONGDING_LEIJI_XIACHEN_EXCEEDING:
+        case SHOULIAN_LEIJI_EXCEEDING:
+        case DIBIAO_LEIJI_XIACHEN_EXCEEDING:
+            return "毫米";
+        case GONGDINGI_XIACHEN_SULV_EXCEEDING:
+        case SHOULIAN_SULV_EXCEEDING:
+        case DIBIAO_XIACHEN_SULV_EXCEEDING:
+            return "毫米/天";
+        }
+        return "";
+    }
+
     /**
      * 检测 断面拱顶 或 地表测点 的 累计沉降 或 单次沉降速率 是否超限.
      * 

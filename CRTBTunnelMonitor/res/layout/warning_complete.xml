@@ -50,6 +50,7 @@
                             android:layout_height="wrap_content"
                             android:text="Medium Text"
                             android:textAppearance="?android:attr/textAppearanceMedium"/>
+
                 </LinearLayout>
 
                 <LinearLayout
@@ -85,6 +86,15 @@
                 </LinearLayout>
             </LinearLayout>
 
+            <TextView
+                    android:textSize="16sp"
+                    android:id="@+id/warning_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_below="@+id/part_top"
+                    android:textAppearance="?android:attr/textAppearanceMedium"/>
+
             <RelativeLayout
                     android:id="@+id/old_date"
                     android:layout_marginTop="14dp"
@@ -92,7 +102,7 @@
                     android:layout_marginRight="23dp"
                     android:layout_width="fill_parent"
                     android:background="@drawable/warning_text_bg"
-                    android:layout_below="@+id/part_top"
+                    android:layout_below="@+id/warning_value"
                     android:layout_height="wrap_content">
 
                 <TextView

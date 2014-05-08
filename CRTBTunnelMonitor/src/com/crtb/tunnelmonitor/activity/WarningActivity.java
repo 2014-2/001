@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Random;
 
+import org.zw.android.framework.util.DateUtils;
+
 import android.app.Activity;
 import android.os.Bundle;
 import android.text.Editable;
@@ -16,7 +18,9 @@ import android.widget.RadioGroup.OnCheckedChangeListener;
 
 import com.crtb.tunnelmonitor.adapter.AlertListAdapter;
 import com.crtb.tunnelmonitor.dao.impl.v2.AlertHandlingInfoDao;
+import com.crtb.tunnelmonitor.dao.impl.v2.RawSheetIndexDao;
 import com.crtb.tunnelmonitor.entity.AlertInfo;
+import com.crtb.tunnelmonitor.entity.RawSheetIndex;
 import com.crtb.tunnelmonitor.utils.AlertManager;
 import com.crtb.tunnelmonitor.utils.AlertUtils;
 
@@ -36,9 +40,9 @@ public class WarningActivity extends Activity {
     private EditText mWarningRemarkView;
 
     private TextView baojing, yixiao;
-    private TextView warningSignalTV, warningPointNumTV,warningStateTV,warningDateTV,
-            warningMessageTV,warningDealWayTV,oldDateMileageTV,oldDateListNumTV,
-            oldDatePointTV;
+    private TextView warningSignalTV, warningPointNumTV, warningStateTV,
+            warningValueTV, warningDateTV, warningMessageTV, warningDealWayTV,
+            oldDateMileageTV, oldDateListNumTV, oldDatePointTV;
     private RadioButton radioButtonVoid,radioButtonFirst,radioButtonAdd;
     private EditText addEdit,warningRemarkET;
     private Button dealWithBtn, completeBtn,completeOkBtn,completeCancelBtn;
@@ -65,6 +69,7 @@ public class WarningActivity extends Activity {
         warningSignalTV = (TextView)findViewById(R.id.warning_signal);
         warningPointNumTV = (TextView)findViewById(R.id.warning_point_num);
         warningStateTV = (TextView)findViewById(R.id.warning_state);
+        warningValueTV = (TextView)findViewById(R.id.warning_value);
         warningDateTV = (TextView)findViewById(R.id.warning_date);
         warningMessageTV = (TextView)findViewById(R.id.warning_message);
         warningDealWayTV = (TextView)findViewById(R.id.warning_deal_way);
@@ -154,16 +159,26 @@ public class WarningActivity extends Activity {
                     switch (handlingStep) {
                         case 0:
                         case 1:
-                            mHandleCompleteView.setVisibility(View.VISIBLE);
-                            warningSignalTV.setText(alerts.get(clickedItem).getXinghao());
-                            warningPointNumTV.setText("点号："+alerts.get(clickedItem).getPntType());
-                            warningStateTV.setText("状态："+alerts.get(clickedItem).getAlertStatusMsg());
-                            warningDateTV.setText(alerts.get(clickedItem).getDate());
-                            warningMessageTV.setText(alerts.get(clickedItem).getUTypeMsg());
-                            warningDealWayTV.setText(alerts.get(clickedItem).getChuliFangshi());
-                            oldDateMileageTV.setText(Html.fromHtml("<font color=\"#0080ee\">里程：</font>"+alerts.get(clickedItem).getXinghao()));
-                            oldDateListNumTV.setText(Html.fromHtml("<font color=\"#0080ee\">记录单号：</font>"+alerts.get(clickedItem).getDate()));
-                            oldDatePointTV.setText(Html.fromHtml("<font color=\"#0080ee\">测点：</font>"+alerts.get(clickedItem).getPntType()));
+                            if (alerts != null && alerts.size() > 0 && clickedItem >= 0 && clickedItem < alerts.size()) {
+                                AlertInfo alert = alerts.get(clickedItem);
+                                if (alert != null) {
+                                    RawSheetIndex sheet = RawSheetIndexDao.defaultDao().queryOneById(alert.getSheetId());
+                                    String date = DateUtils.toDateString(sheet.getCreateTime(),DateUtils.DATE_TIME_FORMAT);
+
+                                    mHandleCompleteView.setVisibility(View.VISIBLE);
+                                    warningSignalTV.setText(alert.getXinghao());
+                                    warningPointNumTV.setText("点号："+alert.getPntType());
+                                    warningStateTV.setText("状态："+alert.getAlertStatusMsg());
+                                    warningValueTV.setText("超限值: " + String.format("%1$.4f", alert.getUValue())
+                                            + AlertUtils.getAlertValueUnit(alert.getUType()));
+                                    warningDateTV.setText(alert.getDate());
+                                    warningMessageTV.setText(alert.getUTypeMsg());
+                                    warningDealWayTV.setText(alert.getChuliFangshi());
+                                    oldDateMileageTV.setText(Html.fromHtml("<font color=\"#0080ee\">里程: </font>" + alert.getXinghao()));
+                                    oldDateListNumTV.setText(Html.fromHtml("<font color=\"#0080ee\">记录单号: </font>" + date));
+                                    oldDatePointTV.setText(Html.fromHtml("<font color=\"#0080ee\">测点: </font>" + alert.getPntType()));
+                                }
+                            }
                             break;
                         case 2:
                             Toast.makeText(WarningActivity.this, " 已消警", 1000).show();
