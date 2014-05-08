@@ -3,6 +3,7 @@ package com.byd.videoplayer.video;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 
+import android.R.integer;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -40,6 +41,7 @@ import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Editor;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -240,7 +242,7 @@ public class VideoPlayActivity extends Activity {
 				if (fromUser) {
 					if (rlFailedToPlay.getVisibility() != View.VISIBLE) {
 						showProgress();
-						mMediaPlayer.pause();
+						//mMediaPlayer.pause();
 						seekBar.setProgress(progress);
 						mHandler.removeMessages(PROGRESS_CHANGED);
 						mHandler.removeMessages(SEEKTO);
@@ -599,13 +601,18 @@ public class VideoPlayActivity extends Activity {
 
 	@Override
 	protected void onPause() {
+		if(null == mMediaPlayer || "" == mVideoUrl){
+			return;
+		}
+		int process = mMediaPlayer.getCurrentPosition();
+		WriteSharedPreferences(mVideoUrl,process);
 		myPause();
 
 		super.onPause();
 	}
 
 	private void myPause() {
-		btnPlayPause.setImageResource(R.drawable.button_play);
+		//btnPlayPause.setImageResource(R.drawable.button_play);
 		isPaused = true;
 		if (mHandler != null) {
 			mHandler.removeMessages(ERROR_HAPPENED);
@@ -619,9 +626,9 @@ public class VideoPlayActivity extends Activity {
 			if (CurrentP != 0) {
 				showProgress();
 				btnPlayPause.setClickable(false);
-				mMediaPlayer.seekTo(CurrentP);
 				mMediaPlayer.start();
-				mMediaPlayer.pause();
+				mMediaPlayer.seekTo(CurrentP);
+				isPaused = false;
 			} else {
 				showProgress();
 				btnPlayPause.setClickable(true);
@@ -635,7 +642,7 @@ public class VideoPlayActivity extends Activity {
 	}
 	
 	private void savePlayRecord() {
-	    BrowserActivity.tabContentChanged[BrowserActivity.TAB_INDEX_HISTORY] = true;
+	   BrowserActivity.tabContentChanged[BrowserActivity.TAB_INDEX_HISTORY] = true;
        PlayRecord playRecord = new PlayRecord();
        MovieInfo movieInfo = new MovieInfo();
        movieInfo.path = mVideoUrl;
@@ -860,8 +867,8 @@ public class VideoPlayActivity extends Activity {
 			durationTextView.setText(String.format("%02d:%02d:%02d", hour, minute, second));
 			if (!isPaused) {
 				CurrentP = ReadSharedPreferences(mVideoUrl);
-				mMediaPlayer.seekTo(CurrentP);
 				mMediaPlayer.start();
+				mMediaPlayer.seekTo(CurrentP);
 				btnPlayPause.setImageResource(R.drawable.button_pause);
 				isPaused = false;
 			}
@@ -924,8 +931,8 @@ public class VideoPlayActivity extends Activity {
 			btnPlayPause.setClickable(true);
 			if (!isPaused && !mMediaPlayer.isPlaying()) {
 				mMediaPlayer.start();
-				mHandler.sendEmptyMessageDelayed(PROGRESS_CHANGED, 100);
 			}
+			mHandler.sendEmptyMessageDelayed(PROGRESS_CHANGED, 100);
 		}
 	};
 
@@ -984,6 +991,4 @@ public class VideoPlayActivity extends Activity {
        } else {
        }
     }
-	
-	
 }
