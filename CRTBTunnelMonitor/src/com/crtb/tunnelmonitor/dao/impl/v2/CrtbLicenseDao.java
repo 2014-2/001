@@ -1,7 +1,7 @@
 package com.crtb.tunnelmonitor.dao.impl.v2;
 
 import org.zw.android.framework.IAccessDatabase;
-import org.zw.android.framework.impl.FrameworkFacade;
+import org.zw.android.framework.util.StringUtils;
 
 import android.content.Context;
 
@@ -18,7 +18,7 @@ import com.crtb.tunnelmonitor.entity.CrtbUser;
  * @author zhouwei
  *
  */
-public final class CrtbLicenseDao {
+public final class CrtbLicenseDao extends AbstractDefaultDBDao<CrtbUser>{
 	
 	static final String TAG 		= "CrtbLicenseDao" ;
 
@@ -26,10 +26,9 @@ public final class CrtbLicenseDao {
 	
 	private String 					mDefaultUsername ;
 	private CrtbUser 				mCrtbUser ;
-	private IAccessDatabase 		mDatabase ;
 	
 	private CrtbLicenseDao(){
-		mDatabase	= FrameworkFacade.getFrameworkFacade().openDefaultDatabase() ;
+		
 	}
 	
 	public static CrtbLicenseDao defaultDao(){
@@ -41,42 +40,97 @@ public final class CrtbLicenseDao {
 		return _instance ;
 	}
 	
+	/**
+	 * 注册默认用户
+	 * 
+	 * @param context
+	 */
 	public static void registDefaultUser(Context context){
 		
 		String username 		= context.getPackageName() ;
 		
 		CrtbLicenseDao dao 		= defaultDao() ;
 		dao.mDefaultUsername	= username ;
+		IAccessDatabase db 		= dao.getDefaultDb();
+		
+		if(db == null){
+			return ;
+		}
 		
 		String sql = "select * from CrtbUser where username = ? " ;
 		
-		CrtbUser user = dao.mDatabase.queryObject(sql, new String[]{username}, CrtbUser.class);
+		CrtbUser user = db.queryObject(sql, new String[]{username}, CrtbUser.class);
 		
 		if(user == null){
 			
 			user = new CrtbUser() ;
 			user.setUsername(username);
-			user.setUsertype(1);
+			user.setUsertype(CrtbUser.LICENSE_TYPE_DEFAULT);
 			user.setLicense("123456789");
 			
-			dao.mDatabase.saveObject(user);
+			db.saveObject(user);
 		}
 	}
 	
-	public void registLicense(Context context,String username,String license){
+	/**
+	 * 注册用户
+	 * 
+	 * @param context
+	 * @param username
+	 * @param license
+	 * @return
+	 */
+	public int registLicense(Context context,String username,String license){
 		
+		IAccessDatabase db 		= getDefaultDb();
+		
+		if(db == null 
+				|| StringUtils.isEmpty(username)
+				|| StringUtils.isEmpty(license)){
+			return DB_EXECUTE_FAILED ;
+		}
+		
+		String sql 		= "select * from CrtbUser where username = ? " ;
+		int error 		= -1 ;
+		
+		CrtbUser user 	= db.queryObject(sql, new String[]{username}, CrtbUser.class);
+		
+		if(user == null){
+			user = new CrtbUser() ;
+			user.setUsername(username);
+			user.setUsertype(CrtbUser.LICENSE_TYPE_REGISTER);
+			user.setLicense(license);
+			error = db.saveObject(user);
+		} else {
+			user.setUsername(username);
+			user.setLicense(license);
+			user.setUsertype(CrtbUser.LICENSE_TYPE_REGISTER);
+			error = db.updateObject(user);
+		}
+		
+		return error > 0 ? DB_EXECUTE_SUCCESS : DB_EXECUTE_FAILED;
 	}
 	
+	/**
+	 * 查询当前用户
+	 * 
+	 * @return
+	 */
 	public CrtbUser queryCrtbUser(){
 		
-		//
 		if(mCrtbUser == null){
+			
+			IAccessDatabase db 		= getDefaultDb();
+			
+			if(db == null){
+				return null;
+			}
 			
 			// 查询注册用户
 			String sql = "select * from CrtbUser where username <> ? " ;
 			
 			// 注册用户
-			CrtbUser user = mDatabase.queryObject(sql, new String[]{mDefaultUsername}, CrtbUser.class);
+			CrtbUser user = db.queryObject(sql, new String[]{mDefaultUsername}, CrtbUser.class);
 			
 			if(user != null){
 				mCrtbUser	= user ;
@@ -84,7 +138,7 @@ public final class CrtbLicenseDao {
 			// 默认注册用户
 			else {
 				sql = "select * from CrtbUser where username = ? " ;
-				mCrtbUser	= mDatabase.queryObject(sql, new String[]{mDefaultUsername}, CrtbUser.class);
+				mCrtbUser	= db.queryObject(sql, new String[]{mDefaultUsername}, CrtbUser.class);
 			}
 		}
 		
