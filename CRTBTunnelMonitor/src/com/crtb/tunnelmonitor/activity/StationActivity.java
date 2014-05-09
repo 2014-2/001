@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -41,6 +42,7 @@ import com.crtb.tunnelmonitor.dao.impl.v2.ProjectIndexDao;
 import com.crtb.tunnelmonitor.entity.TotalStationIndex;
 
 public class StationActivity extends Activity {
+    public static final String TAG = "StationActivity";
     /**
      * 显示用户名和选中状态
      */
@@ -325,14 +327,17 @@ public class StationActivity extends Activity {
                     showExitGameAlert();
                     break;
                 case R.id.bluetooth_connect: // 蓝牙连接
+                    Log.d(TAG, "蓝牙连接  clicked");
                     tsParams = new String[] {tsInfo.getName(), tsInfo.getInfo()};
                     ret = connect(TSConnectType.Bluetooth, tsCmdType, tsParams);
                     if (ret == 1) {
                         // mStations.get(position)
                         // .setbUse(true);
+                        AppCRTBApplication.getInstance().setCurUsedStationId(tsInfo.getID());
                     }
                     break;
                 case R.id.com_connect:// 串口连接
+                    Log.d(TAG, "串口连接  clicked");
                     tsParams = new String[] {tsInfo.getName(), String.valueOf( tsInfo.getBaudRate())};
                     ret = connect(TSConnectType.RS232, tsCmdType, tsParams);
                     if (ret == 1) {

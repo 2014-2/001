@@ -12,6 +12,7 @@ import org.zw.android.framework.impl.FrameworkFacade;
 
 import android.app.Application;
 import android.content.Context;
+import android.util.Log;
 
 import com.crtb.tunnelmonitor.dao.impl.v2.CrtbLicenseDao;
 import com.crtb.tunnelmonitor.entity.ControlPointsIndex;
@@ -23,7 +24,9 @@ import com.crtb.tunnelmonitor.utils.CrtbDbFileUtils;
 
 public class AppCRTBApplication extends Application {
 	
-	private static AppCRTBApplication instance;
+	private static final String TAG = "AppCRTBApplication";
+
+    private static AppCRTBApplication instance;
 	
 	private Object CurTotalStation = null;//正在使用的全站仪
 	
@@ -105,10 +108,12 @@ public class AppCRTBApplication extends Application {
 	}
 
     public int getCurUsedStationId() {
+        Log.d(TAG, "getCurUsedStationId, returning " + CurUsedStationId);
         return CurUsedStationId;
     }
 
     public void setCurUsedStationId(int curUsedStationId) {
+        Log.d(TAG, "setCurUsedStationId " + curUsedStationId);
         CurUsedStationId = curUsedStationId;
     }
 
