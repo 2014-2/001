@@ -33,7 +33,7 @@
             android:layout_gravity="center_vertical"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="预期状态"
+            android:text="预警状态"
             android:textColor="#FF000000" />
 
         <TextView
