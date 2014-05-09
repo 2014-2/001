@@ -94,21 +94,23 @@ public class TunnelAsyncUploadTask extends AsyncUploadTask {
 
             @Override
             public void onSuccess(Object[] data) {
-                CrtbWebService.getInstance().confirmSubmitData(new RpcCallback() {
-
-                    @Override
-                    public void onSuccess(Object[] data) {
-                        measureData.markAsUploaded();
-                        Log.d(LOG_TAG, "upload test data success.");
-                        pointUploadCounter.increase(true);
-                    }
-
-                    @Override
-                    public void onFailed(String reason) {
-                        Log.d(LOG_TAG, "confirm test data failed: " + reason);
-                        pointUploadCounter.increase(false);
-                    }
-                });
+            	measureData.markAsUploaded();
+            	pointUploadCounter.increase(true);
+//                CrtbWebService.getInstance().confirmSubmitData(new RpcCallback() {
+//
+//                    @Override
+//                    public void onSuccess(Object[] data) {
+//                        measureData.markAsUploaded();
+//                        Log.d(LOG_TAG, "upload test data success.");
+//                        pointUploadCounter.increase(true);
+//                    }
+//
+//                    @Override
+//                    public void onFailed(String reason) {
+//                        Log.d(LOG_TAG, "confirm test data failed: " + reason);
+//                        pointUploadCounter.increase(false);
+//                    }
+//                });
             }
 
             @Override
