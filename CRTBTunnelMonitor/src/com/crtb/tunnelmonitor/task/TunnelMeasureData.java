@@ -26,6 +26,8 @@ public class TunnelMeasureData extends MeasureData {
 	private String mMointorModel = null;
 	private float mFaceDistance = 0f;
 
+    private String mFaceDescription = null;
+
 	public void addMeasurePoint(TunnelSettlementTotalData point) {
 		mMeasurePoints.add(point);
 	}
@@ -172,6 +174,21 @@ public class TunnelMeasureData extends MeasureData {
 		}
 		return valueList;
 	}
+
+    public String getFaceDescription() {
+        if (TextUtils.isEmpty(mFaceDescription)) {
+            TunnelSettlementTotalData first = mMeasurePoints.size() > 0 ? mMeasurePoints.get(0)
+                    : null;
+            if (first != null) {
+                int sheetId = first.getSheetId();
+                RawSheetIndex sheet = RawSheetIndexDao.defaultDao().queryOneById(sheetId);
+                if (sheet != null) {
+                    mFaceDescription = sheet.getFACEDESCRIPTION();
+                }
+            }
+        }
+        return mFaceDescription;
+    }
 
     public float getFaceDistance() {
         TunnelSettlementTotalData first = mMeasurePoints.size() > 0 ? mMeasurePoints.get(0) : null;
