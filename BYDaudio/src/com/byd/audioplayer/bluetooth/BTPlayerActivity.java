@@ -151,8 +151,8 @@ public class BTPlayerActivity extends BaseActivity {
             //TODO deal with a2dp-connect failed, give a toast?
             Log.e(BTMUSIC, "connect a2dp FAILED!");
         } else {
-//            Log.i(BTMUSIC, "connect a2dp SUCCESSFULLY!");
-//            audioManager = (AudioManager) getBaseContext().getSystemService(Context.AUDIO_SERVICE);
+            Log.i(BTMUSIC, "connect a2dp SUCCESSFULLY!");
+            audioManager = (AudioManager) getBaseContext().getSystemService(Context.AUDIO_SERVICE);
 //            audioManager.setStreamMute(AudioManager.STREAM_VOICE_CALL, false);
 //            audioManager.setStreamVolume(AudioManager.STREAM_VOICE_CALL, audioManager.getStreamMaxVolume(AudioManager.STREAM_VOICE_CALL), 0);
 //            audioManager.setBluetoothScoOn(true);
