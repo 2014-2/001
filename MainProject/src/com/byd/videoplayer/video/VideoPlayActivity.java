@@ -103,9 +103,9 @@ public class VideoPlayActivity extends Activity {
 	private View titleView;
 	private View controlView;
 	private RelativeLayout rlFailedToPlay;
-	private ImageView iv_sound_ctrl;
+//	private ImageView iv_sound_ctrl;
 	private TextView tv_failed;
-	private SoundVolumeView sv_ctrlbar;
+//	private SoundVolumeView sv_ctrlbar;
 
 	/** Called when the activity is first created. */
 	@Override
@@ -362,30 +362,30 @@ public class VideoPlayActivity extends Activity {
 		tv_failed = (TextView) findViewById(R.id.tv_failed);
 
 		// Pulque edited at 2012-9-19 6:06:46pm
-		iv_sound_ctrl = (ImageView) controlView.findViewById(R.id.iv_sound_ctrl);
+//		iv_sound_ctrl = (ImageView) controlView.findViewById(R.id.iv_sound_ctrl);
 		// mCtrlDialog = new SoundCtrlDialog(this, iv_sound_ctrl);
 		// mCtrlDialog.updateSoundIcon(iv_sound_ctrl);
 		// mCtrlDialog.setCallBackHandler(myHandler, HIDE_CONTROLER, TIME);
-		iv_sound_ctrl.setOnClickListener(new View.OnClickListener() {
+//		iv_sound_ctrl.setOnClickListener(new View.OnClickListener() {
+//
+//			@Override
+//			public void onClick(View v) {
+//				if (sv_ctrlbar != null) {
+//					if (sv_ctrlbar.getVisibility() == View.VISIBLE) {
+//						sv_ctrlbar.setVisibility(View.GONE);
+//						cancelDelayHide();
+//						hideControllerDelay();
+//					} else {
+//						sv_ctrlbar.setVisibility(View.VISIBLE);
+//						showController();
+//						cancelDelayHide();
+//					}
+//				}
+//			}
+//		});
 
-			@Override
-			public void onClick(View v) {
-				if (sv_ctrlbar != null) {
-					if (sv_ctrlbar.getVisibility() == View.VISIBLE) {
-						sv_ctrlbar.setVisibility(View.GONE);
-						cancelDelayHide();
-						hideControllerDelay();
-					} else {
-						sv_ctrlbar.setVisibility(View.VISIBLE);
-						showController();
-						cancelDelayHide();
-					}
-				}
-			}
-		});
-
-		sv_ctrlbar = (SoundVolumeView) controlView.findViewById(R.id.volume_seek_bar);
-		sv_ctrlbar.updateVolumeView();
+//		sv_ctrlbar = (SoundVolumeView) controlView.findViewById(R.id.volume_seek_bar);
+//		sv_ctrlbar.updateVolumeView();
 		updateErrorIcon();
 		
 		registerSuspendBroadcast();
@@ -936,18 +936,18 @@ public class VideoPlayActivity extends Activity {
 		}
 	};
 
-	@Override
-	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN || keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
-			// mCtrlDialog.updateSoundIcon(iv_sound_ctrl);
-			sv_ctrlbar.setVisibility(View.GONE);
-		   sv_ctrlbar.updateVolumeView();
-			showController();
-			cancelDelayHide();
-			hideControllerDelay();
-		}
-		return super.onKeyDown(keyCode, event);
-	}
+//	@Override
+//	public boolean onKeyDown(int keyCode, KeyEvent event) {
+//		if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN || keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
+//			// mCtrlDialog.updateSoundIcon(iv_sound_ctrl);
+//			sv_ctrlbar.setVisibility(View.GONE);
+//		   sv_ctrlbar.updateVolumeView();
+//			showController();
+//			cancelDelayHide();
+//			hideControllerDelay();
+//		}
+//		return super.onKeyDown(keyCode, event);
+//	}
 
 	private int ReadSharedPreferences(String propId) {
 		SharedPreferences user = getSharedPreferences(POINT, Context.MODE_PRIVATE);

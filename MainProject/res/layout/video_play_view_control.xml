@@ -26,18 +26,6 @@
             android:src="@drawable/button_pause"
             android:background="@android:color/transparent" />
         
-        <ImageView
-            android:id="@+id/iv_sound_ctrl"
-            android:layout_width="wrap_content"
-            android:layout_height="60dip"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:layout_marginRight="5dp"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:clickable="true"
-            android:src="@drawable/icon_sound_normal" />
-        
         <SeekBar
             android:id="@+id/progress_bar"
             style="@style/style_seekbar"
@@ -69,16 +57,5 @@
             android:textSize="12sp" />
 
     </RelativeLayout>
-
-        
-    <com.byd.videoplayer.view.SoundVolumeView
-        android:id="@+id/volume_seek_bar"
-        android:layout_width="50dp"
-        android:layout_height="300dp"
-        android:layout_alignParentRight="true"
-        android:layout_marginBottom="5dp"
-        android:layout_marginRight="10dp"
-        android:layout_above="@id/RL_LinearLayoutButtonsBar"/>
-    
 
 </RelativeLayout>
