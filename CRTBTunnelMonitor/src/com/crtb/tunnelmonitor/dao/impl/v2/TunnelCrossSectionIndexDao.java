@@ -42,9 +42,14 @@ public final class TunnelCrossSectionIndexDao extends AbstractDao<TunnelCrossSec
         TunnelCrossSectionIndex obj = querySectionIndexByChainage(bean.getChainage());
         if (obj != null) {
             update(bean);
-            return obj.getID();
+            return -1;
         } else {
-            return insert(bean);
+            int result = insert(bean);
+            if (result != DB_EXECUTE_SUCCESS) {
+            	return -1;
+            } else {
+                return bean.getID();
+            }
         }
     }
 

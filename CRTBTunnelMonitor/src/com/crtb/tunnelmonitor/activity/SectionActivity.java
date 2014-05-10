@@ -15,6 +15,7 @@ import android.os.Parcelable;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -27,10 +28,15 @@ import android.widget.TextView;
 
 import com.crtb.tunnelmonitor.CommonObject;
 import com.crtb.tunnelmonitor.WorkFlowActivity;
+import com.crtb.tunnelmonitor.dao.impl.v2.AbstractDao;
+import com.crtb.tunnelmonitor.dao.impl.v2.SubsidenceCrossSectionExIndexDao;
 import com.crtb.tunnelmonitor.dao.impl.v2.SubsidenceCrossSectionIndexDao;
+import com.crtb.tunnelmonitor.dao.impl.v2.TunnelCrossSectionExIndexDao;
 import com.crtb.tunnelmonitor.dao.impl.v2.TunnelCrossSectionIndexDao;
 import com.crtb.tunnelmonitor.entity.MenuSystemItem;
+import com.crtb.tunnelmonitor.entity.SubsidenceCrossSectionExIndex;
 import com.crtb.tunnelmonitor.entity.SubsidenceCrossSectionIndex;
+import com.crtb.tunnelmonitor.entity.TunnelCrossSectionExIndex;
 import com.crtb.tunnelmonitor.entity.TunnelCrossSectionIndex;
 import com.crtb.tunnelmonitor.mydefine.CrtbDialogHint;
 import com.crtb.tunnelmonitor.mydefine.CrtbDialogResult;
@@ -135,6 +141,13 @@ public class SectionActivity extends WorkFlowActivity implements OnPageChangeLis
 			} else if(position == 1){
 				
 				int code = TunnelCrossSectionIndexDao.defaultDao().delete(section);
+				TunnelCrossSectionExIndex sectionExIndex = TunnelCrossSectionExIndexDao.defaultDao().querySectionById(section.getID());
+				if (sectionExIndex != null) {
+					int result =TunnelCrossSectionExIndexDao.defaultDao().delete(sectionExIndex);
+					if (result != AbstractDao.DB_EXECUTE_SUCCESS) {
+						Log.e("SectionActivity", "delete TunnelCrossSectionExIndex failed!");
+					}
+				}
 				
 				CrtbDialogResult dialog = null ;
 				
@@ -152,6 +165,13 @@ public class SectionActivity extends WorkFlowActivity implements OnPageChangeLis
 		} else if(bean instanceof SubsidenceCrossSectionIndex){
 			
 			SubsidenceCrossSectionIndex section = (SubsidenceCrossSectionIndex)bean ;
+			SubsidenceCrossSectionExIndex sectionExIndex = SubsidenceCrossSectionExIndexDao.defaultDao().querySectionById(section.getID());
+			if (sectionExIndex != null) {
+				int result = SubsidenceCrossSectionExIndexDao.defaultDao().delete(sectionExIndex);
+				if (result != AbstractDao.DB_EXECUTE_SUCCESS) {
+					Log.e("SectionActivity", "delete SubsidenceCrossSectionExIndex failed!");
+				}
+			}
 			
 			if(position == 0){
 				

@@ -4,6 +4,7 @@ import java.util.List;
 
 import android.util.Log;
 
+import com.crtb.tunnelmonitor.dao.impl.v2.AbstractDao;
 import com.crtb.tunnelmonitor.dao.impl.v2.TunnelCrossSectionExIndexDao;
 import com.crtb.tunnelmonitor.dao.impl.v2.TunnelCrossSectionIndexDao;
 import com.crtb.tunnelmonitor.entity.TunnelCrossSectionExIndex;
@@ -41,9 +42,12 @@ public class TunnelAsyncUploadTask extends AsyncUploadTask {
 						dao.update(sectionIndex);
 						TunnelCrossSectionExIndexDao sectionExIndexDao = TunnelCrossSectionExIndexDao.defaultDao();
 						TunnelCrossSectionExIndex sectionExIndex = new TunnelCrossSectionExIndex();
-						sectionExIndex.setID(sectionIndex.getID());
+						sectionExIndex.setSECT_ID(sectionIndex.getID());
 						sectionExIndex.setSECTCODE(sectionCode);
-						sectionExIndexDao.insert(sectionExIndex);
+						int code = sectionExIndexDao.insert(sectionExIndex);
+						if (code != AbstractDao.DB_EXECUTE_SUCCESS) {
+							Log.e(LOG_TAG, "insert TunnelCrossSectionExIndex failed.");
+						}
 					}
 				}).start();
 				Log.d(LOG_TAG, "upload section success: section_code: " + sectionCode);

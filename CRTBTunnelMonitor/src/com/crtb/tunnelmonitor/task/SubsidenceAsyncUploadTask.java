@@ -4,6 +4,7 @@ import java.util.List;
 
 import android.util.Log;
 
+import com.crtb.tunnelmonitor.dao.impl.v2.AbstractDao;
 import com.crtb.tunnelmonitor.dao.impl.v2.SubsidenceCrossSectionExIndexDao;
 import com.crtb.tunnelmonitor.dao.impl.v2.SubsidenceCrossSectionIndexDao;
 import com.crtb.tunnelmonitor.entity.SubsidenceCrossSectionExIndex;
@@ -41,9 +42,12 @@ public class SubsidenceAsyncUploadTask extends AsyncUploadTask {
 						dao.update(sectionIndex);
 						SubsidenceCrossSectionExIndexDao sectionExIndexDao = SubsidenceCrossSectionExIndexDao.defaultDao();
 						SubsidenceCrossSectionExIndex sectionExIndex = new SubsidenceCrossSectionExIndex();
-						sectionExIndex.setID(sectionIndex.getID());
+						sectionExIndex.setSECT_ID(sectionIndex.getID());
 						sectionExIndex.setSECTCODE(sectionCode);
-						sectionExIndexDao.insert(sectionExIndex);
+						int code = sectionExIndexDao.insert(sectionExIndex);
+						if (code != AbstractDao.DB_EXECUTE_SUCCESS) {
+							 Log.e(LOG_TAG, "insert SubsidenceCrossSectionExIndex failed.");
+						}
 					}
 				}).start();
 				uploadMeasureDataList(sectionCode, section.getMeasureData(), sectionUploadCounter);

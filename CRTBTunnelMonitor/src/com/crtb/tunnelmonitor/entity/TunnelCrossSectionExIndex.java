@@ -25,6 +25,9 @@ public class TunnelCrossSectionExIndex implements Serializable {
 	@ColumnInt
 	private int ID;
 	
+	@ColumnInt
+	private int SECT_ID;		    // SECT_ID 断面数据库id
+	
 	@ColumnString(length=64)
 	private String ZONECODE;		// ZONECODE 工区代码
 	
@@ -207,5 +210,13 @@ public class TunnelCrossSectionExIndex implements Serializable {
 
 	public void setDESCRIPTION(String dESCRIPTION) {
 		DESCRIPTION = dESCRIPTION;
+	}
+
+	public int getSECT_ID() {
+		return SECT_ID;
+	}
+
+	public void setSECT_ID(int sECT_ID) {
+		SECT_ID = sECT_ID;
 	}
 }

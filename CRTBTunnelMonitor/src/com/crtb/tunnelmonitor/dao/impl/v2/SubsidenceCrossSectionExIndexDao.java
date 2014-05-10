@@ -25,7 +25,7 @@ public class SubsidenceCrossSectionExIndexDao  extends AbstractDao<SubsidenceCro
         if (queryOneBySectionCode(sectionCode) == null) {
             SubsidenceCrossSectionExIndex obj = new SubsidenceCrossSectionExIndex();
             obj.setSECTCODE(sectionCode);
-            obj.setID(sectionId);
+            obj.setSECT_ID(sectionId);
             insert(obj);
         }
     }
@@ -35,7 +35,7 @@ public class SubsidenceCrossSectionExIndexDao  extends AbstractDao<SubsidenceCro
 		if (mDatabase == null) {
 			return null;
 		}
-		String sql = "select * from TunnelCrossSectionExIndex where ID = ?";
+		String sql = "select * from SubsidenceCrossSectionExIndex where SECT_ID = ?";
 		return mDatabase.queryObject(sql, new String[] { String.valueOf(rowId) }, SubsidenceCrossSectionExIndex.class);
 	}
 
@@ -47,7 +47,7 @@ public class SubsidenceCrossSectionExIndexDao  extends AbstractDao<SubsidenceCro
             return null;
         }
         
-        String sql = "select * from TunnelCrossSectionExIndex where SECTCODE = ?";
+        String sql = "select * from SubsidenceCrossSectionExIndex where SECTCODE = ?";
         return mDatabase.queryObject(sql, new String[] { sectionCode }, SubsidenceCrossSectionExIndex.class);
     }
 }
