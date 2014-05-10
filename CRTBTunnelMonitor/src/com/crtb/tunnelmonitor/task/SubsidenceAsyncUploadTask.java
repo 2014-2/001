@@ -85,14 +85,14 @@ public class SubsidenceAsyncUploadTask extends AsyncUploadTask {
         parameter.setSectionCode(sectionCode);
         parameter.setPointCodeList(measureData.getPointCodeList(sectionCode));
         parameter.setTunnelFaceDistance(measureData.getFaceDistance());
-        parameter.setProcedure("02");
+        parameter.setProcedure(measureData.getFaceDescription());
         parameter.setMonitorModel(measureData.getMonitorModel());
         parameter.setMeasureDate(measureData.getMeasureDate());
         parameter.setPointValueList(measureData.getValueList());
         parameter.setPointCoordinateList(measureData.getCoordinateList());
-        parameter.setSurveyorName("杨工");
-        parameter.setSurveyorId("111");
-        parameter.setRemark("yyy");
+        parameter.setSurveyorName(CrtbUtils.getSurveyorName());
+        parameter.setSurveyorId(CrtbUtils.getSurveyorCertificateID());
+        parameter.setRemark("");
         CrtbWebService.getInstance().uploadTestResult(parameter, new RpcCallback() {
 
             @Override

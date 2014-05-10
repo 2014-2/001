@@ -148,92 +148,110 @@ public final class CrtbUtils {
         
         return "" ;
     }
-    
-    public static void fillSectionParamter(TunnelCrossSectionIndex section,SectionUploadParamter outParamter){
-    	if(section == null || outParamter == null){
-    		return ;
-    	}
-    	outParamter.setSectionName(section.getSectionName().split("\\.")[0]);
-    	CrtbAppConfig config = CrtbAppConfig.getInstance();
-    	int sectionSequence = config.getSectionSequence() + 1;
-    	config.setSectionSequence(sectionSequence);
-    	String sectionCode = CrtbWebService.getInstance().getSiteCode() + String.format("%04d",  sectionSequence);
-    	outParamter.setSectioCode(sectionCode);
-    	String digMethod = getExcavateMethodCode(section.getExcavateMethod());
-    	outParamter.setDigMethod(digMethod);
-    	String pointList = "";
-    	if ("QD".equals(digMethod)) {//全断面法
-    		pointList = sectionCode + "GD01" + "/" + sectionCode + "SL01" + "#" + sectionCode + "SL02";
-    	} else if ("ST".equals(digMethod) || "SC".equals(digMethod)) { //三台阶法或又侧壁法
-    		pointList = sectionCode + "GD01" + "/" + sectionCode + "SL01" + "#" + sectionCode + "SL02" 
-    	                                     + "/" + sectionCode + "SL03" + "#" + sectionCode + "SL04"
-    	                                     + "/" + sectionCode + "SL05" + "#" + sectionCode + "SL06";
-    	} else if ("DT".equals(digMethod)) {//台阶法
-    		pointList = sectionCode + "GD01" + "/" + sectionCode + "SL01" + "#" + sectionCode + "SL02" 
-                    + "/" + sectionCode + "SL03" + "#" + sectionCode + "SL04";
-    	}
-    	else {
-    		Log.e("upload", "unknown dig method: " + digMethod);
-    	}
-    	//outParamter.setPointList(section.getSurveyPntName());
-    	outParamter.setPointList(pointList);
-    	//TODO: 值要保持一至
-    	//outParamter.setChainage(String.valueOf(section.getChainage()));
-    	outParamter.setChainage(formatSectionName(getSectionPrefix(), section.getChainage()).split("\\.")[0]);
-    	outParamter.setWidth((int)section.getWidth());
-    	//TODO:暂时取不到数据,使用"50.0f"
-    	//outParamter.setTotalU0Limit(section.getGDU0());
-    	outParamter.setTotalU0Limit(50.0f);
-    	//TODO:暂时取不到数据,使用当前时间
-    	//outParamter.setModifiedTime(section.getGDU0Time());
-    	outParamter.setModifiedTime(new Date());
-    	//TODO:暂时取不到数据,使用"xxx"
-    	//outParamter.setU0Remark(section.getGDU0Description());
-    	outParamter.setU0Remark("xxx");
-    	//TODO: 暂时取不到数据，使用固定值3
-    	//outParamter.setWallRockLevel(Integer.valueOf(section.getLithologi()));
-    	outParamter.setWallRockLevel(3);
-    	//TODO:暂时取不到数据,使用当前时间
-    	//outParamter.setFirstMeasureDate(section.getInBuiltTime());
-    	outParamter.setFirstMeasureDate(new Date());
-    	outParamter.setRemark(section.getInfo());
+
+    public static void fillSectionParamter(TunnelCrossSectionIndex section,
+            SectionUploadParamter outParamter) {
+        if (section == null || outParamter == null) {
+            return;
+        }
+        outParamter.setSectionName(section.getSectionName().split("\\.")[0]);
+        CrtbAppConfig config = CrtbAppConfig.getInstance();
+        int sectionSequence = config.getSectionSequence() + 1;
+        config.setSectionSequence(sectionSequence);
+        String sectionCode = CrtbWebService.getInstance().getSiteCode()
+                + String.format("%04d", sectionSequence);
+        outParamter.setSectioCode(sectionCode);
+        String digMethod = getExcavateMethodCode(section.getExcavateMethod());
+        outParamter.setDigMethod(digMethod);
+        String pointList = "";
+        if ("QD".equals(digMethod)) {// 全断面法
+            pointList = sectionCode + "GD01" + "/" + sectionCode + "SL01" + "#" + sectionCode
+                    + "SL02";
+        } else if ("ST".equals(digMethod) || "SC".equals(digMethod)) { // 三台阶法或又侧壁法
+            pointList = sectionCode + "GD01" + "/" + sectionCode + "SL01" + "#" + sectionCode
+                    + "SL02" + "/" + sectionCode + "SL03" + "#" + sectionCode + "SL04" + "/"
+                    + sectionCode + "SL05" + "#" + sectionCode + "SL06";
+        } else if ("DT".equals(digMethod)) {// 台阶法
+            pointList = sectionCode + "GD01" + "/" + sectionCode + "SL01" + "#" + sectionCode
+                    + "SL02" + "/" + sectionCode + "SL03" + "#" + sectionCode + "SL04";
+        } else {
+            Log.e("upload", "unknown dig method: " + digMethod);
+        }
+
+        outParamter.setPointList(pointList);
+        outParamter.setChainage(formatSectionName(getSectionPrefix(), section.getChainage()).split(
+                "\\.")[0]);
+        outParamter.setWidth((int) section.getWidth());
+
+        // 使用GDU0和SLU0中的较大值
+        float gdU0 = section.getGDU0();
+        float slU0 = section.getSLU0();
+        outParamter.setTotalU0Limit(Math.max(gdU0, slU0));
+
+        // TODO:若取不到数据,使用当前时间
+        Date gdU0Date = section.getGDU0Time();
+        outParamter.setModifiedTime(gdU0Date != null ? gdU0Date : new Date());
+
+        // 暂时先使用拱顶备注
+        String gdU0Des = section.getGDU0Description();
+        if (gdU0Des == null) {
+            gdU0Des = "";
+        }
+        outParamter.setU0Remark(gdU0Des);
+
+        // TODO: 暂时取不到数据，使用固定值3
+        // outParamter.setWallRockLevel(Integer.valueOf(section.getLithologi()));
+        outParamter.setWallRockLevel(3);
+
+        // TODO:若取不到数据,使用当前时间
+        Date builtTime = section.getInBuiltTime();
+        outParamter.setFirstMeasureDate(builtTime != null ? builtTime : new Date());
+        outParamter.setRemark(section.getInfo());
     }
-    
-    public static void fillSectionParamter(SubsidenceCrossSectionIndex section,SectionUploadParamter outParamter){
-    	if(section == null || outParamter == null){
-    		return ;
-    	}
-    	outParamter.setSectionName(section.getSectionName().split("\\.")[0]);
-    	CrtbAppConfig config = CrtbAppConfig.getInstance();
-    	int sectionSequence = config.getSectionSequence() + 1;
-    	config.setSectionSequence(sectionSequence);
-    	String sectionCode = CrtbWebService.getInstance().getSiteCode() + String.format("%04d",  sectionSequence);
-    	outParamter.setSectioCode(sectionCode);
-    	StringBuilder sb = new StringBuilder();
-    	final int totalCount = Integer.parseInt(section.getSurveyPnts());
-    	for(int i = 0; i < totalCount; i++) {
-    		sb.append(sectionCode + "DB" + String.format("%02d", i) + "/");
-    	}
-    	sb.deleteCharAt(sb.lastIndexOf("/"));
-    	outParamter.setPointList(sb.toString());
-    	//FIX:需要将里程转换成DK-XXX
-    	//outParamter.setChainage(String.valueOf(section.getChainage()));
-    	//outParamter.setDigMethod(String.valueOf(section.getExcavateMethod()));
-    	outParamter.setChainage(formatSectionName(getSectionPrefix(), section.getChainage()).split("\\.")[0]);
-    	outParamter.setDigMethod("QD");
-    	outParamter.setWidth((int)section.getWidth());
-    	outParamter.setTotalU0Limit(section.getDBU0());
-    	outParamter.setModifiedTime(section.getDBU0Time());
-    	//TODO: 暂时取不到数据，使用固定值：
-    	//outParamter.setU0Remark(section.getDBU0Description());
-    	outParamter.setU0Remark("xxx");
-    	//TODO: 暂时取不到数据，使用固定值3
-    	//outParamter.setWallRockLevel(Integer.valueOf(section.getLithologic()));
-    	outParamter.setWallRockLevel(3);
-    	outParamter.setFirstMeasureDate(section.getInbuiltTime());
-    	outParamter.setRemark(section.getInfo());
+
+    public static void fillSectionParamter(SubsidenceCrossSectionIndex section,
+            SectionUploadParamter outParamter) {
+        if (section == null || outParamter == null) {
+            return;
+        }
+        outParamter.setSectionName(section.getSectionName().split("\\.")[0]);
+        CrtbAppConfig config = CrtbAppConfig.getInstance();
+        int sectionSequence = config.getSectionSequence() + 1;
+        config.setSectionSequence(sectionSequence);
+        String sectionCode = CrtbWebService.getInstance().getSiteCode()
+                + String.format("%04d", sectionSequence);
+        outParamter.setSectioCode(sectionCode);
+        StringBuilder sb = new StringBuilder();
+        final int totalCount = Integer.parseInt(section.getSurveyPnts());
+        for (int i = 0; i < totalCount; i++) {
+            sb.append(sectionCode + "DB" + String.format("%02d", i) + "/");
+        }
+        sb.deleteCharAt(sb.lastIndexOf("/"));
+        outParamter.setPointList(sb.toString());
+        // FIX:需要将里程转换成DK-XXX
+        // outParamter.setChainage(String.valueOf(section.getChainage()));
+        // outParamter.setDigMethod(String.valueOf(section.getExcavateMethod()));
+        outParamter.setChainage(formatSectionName(getSectionPrefix(), section.getChainage()).split(
+                "\\.")[0]);
+        outParamter.setDigMethod("QD");
+        outParamter.setWidth((int) section.getWidth());
+        outParamter.setTotalU0Limit(section.getDBU0());
+        Date dbU0time = section.getDBU0Time();
+        outParamter.setModifiedTime(dbU0time != null ? dbU0time : new Date());
+
+        String dbU0Des = section.getDBU0Description();
+        if (dbU0Des == null) {
+            dbU0Des = "";
+        }
+        outParamter.setU0Remark(dbU0Des);
+        // TODO: 暂时取不到数据，使用固定值3
+        // outParamter.setWallRockLevel(Integer.valueOf(section.getLithologic()));
+        outParamter.setWallRockLevel(3);
+        Date inBuiltTime = section.getInbuiltTime();
+        outParamter.setFirstMeasureDate(inBuiltTime != null ? inBuiltTime : new Date());
+        outParamter.setRemark(section.getInfo());
     }
-    
+
     public static void fillTunnelTestRecord(TunnelSettlementTotalData data, PointUploadParameter outParamter){
     	
     	if(data == null || outParamter == null){

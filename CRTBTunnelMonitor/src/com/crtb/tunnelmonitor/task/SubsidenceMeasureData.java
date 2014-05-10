@@ -13,18 +13,16 @@ import com.crtb.tunnelmonitor.dao.impl.v2.RawSheetIndexDao;
 import com.crtb.tunnelmonitor.dao.impl.v2.SubsidenceCrossSectionIndexDao;
 import com.crtb.tunnelmonitor.dao.impl.v2.SubsidenceTotalDataDao;
 import com.crtb.tunnelmonitor.dao.impl.v2.TotalStationInfoDao;
-import com.crtb.tunnelmonitor.dao.impl.v2.TunnelCrossSectionIndexDao;
 import com.crtb.tunnelmonitor.entity.RawSheetIndex;
 import com.crtb.tunnelmonitor.entity.SubsidenceCrossSectionIndex;
 import com.crtb.tunnelmonitor.entity.SubsidenceTotalData;
 import com.crtb.tunnelmonitor.entity.TotalStationIndex;
-import com.crtb.tunnelmonitor.entity.TunnelCrossSectionIndex;
-import com.crtb.tunnelmonitor.entity.TunnelSettlementTotalData;
 
 public class SubsidenceMeasureData extends MeasureData {
 	private List<SubsidenceTotalData> mMeasurePoints = new ArrayList<SubsidenceTotalData>();
     private String mMointorModel = null;
     private float mFaceDistance = 0f;
+    private String mFaceDescription = null;
 
 	public void addMeasurePoint(SubsidenceTotalData point) {
 		mMeasurePoints.add(point);
@@ -75,6 +73,21 @@ public class SubsidenceMeasureData extends MeasureData {
 		sb.deleteCharAt(sb.lastIndexOf("/"));
 		return sb.toString();
 	}
+
+    public String getFaceDescription() {
+        if (TextUtils.isEmpty(mFaceDescription)) {
+            SubsidenceTotalData first = mMeasurePoints.size() > 0 ? mMeasurePoints.get(0)
+                    : null;
+            if (first != null) {
+                int sheetId = first.getSheetId();
+                RawSheetIndex sheet = RawSheetIndexDao.defaultDao().queryOneById(sheetId);
+                if (sheet != null) {
+                    mFaceDescription = sheet.getFACEDESCRIPTION();
+                }
+            }
+        }
+        return mFaceDescription;
+    }
 
     public float getFaceDistance() {
         SubsidenceTotalData first = mMeasurePoints.size() > 0 ? mMeasurePoints.get(0) : null;
