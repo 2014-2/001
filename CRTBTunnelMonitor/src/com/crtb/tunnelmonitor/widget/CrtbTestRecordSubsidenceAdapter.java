@@ -6,6 +6,7 @@ import java.util.List;
 import org.zw.android.framework.ioc.InjectCore;
 import org.zw.android.framework.ioc.InjectLayout;
 import org.zw.android.framework.ioc.InjectView;
+import org.zw.android.framework.util.DateUtils;
 
 import android.content.Context;
 import android.view.View;
@@ -15,7 +16,6 @@ import android.widget.TextView;
 import com.crtb.tunnelmonitor.activity.R;
 import com.crtb.tunnelmonitor.dao.impl.v2.RawSheetIndexDao;
 import com.crtb.tunnelmonitor.entity.RawSheetIndex;
-import com.crtb.tunnelmonitor.utils.CrtbUtils;
 
 /**
  * 地表下沉断面测量单
@@ -77,8 +77,9 @@ public class CrtbTestRecordSubsidenceAdapter extends CrtbEntityAdapter<RawSheetI
 			holder		= (HolderView)convertView.getTag() ;
 		}
 		
-		holder.recordNo.setText(String.valueOf(item.getID()));
-		holder.recordName.setText(CrtbUtils.formatSectionName(item.getPrefix(),item.getFACEDK()));
+		holder.recordNo.setText(String.valueOf(position + 1));
+		//holder.recordName.setText(CrtbUtils.formatSectionName(item.getPrefix(),item.getFACEDK()));
+		holder.recordName.setText(DateUtils.toDateString(item.getCreateTime(),DateUtils.DATE_TIME_FORMAT));
 		
 		if(!item.isChecked()){
 			holder.status.setBackgroundResource(R.drawable.no);

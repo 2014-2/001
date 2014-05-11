@@ -84,6 +84,10 @@ public final class CrtbDialogFileBrowse extends CrtbDialog {
 		};
 		
 	}
+	
+	public boolean hasIuputFiles(){
+		return mList != null && mList.size() > 0 ;
+	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

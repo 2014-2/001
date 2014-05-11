@@ -34,7 +34,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="5dp"
-                android:text="记录单"
+                android:text="记录单名称"
                 android:textColor="#FF000000" />
         </RelativeLayout>
 

@@ -217,7 +217,12 @@ public final class WorkActivity extends WorkFlowActivity {
 		} else if(name.equals(getString(R.string.common_inport))){
 			
 			CrtbDialogFileBrowse browse = new CrtbDialogFileBrowse(WorkActivity.this, mDisplayMetrics.heightPixels >> 1,mHanlder);
-			browse.show() ;
+			
+			if(browse.hasIuputFiles()){
+				browse.show() ;
+			} else {
+				showText("没有导入的数据库文件");
+			}
 			
 		} else if(name.equals(getString(R.string.common_export))){
 			
