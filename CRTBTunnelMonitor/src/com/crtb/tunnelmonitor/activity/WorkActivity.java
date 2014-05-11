@@ -221,7 +221,7 @@ public final class WorkActivity extends WorkFlowActivity {
 			if(browse.hasIuputFiles()){
 				browse.show() ;
 			} else {
-				showText("没有导入的数据库文件");
+				showText("没有可导入的数据库文件");
 			}
 			
 		} else if(name.equals(getString(R.string.common_export))){
