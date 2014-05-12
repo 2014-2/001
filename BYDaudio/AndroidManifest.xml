@@ -25,7 +25,7 @@
             android:icon="@drawable/launch_music"
             android:label="@string/audio_page"
             android:theme="@android:style/Theme.DeviceDefault"
-            android:launchMode="singleTask" >
+            android:launchMode="singleTop" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
