@@ -4,11 +4,13 @@ import java.lang.ref.WeakReference;
 import java.util.List;
 import java.util.Locale;
 
+import android.app.ActivityManager;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.app.FragmentManager;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -100,6 +102,26 @@ OnItemLongClickListener, SearchListener, DeleteListener {
 
     private OnSongChangedListener mOnSongChangedListener;
 
+    private Intent mAudioServiceIntent;
+
+    private Handler mListHandler = new Handler() {
+
+        @Override
+        public void handleMessage(Message msg) {
+            mAdapter.notifyDataSetChanged();
+            if (null == mOnSongChangedListener) {
+                mOnSongChangedListener = new OnSongChangedListener() {
+                    @Override
+                    public void onSongChanged(int newPosition) {
+                        mAdapter.notifyDataSetChanged();
+                    }
+                };
+            }
+            AudioPlayerService.setOnSongChangedListener(mOnSongChangedListener);
+            super.handleMessage(msg);
+        }
+    };
+
     static class MediaStoreChangedHandler extends Handler {
         WeakReference<AudioListActivity> wrActivity = null;
 
@@ -134,6 +156,8 @@ OnItemLongClickListener, SearchListener, DeleteListener {
         refreshDatas();
 
         setContentView(R.layout.audio_list_view);
+
+        mAudioServiceIntent = new Intent(this, AudioPlayerService.class);
 
         initViews();
         setMode(MODE_NORMAL);
@@ -392,6 +416,9 @@ OnItemLongClickListener, SearchListener, DeleteListener {
             case TAB_INDEX_USB:
                 AudioLoaderManager.getInstance().setViewType(index);
                 mAdapter.onDataChange();
+                if (!isPlayerServiceRunning()) {
+                    startPlayTheFirstSong();
+                }
                 break;
             case TAB_INDEX_AUX:
                 Intent intent_aux = new Intent();
@@ -427,6 +454,31 @@ OnItemLongClickListener, SearchListener, DeleteListener {
             }
         }
         updateHeadTitle();
+    }
+
+    private void startPlayTheFirstSong() {
+        new Thread(new Runnable() {
+
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+                List<Song> songs = AudioLoaderManager.getInstance().getViewSongs();
+                AudioPlayerManager.getInstance().setPlayerList(
+                        AudioLoaderManager.getInstance().getViewType(), songs);
+                AudioPlayerManager.getInstance().setPlayerPosition(0);
+                mAudioServiceIntent.putExtra(Constants.PLAYER_MSG, Constants.PlayerCommand.PLAY);
+                mAudioServiceIntent.putExtra(Constants.MUSIC_SONG_POSITION, 0);
+                startService(mAudioServiceIntent);
+                AudioLoaderManager.getInstance().setPlayType(
+                        AudioLoaderManager.getInstance().getViewType());
+                mListHandler.sendEmptyMessageDelayed(0, 500);
+            }
+        }).start();
     }
 
     @Override
@@ -663,5 +715,21 @@ OnItemLongClickListener, SearchListener, DeleteListener {
             return true;
         else
             return false;
+    }
+
+    private boolean isPlayerServiceRunning() {
+        ActivityManager activityManager = (ActivityManager)getSystemService(Context.ACTIVITY_SERVICE);
+        List<ActivityManager.RunningServiceInfo> serviceList = activityManager
+                .getRunningServices(30);
+        if (serviceList == null || serviceList.size() < 0) {
+            return false;
+        }
+        for (int i = 0; i < serviceList.size(); i++) {
+            if (serviceList.get(i).service.getClassName().equals(
+                    AudioPlayerService.class.getName())) {
+                return true;
+            }
+        }
+        return false;
     }
 }
