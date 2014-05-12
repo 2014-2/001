@@ -1,6 +1,7 @@
 package com.byd.audioplayer.audio;
 
 import java.io.File;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -139,7 +140,8 @@ public class AudioLoaderTask extends AsyncQueryHandler {
             //            }
             if (cursor.getString(9) != null) {// fileSize
                 float temp = cursor.getInt(9) / 1024f / 1024f;
-                String sizeStr = (temp + "").substring(0, 4);
+                DecimalFormat df = new DecimalFormat("####.00");
+                String sizeStr = df.format(temp);
                 song.setFileSize(sizeStr + "M");
             } else {
                 song.setFileSize("undefine");
