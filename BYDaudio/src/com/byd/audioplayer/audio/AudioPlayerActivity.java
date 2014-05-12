@@ -216,13 +216,13 @@ public class AudioPlayerActivity extends BaseActivity {
         int viewType = AudioPlayerManager.getInstance().getStorageType();
         switch (viewType) {
             case AudioLoaderManager.INTERNAL_TYPE:
-                mPlayerTitle.setText(R.string.btn_text_local);
+                mPlayerTitle.setText(R.string.title_audio_local);
                 break;
             case AudioLoaderManager.EXTERNAL_SDCARD_TYPE:
-                mPlayerTitle.setText(R.string.btn_text_sdcard);
+                mPlayerTitle.setText(R.string.title_audio_sdcard);
                 break;
             case AudioLoaderManager.EXTERNAL_USB_TYPE:
-                mPlayerTitle.setText(R.string.btn_text_usb);
+                mPlayerTitle.setText(R.string.title_audio_usb);
                 break;
         }
         if (null == mSongInfoAndLyricsContainer) {
