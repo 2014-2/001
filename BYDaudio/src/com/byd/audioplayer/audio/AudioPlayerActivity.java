@@ -14,7 +14,6 @@ import android.content.ServiceConnection;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -49,7 +48,6 @@ import com.byd.audioplayer.lrc.LrcContent;
 import com.byd.audioplayer.lrc.LrcUtils;
 import com.byd.audioplayer.lrc.LrcView;
 import com.byd.audioplayer.view.CheckableImageView;
-import com.byd.audioplayer.view.VerticalSeekBar;
 import com.byd.audioplayer.view.VisualizeView;
 
 public class AudioPlayerActivity extends BaseActivity {
@@ -61,6 +59,8 @@ public class AudioPlayerActivity extends BaseActivity {
      * The container of song info or lyrics
      */
     private LinearLayout mSongInfoAndLyricsContainer;
+
+    private TextView mPlayerTitle;
 
     private TextView mTotalTime;
 
@@ -90,9 +90,9 @@ public class AudioPlayerActivity extends BaseActivity {
 
     private CheckableImageView mBtnAudioFx;
 
-//    private CheckableImageView mBtnVolume;
+    //    private CheckableImageView mBtnVolume;
 
-//    private PopupWindow mPopupVolume;
+    //    private PopupWindow mPopupVolume;
 
     private PopupWindow mPopupAudioFx;
 
@@ -100,7 +100,7 @@ public class AudioPlayerActivity extends BaseActivity {
 
     private RadioGroup mAudioFxGroup;
 
-//    private VerticalSeekBar mVolumeSeekbar;
+    //    private VerticalSeekBar mVolumeSeekbar;
 
     private LayoutInflater mInflater;
 
@@ -210,6 +210,21 @@ public class AudioPlayerActivity extends BaseActivity {
     }
 
     private void initViews() {
+        if (null == mPlayerTitle) {
+            mPlayerTitle = (TextView)findViewById(R.id.tv_header_title);
+        }
+        int viewType = AudioPlayerManager.getInstance().getStorageType();
+        switch (viewType) {
+            case AudioLoaderManager.INTERNAL_TYPE:
+                mPlayerTitle.setText(R.string.btn_text_local);
+                break;
+            case AudioLoaderManager.EXTERNAL_SDCARD_TYPE:
+                mPlayerTitle.setText(R.string.btn_text_sdcard);
+                break;
+            case AudioLoaderManager.EXTERNAL_USB_TYPE:
+                mPlayerTitle.setText(R.string.btn_text_usb);
+                break;
+        }
         if (null == mSongInfoAndLyricsContainer) {
             mSongInfoAndLyricsContainer = (LinearLayout)findViewById(R.id.ll_song_info_and_lyrics);
         }
@@ -419,65 +434,65 @@ public class AudioPlayerActivity extends BaseActivity {
                 break;
         }
 
-//        if (null == mPopupVolume) {
-//            View volume_view = mInflater.inflate(R.layout.layout_audio_volume, null);
-//            mPopupVolume = new PopupWindow(volume_view, LayoutParams.WRAP_CONTENT,
-//                    LayoutParams.WRAP_CONTENT);
-//            mPopupVolume.setOnDismissListener(new OnDismissListener() {
-//
-//                @Override
-//                public void onDismiss() {
-//                    mBtnVolume.setChecked(false);
-//                }
-//            });
-//            mVolumeSeekbar = (VerticalSeekBar)volume_view.findViewById(R.id.audio_volume_seekbar);
-//            mVolumeSeekbar
-//            .setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
-//
-//                @Override
-//                public void onStopTrackingTouch(SeekBar seekBar) {
-//                    // TODO Auto-generated method stub
-//
-//                }
-//
-//                @Override
-//                public void onStartTrackingTouch(SeekBar seekBar) {
-//                    // TODO Auto-generated method stub
-//
-//                }
-//
-//                @Override
-//                public void onProgressChanged(SeekBar seekBar, int progress,
-//                        boolean fromUser) {
-//                    mAudioMgr.setStreamVolume(android.media.AudioManager.STREAM_MUSIC, progress,
-//                            android.media.AudioManager.FLAG_PLAY_SOUND);
-//                }
-//            });
-//        }
+        //        if (null == mPopupVolume) {
+        //            View volume_view = mInflater.inflate(R.layout.layout_audio_volume, null);
+        //            mPopupVolume = new PopupWindow(volume_view, LayoutParams.WRAP_CONTENT,
+        //                    LayoutParams.WRAP_CONTENT);
+        //            mPopupVolume.setOnDismissListener(new OnDismissListener() {
+        //
+        //                @Override
+        //                public void onDismiss() {
+        //                    mBtnVolume.setChecked(false);
+        //                }
+        //            });
+        //            mVolumeSeekbar = (VerticalSeekBar)volume_view.findViewById(R.id.audio_volume_seekbar);
+        //            mVolumeSeekbar
+        //            .setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
+        //
+        //                @Override
+        //                public void onStopTrackingTouch(SeekBar seekBar) {
+        //                    // TODO Auto-generated method stub
+        //
+        //                }
+        //
+        //                @Override
+        //                public void onStartTrackingTouch(SeekBar seekBar) {
+        //                    // TODO Auto-generated method stub
+        //
+        //                }
+        //
+        //                @Override
+        //                public void onProgressChanged(SeekBar seekBar, int progress,
+        //                        boolean fromUser) {
+        //                    mAudioMgr.setStreamVolume(android.media.AudioManager.STREAM_MUSIC, progress,
+        //                            android.media.AudioManager.FLAG_PLAY_SOUND);
+        //                }
+        //            });
+        //        }
 
-//        if (null == mBtnVolume) {
-//            mBtnVolume = (CheckableImageView)findViewById(R.id.btn_audio_volume);
-//            mBtnVolume.setOnClickListener(new OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    boolean isChecked = mBtnVolume.isChecked();
-//                    if (!isChecked) {
-//                        mVolumeSeekbar.setProgress(mAudioMgr
-//                                .getStreamVolume(android.media.AudioManager.STREAM_MUSIC));
-//                        mVolumeSeekbar.setMax(mAudioMgr
-//                                .getStreamMaxVolume(android.media.AudioManager.STREAM_MUSIC));
-//                        mPopupVolume.setFocusable(true);
-//                        mPopupVolume.setBackgroundDrawable(new BitmapDrawable());
-//                        mPopupVolume.showAtLocation(mSongInfoAndLyricsContainer, Gravity.RIGHT,
-//                                20, 30);
-//                        mPopupVolume.update();
-//                    } else if (mPopupVolume.isShowing()) {
-//                        mPopupVolume.dismiss();
-//                    }
-//                    mBtnVolume.setChecked(!isChecked);
-//                }
-//            });
-//        }
+        //        if (null == mBtnVolume) {
+        //            mBtnVolume = (CheckableImageView)findViewById(R.id.btn_audio_volume);
+        //            mBtnVolume.setOnClickListener(new OnClickListener() {
+        //                @Override
+        //                public void onClick(View v) {
+        //                    boolean isChecked = mBtnVolume.isChecked();
+        //                    if (!isChecked) {
+        //                        mVolumeSeekbar.setProgress(mAudioMgr
+        //                                .getStreamVolume(android.media.AudioManager.STREAM_MUSIC));
+        //                        mVolumeSeekbar.setMax(mAudioMgr
+        //                                .getStreamMaxVolume(android.media.AudioManager.STREAM_MUSIC));
+        //                        mPopupVolume.setFocusable(true);
+        //                        mPopupVolume.setBackgroundDrawable(new BitmapDrawable());
+        //                        mPopupVolume.showAtLocation(mSongInfoAndLyricsContainer, Gravity.RIGHT,
+        //                                20, 30);
+        //                        mPopupVolume.update();
+        //                    } else if (mPopupVolume.isShowing()) {
+        //                        mPopupVolume.dismiss();
+        //                    }
+        //                    mBtnVolume.setChecked(!isChecked);
+        //                }
+        //            });
+        //        }
 
         if (null == mPopupAudioFx) {
             View audio_fx_view = mInflater.inflate(R.layout.audio_fx_popup, null);

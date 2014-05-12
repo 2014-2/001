@@ -61,6 +61,10 @@ public class AudioPlayerManager {
         };
     }
 
+    public int getStorageType() {
+        return mStorageType;
+    }
+
     public void notifyDataSetChanged(int storageType) {
         if (mHandler != null && storageType == mStorageType) {
             mHandler.sendEmptyMessage(0);
