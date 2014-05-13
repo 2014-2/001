@@ -25,7 +25,7 @@ public class SubsidenceAsyncUploadTask extends AsyncUploadTask {
 	}
 
 	@Override
-	protected void uploadSection(final Section section, int sheetId, final DataCounter sectionUploadCounter) {
+	protected void uploadSection(final Section section, final DataCounter sectionUploadCounter) {
 		final SubsidenceCrossSectionIndex sectionIndex = ((SubsidenceSection)section).getSection();
         SectionUploadParamter paramter = new SectionUploadParamter();
         CrtbUtils.fillSectionParamter(sectionIndex, paramter);

@@ -21,5 +21,10 @@ public class SubsidenceSection extends Section {
 		}
 		return result;
 	}
+	
+	@Override
+	protected int getRowId() {
+		return (mSection != null) ? mSection.getID() : -1;
+	}
 
 }

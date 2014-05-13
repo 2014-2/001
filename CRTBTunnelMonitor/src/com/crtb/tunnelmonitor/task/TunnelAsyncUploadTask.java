@@ -25,7 +25,7 @@ public class TunnelAsyncUploadTask extends AsyncUploadTask {
 	}
 
 	@Override
-	protected void uploadSection(final Section section, int sheetId, final DataCounter sectionUploadCounter) {
+	protected void uploadSection(final Section section, final DataCounter sectionUploadCounter) {
 		final TunnelCrossSectionIndex sectionIndex = ((TunnelSection) section).getSection();
         SectionUploadParamter paramter = new SectionUploadParamter();
         CrtbUtils.fillSectionParamter(sectionIndex, paramter);
