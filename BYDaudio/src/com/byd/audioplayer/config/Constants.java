@@ -10,7 +10,7 @@ import android.content.SharedPreferences;
  * 
  */
 public class Constants {
-    
+
     /**
      * 目录结构
      */
@@ -33,6 +33,8 @@ public class Constants {
     public static final String PREF_LOOP_MODE_STATUS = "loop_mode_status";
 
     private static final String PREF_AUDIO_FX = "audio_fx";
+
+    private static final String PREF_AUDIO_PAGE = "audio_page";
 
     public static final String MUSIC_SONG_POSITION = "com.byd.audioplayer.SongPosition";
 
@@ -160,5 +162,11 @@ public class Constants {
     public static final void setAudioFx(Context context, int audioFx) {
         SharedPreferences pref = context.getSharedPreferences(AUDIO_PREF, Context.MODE_PRIVATE);
         pref.edit().putInt(PREF_AUDIO_FX, audioFx).commit();
+    }
+
+    public static void recordAudioPageIndex(Context context, int audio_page) {
+        SharedPreferences pref = context.getSharedPreferences(AUDIO_PREF,
+                Context.MODE_WORLD_READABLE);
+        pref.edit().putInt(PREF_AUDIO_PAGE, audio_page).apply();
     }
 }

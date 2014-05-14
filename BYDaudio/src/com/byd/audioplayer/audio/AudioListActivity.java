@@ -437,6 +437,7 @@ OnItemLongClickListener, SearchListener, DeleteListener {
                 startActivityForResult(intent_bt, REQCODE_BT);
                 break;
         }
+        Constants.recordAudioPageIndex(getApplicationContext(), index);
 
         for (int i = 0; i < TAB_IDS.length; i++) {
             if (i == index) {
