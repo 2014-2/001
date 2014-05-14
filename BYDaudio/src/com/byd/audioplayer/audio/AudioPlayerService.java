@@ -19,10 +19,10 @@ import android.os.Binder;
 import android.os.Handler;
 import android.os.IBinder;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.byd.audioplayer.R;
 import com.byd.audioplayer.config.Constants;
+import com.byd.audioplayer.utils.ToastUtils;
 
 public class AudioPlayerService extends Service {
     private static final String LOG_TAG = AudioPlayerService.class.getSimpleName();
@@ -177,8 +177,7 @@ public class AudioPlayerService extends Service {
                 if (mSongPosition < AudioPlayerManager.getInstance().getCount()) {
                     changeSong(mSongPosition);
                 } else {
-                    Toast.makeText(getApplicationContext(), R.string.last_song, Toast.LENGTH_SHORT)
-                    .show();
+                    ToastUtils.showToast(getApplicationContext(), R.string.last_song);
                     mSongPosition--;
                 }
                 break;
@@ -532,8 +531,7 @@ public class AudioPlayerService extends Service {
                 if (mPlayingSong.getFilePath().contains(path)) {
                     Log.d(LOG_TAG, "Playing song has been removed");
                     stopSelf();
-                    Toast.makeText(getApplicationContext(), R.string.external_storage_removed,
-                            Toast.LENGTH_SHORT).show();
+                    ToastUtils.showToast(getApplicationContext(), R.string.external_storage_removed);
                 }
             }
         }

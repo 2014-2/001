@@ -18,8 +18,8 @@ import com.byd.audioplayer.utils.ToastUtils;
 public class AudioAdapter extends BaseAdapter implements DataListener {
 
     private final static int[] AUDIO_ITEM_BGS = new int[] { R.drawable.bg_audio_item1,
-        R.drawable.bg_audio_item1, R.drawable.bg_audio_item1, R.drawable.bg_audio_item2,
-        R.drawable.bg_audio_item2, R.drawable.bg_audio_item2, };
+            R.drawable.bg_audio_item1, R.drawable.bg_audio_item1, R.drawable.bg_audio_item2,
+            R.drawable.bg_audio_item2, R.drawable.bg_audio_item2, };
 
     private List<AudioItem> mData = new ArrayList<AudioItem>();
     private Context mContext = null;
@@ -157,9 +157,6 @@ public class AudioAdapter extends BaseAdapter implements DataListener {
         List<Song> result = null;
         if (!isSearchMode()) {
             result = AudioLoaderManager.getInstance().getViewSongs();
-            if (result == null || result.isEmpty()) {
-                ToastUtils.showToast(mContext, "未找到相关歌曲");
-            }
             setData(result);
         }
     }

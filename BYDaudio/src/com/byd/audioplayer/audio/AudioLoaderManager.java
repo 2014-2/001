@@ -6,6 +6,7 @@ import java.util.List;
 import android.content.Context;
 
 import com.byd.audioplayer.audio.AudioDeleteAsyncTask.DeleteListener;
+import com.byd.audioplayer.utils.ToastUtils;
 
 public class AudioLoaderManager {
     private static AudioLoaderManager sInstance = new AudioLoaderManager();
@@ -73,6 +74,7 @@ public class AudioLoaderManager {
     }
 
     public void loadData(int type) {
+        ToastUtils.showToast(mContext, "正在识别音乐");
         new AudioLoaderTask(mContext, sInstance, type).loadData();
     }
 

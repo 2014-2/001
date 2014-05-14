@@ -26,10 +26,10 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.byd.audioplayer.BaseActivity;
 import com.byd.audioplayer.R;
+import com.byd.audioplayer.utils.ToastUtils;
 import com.byd.audioplayer.view.VisualizeView;
 
 public class BTPlayerActivity extends BaseActivity {
@@ -413,11 +413,10 @@ public class BTPlayerActivity extends BaseActivity {
         }
     }
 
-    private void showToast(String info)
-    {
-    	Toast.makeText(this, info, Toast.LENGTH_SHORT).show();
+    private void showToast(String info) {
+        ToastUtils.showToast(getApplicationContext(), info);
     }
-    
+
     //api for updating status of play&pause button.
     private void updatePlayPauseBtn(boolean isPlay) {
         mIsPlaying = isPlay;

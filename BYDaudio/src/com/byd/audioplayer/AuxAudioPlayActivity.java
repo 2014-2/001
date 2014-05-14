@@ -1,6 +1,8 @@
 
 package com.byd.audioplayer;
 
+import com.byd.audioplayer.utils.ToastUtils;
+
 import android.content.Context;
 import android.content.Intent;
 import android.media.AudioManager;
@@ -13,7 +15,6 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class AuxAudioPlayActivity extends BaseActivity {
 
@@ -49,7 +50,7 @@ public class AuxAudioPlayActivity extends BaseActivity {
         mTvAuxStatus = (TextView)findViewById(R.id.aux_status);
 
         // because of the fail of receiving aux device event, open the aux channel directly.
-        Toast.makeText(this, R.string.aux_connected, Toast.LENGTH_LONG).show();
+        ToastUtils.showToast(getApplicationContext(), R.string.aux_connected);
 
         //mAudioChannelIntent = new Intent(this, AudioChannelService.class);
         //startService(mAudioChannelIntent);
