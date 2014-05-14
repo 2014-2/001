@@ -338,7 +338,11 @@ OnItemLongClickListener, SearchListener, DeleteListener {
                 }
             });
         }
-        tabIndex(TAB_INDEX_LOCAL);
+        int index = AudioLoaderManager.getInstance().getViewType();
+        if (index < 0 || index >= TAB_INDEX_AUX) {
+            index = TAB_INDEX_LOCAL;
+        }
+        tabIndex(index);
     }
 
     private void setMode(int mode) {
