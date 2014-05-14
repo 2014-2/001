@@ -104,6 +104,8 @@ OnItemLongClickListener, SearchListener, DeleteListener {
 
     private Intent mAudioServiceIntent;
 
+    private boolean mIsStartFromWheel = false;
+
     private Handler mListHandler = new Handler() {
 
         @Override
@@ -167,7 +169,9 @@ OnItemLongClickListener, SearchListener, DeleteListener {
 
         mInternalScanner = new AudioInternalScanner(this);
 
-        if (getIntent() != null) {
+        Intent startIntent = getIntent();
+        if (startIntent != null && startIntent.hasExtra(TAB_INDEX)) {
+            mIsStartFromWheel = true;
             final int tabIndex = getIntent().getIntExtra(TAB_INDEX, TAB_INDEX_LOCAL);
             tabIndex(tabIndex);
             Log.d(TAG, "onCreate tabIndex=" + tabIndex);
@@ -178,6 +182,7 @@ OnItemLongClickListener, SearchListener, DeleteListener {
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         if (intent != null) {
+            mIsStartFromWheel = true;
             final int tabIndex = intent.getIntExtra(TAB_INDEX, TAB_INDEX_LOCAL);
             tabIndex(tabIndex);
             Log.d(TAG, "onNewIntent tabIndex=" + tabIndex);
@@ -416,8 +421,9 @@ OnItemLongClickListener, SearchListener, DeleteListener {
             case TAB_INDEX_USB:
                 AudioLoaderManager.getInstance().setViewType(index);
                 mAdapter.onDataChange();
-                if (!isPlayerServiceRunning()) {
+                if (mIsStartFromWheel) {
                     startPlayTheFirstSong();
+                    mIsStartFromWheel = false;
                 }
                 break;
             case TAB_INDEX_AUX:
@@ -468,6 +474,9 @@ OnItemLongClickListener, SearchListener, DeleteListener {
                     e.printStackTrace();
                 }
                 List<Song> songs = AudioLoaderManager.getInstance().getViewSongs();
+                if (songs.size()<=0) {
+                    return;
+                }
                 AudioPlayerManager.getInstance().setPlayerList(
                         AudioLoaderManager.getInstance().getViewType(), songs);
                 AudioPlayerManager.getInstance().setPlayerPosition(0);
