@@ -166,7 +166,7 @@ public class Constants {
 
     public static void recordAudioPageIndex(Context context, int audio_page) {
         SharedPreferences pref = context.getSharedPreferences(AUDIO_PREF,
-                Context.MODE_WORLD_READABLE);
+                Context.MODE_WORLD_READABLE | Context.MODE_MULTI_PROCESS);
         pref.edit().putInt(PREF_AUDIO_PAGE, audio_page).apply();
     }
 }
