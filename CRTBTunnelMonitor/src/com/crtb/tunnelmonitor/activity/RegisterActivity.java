@@ -1,8 +1,16 @@
 package com.crtb.tunnelmonitor.activity;
 
+import com.crtb.tunnelmonitor.common.Constant;
+import com.crtb.tunnelmonitor.dao.impl.v2.AbstractDao;
+import com.crtb.tunnelmonitor.dao.impl.v2.CrtbLicenseDao;
+
+import ICT.utils.RSACoder;
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.Context;
 import android.os.Bundle;
+import android.telephony.TelephonyManager;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
@@ -13,35 +21,59 @@ import android.widget.TextView;
 
 public class RegisterActivity extends Activity implements OnClickListener{
 
-	private EditText mRegisterCode,mSerialNumber;
+	private EditText mSerialNumberView, mRegisterCodeView;
 	
 	private Button mOk,mCancel;
 	
-	
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.register_layout);
-		mRegisterCode=(EditText) findViewById(R.id.regist_code);
-		mSerialNumber=(EditText) findViewById(R.id.serial_number);
-	    mOk=(Button) findViewById(R.id.ok);
-	    mCancel=(Button) findViewById(R.id.cancel);
-	    mOk.setOnClickListener(this);
-	    mCancel.setOnClickListener(this);
-	}
+	private String mDeviceId = null;
 
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.register_layout);
+        mSerialNumberView = (EditText) findViewById(R.id.serial_number);
+        mRegisterCodeView = (EditText) findViewById(R.id.regist_code);
+        mOk = (Button) findViewById(R.id.ok);
+        mCancel = (Button) findViewById(R.id.cancel);
+        mOk.setOnClickListener(this);
+        mCancel.setOnClickListener(this);
+        mDeviceId = getDeviceId();
+        mSerialNumberView.setText(mDeviceId);
+    }
+
+	private String getDeviceId() {
+	    TelephonyManager telephonyManager = (TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE);
+	    return telephonyManager.getDeviceId();
+	}
 
 	@Override
 	public void onClick(View v) {
 		switch(v.getId()){
 		case R.id.ok:
-		    showDialog(false, null);
+		    boolean b = checkAndRegistration();
+		    showDialog(b, null);
 			break;
 		case R.id.cancel:
 			RegisterActivity.this.finish();
 			break;
 		}	
 	}
+
+    private boolean checkAndRegistration() {
+        if (mRegisterCodeView != null) {
+            String registerCode = mRegisterCodeView.getText().toString();
+            if (!TextUtils.isEmpty(registerCode)) {
+                registerCode = registerCode.trim();
+                String decodedSerial = RSACoder.decnryptDes(registerCode, Constant.testDeskey);
+                if (decodedSerial != null && decodedSerial.equals(mDeviceId)) {
+                    int err = CrtbLicenseDao.defaultDao().registLicense(getApplicationContext(),
+                            mDeviceId, registerCode);
+                    return err == AbstractDao.DB_EXECUTE_SUCCESS;
+                }
+            }
+        }
+        return false;
+    }
 
 	private void showDialog(boolean bSuccess,final OnClickListener listener){
         final Dialog dlg=new Dialog(this,R.style.custom_dlg);
