@@ -23,7 +23,7 @@ import android.os.Message;
 public class USBMountReceiver extends BroadcastReceiver {
     private final static Uri INTERNAL_URI = Uri.parse("file:///storage/emulated/");
 
-    private final long ONE_MIN = 60 * 1000;
+    private final long ONE_MIN = 10 * 1000;
     private long mLastActionTime;
     private Context mContext;
 
@@ -42,14 +42,22 @@ public class USBMountReceiver extends BroadcastReceiver {
                     + Environment.getExternalStorageDirectory()));
             mContext.sendBroadcast(intentScanner);
 
+            // scan sdcard
             intentScanner = new Intent(Intent.ACTION_MEDIA_MOUNTED,
                     Uri.parse("file://" + "/extsd/"));
             mContext.sendBroadcast(intentScanner);
-
+            Intent scanSdcard = new Intent("android.intent.action.MEDIA_SCANNER_SCAN_DIR");
+            scanSdcard.setData(Uri.parse("file://" + "/extsd/"));
+            mContext.sendBroadcast(scanSdcard);
+            
+            
             // scan USB
             intentScanner = new Intent(Intent.ACTION_MEDIA_MOUNTED,
                     Uri.parse("file://" + "/udisk/"));
             mContext.sendBroadcast(intentScanner);
+            Intent scanUSB = new Intent("android.intent.action.MEDIA_SCANNER_SCAN_DIR");
+            scanUSB.setData(Uri.parse("file://" + "/udisk/"));
+            mContext.sendBroadcast(scanUSB);
 
             mLastActionTime = curTime;
         }

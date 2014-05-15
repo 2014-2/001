@@ -11,6 +11,7 @@ import java.util.TimerTask;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -43,6 +44,7 @@ import com.byd.videoplayer.utils.VideoContentObserver;
 import com.byd.videoplayer.utils.VideoThumbnailLoader;
 import com.byd.videoplayer.video.MovieInfo;
 import com.byd.videoplayer.video.VideoPlayActivity;
+import com.byd.videoplayer.receiver.USBMountReceiver;
 
 /**
  * 
@@ -66,7 +68,7 @@ public class BrowserActivity extends BaseActivity implements OnClickListener {
 
 	private final static int MSG_TAB_ON_CHANGED = 10;
 	private final static int MSG_SCAN_MEDIA_CHANGED = 20;
-	public final static int MEDIA_SCAN_PERIOD = 60 * 1000;
+	public final static int MEDIA_SCAN_PERIOD = 10 * 1000;
 	private boolean isEditMode;
 	private View buttonHeaderLeft, buttonHeaderRight;
 
@@ -86,7 +88,7 @@ public class BrowserActivity extends BaseActivity implements OnClickListener {
 	
 	public static boolean[] tabContentChanged = new boolean[tabResId.length];
 	private MyHandler mHandler;
-	//private USBMountReceiver mUSBMountReceiver;
+	private USBMountReceiver mUSBMountReceiver;
 	private Timer mScanTimer;
 	
     @Override
@@ -103,7 +105,7 @@ public class BrowserActivity extends BaseActivity implements OnClickListener {
         mLayoutInflater = LayoutInflater.from(this);
         mHandler = new MyHandler(this);
         initUI();
-        //registerUSBStateChangedReceiver();
+        registerUSBStateChangedReceiver();
         registerContentObserver();
 
         if (getIntent() != null) {
@@ -147,21 +149,21 @@ public class BrowserActivity extends BaseActivity implements OnClickListener {
         }
     }
 	
-//    没啥用，故去掉
-//    private void registerUSBStateChangedReceiver() {
-//        mUSBMountReceiver = new USBMountReceiver();
-//        IntentFilter filter = new IntentFilter();  
-//        filter.addAction(Intent.ACTION_MEDIA_MOUNTED);  
-//        filter.addAction(Intent.ACTION_MEDIA_CHECKING);  
-//        filter.addAction(Intent.ACTION_MEDIA_EJECT);  
-//        filter.addAction(Intent.ACTION_MEDIA_REMOVED);
-//        filter.addDataScheme("file");  
-//        registerReceiver(mUSBMountReceiver, filter);
-//    }
-//    
-//    private void unregisterUSBStateChangedReceiver() {
-//        unregisterReceiver(mUSBMountReceiver);
-//    }
+    //事件太频繁
+    private void registerUSBStateChangedReceiver() {
+        mUSBMountReceiver = new USBMountReceiver(this);
+        IntentFilter filter = new IntentFilter();  
+        filter.addAction(Intent.ACTION_MEDIA_MOUNTED);  
+        filter.addAction(Intent.ACTION_MEDIA_CHECKING);  
+        filter.addAction(Intent.ACTION_MEDIA_EJECT);  
+        filter.addAction(Intent.ACTION_MEDIA_REMOVED);
+        filter.addDataScheme("file");  
+        registerReceiver(mUSBMountReceiver, filter);
+    }
+    
+    private void unregisterUSBStateChangedReceiver() {
+        unregisterReceiver(mUSBMountReceiver);
+    }
     
     private void registerContentObserver() {
         getContentResolver().registerContentObserver(MediaStore.Video.Media.INTERNAL_CONTENT_URI, true, 
@@ -345,7 +347,7 @@ public class BrowserActivity extends BaseActivity implements OnClickListener {
     
     @Override
     protected void onDestroy() {
-//        unregisterUSBStateChangedReceiver();
+        unregisterUSBStateChangedReceiver();
         super.onDestroy();
     }
 
@@ -677,8 +679,7 @@ public class BrowserActivity extends BaseActivity implements OnClickListener {
 					if (curList.size() != newList.size()) {// 有新的设备插入或者数据变化导致数量不一致
 						curList.clear();
 						curList.addAll(newList);
-						mHandler.obtainMessage(MSG_SCAN_MEDIA_CHANGED,
-								tabIndex, 0).sendToTarget();
+						mHandler.obtainMessage(MSG_SCAN_MEDIA_CHANGED, tabIndex, 0).sendToTarget();
 						//Log.i("BrowserActivity.class", "New media found!");
 					} else {
 						//Noting changed

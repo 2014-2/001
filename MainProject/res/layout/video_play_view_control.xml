@@ -30,8 +30,7 @@
             android:id="@+id/progress_bar"
             style="@style/style_seekbar"
             android:layout_toRightOf="@id/btnPlayPause"
-            android:layout_centerVertical="true"
-            android:layout_toLeftOf="@+id/iv_sound_ctrl" >
+            android:layout_centerVertical="true">
         </SeekBar>
         
         <TextView
