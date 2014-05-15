@@ -23,8 +23,7 @@
             android:name="com.byd.videoplayer.BrowserActivity"
             android:label="@string/video_page"
             android:screenOrientation="landscape"
-            android:icon="@drawable/launch_video"
-            android:launchMode="singleTask" >
+            android:icon="@drawable/launch_video">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
