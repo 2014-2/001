@@ -119,7 +119,8 @@ public final class CrtbLicenseDao extends AbstractDefaultDBDao<CrtbUser>{
 	 */
 	public CrtbUser queryCrtbUser(){
 		
-		if(mCrtbUser == null){
+        if (mCrtbUser == null
+                || (mDefaultUsername != null && mDefaultUsername.equals(mCrtbUser.getUsername()))) {
 			
 			IAccessDatabase db 		= getDefaultDb();
 			
