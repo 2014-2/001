@@ -96,7 +96,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
                     android:layout_marginTop="16dp"
-                    android:background="@drawable/x" />
+                    android:background="@drawable/x"
+                    android:visibility="invisible" />
             </LinearLayout>
 
             <LinearLayout

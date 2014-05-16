@@ -272,10 +272,10 @@ public class WorkNewActivity extends WorkFlowActivity implements OnClickListener
 				return ;
 			}
 			
-			if(StringUtils.isEmpty(unit)){
+			/*if(StringUtils.isEmpty(unit)){
 				showText("施工单位不能为空");
 				return ;
-			}
+			}*/
 			
 			if(StringUtils.isEmpty(pref)){
 				showText("前缀不能为空");
@@ -295,8 +295,8 @@ public class WorkNewActivity extends WorkFlowActivity implements OnClickListener
 			double sm	= CrtbUtils.formatDouble(start);
 			double em	= CrtbUtils.formatDouble(end);
 			
-			if(em <= sm){
-				showText("结束里程必须大于开始里程");
+			if(em == sm){
+				showText("开始里程与结束里程不能相同");
 				return ;
 			}
 			
