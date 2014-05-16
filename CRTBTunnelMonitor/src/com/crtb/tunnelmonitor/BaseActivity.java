@@ -3,6 +3,7 @@ package com.crtb.tunnelmonitor;
 import java.util.List;
 
 import org.zw.android.framework.IFrameworkFacade;
+import org.zw.android.framework.util.StringUtils;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -202,5 +203,40 @@ public abstract class BaseActivity extends Activity {
 		}
 		
 		return super.onKeyDown(keyCode, event);
+	}
+	
+	public boolean isCertificateID(String idcard){
+		
+		if(StringUtils.isEmpty(idcard)){
+			return false ;
+		}
+		
+		if(idcard.length() == 15 || idcard.length() == 18){
+			
+			char[] array = idcard.toCharArray() ;
+			
+			for(int index = array.length -1 ; index >= 0 ; index--){
+				
+				char ch = array[index];
+				
+				if(!(ch == '0'
+						|| ch == '1'
+						|| ch == '2'
+						|| ch == '3'
+						|| ch == '4'
+						|| ch == '5'
+						|| ch == '6'
+						|| ch == '7'
+						|| ch == '8'
+						|| ch == '9'
+						|| ch == 'x')){
+					return false ;
+				}
+			}
+			
+			return true ;
+		}
+		
+		return false ;
 	}
 }

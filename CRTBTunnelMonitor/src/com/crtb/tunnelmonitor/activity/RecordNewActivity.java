@@ -254,8 +254,8 @@ public class RecordNewActivity extends WorkFlowActivity implements OnPageChangeL
 				return;
 			}
 			
-			if (idcard.length() < 18) {
-				showText("请输入18位身份证号");
+			if (!isCertificateID(idcard)) {
+				showText("身份证号码无效");
 				return;
 			}
 			

@@ -256,8 +256,8 @@ public class RecordNewSubsidenceActivity extends WorkFlowActivity implements OnP
 				return;
 			}
 
-			if (StringUtils.isEmpty(idcard)) {
-				showText("身份证号不能为空");
+			if (!isCertificateID(idcard)) {
+				showText("身份证号码无效");
 				return;
 			}
 			
