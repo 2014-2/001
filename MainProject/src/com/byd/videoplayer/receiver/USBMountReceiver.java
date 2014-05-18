@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 
 /**
  * 
@@ -23,7 +24,8 @@ import android.os.Message;
 public class USBMountReceiver extends BroadcastReceiver {
     private final static Uri INTERNAL_URI = Uri.parse("file:///storage/emulated/");
 
-    private final long ONE_MIN = 10 * 1000;
+    // don't response usb events between TIME_INTERVAL.
+    private final long TIME_INTERVAL = 10 * 1000;  
     private long mLastActionTime;
     private Context mContext;
 
@@ -36,7 +38,8 @@ public class USBMountReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         long curTime = System.currentTimeMillis();
         // make sure the application would not request scan file frequently.
-        if (curTime - mLastActionTime > ONE_MIN) {
+        if (curTime - mLastActionTime > TIME_INTERVAL) {
+        	
             // scan external storage 
             Intent intentScanner = new Intent(Intent.ACTION_MEDIA_MOUNTED, Uri.parse("file://"
                     + Environment.getExternalStorageDirectory()));
@@ -52,8 +55,7 @@ public class USBMountReceiver extends BroadcastReceiver {
             
             
             // scan USB
-            intentScanner = new Intent(Intent.ACTION_MEDIA_MOUNTED,
-                    Uri.parse("file://" + "/udisk/"));
+            intentScanner = new Intent(Intent.ACTION_MEDIA_MOUNTED, Uri.parse("file://" + "/udisk/"));
             mContext.sendBroadcast(intentScanner);
             Intent scanUSB = new Intent("android.intent.action.MEDIA_SCANNER_SCAN_DIR");
             scanUSB.setData(Uri.parse("file://" + "/udisk/"));

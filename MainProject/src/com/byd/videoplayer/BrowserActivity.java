@@ -68,7 +68,7 @@ public class BrowserActivity extends BaseActivity implements OnClickListener {
 
 	private final static int MSG_TAB_ON_CHANGED = 10;
 	private final static int MSG_SCAN_MEDIA_CHANGED = 20;
-	public final static int MEDIA_SCAN_PERIOD = 10 * 1000;
+	public final static int MEDIA_SCAN_PERIOD = 10 * 1000;  //10s
 	private boolean isEditMode;
 	private View buttonHeaderLeft, buttonHeaderRight;
 
@@ -672,18 +672,15 @@ public class BrowserActivity extends BaseActivity implements OnClickListener {
 		public void run() {
 			for (int tabIndex = TAB_INDEX_LOCAL; tabIndex < TAB_INDEX_HISTORY; tabIndex++) {
 				ArrayList<MovieInfo> newList = queryMediaByUri(tabIndex);
-				ArrayList<MovieInfo> curList = mMediaStore
-						.get(tabIndex);
-				//Log.i("BrowserActivity.class", "SCAN SLAP");
+				ArrayList<MovieInfo> curList = mMediaStore.get(tabIndex);
 				if (curList != null) {
 					if (curList.size() != newList.size()) {// 有新的设备插入或者数据变化导致数量不一致
 						curList.clear();
 						curList.addAll(newList);
+						mHandler.obtainMessage(MSG_TAB_ON_CHANGED, tabIndex, 0).sendToTarget();
 						mHandler.obtainMessage(MSG_SCAN_MEDIA_CHANGED, tabIndex, 0).sendToTarget();
-						//Log.i("BrowserActivity.class", "New media found!");
 					} else {
 						//Noting changed
-						//Log.i("BrowserActivity.class", "No more media found!");
 					}
 				}
 			}
