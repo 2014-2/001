@@ -24,6 +24,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 
+import com.crtb.tunnelmonitor.AppCRTBApplication;
 import com.crtb.tunnelmonitor.common.Constant;
 import com.crtb.tunnelmonitor.task.WorkZone;
 import com.crtb.tunnelmonitor.utils.CrtbAppConfig;
@@ -65,7 +66,7 @@ public final class CrtbWebService {
 	}
 	
 	public void login(final String account, final String password, final RpcCallback callback) {
-		GetPublicKeyRpc rpc = new GetPublicKeyRpc(account, Constant.testPhysical, new RpcCallbackWrapper(new RpcCallback() {
+		GetPublicKeyRpc rpc = new GetPublicKeyRpc(account, AppCRTBApplication.getDeviceMac(), new RpcCallbackWrapper(new RpcCallback() {
 			@Override
 			public void onSuccess(Object[] data) {
 				String publicKey = (String)data[0];

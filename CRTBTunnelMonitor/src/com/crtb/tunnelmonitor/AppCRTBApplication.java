@@ -12,6 +12,8 @@ import org.zw.android.framework.impl.FrameworkFacade;
 
 import android.app.Application;
 import android.content.Context;
+import android.telephony.TelephonyManager;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.crtb.tunnelmonitor.dao.impl.v2.CrtbLicenseDao;
@@ -40,6 +42,7 @@ public class AppCRTBApplication extends Application {
 	
 	/** framework */ 
 	private IFrameworkFacade mFramework ;
+	private static String sMacAddress = null;
 	
 	public boolean isbLocaUser() {
 		return bLocaUser;
@@ -431,5 +434,35 @@ public class AppCRTBApplication extends Application {
 		}
 		
 		return sRet;
+	}
+	/**
+	 * 获取设备的物理地址：使用IMEI伪造物理地址
+	 *
+	 */
+	public static String getDeviceMac() {
+		if (sMacAddress == null) {
+			String deviceMac = "";
+			TelephonyManager telephonyManager = (TelephonyManager) instance.getSystemService(Context.TELEPHONY_SERVICE);
+			String deviceId = telephonyManager.getDeviceId();
+			if (!TextUtils.isEmpty(deviceId)) {
+				if (deviceId.length() >= 12) {
+					StringBuilder sb = new StringBuilder();
+					sb.append(deviceId.substring(0, 2));
+					sb.append(":");
+					sb.append(deviceId.substring(2, 4));
+					sb.append(":");
+					sb.append(deviceId.substring(4, 6));
+					sb.append(":");
+					sb.append(deviceId.substring(6, 8));
+					sb.append(":");
+					sb.append(deviceId.substring(8, 10));
+					sb.append(":");
+					sb.append(deviceId.substring(10, 12));
+					deviceMac = sb.toString();
+				}
+			}
+			sMacAddress = deviceMac;
+		}
+		return sMacAddress;
 	}
 }
