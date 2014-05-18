@@ -471,18 +471,21 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 						
 						obj.setCoordinate(info.x + "," + info.y + "," + info.z);
 						obj.setSurveyTime(DateUtils.toDate(info.time, DateUtils.DATE_TIME_FORMAT));
-						obj.setDataStatus(0);
 						
 						int err = TunnelSettlementTotalDataDao.DB_EXECUTE_FAILED;
+						boolean update = false;
 						// 存在的测量点信息
 						TunnelSettlementTotalData old = dao.queryTunnelTotalData(rawSheetBean.getID(),tunnelSection.getID(),info.type);
 						if (old != null) {
 						    //UPDATE
 						    obj.setMEASNo(old.getMEASNo());
 						    obj.setID(old.getID());
+						    obj.setDataStatus(old.getDataStatus());
 						    err = dao.update(obj);
+						    update = true;
 						} else {
 						    //INSERT NEW
+						    obj.setDataStatus(0);
 						    int lastMEASNo = 0;
 						    List<TunnelSettlementTotalData> l = dao.queryAllOrderByMEASNoDesc(info.type);
 						    if(l != null && l.size() > 0) {
@@ -491,6 +494,7 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 						    }
 						    obj.setMEASNo(lastMEASNo + 1);
 						    err = dao.insert(obj);
+						    update = false;
 						}
 						
 						if(err == TunnelSettlementTotalDataDao.DB_EXECUTE_SUCCESS){
@@ -515,9 +519,9 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 								}
 							}
 							
-							showText("保存成功");
+							showText((update ? "更新" : "保存") + "成功");
 						} else {
-							showText("保存失败");
+							showText((update ? "更新" : "保存") + "失败");
 						}
 					} 
 					// 地表下沉
@@ -538,18 +542,21 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 
 						obj.setCoordinate(info.x + "," + info.y + "," + info.z);
 						obj.setSurveyTime(DateUtils.toDate(info.time, DateUtils.DATE_TIME_FORMAT));
-						obj.setDataStatus(0);
 						obj.setInfo("1");
 
 						int err = TunnelSettlementTotalDataDao.DB_EXECUTE_FAILED;
+						boolean update = false;
 
                         if (old != null) {
                             //UPDATE
                             obj.setMEASNo(old.getMEASNo());
                             obj.setID(old.getID());
+                            obj.setDataStatus(old.getDataStatus());
                             err = dao.update(obj);
+                            update = true;
                         } else {
                             //INSERT NEW
+                            obj.setDataStatus(0);
                             int lastMEASNo = 0;
                             List<SubsidenceTotalData> l = dao.queryAllOrderByMEASNoDesc(info.type);
                             if (l != null && l.size() > 0) {
@@ -558,6 +565,7 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
                             }
                             obj.setMEASNo(lastMEASNo + 1);
                             err = dao.insert(obj);
+                            update = false;
                         }
 						
 						if(err == TunnelSettlementTotalDataDao.DB_EXECUTE_SUCCESS){
@@ -566,10 +574,10 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 							// tempSubsidenceData.add(obj);
 							
 						    doWarning(info.holder, AlertUtils.getPointSubsidenceExceedMsg(obj));
-							showText("保存成功");
+							showText((update ? "更新" : "保存") + "成功");
 							
 						} else {
-							showText("保存失败");
+							showText((update ? "更新" : "保存") + "失败");
 						}
 					}
 					

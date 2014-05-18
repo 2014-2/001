@@ -66,6 +66,23 @@ public class AlertListDao extends AbstractDao<AlertList> {
         return mDatabase.queryObject(sql, args, AlertList.class);
     }
 
+    public void deleteAlert(int sheetId, int chainageId, String originalDataID, int uType) {
+        final IAccessDatabase mDatabase = getCurrentDb();
+        Log.d(TAG, "AlertListDao deleteAlert, uType: " + uType);
+
+        if (mDatabase == null) {
+            return;
+        }
+
+        String sql = "delete from AlertList where SheetID=? AND CrossSectionID=?" + " AND Utype=?"
+                + " AND originalDataID=\'" + originalDataID + "\'";
+        String[] args = new String[] { String.valueOf(sheetId), String.valueOf(chainageId),
+                String.valueOf(uType) };
+
+        mDatabase.execute(sql, args);
+
+    }
+
     public AlertList queryOne(int sheetId, int chainageId, String originalDataID, int uType) {
         final IAccessDatabase mDatabase = getCurrentDb();
         Log.d(TAG, "AlertListDao queryOne, uType: " + uType);

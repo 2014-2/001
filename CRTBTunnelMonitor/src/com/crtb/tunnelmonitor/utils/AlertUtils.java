@@ -130,6 +130,10 @@ public class AlertUtils {
         float thisDataCorrection = 0f;
 
         if (point instanceof TunnelSettlementTotalData) {
+            if (((TunnelSettlementTotalData) point).getDataStatus() == POINT_DATASTATUS_AS_FIRSTLINE) {
+                return ret;
+            }
+
             type = 1;
             TunnelSettlementTotalData tPoint = (TunnelSettlementTotalData) point;
             thisCoords = tPoint.getCoordinate().split(",");
@@ -141,6 +145,10 @@ public class AlertUtils {
             pntType = ((TunnelSettlementTotalData) point).getPntType();
             originalDataID = String.valueOf(((TunnelSettlementTotalData) point).getID());
         } else if (point instanceof SubsidenceTotalData) {
+            if (((SubsidenceTotalData) point).getDataStatus() == POINT_DATASTATUS_AS_FIRSTLINE) {
+                return ret;
+            }
+
             type = 2;
             SubsidenceTotalData sPoint = (SubsidenceTotalData) point;
             thisCoords = sPoint.getCoordinate().split(",");
@@ -183,10 +191,10 @@ public class AlertUtils {
                     Log.d(TAG, "累计沉降: " + accumulativeSubsidence + " mm");
                     accumulativeSubsidence += sumOfDataCorrection;
 //                    accumulativeSubsidence = Math.abs(accumulativeSubsidence);
+                    int uType = type == 1 ? GONGDING_LEIJI_XIACHEN_EXCEEDING
+                            : DIBIAO_LEIJI_XIACHEN_EXCEEDING;
                     if (Math.abs(accumulativeSubsidence) >= ACCUMULATIVE_THRESHOLD) {
                         accumulativeSubsidence = Math.round(accumulativeSubsidence);
-                        int uType = type == 1 ? GONGDING_LEIJI_XIACHEN_EXCEEDING
-                                : DIBIAO_LEIJI_XIACHEN_EXCEEDING;
                         ret.leijiType = uType;
                         ret.leijiValue = (long) accumulativeSubsidence;
                         int alertId = -1;
@@ -199,6 +207,21 @@ public class AlertUtils {
                         }
                         AlertHandlingInfoDao.defaultDao().insertIfNotExist(alertId, null,
                                 thisTime, String.valueOf(chainageId) + pntType, ALERT_STATUS_OPEN/*报警*/, 1/*true*/);
+                    } else {
+                        int sheetId = -1;
+                        if (type == 1) {
+                            sheetId = ((TunnelSettlementTotalData) point).getSheetId();
+                        } else {
+                            sheetId = ((SubsidenceTotalData) point).getSheetId();
+                        }
+                        if (sheetId != -1) {
+                            AlertList al = AlertListDao.defaultDao().queryOne(sheetId, chainageId, originalDataID, uType);
+                            if (al != null) {
+                                int alertId = al.getID();
+                                AlertListDao.defaultDao().deleteAlert(sheetId, chainageId, originalDataID, uType);
+                                AlertHandlingInfoDao.defaultDao().deleteByAlertId(alertId);
+                            }
+                        }
                     }
                 }
 
@@ -238,10 +261,10 @@ public class AlertUtils {
                     Log.d(TAG, "delta t in day: " + deltaTInDay + " day");
                     double subsidenceSpeed = deltaZ / deltaTInDay;
                     Log.d(TAG, "沉降速率: " + subsidenceSpeed + " mm/d");
+                    int uType = type == 1 ? GONGDINGI_XIACHEN_SULV_EXCEEDING
+                            : DIBIAO_XIACHEN_SULV_EXCEEDING;
                     if (Math.abs(subsidenceSpeed) >= SPEED_THRESHOLD) {
                         subsidenceSpeed = Math.round(subsidenceSpeed);
-                        int uType = type == 1 ? GONGDINGI_XIACHEN_SULV_EXCEEDING
-                                : DIBIAO_XIACHEN_SULV_EXCEEDING;
                         ret.sulvType = uType;
                         ret.sulvValue = (long) subsidenceSpeed;
                         int alertId = -1;
@@ -254,6 +277,21 @@ public class AlertUtils {
                         }
                         AlertHandlingInfoDao.defaultDao().insertIfNotExist(alertId, null,
                                 thisTime, String.valueOf(chainageId) + pntType, ALERT_STATUS_OPEN/*报警*/, 1/*true*/);
+                    } else {
+                        int sheetId = -1;
+                        if (type == 1) {
+                            sheetId = ((TunnelSettlementTotalData) point).getSheetId();
+                        } else {
+                            sheetId = ((SubsidenceTotalData) point).getSheetId();
+                        }
+                        if (sheetId != -1) {
+                            AlertList al = AlertListDao.defaultDao().queryOne(sheetId, chainageId, originalDataID, uType);
+                            if (al != null) {
+                                int alertId = al.getID();
+                                AlertListDao.defaultDao().deleteAlert(sheetId, chainageId, originalDataID, uType);
+                                AlertHandlingInfoDao.defaultDao().deleteByAlertId(alertId);
+                            }
+                        }
                     }
                 }
             }
@@ -279,6 +317,7 @@ public class AlertUtils {
             return null;
         }
 
+        int sheetId = s_1.getSheetId();
         String originalDataID = s_1.getID() + ORIGINAL_ID_DIVIDER + s_2.getID();
 
         double lineThisLength = getLineLength(s_1, s_2);
@@ -319,15 +358,24 @@ public class AlertUtils {
                 convergence *= 1000; //CHANGE TO MILLIMETER
                 convergence += sumOfCorrections;
 //                convergence = Math.abs(convergence);
+                int uType = SHOULIAN_LEIJI_EXCEEDING;
                 if (Math.abs(convergence) >= ACCUMULATIVE_THRESHOLD) {
                     convergence = Math.round(convergence);
-                    int uType = SHOULIAN_LEIJI_EXCEEDING;
                     ret.leijiType = uType;
                     ret.leijiValue = (long) convergence;
                     int alertId = AlertListDao.defaultDao().insertOrUpdate(s_1, 3/* default */,
                             uType, convergence, ACCUMULATIVE_THRESHOLD, originalDataID);
                     AlertHandlingInfoDao.defaultDao().insertIfNotExist(alertId, null,
                             thisTimeDate, String.valueOf(chainageId) + s_1.getPntType(), ALERT_STATUS_OPEN/*报警*/, 1/*true*/);
+                } else {
+                    if (sheetId != -1) {
+                        AlertList al = AlertListDao.defaultDao().queryOne(sheetId, chainageId, originalDataID, uType);
+                        if (al != null) {
+                            int alertId = al.getID();
+                            AlertListDao.defaultDao().deleteAlert(sheetId, chainageId, originalDataID, uType);
+                            AlertHandlingInfoDao.defaultDao().deleteByAlertId(alertId);
+                        }
+                    }
                 }
             }
 
@@ -364,15 +412,24 @@ public class AlertUtils {
                     deltaTInDay = h;
                 }
                 double shoulianSpeed = deltaLenth / deltaTInDay;
+                int uType = SHOULIAN_SULV_EXCEEDING;
                 if (Math.abs(shoulianSpeed) >= SPEED_THRESHOLD) {
                     shoulianSpeed = Math.round(shoulianSpeed);
-                    int uType = SHOULIAN_SULV_EXCEEDING;
                     ret.sulvType = uType;
                     ret.sulvValue = (long) shoulianSpeed;
                     int alertId = AlertListDao.defaultDao().insertOrUpdate(s_1, 3/* default */, uType, shoulianSpeed,
                             SPEED_THRESHOLD, originalDataID);
                     AlertHandlingInfoDao.defaultDao().insertIfNotExist(alertId, null,
                             thisTimeDate, String.valueOf(chainageId) + s_1.getPntType(), ALERT_STATUS_OPEN/*报警*/, 1/*true*/);
+                } else {
+                    if (sheetId != -1) {
+                        AlertList al = AlertListDao.defaultDao().queryOne(sheetId, chainageId, originalDataID, uType);
+                        if (al != null) {
+                            int alertId = al.getID();
+                            AlertListDao.defaultDao().deleteAlert(sheetId, chainageId, originalDataID, uType);
+                            AlertHandlingInfoDao.defaultDao().deleteByAlertId(alertId);
+                        }
+                    }
                 }
             }
         }
