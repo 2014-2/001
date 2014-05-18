@@ -567,6 +567,9 @@ public class AlertUtils {
                     }
                 }
             }
+
+            ai.setChuliFangshi(((ai.getAlertStatus() == ALERT_STATUS_OPEN) && (ai.getCorrection() == 0)) ? "未作任何处理" : "自由处理");
+
         }
         return l;
     }

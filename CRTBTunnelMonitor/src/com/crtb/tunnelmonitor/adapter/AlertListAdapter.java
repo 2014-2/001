@@ -78,7 +78,7 @@ public class AlertListAdapter extends BaseAdapter {
         TextView chushi = (TextView) view.findViewById(R.id.chulifangshi);
         String handleWay = list.get(pos).getChuliFangshi();
         if (handleWay == null || handleWay.equalsIgnoreCase("null")) {
-            handleWay = "自由处理" ;//TODO: 默认
+            handleWay = "未作任何处理" ;//TODO: 默认
         }
         chushi.setText("处理方式：" + handleWay);
         TextView state = (TextView) view.findViewById(R.id.state);
