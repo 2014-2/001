@@ -80,6 +80,8 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 	private RawSheetIndex		rawSheetBean;// 当前测量单
 	private List<RawSheetIndex> rawSheets ; // 测量数据
 	private boolean 			rawSheetCanTest ; // 是否能够测量
+	private boolean 			showNextHint;
+	private boolean 			showLastHint;
 	
 	private int sectionIndex ;
 	private TunnelCrossSectionIndex tunnelSection ;
@@ -106,6 +108,8 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 		
 		rawSheetIndex	= 0 ;
 		rawSheetBean	= null ;
+		showNextHint 	= true;
+		showLastHint 	= true;
 		tempTunnelData.clear() ;
 		tempSubsidenceData.clear() ;
 		
@@ -125,7 +129,12 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 		if(rawSheets == null 
 				|| rawSheets.isEmpty() 
 				|| rawSheetIndex + 1 >= rawSheets.size()){
-			showText("已经是最后一个断面");
+			
+			if(showNextHint){
+				showText("已经是最后一个断面");
+				showNextHint = false ;
+			}
+			
 			return false ;
 		}
 		
@@ -139,6 +148,7 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 		tunnelSectionList.clear() ;
 		subsidenceSectionList.clear() ;
 		rawSheetCanTest	= false  ;
+		showNextHint	= true ;
 		
 		return true ;
 	}
@@ -149,7 +159,11 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 		if(rawSheets == null 
 				|| rawSheets.isEmpty() 
 				|| rawSheetIndex <= 0){
-			showText("已经是第一个断面");
+			
+			if(showLastHint){
+				showText("已经是第一个断面");
+				showLastHint = false ;
+			}
 			return false ;
 		}
 		
@@ -163,6 +177,7 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 		tunnelSectionList.clear() ;
 		subsidenceSectionList.clear() ;
 		rawSheetCanTest	= false  ;
+		showLastHint = true ;
 		
 		return true ;
 	}
