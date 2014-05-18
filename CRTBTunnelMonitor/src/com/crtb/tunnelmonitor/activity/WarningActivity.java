@@ -217,6 +217,8 @@ public class WarningActivity extends Activity {
                                     oldDateMileageTV.setText(Html.fromHtml("<font color=\"#0080ee\">里程: </font>" + alert.getXinghao()));
                                     oldDateListNumTV.setText(Html.fromHtml("<font color=\"#0080ee\">记录单号: </font>" + date));
                                     oldDatePointTV.setText(Html.fromHtml("<font color=\"#0080ee\">测点: </font>" + alert.getPntType()));
+                                    mCorrectionView.setText(null);
+                                    mWarningRemarkView.setText(alert.getHandling());
                                 }
                             }
                             break;
@@ -334,7 +336,8 @@ public class WarningActivity extends Activity {
 
                     @Override
                     public void onFinish() {
-                        mHandler.sendEmptyMessageDelayed(MSG_REFRESH_LIST, 200);
+//                        mHandler.sendEmptyMessageDelayed(MSG_REFRESH_LIST, 200);
+                        refreshData();
                     }
                 });
     }

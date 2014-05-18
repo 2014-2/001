@@ -738,14 +738,14 @@ public class AlertUtils {
         }
 
         //step 2
-        if (tarAlertStatus != curAlertStatus) {
+//        if (tarAlertStatus != curAlertStatus) {
             // TODO: SHOULD WE DELETE THIS CURRENT AlertHandlingInfo form db?
 //        AlertHandlingInfoDao.defaultDao().deleteItemById(alertHandlingId);
             AlertHandlingInfoDao.defaultDao().deleteByAlertId(alertId);
 
             AlertHandlingInfoDao.defaultDao().insertItem(alertId, handling, handlingTime, duePerson,
                     tarAlertStatus, 1/* true */);
-        }
+//        }
 
         //TODO: step 3 ignored for now, XXXARCHING（桌面版使用，android可预留设计）
     }
