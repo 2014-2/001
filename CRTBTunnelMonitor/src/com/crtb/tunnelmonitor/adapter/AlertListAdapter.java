@@ -68,7 +68,8 @@ public class AlertListAdapter extends BaseAdapter {
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         view = inflater.inflate(R.layout.list, null);
         // if(list.get(pos).isState1()){
-        ((TextView) view.findViewById(R.id.list_num)).setText("" + pos);
+        TextView numView = (TextView) view.findViewById(R.id.list_num);
+        numView.setText(String.valueOf(pos + 1));
         TextView data = (TextView) view.findViewById(R.id.date);
         data.setText(list.get(pos).getDate());
         TextView xinghao = (TextView) view.findViewById(R.id.xinghao);
