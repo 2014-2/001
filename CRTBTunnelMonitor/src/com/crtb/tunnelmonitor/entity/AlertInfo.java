@@ -8,23 +8,24 @@ public class AlertInfo implements Serializable {
     public static int count = 0;
     public static int yixiao = 0;
     //    public boolean state1;
-    public int alertId = -1;
-    public int alertHandlingId = -1;
-    public int sheetId = -1;
-    public int sectionId = -1;
-    public int alertLevel;
-    public double uvalue;
-	public String originalDataID;
-	public String handling;
-	public String handlingTime;
-    public String xinghao;
-    public String date;
-    public String pntType;
-    public String uTypeMsg;
-    public int uType;
-    public String alertStatusMsg;
-    public int alertStatus;
-    public String chuliFangshi;
+    private int alertId = -1;
+    private int alertHandlingId = -1;
+    private int sheetId = -1;
+    private int sectionId = -1;
+    private int alertLevel;
+    private float correction = 0f;
+    private double uvalue;
+    private String originalDataID;
+    private String handling;
+    private String handlingTime;
+    private String xinghao;
+    private String date;
+    private String pntType;
+    private String uTypeMsg;
+    private int uType;
+    private String alertStatusMsg;
+    private int alertStatus;
+    private String chuliFangshi;
 
     //    public boolean isState1() {
     //        return state1;
@@ -81,7 +82,15 @@ public class AlertInfo implements Serializable {
     public double getUValue() {
     	return uvalue;
     }
-    
+
+    public float getCorrection() {
+        return correction;
+    }
+
+    public void setCorrection(float correction) {
+        this.correction = correction;
+    }
+
     public void setOriginalDataID(String id) {
     	this.originalDataID = id;
     }

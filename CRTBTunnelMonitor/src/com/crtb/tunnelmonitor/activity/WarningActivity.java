@@ -8,11 +8,13 @@ import java.util.Random;
 import org.zw.android.framework.util.DateUtils;
 
 import android.app.Activity;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.Editable;
 import android.text.Html;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.*;
@@ -107,8 +109,8 @@ public class WarningActivity extends Activity {
         initB();
         initView();
 
-        alerts = AlertUtils.getAlertInfoList();
         adapter = new AlertListAdapter(this, alerts);
+        refreshData();
 
         mHandleCompleteView= (RelativeLayout) findViewById(R.id.complete_warning_rl);
         mDealWayRadios = (RadioGroup) mHandleCompleteView.findViewById(R.id.radio_group);
@@ -124,6 +126,39 @@ public class WarningActivity extends Activity {
         });
 
         mCorrectionView = (EditText) mHandleCompleteView.findViewById(R.id.add_edit);
+        mCorrectionView.addTextChangedListener(new TextWatcher() {
+            
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                // TODO Auto-generated method stub
+                
+            }
+            
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                // TODO Auto-generated method stub
+                
+            }
+            
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (warningValueTV != null) {
+                    AlertInfo alert = alerts.get(clickedItem);
+                    if (alert != null) {
+                        Editable e = mCorrectionView.getText();
+                        float correction = 0;
+                        if (e != null && e.length() > 0) {
+                            correction = Float.valueOf(e.toString());
+                        }
+                        warningValueTV.setText("超限值: "
+                                + String.format("%1$.4f", alert.getUValue() + alert.getCorrection()
+                                        + correction)
+                                + AlertUtils.getAlertValueUnit(alert.getUType()));
+                    }
+                }
+            }
+        });
+
         mWarningRemarkView = (EditText) mHandleCompleteView.findViewById(R.id.warning_remark);
         listviewInit();
 
@@ -171,7 +206,7 @@ public class WarningActivity extends Activity {
                                     warningSignalTV.setText(alert.getXinghao());
                                     warningPointNumTV.setText("点号："+alert.getPntType());
                                     warningStateTV.setText("状态："+alert.getAlertStatusMsg());
-                                    warningValueTV.setText("超限值: " + String.format("%1$.4f", alert.getUValue())
+                                    warningValueTV.setText("超限值: " + String.format("%1$.4f", alert.getUValue() + alert.getCorrection())
                                             + AlertUtils.getAlertValueUnit(alert.getUType()));
                                     warningDateTV.setText(alert.getDate());
                                     warningMessageTV.setText(alert.getUTypeMsg());
@@ -257,12 +292,13 @@ public class WarningActivity extends Activity {
 
     private void handleAlert() {
 
-        int alertHandlingId = alerts.get(clickedItem).getAlertHandlingId();
+//        int alertHandlingId = alerts.get(clickedItem).getAlertHandlingId();
         AlertInfo ai = (AlertInfo) adapter.getItem(clickedItem);
         if (ai == null) {
             return;
         }
 
+        int curStatus = ai.getAlertStatus();
         float correction = 0f;
 
         Editable e = mCorrectionView.getText();
@@ -290,12 +326,12 @@ public class WarningActivity extends Activity {
                             // 需要将mBtnOnClickListener中deal_with_btn也要和complete_btn一样的逻辑
         String handling = mWarningRemarkView.getText().toString();
         Log.d(TAG, "handleAlert 处理内容：" + handling);
-        new AlertManager().handleAlert(alertId, dataStatus, correction, alertStatus, handling,
+        new AlertManager().handleAlert(alertId, dataStatus, correction, curStatus, alertStatus, handling,
                 new Date(System.currentTimeMillis()), new AlertManager.HandleFinishCallback() {
 
                     @Override
                     public void onFinish() {
-                        mHandler.sendEmptyMessageDelayed(MSG_REFRESH_LIST, 500);
+                        mHandler.sendEmptyMessageDelayed(MSG_REFRESH_LIST, 200);
                     }
                 });
     }
@@ -305,9 +341,7 @@ public class WarningActivity extends Activity {
     }
 
     private void refreshData() {
-        alerts = AlertUtils.getAlertInfoList();
-        adapter.refreshData(alerts);
-        refreshNum();
+        new RefreshTask().execute();
     }
 
     public void initB() {
@@ -334,8 +368,22 @@ public class WarningActivity extends Activity {
         
     };
 
-    public String getdate() {
-        SimpleDateFormat simp = new SimpleDateFormat("yyyy-MM-dd hh:mm");
-        return simp.format(new Date());
+    class RefreshTask extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            alerts = AlertUtils.getAlertInfoList();
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+            super.onPostExecute(result);
+            if (adapter != null) {
+                adapter.refreshData(alerts);
+                refreshNum();
+            }
+        }
+        
     }
 }

@@ -16,12 +16,14 @@ public class AlertManager {
     private String mHandling;
     private Date mHandlingTime;
     private HandleFinishCallback mCallback;
+    private int mCurAlertStatus;
 
-    public void handleAlert(int alertId, int dataStatus, float correction, int alertStatus,
+    public void handleAlert(int alertId, int dataStatus, float correction, int curAlertStatus, int alertStatus,
             String handling, Date handlingTime, HandleFinishCallback callback) {
         Log.d(TAG, "handleAlert");
         mAlertId = alertId;
         mDataStatus = dataStatus;
+        mCurAlertStatus = curAlertStatus;
         mAlertStatus = alertStatus;
         mCorretion = correction;
         mHandling = handling;
@@ -36,7 +38,7 @@ public class AlertManager {
         @Override
         protected Void doInBackground(Void... params) {
             Log.d(TAG, "HandleAlertTask doInBackground");
-            AlertUtils.handleAlert(mAlertId, mDataStatus, mCorretion,
+            AlertUtils.handleAlert(mAlertId, mDataStatus, mCorretion, mCurAlertStatus,
                     mAlertStatus, mHandling, mHandlingTime);
             return null;
         }

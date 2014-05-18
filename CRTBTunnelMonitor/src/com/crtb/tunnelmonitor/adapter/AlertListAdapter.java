@@ -100,7 +100,7 @@ public class AlertListAdapter extends BaseAdapter {
         int c = 0;
         if (list != null) {
             for (AlertInfo ai : list) {
-                if (ai.alertStatus == 0) {
+                if (ai.getAlertStatus() == 0) {
                     c++;
                 }
             }
