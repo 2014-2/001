@@ -89,8 +89,7 @@
                         android:layout_marginLeft="10dp"
                         android:layout_marginRight="20dp"
                         android:layout_weight="1"
-                        android:hint="请输入身份证"
-                        android:text="102190198805012891" />
+                        android:hint="请输入身份证" />
                 </LinearLayout>
             </RelativeLayout>
 

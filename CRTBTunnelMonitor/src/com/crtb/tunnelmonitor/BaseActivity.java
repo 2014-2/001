@@ -71,7 +71,7 @@ public abstract class BaseActivity extends Activity {
 	}
 	
 	protected void showText(String msg){
-		Toast.makeText(this, msg, Toast.LENGTH_LONG).show() ;
+		Toast.makeText(this, msg, Toast.LENGTH_SHORT).show() ;
 	}
 	
 	/**

@@ -43,17 +43,28 @@
                 android:text="X"
                 android:textColor="@color/black" />
 
+            <TextView
+                android:id="@+id/right"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="10dp"
+                android:text="米"
+                android:textColor="@color/black" />
+
             <EditText
                 android:id="@+id/test_point_x"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
+                android:layout_marginRight="10dp"
+                android:layout_toLeftOf="@id/right"
                 android:layout_toRightOf="@id/left"
-                android:inputType="numberDecimal"
-                android:singleLine="true" 
                 android:editable="false"
-                android:focusable="false"/>
+                android:focusable="false"
+                android:inputType="numberDecimal"
+                android:singleLine="true" />
         </RelativeLayout>
 
         <RelativeLayout
@@ -73,17 +84,28 @@
                 android:text="Y"
                 android:textColor="@color/black" />
 
+            <TextView
+                android:id="@+id/right"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="10dp"
+                android:text="米"
+                android:textColor="@color/black" />
+
             <EditText
                 android:id="@+id/test_point_y"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
+                android:layout_marginRight="10dp"
+                android:layout_toLeftOf="@id/right"
                 android:layout_toRightOf="@id/left"
-                android:inputType="numberDecimal"
-                android:singleLine="true"
                 android:editable="false"
-                android:focusable="false" />
+                android:focusable="false"
+                android:inputType="numberDecimal"
+                android:singleLine="true" />
         </RelativeLayout>
 
         <RelativeLayout
@@ -103,17 +125,28 @@
                 android:text="H"
                 android:textColor="@color/black" />
 
+            <TextView
+                android:id="@+id/right"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="10dp"
+                android:text="米"
+                android:textColor="@color/black" />
+
             <EditText
                 android:id="@+id/test_point_z"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
+                android:layout_marginRight="10dp"
+                android:layout_toLeftOf="@id/right"
                 android:layout_toRightOf="@id/left"
-                android:inputType="numberDecimal"
-                android:singleLine="true"
                 android:editable="false"
-                android:focusable="false" />
+                android:focusable="false"
+                android:inputType="numberDecimal"
+                android:singleLine="true" />
         </RelativeLayout>
 
         <RelativeLayout
@@ -133,12 +166,24 @@
                 android:text="日期"
                 android:textColor="@color/black" />
 
+            <TextView
+                android:id="@+id/right"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="10dp"
+                android:text="米"
+                android:textColor="@color/black"
+                android:visibility="invisible" />
+
             <EditText
                 android:id="@+id/test_point_time"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
+                android:layout_marginRight="10dp"
+                android:layout_toLeftOf="@id/right"
                 android:layout_toRightOf="@id/left"
                 android:editable="false"
                 android:focusable="false"
@@ -161,7 +206,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
             android:layout_marginLeft="10dp"
-            android:orientation="vertical" 
+            android:orientation="vertical"
             android:visibility="gone" />
     </LinearLayout>
 
