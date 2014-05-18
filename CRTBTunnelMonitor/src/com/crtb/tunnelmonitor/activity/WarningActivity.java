@@ -148,7 +148,10 @@ public class WarningActivity extends Activity {
                         Editable e = mCorrectionView.getText();
                         float correction = 0;
                         if (e != null && e.length() > 0) {
-                            correction = Float.valueOf(e.toString());
+                            String cstr = e.toString();
+                            if (cstr != null && !cstr.trim().endsWith("-")) {
+                                correction = Float.valueOf(cstr);
+                            }
                         }
                         warningValueTV.setText("超限值: "
                                 + String.format("%1$.4f", alert.getUValue() + alert.getCorrection()
