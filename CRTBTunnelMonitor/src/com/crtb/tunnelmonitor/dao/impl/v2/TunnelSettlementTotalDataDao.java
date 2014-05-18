@@ -203,7 +203,7 @@ public class TunnelSettlementTotalDataDao extends AbstractDao<TunnelSettlementTo
         	
             String sql = "UPDATE TunnelSettlementTotalData"
                     + " SET DataStatus=" + dataStatus
-                    + ((dataStatus == AlertUtils.POINT_DATASTATUS_CORRECTION) ? (", DataCorrection=" + correction) : "")
+                    + ", DataCorrection=" + ((dataStatus == AlertUtils.POINT_DATASTATUS_CORRECTION) ? correction : 0f)
                     + " WHERE ID=?";
             
             String[] args = new String[]{String.valueOf(id)};

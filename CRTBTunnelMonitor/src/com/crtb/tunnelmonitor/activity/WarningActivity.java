@@ -9,6 +9,8 @@ import org.zw.android.framework.util.DateUtils;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.text.Editable;
 import android.text.Html;
 import android.util.Log;
@@ -27,6 +29,8 @@ import com.crtb.tunnelmonitor.utils.AlertUtils;
 public class WarningActivity extends Activity {
 
     protected static final String TAG = "WarningActivity";
+
+    private static final int MSG_REFRESH_LIST = 0;
 
     private ListView listview;
 
@@ -145,10 +149,8 @@ public class WarningActivity extends Activity {
                             AlertHandlingInfoDao.defaultDao().updateAlertStatus(alerts.get(clickedItem).getAlertHandlingId(), 2);
 //                            alerts.get(clickedItem).setAlertStatusMsg(sss[1]);
                             handlingStep = 1;
-                            adapter.notifyDataSetChanged();
-                            alerts = AlertUtils.getAlertInfoList();
-                            adapter.refreshData(alerts);
-                            refreshNum();
+//                            adapter.notifyDataSetChanged();
+                            refreshData();
                             break;
                         case 1:
                             Toast.makeText(WarningActivity.this, " 已开始处理", 1000).show();
@@ -193,9 +195,7 @@ public class WarningActivity extends Activity {
                         handleAlert();
                         handlingStep = 2;
                         mHandleCompleteView.setVisibility(View.GONE);
-                        alerts = AlertUtils.getAlertInfoList();
-                        adapter.refreshData(alerts);
-                        refreshNum();
+                        refreshData();
                     } else {
                         Toast.makeText(WarningActivity.this, "请选择处理方式！", Toast.LENGTH_LONG).show();
                     }
@@ -256,10 +256,8 @@ public class WarningActivity extends Activity {
     }
 
     private void handleAlert() {
-        // TODO: SHOULD WE DELETE THIS CURRENT AlertHandlingInfo form db?
-        AlertHandlingInfoDao.defaultDao().deleteItemById(
-                alerts.get(clickedItem).getAlertHandlingId());
 
+        int alertHandlingId = alerts.get(clickedItem).getAlertHandlingId();
         AlertInfo ai = (AlertInfo) adapter.getItem(clickedItem);
         if (ai == null) {
             return;
@@ -288,15 +286,28 @@ public class WarningActivity extends Activity {
             dataStatus = 3;
         }
 
-        int alertStatus = 0;//TODO : may also be 2?, if so, 需要将mBtnOnClickListener中deal_with_btn也要和complete_btn一样的逻辑
+        int alertStatus = 0;// TODO : may also be 2?, if so,
+                            // 需要将mBtnOnClickListener中deal_with_btn也要和complete_btn一样的逻辑
         String handling = mWarningRemarkView.getText().toString();
         Log.d(TAG, "handleAlert 处理内容：" + handling);
-        new AlertManager().handleAlert(alertId, dataStatus, correction, alertStatus, handling, new Date(
-                System.currentTimeMillis()));
+        new AlertManager().handleAlert(alertId, dataStatus, correction, alertStatus, handling,
+                new Date(System.currentTimeMillis()), new AlertManager.HandleFinishCallback() {
+
+                    @Override
+                    public void onFinish() {
+                        mHandler.sendEmptyMessageDelayed(MSG_REFRESH_LIST, 500);
+                    }
+                });
     }
 
     private void cancelHandling() {
         mCheckedRaidoId = 0;
+    }
+
+    private void refreshData() {
+        alerts = AlertUtils.getAlertInfoList();
+        adapter.refreshData(alerts);
+        refreshNum();
     }
 
     public void initB() {
@@ -308,29 +319,20 @@ public class WarningActivity extends Activity {
         }
     }
 
-//    public ArrayList<AlertInfo> getdata() {
-//        AlertInfo.yixiao = 0;
-//        ArrayList<AlertInfo> listt = new ArrayList<AlertInfo>();
-//        AlertInfo infor;
-//        for (int i = 0; i < s.length; i++) {
-//            infor = new AlertInfo();
-//            infor.setDate(getdate());
-//            infor.setXinghao(s[i]);
-//            infor.setPntType(ss[ran.nextInt(3)]);
-//            infor.setChuliFangshi("自由处理");
-//            infor.setAlertStatusMsg(sss[ran.nextInt(3)]);
-//            infor.setUTypeMsg(s2[ran.nextInt(4)]);
-//            infor.setEdtState(ssss[ran.nextInt(4)]);
-////            infor.setState1(true);
-//            if (infor.getAlertStatusMsg().equals("已消警")) {
-//                AlertInfo.yixiao = AlertInfo.yixiao + 1;
-//                System.out.println(AlertInfo.yixiao);
-//
-//            }
-//            listt.add(infor);
-//        }
-//        return listt;
-//    }
+    private Handler mHandler = new Handler() {
+
+        @Override
+        public void handleMessage(Message msg) {
+            switch(msg.what) {
+                case MSG_REFRESH_LIST:
+                    refreshData();
+                    break;
+                default:
+                    super.handleMessage(msg);
+            }
+        }
+        
+    };
 
     public String getdate() {
         SimpleDateFormat simp = new SimpleDateFormat("yyyy-MM-dd hh:mm");

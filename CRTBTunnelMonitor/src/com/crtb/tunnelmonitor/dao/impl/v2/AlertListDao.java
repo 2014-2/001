@@ -38,7 +38,7 @@ public class AlertListDao extends AbstractDao<AlertList> {
         db.createTable(AlertList.class);
     }
 
-    public List<AlertList> queryAllRawSheetIndex() {
+    public List<AlertList> queryAll() {
 
         final IAccessDatabase mDatabase = getCurrentDb();
 
@@ -237,6 +237,31 @@ public class AlertListDao extends AbstractDao<AlertList> {
         int chainageId = point.getChainageId();
 
         updatePointAlertItem(sheetId, chainageId, Utype, UValue, originalDataID);
+    }
+
+    public List<AlertList> queryTunnelSettlementAlertsByOriginalDataId(int originalDataId) {
+        IAccessDatabase db = getCurrentDb();
+        if (db == null) {
+            return null;
+        }
+        String oid = String.valueOf(originalDataId);
+        String sql = "select * from AlertList where (OriginalDataID = \'"
+                + oid + "\'"
+                + " OR OriginalDataID LIKE \'" + oid + ",%\'"
+                + " OR OriginalDataID LIKE \'%," + oid + "\')"
+                + " AND Utype<=3";//隧道内
+        return db.queryObjects(sql, AlertList.class);
+    }
+
+    public List<AlertList> queryGroundSubsidenceAlertsByOriginalDataId(int originalDataId) {
+        IAccessDatabase db = getCurrentDb();
+        if (db == null) {
+            return null;
+        }
+        String sql = "select * from AlertList where OriginalDataID = ?"
+                + " AND Utype>=4";//地表下沉
+        String[] args = new String[] {String.valueOf(originalDataId)};
+        return db.queryObjects(sql, args, AlertList.class);
     }
 
     public Cursor executeQuerySQL(String sql, String[] args) {
