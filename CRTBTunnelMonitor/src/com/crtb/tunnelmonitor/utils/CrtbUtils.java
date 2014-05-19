@@ -56,7 +56,7 @@ public final class CrtbUtils {
 		return pre + km + "+" + m + desc;
 	}
 	
-	public String generatorGUID(){
+	public static String generatorGUID(){
 		return UUID.randomUUID().toString() ;
 	}
 	
