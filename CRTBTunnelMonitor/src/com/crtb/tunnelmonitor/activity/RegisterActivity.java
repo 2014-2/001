@@ -79,7 +79,7 @@ public class RegisterActivity extends Activity implements OnClickListener {
         return false;
     }
 
-    private void showDialog(boolean bSuccess, final OnClickListener listener) {
+    private void showDialog(final boolean bSuccess, final OnClickListener listener) {
         final Dialog dlg = new Dialog(this, R.style.custom_dlg);
         View view = LayoutInflater.from(this).inflate(
                 R.layout.success_dialog_layout, null);
@@ -100,6 +100,9 @@ public class RegisterActivity extends Activity implements OnClickListener {
                 }
                 if (dlg != null) {
                     dlg.dismiss();
+                }
+                if (bSuccess) {
+                    RegisterActivity.this.finish();
                 }
             }
         });
