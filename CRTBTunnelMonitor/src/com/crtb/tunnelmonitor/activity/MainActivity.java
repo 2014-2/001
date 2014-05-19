@@ -7,6 +7,8 @@ import org.zw.android.framework.util.StringUtils;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.LinearLayout;
@@ -55,6 +57,9 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 	private TotalStationIndex info = new TotalStationIndex();
 
 	private ProjectIndex mCurrentWorkPlan;
+
+	private boolean mBackPressedOnce = false;
+	private static final int MSG_CLEAR_BACK_PRESSED_FLAG = 0;
 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -217,4 +222,33 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 		}
 
 	}
+
+    @Override
+    public void onBackPressed() {
+        if (mBackPressedOnce) {
+            finish();
+        } else {
+            mBackPressedOnce = true;
+            Toast t = Toast.makeText(this, R.string.press_again_to_exit, Toast.LENGTH_LONG);
+            t.setDuration(1500);
+            t.show();
+            mHandler.sendEmptyMessageDelayed(MSG_CLEAR_BACK_PRESSED_FLAG, 1500);
+        }
+    }
+
+    private Handler mHandler = new Handler() {
+
+        @Override
+        public void handleMessage(Message msg) {
+            switch(msg.what) {
+            case MSG_CLEAR_BACK_PRESSED_FLAG:
+                mBackPressedOnce = false;
+                break;
+            default:
+                super.handleMessage(msg);
+                break;
+            }
+        }
+    };
+
 }

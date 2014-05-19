@@ -223,6 +223,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 						
 						@Override
 						public void onClick(View v) {
+						    finish();
 							Intent intent = new Intent(LoginActivity.this, MainActivity.class);
 			    			intent.putExtra(Constant.LOGIN_TYPE
 			    					, Constant.SERVER_USER);
