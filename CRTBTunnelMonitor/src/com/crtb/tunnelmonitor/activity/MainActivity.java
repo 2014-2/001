@@ -23,6 +23,7 @@ import com.crtb.tunnelmonitor.BaseActivity;
 import com.crtb.tunnelmonitor.CommonObject;
 import com.crtb.tunnelmonitor.common.Constant;
 import com.crtb.tunnelmonitor.dao.impl.v2.ProjectIndexDao;
+import com.crtb.tunnelmonitor.entity.CrtbUser;
 import com.crtb.tunnelmonitor.entity.TotalStationIndex;
 import com.crtb.tunnelmonitor.entity.ProjectIndex;
 
@@ -145,9 +146,20 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 		String name = AppPreferences.getPreferences().getCurrentSimpleProjectName();
 		mTitle.setText(StringUtils.isEmpty(name) ? getString(R.string.main_title) : name);
 	}
-	
+
+	private void notRegisteredToast() {
+	    Toast.makeText(getApplicationContext(), "该功能对未注册用户不可用！", Toast.LENGTH_LONG).show();
+	}
+
 	@Override
 	public void onClick(View v) {
+
+	    int userType = AppCRTBApplication.getInstance().getCurUserType();
+	    if (userType == CrtbUser.LICENSE_TYPE_DEFAULT && v.getId() != R.id.about) {
+	        notRegisteredToast();
+	        return;
+	    }
+
 		switch (v.getId()) {
 		case R.id.worksection:// 工作面
 		{

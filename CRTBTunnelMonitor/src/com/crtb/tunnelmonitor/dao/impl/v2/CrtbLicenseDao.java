@@ -6,7 +6,9 @@ import org.zw.android.framework.util.StringUtils;
 
 import android.content.Context;
 
+import com.crtb.tunnelmonitor.AppCRTBApplication;
 import com.crtb.tunnelmonitor.entity.CrtbUser;
+import com.crtb.tunnelmonitor.utils.CrtbUtils;
 
 /**
  * 权限认证
@@ -95,20 +97,22 @@ public final class CrtbLicenseDao extends AbstractDefaultDBDao<CrtbUser>{
 		int error 		= -1 ;
 		
 		CrtbUser user 	= db.queryObject(sql, new String[]{username}, CrtbUser.class);
+		int userType = CrtbUtils.getCrtbUserTypeByUsername(username);
 		
 		if(user == null){
 			user = new CrtbUser() ;
 			user.setUsername(username);
-			user.setUsertype(CrtbUser.LICENSE_TYPE_REGISTER);
+			user.setUsertype(userType);
 			user.setLicense(license);
 			error = db.saveObject(user);
 		} else {
 			user.setUsername(username);
 			user.setLicense(license);
-			user.setUsertype(CrtbUser.LICENSE_TYPE_REGISTER);
+			user.setUsertype(userType);
 			error = db.updateObject(user);
 		}
 		
+		AppCRTBApplication.getInstance().setCurUser(user);
 		return error > 0 ? DB_EXECUTE_SUCCESS : DB_EXECUTE_FAILED;
 	}
 	

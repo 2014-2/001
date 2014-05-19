@@ -7,6 +7,7 @@ import org.zw.android.framework.IAccessDatabase;
 
 import android.util.Log;
 
+import com.crtb.tunnelmonitor.AppCRTBApplication;
 import com.crtb.tunnelmonitor.AppPreferences;
 import com.crtb.tunnelmonitor.entity.CrtbProject;
 import com.crtb.tunnelmonitor.entity.CrtbUser;
@@ -132,23 +133,13 @@ public final class ProjectIndexDao extends AbstractDao<ProjectIndex> {
 		
 		return list != null && list.size() > 0 ;
 	}
-	
-	public boolean hasExport(){
-		
-		final CrtbUser user = CrtbLicenseDao.defaultDao().queryCrtbUser() ;
-		
-		if(user == null){
-			return false ;
-		}
-		
-		// 非注册用户
-		if(user.getUsertype() == CrtbUser.LICENSE_TYPE_DEFAULT){
-			return false ;
-		}
-		
-		return hasWorkPlan();
-	}
-	
+
+    public boolean hasExport() {
+        int userType = AppCRTBApplication.getInstance().getCurUserType();
+        return userType == CrtbUser.LICENSE_TYPE_DEFAULT ? false
+                : hasWorkPlan();
+    }
+
 	// 导入数据库
 	public int inportDb(String dbName){
 		
@@ -157,16 +148,27 @@ public final class ProjectIndexDao extends AbstractDao<ProjectIndex> {
 		if(user == null){
 			return DB_EXECUTE_FAILED ;
 		}
-		
+
+        int limit = 0;
+        int userType = AppCRTBApplication.getInstance().getCurUserType();
+        if (userType == CrtbUser.LICENSE_TYPE_DEFAULT) {
+            Log.d(TAG, "未授权用户, 不能创建工作面！");
+            return DB_EXECUTE_FAILED;
+        } else if (userType == CrtbUser.LICENSE_TYPE_TRIAL) {
+            limit = TRIAL_USER_MAX_PROJECTINDEX_COUNT;
+        } else if (userType == CrtbUser.LICENSE_TYPE_REGISTERED) {
+            limit = -1;
+        }
+
 		// 非注册用户
-		if(user.getUsertype() == CrtbUser.LICENSE_TYPE_DEFAULT){
+		if (limit != -1) {
 			
 			String sql = "select * from CrtbProject" ;
 			
 			List<CrtbProject> list = getDefaultDb().queryObjects(sql, CrtbProject.class);
 			
-			if(list != null && list.size() >= MAX_PROJECTINDEX){
-				Log.e(TAG, "error : 非注册用户,不能保存2个以上的工作面");
+			if(list != null && list.size() >= limit){
+				Log.e(TAG, "error : 试用版用户,不能保存" + limit + "个以上的工作面");
 				return 100 ;
 			}
 		}
@@ -235,20 +237,32 @@ public final class ProjectIndexDao extends AbstractDao<ProjectIndex> {
 		if(user == null){
 			return DB_EXECUTE_FAILED ;
 		}
-		
-		// 非注册用户
-		if(user.getUsertype() == CrtbUser.LICENSE_TYPE_DEFAULT){
-			
-			String sql = "select * from CrtbProject where username = ?" ;
-			
-			List<CrtbProject> list = getDefaultDb().queryObjects(sql, new String[]{user.getUsername()}, CrtbProject.class);
-			
-			if(list != null && list.size() >= MAX_PROJECTINDEX){
-				Log.e(TAG, "error : 非注册用户,不能保存2个以上的工作面");
-				return 100 ;
-			}
-		}
-		
+
+        int limit = 0;
+        int userType = AppCRTBApplication.getInstance().getCurUserType();
+        if (userType == CrtbUser.LICENSE_TYPE_DEFAULT) {
+            Log.d(TAG, "未授权用户, 不能创建工作面！");
+            return DB_EXECUTE_FAILED;
+        } else if (userType == CrtbUser.LICENSE_TYPE_TRIAL) {
+            limit = TRIAL_USER_MAX_PROJECTINDEX_COUNT;
+        } else if (userType == CrtbUser.LICENSE_TYPE_REGISTERED) {
+            limit = -1;
+        }
+
+        // 非注册用户
+        if (limit != -1) {
+
+            String sql = "select * from CrtbProject where username = ?";
+
+            List<CrtbProject> list = getDefaultDb().queryObjects(sql,
+                    new String[] { user.getUsername() }, CrtbProject.class);
+
+            if (list != null && list.size() >= limit) {
+                Log.e(TAG, "error : 试用版用户,不能保存" + limit + "个以上的工作面");
+                return 100;
+            }
+        }
+
 		final IAccessDatabase db = openDb(bean.getDbName());
 		
 		// 保存到对应的数据库

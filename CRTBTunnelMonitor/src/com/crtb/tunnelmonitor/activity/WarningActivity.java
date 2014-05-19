@@ -20,10 +20,12 @@ import android.view.View;
 import android.widget.*;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 
+import com.crtb.tunnelmonitor.AppCRTBApplication;
 import com.crtb.tunnelmonitor.adapter.AlertListAdapter;
 import com.crtb.tunnelmonitor.dao.impl.v2.AlertHandlingInfoDao;
 import com.crtb.tunnelmonitor.dao.impl.v2.RawSheetIndexDao;
 import com.crtb.tunnelmonitor.entity.AlertInfo;
+import com.crtb.tunnelmonitor.entity.CrtbUser;
 import com.crtb.tunnelmonitor.entity.RawSheetIndex;
 import com.crtb.tunnelmonitor.utils.AlertManager;
 import com.crtb.tunnelmonitor.utils.AlertUtils;
@@ -70,6 +72,8 @@ public class WarningActivity extends Activity {
     private int mHandledAlertNum;
 
     protected int mCheckedRaidoId;
+
+    private int mUserType = CrtbUser.LICENSE_TYPE_DEFAULT;
 
     public void initView(){
         warningSignalTV = (TextView)findViewById(R.id.warning_signal);
@@ -168,6 +172,8 @@ public class WarningActivity extends Activity {
         baojing = (TextView) findViewById(R.id.rizhi);
         yixiao = (TextView) findViewById(R.id.yixiaojing);
         refreshNum();
+
+        mUserType  = AppCRTBApplication.getInstance().getCurUserType();
     }
 
     private void refreshNum() {
@@ -266,7 +272,15 @@ public class WarningActivity extends Activity {
         listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                if (oldChooseView != null) oldChooseView.setBackgroundResource(R.color.warning_bg);
+                if (mUserType != CrtbUser.LICENSE_TYPE_REGISTERED) {
+                    Toast.makeText(getApplicationContext(), "预警处理对非注册用户不可用!", Toast.LENGTH_LONG).show();
+                    return;
+                }
+
+                if (oldChooseView != null) {
+                    oldChooseView.setBackgroundResource(R.color.warning_bg);
+                }
+
                 view.setBackgroundResource(R.color.lightyellow);
                 clickedItem = i;
                 if (alerts.get(i).getAlertStatus() == 1) {//"开"

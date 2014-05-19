@@ -6,9 +6,15 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import android.content.Context;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.util.Log;
+
 import com.crtb.tunnelmonitor.AppCRTBApplication;
 import com.crtb.tunnelmonitor.dao.impl.v2.ProjectIndexDao;
+import com.crtb.tunnelmonitor.entity.CrtbUser;
 import com.crtb.tunnelmonitor.entity.ProjectIndex;
 import com.crtb.tunnelmonitor.entity.SubsidenceCrossSectionIndex;
 import com.crtb.tunnelmonitor.entity.SurveyerInformation;
@@ -284,5 +290,33 @@ public final class CrtbUtils {
     public static String getSurveyorCertificateID() {
         SurveyerInformation s = AppCRTBApplication.getInstance().getCurPerson();
         return s != null ? s.getCertificateID() : "";
+    }
+
+    public static int getAppVersionCode(Context context) {
+        PackageManager manager = context.getPackageManager();
+        PackageInfo info = null;
+        try {
+            info = manager.getPackageInfo(context.getPackageName(), 0);
+        } catch (NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        return info == null ? 0 : info.versionCode;
+    }
+
+    public static int getCrtbUserTypeByUsername(String username) {
+        int type = CrtbUser.LICENSE_TYPE_DEFAULT;
+        if (username != null && username.length() > 10) {
+            String typeStr = username.substring(username.length() - 10, username.length() - 8);
+            if (typeStr != null) {
+                if (typeStr.equals("00")) {
+                    type = CrtbUser.LICENSE_TYPE_DEFAULT;
+                } else if (typeStr.equals("10")) {
+                    type = CrtbUser.LICENSE_TYPE_TRIAL;
+                }  else if (typeStr.equals("20")) {
+                    type = CrtbUser.LICENSE_TYPE_REGISTERED;
+                }
+            }
+        }
+        return type;
     }
 }

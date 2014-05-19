@@ -7,6 +7,7 @@ import org.zw.android.framework.impl.ExecuteAsyncTaskImpl;
 
 import android.util.Log;
 
+import com.crtb.tunnelmonitor.AppCRTBApplication;
 import com.crtb.tunnelmonitor.AppHandler;
 import com.crtb.tunnelmonitor.BaseAsyncTask;
 import com.crtb.tunnelmonitor.entity.CrtbUser;
@@ -48,28 +49,43 @@ public final class SubsidenceCrossSectionIndexDao extends AbstractDao<Subsidence
         }
     }
 
-	@Override
-	public int insert(SubsidenceCrossSectionIndex bean) {
-		
-		final CrtbUser user = CrtbLicenseDao.defaultDao().queryCrtbUser() ;
-		
-		// 非注册用户
-		if(user.getUsertype() == CrtbUser.LICENSE_TYPE_DEFAULT){
-			
-			String sql = "select * from SubsidenceCrossSectionIndex limit ?,?" ;
-			
-			final IAccessDatabase mDatabase = getCurrentDb();
-			
-			List<SubsidenceCrossSectionIndex> list = mDatabase.queryObjects(sql, new String[]{String.valueOf(0),String.valueOf(11)},SubsidenceCrossSectionIndex.class) ;
-			
-			if(list != null && list.size() >= MAX_SECTION_COUNT){
-				Log.e(TAG, "error : 非注册用户,不能保存10个以上的断面");
-				return 100 ;
-			}
-		}
-		
-		return super.insert(bean);
-	}
+    @Override
+    public int insert(SubsidenceCrossSectionIndex bean) {
+
+        int sectionCountLimit = 0;
+
+        int userType = AppCRTBApplication.getInstance().getCurUserType();
+
+        if (userType == CrtbUser.LICENSE_TYPE_DEFAULT) {
+            Log.d(TAG, "未授权用户, 不能创建断面！");
+            return DB_EXECUTE_FAILED;
+        } else if (userType == CrtbUser.LICENSE_TYPE_TRIAL) {
+            sectionCountLimit = TRIAL_USER_MAX_SECTION_COUNT;
+        } else if (userType == CrtbUser.LICENSE_TYPE_REGISTERED) {
+            sectionCountLimit = -1;
+        }
+
+        // 非注册用户
+        if (sectionCountLimit != -1) {
+
+            String sql = "select * from SubsidenceCrossSectionIndex limit ?,?";
+
+            final IAccessDatabase mDatabase = getCurrentDb();
+
+            List<SubsidenceCrossSectionIndex> list = mDatabase.queryObjects(
+                    sql,
+                    new String[] { String.valueOf(0),
+                            String.valueOf(sectionCountLimit) },
+                    SubsidenceCrossSectionIndex.class);
+
+            if (list != null && list.size() >= sectionCountLimit) {
+                Log.e(TAG, "error : 试用版用户, 不能保存" + sectionCountLimit + "个以上的断面");
+                return 100;
+            }
+        }
+
+        return super.insert(bean);
+    }
 
 	public void queryAllSection(AppHandler handler){
 		

@@ -18,11 +18,13 @@ import android.util.Log;
 
 import com.crtb.tunnelmonitor.dao.impl.v2.CrtbLicenseDao;
 import com.crtb.tunnelmonitor.entity.ControlPointsIndex;
+import com.crtb.tunnelmonitor.entity.CrtbUser;
 import com.crtb.tunnelmonitor.entity.SubsidenceCrossSectionIndex;
 import com.crtb.tunnelmonitor.entity.SurveyerInformation;
 import com.crtb.tunnelmonitor.entity.TotalStationIndex;
 import com.crtb.tunnelmonitor.entity.TunnelCrossSectionIndex;
 import com.crtb.tunnelmonitor.utils.CrtbDbFileUtils;
+import com.crtb.tunnelmonitor.utils.CrtbUtils;
 
 public class AppCRTBApplication extends Application {
 	
@@ -39,7 +41,11 @@ public class AppCRTBApplication extends Application {
 	private int CurUsedStationId = 0;//当前连接的station的 id
 
 	private boolean bLocaUser;
-	
+
+	private CrtbUser mCurUser;
+	private int mCurUserType = CrtbUser.LICENSE_TYPE_DEFAULT;
+	private String mCurUserVersionRange = null;
+
 	/** framework */ 
 	private IFrameworkFacade mFramework ;
 	private static String sMacAddress = null;
@@ -88,6 +94,10 @@ public class AppCRTBApplication extends Application {
 		
 		// sdcard db file
 		CrtbDbFileUtils.initCrtbDbFiles(this);
+
+        CrtbUser user = CrtbLicenseDao.defaultDao().queryCrtbUser();
+        setCurUser(user);
+
 	}
 	
 	public IFrameworkFacade getFrameworkFacade(){
@@ -118,6 +128,47 @@ public class AppCRTBApplication extends Application {
     public void setCurUsedStationId(int curUsedStationId) {
         Log.d(TAG, "setCurUsedStationId " + curUsedStationId);
         CurUsedStationId = curUsedStationId;
+    }
+
+    public CrtbUser getCurUser() {
+        return mCurUser;
+    }
+
+    public void setCurUser(CrtbUser curUser) {
+        mCurUser = curUser;
+        if (mCurUser != null) {
+            String username = mCurUser.getUsername();
+            if (username != null && username.length() > 10) {
+                String versionRangeLow = username.substring(
+                        username.length() - 8, username.length() - 4);
+                String versionRangeHigh = username.substring(
+                        username.length() - 4, username.length());
+                int low = 1000, high = -1;
+                try {
+                    low = Integer.valueOf(versionRangeLow);
+                    high = Integer.valueOf(versionRangeHigh);
+                } catch (NumberFormatException e) {
+                    Log.e(TAG, "setCurUser", e);
+                }
+
+                int curVersion = CrtbUtils
+                        .getAppVersionCode(getApplicationContext());
+                if (curVersion >= low
+                        && curVersion <= high) {
+                    setCurUserType(mCurUser.getUsertype());
+                    return;
+                }
+            }
+        }
+        setCurUserType(CrtbUser.LICENSE_TYPE_DEFAULT);
+    }
+
+    public int getCurUserType() {
+        return mCurUserType;
+    }
+
+    private void setCurUserType(int curUserType) {
+        mCurUserType = curUserType;
     }
 
     //	public boolean IsValidWork(WorkInfos Value)

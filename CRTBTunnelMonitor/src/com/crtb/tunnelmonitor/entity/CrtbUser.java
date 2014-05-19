@@ -11,9 +11,9 @@ import org.zw.android.framework.db.core.ColumnPrimaryKey.PrimaryKeyType;
 @Table(TableName="CrtbUser")
 public final class CrtbUser implements Serializable {
 	
-	public static final int LICENSE_TYPE_DEFAULT				= 1 ;
-	public static final int LICENSE_TYPE_REGISTER				= 2 ;
-	public static final int LICENSE_TYPE_DMIN					= 3 ;
+	public static final int LICENSE_TYPE_DEFAULT				= 0 ;
+	public static final int LICENSE_TYPE_TRIAL					= 1 ;
+	public static final int LICENSE_TYPE_REGISTERED				= 2 ;
 
 	@ColumnPrimaryKey(Type = PrimaryKeyType.AUTO)
 	@ColumnInt
