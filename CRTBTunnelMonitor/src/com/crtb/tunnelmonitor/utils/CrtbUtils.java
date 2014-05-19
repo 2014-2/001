@@ -5,6 +5,7 @@ import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.UUID;
 
 import android.content.Context;
 import android.content.pm.PackageInfo;
@@ -53,6 +54,10 @@ public final class CrtbUtils {
 		String desc	= str.indexOf(".") >= 0 ? str.substring(str.indexOf(".")) : "" ;
 		
 		return pre + km + "+" + m + desc;
+	}
+	
+	public String generatorGUID(){
+		return UUID.randomUUID().toString() ;
 	}
 	
     public static Date parseDate(String text) {
