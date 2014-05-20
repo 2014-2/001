@@ -13,6 +13,8 @@ import org.zw.android.framework.db.Table;
 import org.zw.android.framework.db.core.ColumnPrimaryKey;
 import org.zw.android.framework.db.core.ColumnPrimaryKey.PrimaryKeyType;
 
+import com.crtb.tunnelmonitor.utils.CrtbUtils;
+
 /**
  * 工程信息(工作面)
  * 
@@ -33,6 +35,9 @@ public class ProjectIndex implements Serializable {
 
 	@ColumnString(length = 256)
 	private String ProjectName;					// 项目名称
+	
+	@ColumnString(length = 64)
+	private String guid ;						// 唯一标示 ---- 扩展
 
 	@ColumnDate
 	private Date CreateTime;					// 创建时间
@@ -99,11 +104,20 @@ public class ProjectIndex implements Serializable {
 	private Date LimitedTotalSubsidenceTime ;  	// 限差时间
 	
 	public ProjectIndex(){
-		
+		setGuid(CrtbUtils.generatorGUID());
+		setInfo(getGuid());
 	}
 
 	public Date getGDCreateTime() {
 		return GDCreateTime;
+	}
+
+	public String getGuid() {
+		return guid;
+	}
+
+	public void setGuid(String guid) {
+		this.guid = guid;
 	}
 
 	public void setGDCreateTime(Date gDCreateTime) {

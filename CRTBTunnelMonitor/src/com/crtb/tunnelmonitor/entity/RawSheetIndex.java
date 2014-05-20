@@ -13,6 +13,8 @@ import org.zw.android.framework.db.Table;
 import org.zw.android.framework.db.core.ColumnPrimaryKey;
 import org.zw.android.framework.db.core.ColumnPrimaryKey.PrimaryKeyType;
 
+import com.crtb.tunnelmonitor.utils.CrtbUtils;
+
 /**
  * 隧道内断面记录单和地表下沉记录单的索引
  * 
@@ -28,6 +30,9 @@ public class RawSheetIndex implements Serializable {
 	@ColumnPrimaryKey(Type = PrimaryKeyType.AUTO)
 	@ColumnInt
 	private int ID;
+	
+	@ColumnString(length = 64)
+	private String guid ;					// 唯一标示 -----------扩展
 	
 	@ColumnInt
 	private int CrossSectionType ;			// 断面类型 : 	1表示隧道内断面
@@ -65,12 +70,25 @@ public class RawSheetIndex implements Serializable {
 	@ColumnBoolean
 	private boolean checked ;				// 是否选择
 	
+	public RawSheetIndex(){
+		setGuid(CrtbUtils.generatorGUID());
+		setInfo(getGuid());
+	}
+	
 	public int getID() {
 		return ID;
 	}
 
 	public void setID(int iD) {
 		ID = iD;
+	}
+
+	public String getGuid() {
+		return guid;
+	}
+
+	public void setGuid(String guid) {
+		this.guid = guid;
 	}
 
 	public boolean isChecked() {

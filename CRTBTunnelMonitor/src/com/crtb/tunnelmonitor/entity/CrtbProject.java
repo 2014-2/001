@@ -38,6 +38,9 @@ public final class CrtbProject implements Serializable {
 	
 	@ColumnString(length = 256)
 	private String ProjectName;					// 项目名称
+	
+	@ColumnString(length = 64)
+	private String guid ;						// 唯一标示
 
 	@ColumnDate
 	private Date CreateTime;					// 创建时间
@@ -83,7 +86,7 @@ public final class CrtbProject implements Serializable {
 	private Date  SLCreateTime ;				// 收敛设置时间	----扩展
 	
 	@ColumnText
-	private String SLInfo ;					// 收敛设置时间	----扩展
+	private String SLInfo ;						// 收敛设置时间	----扩展
 
 	@ColumnFloat
 	private float DBLimitVelocity;				// 地表单次下沉速率		5
@@ -105,6 +108,14 @@ public final class CrtbProject implements Serializable {
 	
 	public CrtbProject(){
 		
+	}
+
+	public String getGuid() {
+		return guid;
+	}
+
+	public void setGuid(String guid) {
+		this.guid = guid;
 	}
 
 	public int getId() {

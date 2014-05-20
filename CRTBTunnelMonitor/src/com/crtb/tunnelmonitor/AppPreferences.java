@@ -16,6 +16,7 @@ import android.preference.PreferenceManager;
 public final class AppPreferences {
 	
 	static final String KEY_CURRENT_PROJECT				= "_key_current_project" ; // 当前项目
+	static final String KEY_CURRENT_PROJECT_GUID		= "_key_current_project_guid" ; // 当前项目guid
 	
 	private static AppPreferences _instance ;
 	private SharedPreferences 	mSharedPreferences ;
@@ -43,16 +44,22 @@ public final class AppPreferences {
 	}
 	
 	// 设置当前工程名称
-	public void putCurrentProject(String projectName){
+	public void putCurrentProject(String projectName,String guid){
 		
 		if(!StringUtils.isEmpty(projectName)){
 			putString(KEY_CURRENT_PROJECT, projectName);
+			putString(KEY_CURRENT_PROJECT_GUID, guid);
 		}
 	}
 	
 	// 当前工程名称
 	public String getCurrentProject(){
 		return getString(KEY_CURRENT_PROJECT) ;
+	}
+	
+	// 当前工作面guid
+	public String getCurrentProjectGuid(){
+		return getString(KEY_CURRENT_PROJECT_GUID) ;
 	}
 	
 	public String getCurrentSimpleProjectName(){

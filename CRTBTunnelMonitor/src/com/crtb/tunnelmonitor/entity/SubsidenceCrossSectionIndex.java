@@ -28,6 +28,12 @@ public class SubsidenceCrossSectionIndex implements Serializable {
 	@ColumnInt
 	private int ID;						//记录id
 	
+	@ColumnString(length = 64)
+	private String guid ;				// 唯一标示 -----------扩展
+	
+	@ColumnString(length = 64)
+	private String projectIndexGuid ;	// 工作面guid ---- 扩展
+	
 	@ColumnDouble
 	private double Chainage; 			// 断面里程值
 	
@@ -72,6 +78,11 @@ public class SubsidenceCrossSectionIndex implements Serializable {
 	private boolean used;				// 是否使用 ---------扩展
 	
 	private boolean hasTestData;		// 是否存在测量数据----扩展
+	
+	public SubsidenceCrossSectionIndex(){
+		setGuid(CrtbUtils.generatorGUID());
+		setInfo(getGuid());
+	}
 
 	public int getID() {
 		return ID;
@@ -79,6 +90,22 @@ public class SubsidenceCrossSectionIndex implements Serializable {
 
 	public void setID(int iD) {
 		ID = iD;
+	}
+
+	public String getGuid() {
+		return guid;
+	}
+
+	public void setGuid(String guid) {
+		this.guid = guid;
+	}
+
+	public String getProjectIndexGuid() {
+		return projectIndexGuid;
+	}
+
+	public void setProjectIndexGuid(String projectIndexGuid) {
+		this.projectIndexGuid = projectIndexGuid;
 	}
 
 	public double getChainage() {

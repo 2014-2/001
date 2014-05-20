@@ -26,6 +26,12 @@ public class TunnelCrossSectionIndex implements Serializable {
     @ColumnPrimaryKey(Type = PrimaryKeyType.AUTO)
     @ColumnInt
     private int ID;
+    
+    @ColumnString(length = 64)
+	private String guid ;				// 唯一标示 -----------扩展
+	
+	@ColumnString(length = 64)
+	private String projectIndexGuid ;	// 工作面guid ---- 扩展
 
     ///////////////////////base info////////////////////
 
@@ -104,6 +110,11 @@ public class TunnelCrossSectionIndex implements Serializable {
 
     private boolean used;				// 是否选中----------扩展
 
+    public TunnelCrossSectionIndex(){
+    	setGuid(CrtbUtils.generatorGUID());
+    	setInfo(getGuid());
+    }
+    
     public int getID() {
         return ID;
     }
@@ -112,7 +123,23 @@ public class TunnelCrossSectionIndex implements Serializable {
         ID = iD;
     }
 
-    public String getPointAName() {
+    public String getGuid() {
+		return guid;
+	}
+
+	public void setGuid(String guid) {
+		this.guid = guid;
+	}
+
+	public String getProjectIndexGuid() {
+		return projectIndexGuid;
+	}
+
+	public void setProjectIndexGuid(String projectIndexGuid) {
+		this.projectIndexGuid = projectIndexGuid;
+	}
+
+	public String getPointAName() {
 		return pointAName;
 	}
 

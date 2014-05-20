@@ -40,7 +40,7 @@ public final class CrtbDialogFileBrowse extends CrtbDialog {
 		
 		mHomeHandler = handler ;
 		mHeight	= height ;
-		mList	= CrtbDbFileUtils.getInportFiles() ;
+		mList	= CrtbDbFileUtils.getImportFiles() ;
 		mHanlder= new AppHandler(context){
 
 			@Override
@@ -113,9 +113,18 @@ public final class CrtbDialogFileBrowse extends CrtbDialog {
 				
 				dismiss() ;
 				
+				List<File> list = CrtbDbFileUtils.getLocalDbFiles(getContext()) ;
 				File file = adapter.getItem(position);
 				
-				CrtbDbFileUtils.inportDb(getContext(), file.getAbsolutePath(), mHanlder);
+				for(File f : list){
+					if(f.getName().equals(file.getName())){
+						Toast.makeText(getContext(), "已经存在该数据库", Toast.LENGTH_LONG).show() ;
+						return ;
+					}
+				}
+				
+				// inport
+				CrtbDbFileUtils.importDb(getContext(), file.getAbsolutePath(), mHanlder);
 			}
 		}) ;
 		

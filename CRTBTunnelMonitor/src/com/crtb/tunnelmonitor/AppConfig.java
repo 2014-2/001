@@ -35,5 +35,5 @@ public final class AppConfig {
 	// export file dir name
 	public static final String DB_ROOT							= "/crtb_db/" ;
 	public static final String DB_EXPORT_DIR					= "/crtb_export/" ;
-	public static final String DB_INPORT_DIR					= "/crtb_inport/" ;
+	public static final String DB_IMPORT_DIR					= "/crtb_import/" ;
 }

@@ -124,7 +124,7 @@ public final class ProjectIndexDao extends AbstractDao<ProjectIndex> {
 	}
 	
 	public void updateCurrentWorkPlan(ProjectIndex bean){
-		AppPreferences.getPreferences().putCurrentProject(bean.getDbName());
+		AppPreferences.getPreferences().putCurrentProject(bean.getDbName(),bean.getGuid());
 	}
 	
 	public boolean hasWorkPlan(){
@@ -342,6 +342,7 @@ public final class ProjectIndexDao extends AbstractDao<ProjectIndex> {
 			}
 			
 			pro.setDbName(bean.getDbName());
+			pro.setGuid(bean.getGuid());
 			
 			pro.setProjectId(bean.getId());
 			pro.setProjectName(bean.getProjectName());

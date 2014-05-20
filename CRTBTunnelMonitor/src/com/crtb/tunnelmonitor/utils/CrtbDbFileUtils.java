@@ -48,7 +48,7 @@ public final class CrtbDbFileUtils {
 					export.mkdir() ;
 				}
 				
-				File inport = new File(crtb, AppConfig.DB_INPORT_DIR);
+				File inport = new File(crtb, AppConfig.DB_IMPORT_DIR);
 				
 				if(!inport.isDirectory()){
 					inport.mkdir() ;
@@ -69,11 +69,11 @@ public final class CrtbDbFileUtils {
 		return new File(crtb, dir).getAbsolutePath() ;
 	}
 	
-	public static List<File> getInportFiles(){
+	public static List<File> getImportFiles(){
 		
 		List<File> list = new ArrayList<File>();
 		
-		String inPath = getExportPath(AppConfig.DB_INPORT_DIR) ;
+		String inPath = getExportPath(AppConfig.DB_IMPORT_DIR) ;
 		
 		File root = new File(inPath);
 		
@@ -83,6 +83,28 @@ public final class CrtbDbFileUtils {
 			
 			if(!fs[index].isDirectory()){
 				list.add(fs[index]);
+			}
+		}
+		
+		return list ;
+	}
+	
+	public static List<File> getLocalDbFiles(Context context){
+		
+		List<File> list = new ArrayList<File>();
+		
+		if(context != null){
+			
+			String path = "/data/data/" + context.getPackageName() + "/databases/" ;
+			
+			File dir = new File(path);
+			
+			File[] fs = dir.listFiles() ;
+			
+			if(fs != null){
+				for(File f : fs){
+					list.add(f);
+				}
 			}
 		}
 		
@@ -126,7 +148,7 @@ public final class CrtbDbFileUtils {
 		}) ;
 	}
 	
-	public static void inportDb(final Context context,
+	public static void importDb(final Context context,
 			final String path,
 			AppHandler handler){
 		
