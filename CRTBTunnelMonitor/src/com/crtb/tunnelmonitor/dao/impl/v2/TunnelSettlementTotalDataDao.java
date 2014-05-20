@@ -32,6 +32,23 @@ public class TunnelSettlementTotalDataDao extends AbstractDao<TunnelSettlementTo
 		
 		return _instance ;
 	}
+	
+	public void reset(TunnelSettlementTotalData bean){
+		
+		if(bean == null){
+			return ;
+		}
+		
+		final IAccessDatabase mDatabase = getCurrentDb();
+
+        if (mDatabase == null) {
+            return;
+        }
+		
+		String sql = "update TunnelSettlementTotalData set Coordinate = \"\", SurveyTime = \"\" ,DataStatus = 0 ,MEASNo = 0 ,Info = \"\" where ID = ? ";
+		
+		mDatabase.execute(sql, SQLiteParamUtils.toParamemter(bean.getID()));
+	}
 
     public List<TunnelSettlementTotalData> queryAllOrderByMEASNoDesc(String pntType) {
 

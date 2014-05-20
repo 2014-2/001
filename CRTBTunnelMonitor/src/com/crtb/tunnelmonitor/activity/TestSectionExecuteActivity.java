@@ -349,6 +349,28 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 			}
 		}) ;
 		
+		// 清除
+		holder.mPointResetBnt.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				
+				TunnelSettlementTotalDataDao dao 	= TunnelSettlementTotalDataDao.defaultDao() ;
+				TunnelSettlementTotalData obj 		= dao.queryTunnelTotalData(rawSheetBean.getID(),tunnelSection.getID(),type);
+				
+				if(obj != null){
+					
+					dao.reset(obj);
+					
+					holder.mPointX.setText("");
+					holder.mPointY.setText("");
+					holder.mPointZ.setText("");
+					holder.mPointTime.setText("");
+					holder.warringLayout.setVisibility(View.INVISIBLE);
+				}
+			}
+		}) ;
+		
 		return holder ;
 	}
 	
@@ -636,7 +658,7 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 		}
 	}
 	
-	private View createSubsidenceTestPointView(SubsidenceTotalData bean,final String type){
+	private View createSubsidenceTestPointView(final SubsidenceTotalData bean,final String type){
 		
 		final TestPointHolder holder 	= new TestPointHolder() ;
 		
@@ -673,6 +695,28 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 			}
 		}) ;
 		
+		// 清除
+		holder.mPointResetBnt.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				
+				SubsidenceTotalDataDao dao 	= SubsidenceTotalDataDao.defaultDao() ;
+				SubsidenceTotalData obj = dao.querySubsidenceTotalData(rawSheetBean.getID(),subsidenceSection.getID(),type);
+
+				if(obj != null){
+					
+					dao.reset(obj);
+					
+					holder.mPointX.setText("");
+					holder.mPointY.setText("");
+					holder.mPointZ.setText("");
+					holder.mPointTime.setText("");
+					holder.warringLayout.setVisibility(View.INVISIBLE);
+				}
+			}
+		});
+
 		return view ;
 	}
 	
@@ -1036,6 +1080,9 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 		
 		@InjectView(id=R.id.bnt_test)
 		Button 	mPointTestBnt ;
+		
+		@InjectView(id=R.id.bnt_reset)
+		Button 	mPointResetBnt ;
 		
 		@InjectView(id=R.id.test_warring_layout)
 		LinearLayout warringLayout ;

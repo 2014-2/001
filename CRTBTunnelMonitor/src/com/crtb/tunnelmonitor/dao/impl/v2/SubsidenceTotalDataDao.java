@@ -3,6 +3,7 @@ package com.crtb.tunnelmonitor.dao.impl.v2;
 import java.util.List;
 
 import org.zw.android.framework.IAccessDatabase;
+import org.zw.android.framework.db.core.SQLiteParamUtils;
 
 import com.crtb.tunnelmonitor.entity.SubsidenceTotalData;
 import com.crtb.tunnelmonitor.utils.AlertUtils;
@@ -22,6 +23,23 @@ public class SubsidenceTotalDataDao extends AbstractDao<SubsidenceTotalData> {
 		}
 		
 		return _instance ;
+	}
+	
+	public void reset(SubsidenceTotalData bean){
+		
+		if(bean == null){
+			return ;
+		}
+		
+		final IAccessDatabase mDatabase = getCurrentDb();
+
+        if (mDatabase == null) {
+            return;
+        }
+		
+		String sql = "update SubsidenceTotalData set Coordinate = \"\", SurveyTime = \"\" ,DataStatus = 0 ,MEASNo = 0 ,Info = \"\" where ID = ? ";
+		
+		mDatabase.execute(sql, SQLiteParamUtils.toParamemter(bean.getID()));
 	}
 
     public List<SubsidenceTotalData> queryAllOrderByMEASNoDesc(String pntType) {

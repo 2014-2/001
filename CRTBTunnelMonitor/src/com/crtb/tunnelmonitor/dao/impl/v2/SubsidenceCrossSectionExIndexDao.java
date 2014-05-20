@@ -3,7 +3,6 @@ package com.crtb.tunnelmonitor.dao.impl.v2;
 import org.zw.android.framework.IAccessDatabase;
 
 import com.crtb.tunnelmonitor.entity.SubsidenceCrossSectionExIndex;
-import com.crtb.tunnelmonitor.entity.TunnelCrossSectionExIndex;
 
 public class SubsidenceCrossSectionExIndexDao  extends AbstractDao<SubsidenceCrossSectionExIndex> {
 	private static SubsidenceCrossSectionExIndexDao _instance;
