@@ -164,7 +164,7 @@ public class AppCRTBApplication extends Application {
     }
 
     public int getCurUserType() {
-        return CrtbUser.LICENSE_TYPE_TRIAL;
+        return mCurUserType;
     }
 
     private void setCurUserType(int curUserType) {
