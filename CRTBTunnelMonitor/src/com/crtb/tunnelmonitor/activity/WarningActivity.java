@@ -34,7 +34,7 @@ public class WarningActivity extends Activity {
 
     protected static final String TAG = "WarningActivity";
 
-    private static final int MSG_REFRESH_LIST = 0;
+//    private static final int MSG_REFRESH_LIST = 0;
 
     private ListView listview;
 
@@ -44,6 +44,8 @@ public class WarningActivity extends Activity {
     private RadioButton mDealWayBtnDiscard;
     private RadioButton mDealWayBtnAsFirst;
     private RadioButton mDealWayBtnCorrection;
+    private RadioButton mDealWayBtnNormal;
+
     private EditText mCorrectionView;
     private EditText mWarningRemarkView;
 
@@ -51,8 +53,6 @@ public class WarningActivity extends Activity {
     private TextView warningSignalTV, warningPointNumTV, warningStateTV,
             warningValueTV, warningDateTV, warningMessageTV, warningDealWayTV,
             oldDateMileageTV, oldDateListNumTV, oldDatePointTV;
-    private RadioButton radioButtonVoid,radioButtonFirst,radioButtonAdd;
-    private EditText addEdit,warningRemarkET;
     private Button dealWithBtn, completeBtn,completeOkBtn,completeCancelBtn;
     private View oldChooseView;
     private int clickedItem;
@@ -87,13 +87,6 @@ public class WarningActivity extends Activity {
         oldDateListNumTV = (TextView)findViewById(R.id.old_date_list_num);
         oldDatePointTV = (TextView)findViewById(R.id.old_date_point);
 
-        radioButtonVoid = (RadioButton)findViewById(R.id.radio_button_void);
-        radioButtonFirst = (RadioButton)findViewById(R.id.radio_button_first);
-        radioButtonAdd = (RadioButton)findViewById(R.id.radio_button_add);
-
-        addEdit = (EditText)findViewById(R.id.add_edit);
-        warningRemarkET = (EditText)findViewById(R.id.warning_remark);
-
         completeOkBtn = (Button)findViewById(R.id.complete_ok);
         setBtnClickListener(completeOkBtn);
         completeCancelBtn =  (Button)findViewById(R.id.complete_cancel);
@@ -121,6 +114,7 @@ public class WarningActivity extends Activity {
         mDealWayBtnDiscard = (RadioButton) mDealWayRadios.findViewById(R.id.radio_button_void);
         mDealWayBtnAsFirst = (RadioButton) mDealWayRadios.findViewById(R.id.radio_button_first);
         mDealWayBtnCorrection = (RadioButton) mDealWayRadios.findViewById(R.id.radio_button_add);
+        mDealWayBtnNormal = (RadioButton) mDealWayRadios.findViewById(R.id.radio_button_normal);
         mDealWayRadios.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 
             @Override
@@ -191,13 +185,11 @@ public class WarningActivity extends Activity {
                     switch (handlingStep) {
                         case 0:
                             AlertHandlingInfoDao.defaultDao().updateAlertStatus(alerts.get(clickedItem).getAlertHandlingId(), 2);
-//                            alerts.get(clickedItem).setAlertStatusMsg(sss[1]);
                             handlingStep = 1;
-//                            adapter.notifyDataSetChanged();
                             refreshData();
                             break;
                         case 1:
-                            Toast.makeText(WarningActivity.this, " 已开始处理", 1000).show();
+                            Toast.makeText(WarningActivity.this, "已开始处理", Toast.LENGTH_LONG).show();
                             break;
                     }
                     break;
@@ -229,7 +221,7 @@ public class WarningActivity extends Activity {
                             }
                             break;
                         case 2:
-                            Toast.makeText(WarningActivity.this, " 已消警", 1000).show();
+                            Toast.makeText(WarningActivity.this, " 已消警", Toast.LENGTH_LONG).show();
                             break;
                     }
                     break;
@@ -237,7 +229,8 @@ public class WarningActivity extends Activity {
                     //alerts.get(clickedItem).setAlertStatusMsg(sss[2]);
                     if (mCheckedRaidoId == mDealWayBtnDiscard.getId()
                             || mCheckedRaidoId == mDealWayBtnAsFirst.getId()
-                            || mCheckedRaidoId == mDealWayBtnCorrection.getId()) {
+                            || mCheckedRaidoId == mDealWayBtnCorrection.getId()
+                            || mCheckedRaidoId == mDealWayBtnNormal.getId()) {
                         handleAlert();
                         handlingStep = 2;
                         mHandleCompleteView.setVisibility(View.GONE);
@@ -293,7 +286,7 @@ public class WarningActivity extends Activity {
                 }
                 if (alerts.get(i).getAlertStatus() == 0) {//"已消警"
                     warningBottom.setVisibility(View.GONE);
-                    Toast.makeText(WarningActivity.this, "已消警", 1000).show();
+                    Toast.makeText(WarningActivity.this, "已消警", Toast.LENGTH_LONG).show();
                 }
                 oldChooseView = view;
             }
@@ -326,19 +319,23 @@ public class WarningActivity extends Activity {
         }
 
         int alertId = ai.getAlertId();
-        int dataStatus = 0;
+        int dataStatus = AlertUtils.POINT_DATASTATUS_NONE;
         if (mCheckedRaidoId == mDealWayBtnDiscard.getId()) {
             Log.d(TAG, "Handling way: discard data");
-            dataStatus = 1;
+            dataStatus = AlertUtils.POINT_DATASTATUS_DISCARD;
         } else if (mCheckedRaidoId == mDealWayBtnAsFirst.getId()) {
             Log.d(TAG, "Handling way: As First line");
-            dataStatus = 2;
+            dataStatus = AlertUtils.POINT_DATASTATUS_AS_FIRSTLINE;
         } else if (mCheckedRaidoId == mDealWayBtnCorrection.getId()) {
             Log.d(TAG, "Handling way: Correction");
-            dataStatus = 3;
+            dataStatus = AlertUtils.POINT_DATASTATUS_CORRECTION;
+        } else if (mCheckedRaidoId == mDealWayBtnNormal.getId()) {
+            Log.d(TAG, "Handling way: Normal");
+            dataStatus = AlertUtils.POINT_DATASTATUS_NORMAL;
         } else if (correction != 0) {
             Log.d(TAG, "Handling way: Correction");
-            dataStatus = 3;
+            //If no radio button is selected and correction is input, treat as correction
+            dataStatus = AlertUtils.POINT_DATASTATUS_CORRECTION;
         }
 
         int alertStatus = 0;// TODO : may also be 2?, if so,
@@ -373,20 +370,20 @@ public class WarningActivity extends Activity {
         }
     }
 
-    private Handler mHandler = new Handler() {
-
-        @Override
-        public void handleMessage(Message msg) {
-            switch(msg.what) {
-                case MSG_REFRESH_LIST:
-                    refreshData();
-                    break;
-                default:
-                    super.handleMessage(msg);
-            }
-        }
-        
-    };
+//    private Handler mHandler = new Handler() {
+//
+//        @Override
+//        public void handleMessage(Message msg) {
+//            switch(msg.what) {
+//                case MSG_REFRESH_LIST:
+//                    refreshData();
+//                    break;
+//                default:
+//                    super.handleMessage(msg);
+//            }
+//        }
+//        
+//    };
 
     class RefreshTask extends AsyncTask<Void, Void, Void> {
 

@@ -10,10 +10,14 @@ import org.zw.android.framework.db.core.ColumnPrimaryKey.PrimaryKeyType;
 
 @Table(TableName="CrtbUser")
 public final class CrtbUser implements Serializable {
-	
-	public static final int LICENSE_TYPE_DEFAULT				= 0 ;
-	public static final int LICENSE_TYPE_TRIAL					= 1 ;
-	public static final int LICENSE_TYPE_REGISTERED				= 2 ;
+
+    public static final int LICENSE_TYPE_DEFAULT				= 0;
+	public static final int LICENSE_TYPE_TRIAL					= 1;
+	public static final int LICENSE_TYPE_REGISTERED				= 2;
+
+    public static final String USER_LICENSE_TYPE_STR_DEFAULT                = "00";
+    public static final String USER_LICENSE_TYPE_STR_TRIAL                  = "10";
+    public static final String USER_LICENSE_TYPE_STR_REGISTERED             = "20";
 
 	@ColumnPrimaryKey(Type = PrimaryKeyType.AUTO)
 	@ColumnInt
@@ -24,14 +28,20 @@ public final class CrtbUser implements Serializable {
 	
 	@ColumnInt
 	private int usertype ;				// 用户类型
-	
+
+    @ColumnInt
+    private int versionLowLimit ;              // 授权可用版本下限
+
+    @ColumnInt
+    private int versionHighLimit ;              // 授权可用版本上限
+
 	@ColumnString(length=256)
-	private String license ; 			// 授权类型 
+	private String license ; 			// 授权码 
 
 	public CrtbUser(){
 		setUsertype(LICENSE_TYPE_DEFAULT);
 	}
-	
+
 	public int getId() {
 		return Id;
 	}
@@ -52,7 +62,23 @@ public final class CrtbUser implements Serializable {
 		return usertype;
 	}
 
-	public String getLicense() {
+	public int getVersionLowLimit() {
+        return versionLowLimit;
+    }
+
+    public void setVersionLowLimit(int versionLowLimit) {
+        this.versionLowLimit = versionLowLimit;
+    }
+
+    public int getVersionHighLimit() {
+        return versionHighLimit;
+    }
+
+    public void setVersionHighLimit(int versionHighLimit) {
+        this.versionHighLimit = versionHighLimit;
+    }
+
+    public String getLicense() {
 		return license;
 	}
 

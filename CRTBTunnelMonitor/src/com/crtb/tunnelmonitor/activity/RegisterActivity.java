@@ -3,6 +3,7 @@ package com.crtb.tunnelmonitor.activity;
 import com.crtb.tunnelmonitor.common.Constant;
 import com.crtb.tunnelmonitor.dao.impl.v2.AbstractDao;
 import com.crtb.tunnelmonitor.dao.impl.v2.CrtbLicenseDao;
+import com.crtb.tunnelmonitor.utils.CrtbUtils;
 
 import ICT.utils.RSACoder;
 import android.app.Activity;
@@ -11,6 +12,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
@@ -20,6 +22,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 public class RegisterActivity extends Activity implements OnClickListener {
+
+    private static final String TAG = "RegisterActivity";
 
     private EditText mSerialNumberView, mRegisterCodeView;
 
@@ -64,14 +68,29 @@ public class RegisterActivity extends Activity implements OnClickListener {
             String registerCode = mRegisterCodeView.getText().toString();
             if (!TextUtils.isEmpty(registerCode)) {
                 registerCode = registerCode.trim();
-                String decodedSerial = RSACoder.decnryptDes(registerCode,
-                        Constant.testDeskey);
-                if (decodedSerial != null
-                        && decodedSerial.startsWith(mDeviceId)
+                String decodedSerial = RSACoder.decnryptDes(registerCode, Constant.testDeskey);
+                if (decodedSerial != null && decodedSerial.startsWith(mDeviceId)
                         && decodedSerial.length() == mDeviceId.length() + 10) {
-                    int err = CrtbLicenseDao.defaultDao().registLicense(
-                            getApplicationContext(), decodedSerial,
-                            registerCode);
+
+                    String versionRangeLow = decodedSerial.substring(decodedSerial.length() - 8,
+                            decodedSerial.length() - 4);
+                    String versionRangeHigh = decodedSerial.substring(decodedSerial.length() - 4,
+                            decodedSerial.length());
+                    int low = 1000, high = -1;
+                    try {
+                        low = Integer.valueOf(versionRangeLow);
+                        high = Integer.valueOf(versionRangeHigh);
+                    } catch (NumberFormatException e) {
+                        Log.e(TAG, "checkAndRegistration", e);
+                    }
+
+                    String typeStr = decodedSerial.substring(decodedSerial.length() - 10,
+                            decodedSerial.length() - 8);
+                    int userType = CrtbUtils.getCrtbUserTypeByTypeStr(typeStr);
+
+                    String username = decodedSerial.substring(0, decodedSerial.length() - 10);
+                    int err = CrtbLicenseDao.defaultDao().registLicense(getApplicationContext(),
+                            username, userType, low, high, registerCode);
                     return err == AbstractDao.DB_EXECUTE_SUCCESS;
                 }
             }

@@ -308,18 +308,15 @@ public final class CrtbUtils {
         return info == null ? 0 : info.versionCode;
     }
 
-    public static int getCrtbUserTypeByUsername(String username) {
+    public static int getCrtbUserTypeByTypeStr(String typeStr) {
         int type = CrtbUser.LICENSE_TYPE_DEFAULT;
-        if (username != null && username.length() > 10) {
-            String typeStr = username.substring(username.length() - 10, username.length() - 8);
-            if (typeStr != null) {
-                if (typeStr.equals("00")) {
-                    type = CrtbUser.LICENSE_TYPE_DEFAULT;
-                } else if (typeStr.equals("10")) {
-                    type = CrtbUser.LICENSE_TYPE_TRIAL;
-                }  else if (typeStr.equals("20")) {
-                    type = CrtbUser.LICENSE_TYPE_REGISTERED;
-                }
+        if (typeStr != null && typeStr.length() == 2) {
+            if (typeStr.equals(CrtbUser.USER_LICENSE_TYPE_STR_DEFAULT)) {
+                type = CrtbUser.LICENSE_TYPE_DEFAULT;
+            } else if (typeStr.equals(CrtbUser.USER_LICENSE_TYPE_STR_TRIAL)) {
+                type = CrtbUser.LICENSE_TYPE_TRIAL;
+            } else if (typeStr.equals(CrtbUser.USER_LICENSE_TYPE_STR_REGISTERED)) {
+                type = CrtbUser.LICENSE_TYPE_REGISTERED;
             }
         }
         return type;

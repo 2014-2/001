@@ -22,6 +22,7 @@ import com.crtb.tunnelmonitor.AppPreferences;
 import com.crtb.tunnelmonitor.BaseActivity;
 import com.crtb.tunnelmonitor.CommonObject;
 import com.crtb.tunnelmonitor.common.Constant;
+import com.crtb.tunnelmonitor.dao.impl.v2.CrtbLicenseDao;
 import com.crtb.tunnelmonitor.dao.impl.v2.ProjectIndexDao;
 import com.crtb.tunnelmonitor.entity.CrtbUser;
 import com.crtb.tunnelmonitor.entity.TotalStationIndex;
@@ -54,8 +55,8 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 	/** 意图 */
 	private Intent intent;
 
-	public static List<TotalStationIndex> list = new ArrayList<TotalStationIndex>();
-	private TotalStationIndex info = new TotalStationIndex();
+//	public static List<TotalStationIndex> list = new ArrayList<TotalStationIndex>();
+//	private TotalStationIndex info = new TotalStationIndex();
 
 	private ProjectIndex mCurrentWorkPlan;
 
@@ -76,28 +77,31 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 		// remove current workplan from cache
 		CommonObject.remove(KEY_CURRENT_WORKPLAN);
 
-		// 测试
-		info.setName("leon0");
-		info.setInfo("未选中");
-		info.setBaudRate(1);
-		info.setDatabits(1);
-		info.setID(1);
-//		info.setParity(1);
-		info.setCmd("cmd2");
-		info.setStopbits(1);
-		info.setTotalstationType("sa");
-		list.add(info);
-		info = new TotalStationIndex();
-		info.setName("leon2");
-		info.setInfo("未选中");
-		info.setBaudRate(12);
-		info.setDatabits(12);
-		info.setID(12);
-//		info.setParity(12);
-		info.setCmd("cmd4");
-		info.setStopbits(12);
-		info.setTotalstationType("sa1");
-		list.add(info);
+        CrtbUser user = CrtbLicenseDao.defaultDao().queryCrtbUser();
+        AppCRTBApplication.getInstance().setCurUser(user);
+
+//		// 测试
+//		info.setName("leon0");
+//		info.setInfo("未选中");
+//		info.setBaudRate(1);
+//		info.setDatabits(1);
+//		info.setID(1);
+////		info.setParity(1);
+//		info.setCmd("cmd2");
+//		info.setStopbits(1);
+//		info.setTotalstationType("sa");
+//		list.add(info);
+//		info = new TotalStationIndex();
+//		info.setName("leon2");
+//		info.setInfo("未选中");
+//		info.setBaudRate(12);
+//		info.setDatabits(12);
+//		info.setID(12);
+////		info.setParity(12);
+//		info.setCmd("cmd4");
+//		info.setStopbits(12);
+//		info.setTotalstationType("sa1");
+//		list.add(info);
 	}
 
 	/** 初始化控件 */

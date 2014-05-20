@@ -137,27 +137,13 @@ public class AppCRTBApplication extends Application {
     public void setCurUser(CrtbUser curUser) {
         mCurUser = curUser;
         if (mCurUser != null) {
-            String username = mCurUser.getUsername();
-            if (username != null && username.length() > 10) {
-                String versionRangeLow = username.substring(
-                        username.length() - 8, username.length() - 4);
-                String versionRangeHigh = username.substring(
-                        username.length() - 4, username.length());
-                int low = 1000, high = -1;
-                try {
-                    low = Integer.valueOf(versionRangeLow);
-                    high = Integer.valueOf(versionRangeHigh);
-                } catch (NumberFormatException e) {
-                    Log.e(TAG, "setCurUser", e);
-                }
+            int low = mCurUser.getVersionLowLimit();
+            int high = mCurUser.getVersionHighLimit();
 
-                int curVersion = CrtbUtils
-                        .getAppVersionCode(getApplicationContext());
-                if (curVersion >= low
-                        && curVersion <= high) {
-                    setCurUserType(mCurUser.getUsertype());
-                    return;
-                }
+            int curVersion = CrtbUtils.getAppVersionCode(getApplicationContext());
+            if (curVersion >= low && curVersion <= high) {
+                setCurUserType(mCurUser.getUsertype());
+                return;
             }
         }
         setCurUserType(CrtbUser.LICENSE_TYPE_DEFAULT);

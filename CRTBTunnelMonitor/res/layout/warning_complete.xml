@@ -203,7 +203,13 @@
                             android:layout_height="wrap_content"
                             android:text="@string/deal_way_add"
                             />
-
+                    <RadioButton
+                            style="?android:attr/ratingBarStyleSmall"
+                            android:id="@+id/radio_button_normal"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/deal_way_normal"
+                            />
                 </RadioGroup>
 
                 <EditText android:layout_width="100dp"

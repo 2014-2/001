@@ -70,6 +70,7 @@
     <string name="deal_way_void">数据作废</string>
     <string name="deal_way_first">数据作为首行</string>
     <string name="deal_way_add">添加改正值</string>
+    <string name="deal_way_normal">正常计算</string>
 
     <!-- 预警模块 -->
     <string name="millimeter">毫米</string>

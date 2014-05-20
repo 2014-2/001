@@ -61,7 +61,7 @@ public class AlertUtils {
     public static final int POINT_DATASTATUS_DISCARD = 1;
     public static final int POINT_DATASTATUS_AS_FIRSTLINE = 2;
     public static final int POINT_DATASTATUS_CORRECTION = 3;
-
+    public static final int POINT_DATASTATUS_NORMAL = 4;
 
     public static String[] getPointSubsidenceExceedMsg(Object point) {
         Exceeding ex = checkPointSubsidenceExceed(point);
