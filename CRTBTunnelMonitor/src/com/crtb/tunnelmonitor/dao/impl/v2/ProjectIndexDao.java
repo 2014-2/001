@@ -141,7 +141,7 @@ public final class ProjectIndexDao extends AbstractDao<ProjectIndex> {
     }
 
 	// 导入数据库
-	public int inportDb(String dbName){
+	public int importDb(String dbName){
 		
 		final CrtbUser user = CrtbLicenseDao.defaultDao().queryCrtbUser() ;
 		

@@ -174,7 +174,7 @@ public final class CrtbDbFileUtils {
 					if(success){
 						
 						// 写入数据库
-						int code = ProjectIndexDao.defaultWorkPlanDao().inportDb(filename) ;
+						int code = ProjectIndexDao.defaultWorkPlanDao().importDb(filename) ;
 						
 						Thread.sleep(2000);
 						
@@ -186,7 +186,7 @@ public final class CrtbDbFileUtils {
 							
 							AppLogger.d(TAG, "zhouwei : 数据库导入失败"); 
 							
-							sendMessage(MSG_INPORT_DB_FAILED,"非注册用户,不能保存2个以上的工作面") ;
+							sendMessage(MSG_INPORT_DB_FAILED,"非注册用户,只能保存1个工作面") ;
 						} else {
 							
 							AppLogger.d(TAG, "zhouwei : 数据库导入完成: " + outPath); 

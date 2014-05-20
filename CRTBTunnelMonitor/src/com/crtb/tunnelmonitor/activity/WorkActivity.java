@@ -7,6 +7,7 @@ import org.zw.android.framework.ioc.InjectCore;
 import org.zw.android.framework.ioc.InjectLayout;
 import org.zw.android.framework.ioc.InjectResource;
 import org.zw.android.framework.ioc.InjectView;
+import org.zw.android.framework.util.StringUtils;
 
 import android.content.BroadcastReceiver;
 import android.content.Intent;
@@ -229,6 +230,11 @@ public final class WorkActivity extends WorkFlowActivity {
 			mProgressText	= "正在导出文件,请稍等..." ;
 			String path 	= ProjectIndexDao.defaultWorkPlanDao().getCurrentWorkDbPath() ;
 			String dbname 	= AppPreferences.getPreferences().getCurrentProject();
+			
+			if(path == null || StringUtils.isEmpty(dbname)){
+				showText("没有打开工作面");
+				return ;
+			}
 			
 			CrtbDbFileUtils.exportDb(path, dbname, mHanlder);
 		}

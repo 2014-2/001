@@ -76,7 +76,10 @@ public final class CrtbDialogFileBrowse extends CrtbDialog {
 					
 					break ;
 				case MSG_INPORT_DB_FAILED :
-					Toast.makeText(context, "数据库导入错误!", Toast.LENGTH_LONG).show() ;
+					
+					String error = msg.obj != null ? msg.obj.toString() : "数据库导入失败!" ;
+					
+					Toast.makeText(context, error, Toast.LENGTH_LONG).show() ;
 					break ;
 				}
 			}
