@@ -3,15 +3,19 @@ package com.byd.audioplayer.audio;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.app.Activity;
+import android.app.FragmentManager;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.View.OnClickListener;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.byd.audioplayer.R;
+import com.byd.audioplayer.audio.AudioListActivity.DeleteDialog;
 import com.byd.audioplayer.audio.AudioLoaderManager.DataListener;
 import com.byd.audioplayer.utils.ToastUtils;
 
@@ -22,13 +26,13 @@ public class AudioAdapter extends BaseAdapter implements DataListener {
             R.drawable.bg_audio_item2, R.drawable.bg_audio_item2, };
 
     private List<AudioItem> mData = new ArrayList<AudioItem>();
-    private Context mContext = null;
+    private Activity mActivity = null;
     private LayoutInflater mInflater;
 
     private int mMode = -1;
 
-    public AudioAdapter(Context context, LayoutInflater inflater) {
-        mContext = context;
+    public AudioAdapter(Activity context, LayoutInflater inflater) {
+        mActivity = context;
         mInflater = inflater;
         AudioLoaderManager.getInstance().addDataListener(this);
     }
@@ -105,6 +109,17 @@ public class AudioAdapter extends BaseAdapter implements DataListener {
             viewHolder.mTextAudioName = (TextView) convertView.findViewById(R.id.audio_name);
             viewHolder.mTextAudioSinger = (TextView) convertView.findViewById(R.id.audio_singer);
             viewHolder.mDelete = (ImageView) convertView.findViewById(R.id.audio_delete);
+            viewHolder.mDelete.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (isEditMode()) {
+                        FragmentManager fm = mActivity.getFragmentManager();
+                        List<Song> songs = getSeletedSongs();
+                        DeleteDialog.newInstance((AudioListActivity)mActivity, songs).show(fm,
+                                "DELETE_DIALOG");
+                    }
+                }
+            });
             // construct an item tag
             convertView.setTag(viewHolder);
         } else {

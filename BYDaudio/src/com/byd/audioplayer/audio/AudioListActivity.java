@@ -557,7 +557,7 @@ OnItemLongClickListener, SearchListener, DeleteListener {
         return mAdapter.getSeletedSongs();
     }
 
-    private static class DeleteDialog extends DialogFragment {
+    public static class DeleteDialog extends DialogFragment {
         private AudioListActivity mActivity = null;
         private List<Song> mSongs;
 
@@ -574,7 +574,7 @@ OnItemLongClickListener, SearchListener, DeleteListener {
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-            builder.setTitle("DELETE").setMessage(R.string.confirm_delete);
+            builder.setTitle(R.string.delete).setMessage(R.string.confirm_delete);
 
             builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                 @Override
