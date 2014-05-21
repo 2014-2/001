@@ -12,6 +12,8 @@ import org.zw.android.framework.db.Table;
 import org.zw.android.framework.db.core.ColumnPrimaryKey;
 import org.zw.android.framework.db.core.ColumnPrimaryKey.PrimaryKeyType;
 
+import com.crtb.tunnelmonitor.utils.CrtbUtils;
+
 /**
  * 满足铁科院上传接口要求的断面基础信息表
  * 
@@ -24,6 +26,9 @@ public class TunnelCrossSectionExIndex implements Serializable {
 	@ColumnPrimaryKey(Type = PrimaryKeyType.AUTO)
 	@ColumnInt
 	private int ID;
+	
+	@ColumnString(length = 64)
+	private String guid ;			// guid ---- 扩展
 	
 	@ColumnString(length = 64)
 	private String sectionGuid ;	// 断面guid ---- 扩展
@@ -79,6 +84,10 @@ public class TunnelCrossSectionExIndex implements Serializable {
 	@ColumnText
 	private String DESCRIPTION;		// DESCRIPTION 备注
 
+	public TunnelCrossSectionExIndex(){
+		setGuid(CrtbUtils.generatorGUID());
+	}
+	
 	public int getID() {
 		return ID;
 	}
@@ -87,6 +96,14 @@ public class TunnelCrossSectionExIndex implements Serializable {
 		ID = iD;
 	}
 	
+	public String getGuid() {
+		return guid;
+	}
+
+	public void setGuid(String guid) {
+		this.guid = guid;
+	}
+
 	public String getSectionGuid() {
 		return sectionGuid;
 	}

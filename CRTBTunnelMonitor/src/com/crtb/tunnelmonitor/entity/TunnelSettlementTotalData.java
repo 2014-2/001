@@ -12,6 +12,8 @@ import org.zw.android.framework.db.Table;
 import org.zw.android.framework.db.core.ColumnPrimaryKey;
 import org.zw.android.framework.db.core.ColumnPrimaryKey.PrimaryKeyType;
 
+import com.crtb.tunnelmonitor.utils.CrtbUtils;
+
 /**
  * 隧道内断面记录单
  * 
@@ -24,6 +26,9 @@ public class TunnelSettlementTotalData implements Serializable {
 	@ColumnPrimaryKey(Type = PrimaryKeyType.AUTO)
 	@ColumnInt
 	private int ID;				// id
+	
+	@ColumnString(length = 64)
+	private String guid ;		// 唯一标示 -----------扩展
 	
 	@ColumnInt
 	private int StationId;		// 设站ID
@@ -62,12 +67,24 @@ public class TunnelSettlementTotalData implements Serializable {
 	@ColumnFloat
 	private float DataCorrection;	// 异常数据修正值
 	
+	public TunnelSettlementTotalData(){
+		setGuid(CrtbUtils.generatorGUID());
+	}
+	
 	public int getID() {
 		return ID;
 	}
 
 	public void setID(int iD) {
 		ID = iD;
+	}
+
+	public String getGuid() {
+		return guid;
+	}
+
+	public void setGuid(String guid) {
+		this.guid = guid;
 	}
 
 	public float getDataCorrection() {
