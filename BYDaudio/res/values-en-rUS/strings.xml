@@ -58,7 +58,8 @@
 
     <!-- Aux -->
     <string name="aux_title">AUX</string>
-    <string name="aux_connected">Aux in</string>
+    <string name="aux_connected">AUX connected</string>
+    <string name="aux_disconnected">AUX disconnected</string>
     
     <!-- BT -->
     <string name="bt_title">Phone music</string>

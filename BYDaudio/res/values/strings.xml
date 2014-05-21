@@ -58,7 +58,8 @@
 
     <!-- Aux -->
     <string name="aux_title">AUX连接</string>
-    <string name="aux_connected">AUX输入</string>
+    <string name="aux_connected">已连接AUX</string>
+    <string name="aux_disconnected">未连接AUX</string>
     
     <!-- BT -->
     <string name="bt_title">手机音乐</string>
