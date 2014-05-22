@@ -734,6 +734,10 @@ public class AudioPlayerActivity extends BaseActivity {
     private void startPlay() {
         mAudioServiceIntent.putExtra(Constants.PLAYER_MSG, Constants.PlayerCommand.PLAY);
         mAudioServiceIntent.putExtra(Constants.MUSIC_SONG_POSITION, mSongPosition);
+        if (getIntent().hasExtra(Constants.MUSIC_SONG_CURRENT_TIME)) {
+            mAudioServiceIntent.putExtra(Constants.MUSIC_SONG_CURRENT_TIME, getIntent()
+                    .getIntExtra(Constants.MUSIC_SONG_CURRENT_TIME, 0));
+        }
         startService(mAudioServiceIntent);
     }
 

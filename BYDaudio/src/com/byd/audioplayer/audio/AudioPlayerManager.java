@@ -15,6 +15,8 @@ public class AudioPlayerManager {
 
     private ReloadSongListHandler mHandler;
 
+    private PausedSong[] mPausedSongs = new PausedSong[3];
+
     class ReloadSongListHandler extends Handler {
         public Song mPlayingSong;
 
@@ -28,6 +30,14 @@ public class AudioPlayerManager {
 
     public static AudioPlayerManager getInstance() {
         return sInstance;
+    }
+
+    public void setPausedSong(int index, PausedSong song) {
+        mPausedSongs[index] = song;
+    }
+
+    public PausedSong getPausedSong(int index) {
+        return mPausedSongs[index];
     }
 
     public void setPlayerList(int type, List<Song> songs) {
@@ -129,5 +139,54 @@ public class AudioPlayerManager {
     public void clearPlayList() {
         mPlayerList.clear();
         mPlayerPosition = -1;
+    }
+
+    class PausedSong {
+        private int storage_type;
+
+        private int position;
+
+        private String path;
+
+        private int current_time;
+
+        public PausedSong(int storage_type, int position, String path, int current_time) {
+            this.storage_type = storage_type;
+            this.position = position;
+            this.path = path;
+            this.current_time = current_time;
+        }
+
+        public int getStorageType() {
+            return storage_type;
+        }
+
+        public void setStorageType(int storage_type) {
+            this.storage_type = storage_type;
+        }
+
+        public int getPosition() {
+            return position;
+        }
+
+        public void setPosition(int position) {
+            this.position = position;
+        }
+
+        public String getPath() {
+            return path;
+        }
+
+        public void setPath(String path) {
+            this.path = path;
+        }
+
+        public int getCurrentTime() {
+            return current_time;
+        }
+
+        public void setCurrentTime(int current_time) {
+            this.current_time = current_time;
+        }
     }
 }

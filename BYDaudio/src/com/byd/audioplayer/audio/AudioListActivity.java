@@ -4,13 +4,11 @@ import java.lang.ref.WeakReference;
 import java.util.List;
 import java.util.Locale;
 
-import android.app.ActivityManager;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.app.FragmentManager;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -36,6 +34,7 @@ import com.byd.audioplayer.AuxAudioPlayActivity;
 import com.byd.audioplayer.BaseActivity;
 import com.byd.audioplayer.R;
 import com.byd.audioplayer.audio.AudioDeleteAsyncTask.DeleteListener;
+import com.byd.audioplayer.audio.AudioPlayerManager.PausedSong;
 import com.byd.audioplayer.audio.AudioPlayerService.OnSongChangedListener;
 import com.byd.audioplayer.audio.AudioSearchTask.SearchListener;
 import com.byd.audioplayer.bluetooth.BTPlayerActivity;
@@ -419,6 +418,18 @@ OnItemLongClickListener, SearchListener, DeleteListener {
     }
 
     public void tabIndex(int index) {
+        if (mIsStartFromWheel) {
+            int storageType = AudioPlayerManager.getInstance().getStorageType();
+            List<Song> songs = AudioLoaderManager.getInstance().getViewSongs();
+            if (index <= 3 && index >= 0 && null != AudioPlayerService.mPlayingSong
+                    && null != AudioPlayerService.mPlayer && songs.size() > 0) {
+                PausedSong pausedSong = AudioPlayerManager.getInstance().new PausedSong(
+                        storageType, AudioPlayerService.mSongPosition,
+                        AudioPlayerService.mPlayingSong.getFilePath(),
+                        AudioPlayerService.mPlayer.getCurrentPosition());
+                AudioPlayerManager.getInstance().setPausedSong(storageType, pausedSong);
+            }
+        }
         switch (index) {
             case TAB_INDEX_LOCAL:
             case TAB_INDEX_SDCARD:
@@ -426,7 +437,7 @@ OnItemLongClickListener, SearchListener, DeleteListener {
                 AudioLoaderManager.getInstance().setViewType(index);
                 mAdapter.onDataChange();
                 if (mIsStartFromWheel) {
-                    startPlayTheFirstSong();
+                    startPlaySong();
                     mIsStartFromWheel = false;
                 }
                 break;
@@ -467,32 +478,82 @@ OnItemLongClickListener, SearchListener, DeleteListener {
         updateHeadTitle();
     }
 
-    private void startPlayTheFirstSong() {
-        new Thread(new Runnable() {
-
-            @Override
-            public void run() {
-                try {
-                    Thread.sleep(500);
-                } catch (InterruptedException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
+    private void startPlaySong() {
+        // new Thread(new Runnable() {
+        //
+        // @Override
+        // public void run() {
+        // try {
+        // Thread.sleep(500);
+        // } catch (InterruptedException e) {
+        // // TODO Auto-generated catch block
+        // e.printStackTrace();
+        // }
+        int viewType = AudioLoaderManager.getInstance().getViewType();
+        List<Song> songs = AudioLoaderManager.getInstance().getViewSongs();
+        if (songs.size()<=0) {
+            mIsStartFromWheel = true;
+            tabIndex(viewType + 1);
+            return;
+        }
+        // AudioPlayerManager.getInstance().setPlayerList(
+        // AudioLoaderManager.getInstance().getViewType(), songs);
+        // AudioPlayerManager.getInstance().setPlayerPosition(0);
+        // mAudioServiceIntent.putExtra(Constants.PLAYER_MSG,
+        // Constants.PlayerCommand.PLAY);
+        // mAudioServiceIntent.putExtra(Constants.MUSIC_SONG_POSITION,
+        // 0);
+        // mAudioServiceIntent.putExtra(Constants.MUSIC_SONG_CURRENT_TIME,
+        // 10000);
+        // startService(mAudioServiceIntent);
+        // AudioLoaderManager.getInstance().setPlayType(
+        // AudioLoaderManager.getInstance().getViewType());
+        PausedSong pausedSong = AudioPlayerManager.getInstance().getPausedSong(viewType);
+        int songPosition = 0;
+        int currentTime = 0;
+        if (null != pausedSong) {
+            if (pausedSong.getPosition() < songs.size()
+                    && songs.get(pausedSong.getPosition()).getFilePath()
+                    .equals(pausedSong.getPath())) {
+                // 列表没有变动，index对应的歌曲是正确的
+                songPosition = pausedSong.getPosition();
+                currentTime = pausedSong.getCurrentTime();
+            } else {
+                // 列表出现了变动，index对应歌曲不正确，重新查找
+                int newIndex = findIndexInSongList(songs, pausedSong.getPath());
+                if (newIndex != -1) {
+                    // 歌曲找到了，只是index有变动，恢复播放
+                    songPosition = newIndex;
+                    currentTime = pausedSong.getCurrentTime();
+                } else {
+                    // 歌曲无法找到，播放默认歌曲
                 }
-                List<Song> songs = AudioLoaderManager.getInstance().getViewSongs();
-                if (songs.size()<=0) {
-                    return;
-                }
-                AudioPlayerManager.getInstance().setPlayerList(
-                        AudioLoaderManager.getInstance().getViewType(), songs);
-                AudioPlayerManager.getInstance().setPlayerPosition(0);
-                mAudioServiceIntent.putExtra(Constants.PLAYER_MSG, Constants.PlayerCommand.PLAY);
-                mAudioServiceIntent.putExtra(Constants.MUSIC_SONG_POSITION, 0);
-                startService(mAudioServiceIntent);
-                AudioLoaderManager.getInstance().setPlayType(
-                        AudioLoaderManager.getInstance().getViewType());
-                mListHandler.sendEmptyMessageDelayed(0, 500);
             }
-        }).start();
+        }
+
+        // Start player activity
+        AudioPlayerManager.getInstance().setPlayerList(viewType, songs);
+        AudioPlayerManager.getInstance().setPlayerPosition(songPosition);
+        Intent intent = new Intent(AudioListActivity.this, AudioPlayerActivity.class);
+        intent.putExtra(Constants.MUSIC_SONG_POSITION, songPosition);
+        intent.putExtra(Constants.MUSIC_SONG_CURRENT_TIME, currentTime);
+        startActivityForResult(intent, REQUEST_CODE_PLAY);
+        AudioLoaderManager.getInstance().setPlayType(
+                AudioLoaderManager.getInstance().getViewType());
+        mListHandler.sendEmptyMessageDelayed(0, 500);
+        // }
+        // }).start();
+    }
+
+    private int findIndexInSongList(List<Song> songs, String path) {
+        int index = -1;
+        for (int i = 0; i < songs.size(); i++) {
+            if (songs.get(i).getFilePath().equals(path)) {
+                index = i;
+                break;
+            }
+        }
+        return index;
     }
 
     @Override
@@ -729,21 +790,5 @@ OnItemLongClickListener, SearchListener, DeleteListener {
             return true;
         else
             return false;
-    }
-
-    private boolean isPlayerServiceRunning() {
-        ActivityManager activityManager = (ActivityManager)getSystemService(Context.ACTIVITY_SERVICE);
-        List<ActivityManager.RunningServiceInfo> serviceList = activityManager
-                .getRunningServices(30);
-        if (serviceList == null || serviceList.size() < 0) {
-            return false;
-        }
-        for (int i = 0; i < serviceList.size(); i++) {
-            if (serviceList.get(i).service.getClassName().equals(
-                    AudioPlayerService.class.getName())) {
-                return true;
-            }
-        }
-        return false;
     }
 }

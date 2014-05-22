@@ -45,7 +45,7 @@ public class AudioPlayerService extends Service {
 
     private static ArrayList<OnSongChangedListener> mSongChangedListenerList = new ArrayList<AudioPlayerService.OnSongChangedListener>();
 
-    private Song mPlayingSong;
+    public static Song mPlayingSong;
 
     public static int mSongPosition = -1;
 
@@ -353,6 +353,14 @@ public class AudioPlayerService extends Service {
                         mPlayer.setDataSource(song.getFilePath());
                         mPlayingSong = song;
                         mPlayer.prepare();
+                        if (intent.hasExtra(Constants.MUSIC_SONG_CURRENT_TIME)) {
+                            int currentTime = intent.getIntExtra(Constants.MUSIC_SONG_CURRENT_TIME,
+                                    0);
+                            Log.d(LOG_TAG, "seek to time: " + currentTime);
+                            if (currentTime != 0) {
+                                mPlayer.seekTo(currentTime);
+                            }
+                        }
                     } catch (IllegalStateException e) {
                         // TODO Auto-generated catch block
                         e.printStackTrace();

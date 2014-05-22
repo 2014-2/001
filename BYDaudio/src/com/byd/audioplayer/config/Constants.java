@@ -15,7 +15,9 @@ public class Constants {
      * 目录结构
      */
     public static final String USB_REGIX = "/udisk/";
+
     public static final String LOCAL_REGIX = "/storage/";
+
     public static final String SDCARD_REGIX = "/extsd/";
 
     public static final int ERROR_DISMISS_THREE_SECONDS = 3000;
@@ -37,6 +39,8 @@ public class Constants {
     private static final String PREF_AUDIO_PAGE = "audio_page";
 
     public static final String MUSIC_SONG_POSITION = "com.byd.audioplayer.SongPosition";
+
+    public static final String MUSIC_SONG_CURRENT_TIME = "com.byd.audioplayer.CurrentTime";
 
     public static final String PLAYER_MSG = "com.byd.audioplayer.MSG";
 
