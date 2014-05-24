@@ -14,6 +14,7 @@ import android.content.ServiceConnection;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -883,5 +884,22 @@ public class AudioPlayerActivity extends BaseActivity {
             return true;
         else
             return false;
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        switch (keyCode) {
+            case KeyEvent.KEYCODE_MEDIA_PREVIOUS:
+                if (null != mService) {
+                    mService.forceChangeToPrevious();
+                }
+                return true;
+            case KeyEvent.KEYCODE_MEDIA_NEXT:
+                if (null != mService) {
+                    mService.forceChangeToNext();
+                }
+                return true;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 }

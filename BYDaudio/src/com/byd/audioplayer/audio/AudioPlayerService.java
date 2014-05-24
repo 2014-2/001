@@ -8,7 +8,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.hardware.Canbus;
 import android.media.AudioManager;
 import android.media.AudioManager.OnAudioFocusChangeListener;
 import android.media.MediaPlayer;
@@ -53,7 +52,7 @@ public class AudioPlayerService extends Service {
 
     private AudioManager am;
 
-    private WheelKeyReceiver mWheelKeyReceiver;
+    // private WheelKeyReceiver mWheelKeyReceiver;
 
     private SuspendReceiver mSuspendReceiver;
 
@@ -195,7 +194,7 @@ public class AudioPlayerService extends Service {
         }
     }
 
-    private void forceChangeToNext() {
+    public void forceChangeToNext() {
         boolean isPlayOrderChecked = Constants.isPlayOrderChecked(getApplicationContext());
         boolean isLoopModeChecked = Constants.isLoopModeChecked(getApplicationContext());
         int status = -1;
@@ -218,7 +217,7 @@ public class AudioPlayerService extends Service {
         }
     }
 
-    private void forceChangeToPrevious() {
+    public void forceChangeToPrevious() {
         boolean isPlayOrderChecked = Constants.isPlayOrderChecked(getApplicationContext());
         boolean isLoopModeChecked = Constants.isLoopModeChecked(getApplicationContext());
         int status = -1;
@@ -304,12 +303,12 @@ public class AudioPlayerService extends Service {
     }
 
     private void registerReceivers() {
-        if (mWheelKeyReceiver == null) {
-            mWheelKeyReceiver = new WheelKeyReceiver();
-            IntentFilter filter = new IntentFilter(ACTION_CAR_SETTING);
-            filter.addCategory("com.canbus.action.CAR_SETTING.WHEEL_KEY");
-            registerReceiver(mWheelKeyReceiver, filter);
-        }
+        // if (mWheelKeyReceiver == null) {
+        // mWheelKeyReceiver = new WheelKeyReceiver();
+        // IntentFilter filter = new IntentFilter(ACTION_CAR_SETTING);
+        // filter.addCategory("com.canbus.action.CAR_SETTING.WHEEL_KEY");
+        // registerReceiver(mWheelKeyReceiver, filter);
+        // }
 
         if (mSuspendReceiver == null) {
             mSuspendReceiver = new SuspendReceiver();
@@ -329,7 +328,7 @@ public class AudioPlayerService extends Service {
     }
 
     private void unregisterReceivers() {
-        unregisterReceiver(mWheelKeyReceiver);
+        // unregisterReceiver(mWheelKeyReceiver);
         unregisterReceiver(mSuspendReceiver);
         unregisterReceiver(mStorageMountReceiver);
     }
@@ -467,29 +466,29 @@ public class AudioPlayerService extends Service {
         }
     };
 
-    class WheelKeyReceiver extends BroadcastReceiver {
-
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            String action = intent.getAction();
-            if ("com.canbus.action.CAR_SETTING".equals(action)) {
-                int value = intent.getIntExtra("value", -1);
-                if (-1 == value) {
-                    // if the value is not int type
-                    String valueStr = intent.getStringExtra("value");
-                    value = Integer.parseInt(valueStr);
-                }
-                switch (value) {
-                    case Canbus.WHEEL_KEY_SEEK_UP_SHORT:
-                        forceChangeToPrevious();
-                        break;
-                    case Canbus.WHEEL_KEY_SEEK_DOWN_SHORT:
-                        forceChangeToNext();
-                        break;
-                }
-            }
-        }
-    }
+    // class WheelKeyReceiver extends BroadcastReceiver {
+    //
+    // @Override
+    // public void onReceive(Context context, Intent intent) {
+    // String action = intent.getAction();
+    // if ("com.canbus.action.CAR_SETTING".equals(action)) {
+    // int value = intent.getIntExtra("value", -1);
+    // if (-1 == value) {
+    // // if the value is not int type
+    // String valueStr = intent.getStringExtra("value");
+    // value = Integer.parseInt(valueStr);
+    // }
+    // switch (value) {
+    // case Canbus.WHEEL_KEY_SEEK_UP_SHORT:
+    // forceChangeToPrevious();
+    // break;
+    // case Canbus.WHEEL_KEY_SEEK_DOWN_SHORT:
+    // forceChangeToNext();
+    // break;
+    // }
+    // }
+    // }
+    // }
 
     class SuspendReceiver extends BroadcastReceiver {
 
