@@ -103,7 +103,7 @@ public class BTPlayerActivity extends BaseActivity {
 	            // Resume bt playback
 	        	Log.d(BTMUSIC, "AUDIOFOCUS_GAIN");
 	        	BTcontinuePlay();
-				startPlaybackService("0");
+				//startPlaybackService("0");
 	        }
 	    }  
 	}; 
@@ -385,21 +385,25 @@ public class BTPlayerActivity extends BaseActivity {
             		switch(intent.getIntExtra("a2dp", 0)){
             		case BTSTATUS_DISCONNECT:
             			btstatus = BTSTATUS_DISCONNECT;
+            			stopPlaybackService("0");
             			updatePlayPauseBtn(false);
             			showToast(getString(R.string.bt_plsconnect));
             			break;
             		case BTSTATUS_CONNECTING:
             			btstatus = BTSTATUS_CONNECTING;
+            			stopPlaybackService("0");
             			updatePlayPauseBtn(false);
             			showToast(getString(R.string.bt_plsconnect));
             			break;
             		case BTSTATUS_CONNECTED:
             			btstatus = BTSTATUS_CONNECTED;
+            			stopPlaybackService("0");
             			updatePlayPauseBtn(false);
             			showToast(getString(R.string.bt_connected));
             			break;
             		case BTSTATUS_PLAYING:
             			btstatus = BTSTATUS_PLAYING;
+            			startPlaybackService("0");
             			updatePlayPauseBtn(true);
             			showToast(getString(R.string.bt_connected));
             			break;
