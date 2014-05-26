@@ -58,15 +58,16 @@ import com.byd.videoplayer.history.BYDDatabase;
 import com.byd.videoplayer.history.PlayRecord;
 import com.byd.videoplayer.video.VideoView.MySizeChangeLinstener;
 import com.byd.videoplayer.view.SoundVolumeView;
+
 /**
  * 
  * @author Des
- *
+ * 
  */
 public class VideoPlayActivity extends Activity {
 
-   public static final String ACTION_SUSPEND_BROADCAST = "com.android.suspend.BroadcastReceiver";
-   
+	public static final String ACTION_SUSPEND_BROADCAST = "com.android.suspend.BroadcastReceiver";
+
 	public static final String POINT = "POINT";
 	private final static int REPEAT_NONE = 0;
 	private final static int REPEAT_ALL = 1;
@@ -79,7 +80,7 @@ public class VideoPlayActivity extends Activity {
 	private GestureDetector mGestureDetector = null;
 
 	public static ImageButton btnPlayPause = null;
-	/**播放条*/
+	/** 播放条 */
 	private PopupWindow controlerWindow = null;
 	private PopupWindow titleWindow = null;
 
@@ -103,20 +104,21 @@ public class VideoPlayActivity extends Activity {
 	private View titleView;
 	private View controlView;
 	private RelativeLayout rlFailedToPlay;
-//	private ImageView iv_sound_ctrl;
+	// private ImageView iv_sound_ctrl;
 	private TextView tv_failed;
-//	private SoundVolumeView sv_ctrlbar;
+
+	// private SoundVolumeView sv_ctrlbar;
 
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-	   requestWindowFeature(Window.FEATURE_NO_TITLE);
-	   setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+		requestWindowFeature(Window.FEATURE_NO_TITLE);
+		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 		super.onCreate(savedInstanceState);
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON,
 				WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 		setContentView(R.layout.video_play_view);
-		
+
 		final TextView tv1 = (TextView) findViewById(R.id.VideoViewTest);
 		tv1.post(new Runnable() {
 			public void run() {
@@ -134,44 +136,51 @@ public class VideoPlayActivity extends Activity {
 			@Override
 			public boolean queueIdle() {
 
-				if (controlerWindow != null && mMediaPlayer != null && mMediaPlayer.isShown()) {
-					controlerWindow.showAtLocation(mMediaPlayer, Gravity.BOTTOM, 0, 0);
-					controlerWindow.update(0, 8, screenWidth, controlHeight + 8);
+				if (controlerWindow != null && mMediaPlayer != null
+						&& mMediaPlayer.isShown()) {
+					controlerWindow.showAtLocation(mMediaPlayer,
+							Gravity.BOTTOM, 0, 0);
+					controlerWindow
+							.update(0, 8, screenWidth, controlHeight + 8);
 				}
-				if (titleWindow != null && mMediaPlayer != null && mMediaPlayer.isShown()) {
+				if (titleWindow != null && mMediaPlayer != null
+						&& mMediaPlayer.isShown()) {
 					titleWindow.showAtLocation(mMediaPlayer, Gravity.TOP, 0, 0);
-					titleWindow.update(0, statusBarHeight - 6, screenWidth, ViewGroup.LayoutParams.WRAP_CONTENT);
+					titleWindow.update(0, statusBarHeight - 6, screenWidth,
+							ViewGroup.LayoutParams.WRAP_CONTENT);
 				}
 
 				return false;
 			}
 		});
-		
+
 		Intent intent = getIntent();
 		int playType = 0;
-		if(intent != null) {
-		      Bundle bundle = getIntent().getBundleExtra(Constants.VIDEO_PLAY_PARAMS);
-		      if(bundle != null) {
-   		      mVideoUrl = bundle.getString("video_url");
-   		      mediaName = bundle.getString("name");
-   		      duration = bundle.getInt("duration", 0);
-   		      playType = bundle.getInt("repeat_mode");
-		      } else {
-		          launchBrowser(intent);
-		      }
+		if (intent != null) {
+			Bundle bundle = getIntent().getBundleExtra(
+					Constants.VIDEO_PLAY_PARAMS);
+			if (bundle != null) {
+				mVideoUrl = bundle.getString("video_url");
+				mediaName = bundle.getString("name");
+				duration = bundle.getInt("duration", 0);
+				playType = bundle.getInt("repeat_mode");
+			} else {
+				launchBrowser(intent);
+			}
 		}
-		
-		
-		titleView = getLayoutInflater().inflate(R.layout.header_video_player, null);
-		
+
+		titleView = getLayoutInflater().inflate(R.layout.header_video_player,
+				null);
+
 		titleWindow = new PopupWindow(titleView);
 
 		tvTitle = (TextView) titleView.findViewById(R.id.button_header_title);
-		if(!TextUtils.isEmpty(mediaName)) {
+		if (!TextUtils.isEmpty(mediaName)) {
 			tvTitle.setText(mediaName);
 		}
 
-		controlView = getLayoutInflater().inflate(R.layout.video_play_view_control, null);
+		controlView = getLayoutInflater().inflate(
+				R.layout.video_play_view_control, null);
 		controlView.setOnTouchListener(new OnTouchListener() {
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
@@ -179,14 +188,17 @@ public class VideoPlayActivity extends Activity {
 			}
 		});
 		controlerWindow = new PopupWindow(controlView);
-		durationTextView = (TextView) controlView.findViewById(R.id.duration_time);
+		durationTextView = (TextView) controlView
+				.findViewById(R.id.duration_time);
 		playedTextView = (TextView) controlView.findViewById(R.id.current_time);
 
-		btnPlayPause = (ImageButton) controlView.findViewById(R.id.btnPlayPause);
+		btnPlayPause = (ImageButton) controlView
+				.findViewById(R.id.btnPlayPause);
 		progressLayout = (RelativeLayout) findViewById(R.id.ll_progress);
 		dismissProgress();
 
-		ImageView btnhome = (ImageView) titleView.findViewById(R.id.button_header_left);
+		ImageView btnhome = (ImageView) titleView
+				.findViewById(R.id.button_header_left);
 		btnhome.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -201,48 +213,46 @@ public class VideoPlayActivity extends Activity {
 
 		btnPlayPause.setOnClickListener(new OnClickListener() {
 			@Override
-            public void onClick(View view) {
-                mHandler.removeMessages(ERROR_HAPPENED);
-                // resetVideoView();
-                isFirst = true;
-                // seekBar.setProgress(0);
-                // seekBar.setSecondaryProgress(0);
-                cancelDelayHide();
-                if (isPaused) {
-                    if (!mMediaPlayer.isUrlEmpty()) {
-                        mMediaPlayer.start();
-                        btnPlayPause.setImageResource(R.drawable.button_pause);
-                        hideControllerDelay();
-                        mHandler.sendEmptyMessage(PROGRESS_CHANGED);
-                        isPaused = false;
-                    }
-                    else {
-                        playVideo();
-                    }
-                }
-                else {
-                    if (!mMediaPlayer.isUrlEmpty()) {
-                        mMediaPlayer.pause();
-                        btnPlayPause.setImageResource(R.drawable.button_play);
-                        hideControllerDelay();
-                        isPaused = true;
-                    }
-                    else {
-                        playVideo();
-                    }
-                }
-            }
+			public void onClick(View view) {
+				mHandler.removeMessages(ERROR_HAPPENED);
+				// resetVideoView();
+				isFirst = true;
+				// seekBar.setProgress(0);
+				// seekBar.setSecondaryProgress(0);
+				cancelDelayHide();
+				if (isPaused) {
+					if (!mMediaPlayer.isUrlEmpty()) {
+						mMediaPlayer.start();
+						btnPlayPause.setImageResource(R.drawable.button_pause);
+						hideControllerDelay();
+						mHandler.sendEmptyMessage(PROGRESS_CHANGED);
+						isPaused = false;
+					} else {
+						playVideo();
+					}
+				} else {
+					if (!mMediaPlayer.isUrlEmpty()) {
+						mMediaPlayer.pause();
+						btnPlayPause.setImageResource(R.drawable.button_play);
+						hideControllerDelay();
+						isPaused = true;
+					} else {
+						playVideo();
+					}
+				}
+			}
 		});
 
 		seekBar = (SeekBar) controlView.findViewById(R.id.progress_bar);
 		seekBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
 
 			@Override
-			public void onProgressChanged(SeekBar seekbar, int progress, boolean fromUser) {
+			public void onProgressChanged(SeekBar seekbar, int progress,
+					boolean fromUser) {
 				if (fromUser) {
 					if (rlFailedToPlay.getVisibility() != View.VISIBLE) {
 						showProgress();
-						//mMediaPlayer.pause();
+						// mMediaPlayer.pause();
 						seekBar.setProgress(progress);
 						mHandler.removeMessages(PROGRESS_CHANGED);
 						mHandler.removeMessages(SEEKTO);
@@ -269,14 +279,15 @@ public class VideoPlayActivity extends Activity {
 				mHandler.sendEmptyMessageDelayed(HIDE_CONTROLER, TIME);
 			}
 		});
-		
-		controlView.findViewById(R.id.RL_LinearLayoutButtonsBar).setOnClickListener(new OnClickListener() {
-          @Override
-          public void onClick(View view) {
-              cancelDelayHide();
-              hideControllerDelay();
-          }
-		});
+
+		controlView.findViewById(R.id.RL_LinearLayoutButtonsBar)
+				.setOnClickListener(new OnClickListener() {
+					@Override
+					public void onClick(View view) {
+						cancelDelayHide();
+						hideControllerDelay();
+					}
+				});
 
 		mGestureDetector = new GestureDetector(new SimpleOnGestureListener() {
 
@@ -333,7 +344,7 @@ public class VideoPlayActivity extends Activity {
 		mMediaPlayer.setOnCompletionListener(mCompletionListener);
 		mMediaPlayer.setMySizeChangeLinstener(mySizeChangeLinstener);
 		mMediaPlayer.setOnSeekCompleteListener(mSeekCompleteListener);
-		
+
 		if (playType == 0) {
 			repeatMode = REPEAT_ALL;
 		}
@@ -362,126 +373,138 @@ public class VideoPlayActivity extends Activity {
 		tv_failed = (TextView) findViewById(R.id.tv_failed);
 
 		// Pulque edited at 2012-9-19 6:06:46pm
-//		iv_sound_ctrl = (ImageView) controlView.findViewById(R.id.iv_sound_ctrl);
+		// iv_sound_ctrl = (ImageView)
+		// controlView.findViewById(R.id.iv_sound_ctrl);
 		// mCtrlDialog = new SoundCtrlDialog(this, iv_sound_ctrl);
 		// mCtrlDialog.updateSoundIcon(iv_sound_ctrl);
 		// mCtrlDialog.setCallBackHandler(myHandler, HIDE_CONTROLER, TIME);
-//		iv_sound_ctrl.setOnClickListener(new View.OnClickListener() {
-//
-//			@Override
-//			public void onClick(View v) {
-//				if (sv_ctrlbar != null) {
-//					if (sv_ctrlbar.getVisibility() == View.VISIBLE) {
-//						sv_ctrlbar.setVisibility(View.GONE);
-//						cancelDelayHide();
-//						hideControllerDelay();
-//					} else {
-//						sv_ctrlbar.setVisibility(View.VISIBLE);
-//						showController();
-//						cancelDelayHide();
-//					}
-//				}
-//			}
-//		});
+		// iv_sound_ctrl.setOnClickListener(new View.OnClickListener() {
+		//
+		// @Override
+		// public void onClick(View v) {
+		// if (sv_ctrlbar != null) {
+		// if (sv_ctrlbar.getVisibility() == View.VISIBLE) {
+		// sv_ctrlbar.setVisibility(View.GONE);
+		// cancelDelayHide();
+		// hideControllerDelay();
+		// } else {
+		// sv_ctrlbar.setVisibility(View.VISIBLE);
+		// showController();
+		// cancelDelayHide();
+		// }
+		// }
+		// }
+		// });
 
-//		sv_ctrlbar = (SoundVolumeView) controlView.findViewById(R.id.volume_seek_bar);
-//		sv_ctrlbar.updateVolumeView();
+		// sv_ctrlbar = (SoundVolumeView)
+		// controlView.findViewById(R.id.volume_seek_bar);
+		// sv_ctrlbar.updateVolumeView();
 		updateErrorIcon();
-		
+
 		registerSuspendBroadcast();
 	}
-	
-	
+
 	/**
 	 * 麻烦实现一下暂停恢复功能：按下某个暂停硬件后，发出broadcast，我们如果在播放,收到stop broadcast后暂停。
-                 如果我们之前是被暂停的，收到recover broadcast后继续播放 4/27/2014
+	 * 如果我们之前是被暂停的，收到recover broadcast后继续播放 4/27/2014
+	 * 
 	 * @author Des
-	 *
+	 * 
 	 */
 	class SuspendReceiver extends BroadcastReceiver {
 
-       @Override
-       public void onReceive(Context context, Intent intent) {
-           String action = intent.getAction();
-           if(ACTION_SUSPEND_BROADCAST.equals(action)) {
-               String operation = intent.getStringExtra("command");
-               if("stop".equals(operation)) {
-                   if (!isPaused && !mMediaPlayer.isUrlEmpty()) {
-                       mMediaPlayer.pause();
-                       btnPlayPause.setImageResource(R.drawable.button_play);
-                       hideControllerDelay();
-                       isPaused = true;
-                   }
-               } else if("recover".equals(operation)) {
-                   if (isPaused && !mMediaPlayer.isUrlEmpty()) {
-                       mMediaPlayer.start();
-                       btnPlayPause.setImageResource(R.drawable.button_pause);
-                       hideControllerDelay();
-                       isPaused = false;
-                   }
-               }
-           }
-       }
-   }
-	
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			String action = intent.getAction();
+			if (ACTION_SUSPEND_BROADCAST.equals(action)) {
+				String operation = intent.getStringExtra("command");
+				if ("stop".equals(operation)) {
+					if (!isPaused && !mMediaPlayer.isUrlEmpty()) {
+						mMediaPlayer.pause();
+						btnPlayPause.setImageResource(R.drawable.button_play);
+						hideControllerDelay();
+						isPaused = true;
+					}
+				} else if ("recover".equals(operation)) {
+					if (isPaused && !mMediaPlayer.isUrlEmpty()) {
+						mMediaPlayer.start();
+						btnPlayPause.setImageResource(R.drawable.button_pause);
+						hideControllerDelay();
+						isPaused = false;
+					}
+				}
+			}
+		}
+	}
+
 	private SuspendReceiver mSuspendReceiver;
+
 	private void registerSuspendBroadcast() {
-	    if(mSuspendReceiver == null) {
-	        mSuspendReceiver = new SuspendReceiver();
-	        IntentFilter filter = new IntentFilter(ACTION_SUSPEND_BROADCAST);
-	        registerReceiver(mSuspendReceiver, filter);
-	    }
+		if (mSuspendReceiver == null) {
+			mSuspendReceiver = new SuspendReceiver();
+			IntentFilter filter = new IntentFilter(ACTION_SUSPEND_BROADCAST);
+			registerReceiver(mSuspendReceiver, filter);
+		}
 	}
+
 	private void unregisterSuspendBroadcast() {
-	    if(mSuspendReceiver != null) {
-	        unregisterReceiver(mSuspendReceiver);
-	    }
-	    mSuspendReceiver = null;
+		if (mSuspendReceiver != null) {
+			unregisterReceiver(mSuspendReceiver);
+		}
+		mSuspendReceiver = null;
 	}
-	
+
 	/**
 	 * 从第三方媒体浏览器上观看视频的入口
 	 * 
 	 * @param intent
 	 */
-    public void launchBrowser(Intent intent) {
-        if (intent != null) {
-            Uri uri = intent.getData();
-            if (uri != null) {
-                mVideoUrl = uri.getEncodedPath();
+	public void launchBrowser(Intent intent) {
+		if (intent != null) {
+			Uri uri = intent.getData();
+			if (uri != null) {
+				mVideoUrl = uri.getEncodedPath();
 
-                // Change from 1.6
-                String decodedOpenFileFromBrowser = null;
-                try {
-                    decodedOpenFileFromBrowser = URLDecoder.decode(mVideoUrl,
-                            "UTF-8");
-                }
-                catch (UnsupportedEncodingException e) {
-                    // e.printStackTrace();
-                    // 文件可能存在乱码
-                }
-                if (decodedOpenFileFromBrowser != null) {
-                    mVideoUrl = decodedOpenFileFromBrowser;
-                }
-                
-                if(!TextUtils.isEmpty(mVideoUrl) && mVideoUrl.lastIndexOf('.') > 0 && mVideoUrl.lastIndexOf('/') > 0) {
-                    mediaName = mVideoUrl.substring(mVideoUrl.lastIndexOf('/') + 1, mVideoUrl.lastIndexOf('.'));
-                }
-            }
-        }
-    }
+				// Change from 1.6
+				String decodedOpenFileFromBrowser = null;
+				try {
+					decodedOpenFileFromBrowser = URLDecoder.decode(mVideoUrl,
+							"UTF-8");
+				} catch (UnsupportedEncodingException e) {
+					// e.printStackTrace();
+					// 文件可能存在乱码
+				}
+				if (decodedOpenFileFromBrowser != null) {
+					mVideoUrl = decodedOpenFileFromBrowser;
+				}
+
+				if (!TextUtils.isEmpty(mVideoUrl)
+						&& mVideoUrl.lastIndexOf('.') > 0
+						&& mVideoUrl.lastIndexOf('/') > 0) {
+					mediaName = mVideoUrl.substring(
+							mVideoUrl.lastIndexOf('/') + 1,
+							mVideoUrl.lastIndexOf('.'));
+				}
+			}
+		}
+	}
 
 	private void updateErrorIcon() {
 		if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-			int temp = (int) (screenHeight - (int) (statusBarHeight * 2 + 5 * dm.density) - 100 * dm.density);
+			int temp = (int) (screenHeight
+					- (int) (statusBarHeight * 2 + 5 * dm.density) - 100 * dm.density);
 			RelativeLayout.LayoutParams mLayoutParams = new RelativeLayout.LayoutParams(
-					(int) (286 * dm.density), temp > (int) (217 * dm.density) ? (int) (217 * dm.density)
+					(int) (286 * dm.density),
+					temp > (int) (217 * dm.density) ? (int) (217 * dm.density)
 							: temp);
-			mLayoutParams.addRule(RelativeLayout.CENTER_HORIZONTAL, RelativeLayout.TRUE);
+			mLayoutParams.addRule(RelativeLayout.CENTER_HORIZONTAL,
+					RelativeLayout.TRUE);
 			if (screenHeight <= 720) {
-				mLayoutParams.setMargins(0, (int) (48 * dm.density), 0, (int) (10 * dm.density));
+				mLayoutParams.setMargins(0, (int) (48 * dm.density), 0,
+						(int) (10 * dm.density));
 			} else {
-				mLayoutParams.addRule(RelativeLayout.CENTER_VERTICAL, RelativeLayout.TRUE);
+				mLayoutParams.addRule(RelativeLayout.CENTER_VERTICAL,
+						RelativeLayout.TRUE);
 			}
 
 			rlFailedToPlay.setLayoutParams(mLayoutParams);
@@ -490,8 +513,10 @@ public class VideoPlayActivity extends Activity {
 					(int) (286 * dm.density),
 					(screenHeight - statusBarHeight - (int) (217 * dm.density) > (int) (217 * dm.density) ? (int) (217 * dm.density)
 							: (screenHeight - statusBarHeight - (int) (217 * dm.density))));
-			mLayoutParams.addRule(RelativeLayout.CENTER_HORIZONTAL, RelativeLayout.TRUE);
-			mLayoutParams.addRule(RelativeLayout.CENTER_VERTICAL, RelativeLayout.TRUE);
+			mLayoutParams.addRule(RelativeLayout.CENTER_HORIZONTAL,
+					RelativeLayout.TRUE);
+			mLayoutParams.addRule(RelativeLayout.CENTER_VERTICAL,
+					RelativeLayout.TRUE);
 			rlFailedToPlay.setLayoutParams(mLayoutParams);
 		}
 	}
@@ -541,7 +566,8 @@ public class VideoPlayActivity extends Activity {
 				int hour = minute / 60;
 				int second = i % 60;
 				minute %= 60;
-				playedTextView.setText(String.format("%02d:%02d:%02d", hour, minute, second));
+				playedTextView.setText(String.format("%02d:%02d:%02d", hour,
+						minute, second));
 
 				sendEmptyMessageDelayed(PROGRESS_CHANGED, 100);
 				break;
@@ -571,8 +597,8 @@ public class VideoPlayActivity extends Activity {
 				}
 				break;
 			case CLICK_DELAY:
-			    ((View) msg.obj).setClickable(true);
-			    break;
+				((View) msg.obj).setClickable(true);
+				break;
 			}
 
 			super.handleMessage(msg);
@@ -601,24 +627,24 @@ public class VideoPlayActivity extends Activity {
 
 	@Override
 	protected void onPause() {
-		if(null == mMediaPlayer || "" == mVideoUrl){
+		if (null == mMediaPlayer || "" == mVideoUrl) {
 			return;
 		}
 		int process = mMediaPlayer.getCurrentPosition();
-		WriteSharedPreferences(mVideoUrl,process);
+		WriteSharedPreferences(mVideoUrl, process);
 		myPause();
 
 		super.onPause();
 	}
 
 	private void myPause() {
-		//btnPlayPause.setImageResource(R.drawable.button_play);
+		// btnPlayPause.setImageResource(R.drawable.button_play);
 		isPaused = true;
 		if (mHandler != null) {
 			mHandler.removeMessages(ERROR_HAPPENED);
 		}
 	}
-	
+
 	@Override
 	protected void onResume() {
 		CurrentP = ReadSharedPreferences(mVideoUrl);
@@ -640,27 +666,27 @@ public class VideoPlayActivity extends Activity {
 		mHandler.removeMessages(0);
 		super.onResume();
 	}
-	
+
 	private void savePlayRecord() {
-	   BrowserActivity.tabContentChanged[BrowserActivity.TAB_INDEX_HISTORY] = true;
-       PlayRecord playRecord = new PlayRecord();
-       MovieInfo movieInfo = new MovieInfo();
-       movieInfo.path = mVideoUrl;
-       movieInfo.displayName = mediaName;
-       movieInfo.duration = duration;
-       playRecord.setMovieInfo(movieInfo);
-       playRecord.setLastPlayPosition(mMediaPlayer.getCurrentPosition());
-       playRecord.setTime(System.currentTimeMillis());
-       BYDDatabase.getInstance(this).insertVideoPlayRecord(playRecord);
-   }
+		BrowserActivity.tabContentChanged[BrowserActivity.TAB_INDEX_HISTORY] = true;
+		PlayRecord playRecord = new PlayRecord();
+		MovieInfo movieInfo = new MovieInfo();
+		movieInfo.path = mVideoUrl;
+		movieInfo.displayName = mediaName;
+		movieInfo.duration = duration;
+		playRecord.setMovieInfo(movieInfo);
+		playRecord.setLastPlayPosition(mMediaPlayer.getCurrentPosition());
+		playRecord.setTime(System.currentTimeMillis());
+		BYDDatabase.getInstance(this).insertVideoPlayRecord(playRecord);
+	}
 
 	@Override
-    protected void onStop() {
-        super.onStop();
-        savePlayRecord();
-    }
+	protected void onStop() {
+		super.onStop();
+		savePlayRecord();
+	}
 
-    @Override
+	@Override
 	protected void onDestroy() {
 		if (controlerWindow.isShowing()) {
 			controlerWindow.dismiss();
@@ -695,10 +721,12 @@ public class VideoPlayActivity extends Activity {
 		if (!result) {
 			if (event.getAction() == MotionEvent.ACTION_UP) {
 
-				
-				 /* if(!isControllerShow){ showController(); hideControllerDelay(); }else { cancelDelayHide();
-				 * hideController(); }*/
-				 
+				/*
+				 * if(!isControllerShow){ showController();
+				 * hideControllerDelay(); }else { cancelDelayHide();
+				 * hideController(); }
+				 */
+
 			}
 			result = super.onTouchEvent(event);
 		}
@@ -706,7 +734,7 @@ public class VideoPlayActivity extends Activity {
 
 	}
 
-    private void getScreenSize() {
+	private void getScreenSize() {
 		Display display = getWindowManager().getDefaultDisplay();
 		screenHeight = display.getHeight();
 		screenWidth = display.getWidth();
@@ -714,7 +742,7 @@ public class VideoPlayActivity extends Activity {
 		dm = getApplicationContext().getResources().getDisplayMetrics();
 		// int screenWidth = dm.widthPixels;
 		// int screenHeight = dm.heightPixels;
-//		controlHeight = (int) (300 * dm.density);
+		// controlHeight = (int) (300 * dm.density);
 		controlHeight = screenHeight;
 
 	}
@@ -739,9 +767,11 @@ public class VideoPlayActivity extends Activity {
 		titleView.setVisibility(View.VISIBLE);
 		controlerWindow.update(0, 8, screenWidth, controlHeight + 8);
 		if (isFullScreen) {
-			titleWindow.update(0, 0, screenWidth, ViewGroup.LayoutParams.WRAP_CONTENT);
+			titleWindow.update(0, 0, screenWidth,
+					ViewGroup.LayoutParams.WRAP_CONTENT);
 		} else {
-			titleWindow.update(0, statusBarHeight - 6, screenWidth, ViewGroup.LayoutParams.WRAP_CONTENT);
+			titleWindow.update(0, statusBarHeight - 6, screenWidth,
+					ViewGroup.LayoutParams.WRAP_CONTENT);
 		}
 
 		isControllerShow = true;
@@ -791,8 +821,6 @@ public class VideoPlayActivity extends Activity {
 		}
 	}
 
-
-
 	private void playVideo() {
 		rlFailedToPlay.setVisibility(View.GONE);
 		mMediaPlayer.setVideoPath(mVideoUrl);
@@ -834,7 +862,8 @@ public class VideoPlayActivity extends Activity {
 			dismissProgress();
 			mMediaPlayer.setmUri(null);
 			if (repeatMode == REPEAT_ALL) {
-				mHandler.sendEmptyMessageDelayed(ERROR_HAPPENED, Constants.ERROR_DISMISS_THREE_SECONDS);
+				mHandler.sendEmptyMessageDelayed(ERROR_HAPPENED,
+						Constants.ERROR_DISMISS_THREE_SECONDS);
 				tv_failed.setText(getString(R.string.failed_to_play));
 			} else {
 				tv_failed.setText(getString(R.string.failed_to_play));
@@ -864,7 +893,8 @@ public class VideoPlayActivity extends Activity {
 			int hour = minute / 60;
 			int second = i % 60;
 			minute %= 60;
-			durationTextView.setText(String.format("%02d:%02d:%02d", hour, minute, second));
+			durationTextView.setText(String.format("%02d:%02d:%02d", hour,
+					minute, second));
 			if (!isPaused) {
 				CurrentP = ReadSharedPreferences(mVideoUrl);
 				mMediaPlayer.start();
@@ -899,9 +929,9 @@ public class VideoPlayActivity extends Activity {
 				break;
 			case REPEAT_ALL:
 				resetVideoView();
-				//TODO
-				//mVideoUrl = "next";
-				playVideo();
+				finish();
+				// mVideoUrl = "next";
+				// playVideo();//TODO
 				break;
 			}
 		}
@@ -936,30 +966,32 @@ public class VideoPlayActivity extends Activity {
 		}
 	};
 
-//	@Override
-//	public boolean onKeyDown(int keyCode, KeyEvent event) {
-//		if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN || keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
-//			// mCtrlDialog.updateSoundIcon(iv_sound_ctrl);
-//			sv_ctrlbar.setVisibility(View.GONE);
-//		   sv_ctrlbar.updateVolumeView();
-//			showController();
-//			cancelDelayHide();
-//			hideControllerDelay();
-//		}
-//		return super.onKeyDown(keyCode, event);
-//	}
+	// @Override
+	// public boolean onKeyDown(int keyCode, KeyEvent event) {
+	// if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN || keyCode ==
+	// KeyEvent.KEYCODE_VOLUME_UP) {
+	// // mCtrlDialog.updateSoundIcon(iv_sound_ctrl);
+	// sv_ctrlbar.setVisibility(View.GONE);
+	// sv_ctrlbar.updateVolumeView();
+	// showController();
+	// cancelDelayHide();
+	// hideControllerDelay();
+	// }
+	// return super.onKeyDown(keyCode, event);
+	// }
 
 	private int ReadSharedPreferences(String propId) {
-		SharedPreferences user = getSharedPreferences(POINT, Context.MODE_PRIVATE);
+		SharedPreferences user = getSharedPreferences(POINT,
+				Context.MODE_PRIVATE);
 		return user.getInt(propId, 0);
 	}
 
 	private void WriteSharedPreferences(String propId, int CurrentP) {
-		SharedPreferences user = getSharedPreferences(POINT, Context.MODE_PRIVATE);
+		SharedPreferences user = getSharedPreferences(POINT,
+				Context.MODE_PRIVATE);
 		user.edit().putInt(propId, CurrentP).commit();
 	}
-	
-	
+
 	public void clickDelayHandler(final View view) {
 		view.setClickable(false);
 		Message msg = new Message();
@@ -967,28 +999,31 @@ public class VideoPlayActivity extends Activity {
 		msg.obj = view;
 	}
 
-	
 	/**
 	 * Just for test only
+	 * 
 	 * @param context
 	 */
 	public static void playVideoItem(Context context) {
-       
-       String[] projection = { MediaStore.Video.VideoColumns._ID, MediaStore.Video.VideoColumns.DATA };
-       String selection = "";
-       String [] selectionArgs = null;
-       Cursor videoCursor = context.getContentResolver().query( MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
-                                    projection, selection, selectionArgs, null );
-       if ( videoCursor != null ) {
-           videoCursor.moveToFirst();
-           videoCursor.moveToNext();
-           String videoUrl = videoCursor.getString(videoCursor.getColumnIndex(MediaStore.Video.VideoColumns.DATA));
-           Intent intent = new Intent(context, VideoPlayActivity.class);
-           Bundle params = new Bundle();
-           params.putString("video_url", videoUrl);
-           intent.putExtra(Constants.VIDEO_PLAY_PARAMS, params);
-           context.startActivity(intent);
-       } else {
-       }
-    }
+
+		String[] projection = { MediaStore.Video.VideoColumns._ID,
+				MediaStore.Video.VideoColumns.DATA };
+		String selection = "";
+		String[] selectionArgs = null;
+		Cursor videoCursor = context.getContentResolver().query(
+				MediaStore.Video.Media.EXTERNAL_CONTENT_URI, projection,
+				selection, selectionArgs, null);
+		if (videoCursor != null) {
+			videoCursor.moveToFirst();
+			videoCursor.moveToNext();
+			String videoUrl = videoCursor.getString(videoCursor
+					.getColumnIndex(MediaStore.Video.VideoColumns.DATA));
+			Intent intent = new Intent(context, VideoPlayActivity.class);
+			Bundle params = new Bundle();
+			params.putString("video_url", videoUrl);
+			intent.putExtra(Constants.VIDEO_PLAY_PARAMS, params);
+			context.startActivity(intent);
+		} else {
+		}
+	}
 }
