@@ -4,6 +4,7 @@ import java.lang.ref.WeakReference;
 import java.util.List;
 import java.util.Locale;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
@@ -51,6 +52,7 @@ import com.byd.audioplayer.utils.VideoContentObserver;
  * intent.putExtra("audio_page", number); // number: 0-本地, 1-sdcard, 2-usb, 3-aux, 4-手机
  * startActivity(intent)
  */
+@SuppressLint("ValidFragment")
 public class AudioListActivity extends BaseActivity implements OnItemClickListener,
 OnItemLongClickListener, SearchListener, DeleteListener {
     private final static String TAG = "AudioListActivity";
@@ -722,7 +724,7 @@ OnItemLongClickListener, SearchListener, DeleteListener {
     @Override
     public void onSearchComplete(List<Song> result) {
         if (result == null || result.isEmpty()) {
-            ToastUtils.showToast(this, "未搜索到相关歌曲");
+            ToastUtils.showToast(this, R.string.not_found_music);
         } else {
             mAdapter.setData(result);
         }

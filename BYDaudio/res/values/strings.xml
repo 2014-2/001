@@ -65,5 +65,6 @@
     <string name="bt_title">手机音乐</string>
     <string name="bt_plsconnect">请连接蓝牙音频</string>
     <string name="bt_connected">已连接蓝牙音频</string>
+    <string name="not_found_music">未搜索到相关歌曲</string>
     
 </resources>
