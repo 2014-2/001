@@ -6,7 +6,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-
 import android.content.Context;
 import android.content.Intent;
 import android.media.AudioManager;
@@ -21,7 +20,6 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.TextView;
-
 import com.byd.audioplayer.utils.ToastUtils;
 
 public class AuxAudioPlayActivity extends BaseActivity {
