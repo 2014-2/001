@@ -21,6 +21,13 @@ import com.crtb.tunnelmonitor.utils.AlertUtils;
 
 public class TunnelMeasureData extends MeasureData {
 	private static final String LOG_TAG = "TunnelMeasureData";
+	private static final String POINT_TYPE_A = "A";
+	private static final String POINT_TYPE_S1_1 = "S1-1";
+	private static final String POINT_TYPE_S1_2 = "S1-2";
+	private static final String POINT_TYPE_S2_1 = "S2-1";
+	private static final String POINT_TYPE_S2_2 = "S2-2";
+	private static final String POINT_TYPE_S3_1 = "S3-1";
+	private static final String POINT_TYPE_S3_2 = "S3-2";
 
 	private List<TunnelSettlementTotalData> mMeasurePoints = new ArrayList<TunnelSettlementTotalData>();
 	private String mMointorModel = null;
@@ -44,29 +51,43 @@ public class TunnelMeasureData extends MeasureData {
 
 	@Override
 	public String getPointCodeList(String sectionCode) {
-		String pointCodeList = "";
-		final int pointCount = mMeasurePoints.size();
-		switch (pointCount) {
-		// 全断面法
-		case 3:
-			pointCodeList = sectionCode + "GD01" + "/" + sectionCode + "SL01" + "#" + sectionCode + "SL02";
-			break;
-		// 台阶法
-		case 5:
-			pointCodeList = sectionCode + "GD01" + "/" + sectionCode + "SL01" + "#" + sectionCode + "SL02" + "/"
-					+ sectionCode + "SL03" + "#" + sectionCode + "SL04";
-			break;
-		// 三台阶法或双侧壁法
-		case 7:
-			pointCodeList = sectionCode + "GD01" + "/" + sectionCode + "SL01" + "#" + sectionCode + "SL02" + "/"
-					+ sectionCode + "SL03" + "#" + sectionCode + "SL04" + "/" + sectionCode + "SL05" + "#"
-					+ sectionCode + "SL06";
-			break;
-		default:
-			Log.d(LOG_TAG, "未知的开挖方法: 测点数目=" + pointCount);
-			break;
+		StringBuilder sb = new StringBuilder();
+		boolean first = true;
+		if (getPointByType(POINT_TYPE_A) != null) {
+			sb.append(sectionCode + "GD01");
+			first = false;
 		}
-		return pointCodeList;
+		TunnelSettlementTotalData s1_1 = getPointByType(POINT_TYPE_S1_1);
+		TunnelSettlementTotalData s1_2 = getPointByType(POINT_TYPE_S1_2);
+		if (s1_1 != null && s1_2 != null) {
+			if (first) {
+				sb.append(sectionCode + "SL01" + "#" + sectionCode + "SL02");
+				first = false;
+			} else {
+				sb.append("/" + sectionCode + "SL01" + "#" + sectionCode + "SL02");
+			}
+		}
+		TunnelSettlementTotalData s2_1 = getPointByType(POINT_TYPE_S2_1);
+		TunnelSettlementTotalData s2_2 = getPointByType(POINT_TYPE_S2_2);
+		if (s2_1 != null && s2_2 != null) {
+			if (first) {
+				sb.append(sectionCode + "SL03" + "#" + sectionCode + "SL04");
+				first = false;
+			} else {
+				sb.append("/" + sectionCode + "SL03" + "#" + sectionCode + "SL04");
+			}
+		}
+		TunnelSettlementTotalData s3_1 = getPointByType(POINT_TYPE_S3_1);
+		TunnelSettlementTotalData s3_2 = getPointByType(POINT_TYPE_S3_2);
+		if (s3_1 != null && s3_2 != null) {
+			if (first) {
+				sb.append(sectionCode + "SL05" + "#" + sectionCode + "SL06");
+				first = false;
+			} else {
+				sb.append("/" + sectionCode + "SL05" + "#" + sectionCode + "SL06");
+			}
+		}
+		return sb.toString();
 	}
 
 	@Override
