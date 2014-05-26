@@ -42,7 +42,7 @@ public class AlertHandlingList implements Serializable {
 	/*
 	 * true表示（2.1）的处理方式；false表示（2.2）的处理方式下填写“人工处理”
 	 */
-	@ColumnBoolean
+	@ColumnInt
 	private int HandlingInfo;			// 备注
 
 	public int getID() {

@@ -11,6 +11,7 @@ import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.crtb.tunnelmonitor.AppCRTBApplication;
@@ -62,21 +63,20 @@ public final class CrtbUtils {
 	
     public static Date parseDate(String text) {
         Date result = null;
-        if (text == null || text.length() == 0) {
-            throw new IllegalArgumentException("Date text is empty.");
-        }
-        try {
-            result = DATE_FORMAT.parse(text);
-        } catch (ParseException e) {
-            e.printStackTrace();
+        if (!TextUtils.isEmpty(text)) {
+            try {
+                result = DATE_FORMAT.parse(text);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
         }
         return result;
     }
 
     public static String formatDate(Date date) {
-        return DATE_FORMAT.format(date);
+        return date != null ? DATE_FORMAT.format(date) : "";
     }
-    
+
     public static int getExcavateMethod(String method){
     	
     	if(method == null){

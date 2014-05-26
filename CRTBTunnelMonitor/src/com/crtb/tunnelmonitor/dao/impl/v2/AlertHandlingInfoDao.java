@@ -1,6 +1,7 @@
 package com.crtb.tunnelmonitor.dao.impl.v2;
 
 import java.util.Date;
+import java.util.List;
 
 import org.zw.android.framework.IAccessDatabase;
 
@@ -33,6 +34,26 @@ public class AlertHandlingInfoDao extends AbstractDao<AlertHandlingList> {
             return;
         }
         db.createTable(AlertHandlingList.class);
+    }
+
+    public List<AlertHandlingList> queryByAlertIdOrderByHandlingTimeDesc(int alertId) {
+        final IAccessDatabase db = getCurrentDb();
+
+        if (db == null) {
+            return null;
+        }
+
+        String sql = "SELECT * from AlertHandlingList"
+                + " WHERE"
+                + " AlertID=?"
+                + " ORDER BY HandlingTime DESC, ID DESC"
+                ;
+
+        String[] args = new String[] {
+                String.valueOf(alertId)
+        };
+
+        return db.queryObjects(sql, args, AlertHandlingList.class);
     }
 
     public AlertHandlingList queryOne(int alertId,

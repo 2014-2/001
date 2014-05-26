@@ -151,7 +151,7 @@ public class SubsidenceTotalDataDao extends AbstractDao<SubsidenceTotalData> {
     }
 
     /**
-     * 查询 本次测量(MEASNo)之后的所有相同断面和相同测点类型的测点信息
+     * 查询 本次测量(MEASNo)及之后的所有相同断面和相同测点类型的测点信息
      *
      * @param chainageId 断面里程ID
      * @param pntType 测点类型
@@ -170,7 +170,7 @@ public class SubsidenceTotalDataDao extends AbstractDao<SubsidenceTotalData> {
         String sql = "select * from SubsidenceTotalData where"
                 + " chainageId=" + chainageId
                 + " AND pntType=" + pntType
-                + " AND MEASNo > " + String.valueOf(MEASNo)
+                + " AND MEASNo >= " + String.valueOf(MEASNo)
                 + " AND DataStatus != "
                 + String.valueOf(AlertUtils.POINT_DATASTATUS_DISCARD)
                 + " order by MEASNo ASC";

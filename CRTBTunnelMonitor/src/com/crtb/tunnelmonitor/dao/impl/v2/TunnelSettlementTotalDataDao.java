@@ -154,7 +154,7 @@ public class TunnelSettlementTotalDataDao extends AbstractDao<TunnelSettlementTo
     }
 
     /**
-     * 查询 本次测量(MEASNo)之后的所有相同断面和相同测点类型的测点信息
+     * 查询 本次测量(MEASNo)及之后的所有相同断面和相同测点类型的测点信息
      * 
      * @param chainageId
      *            断面里程ID
@@ -174,7 +174,7 @@ public class TunnelSettlementTotalDataDao extends AbstractDao<TunnelSettlementTo
         }
 
         String sql = "select * from TunnelSettlementTotalData where chainageId=" + chainageId
-                + " AND pntType=\'" + pntType + "\' AND MEASNo>?" + " AND DataStatus != ?"
+                + " AND pntType=\'" + pntType + "\' AND MEASNo>=?" + " AND DataStatus != ?"
                 + " order by MEASNo ASC";
 
         String[] args = new String[] { String.valueOf(MEASNo),
