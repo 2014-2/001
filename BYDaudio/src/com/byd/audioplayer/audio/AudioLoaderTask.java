@@ -12,6 +12,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.provider.MediaStore;
+import android.util.Log;
 
 import com.byd.audioplayer.config.Constants;
 
@@ -174,6 +175,8 @@ public class AudioLoaderTask extends AsyncQueryHandler {
                 cur.moveToNext();
                 album_art = cur.getString(0);
             }
+        } catch (Exception e) {
+            Log.w("AudioLoaderTask", e.toString());
         } finally {
             if (cur != null) {
                 cur.close();

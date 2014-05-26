@@ -182,7 +182,7 @@ OnItemLongClickListener, SearchListener, DeleteListener {
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        if (intent != null) {
+        if (intent != null && !intent.getCategories().contains(Intent.CATEGORY_LAUNCHER)) {
             mIsStartFromWheel = true;
             final int tabIndex = intent.getIntExtra(TAB_INDEX, TAB_INDEX_LOCAL);
             tabIndex(tabIndex);
