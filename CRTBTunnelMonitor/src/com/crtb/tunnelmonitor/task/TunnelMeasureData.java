@@ -92,108 +92,95 @@ public class TunnelMeasureData extends MeasureData {
 
 	@Override
 	public String getCoordinateList() {
-		String coordinateList = "";
-		final int pointCount = mMeasurePoints.size();
-		TunnelSettlementTotalData pointA, pointS1_1, pointS1_2, pointS2_1, pointS2_2, pointS3_1, pointS3_2;
-		String A, S1_1, S1_2, S2_1, S2_2, S3_1, S3_2, coordinate;
-		switch (pointCount) {
-		// 全断面法
-		case 3:
-			pointA = getPointByType("A");
-			pointS1_1 = getPointByType("S1-1");
-			pointS1_2 = getPointByType("S1-2");
-			A = pointA.getCoordinate().replace(",", "#");
-			S1_1 = pointS1_1.getCoordinate().replace(",", "#");
-			S1_2 = pointS1_2.getCoordinate().replace(",", "#");
-			coordinate = A + "/" + S1_1 + "#" + S1_2;
-			coordinateList = RSACoder.encnryptDes(coordinate, Constant.testDeskey);
-			break;
-		// 台阶法
-		case 5:
-			pointA = getPointByType("A");
-			pointS1_1 = getPointByType("S1-1");
-			pointS1_2 = getPointByType("S1-2");
-			pointS2_1 = getPointByType("S2-1");
-			pointS2_2 = getPointByType("S2-2");
-			A = pointA.getCoordinate().replace(",", "#");
-			S1_1 = pointS1_1.getCoordinate().replace(",", "#");
-			S1_2 = pointS1_2.getCoordinate().replace(",", "#");
-			S2_1 = pointS2_1.getCoordinate().replace(",", "#");
-			S2_2 = pointS2_2.getCoordinate().replace(",", "#");
-			coordinate = A + "/" + S1_1 + "#" + S1_2 + "/" + S2_1 + "#" + S2_2;
-			coordinateList = RSACoder.encnryptDes(coordinate, Constant.testDeskey);
-			break;
-		// 三台阶法或双侧壁法
-		case 7:
-			pointA = getPointByType("A");
-			pointS1_1 = getPointByType("S1-1");
-			pointS1_2 = getPointByType("S1-2");
-			pointS2_1 = getPointByType("S2-1");
-			pointS2_2 = getPointByType("S2-2");
-			pointS3_1 = getPointByType("S3-1");
-			pointS3_2 = getPointByType("S3-2");
-			A = pointA.getCoordinate().replace(",", "#");
-			S1_1 = pointS1_1.getCoordinate().replace(",", "#");
-			S1_2 = pointS1_2.getCoordinate().replace(",", "#");
-			S2_1 = pointS2_1.getCoordinate().replace(",", "#");
-			S2_2 = pointS2_2.getCoordinate().replace(",", "#");
-			S3_1 = pointS3_1.getCoordinate().replace(",", "#");
-			S3_2 = pointS3_2.getCoordinate().replace(",", "#");
-			coordinate = A + "/" + S1_1 + "#" + S1_2 + "/" + S2_1 + "#" + S2_2 + "/" + S3_1 + "#" + S3_2;
-			coordinateList = RSACoder.encnryptDes(coordinate, Constant.testDeskey);
-			break;
-		default:
-			Log.d(LOG_TAG, "未知的开挖方法: 测点数目=" + pointCount);
-			break;
+		StringBuilder sb = new StringBuilder();
+		boolean first = true;
+		TunnelSettlementTotalData pointA = getPointByType(POINT_TYPE_A);
+		if (pointA != null) {
+			sb.append(pointA.getCoordinate().replace(",", "#"));
+			first = false;
 		}
-		return coordinateList;
+		TunnelSettlementTotalData  pointS1_1 = getPointByType(POINT_TYPE_S1_1);
+		TunnelSettlementTotalData  pointS1_2 = getPointByType(POINT_TYPE_S1_2);
+		if (pointS1_1 != null && pointS1_2 != null) {
+			String S1_1 = pointS1_1.getCoordinate().replace(",", "#");
+			String S1_2 = pointS1_2.getCoordinate().replace(",", "#");
+			if (first) {
+				sb.append(S1_1 + "#" + S1_2);
+				first = false;
+			} else {
+				sb.append("/" + S1_1 + "#" + S1_2);
+			}
+		}
+		TunnelSettlementTotalData pointS2_1 = getPointByType(POINT_TYPE_S2_1);
+		TunnelSettlementTotalData pointS2_2 = getPointByType(POINT_TYPE_S2_2);
+		if (pointS2_1 != null && pointS2_2 != null) {
+			String S2_1 = pointS2_1.getCoordinate().replace(",", "#");
+			String S2_2 = pointS2_2.getCoordinate().replace(",", "#");
+			if (first) {
+				sb.append(S2_1 + "#" + S2_2);
+				first = false;
+			} else {
+				sb.append("/" + S2_1 + "#" + S2_2);
+			}
+		}
+		TunnelSettlementTotalData pointS3_1 = getPointByType(POINT_TYPE_S3_1);
+		TunnelSettlementTotalData pointS3_2 = getPointByType(POINT_TYPE_S3_2);
+		if (pointS3_1 != null && pointS3_2 != null) {
+			String S3_1 = pointS3_1.getCoordinate().replace(",", "#");
+			String S3_2 = pointS3_2.getCoordinate().replace(",", "#");
+			if (first) {
+				sb.append(S3_1 + "#" + S3_2);
+				first = false;
+			} else {
+				sb.append("/" + S3_1 + "#" + S3_2);
+			}
+		}
+		String coordinate = sb.toString();
+		Log.d(LOG_TAG, "coordinate: " + coordinate);
+		return RSACoder.encnryptDes(coordinate, Constant.testDeskey);
 	}
 
 	@Override
 	public String getValueList() {
-		String valueList = "";
-		final int pointCount = mMeasurePoints.size();
-		TunnelSettlementTotalData pointA, pointS1_1, pointS1_2, pointS2_1, pointS2_2, pointS3_1, pointS3_2;
-		String[] cA;
-		switch (pointCount) {
-		// 全断面法
-		case 3:
-			pointA = getPointByType("A");
-			pointS1_1 = getPointByType("S1-1");
-			pointS1_2 = getPointByType("S1-2");
-			cA = pointA.getCoordinate().split(",");
-			valueList = cA[2] + "/" + AlertUtils.getLineLength(pointS1_1, pointS1_2);
-			break;
-		// 台阶法
-		case 5:
-			pointA = getPointByType("A");
-			pointS1_1 = getPointByType("S1-1");
-			pointS1_2 = getPointByType("S1-2");
-			pointS2_1 = getPointByType("S2-1");
-			pointS2_2 = getPointByType("S2-2");
-			cA = pointA.getCoordinate().split(",");
-			valueList = cA[2] + "/" + AlertUtils.getLineLength(pointS1_1, pointS1_2) + "/"
-					+ AlertUtils.getLineLength(pointS2_1, pointS2_2);
-			break;
-		// 三台阶法或双侧壁法
-		case 7:
-			pointA = getPointByType("A");
-			pointS1_1 = getPointByType("S1-1");
-			pointS1_2 = getPointByType("S1-2");
-			pointS2_1 = getPointByType("S2-1");
-			pointS2_2 = getPointByType("S2-2");
-			pointS3_1 = getPointByType("S3-1");
-			pointS3_2 = getPointByType("S3-2");
-			cA = pointA.getCoordinate().split(",");
-			valueList = cA[2] + "/" + AlertUtils.getLineLength(pointS1_1, pointS1_2) + "/"
-					+ AlertUtils.getLineLength(pointS2_1, pointS2_2) + "/"
-					+ AlertUtils.getLineLength(pointS3_1, pointS3_2);
-			break;
-		default:
-			Log.d(LOG_TAG, "未知的开挖方法: 测点数目=" + pointCount);
-			break;
+		StringBuilder sb = new StringBuilder();
+		boolean first = true;
+		TunnelSettlementTotalData pointA = getPointByType(POINT_TYPE_A);
+		if (pointA != null) {
+			String[] cA = pointA.getCoordinate().split(",");
+			sb.append(cA[2]);
+			first = false;
 		}
-		return valueList;
+		TunnelSettlementTotalData pointS1_1 = getPointByType(POINT_TYPE_S1_1);
+		TunnelSettlementTotalData pointS1_2 = getPointByType(POINT_TYPE_S1_2);
+		if (pointS1_1 != null && pointS1_2 != null) {
+			if (first) {
+				sb.append(AlertUtils.getLineLength(pointS1_1, pointS1_2));
+				first = false;
+			} else {
+				sb.append("/" + AlertUtils.getLineLength(pointS1_1, pointS1_2));
+			}
+		}
+		TunnelSettlementTotalData pointS2_1 = getPointByType(POINT_TYPE_S2_1);
+		TunnelSettlementTotalData pointS2_2 = getPointByType(POINT_TYPE_S2_2);
+		if (pointS2_1 != null && pointS2_2 != null) {
+			if (first) {
+				sb.append(AlertUtils.getLineLength(pointS2_1, pointS2_2));
+				first = false;
+			} else {
+				sb.append("/" + AlertUtils.getLineLength(pointS2_1, pointS2_2));
+			}
+		}
+		TunnelSettlementTotalData pointS3_1 = getPointByType(POINT_TYPE_S3_1);
+		TunnelSettlementTotalData pointS3_2 = getPointByType(POINT_TYPE_S3_2);
+		if (pointS3_1 != null && pointS3_2 != null) {
+			if (first) {
+				sb.append(AlertUtils.getLineLength(pointS3_1, pointS3_2));
+				first = false;
+			} else {
+				sb.append("/" + AlertUtils.getLineLength(pointS3_1, pointS3_2));
+			}
+		}
+		return sb.toString();
 	}
 
     public String getFaceDescription() {
