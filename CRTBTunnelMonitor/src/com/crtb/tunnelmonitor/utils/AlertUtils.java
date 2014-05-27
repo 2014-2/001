@@ -470,7 +470,7 @@ public class AlertUtils {
             thisCoords = tPoint.getCoordinate().split(",");
             thisDataCorrection = tPoint.getDataCorrection();
             pastInfoList = TunnelSettlementTotalDataDao.defaultDao().queryInfoBeforeMEASNo(
-                    tPoint.getChainageId(), tPoint.getPntType(), tPoint.getMEASNo());
+                    Integer.valueOf(tPoint.getChainageId()), tPoint.getPntType(), tPoint.getMEASNo());
             sumOfDataCorrection = thisDataCorrection
                     + calculateSumOfDataCorrectionsOfTunnelSettlementTotalDatas(pastInfoList);
         } else if (point instanceof SubsidenceTotalData) {
@@ -483,7 +483,7 @@ public class AlertUtils {
             thisCoords = sPoint.getCoordinate().split(",");
             thisDataCorrection = sPoint.getDataCorrection();
             pastInfoList = SubsidenceTotalDataDao.defaultDao().queryInfoBeforeMEASNo(
-                    sPoint.getChainageId(), sPoint.getPntType(), sPoint.getMEASNo());
+                    Integer.valueOf(sPoint.getChainageId()), sPoint.getPntType(), sPoint.getMEASNo());
             sumOfDataCorrection = thisDataCorrection
                     + calculateSumOfDataCorrectionsOfSubsidenceTotalDatas(pastInfoList);
         } else {
@@ -550,7 +550,7 @@ public class AlertUtils {
 
         double lineThisLength = getLineLength(s_1, s_2);
 
-        int chainageId = s_1.getChainageId();
+        int chainageId = Integer.valueOf(s_1.getChainageId());
 
         List<TunnelSettlementTotalData> s_1InfoList = TunnelSettlementTotalDataDao.defaultDao()
                 .queryInfoBeforeMEASNo(chainageId, s_1.getPntType(), s_1.getMEASNo());
