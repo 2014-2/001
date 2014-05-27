@@ -71,10 +71,17 @@
     <string name="deal_way_first">数据作为首行</string>
     <string name="deal_way_add">添加改正值</string>
     <string name="deal_way_normal">正常计算</string>
+    <string name="deal_way_rebury">重埋</string>
 
     <!-- 预警模块 -->
     <string name="millimeter">毫米</string>
 
+    <string name="normal_cal">正常计算</string>
+    <string name="discarded">不参与计算</string>
+    <string name="as_first_line">作为首行</string>
+    <string name="add_correction">添加改正值</string>
+    <string name="rebury">重埋</string>
+    <string name="handling_details">处理详情</string>
 
     <!-- 升级模块 -->
     <string name="update_title">软件升级</string>

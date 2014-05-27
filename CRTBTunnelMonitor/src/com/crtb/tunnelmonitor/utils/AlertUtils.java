@@ -246,8 +246,7 @@ public class AlertUtils {
                 }
 
                 if (lastCoords != null && lastCoords.length == 3
-                        && !TextUtils.isEmpty(lastCoords[2]) && lastTime != null
-                        && lastTime != null) {
+                        && !TextUtils.isEmpty(lastCoords[2]) && lastTime != null) {
                     double lastZ = Double.valueOf(lastCoords[2]);
                     Log.d(TAG, "last z: " + lastZ + " m");
                     double deltaZ = thisZ - lastZ;
@@ -442,6 +441,162 @@ public class AlertUtils {
                         }
                     }
                 }
+            }
+        }
+
+        return ret;
+    }
+
+    /**
+     * @param point
+     * @return 长度为2的double型数组，第一个元素是累计沉降值，第二个是本次沉降值
+     */
+    public static double[] getSubsidenceValues(Object point) {
+        double[] v = new double[]{0, 0};
+        int type = 0;
+        List pastInfoList = null;
+        String[] thisCoords = null;
+
+        float sumOfDataCorrection = 0f;
+        float thisDataCorrection = 0f;
+
+        if (point instanceof TunnelSettlementTotalData) {
+            if (((TunnelSettlementTotalData) point).getDataStatus() == POINT_DATASTATUS_AS_FIRSTLINE) {
+                return v;
+            }
+
+            type = 1;
+            TunnelSettlementTotalData tPoint = (TunnelSettlementTotalData) point;
+            thisCoords = tPoint.getCoordinate().split(",");
+            thisDataCorrection = tPoint.getDataCorrection();
+            pastInfoList = TunnelSettlementTotalDataDao.defaultDao().queryInfoBeforeMEASNo(
+                    tPoint.getChainageId(), tPoint.getPntType(), tPoint.getMEASNo());
+            sumOfDataCorrection = thisDataCorrection
+                    + calculateSumOfDataCorrectionsOfTunnelSettlementTotalDatas(pastInfoList);
+        } else if (point instanceof SubsidenceTotalData) {
+            if (((SubsidenceTotalData) point).getDataStatus() == POINT_DATASTATUS_AS_FIRSTLINE) {
+                return v;
+            }
+
+            type = 2;
+            SubsidenceTotalData sPoint = (SubsidenceTotalData) point;
+            thisCoords = sPoint.getCoordinate().split(",");
+            thisDataCorrection = sPoint.getDataCorrection();
+            pastInfoList = SubsidenceTotalDataDao.defaultDao().queryInfoBeforeMEASNo(
+                    sPoint.getChainageId(), sPoint.getPntType(), sPoint.getMEASNo());
+            sumOfDataCorrection = thisDataCorrection
+                    + calculateSumOfDataCorrectionsOfSubsidenceTotalDatas(pastInfoList);
+        } else {
+            return v;
+        }
+
+        if (thisCoords == null || thisCoords.length < 3) {
+            return v;
+        }
+
+        if (pastInfoList != null && pastInfoList.size() > 0) {
+
+            Object firstInfo = pastInfoList.get(0);
+
+            if (!TextUtils.isEmpty(thisCoords[2])) {
+                double thisZ = Double.valueOf(thisCoords[2]);
+                String[] firstCoords = null;
+                if (type == 1) {
+                    firstCoords = ((TunnelSettlementTotalData) firstInfo).getCoordinate()
+                            .split(",");
+                } else if (type == 2) {
+                    firstCoords = ((SubsidenceTotalData) firstInfo).getCoordinate().split(",");
+                }
+
+                if (firstCoords != null && firstCoords.length == 3
+                        && !TextUtils.isEmpty(firstCoords[2])) {
+                    double firstZ = Double.valueOf(firstCoords[2]);
+                    double accumulativeSubsidence = thisZ - firstZ;
+                    accumulativeSubsidence *= 1000;// CHANGE TO MILLIMETER
+                    accumulativeSubsidence += sumOfDataCorrection;
+                    v[0] = accumulativeSubsidence;
+                }
+
+                Object lastInfo = pastInfoList.get(pastInfoList.size() - 1);
+                String[] lastCoords = null;
+                if (type == 1) {
+                    lastCoords = ((TunnelSettlementTotalData) lastInfo).getCoordinate().split(",");
+                } else if (type == 2) {
+                    lastCoords = ((SubsidenceTotalData) lastInfo).getCoordinate().split(",");
+                }
+
+                if (lastCoords != null && lastCoords.length == 3
+                        && !TextUtils.isEmpty(lastCoords[2])) {
+                    double lastZ = Double.valueOf(lastCoords[2]);
+                    double deltaZ = thisZ - lastZ;
+                    deltaZ *= 1000;// CHANGE TO MILLIMETER
+                    deltaZ += thisDataCorrection;
+                    v[1] = deltaZ;
+                }
+            }
+        }
+
+        return v;
+    }
+
+    public static double[] getLineConvergenceValues(TunnelSettlementTotalData s_1,
+            TunnelSettlementTotalData s_2) {
+        Log.d(TAG, "getLineConvergenceValues");
+        double[] ret = new double[]{0, 0};
+
+        if (s_1 == null || s_2 == null) {
+            return ret;
+        }
+
+        double lineThisLength = getLineLength(s_1, s_2);
+
+        int chainageId = s_1.getChainageId();
+
+        List<TunnelSettlementTotalData> s_1InfoList = TunnelSettlementTotalDataDao.defaultDao()
+                .queryInfoBeforeMEASNo(chainageId, s_1.getPntType(), s_1.getMEASNo());
+        if (s_1InfoList != null && s_1InfoList.size() > 0) {
+
+            int s = s_1InfoList.size();
+            String s_2pntType = s_2.getPntType();
+
+            float sumOfCorrections = calculateSumOfDataCorrectionsOfTunnelSettlementTotalDatas(s_1InfoList);
+
+            TunnelSettlementTotalData s_1First = null;
+            TunnelSettlementTotalData s_2First = null;
+            for (int i = 0; i < s; i++) {
+                s_1First = s_1InfoList.get(i);
+                s_2First = TunnelSettlementTotalDataDao.defaultDao()
+                        .queryOppositePointOfALine(s_1First, s_2pntType);
+                if (s_1First != null && s_2First != null) {
+                    break;
+                }
+            }
+
+            if (s_1First != null && s_2First != null) {
+                double lineFirstLength = getLineLength(s_1First, s_2First);
+                double convergence = lineThisLength - lineFirstLength;
+                convergence *= 1000; //CHANGE TO MILLIMETER
+                convergence += sumOfCorrections;
+                ret[0] = convergence;
+            }
+
+            TunnelSettlementTotalData s_1Last = null;
+            TunnelSettlementTotalData s_2Last = null;
+            for (int i = 1; i <= s; i++) {
+                s_1Last = s_1InfoList.get(s - i);
+                s_2Last = TunnelSettlementTotalDataDao.defaultDao()
+                        .queryOppositePointOfALine(s_1Last, s_2pntType);
+                if (s_1Last != null && s_2Last != null) {
+                    break;
+                }
+            }
+            if (s_1Last != null && s_2Last != null) {
+                float correction = s_1Last.getDataCorrection();
+                double lineLastLength = getLineLength(s_1Last, s_2Last);
+                double deltaLenth = lineThisLength - lineLastLength;
+                deltaLenth *= 1000;
+                deltaLenth += correction;
+                ret[1] = deltaLenth;
             }
         }
 
@@ -670,7 +825,7 @@ public class AlertUtils {
      * @param handlingTime
      *            要新插入AlertHandlingList表的HandlingTime列
      */
-    public static void handleAlert(int alertId, int dataStatus, float correction,
+    public static void handleAlert(int alertId, int dataStatus, boolean isRebury, float correction,
             int curAlertStatus, int alertStatus, String handling, Date handlingTime) {
         Log.d(TAG, "handleAlert");
 
@@ -682,6 +837,8 @@ public class AlertUtils {
         String originalID = al.getOriginalDataID();
         int chainageId = al.getCrossSectionID();
         String pntType = al.getPntType();
+        int uType = al.getUtype();
+        double uValue = al.getUValue();
         String duePerson = String.valueOf(chainageId) + pntType;
 
         if (!TextUtils.isEmpty(originalID)) {
@@ -701,15 +858,27 @@ public class AlertUtils {
                 if (pntType.contains("A")) {//隧道内断面
                     TunnelSettlementTotalData p = TunnelSettlementTotalDataDao.defaultDao().queryOneById(id);
                     if (p != null) {
-                        float curCorrection = p.getDataCorrection();
-                        float totalCorrection = curCorrection + correction;
+                        float totalCorrection = 0;
+                        if (isRebury) {
+                            if (uType == GONGDING_LEIJI_XIACHEN_EXCEEDING) {
+                                totalCorrection = (float) (0d - uValue);
+                            } else if (uType == GONGDINGI_XIACHEN_SULV_EXCEEDING) {
+                                double[] v = getSubsidenceValues(p);
+                                if (v != null && v.length == 2) {
+                                    totalCorrection = (float) (0d - v[1]);
+                                }
+                            }
+                        } else {
+                            float curCorrection = p.getDataCorrection();
+                            totalCorrection = curCorrection + correction;
+                        }
 //                        if (!checkExceeding(uValue + totalCorrection, uType)) {
 //                            tarAlertStatus = alertStatus;
 //                        }
                         TunnelSettlementTotalDataDao.defaultDao().updateDataStatus(id, dataStatus, totalCorrection);
 
                         if (dataStatus == POINT_DATASTATUS_AS_FIRSTLINE
-                                || (dataStatus == POINT_DATASTATUS_CORRECTION && correction != 0)) {
+                                || (dataStatus == POINT_DATASTATUS_CORRECTION)) {
                             // STEP 4
                             measNo = p.getMEASNo();
 //                            AlertHandlingInfoDao.defaultDao().deleteByAlertId(alertId);
@@ -722,8 +891,20 @@ public class AlertUtils {
                 } else {//地表沉降
                     SubsidenceTotalData p = SubsidenceTotalDataDao.defaultDao().queryOneById(id);
                     if (p != null) {
-                        float curCorrection = p.getDataCorrection();
-                        float totalCorrection = curCorrection + correction;
+                        float totalCorrection = 0;
+                        if (isRebury) {
+                            if (uType == DIBIAO_LEIJI_XIACHEN_EXCEEDING) {
+                                totalCorrection = (float) (0d - uValue);
+                            } else if (uType == DIBIAO_XIACHEN_SULV_EXCEEDING) {
+                                double[] v = getSubsidenceValues(p);
+                                if (v != null && v.length == 2) {
+                                    totalCorrection = (float) (0d - v[1]);
+                                }
+                            }
+                        } else {
+                            float curCorrection = p.getDataCorrection();
+                            totalCorrection = curCorrection + correction;
+                        }
 //                        if (!checkExceeding(uValue + totalCorrection, uType)) {
 //                            tarAlertStatus = alertStatus;
 //                        }
@@ -731,7 +912,7 @@ public class AlertUtils {
                                 totalCorrection);
 
                         if (dataStatus == POINT_DATASTATUS_AS_FIRSTLINE
-                                || (dataStatus == POINT_DATASTATUS_CORRECTION && correction != 0)) {
+                                || (dataStatus == POINT_DATASTATUS_CORRECTION)) {
                             // STEP 4
                             measNo = p.getMEASNo();
 //                            AlertHandlingInfoDao.defaultDao().deleteByAlertId(alertId);
@@ -755,8 +936,26 @@ public class AlertUtils {
                 TunnelSettlementTotalData s_1 = TunnelSettlementTotalDataDao.defaultDao()
                         .queryOneById(ids.get(0));
                 //测线的DataCorrection存在第一个点中，即SX_1
-                float curCorrection = s_1.getDataCorrection();
-                float totalCorrection = curCorrection + correction;
+//                float curCorrection = s_1.getDataCorrection();
+//                float totalCorrection = curCorrection + correction;
+                float totalCorrection = 0;
+                if (isRebury) {
+                    if (uType == DIBIAO_LEIJI_XIACHEN_EXCEEDING) {
+                        totalCorrection = (float) (0d - uValue);
+                    } else if (uType == DIBIAO_XIACHEN_SULV_EXCEEDING) {
+                        String pnt1Type = s_1.getPntType();
+                        String oppositePntType = pnt1Type.substring(0, pnt1Type.length() - 1) + "2";
+                        TunnelSettlementTotalData s_2 = TunnelSettlementTotalDataDao.defaultDao()
+                        .queryOppositePointOfALine(s_1, oppositePntType);
+                        double[] v = getLineConvergenceValues(s_1, s_2);
+                        if (v != null && v.length == 2) {
+                            totalCorrection = (float) (0d - v[1]);
+                        }
+                    }
+                } else {
+                    float curCorrection = s_1.getDataCorrection();
+                    totalCorrection = curCorrection + correction;
+                }
 //                if (!checkExceeding(uValue + totalCorrection, uType)) {
 //                    tarAlertStatus = alertStatus;
 //                }
@@ -764,7 +963,7 @@ public class AlertUtils {
                     TunnelSettlementTotalDataDao.defaultDao().updateDataStatus(id, dataStatus, totalCorrection);
                 }
                 if (dataStatus == POINT_DATASTATUS_AS_FIRSTLINE
-                        || (dataStatus == POINT_DATASTATUS_CORRECTION && correction != 0)) {
+                        || (dataStatus == POINT_DATASTATUS_CORRECTION)) {
                     // STEP 4
 
                     if (dataStatus == POINT_DATASTATUS_AS_FIRSTLINE) {
