@@ -38,7 +38,7 @@ public class AppCRTBApplication extends Application {
 	private String publickey;//加密公钥
 	private List<SurveyerInformation> personList = null;
 	private SurveyerInformation CurPerson = null;
-	private int CurUsedStationId = 0;//当前连接的station的 id
+	private String CurUsedStationId = null;//当前连接的station的 id
 
 	private boolean bLocaUser;
 
@@ -120,12 +120,12 @@ public class AppCRTBApplication extends Application {
 		CurPerson = curPerson;
 	}
 
-    public int getCurUsedStationId() {
+    public String getCurUsedStationId() {
         Log.d(TAG, "getCurUsedStationId, returning " + CurUsedStationId);
-        return CurUsedStationId;
+        return CurUsedStationId ;
     }
 
-    public void setCurUsedStationId(int curUsedStationId) {
+    public void setCurUsedStationId(String curUsedStationId) {
         Log.d(TAG, "setCurUsedStationId " + curUsedStationId);
         CurUsedStationId = curUsedStationId;
     }
@@ -218,10 +218,10 @@ public class AppCRTBApplication extends Application {
 //		{
 //			return false;
 //		}
-		if(Value.getSurveyPnts().toString().trim().length() <= 0)
-		{
-			return false;
-		}
+//		if(Value.getSurveyPnts().toString().trim().length() <= 0)
+//		{
+//			return false;
+//		}
 		
 		return true;
 	}

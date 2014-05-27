@@ -333,7 +333,7 @@ public class StationActivity extends Activity {
                     if (ret == 1) {
                         // mStations.get(position)
                         // .setbUse(true);
-                        AppCRTBApplication.getInstance().setCurUsedStationId(tsInfo.getID());
+                        AppCRTBApplication.getInstance().setCurUsedStationId(String.valueOf(tsInfo.getID()));
                     }
                     break;
                 case R.id.com_connect:// 串口连接
@@ -341,7 +341,7 @@ public class StationActivity extends Activity {
                     tsParams = new String[] {tsInfo.getName(), String.valueOf( tsInfo.getBaudRate())};
                     ret = connect(TSConnectType.RS232, tsCmdType, tsParams);
                     if (ret == 1) {
-                        AppCRTBApplication.getInstance().setCurUsedStationId(tsInfo.getID());
+                        AppCRTBApplication.getInstance().setCurUsedStationId(String.valueOf(tsInfo.getID()));
                     }
                     break;
                 case R.id.disconnect:// 断开连接

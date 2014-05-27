@@ -103,8 +103,8 @@ public class AlertListDao extends AbstractDao<AlertList> {
             double UValue, double UMax, String originalDataID) {
 
         Log.d(TAG, "AlertListDao insertOrUpdate TunnelSettlementTotalData");
-        int sheetId = point.getSheetId();
-        int chainageId = point.getChainageId();
+        int sheetId = Integer.valueOf(point.getSheetId());
+        int chainageId = Integer.valueOf(point.getChainageId());
 
 //        String pntType = point.getPntType();
 
@@ -128,8 +128,8 @@ public class AlertListDao extends AbstractDao<AlertList> {
             double UMax, String originalDataID) {
         Log.d(TAG, "AlertListDao insertOrUpdate SubsidenceTotalData");
 
-        int sheetId = point.getSheetId();
-        int chainageId = point.getChainageId();
+        int sheetId = Integer.valueOf(point.getSheetId());
+        int chainageId = Integer.valueOf(point.getChainageId());
 //        String pntType = point.getPntType();
 
         AlertList al = queryOne(sheetId, chainageId, originalDataID, Utype);
@@ -171,14 +171,14 @@ public class AlertListDao extends AbstractDao<AlertList> {
             pntType = pntType.substring(0, pntType.length() - 2);
         }
 
-        al.setSheetID(point.getSheetId());
-        al.setCrossSectionID(point.getChainageId());
+        al.setSheetID(Integer.valueOf(point.getSheetId()));
+        al.setCrossSectionID(Integer.valueOf(point.getChainageId()));
         al.setPntType(pntType);
         al.setAlertTime(point.getSurveyTime());
         al.setAlertLeverl(alertLevel);
         al.setUtype(Utype);
         al.setUValue(UValue);
-        al.setUMax(UMax);
+        al.setUMax((int)UMax);
         al.setOriginalDataID(originalDataID);
 
         int ret = mDatabase.saveObject(al);
@@ -207,14 +207,14 @@ public class AlertListDao extends AbstractDao<AlertList> {
         }
 
         AlertList al = new AlertList();
-        al.setSheetID(point.getSheetId());
-        al.setCrossSectionID(point.getChainageId());
+        al.setSheetID(Integer.valueOf(point.getSheetId()));
+        al.setCrossSectionID(Integer.valueOf(point.getChainageId()));
         al.setPntType(point.getPntType());
         al.setAlertTime(point.getSurveyTime());
         al.setAlertLeverl(alertLevel);
         al.setUtype(Utype);
         al.setUValue(UValue);
-        al.setUMax(UMax);
+        al.setUMax((int)UMax);
         al.setOriginalDataID(originalDataID);
 
         int ret = mDatabase.saveObject(al);
@@ -241,8 +241,8 @@ public class AlertListDao extends AbstractDao<AlertList> {
     public void updatePointAlertItem(TunnelSettlementTotalData point, int Utype, double UValue,
             String originalDataID) {
         Log.d(TAG, "AlertListDao updatePointAlertItem TunnelSettlementTotalData");
-        int sheetId = point.getSheetId();
-        int chainageId = point.getChainageId();
+        int sheetId = Integer.valueOf(point.getSheetId());
+        int chainageId = Integer.valueOf(point.getChainageId());
 
         updatePointAlertItem(sheetId, chainageId, Utype, UValue, originalDataID);
     }
@@ -250,8 +250,8 @@ public class AlertListDao extends AbstractDao<AlertList> {
     public void updatePointAlertItem(SubsidenceTotalData point, int Utype, double UValue,
             String originalDataID) {
         Log.d(TAG, "AlertListDao updatePointAlertItem SubsidenceTotalData");
-        int sheetId = point.getSheetId();
-        int chainageId = point.getChainageId();
+        int sheetId = Integer.valueOf(point.getSheetId());
+        int chainageId = Integer.valueOf(point.getChainageId());
 
         updatePointAlertItem(sheetId, chainageId, Utype, UValue, originalDataID);
     }

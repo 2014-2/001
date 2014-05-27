@@ -302,23 +302,41 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 			section_new_et_prefix.setText(sectionInfo.getChainagePrefix());
 			section_new_et_Chainage.setText(String.valueOf(sectionInfo.getChainage()));
 			section_new_et_name.setText(sectionInfo.getSectionName());
-			section_new_et_calendar.setText(DateUtils.toDateString(sectionInfo.getInBuiltTime()));
+			section_new_et_calendar.setText(DateUtils.toDateString(sectionInfo.getInBuiltTime(),DateUtils.DATE_TIME_FORMAT));
 			section_new_et_width.setText(String.valueOf(sectionInfo.getWidth()));
 			
 			section_new_sp.setSelection(CrtbUtils.getExcavateMethod(sectionInfo.getExcavateMethod()));
 			
-			section_new_et_a.setText(sectionInfo.getPointAName());
-			section_new_et_s1.setText(sectionInfo.getPointS1Name());
-			section_new_et_s2.setText(sectionInfo.getPointS2Name());
-			section_new_et_s3.setText(sectionInfo.getPointS3Name());
+			if(sectionInfo.getSurveyPntName() != null){
+				
+				String[] str = sectionInfo.getSurveyPntName().split(",") ;
+				
+				int len = str.length ;
+				
+				if(len == 1){
+					section_new_et_a.setText(str[0]);
+				} else if(len == 2){
+					section_new_et_a.setText(str[0]);
+					section_new_et_s1.setText(str[1]);
+				} else if(len == 3){
+					section_new_et_a.setText(str[0]);
+					section_new_et_s1.setText(str[1]);
+					section_new_et_s2.setText(str[2]);
+				} else if(len == 4){
+					section_new_et_a.setText(str[0]);
+					section_new_et_s1.setText(str[1]);
+					section_new_et_s2.setText(str[2]);
+					section_new_et_s3.setText(str[3]);
+				}
+			}
 			
 			section_new_leiji_gd.setText(String.valueOf(sectionInfo.getGDU0()));
 			section_new_leiji_sl.setText(String.valueOf(sectionInfo.getSLU0()));
 			section_new_single_gd.setText(String.valueOf(sectionInfo.getGDVelocity()));
 			section_new_single_sl.setText(String.valueOf(sectionInfo.getSLLimitVelocity()));
 			
-			section_new_createtime1.setText(DateUtils.toDateString(sectionInfo.getGDU0Time()));
-			section_new_createtime2.setText(DateUtils.toDateString(sectionInfo.getSLU0Time()));
+			section_new_createtime1.setText(DateUtils.toDateString(sectionInfo.getGDU0Time(),DateUtils.DATE_TIME_FORMAT));
+			section_new_createtime2.setText(DateUtils.toDateString(sectionInfo.getSLU0Time(),DateUtils.DATE_TIME_FORMAT));
 			
 			section_new_remark_gd.setText(sectionInfo.getGDU0Description());
 			section_new_remark_sl.setText(sectionInfo.getSLU0Description());
@@ -372,7 +390,7 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 			break;
 		case R.id.section_new_et_calendar :
 			
-			curdate = DateUtils.toDate(section_new_et_calendar.getEditableText().toString().trim(), DateUtils.PART_TIME_FORMAT);
+			curdate = DateUtils.toDate(section_new_et_calendar.getEditableText().toString().trim(), DateUtils.DATE_TIME_FORMAT);
 			
 			if(curdate == null){
 				curdate	= DateUtils.getCurrtentTimes() ;
@@ -382,7 +400,7 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 			break ;
 		case R.id.section_new_createtime_gd :
 			
-			curdate = DateUtils.toDate(section_new_createtime1.getEditableText().toString().trim(), DateUtils.PART_TIME_FORMAT);
+			curdate = DateUtils.toDate(section_new_createtime1.getEditableText().toString().trim(), DateUtils.DATE_TIME_FORMAT);
 			
 			if(curdate == null){
 				curdate	= DateUtils.getCurrtentTimes() ;
@@ -469,13 +487,11 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 				sectionInfo.setChainage(CrtbUtils.formatDouble(chainage));
 				sectionInfo.setInBuiltTime(DateUtils.toDate(date, DateUtils.PART_TIME_FORMAT));
 				sectionInfo.setWidth(CrtbUtils.formatDouble(width));
+				
 				//TODO: 表示数据未上传
 				sectionInfo.setInfo("1"); 
 				
-				sectionInfo.setPointAName(pointA);
-				sectionInfo.setPointS1Name(pointS1);
-				sectionInfo.setPointS2Name(pointS2);
-				sectionInfo.setPointS3Name(pointS3);
+				sectionInfo.setSurveyPntName(pointA + "," + pointS1 + "," + pointS2 + "," + pointS3);
 				
 				sectionInfo.setGDU0(Float.valueOf(gdlj));
 				sectionInfo.setGDVelocity(Float.valueOf(gdsl));
@@ -511,10 +527,7 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 				// excavation
 				sectionInfo.setExcavateMethod((String)section_new_sp.getSelectedItem());
 				
-				sectionInfo.setPointAName(pointA);
-				sectionInfo.setPointS1Name(pointS1);
-				sectionInfo.setPointS2Name(pointS2);
-				sectionInfo.setPointS3Name(pointS3);
+				sectionInfo.setSurveyPntName(pointA + "," + pointS1 + "," + pointS2 + "," + pointS3);
 				
 				sectionInfo.setGDU0(Float.valueOf(gdlj));
 				sectionInfo.setGDVelocity(Float.valueOf(gdsl));

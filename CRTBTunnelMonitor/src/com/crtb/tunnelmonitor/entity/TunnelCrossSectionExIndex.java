@@ -15,7 +15,7 @@ import org.zw.android.framework.db.core.ColumnPrimaryKey.PrimaryKeyType;
 import com.crtb.tunnelmonitor.utils.CrtbUtils;
 
 /**
- * 满足铁科院上传接口要求的断面基础信息表
+ * 满足铁科院上传接口要求的断面基础信息表; 更新时间 2014-05-27
  * 
  * @author zhouwei
  *
@@ -27,11 +27,11 @@ public class TunnelCrossSectionExIndex implements Serializable {
 	@ColumnInt
 	private int ID;
 	
-	@ColumnString(length = 64)
-	private String guid ;			// guid ---- 扩展
+	@ColumnText
+	private String Guid ;			// guid
 	
 	@ColumnString(length = 64)
-	private String sectionGuid ;	// 断面guid ---- 扩展
+	private String HOLEENDKILO ;	// 增加字段
 	
 	@ColumnInt
 	private int SECT_ID;		    // SECT_ID 断面数据库id
@@ -83,7 +83,7 @@ public class TunnelCrossSectionExIndex implements Serializable {
 	
 	@ColumnText
 	private String DESCRIPTION;		// DESCRIPTION 备注
-
+	
 	public TunnelCrossSectionExIndex(){
 		setGuid(CrtbUtils.generatorGUID());
 	}
@@ -97,19 +97,19 @@ public class TunnelCrossSectionExIndex implements Serializable {
 	}
 	
 	public String getGuid() {
-		return guid;
+		return Guid;
 	}
 
 	public void setGuid(String guid) {
-		this.guid = guid;
+		Guid = guid;
 	}
 
-	public String getSectionGuid() {
-		return sectionGuid;
+	public String getHOLEENDKILO() {
+		return HOLEENDKILO;
 	}
 
-	public void setSectionGuid(String sectionGuid) {
-		this.sectionGuid = sectionGuid;
+	public void setHOLEENDKILO(String hOLEENDKILO) {
+		HOLEENDKILO = hOLEENDKILO;
 	}
 
 	public String getZONECODE() {

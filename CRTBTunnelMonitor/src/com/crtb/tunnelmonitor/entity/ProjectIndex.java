@@ -16,7 +16,7 @@ import org.zw.android.framework.db.core.ColumnPrimaryKey.PrimaryKeyType;
 import com.crtb.tunnelmonitor.utils.CrtbUtils;
 
 /**
- * 工程信息(工作面)
+ * 工作面: 修改时间 2014-05-27
  * 
  * @author zhouwei
  * 
@@ -30,15 +30,9 @@ public class ProjectIndex implements Serializable {
 
 	///////////////base info////////////////
 	
-	@ColumnString(length=256)
-	private String dbName ;						// 数据库名称 ----扩展
-
 	@ColumnString(length = 256)
 	private String ProjectName;					// 项目名称
 	
-	@ColumnString(length = 64)
-	private String guid ;						// 唯一标示 ---- 扩展
-
 	@ColumnDate
 	private Date CreateTime;					// 创建时间
 
@@ -68,10 +62,10 @@ public class ProjectIndex implements Serializable {
 	private float GDLimitTotalSettlement;		// 拱顶累计沉降速率		100
 	
 	@ColumnDate
-	private Date GDCreateTime ;					// 拱顶设置时间	----扩展
+	private Date GDCreateTime ;					// 拱顶设置时间			----扩展
 	
 	@ColumnText
-	private String GDInfo ;						// 拱顶备注信息	----扩展
+	private String GDInfo ;						// 拱顶备注信息			----扩展
 
 	@ColumnFloat
 	private float SLLimitVelocity;				// 收敛单次变形速率		5
@@ -80,10 +74,10 @@ public class ProjectIndex implements Serializable {
 	private float SLLimitTotalSettlement;		// 收敛累计变形差			100
 	
 	@ColumnDate
-	private Date  SLCreateTime ;				// 收敛设置时间	----扩展
+	private Date  SLCreateTime ;				// 收敛设置时间			----扩展
 	
 	@ColumnText
-	private String SLInfo ;					// 收敛设置时间	----扩展
+	private String SLInfo ;						// 收敛设置时间			----扩展
 
 	@ColumnFloat
 	private float DBLimitVelocity;				// 地表单次下沉速率		5
@@ -91,17 +85,14 @@ public class ProjectIndex implements Serializable {
 	@ColumnFloat
 	private float DBLimitTotalSettlement;		// 地表累计下沉限差		100
 	
-	@ColumnDate
-	private Date  DBCreateTime ;				// 地表设置时间	----扩展
-	
-	@ColumnText
-	private String DBInfo ;						// 地表设置时间	----扩展
-	
 	@ColumnString(length = 256)
 	private String ConstructionFirm ;			// 施工单位
 	
 	@ColumnDate
 	private Date LimitedTotalSubsidenceTime ;  	// 限差时间
+	
+	@ColumnText
+	private String Guid ;						// 唯一标示 
 	
 	public ProjectIndex(){
 		setGuid(CrtbUtils.generatorGUID());
@@ -113,11 +104,11 @@ public class ProjectIndex implements Serializable {
 	}
 
 	public String getGuid() {
-		return guid;
+		return Guid;
 	}
 
 	public void setGuid(String guid) {
-		this.guid = guid;
+		Guid = guid;
 	}
 
 	public void setGDCreateTime(Date gDCreateTime) {
@@ -126,14 +117,6 @@ public class ProjectIndex implements Serializable {
 
 	public Date getLastOpenTime() {
 		return LastOpenTime;
-	}
-
-	public String getDbName() {
-		return dbName;
-	}
-
-	public void setDbName(String dbName) {
-		this.dbName = dbName;
 	}
 
 	public void setLastOpenTime(Date lastOpenTime) {
@@ -163,22 +146,6 @@ public class ProjectIndex implements Serializable {
 
 	public void setSLInfo(String sLInfo) {
 		SLInfo = sLInfo;
-	}
-
-	public Date getDBCreateTime() {
-		return DBCreateTime;
-	}
-
-	public void setDBCreateTime(Date dBCreateTime) {
-		DBCreateTime = dBCreateTime;
-	}
-
-	public String getDBInfo() {
-		return DBInfo;
-	}
-
-	public void setDBInfo(String dBInfo) {
-		DBInfo = dBInfo;
 	}
 
 	public int getId() {

@@ -24,7 +24,7 @@
                 <TextView
                     style="@style/work_plan_label"
                     android:layout_width="80dp"
-                    android:text="工作面名称" />
+                    android:text="工作面" />
 
                 <EditText
                     android:id="@+id/ed_work_new_name"

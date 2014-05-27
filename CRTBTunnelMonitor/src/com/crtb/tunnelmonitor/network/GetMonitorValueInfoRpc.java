@@ -93,7 +93,7 @@ class GetMonitorValueInfoRpc extends AbstractRpc {
 						pointTestData.setInfo("2");
 						pointTestData.setPntType("A");
 						//TODO: 无法获取此数据，暂时用0代替
-						pointTestData.setSurveyorID(0);
+						pointTestData.setSurveyorID(String.valueOf(0));
 						pointTestDataList.add(pointTestData);
 						break;
 					case 6:
@@ -108,7 +108,7 @@ class GetMonitorValueInfoRpc extends AbstractRpc {
 						pointTestData1.setInfo("2");
 						pointTestData1.setPntType("S1-1");
 						//TODO: 无法获取此数据，暂时用0代替
-						pointTestData1.setSurveyorID(0);
+						pointTestData1.setSurveyorID(String.valueOf(0));
 						pointTestDataList.add(pointTestData1);
 
 						TunnelSettlementTotalData pointTestData2 = new TunnelSettlementTotalData();
@@ -120,7 +120,7 @@ class GetMonitorValueInfoRpc extends AbstractRpc {
 						pointTestData2.setInfo("2");
 						pointTestData2.setPntType("S1-2");
 						//TODO: 无法获取此数据，暂时用0代替
-						pointTestData2.setSurveyorID(0);
+						pointTestData2.setSurveyorID(String.valueOf(0));
 						pointTestDataList.add(pointTestData2);
 						break;
 					default:

@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 import org.zw.android.framework.db.ColumnDate;
+import org.zw.android.framework.db.ColumnDouble;
 import org.zw.android.framework.db.ColumnFloat;
 import org.zw.android.framework.db.ColumnInt;
 import org.zw.android.framework.db.ColumnString;
@@ -11,6 +12,8 @@ import org.zw.android.framework.db.ColumnText;
 import org.zw.android.framework.db.Table;
 import org.zw.android.framework.db.core.ColumnPrimaryKey;
 import org.zw.android.framework.db.core.ColumnPrimaryKey.PrimaryKeyType;
+
+import com.crtb.tunnelmonitor.utils.CrtbUtils;
 
 /**
  * 设站信息实体
@@ -22,11 +25,11 @@ public class StationInfoIndex implements Serializable {
 	@ColumnInt
 	private int ID;						// id
 	
-	@ColumnInt
-	private int StationPointId;			// 测站点id
+	@ColumnText
+	private String StationPointIndex;	// 测站点id
 	
-	@ColumnFloat
-	private float StationHeight;		// 测站高度值
+	@ColumnDouble
+	private double StationHeight;		// 测站高度值
 	
 	/*
 	 * 一个或多个后视点的ID,大于1个后视点采用逗号分隔
@@ -34,7 +37,7 @@ public class StationInfoIndex implements Serializable {
 	@ColumnText
 	private String BackSightPointIds;	// 后视点id
 	
-	@ColumnFloat
+	@ColumnDouble
 	private double BackeSightHeight;	// 后视高度值
 	
 	@ColumnDate
@@ -42,6 +45,13 @@ public class StationInfoIndex implements Serializable {
 	
 	@ColumnText
 	private String Info;				// 备注
+	
+	@ColumnText
+	private String Guid ;				// guid
+	
+	private StationInfoIndex(){
+		setGuid(CrtbUtils.generatorGUID());
+	}
 
 	public int getID() {
 		return ID;
@@ -51,20 +61,28 @@ public class StationInfoIndex implements Serializable {
 		ID = iD;
 	}
 
-	public int getStationPointId() {
-		return StationPointId;
+	public String getStationPointIndex() {
+		return StationPointIndex;
 	}
 
-	public void setStationPointId(int stationPointId) {
-		StationPointId = stationPointId;
+	public void setStationPointIndex(String stationPointIndex) {
+		StationPointIndex = stationPointIndex;
 	}
 
-	public float getStationHeight() {
+	public double getStationHeight() {
 		return StationHeight;
 	}
 
-	public void setStationHeight(float stationHeight) {
+	public void setStationHeight(double stationHeight) {
 		StationHeight = stationHeight;
+	}
+
+	public String getGuid() {
+		return Guid;
+	}
+
+	public void setGuid(String guid) {
+		Guid = guid;
 	}
 
 	public String getBackSightPointIds() {
