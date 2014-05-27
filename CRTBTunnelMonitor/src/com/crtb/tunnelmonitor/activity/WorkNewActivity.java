@@ -189,10 +189,10 @@ public class WorkNewActivity extends WorkFlowActivity implements OnClickListener
 	private void loadDefaultData(ProjectIndex bean){
 		
 		// 创建时间
-		String buildTime = DateUtils.toDateString(bean.getCreateTime(),DateUtils.PART_TIME_FORMAT) ;
+		String buildTime = DateUtils.toDateString(bean.getCreateTime(),DateUtils.DATE_TIME_FORMAT) ;
 		
 		if(StringUtils.isEmpty(buildTime)){
-			buildTime	= DateUtils.toDateString(DateUtils.getCurrtentTimes(),DateUtils.PART_TIME_FORMAT) ;
+			buildTime	= DateUtils.toDateString(DateUtils.getCurrtentTimes(),DateUtils.DATE_TIME_FORMAT) ;
 		}
 		
 		mWorkPlanName.setText(bean.getProjectName());
@@ -205,13 +205,13 @@ public class WorkNewActivity extends WorkFlowActivity implements OnClickListener
 		// 拱顶
 		mVaultTransMax.setText(String.valueOf(bean.getGDLimitTotalSettlement()));
 		mVaultTransVelocity.setText(String.valueOf(bean.getGDLimitVelocity()));
-		mVaultTransDate.setText(DateUtils.toDateString(bean.getGDCreateTime(),DateUtils.PART_TIME_FORMAT));
+		mVaultTransDate.setText(DateUtils.toDateString(bean.getGDCreateTime(),DateUtils.DATE_TIME_FORMAT));
 		mVaultTransRemark.setText(bean.getGDInfo());
 		
 		// 收敛
 		mAstringeMax.setText(String.valueOf(bean.getSLLimitTotalSettlement()));
 		mAstringevelocity.setText(String.valueOf(bean.getSLLimitVelocity()));
-		mAstringeDate.setText(DateUtils.toDateString(bean.getSLCreateTime(),DateUtils.PART_TIME_FORMAT));
+		mAstringeDate.setText(DateUtils.toDateString(bean.getSLCreateTime(),DateUtils.DATE_TIME_FORMAT));
 		mAstringeRemark.setText(bean.getSLInfo());
 		
 		// 地表
@@ -357,7 +357,7 @@ public class WorkNewActivity extends WorkFlowActivity implements OnClickListener
 			if(mWorkPlanBean != null){
 				
 				mWorkPlanBean.setProjectName(name);
-				mWorkPlanBean.setCreateTime(DateUtils.toDate(date));
+				mWorkPlanBean.setCreateTime(DateUtils.toDate(date,DateUtils.DATE_TIME_FORMAT));
 				mWorkPlanBean.setConstructionFirm(unit);
 				mWorkPlanBean.setChainagePrefix(pref);
 				mWorkPlanBean.setStartChainage(sm);
@@ -365,12 +365,12 @@ public class WorkNewActivity extends WorkFlowActivity implements OnClickListener
 				
 				mWorkPlanBean.setGDLimitTotalSettlement(gdlimt);
 				mWorkPlanBean.setGDLimitVelocity(gdv);
-				mWorkPlanBean.setGDCreateTime(DateUtils.toDate(vaultDate, DateUtils.PART_TIME_FORMAT));
+				mWorkPlanBean.setGDCreateTime(DateUtils.toDate(vaultDate, DateUtils.DATE_TIME_FORMAT));
 				mWorkPlanBean.setGDInfo(vaultRemark);
 				
 				mWorkPlanBean.setSLLimitTotalSettlement(sllimt);
 				mWorkPlanBean.setSLLimitVelocity(sldv);
-				mWorkPlanBean.setSLCreateTime(DateUtils.toDate(circumDate, DateUtils.PART_TIME_FORMAT));
+				mWorkPlanBean.setSLCreateTime(DateUtils.toDate(circumDate, DateUtils.DATE_TIME_FORMAT));
 				mWorkPlanBean.setSLInfo(circumRemark);
 				
 				mWorkPlanBean.setDBLimitTotalSettlement(dblimt);
@@ -383,25 +383,20 @@ public class WorkNewActivity extends WorkFlowActivity implements OnClickListener
 				
 				ProjectIndex info = new ProjectIndex() ;
 				info.setProjectName(name);
-				info.setCreateTime(DateUtils.toDate(date));
+				info.setCreateTime(DateUtils.toDate(date,DateUtils.DATE_TIME_FORMAT));
 				info.setConstructionFirm(unit);
 				info.setChainagePrefix(pref);
 				info.setStartChainage(sm);
 				info.setEndChainage(em);
 				
-				// 第一次初始化数据库名称
-				if(StringUtils.isEmpty(info.getDbName())){
-					info.setDbName(ProjectIndexDao.getDbUniqueName(name)) ;
-				}
-				
 				info.setGDLimitTotalSettlement(gdlimt);
 				info.setGDLimitVelocity(gdv);
-				info.setGDCreateTime(DateUtils.toDate(vaultDate, DateUtils.PART_TIME_FORMAT));
+				info.setGDCreateTime(DateUtils.toDate(vaultDate, DateUtils.DATE_TIME_FORMAT));
 				info.setGDInfo(vaultRemark);
 				
 				info.setSLLimitTotalSettlement(sllimt);
 				info.setSLLimitVelocity(sldv);
-				info.setSLCreateTime(DateUtils.toDate(circumDate, DateUtils.PART_TIME_FORMAT));
+				info.setSLCreateTime(DateUtils.toDate(circumDate, DateUtils.DATE_TIME_FORMAT));
 				info.setSLInfo(circumRemark);
 				
 				info.setDBLimitTotalSettlement(dblimt);

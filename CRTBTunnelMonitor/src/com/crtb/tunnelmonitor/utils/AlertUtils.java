@@ -141,9 +141,9 @@ public class AlertUtils {
             thisTime = tPoint.getSurveyTime();
             thisDataCorrection = tPoint.getDataCorrection();
             pastInfoList = TunnelSettlementTotalDataDao.defaultDao().queryInfoBeforeMEASNo(
-                    tPoint.getChainageId(), tPoint.getPntType(), tPoint.getMEASNo());
+            		Integer.valueOf(tPoint.getChainageId()), tPoint.getPntType(), tPoint.getMEASNo());
             sumOfDataCorrection = thisDataCorrection + calculateSumOfDataCorrectionsOfTunnelSettlementTotalDatas(pastInfoList);
-            chainageId = ((TunnelSettlementTotalData) point).getChainageId();
+            chainageId = Integer.valueOf(((TunnelSettlementTotalData) point).getChainageId());
             pntType = ((TunnelSettlementTotalData) point).getPntType();
             originalDataID = String.valueOf(((TunnelSettlementTotalData) point).getID());
         } else if (point instanceof SubsidenceTotalData) {
@@ -157,9 +157,9 @@ public class AlertUtils {
             thisTime = sPoint.getSurveyTime();
             thisDataCorrection = sPoint.getDataCorrection();
             pastInfoList = SubsidenceTotalDataDao.defaultDao().queryInfoBeforeMEASNo(
-                    sPoint.getChainageId(), sPoint.getPntType(), sPoint.getMEASNo());
+                    Integer.valueOf(sPoint.getChainageId()), sPoint.getPntType(), sPoint.getMEASNo());
             sumOfDataCorrection = thisDataCorrection + calculateSumOfDataCorrectionsOfSubsidenceTotalDatas(pastInfoList);
-            chainageId = ((SubsidenceTotalData) point).getChainageId();
+            chainageId = Integer.valueOf(((SubsidenceTotalData) point).getChainageId());
             pntType = ((SubsidenceTotalData) point).getPntType();
             originalDataID = String.valueOf(((SubsidenceTotalData) point).getID());
         } else {
@@ -213,15 +213,15 @@ public class AlertUtils {
                     } else if (curHandlingAlertId >= 0) {
                         int sheetId = -1;
                         if (type == 1) {
-                            sheetId = ((TunnelSettlementTotalData) point).getSheetId();
+                            sheetId = Integer.valueOf(((TunnelSettlementTotalData) point).getSheetId());
                         } else {
-                            sheetId = ((SubsidenceTotalData) point).getSheetId();
+                            sheetId = Integer.valueOf(((SubsidenceTotalData) point).getSheetId());
                         }
                         if (sheetId != -1) {
                             AlertList al = AlertListDao.defaultDao().queryOne(sheetId, chainageId, originalDataID, uType);
                             if (al != null) {
                                 int alertId = al.getID();
-                                int chainageId1 = al.getCrossSectionID();
+                                int chainageId1 = Integer.valueOf(al.getCrossSectionID());
                                 String pntType1 = al.getPntType();
                                 String duePerson = String.valueOf(chainageId1) + pntType1;
                                 AlertHandlingInfoDao.defaultDao().insertItem(alertId,
@@ -287,15 +287,15 @@ public class AlertUtils {
                     } else if (curHandlingAlertId >= 0) {
                         int sheetId = -1;
                         if (type == 1) {
-                            sheetId = ((TunnelSettlementTotalData) point).getSheetId();
+                            sheetId = Integer.valueOf(((TunnelSettlementTotalData) point).getSheetId());
                         } else {
-                            sheetId = ((SubsidenceTotalData) point).getSheetId();
+                            sheetId = Integer.valueOf(((SubsidenceTotalData) point).getSheetId());
                         }
                         if (sheetId != -1) {
                             AlertList al = AlertListDao.defaultDao().queryOne(sheetId, chainageId, originalDataID, uType);
                             if (al != null) {
                                 int alertId = al.getID();
-                                int chainageId1 = al.getCrossSectionID();
+                                int chainageId1 = Integer.valueOf(al.getCrossSectionID());
                                 String pntType1 = al.getPntType();
                                 String duePerson = String.valueOf(chainageId1) + pntType1;
                                 AlertHandlingInfoDao.defaultDao().insertItem(alertId,
@@ -328,7 +328,7 @@ public class AlertUtils {
             return null;
         }
 
-        int sheetId = s_1.getSheetId();
+        int sheetId = Integer.valueOf(s_1.getSheetId());
         String originalDataID = s_1.getID() + ORIGINAL_ID_DIVIDER + s_2.getID();
 
         double lineThisLength = getLineLength(s_1, s_2);
@@ -341,7 +341,7 @@ public class AlertUtils {
             thisTimeDate = s_2ThisTime;
         }
 
-        int chainageId = s_1.getChainageId();
+        int chainageId = Integer.valueOf(s_1.getChainageId());
 
         List<TunnelSettlementTotalData> s_1InfoList = TunnelSettlementTotalDataDao.defaultDao()
                 .queryInfoBeforeMEASNo(chainageId, s_1.getPntType(), s_1.getMEASNo());
@@ -680,7 +680,7 @@ public class AlertUtils {
 //        int uType = al.getUtype();
 //        int tarAlertStatus = curAlertStatus;
         String originalID = al.getOriginalDataID();
-        int chainageId = al.getCrossSectionID();
+        int chainageId = Integer.valueOf(al.getCrossSectionID());
         String pntType = al.getPntType();
         String duePerson = String.valueOf(chainageId) + pntType;
 

@@ -16,7 +16,7 @@ import org.zw.android.framework.db.core.ColumnPrimaryKey.PrimaryKeyType;
 import com.crtb.tunnelmonitor.utils.CrtbUtils;
 
 /**
- * 隧道内断面记录单和地表下沉记录单的索引
+ * 隧道内断面记录单和地表下沉记录单的索引,更新时间: 2014-05-27
  * 
  * @author zhouwei
  *
@@ -31,9 +31,6 @@ public class RawSheetIndex implements Serializable {
 	@ColumnInt
 	private int ID;
 	
-	@ColumnString(length = 64)
-	private String guid ;					// 唯一标示 -----------扩展
-	
 	@ColumnInt
 	private int CrossSectionType ;			// 断面类型 : 	1表示隧道内断面
 											// 				2表示地表下沉断面
@@ -42,22 +39,19 @@ public class RawSheetIndex implements Serializable {
 	private Date CreateTime ;				// 创建类型
 	
 	@ColumnText
+	private String Guid ;					// 唯一标示
+	
+	@ColumnInt
+	private int UploadStatus ;				// 0表示全部状态；1表示未上传，2表示已上传，3表示部分上传
+	
+	@ColumnText
 	private String Info ;					// 备注
 	
 	@ColumnDouble
 	private double FACEDK ;					// 开挖面里程值
 	
-	@ColumnString(length=64)
-	private String prefix ;					// 前缀  ------扩展
-	
 	@ColumnText
 	private String FACEDESCRIPTION ;		// 施工工序
-	
-	@ColumnString(length=100)
-	private String Surveyer ;				// 测量人员  ------扩展
-	
-	@ColumnString(length=20)
-	private String CertificateID;			// 测量人员id------扩展
 	
 	@ColumnDouble
 	private double	TEMPERATURE ;			// 温度
@@ -66,6 +60,15 @@ public class RawSheetIndex implements Serializable {
 	private String CrossSectionIDs ;		// 断面ID序列: 断面ID以逗号分隔
 											// TunnelCrossSectionIndex
 											// SubsidenceCrossSectionIndex
+	
+	@ColumnString(length=64)
+	private String prefix ;					// 前缀  ------扩展
+	
+	@ColumnString(length=100)
+	private String Surveyer ;				// 测量人员  ------扩展
+	
+	@ColumnString(length=20)
+	private String CertificateID;			// 测量人员id------扩展
 
 	@ColumnBoolean
 	private boolean checked ;				// 是否选择
@@ -84,11 +87,19 @@ public class RawSheetIndex implements Serializable {
 	}
 
 	public String getGuid() {
-		return guid;
+		return Guid;
 	}
 
 	public void setGuid(String guid) {
-		this.guid = guid;
+		Guid = guid;
+	}
+
+	public int getUploadStatus() {
+		return UploadStatus;
+	}
+
+	public void setUploadStatus(int uploadStatus) {
+		UploadStatus = uploadStatus;
 	}
 
 	public boolean isChecked() {

@@ -212,13 +212,13 @@ public class SectionNewSubsidenceActivity extends WorkFlowActivity implements On
 			section_new_et_prefix.setText(subsidence.getChainagePrefix());
 			DSection_Chainage.setText(String.valueOf(subsidence.getChainage()));
 			DSection_name.setText(subsidence.getSectionName());
-			DSection_createtime.setText(DateUtils.toDateString(subsidence.getInbuiltTime()));
+			DSection_createtime.setText(DateUtils.toDateString(subsidence.getInbuiltTime(),DateUtils.DATE_TIME_FORMAT));
 			DSection_Width.setText(String.valueOf((int)subsidence.getWidth()));
 			DSection_PointCount.setText(String.valueOf(subsidence.getSurveyPnts()));
 			
 			DSection_Value1.setText(String.valueOf(subsidence.getDBU0()));
 			DSection_Value2.setText(String.valueOf(subsidence.getDBLimitVelocity()));
-			DSection_SetTime.setText(DateUtils.toDateString(subsidence.getDBU0Time()));
+			DSection_SetTime.setText(DateUtils.toDateString(subsidence.getDBU0Time(),DateUtils.DATE_TIME_FORMAT));
 			DSection_Info.setText(subsidence.getDBU0Description());
 		}
 	}
@@ -236,7 +236,7 @@ public class SectionNewSubsidenceActivity extends WorkFlowActivity implements On
 			break;
 		case R.id.section_new_et_calendar:
 			
-			curdate = DateUtils.toDate(DSection_createtime.getEditableText().toString().trim(), DateUtils.PART_TIME_FORMAT);
+			curdate = DateUtils.toDate(DSection_createtime.getEditableText().toString().trim(), DateUtils.DATE_TIME_FORMAT);
 			
 			if(curdate == null){
 				curdate	= DateUtils.getCurrtentTimes() ;
@@ -246,7 +246,7 @@ public class SectionNewSubsidenceActivity extends WorkFlowActivity implements On
 			break ;
 		case R.id.DSection_SetTime:
 			
-			curdate = DateUtils.toDate(DSection_SetTime.getEditableText().toString().trim(), DateUtils.PART_TIME_FORMAT);
+			curdate = DateUtils.toDate(DSection_SetTime.getEditableText().toString().trim(), DateUtils.DATE_TIME_FORMAT);
 			
 			if(curdate == null){
 				curdate	= DateUtils.getCurrtentTimes() ;
@@ -324,7 +324,7 @@ public class SectionNewSubsidenceActivity extends WorkFlowActivity implements On
 				subsidence.setChainage(CrtbUtils.formatDouble(chainage));
 				subsidence.setWidth(CrtbUtils.formatDouble(width));
 				subsidence.setInbuiltTime(DateUtils.toDate(date, DateUtils.PART_TIME_FORMAT));
-				subsidence.setSurveyPnts(point);
+				subsidence.setSurveyPnts(pc);
 				
 				//
 				subsidence.setDBU0(CrtbUtils.formatFloat(dbu0));
@@ -350,7 +350,7 @@ public class SectionNewSubsidenceActivity extends WorkFlowActivity implements On
 				subsidence.setChainage(CrtbUtils.formatDouble(chainage));
 				subsidence.setWidth(CrtbUtils.formatDouble(width));
 				subsidence.setInbuiltTime(DateUtils.toDate(date, DateUtils.PART_TIME_FORMAT));
-				subsidence.setSurveyPnts(point);
+				subsidence.setSurveyPnts(pc);
 
 				//
 				subsidence.setDBU0(CrtbUtils.formatFloat(dbu0));

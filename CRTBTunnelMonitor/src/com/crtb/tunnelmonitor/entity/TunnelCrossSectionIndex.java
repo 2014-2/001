@@ -16,7 +16,7 @@ import org.zw.android.framework.db.core.ColumnPrimaryKey.PrimaryKeyType;
 import com.crtb.tunnelmonitor.utils.CrtbUtils;
 
 /**
- * 隧道内断面
+ * 隧道内断面; 更新时间: 2014-05-27
  * 
  * @author zhouwei
  */
@@ -27,80 +27,62 @@ public class TunnelCrossSectionIndex implements Serializable {
     @ColumnInt
     private int ID;
     
-    @ColumnString(length = 64)
-	private String guid ;				// 唯一标示 -----------扩展
-	
-	@ColumnString(length = 64)
-	private String projectIndexGuid ;	// 工作面guid ---- 扩展
-
-    ///////////////////////base info////////////////////
-
-    @ColumnString(length = 64)
-    private String ChainagePrefix; 		// 里程前缀
-
     @ColumnDouble
     private double Chainage; 			// 断面里程值
-
+    
     @ColumnDate
     private Date InBuiltTime; 			// 埋设时间
-
+    
     @ColumnDouble
     private double Width; 				// 断面宽度
-
-//    @ColumnString(length=255) //NOT A COLUMN IN THE DB TABLE
-    private String sectionName;         // 断面名称
-
-    //////////////////////开挖方式//////////////////////////
-
+    
+    @ColumnText
+	private String Guid ;				// 唯一标示
+	
     @ColumnString(length = 255)
     private String ExcavateMethod;  	// 施工方法
 
     @ColumnString(length = 255)
-    private String SurveyPntName; 		// 测点编号
+    private String SurveyPntName; 		// 测点编号: 测量点对应的别名: A,S1,S2,S3
     
-    @ColumnString(length = 128)
-    private String pointAName; 			// A 点名称
-    
-    @ColumnString(length = 128)
-    private String pointS1Name; 		// S1 点名称
-    
-    @ColumnString(length = 128)
-    private String pointS2Name; 		// S2 点名称
-    
-    @ColumnString(length = 128)
-    private String pointS3Name; 		// S3 点名称
-
-    //////////////////////变形阀值///////////////////////////
+    @ColumnInt
+    private int UploadStatus ;			// 0 表示全部状态；1表示未上传，2表示已上传，3表示部分上传
 
     @ColumnText
-    private String info; 				// 备注
+    private String Info; 				// 备注
+    
+    @ColumnString(length = 64)
+    private String ChainagePrefix; 		// 里程前缀 默认是工程前缀
+    
+    //@ColumnString(length=255) //NOT A COLUMN IN THE DB TABLE
+    private String sectionName;         // 断面名称					---- 非数据库字段
 
     @ColumnFloat
-    private float GDU0; 				// 拱顶U0值
+    private float 	GDU0; 				// 拱顶U0值
 
     @ColumnFloat
-    private float GDVelocity; 			// 拱顶本次下沉速率
+    private float 	GDVelocity; 		// 拱顶本次下沉速率
 
     @ColumnDate
-    private Date GDU0Time; 				// 拱顶限差修改时间
+    private Date 	GDU0Time; 			// 拱顶限差修改时间
 
     @ColumnText
-    private String GDU0Description; 	// 拱顶极限备注
+    private String 	GDU0Description; 	// 拱顶极限备注
 
     @ColumnFloat
-    private float SLU0; 				// 收敛uo值
+    private float 	SLU0; 				// 收敛uo值
 
     @ColumnFloat
-    private float SLLimitVelocity; 		// 收敛本次下沉速率
+    private float 	SLLimitVelocity; 	// 收敛本次下沉速率
 
     @ColumnDate
-    private Date SLU0Time; 				// 收敛限差修改时间
+    private Date 	SLU0Time; 			// 收敛限差修改时间
 
     @ColumnText
-    private String SLU0Description; 	// 收敛极限备注
+    private String 	SLU0Description; 	// 收敛极限备注
 
     @ColumnString(length = 255)
-    private String Lithologi; 			// 岩性
+    private String Lithologic; 			// 岩性
 
     @ColumnFloat
     private float LAYVALUE; 			// 埋深值
@@ -111,6 +93,7 @@ public class TunnelCrossSectionIndex implements Serializable {
     private boolean used;				// 是否选中----------扩展
 
     public TunnelCrossSectionIndex(){
+    	setUploadStatus(1);// 未上传
     	setGuid(CrtbUtils.generatorGUID());
     	setInfo(getGuid());
     }
@@ -123,52 +106,20 @@ public class TunnelCrossSectionIndex implements Serializable {
         ID = iD;
     }
 
-    public String getGuid() {
-		return guid;
+	public String getGuid() {
+		return Guid;
+	}
+
+	public int getUploadStatus() {
+		return UploadStatus;
+	}
+
+	public void setUploadStatus(int uploadStatus) {
+		UploadStatus = uploadStatus;
 	}
 
 	public void setGuid(String guid) {
-		this.guid = guid;
-	}
-
-	public String getProjectIndexGuid() {
-		return projectIndexGuid;
-	}
-
-	public void setProjectIndexGuid(String projectIndexGuid) {
-		this.projectIndexGuid = projectIndexGuid;
-	}
-
-	public String getPointAName() {
-		return pointAName;
-	}
-
-	public void setPointAName(String pointAName) {
-		this.pointAName = pointAName;
-	}
-
-	public String getPointS1Name() {
-		return pointS1Name;
-	}
-
-	public void setPointS1Name(String pointS1Name) {
-		this.pointS1Name = pointS1Name;
-	}
-
-	public String getPointS2Name() {
-		return pointS2Name;
-	}
-
-	public void setPointS2Name(String pointS2Name) {
-		this.pointS2Name = pointS2Name;
-	}
-
-	public String getPointS3Name() {
-		return pointS3Name;
-	}
-
-	public void setPointS3Name(String pointS3Name) {
-		this.pointS3Name = pointS3Name;
+		Guid = guid;
 	}
 
 	public void setSectionName(String sectionName) {
@@ -219,16 +170,16 @@ public class TunnelCrossSectionIndex implements Serializable {
     public void setSurveyPntName(String surveyPntName) {
         SurveyPntName = surveyPntName;
     }
-
+    
     public String getInfo() {
-        return info;
-    }
+		return Info;
+	}
 
-    public void setInfo(String info) {
-        this.info = info;
-    }
+	public void setInfo(String info) {
+		Info = info;
+	}
 
-    public String getChainagePrefix() {
+	public String getChainagePrefix() {
         return ChainagePrefix;
     }
 
@@ -300,15 +251,15 @@ public class TunnelCrossSectionIndex implements Serializable {
         SLU0Description = sLU0Description;
     }
 
-    public String getLithologi() {
-        return Lithologi;
-    }
+    public String getLithologic() {
+		return Lithologic;
+	}
 
-    public void setLithologi(String lithologi) {
-        Lithologi = lithologi;
-    }
+	public void setLithologic(String lithologic) {
+		Lithologic = lithologic;
+	}
 
-    public float getLAYVALUE() {
+	public float getLAYVALUE() {
         return LAYVALUE;
     }
 

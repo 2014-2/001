@@ -4,14 +4,29 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.zw.android.framework.IAccessDatabase;
+import org.zw.android.framework.util.DateUtils;
 
 import android.util.Log;
 
 import com.crtb.tunnelmonitor.AppCRTBApplication;
 import com.crtb.tunnelmonitor.AppPreferences;
+import com.crtb.tunnelmonitor.entity.ControlPointsIndex;
+import com.crtb.tunnelmonitor.entity.ConvergenceSettlementArching;
+import com.crtb.tunnelmonitor.entity.CrownSettlementARCHING;
 import com.crtb.tunnelmonitor.entity.CrtbProject;
 import com.crtb.tunnelmonitor.entity.CrtbUser;
 import com.crtb.tunnelmonitor.entity.ProjectIndex;
+import com.crtb.tunnelmonitor.entity.ProjectSettingIndex;
+import com.crtb.tunnelmonitor.entity.RawSheetIndex;
+import com.crtb.tunnelmonitor.entity.StationInfoIndex;
+import com.crtb.tunnelmonitor.entity.SubsidenceCrossSectionExIndex;
+import com.crtb.tunnelmonitor.entity.SubsidenceCrossSectionIndex;
+import com.crtb.tunnelmonitor.entity.SubsidenceSettlementARCHING;
+import com.crtb.tunnelmonitor.entity.SubsidenceTotalData;
+import com.crtb.tunnelmonitor.entity.SurveyerInformation;
+import com.crtb.tunnelmonitor.entity.TunnelCrossSectionExIndex;
+import com.crtb.tunnelmonitor.entity.TunnelCrossSectionIndex;
+import com.crtb.tunnelmonitor.entity.TunnelSettlementTotalData;
 
 /**
  * 工程信息DAO(工作面)
@@ -63,7 +78,7 @@ public final class ProjectIndexDao extends AbstractDao<ProjectIndex> {
 			ProjectIndex pro = new ProjectIndex() ;
 			
 			pro.setId(p.getProjectId());
-			pro.setDbName(p.getDbName()); // 对应的数据库名称
+			//pro.setDbName(p.getDbName()); // 对应的数据库名称
 			pro.setProjectName(p.getProjectName());
 			pro.setCreateTime(p.getCreateTime());
 			pro.setStartChainage(p.getStartChainage());
@@ -85,8 +100,6 @@ public final class ProjectIndexDao extends AbstractDao<ProjectIndex> {
 			
 			pro.setDBLimitVelocity(p.getDBLimitVelocity());
 			pro.setDBLimitTotalSettlement(p.getDBLimitTotalSettlement());
-			pro.setDBCreateTime(p.getDBCreateTime());
-			pro.setDBInfo(p.getDBInfo());
 			
 			pro.setConstructionFirm(p.getConstructionFirm());
 			pro.setLimitedTotalSubsidenceTime(p.getLimitedTotalSubsidenceTime());
@@ -124,7 +137,33 @@ public final class ProjectIndexDao extends AbstractDao<ProjectIndex> {
 	}
 	
 	public void updateCurrentWorkPlan(ProjectIndex bean){
-		AppPreferences.getPreferences().putCurrentProject(bean.getDbName(),bean.getGuid());
+		
+		String dbName = getDbUniqueName(bean.getProjectName());
+		
+		AppPreferences.getPreferences().putCurrentProject(dbName,bean.getGuid());
+		
+		IAccessDatabase db = openDb(dbName);
+		
+		if(db != null){
+			
+			db.createTable(TunnelCrossSectionIndex.class);
+			db.createTable(TunnelCrossSectionExIndex.class);
+			db.createTable(SurveyerInformation.class);
+			db.createTable(TunnelSettlementTotalData.class);
+			db.createTable(SubsidenceTotalData.class);
+			db.createTable(SubsidenceCrossSectionIndex.class);
+			db.createTable(StationInfoIndex.class);
+			db.createTable(RawSheetIndex.class);
+			db.createTable(ControlPointsIndex.class);
+			db.createTable(SubsidenceCrossSectionExIndex.class);
+			
+			db.createTable(CrownSettlementARCHING.class);
+			db.createTable(ConvergenceSettlementArching.class);
+			db.createTable(SubsidenceSettlementARCHING.class);
+			db.createTable(SurveyerInformation.class);
+			db.createTable(StationInfoIndex.class);
+			db.createTable(ControlPointsIndex.class);
+		}
 	}
 	
 	public boolean hasWorkPlan(){
@@ -209,8 +248,6 @@ public final class ProjectIndexDao extends AbstractDao<ProjectIndex> {
 			
 			pro.setDBLimitVelocity(obj.getDBLimitVelocity());
 			pro.setDBLimitTotalSettlement(obj.getDBLimitTotalSettlement());
-			pro.setDBCreateTime(obj.getDBCreateTime());
-			pro.setDBInfo(obj.getDBInfo());
 			
 			pro.setConstructionFirm(obj.getConstructionFirm());
 			pro.setLimitedTotalSubsidenceTime(obj.getLimitedTotalSubsidenceTime());
@@ -263,10 +300,20 @@ public final class ProjectIndexDao extends AbstractDao<ProjectIndex> {
             }
         }
 
-		final IAccessDatabase db = openDb(bean.getDbName());
+		final IAccessDatabase db = openDb(getDbUniqueName(bean.getProjectName()));
 		
 		// 保存到对应的数据库
 		if(db.saveObject(bean) > 0){
+			
+			// 保存工程配置文件表
+			ProjectSettingIndex setting = new ProjectSettingIndex() ;
+			setting.setProjectName(bean.getProjectName());
+			setting.setChainagePrefix(bean.getChainagePrefix());
+			setting.setInfo(bean.getInfo());
+			setting.setProjectID(bean.getId());
+			setting.setYMDFormat(DateUtils.toDate(DateUtils.toDateString(bean.getCreateTime()), DateUtils.DATE_FORMAT));
+			setting.setHMSFormat(DateUtils.toDate(DateUtils.toDateString(bean.getCreateTime()), DateUtils.DATE_FORMAT));
+			db.saveObject(setting);
 			
 			ProjectIndex obj = db.queryObject("select * from ProjectIndex where ProjectName = ? ", new String[]{bean.getProjectName()}, ProjectIndex.class) ;
 			
@@ -274,7 +321,7 @@ public final class ProjectIndexDao extends AbstractDao<ProjectIndex> {
 			pro.setUsername(user.getUsername());
 			
 			// 第一次保存工作面对应的数据库名称
-			pro.setDbName(obj.getDbName());
+			pro.setDbName(getDbUniqueName(obj.getProjectName()));
 			
 			pro.setProjectId(obj.getId());
 			pro.setProjectName(obj.getProjectName());
@@ -298,8 +345,6 @@ public final class ProjectIndexDao extends AbstractDao<ProjectIndex> {
 			
 			pro.setDBLimitVelocity(obj.getDBLimitVelocity());
 			pro.setDBLimitTotalSettlement(obj.getDBLimitTotalSettlement());
-			pro.setDBCreateTime(obj.getDBCreateTime());
-			pro.setDBInfo(obj.getDBInfo());
 			
 			pro.setConstructionFirm(obj.getConstructionFirm());
 			pro.setLimitedTotalSubsidenceTime(obj.getLimitedTotalSubsidenceTime());
@@ -325,23 +370,25 @@ public final class ProjectIndexDao extends AbstractDao<ProjectIndex> {
 	@Override
 	public int update(ProjectIndex bean) {
 		
-		if(bean == null || bean.getDbName() == null){
+		if(bean == null || bean.getProjectName() == null){
 			return DB_EXECUTE_FAILED ;
 		}
 		
-		final IAccessDatabase db = openDb(bean.getDbName());
+		String dbName = getDbUniqueName(bean.getProjectName()) ;
+		
+		final IAccessDatabase db = openDb(dbName);
 		
 		// 保存到对应的数据库
 		if(db.updateObject(bean) > 0){
 			
 			String sql 		= "select * from CrtbProject where dbName = ? " ;
-			CrtbProject pro = getDefaultDb().queryObject(sql, new String[]{bean.getDbName()}, CrtbProject.class) ;
+			CrtbProject pro = getDefaultDb().queryObject(sql, new String[]{dbName}, CrtbProject.class) ;
 			
 			if(pro == null){
 				return DB_EXECUTE_FAILED ;
 			}
 			
-			pro.setDbName(bean.getDbName());
+			pro.setDbName(dbName);
 			pro.setGuid(bean.getGuid());
 			
 			pro.setProjectId(bean.getId());
@@ -366,8 +413,6 @@ public final class ProjectIndexDao extends AbstractDao<ProjectIndex> {
 			
 			pro.setDBLimitVelocity(bean.getDBLimitVelocity());
 			pro.setDBLimitTotalSettlement(bean.getDBLimitTotalSettlement());
-			pro.setDBCreateTime(bean.getDBCreateTime());
-			pro.setDBInfo(bean.getDBInfo());
 			
 			pro.setConstructionFirm(bean.getConstructionFirm());
 			pro.setLimitedTotalSubsidenceTime(bean.getLimitedTotalSubsidenceTime());
@@ -403,15 +448,17 @@ public final class ProjectIndexDao extends AbstractDao<ProjectIndex> {
 	@Override
 	public int delete(ProjectIndex bean) {
 		
-		if(bean == null || bean.getDbName() == null){
+		if(bean == null || bean.getProjectName() == null){
 			return DB_EXECUTE_FAILED ;
 		}
 		
-		final IAccessDatabase db = openDb(bean.getDbName());
+		String dbName = getDbUniqueName(bean.getProjectName()) ;
+		
+		final IAccessDatabase db = openDb(dbName);
 		
 		if(db.deleteObject(bean) > 0){
 			
-			getDefaultDb().execute("delete from CrtbProject where dbName = ? ", new String[]{bean.getDbName()}) ;
+			getDefaultDb().execute("delete from CrtbProject where dbName = ? ", new String[]{dbName}) ;
 			
 			db.removeDatabse() ;
 			

@@ -11,6 +11,8 @@ import org.zw.android.framework.db.Table;
 import org.zw.android.framework.db.core.ColumnPrimaryKey;
 import org.zw.android.framework.db.core.ColumnPrimaryKey.PrimaryKeyType;
 
+import com.crtb.tunnelmonitor.utils.CrtbUtils;
+
 /**
  * 控制点实体
  */
@@ -35,6 +37,9 @@ public class ControlPointsIndex implements Serializable {
 
     @ColumnText
     private String Info;		// 备注
+    
+    @ColumnText
+    private String Guid ;		// guid
 
     @ColumnBoolean
     private boolean used; 		// 使用
@@ -43,12 +48,21 @@ public class ControlPointsIndex implements Serializable {
     private boolean checked; 	// 选中
 
     public ControlPointsIndex(){
+    	setGuid(CrtbUtils.generatorGUID());
         setChecked(false);
         setUsed(false);
     }
 
 	public int getId() {
 		return Id;
+	}
+
+	public String getGuid() {
+		return Guid;
+	}
+
+	public void setGuid(String guid) {
+		Guid = guid;
 	}
 
 	public void setId(int id) {

@@ -233,7 +233,7 @@ public final class CrtbUtils {
                 + String.format("%04d", sectionSequence);
         outParamter.setSectioCode(sectionCode);
         StringBuilder sb = new StringBuilder();
-        final int totalCount = Integer.parseInt(section.getSurveyPnts());
+        final int totalCount = section.getSurveyPnts();
         for (int i = 0; i < totalCount; i++) {
             sb.append(sectionCode + "DB" + String.format("%02d", i) + "/");
         }

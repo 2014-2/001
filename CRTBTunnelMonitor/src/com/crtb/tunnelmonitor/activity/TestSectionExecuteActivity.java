@@ -497,11 +497,11 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 						
 						TunnelSettlementTotalData obj = new TunnelSettlementTotalData() ;
 						obj.setStationId(AppCRTBApplication.getInstance().getCurUsedStationId());
-						obj.setChainageId(tunnelSection.getID());
-						obj.setSheetId(rawSheetBean.getID());
+						obj.setChainageId(String.valueOf(tunnelSection.getID()));
+						obj.setSheetId(String.valueOf(rawSheetBean.getID()));
 						obj.setPntType(info.type); // 测量点类型
-						obj.setSurveyorID(SurveyerInformationDao.defaultDao().getRowIdByCertificateID(
-						        rawSheetBean.getCertificateID()));// 测量人员id
+						obj.setSurveyorID(String.valueOf(SurveyerInformationDao.defaultDao().getRowIdByCertificateID(
+						        rawSheetBean.getCertificateID())));// 测量人员id
 						obj.setInfo("1");
 
 						TunnelSettlementTotalDataDao dao 	= TunnelSettlementTotalDataDao.defaultDao() ;
@@ -571,11 +571,11 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 						
 						final SubsidenceTotalData obj = new SubsidenceTotalData() ;
 						obj.setStationId(AppCRTBApplication.getInstance().getCurUsedStationId());
-						obj.setChainageId(subsidenceSection.getID());
-						obj.setSheetId(rawSheetBean.getID());
+						obj.setChainageId(String.valueOf(subsidenceSection.getID()));
+						obj.setSheetId(String.valueOf(rawSheetBean.getID()));
 						obj.setPntType(info.type); // 测量点类型
-						obj.setSurveyorID(SurveyerInformationDao.defaultDao().getRowIdByCertificateID(
-						        rawSheetBean.getCertificateID()));// 测量人员id
+						obj.setSurveyorID(String.valueOf(SurveyerInformationDao.defaultDao().getRowIdByCertificateID(
+						        rawSheetBean.getCertificateID())));// 测量人员id
 
 						obj.setCoordinate(info.x + "," + info.y + "," + info.z);
 						obj.setSurveyTime(DateUtils.toDate(info.time, DateUtils.DATE_TIME_FORMAT));
@@ -720,6 +720,34 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 		return view ;
 	}
 	
+	// 得到测量点名称: 0 A, 1 S1, 2 S2, 3 S3
+	private String getPntName(int index){
+		
+		if(index < 0 || index > 3 || tunnelSection == null){
+			return "" ;
+		}
+		
+		String str = tunnelSection.getSurveyPntName() ;
+		
+		if(StringUtils.isEmpty(str)){
+			return "" ;
+		}
+		
+		String[] array = str.split(",");
+		
+		if(index == 0 && array.length >= 1){
+			return array[0];
+		} else if(index == 1 && array.length >=2 ){
+			return array[1];
+		} else if(index == 2 && array.length >= 3){
+			return array[2];
+		} else if(index == 3 && array.length >= 4){
+			return array[3];
+		}
+		
+		return "" ;
+	}
+	
 	private void loadSectionTestData(){
 		
 		// 删除所以的测量点view
@@ -753,7 +781,7 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 			
 			// A
 			bean 	= dao.queryTunnelTotalData(rawSheetBean.getID(),tunnelSection.getID(), AppConfig.POINT_A);
-			holder 	= createTunnelTestPointView(bean,AppConfig.POINT_A,tunnelSection.getPointAName(),"");
+			holder 	= createTunnelTestPointView(bean,AppConfig.POINT_A,getPntName(0),"");
 			addTestPoint(holder.mItemView);
 			
 			// A 报警
@@ -766,13 +794,13 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 				
 				// S1-1
 				bean 	= dao.queryTunnelTotalData(rawSheetBean.getID(),tunnelSection.getID(), AppConfig.POINT_S1_1);
-				holder 	= createTunnelTestPointView(bean,AppConfig.POINT_S1_1,tunnelSection.getPointS1Name(),"1") ;
+				holder 	= createTunnelTestPointView(bean,AppConfig.POINT_S1_1,getPntName(1),"1") ;
 				addTestPoint(holder.mItemView);
 				p1 = bean ;
 				
 				// S1-2
 				bean 	= dao.queryTunnelTotalData(rawSheetBean.getID(),tunnelSection.getID(), AppConfig.POINT_S1_2);
-				holder 	= createTunnelTestPointView(bean,AppConfig.POINT_S1_2,tunnelSection.getPointS1Name(),"2");
+				holder 	= createTunnelTestPointView(bean,AppConfig.POINT_S1_2,getPntName(1),"2");
 				addTestPoint(holder.mItemView);
 				p2 = bean ;
 				
@@ -785,13 +813,13 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 				
 				// S1-1
 				bean 	= dao.queryTunnelTotalData(rawSheetBean.getID(),tunnelSection.getID(), AppConfig.POINT_S1_1);
-				holder 	= createTunnelTestPointView(bean,AppConfig.POINT_S1_1,tunnelSection.getPointS1Name(),"1") ;
+				holder 	= createTunnelTestPointView(bean,AppConfig.POINT_S1_1,getPntName(1),"1") ;
 				p1 		= bean ;
 				addTestPoint(holder.mItemView);
 				
 				// S1-2
 				bean 	= dao.queryTunnelTotalData(rawSheetBean.getID(),tunnelSection.getID(), AppConfig.POINT_S1_2);
-				holder 	= createTunnelTestPointView(bean,AppConfig.POINT_S1_2,tunnelSection.getPointS1Name(),"2") ;
+				holder 	= createTunnelTestPointView(bean,AppConfig.POINT_S1_2,getPntName(1),"2") ;
 				p2		= bean ;
 				addTestPoint(holder.mItemView);
 				
@@ -803,13 +831,13 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 				
 				// S2-1
 				bean 	= dao.queryTunnelTotalData(rawSheetBean.getID(),tunnelSection.getID(), AppConfig.POINT_S2_1);
-				holder 	= createTunnelTestPointView(bean,AppConfig.POINT_S2_1,tunnelSection.getPointS2Name(),"1") ;
+				holder 	= createTunnelTestPointView(bean,AppConfig.POINT_S2_1,getPntName(2),"1") ;
 				p1 		= bean ;
 				addTestPoint(holder.mItemView);
 				
 				// S2-2
 				bean 	= dao.queryTunnelTotalData(rawSheetBean.getID(),tunnelSection.getID(), AppConfig.POINT_S2_2);
-				holder 	= createTunnelTestPointView(bean,AppConfig.POINT_S2_2,tunnelSection.getPointS2Name(),"2") ;
+				holder 	= createTunnelTestPointView(bean,AppConfig.POINT_S2_2,getPntName(2),"2") ;
 				p2 		= bean ;
 				addTestPoint(holder.mItemView);
 				
@@ -822,13 +850,13 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 				
 				// S1-1
 				bean 	= dao.queryTunnelTotalData(rawSheetBean.getID(),tunnelSection.getID(), AppConfig.POINT_S1_1);
-				holder 	= createTunnelTestPointView(bean,AppConfig.POINT_S1_1,tunnelSection.getPointS1Name(),"1") ;
+				holder 	= createTunnelTestPointView(bean,AppConfig.POINT_S1_1,getPntName(1),"1") ;
 				p1		= bean ;
 				addTestPoint(holder.mItemView);
 				
 				// S1-2
 				bean 	= dao.queryTunnelTotalData(rawSheetBean.getID(),tunnelSection.getID(), AppConfig.POINT_S1_2);
-				holder 	= createTunnelTestPointView(bean,AppConfig.POINT_S1_2,tunnelSection.getPointS1Name(),"2") ;
+				holder 	= createTunnelTestPointView(bean,AppConfig.POINT_S1_2,getPntName(1),"2") ;
 				p2		= bean ;
 				addTestPoint(holder.mItemView);
 				
@@ -840,13 +868,13 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 				
 				// S2-1
 				bean 	= dao.queryTunnelTotalData(rawSheetBean.getID(),tunnelSection.getID(), AppConfig.POINT_S2_1);
-				holder 	= createTunnelTestPointView(bean,AppConfig.POINT_S2_1,tunnelSection.getPointS2Name(),"1") ;
+				holder 	= createTunnelTestPointView(bean,AppConfig.POINT_S2_1,getPntName(2),"1") ;
 				p1		= bean ;
 				addTestPoint(holder.mItemView);
 				
 				// S2-2
 				bean 	= dao.queryTunnelTotalData(rawSheetBean.getID(),tunnelSection.getID(), AppConfig.POINT_S2_2);
-				holder 	= createTunnelTestPointView(bean,AppConfig.POINT_S2_2,tunnelSection.getPointS2Name(),"2") ;
+				holder 	= createTunnelTestPointView(bean,AppConfig.POINT_S2_2,getPntName(2),"2") ;
 				p2		= bean ;
 				addTestPoint(holder.mItemView);
 				
@@ -858,13 +886,13 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 				
 				// S3-1
 				bean 	= dao.queryTunnelTotalData(rawSheetBean.getID(),tunnelSection.getID(), AppConfig.POINT_S3_1);
-				holder 	= createTunnelTestPointView(bean,AppConfig.POINT_S3_1,tunnelSection.getPointS3Name(),"1") ;
+				holder 	= createTunnelTestPointView(bean,AppConfig.POINT_S3_1,getPntName(3),"1") ;
 				p1		= bean ;
 				addTestPoint(holder.mItemView);
 				
 				// S3-2
 				bean 	= dao.queryTunnelTotalData(rawSheetBean.getID(),tunnelSection.getID(), AppConfig.POINT_S3_2);
-				holder 	= createTunnelTestPointView(bean,AppConfig.POINT_S3_2,tunnelSection.getPointS3Name(),"2") ;
+				holder 	= createTunnelTestPointView(bean,AppConfig.POINT_S3_2,getPntName(3),"2") ;
 				p2		= bean ;
 				addTestPoint(holder.mItemView);
 				
@@ -877,13 +905,13 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 				
 				// S1-1
 				bean 	= dao.queryTunnelTotalData(rawSheetBean.getID(),tunnelSection.getID(), AppConfig.POINT_S1_1);
-				holder 	= createTunnelTestPointView(bean,AppConfig.POINT_S1_1,tunnelSection.getPointS1Name(),"1") ;
+				holder 	= createTunnelTestPointView(bean,AppConfig.POINT_S1_1,getPntName(1),"1") ;
 				p1		= bean ;
 				addTestPoint(holder.mItemView);
 				
 				// S1-2
 				bean 	= dao.queryTunnelTotalData(rawSheetBean.getID(),tunnelSection.getID(), AppConfig.POINT_S1_2);
-				holder 	= createTunnelTestPointView(bean,AppConfig.POINT_S1_2,tunnelSection.getPointS1Name(),"2") ;
+				holder 	= createTunnelTestPointView(bean,AppConfig.POINT_S1_2,getPntName(1),"2") ;
 				p2		= bean ;
 				addTestPoint(holder.mItemView);
 				
@@ -895,13 +923,13 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 				
 				// S2-1
 				bean 	= dao.queryTunnelTotalData(rawSheetBean.getID(),tunnelSection.getID(), AppConfig.POINT_S2_1);
-				holder 	= createTunnelTestPointView(bean,AppConfig.POINT_S2_1,tunnelSection.getPointS2Name(),"1") ;
+				holder 	= createTunnelTestPointView(bean,AppConfig.POINT_S2_1,getPntName(2),"1") ;
 				p1		= bean ;
 				addTestPoint(holder.mItemView);
 				
 				// S2-2
 				bean 	= dao.queryTunnelTotalData(rawSheetBean.getID(),tunnelSection.getID(), AppConfig.POINT_S2_2);
-				holder 	= createTunnelTestPointView(bean,AppConfig.POINT_S2_2,tunnelSection.getPointS2Name(),"2") ;
+				holder 	= createTunnelTestPointView(bean,AppConfig.POINT_S2_2,getPntName(2),"2") ;
 				p2		= bean ;
 				addTestPoint(holder.mItemView);
 				
@@ -913,13 +941,13 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 				
 				// S3-1
 				bean 	= dao.queryTunnelTotalData(rawSheetBean.getID(),tunnelSection.getID(), AppConfig.POINT_S3_1);
-				holder 	= createTunnelTestPointView(bean,AppConfig.POINT_S3_1,tunnelSection.getPointS3Name(),"1") ;
+				holder 	= createTunnelTestPointView(bean,AppConfig.POINT_S3_1,getPntName(3),"1") ;
 				p1		= bean ;
 				addTestPoint(holder.mItemView);
 				
 				// S3-2
 				bean 	= dao.queryTunnelTotalData(rawSheetBean.getID(),tunnelSection.getID(), AppConfig.POINT_S3_2);
-				holder 	= createTunnelTestPointView(bean,AppConfig.POINT_S3_2,tunnelSection.getPointS3Name(),"2") ;
+				holder 	= createTunnelTestPointView(bean,AppConfig.POINT_S3_2,getPntName(3),"2") ;
 				p2		= bean ;
 				addTestPoint(holder.mItemView);
 				
@@ -931,17 +959,7 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 		// 地表下沉断面测量---临时值
 		else if(sectionType == RawSheetIndex.CROSS_SECTION_TYPE_SUBSIDENCES){
 			
-			String points = subsidenceSection.getSurveyPnts();
-			int size = 0 ;
-			
-			try{
-				if(!StringUtils.isEmpty(points)){
-					size = Integer.valueOf(points) ;
-				}
-			} catch(Exception e){
-				e.printStackTrace() ;
-				showText("地表下沉隧道测量点错误");
-			}
+			int size = subsidenceSection.getSurveyPnts();
 			
 			// title
 			setTopbarTitle(subsidenceSection.getSectionName() + " (" + (sectionIndex + 1) + "/" + subsidenceSectionList.size() + ")");

@@ -9,6 +9,8 @@ import org.zw.android.framework.db.Table;
 import org.zw.android.framework.db.core.ColumnPrimaryKey;
 import org.zw.android.framework.db.core.ColumnPrimaryKey.PrimaryKeyType;
 
+import com.crtb.tunnelmonitor.utils.CrtbUtils;
+
 /**
  *测量人员信息实体
  */
@@ -25,6 +27,9 @@ public class SurveyerInformation implements Serializable {
 	@ColumnString(length=20)
 	private String CertificateID;			//身份证id
 	
+	@ColumnText
+	private String Guid ;					// guid
+	
 	@ColumnString(length=64)
 	private String Password;				//密码
 	
@@ -33,6 +38,18 @@ public class SurveyerInformation implements Serializable {
 	
 	@ColumnInt
 	private int ProjectID;					//工作面id
+	
+	public SurveyerInformation(){
+		setGuid(CrtbUtils.generatorGUID());
+	}
+
+	public String getGuid() {
+		return Guid;
+	}
+
+	public void setGuid(String guid) {
+		Guid = guid;
+	}
 
 	public int getId() {
 		return id;

@@ -47,6 +47,7 @@ public final class AppPreferences {
 	public void putCurrentProject(String projectName,String guid){
 		
 		if(!StringUtils.isEmpty(projectName)){
+			
 			putString(KEY_CURRENT_PROJECT, projectName);
 			putString(KEY_CURRENT_PROJECT_GUID, guid);
 		}

@@ -16,7 +16,7 @@ import org.zw.android.framework.db.core.ColumnPrimaryKey.PrimaryKeyType;
 import com.crtb.tunnelmonitor.utils.CrtbUtils;
 
 /**
- * 地表下沉断面
+ * 地表下沉断面: 更新时间: 2014-05-27
  * 
  * @author zhouwei
  *
@@ -28,12 +28,6 @@ public class SubsidenceCrossSectionIndex implements Serializable {
 	@ColumnInt
 	private int ID;						//记录id
 	
-	@ColumnString(length = 64)
-	private String guid ;				// 唯一标示 -----------扩展
-	
-	@ColumnString(length = 64)
-	private String projectIndexGuid ;	// 工作面guid ---- 扩展
-	
 	@ColumnDouble
 	private double Chainage; 			// 断面里程值
 	
@@ -43,28 +37,35 @@ public class SubsidenceCrossSectionIndex implements Serializable {
 	@ColumnDouble
 	private double Width;				// 断面宽度
 	
-	private String sectionName ;		// 断面名称
+	@ColumnText
+	private String Guid ;				// 唯一标示
+	
+	@ColumnInt
+	private int SurveyPnts;				// 测点个数
 	
 	@ColumnString(length = 255)
-	private String SurveyPnts;			// 测点编号
+	private String SurveyPntName ;		// 测点名称
+	
+	@ColumnInt
+	private int UploadStatus ;			// 0表示全部状态；1表示未上传，2表示已上传，3表示部分上传
 	
 	@ColumnText
 	private String Info;				// 备注
 	
 	@ColumnString(length=255)
-	private String ChainagePrefix;		// 前缀
+	private String ChainagePrefix;		// 里程前缀
 	
 	@ColumnFloat
-	private float DBU0;					//地表uo值
+	private float 	DBU0;					//地表uo值
 	
 	@ColumnDate
-	private Date DBU0Time;				// 限差修改时间
+	private Date 	DBU0Time;				// 限差修改时间
 	
 	@ColumnText
-	private String DBU0Description;		// 拱顶极限备注
+	private String 	DBU0Description;		// 拱顶极限备注
 	
 	@ColumnFloat
-	private float DBLimitVelocity;		// 地表下沉速率
+	private float 	DBLimitVelocity;		// 地表下沉速率
 	
 	@ColumnString(length = 255)
 	private String Lithologic;			// 岩性
@@ -73,11 +74,13 @@ public class SubsidenceCrossSectionIndex implements Serializable {
 	private float LAYVALUE;				// 埋深值
 	
 	@ColumnString(length = 255)
-	private String ROCKGRADE;			// 围岩级别
+	private String ROCKGRADE;			// 围岩级别 使用罗马数字I，II，III，IV，V，VI
 	
 	private boolean used;				// 是否使用 ---------扩展
 	
 	private boolean hasTestData;		// 是否存在测量数据----扩展
+	
+	private String sectionName ;		// 断面名称
 	
 	public SubsidenceCrossSectionIndex(){
 		setGuid(CrtbUtils.generatorGUID());
@@ -93,19 +96,35 @@ public class SubsidenceCrossSectionIndex implements Serializable {
 	}
 
 	public String getGuid() {
-		return guid;
+		return Guid;
 	}
 
 	public void setGuid(String guid) {
-		this.guid = guid;
+		Guid = guid;
 	}
 
-	public String getProjectIndexGuid() {
-		return projectIndexGuid;
+	public int getSurveyPnts() {
+		return SurveyPnts;
 	}
 
-	public void setProjectIndexGuid(String projectIndexGuid) {
-		this.projectIndexGuid = projectIndexGuid;
+	public void setSurveyPnts(int surveyPnts) {
+		SurveyPnts = surveyPnts;
+	}
+
+	public String getSurveyPntName() {
+		return SurveyPntName;
+	}
+
+	public void setSurveyPntName(String surveyPntName) {
+		SurveyPntName = surveyPntName;
+	}
+
+	public int getUploadStatus() {
+		return UploadStatus;
+	}
+
+	public void setUploadStatus(int uploadStatus) {
+		UploadStatus = uploadStatus;
 	}
 
 	public double getChainage() {
@@ -147,14 +166,6 @@ public class SubsidenceCrossSectionIndex implements Serializable {
 
 	public void setSectionName(String sectionName) {
 		this.sectionName = sectionName;
-	}
-
-	public String getSurveyPnts() {
-		return SurveyPnts;
-	}
-
-	public void setSurveyPnts(String surveyPnts) {
-		SurveyPnts = surveyPnts;
 	}
 
 	public String getInfo() {

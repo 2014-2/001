@@ -79,7 +79,7 @@ public class SubsidenceMeasureData extends MeasureData {
             SubsidenceTotalData first = mMeasurePoints.size() > 0 ? mMeasurePoints.get(0)
                     : null;
             if (first != null) {
-                int sheetId = first.getSheetId();
+                int sheetId = Integer.valueOf(first.getSheetId());
                 RawSheetIndex sheet = RawSheetIndexDao.defaultDao().queryOneById(sheetId);
                 if (sheet != null) {
                     mFaceDescription = sheet.getFACEDESCRIPTION();
@@ -92,13 +92,13 @@ public class SubsidenceMeasureData extends MeasureData {
     public float getFaceDistance() {
         SubsidenceTotalData first = mMeasurePoints.size() > 0 ? mMeasurePoints.get(0) : null;
         if (first != null) {
-            int chainageId = first.getChainageId();
+            int chainageId = Integer.valueOf(first.getChainageId());
             SubsidenceCrossSectionIndex section = SubsidenceCrossSectionIndexDao.defaultDao()
                     .querySectionById(chainageId);
             if (section != null) {
                 double chainage = section.getChainage();
 
-                int sheetId = first.getSheetId();
+                int sheetId = Integer.valueOf(first.getSheetId());
                 RawSheetIndex sheet = RawSheetIndexDao.defaultDao().queryOneById(sheetId);
                 if (sheet != null) {
                     double facedk = sheet.getFACEDK();
@@ -111,7 +111,18 @@ public class SubsidenceMeasureData extends MeasureData {
 
     public String getMonitorModel() {
         if (TextUtils.isEmpty(mMointorModel)) {
-            int id = mMeasurePoints.size() > 0 ? mMeasurePoints.get(0).getStationId() : -1;
+        	
+        	// by wei.zhou 2014-05-27
+        	String str = mMeasurePoints.size() > 0 ? mMeasurePoints.get(0).getStationId() : "-1";
+        	int id = -1 ;
+        	
+        	try{
+        		id = Integer.valueOf(str);
+        	}catch(Exception e){
+        		e.printStackTrace() ;
+        	}
+        	
+            // int id = mMeasurePoints.size() > 0 ? mMeasurePoints.get(0).getStationId() : -1;
             if (id >= 0) {
                 TotalStationIndex station = TotalStationInfoDao.defaultDao().queryOneById(id);
                 if (station != null) {

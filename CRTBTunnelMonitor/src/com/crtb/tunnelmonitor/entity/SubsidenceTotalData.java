@@ -6,7 +6,6 @@ import java.util.Date;
 import org.zw.android.framework.db.ColumnDate;
 import org.zw.android.framework.db.ColumnFloat;
 import org.zw.android.framework.db.ColumnInt;
-import org.zw.android.framework.db.ColumnString;
 import org.zw.android.framework.db.ColumnText;
 import org.zw.android.framework.db.Table;
 import org.zw.android.framework.db.core.ColumnPrimaryKey;
@@ -15,7 +14,7 @@ import org.zw.android.framework.db.core.ColumnPrimaryKey.PrimaryKeyType;
 import com.crtb.tunnelmonitor.utils.CrtbUtils;
 
 /**
- * 地表下沉断面记录单
+ * 地表下沉断面记录单, 更新时间: 2014-05-27
  * 
  * @author zhouwei
  *
@@ -27,22 +26,22 @@ public class SubsidenceTotalData implements Serializable {
 	@ColumnInt
 	private int ID;				// id
 	
-	@ColumnString(length = 64)
-	private String guid ;		// 唯一标示 -----------扩展
+	@ColumnText
+	private String Guid ;		// 唯一标示
 	
-	@ColumnInt
-	private int StationId;		// 设站ID
+	@ColumnText
+	private String StationId;	// 设站ID
 	
-	@ColumnInt
-	private int ChainageId;		// 断面里程ID
+	@ColumnText
+	private String ChainageId;	// 断面里程ID
 	
-	@ColumnInt
-	private int SheetId;		// 记录单id
+	@ColumnText
+	private String SheetId;		// 记录单id
 	
 	@ColumnText
 	private String Coordinate;	// 测点坐标
 	
-	@ColumnString(length=10)
+	@ColumnText
 	private String PntType;		// 测点类型
 	
 	@ColumnDate
@@ -54,8 +53,8 @@ public class SubsidenceTotalData implements Serializable {
 	@ColumnInt
 	private int MEASNo;			// 第几次测量
 	
-	@ColumnInt
-	private int SurveyorID;		// 测量人员id
+	@ColumnText
+	private String SurveyorID;	// 测量人员id
 	
 	@ColumnInt
 	private int DataStatus;		// 异常数据标识 
@@ -66,6 +65,9 @@ public class SubsidenceTotalData implements Serializable {
 	
 	@ColumnFloat
 	private float DataCorrection;	// 异常数据修正值
+	
+	@ColumnInt
+	private int UploadStatus ;		// 上传状态
 	
 	public SubsidenceTotalData(){
 		setGuid(CrtbUtils.generatorGUID());
@@ -80,35 +82,27 @@ public class SubsidenceTotalData implements Serializable {
 	}
 
 	public String getGuid() {
-		return guid;
+		return Guid;
 	}
 
 	public void setGuid(String guid) {
-		this.guid = guid;
+		Guid = guid;
 	}
 
-	public int getStationId() {
+	public int getUploadStatus() {
+		return UploadStatus;
+	}
+
+	public void setUploadStatus(int uploadStatus) {
+		UploadStatus = uploadStatus;
+	}
+
+	public String getStationId() {
 		return StationId;
 	}
 
-	public void setStationId(int stationId) {
+	public void setStationId(String stationId) {
 		StationId = stationId;
-	}
-
-	public int getChainageId() {
-		return ChainageId;
-	}
-
-	public void setChainageId(int chainageId) {
-		ChainageId = chainageId;
-	}
-
-	public int getSheetId() {
-		return SheetId;
-	}
-
-	public void setSheetId(int sheetId) {
-		SheetId = sheetId;
 	}
 
 	public String getCoordinate() {
@@ -151,11 +145,27 @@ public class SubsidenceTotalData implements Serializable {
 		MEASNo = mEASNo;
 	}
 
-	public int getSurveyorID() {
+	public String getChainageId() {
+		return ChainageId;
+	}
+
+	public void setChainageId(String chainageId) {
+		ChainageId = chainageId;
+	}
+
+	public String getSheetId() {
+		return SheetId;
+	}
+
+	public void setSheetId(String sheetId) {
+		SheetId = sheetId;
+	}
+
+	public String getSurveyorID() {
 		return SurveyorID;
 	}
 
-	public void setSurveyorID(int surveyorID) {
+	public void setSurveyorID(String surveyorID) {
 		SurveyorID = surveyorID;
 	}
 
