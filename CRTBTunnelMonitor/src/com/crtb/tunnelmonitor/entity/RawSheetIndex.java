@@ -61,9 +61,6 @@ public class RawSheetIndex implements Serializable {
 											// TunnelCrossSectionIndex
 											// SubsidenceCrossSectionIndex
 	
-	@ColumnString(length=64)
-	private String prefix ;					// 前缀  ------扩展
-	
 	@ColumnString(length=100)
 	private String Surveyer ;				// 测量人员  ------扩展
 	
@@ -124,14 +121,6 @@ public class RawSheetIndex implements Serializable {
 
 	public void setCertificateID(String certificateID) {
 		CertificateID = certificateID;
-	}
-
-	public String getPrefix() {
-		return prefix;
-	}
-
-	public void setPrefix(String prefix) {
-		this.prefix = prefix;
 	}
 
 	public int getCrossSectionType() {
