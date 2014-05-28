@@ -15,6 +15,8 @@ import com.crtb.tunnelmonitor.entity.ConvergenceSettlementArching;
 import com.crtb.tunnelmonitor.entity.CrownSettlementARCHING;
 import com.crtb.tunnelmonitor.entity.CrtbProject;
 import com.crtb.tunnelmonitor.entity.CrtbUser;
+import com.crtb.tunnelmonitor.entity.DTMSProjectVersion;
+import com.crtb.tunnelmonitor.entity.DTMSVersion;
 import com.crtb.tunnelmonitor.entity.ProjectIndex;
 import com.crtb.tunnelmonitor.entity.ProjectSettingIndex;
 import com.crtb.tunnelmonitor.entity.RawSheetIndex;
@@ -146,13 +148,15 @@ public final class ProjectIndexDao extends AbstractDao<ProjectIndex> {
 		
 		if(db != null){
 			
+			db.createTable(DTMSVersion.class);
+			db.createTable(DTMSProjectVersion.class);
+			db.createTable(ProjectSettingIndex.class);
+			
 			db.createTable(TunnelCrossSectionIndex.class);
 			db.createTable(TunnelCrossSectionExIndex.class);
-			db.createTable(SurveyerInformation.class);
 			db.createTable(TunnelSettlementTotalData.class);
 			db.createTable(SubsidenceTotalData.class);
 			db.createTable(SubsidenceCrossSectionIndex.class);
-			db.createTable(StationInfoIndex.class);
 			db.createTable(RawSheetIndex.class);
 			db.createTable(ControlPointsIndex.class);
 			db.createTable(SubsidenceCrossSectionExIndex.class);
