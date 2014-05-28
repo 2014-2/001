@@ -38,6 +38,9 @@ import com.crtb.tunnelmonitor.entity.SubsidenceTotalData;
 import com.crtb.tunnelmonitor.entity.TunnelCrossSectionIndex;
 import com.crtb.tunnelmonitor.entity.TunnelSettlementTotalData;
 import com.crtb.tunnelmonitor.mydefine.CrtbDialogConnecting;
+import com.crtb.tunnelmonitor.mydefine.CrtbDialogDelete;
+import com.crtb.tunnelmonitor.mydefine.CrtbDialogDelete.IButtonOnClick;
+import com.crtb.tunnelmonitor.mydefine.CrtbDialogHint;
 import com.crtb.tunnelmonitor.utils.AlertUtils;
 import com.crtb.tunnelmonitor.utils.CrtbUtils;
 import com.crtb.tunnelmonitor.utils.Time;
@@ -63,6 +66,7 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 	static final int MSG_TEST_ERROR		= 2 ;
 	static final int MSG_TEST_SUCCESS	= 3 ;
 	static final int MSG_ERROR_NOT_TEST	= 4 ;
+	static final int MSG_ERROR_NOT_RESET= 5 ;
 	
 	@InjectView(id=R.id.test_bottom_layout)
 	private LinearLayout mBottomLayout ;
@@ -326,7 +330,7 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 			}
 			
 			// 测试时间
-			holder.mPointTime.setText(DateUtils.toDateString(bean.getSurveyTime(), DateUtils.PART_TIME_FORMAT));
+			holder.mPointTime.setText(DateUtils.toDateString(bean.getSurveyTime(), DateUtils.DATE_TIME_FORMAT));
 		}
 		
 		// 测点类型
@@ -355,19 +359,40 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 			@Override
 			public void onClick(View v) {
 				
-				TunnelSettlementTotalDataDao dao 	= TunnelSettlementTotalDataDao.defaultDao() ;
-				TunnelSettlementTotalData obj 		= dao.queryTunnelTotalData(rawSheetBean.getID(),tunnelSection.getID(),type);
-				
-				if(obj != null){
-					
-					dao.reset(obj);
-					
-					holder.mPointX.setText("");
-					holder.mPointY.setText("");
-					holder.mPointZ.setText("");
-					holder.mPointTime.setText("");
-					holder.warringLayout.setVisibility(View.INVISIBLE);
+				if(!rawSheetCanTest){
+					mHanlder.sendMessage(MSG_ERROR_NOT_RESET);
+					return ;
 				}
+				
+				CrtbDialogDelete delete = new CrtbDialogDelete(TestSectionExecuteActivity.this,R.drawable.ic_warnning,"执行该操作将删除操作面的全部数据,无法恢复!");
+				
+				delete.setButtonClick(new IButtonOnClick() {
+					
+					@Override
+					public void onClick(int id) {
+						
+						if(id == CrtbDialogDelete.BUTTON_ID_CONFIRM){
+
+							TunnelSettlementTotalDataDao dao 	= TunnelSettlementTotalDataDao.defaultDao() ;
+							TunnelSettlementTotalData obj 		= dao.queryTunnelTotalData(rawSheetBean.getID(),tunnelSection.getID(),type);
+							
+							if(obj != null){
+								
+								dao.reset(obj);
+								
+								//TODO 删除对应的超限信息
+								
+								holder.mPointX.setText("");
+								holder.mPointY.setText("");
+								holder.mPointZ.setText("");
+								holder.mPointTime.setText("");
+								holder.warringLayout.setVisibility(View.INVISIBLE);
+							}
+						}
+					}
+				}) ;
+				
+				delete.show() ;
 			}
 		}) ;
 		
@@ -391,10 +416,17 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 			mHanlder.sendMessage(MSG_ERROR_NOT_TEST);
 			return ;
 		}
+		
+		if(rawSheetBean != null && rawSheetBean.getUploadStatus() == 2){
+			CrtbDialogHint hint = new CrtbDialogHint(this,R.drawable.ic_warnning, "数据已上传，不能重测!");
+			hint.show() ;
+			return ;
+		}
 
 		String x, y, z;
 
 		if (!DEBUG) {
+			
 		    ISurveyProvider ts = TSSurveyProvider.getDefaultAdapter();
 		    
 		    if (ts == null) {
@@ -482,6 +514,9 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 					break ;
 				case MSG_ERROR_NOT_TEST :
 					showText("该记录不是最新记录单,不能测量");
+					break ;
+				case MSG_ERROR_NOT_RESET :
+					showText("该记录不能被删除");
 					break ;
 				case MSG_TEST_SUCCESS :
 					
@@ -683,7 +718,7 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 			}
 
 			// 测试时间
-			holder.mPointTime.setText(DateUtils.toDateString(bean.getSurveyTime(), DateUtils.PART_TIME_FORMAT));
+			holder.mPointTime.setText(DateUtils.toDateString(bean.getSurveyTime(), DateUtils.DATE_TIME_FORMAT));
 		}
 		
 		// 测量
@@ -701,19 +736,42 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 			@Override
 			public void onClick(View v) {
 				
-				SubsidenceTotalDataDao dao 	= SubsidenceTotalDataDao.defaultDao() ;
-				SubsidenceTotalData obj = dao.querySubsidenceTotalData(rawSheetBean.getID(),subsidenceSection.getID(),type);
-
-				if(obj != null){
-					
-					dao.reset(obj);
-					
-					holder.mPointX.setText("");
-					holder.mPointY.setText("");
-					holder.mPointZ.setText("");
-					holder.mPointTime.setText("");
-					holder.warringLayout.setVisibility(View.INVISIBLE);
+				if(!rawSheetCanTest){
+					mHanlder.sendMessage(MSG_ERROR_NOT_RESET);
+					return ;
 				}
+				
+				CrtbDialogDelete delete = new CrtbDialogDelete(TestSectionExecuteActivity.this,R.drawable.ic_warnning,"执行该操作将删除操作面的全部数据,无法恢复!");
+				
+				delete.setButtonClick(new IButtonOnClick() {
+					
+					@Override
+					public void onClick(int id) {
+						
+						if(id == CrtbDialogDelete.BUTTON_ID_CONFIRM){
+							
+							SubsidenceTotalDataDao dao 	= SubsidenceTotalDataDao.defaultDao() ;
+							SubsidenceTotalData obj = dao.querySubsidenceTotalData(rawSheetBean.getID(),subsidenceSection.getID(),type);
+
+							if(obj != null){
+								
+								dao.reset(obj);
+								
+								//TODO 删除对应的超限信息
+								
+								holder.mPointX.setText("");
+								holder.mPointY.setText("");
+								holder.mPointZ.setText("");
+								holder.mPointTime.setText("");
+								holder.warringLayout.removeAllViews();
+								holder.warringLayout.setVisibility(View.INVISIBLE);
+							}
+						}
+					}
+				}) ;
+				
+				delete.show() ;
+				
 			}
 		});
 
