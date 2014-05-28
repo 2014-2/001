@@ -42,7 +42,9 @@ public class TotalStationNewBluetoothActivity extends Activity implements OnClic
     private EditText pp, name, info;
     private ArrayAdapter adapter;
     private List<String> pplist = null;
+//    private List<BluetoothDevice> btDevices = null;
     private List<String> infolist = null;
+    private List<String> btDeviceNamelist = null;
     private TotalStationIndex editInfo = null;
     /** 确定按钮 */
     private Button section_btn_queding;
@@ -52,6 +54,8 @@ public class TotalStationNewBluetoothActivity extends Activity implements OnClic
     private AppCRTBApplication CurApp = null;
 
     private boolean bEdit=false;
+
+    private int selectedBtDevicePosition = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +68,8 @@ public class TotalStationNewBluetoothActivity extends Activity implements OnClic
 
         pplist = new ArrayList<String>();
         infolist = new ArrayList<String>();
+        btDeviceNamelist = new ArrayList<String>();
+//        btDevices = new ArrayList<BluetoothDevice>();
         Bundle bundle=getIntent().getExtras();
         editInfo = (TotalStationIndex)bundle.getSerializable(Constant.Select_TotalStationRowClickItemsName_Data);
         bEdit=bundle.getBoolean("bEdit");
@@ -82,8 +88,8 @@ public class TotalStationNewBluetoothActivity extends Activity implements OnClic
                 }
             }
         });
-        adap(pps,pplist);
-        adap(infos,infolist);
+        adap(pps, pplist);
+        adap(infos, btDeviceNamelist);
         onCli();
 
         initData();
@@ -101,12 +107,14 @@ public class TotalStationNewBluetoothActivity extends Activity implements OnClic
   			else {
 	   		  // 获得已配对的远程蓝牙设备的集合  
 	        Set<BluetoothDevice> devices = btAdapt.getBondedDevices();
+//	        btDevices.addAll(devices);
 	        if(devices.size() > 0){  
-	          for(Iterator<BluetoothDevice> it = devices.iterator();it.hasNext();){  
-	              BluetoothDevice device = (BluetoothDevice)it.next();  
-	              // 打印出远程蓝牙设备的物理地址  
-	      				infolist.add (device.getAddress());
-	          }  
+                for (Iterator<BluetoothDevice> it = devices.iterator(); it.hasNext();) {
+                    BluetoothDevice device = (BluetoothDevice) it.next();
+                    // 打印出远程蓝牙设备的物理地址
+                    infolist.add(device.getAddress());
+                    btDeviceNamelist.add(device.getName());
+                }
 	        }
 	        else 
 	        {
@@ -164,7 +172,9 @@ public class TotalStationNewBluetoothActivity extends Activity implements OnClic
                     }
                 }
                 ts.setName(name.getText().toString().trim());
-                ts.setInfo(info.getText().toString().trim());
+                if (selectedBtDevicePosition != -1) {
+                    ts.setInfo(infolist.get(selectedBtDevicePosition).trim());
+                }
 
                 if(!CurApp.IsValidTotalStationInfo(ts))
                 {
@@ -208,7 +218,7 @@ public class TotalStationNewBluetoothActivity extends Activity implements OnClic
         }
         else {
             ts_new_tv_header.setText(R.string.new_control_station_title);
-            if (infolist.size() > 0) infos.setSelection(0);
+            if (btDeviceNamelist.size() > 0) infos.setSelection(0);
         }
     }
 
@@ -242,7 +252,10 @@ public class TotalStationNewBluetoothActivity extends Activity implements OnClic
             @Override
             public void onItemSelected(AdapterView<?> parent, View view,
                     int position, long id) {
-                info.setText(infolist.get(position).toString());
+                selectedBtDevicePosition  = position;
+//                info.setText(infolist.get(position).toString());
+                String btDeviceName = btDeviceNamelist.get(position);
+                info.setText(btDeviceName);
             }
 
             @Override
