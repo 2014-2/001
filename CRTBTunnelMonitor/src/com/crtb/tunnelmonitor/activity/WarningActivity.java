@@ -8,6 +8,7 @@ import java.util.Random;
 import org.zw.android.framework.util.DateUtils;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -57,7 +58,7 @@ public class WarningActivity extends Activity {
     private TextView warningSignalTV, warningPointNumTV, warningStateTV,
             warningValueTV, warningDateTV, warningMessageTV, warningDealWayTV,
             oldDateMileageTV, oldDateListNumTV, oldDatePointTV;
-    private Button normalCalBtn, discardBtn, asFirstLineBtn, correctionBtn, reburyBtn, completeOkBtn,completeCancelBtn;
+    private Button normalCalBtn, discardBtn, asFirstLineBtn, correctionBtn, reburyBtn, handlingDetailBtn, completeOkBtn,completeCancelBtn;
     private View oldChooseView;
     private int clickedItem;
     private int handlingStep;
@@ -113,7 +114,9 @@ public class WarningActivity extends Activity {
         setBtnClickListener(correctionBtn);
         reburyBtn = (Button) findViewById(R.id.rebury);
         setBtnClickListener(reburyBtn);
-        
+        handlingDetailBtn = (Button) findViewById(R.id.handling_detail);
+        setBtnClickListener(handlingDetailBtn);
+
         initB();
         initView();
 
@@ -169,8 +172,7 @@ public class WarningActivity extends Activity {
                             }
                         }
                         warningValueTV.setText("超限值: "
-                                + String.format("%1$.4f", alert.getUValue() + alert.getCorrection()
-                                        + correction)
+                                + String.format("%1$.4f", alert.getUValue() + correction)
                                 + AlertUtils.getAlertValueUnit(alert.getUType()));
                     }
                 }
@@ -256,7 +258,7 @@ public class WarningActivity extends Activity {
                                     warningSignalTV.setText(alert.getXinghao());
                                     warningPointNumTV.setText("点号："+alert.getPntType());
                                     warningStateTV.setText("状态："+alert.getAlertStatusMsg());
-                                    warningValueTV.setText("超限值: " + String.format("%1$.4f", alert.getUValue() + alert.getCorrection())
+                                    warningValueTV.setText("超限值: " + String.format("%1$.4f", alert.getUValue())
                                             + AlertUtils.getAlertValueUnit(alert.getUType()));
                                     warningDateTV.setText(alert.getDate());
                                     warningMessageTV.setText(alert.getUTypeMsg());
@@ -303,8 +305,9 @@ public class WarningActivity extends Activity {
                 case R.id.handling_detail:
                     if (alerts != null && alerts.size() > 0 && clickedItem >= 0 && clickedItem < alerts.size()) {
                         AlertInfo alert = alerts.get(clickedItem);
-//                        List<AlertHandlingList> handlings = AlertHandlingInfoDao.defaultDao().queryByAlertIdOrderByHandlingTimeDesc(alert.getAlertId());
-                        //TODO
+                        Intent i = new Intent(WarningActivity.this, HandlingDetailsActivity.class);
+                        i.putExtra(HandlingDetailsActivity.EXTRA_ALERT_ID, alert.getAlertId());
+                        startActivity(i);
                     }
                     break;
                 case R.id.complete_ok:
