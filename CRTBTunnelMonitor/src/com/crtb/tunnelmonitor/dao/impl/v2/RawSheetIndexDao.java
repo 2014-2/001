@@ -51,7 +51,7 @@ public class RawSheetIndexDao extends AbstractDao<RawSheetIndex> {
 			return null ;
 		}
 		
-		String sql = "select * from RawSheetIndex where CrossSectionType = ? ORDER BY ID ASC";
+		String sql = "select * from RawSheetIndex where CrossSectionType = ? ORDER BY CreateTime DESC";
 		
 		return mDatabase.queryObjects(sql, new String[]{String.valueOf(RawSheetIndex.CROSS_SECTION_TYPE_TUNNEL)}, RawSheetIndex.class);
 	}
@@ -65,7 +65,7 @@ public class RawSheetIndexDao extends AbstractDao<RawSheetIndex> {
 			return null ;
 		}
 		
-		String sql = "select * from RawSheetIndex where CrossSectionType = ? ORDER BY ID ASC";
+		String sql = "select * from RawSheetIndex where CrossSectionType = ? ORDER BY CreateTime DESC";
 		
 		return mDatabase.queryObjects(sql, new String[]{String.valueOf(RawSheetIndex.CROSS_SECTION_TYPE_SUBSIDENCES)}, RawSheetIndex.class);
 	}

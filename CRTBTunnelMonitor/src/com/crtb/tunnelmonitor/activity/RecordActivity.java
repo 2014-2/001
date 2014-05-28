@@ -195,6 +195,13 @@ public class RecordActivity extends WorkFlowActivity implements OnPageChangeList
 			// 删除
 			else if(position == 2){
 				
+				// 已经上传不能删除
+				if(info.getUploadStatus() == 2){
+					CrtbDialogHint hint = new CrtbDialogHint(RecordActivity.this,R.drawable.ic_warnning, "数据已上传，不能删除!");
+					hint.show() ;
+					return ;
+				}
+				
 				// 隧道内
 				if(info.getCrossSectionType() == RawSheetIndex.CROSS_SECTION_TYPE_TUNNEL){
 					
