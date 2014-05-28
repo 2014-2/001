@@ -56,6 +56,11 @@ public final class AppPreferences {
 		return getString(KEY_CURRENT_PROJECT) ;
 	}
 	
+	// 重置保存数据
+	public void removeCurrentProject(){
+		putString(KEY_CURRENT_PROJECT, "");
+	}
+	
 	public String getCurrentSimpleProjectName(){
 		
 		String name = getCurrentProject();

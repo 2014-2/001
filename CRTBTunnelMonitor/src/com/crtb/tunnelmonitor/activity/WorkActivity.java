@@ -112,6 +112,8 @@ public final class WorkActivity extends WorkFlowActivity {
 							
 							int code = ProjectIndexDao.defaultWorkPlanDao().delete(bean) ;
 							
+							ProjectIndexDao.defaultWorkPlanDao().removeProjectIndex(bean);
+							
 							if(code == ProjectIndexDao.DB_EXECUTE_SUCCESS){
 								loadSystemMenu();
 							}

@@ -63,6 +63,8 @@
                     android:layout_marginRight="10dp"
                     android:layout_marginTop="10dp"
                     android:layout_toLeftOf="@id/hint_img"
+                    android:editable="false"
+                    android:focusable="false"
                     android:inputType="numberDecimal"
                     android:text="100" />
             </RelativeLayout>
@@ -97,6 +99,8 @@
                     android:layout_marginRight="10dp"
                     android:layout_marginTop="10dp"
                     android:layout_toLeftOf="@id/hint_img"
+                    android:editable="false"
+                    android:focusable="false"
                     android:inputType="numberDecimal"
                     android:text="5" />
             </RelativeLayout>
@@ -147,6 +151,8 @@
                     android:layout_marginRight="10dp"
                     android:layout_marginTop="10dp"
                     android:layout_toLeftOf="@id/hint_img"
+                    android:editable="false"
+                    android:focusable="false"
                     android:inputType="numberDecimal"
                     android:text="100" />
             </RelativeLayout>
@@ -181,6 +187,8 @@
                     android:layout_marginRight="10dp"
                     android:layout_marginTop="10dp"
                     android:layout_toLeftOf="@id/hint_img"
+                    android:editable="false"
+                    android:focusable="false"
                     android:inputType="numberDecimal"
                     android:text="5" />
             </RelativeLayout>
@@ -231,10 +239,12 @@
                     android:layout_marginRight="10dp"
                     android:layout_marginTop="10dp"
                     android:layout_toLeftOf="@id/hint_img"
+                    android:editable="false"
+                    android:focusable="false"
                     android:inputType="numberDecimal"
                     android:text="100" />
             </RelativeLayout>
-            
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -265,6 +275,8 @@
                     android:layout_marginRight="10dp"
                     android:layout_marginTop="10dp"
                     android:layout_toLeftOf="@id/hint_img"
+                    android:editable="false"
+                    android:focusable="false"
                     android:inputType="numberDecimal"
                     android:text="5" />
             </RelativeLayout>

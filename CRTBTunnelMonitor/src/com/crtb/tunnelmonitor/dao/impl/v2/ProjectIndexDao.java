@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.zw.android.framework.IAccessDatabase;
+import org.zw.android.framework.impl.FrameworkFacade;
 import org.zw.android.framework.util.DateUtils;
 
 import android.util.Log;
@@ -82,7 +83,6 @@ public final class ProjectIndexDao extends AbstractDao<ProjectIndex> {
 			ProjectIndex pro = new ProjectIndex() ;
 			
 			pro.setId(p.getProjectId());
-			//pro.setDbName(p.getDbName()); // 对应的数据库名称
 			pro.setProjectName(p.getProjectName());
 			pro.setCreateTime(p.getCreateTime());
 			pro.setStartChainage(p.getStartChainage());
@@ -97,6 +97,9 @@ public final class ProjectIndexDao extends AbstractDao<ProjectIndex> {
 			
 			pro.setDBLimitVelocity(p.getDBLimitVelocity());
 			pro.setDBLimitTotalSettlement(p.getDBLimitTotalSettlement());
+			
+			pro.setSLLimitTotalSettlement(p.getSLLimitTotalSettlement());
+			pro.setSLLimitVelocity(p.getSLLimitVelocity());
 			
 			pro.setConstructionFirm(p.getConstructionFirm());
 			pro.setLimitedTotalSubsidenceTime(p.getLimitedTotalSubsidenceTime());
@@ -131,6 +134,17 @@ public final class ProjectIndexDao extends AbstractDao<ProjectIndex> {
 		}
 		
 		return db.getDatabasePath() ;
+	}
+	
+	public void removeProjectIndex(ProjectIndex bean){
+		
+		String dbName = getDbUniqueName(bean.getProjectName());
+		
+		String name = AppPreferences.getPreferences().getCurrentProject() ;
+		
+		if(name.equals(dbName)){
+			AppPreferences.getPreferences().removeCurrentProject();
+		}
 	}
 	
 	public void updateCurrentWorkPlan(ProjectIndex bean){
@@ -448,6 +462,10 @@ public final class ProjectIndexDao extends AbstractDao<ProjectIndex> {
 			
 			getDefaultDb().execute("delete from CrtbProject where dbName = ? ", new String[]{dbName}) ;
 			
+			// 删除数据库缓存
+			FrameworkFacade.getFrameworkFacade().removeDatabaseByName(dbName);
+			
+			// 删除数据库文件
 			db.removeDatabse() ;
 			
 			return DB_EXECUTE_SUCCESS ;

@@ -288,6 +288,16 @@ public class WorkNewActivity extends WorkFlowActivity implements OnClickListener
 			double sm	= CrtbUtils.formatDouble(start);
 			double em	= CrtbUtils.formatDouble(end);
 			
+			if(sm <= 0.0d){
+				showText("开始里程必须大于0");
+				return ;
+			}
+			
+			if(em <= 0.0d){
+				showText("结束里程必须大于0");
+				return ;
+			}
+			
 			if(em == sm){
 				showText("开始里程与结束里程不能相同");
 				return ;
@@ -334,7 +344,7 @@ public class WorkNewActivity extends WorkFlowActivity implements OnClickListener
 			String limitDate 	= mLimitDate.getEditableText().toString().trim() ;
 			String infoStr 		= mInfo.getEditableText().toString().trim();
 			
-			float gdlimt= 0f ,gdv = 0f,sllimt= 0f ,sldv = 0f,dblimt = 0f,dbv = 0f,dbvl=0f ;
+			float gdlimt= 0f ,gdv = 0f,sllimt= 0f ,sldv = 0f,dblimt = 0f,dbvl=0f ;
 			
 			try{
 				
