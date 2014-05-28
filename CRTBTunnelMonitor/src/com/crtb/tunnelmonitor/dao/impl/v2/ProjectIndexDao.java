@@ -10,11 +10,15 @@ import android.util.Log;
 
 import com.crtb.tunnelmonitor.AppCRTBApplication;
 import com.crtb.tunnelmonitor.AppPreferences;
+import com.crtb.tunnelmonitor.entity.AlertHandlingList;
+import com.crtb.tunnelmonitor.entity.AlertList;
 import com.crtb.tunnelmonitor.entity.ControlPointsIndex;
 import com.crtb.tunnelmonitor.entity.ConvergenceSettlementArching;
 import com.crtb.tunnelmonitor.entity.CrownSettlementARCHING;
 import com.crtb.tunnelmonitor.entity.CrtbProject;
 import com.crtb.tunnelmonitor.entity.CrtbUser;
+import com.crtb.tunnelmonitor.entity.DTMSProjectVersion;
+import com.crtb.tunnelmonitor.entity.DTMSVersion;
 import com.crtb.tunnelmonitor.entity.ProjectIndex;
 import com.crtb.tunnelmonitor.entity.ProjectSettingIndex;
 import com.crtb.tunnelmonitor.entity.RawSheetIndex;
@@ -90,13 +94,6 @@ public final class ProjectIndexDao extends AbstractDao<ProjectIndex> {
 			
 			pro.setGDLimitVelocity(p.getGDLimitVelocity());
 			pro.setGDLimitTotalSettlement(p.getGDLimitTotalSettlement());
-			pro.setGDCreateTime(p.getGDCreateTime());
-			pro.setGDInfo(p.getGDInfo());
-			
-			pro.setSLLimitVelocity(p.getSLLimitVelocity());
-			pro.setSLLimitTotalSettlement(p.getSLLimitTotalSettlement());
-			pro.setSLCreateTime(p.getSLCreateTime());
-			pro.setSLInfo(p.getSLInfo());
 			
 			pro.setDBLimitVelocity(p.getDBLimitVelocity());
 			pro.setDBLimitTotalSettlement(p.getDBLimitTotalSettlement());
@@ -140,23 +137,27 @@ public final class ProjectIndexDao extends AbstractDao<ProjectIndex> {
 		
 		String dbName = getDbUniqueName(bean.getProjectName());
 		
-		AppPreferences.getPreferences().putCurrentProject(dbName,bean.getGuid());
+		AppPreferences.getPreferences().putCurrentProject(dbName);
 		
 		IAccessDatabase db = openDb(dbName);
 		
 		if(db != null){
 			
+			db.createTable(DTMSVersion.class);
+			db.createTable(DTMSProjectVersion.class);
+			db.createTable(ProjectSettingIndex.class);
+			
 			db.createTable(TunnelCrossSectionIndex.class);
 			db.createTable(TunnelCrossSectionExIndex.class);
-			db.createTable(SurveyerInformation.class);
 			db.createTable(TunnelSettlementTotalData.class);
 			db.createTable(SubsidenceTotalData.class);
 			db.createTable(SubsidenceCrossSectionIndex.class);
-			db.createTable(StationInfoIndex.class);
 			db.createTable(RawSheetIndex.class);
 			db.createTable(ControlPointsIndex.class);
 			db.createTable(SubsidenceCrossSectionExIndex.class);
 			
+			db.createTable(AlertList.class);
+			db.createTable(AlertHandlingList.class);
 			db.createTable(CrownSettlementARCHING.class);
 			db.createTable(ConvergenceSettlementArching.class);
 			db.createTable(SubsidenceSettlementARCHING.class);
@@ -238,13 +239,9 @@ public final class ProjectIndexDao extends AbstractDao<ProjectIndex> {
 			
 			pro.setGDLimitVelocity(obj.getGDLimitVelocity());
 			pro.setGDLimitTotalSettlement(obj.getGDLimitTotalSettlement());
-			pro.setGDCreateTime(obj.getGDCreateTime());
-			pro.setGDInfo(obj.getGDInfo());
 			
 			pro.setSLLimitVelocity(obj.getSLLimitVelocity());
 			pro.setSLLimitTotalSettlement(obj.getSLLimitTotalSettlement());
-			pro.setSLCreateTime(obj.getSLCreateTime());
-			pro.setSLInfo(obj.getSLInfo());
 			
 			pro.setDBLimitVelocity(obj.getDBLimitVelocity());
 			pro.setDBLimitTotalSettlement(obj.getDBLimitTotalSettlement());
@@ -335,13 +332,9 @@ public final class ProjectIndexDao extends AbstractDao<ProjectIndex> {
 			
 			pro.setGDLimitVelocity(obj.getGDLimitVelocity());
 			pro.setGDLimitTotalSettlement(obj.getGDLimitTotalSettlement());
-			pro.setGDCreateTime(obj.getGDCreateTime());
-			pro.setGDInfo(obj.getGDInfo());
 			
 			pro.setSLLimitVelocity(obj.getSLLimitVelocity());
 			pro.setSLLimitTotalSettlement(obj.getSLLimitTotalSettlement());
-			pro.setSLCreateTime(obj.getSLCreateTime());
-			pro.setSLInfo(obj.getSLInfo());
 			
 			pro.setDBLimitVelocity(obj.getDBLimitVelocity());
 			pro.setDBLimitTotalSettlement(obj.getDBLimitTotalSettlement());
@@ -389,7 +382,6 @@ public final class ProjectIndexDao extends AbstractDao<ProjectIndex> {
 			}
 			
 			pro.setDbName(dbName);
-			pro.setGuid(bean.getGuid());
 			
 			pro.setProjectId(bean.getId());
 			pro.setProjectName(bean.getProjectName());
@@ -403,13 +395,9 @@ public final class ProjectIndexDao extends AbstractDao<ProjectIndex> {
 			
 			pro.setGDLimitVelocity(bean.getGDLimitVelocity());
 			pro.setGDLimitTotalSettlement(bean.getGDLimitTotalSettlement());
-			pro.setGDCreateTime(bean.getGDCreateTime());
-			pro.setGDInfo(bean.getGDInfo());
 			
 			pro.setSLLimitVelocity(bean.getSLLimitVelocity());
 			pro.setSLLimitTotalSettlement(bean.getSLLimitTotalSettlement());
-			pro.setSLCreateTime(bean.getSLCreateTime());
-			pro.setSLInfo(bean.getSLInfo());
 			
 			pro.setDBLimitVelocity(bean.getDBLimitVelocity());
 			pro.setDBLimitTotalSettlement(bean.getDBLimitTotalSettlement());

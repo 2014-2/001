@@ -92,12 +92,6 @@ public class WorkNewActivity extends WorkFlowActivity implements OnClickListener
 	@InjectView(id=R.id.vault_trans_velocity,parent="tabTwoView")
 	private EditText mVaultTransVelocity;
 	
-	@InjectView(id=R.id.vault_trans_date,parent="tabTwoView",onClick="this")
-	private EditText mVaultTransDate;
-	
-	@InjectView(id=R.id.vault_trans_remark,parent="tabTwoView")
-	private EditText mVaultTransRemark;
-	
 	////////////////////////周边收敛/////////////////////////
 	
 	@InjectView(id=R.id.circum_astringe_max,parent="tabTwoView")
@@ -106,15 +100,16 @@ public class WorkNewActivity extends WorkFlowActivity implements OnClickListener
 	@InjectView(id=R.id.circum_astringe_velocity,parent="tabTwoView")
 	private EditText mAstringevelocity;
 	
-	@InjectView(id=R.id.circum_astringe_date,parent="tabTwoView",onClick="this")
-	private EditText mAstringeDate;
-	
-	@InjectView(id=R.id.circum_astringe_remark,parent="tabTwoView")
-	private EditText mAstringeRemark;
-	
 	/////////////////////////地表下沉/////////////////////////
 	@InjectView(id=R.id.surface_sink_max,parent="tabTwoView")
 	private EditText mSurfaceSinkMax ;
+	
+	////////////////////////极限时间&备注//////////////////////
+	@InjectView(id=R.id.circum_astringe_date,parent="tabTwoView",onClick="this")
+	private EditText mLimitDate;
+	
+	@InjectView(id=R.id.circum_astringe_remark,parent="tabTwoView")
+	private EditText mInfo;
 	
 	private Button mBntConfirm;
 	
@@ -150,8 +145,7 @@ public class WorkNewActivity extends WorkFlowActivity implements OnClickListener
 			// default 
 			String date = DateUtils.toDateString(DateUtils.getCurrtentTimes(), DateUtils.DATE_TIME_FORMAT) ;
 			mWorkPlanCalendar.setText(date);
-			mVaultTransDate.setText(date);
-			mAstringeDate.setText(date);
+			mLimitDate.setText(date);
 		}
 		
 		TextWatcher watcher = new TextWatcher() {
@@ -205,17 +199,17 @@ public class WorkNewActivity extends WorkFlowActivity implements OnClickListener
 		// 拱顶
 		mVaultTransMax.setText(String.valueOf(bean.getGDLimitTotalSettlement()));
 		mVaultTransVelocity.setText(String.valueOf(bean.getGDLimitVelocity()));
-		mVaultTransDate.setText(DateUtils.toDateString(bean.getGDCreateTime(),DateUtils.DATE_TIME_FORMAT));
-		mVaultTransRemark.setText(bean.getGDInfo());
 		
 		// 收敛
 		mAstringeMax.setText(String.valueOf(bean.getSLLimitTotalSettlement()));
 		mAstringevelocity.setText(String.valueOf(bean.getSLLimitVelocity()));
-		mAstringeDate.setText(DateUtils.toDateString(bean.getSLCreateTime(),DateUtils.DATE_TIME_FORMAT));
-		mAstringeRemark.setText(bean.getSLInfo());
 		
 		// 地表
 		mSurfaceSinkMax.setText(String.valueOf(bean.getDBLimitTotalSettlement()));
+		
+		// 极限时间
+		mLimitDate.setText(DateUtils.toDateString(bean.getLimitedTotalSubsidenceTime(),DateUtils.DATE_TIME_FORMAT));
+		mInfo.setText(bean.getInfo());
 	}
 
 	private void InitViewPager() {
@@ -272,11 +266,6 @@ public class WorkNewActivity extends WorkFlowActivity implements OnClickListener
 				return ;
 			}
 			
-			/*if(StringUtils.isEmpty(unit)){
-				showText("施工单位不能为空");
-				return ;
-			}*/
-			
 			if(StringUtils.isEmpty(pref)){
 				showText("前缀不能为空");
 				return ;
@@ -303,8 +292,6 @@ public class WorkNewActivity extends WorkFlowActivity implements OnClickListener
 			// 拱顶
 			String vaultMax 	= mVaultTransMax.getEditableText().toString().trim() ;
 			String vaultVel 	= mVaultTransVelocity.getEditableText().toString().trim() ;
-			String vaultDate 	= mVaultTransDate.getEditableText().toString().trim() ;
-			String vaultRemark 	= mVaultTransRemark.getEditableText().toString().trim() ;
 			
 			if(StringUtils.isEmpty(vaultMax)){
 				showText("拱顶累计变形极限值不能为空");
@@ -319,8 +306,6 @@ public class WorkNewActivity extends WorkFlowActivity implements OnClickListener
 			// 收敛
 			String circumMax 	= mAstringeMax.getEditableText().toString().trim() ;
 			String circumVel 	= mAstringevelocity.getEditableText().toString().trim() ;
-			String circumDate 	= mAstringeDate.getEditableText().toString().trim() ;
-			String circumRemark = mAstringeRemark.getEditableText().toString().trim() ;
 			
 			if(StringUtils.isEmpty(circumMax)){
 				showText("周边累计收敛极限值不能为空");
@@ -339,6 +324,10 @@ public class WorkNewActivity extends WorkFlowActivity implements OnClickListener
 				showText("地表累计收敛极限值不能为空");
 				return ;
 			}
+			
+			// 极限时间与备注
+			String limitDate 	= mLimitDate.getEditableText().toString().trim() ;
+			String infoStr 		= mInfo.getEditableText().toString().trim();
 			
 			float gdlimt= 0f ,gdv = 0f,sllimt= 0f ,sldv = 0f,dblimt = 0f,dbv = 0f ;
 			
@@ -365,15 +354,14 @@ public class WorkNewActivity extends WorkFlowActivity implements OnClickListener
 				
 				mWorkPlanBean.setGDLimitTotalSettlement(gdlimt);
 				mWorkPlanBean.setGDLimitVelocity(gdv);
-				mWorkPlanBean.setGDCreateTime(DateUtils.toDate(vaultDate, DateUtils.DATE_TIME_FORMAT));
-				mWorkPlanBean.setGDInfo(vaultRemark);
 				
 				mWorkPlanBean.setSLLimitTotalSettlement(sllimt);
 				mWorkPlanBean.setSLLimitVelocity(sldv);
-				mWorkPlanBean.setSLCreateTime(DateUtils.toDate(circumDate, DateUtils.DATE_TIME_FORMAT));
-				mWorkPlanBean.setSLInfo(circumRemark);
 				
 				mWorkPlanBean.setDBLimitTotalSettlement(dblimt);
+				
+				mWorkPlanBean.setLimitedTotalSubsidenceTime(DateUtils.toDate(limitDate,DateUtils.DATE_TIME_FORMAT));
+				mWorkPlanBean.setInfo(infoStr);
 				
 				if(ProjectIndexDao.defaultWorkPlanDao().update(mWorkPlanBean) == ProjectIndexDao.DB_EXECUTE_FAILED){
 					showText("更新工作面失败");
@@ -391,15 +379,14 @@ public class WorkNewActivity extends WorkFlowActivity implements OnClickListener
 				
 				info.setGDLimitTotalSettlement(gdlimt);
 				info.setGDLimitVelocity(gdv);
-				info.setGDCreateTime(DateUtils.toDate(vaultDate, DateUtils.DATE_TIME_FORMAT));
-				info.setGDInfo(vaultRemark);
 				
 				info.setSLLimitTotalSettlement(sllimt);
 				info.setSLLimitVelocity(sldv);
-				info.setSLCreateTime(DateUtils.toDate(circumDate, DateUtils.DATE_TIME_FORMAT));
-				info.setSLInfo(circumRemark);
 				
 				info.setDBLimitTotalSettlement(dblimt);
+				
+				info.setLimitedTotalSubsidenceTime(DateUtils.toDate(limitDate,DateUtils.DATE_TIME_FORMAT));
+				info.setInfo(infoStr);
 				
 				int code = ProjectIndexDao.defaultWorkPlanDao().insert(info) ;
 				
@@ -428,27 +415,16 @@ public class WorkNewActivity extends WorkFlowActivity implements OnClickListener
 			CrtbDateDialogUtils.setAnyDateDialog(this, mWorkPlanCalendar, curdate);
 			
 			break ;
-		case R.id.vault_trans_date :
-			
-			curdate = DateUtils.toDate(mVaultTransDate.getEditableText().toString().trim(), DateUtils.PART_TIME_FORMAT);
-			
-			if(curdate == null){
-				curdate	= DateUtils.getCurrtentTimes() ;
-			}
-			
-			CrtbDateDialogUtils.setAnyDateDialog(this, mVaultTransDate, curdate);
-			
-			break;
 			
 		case R.id.circum_astringe_date :
 			
-			curdate = DateUtils.toDate(mAstringeDate.getEditableText().toString().trim(), DateUtils.PART_TIME_FORMAT);
+			curdate = DateUtils.toDate(mLimitDate.getEditableText().toString().trim(), DateUtils.PART_TIME_FORMAT);
 			
 			if(curdate == null){
 				curdate	= DateUtils.getCurrtentTimes() ;
 			}
 			
-			CrtbDateDialogUtils.setAnyDateDialog(this, mAstringeDate, curdate);
+			CrtbDateDialogUtils.setAnyDateDialog(this, mLimitDate, curdate);
 			
 			break;
 		}

@@ -39,9 +39,6 @@ public final class CrtbProject implements Serializable {
 	@ColumnString(length = 256)
 	private String ProjectName;					// 项目名称
 	
-	@ColumnString(length = 64)
-	private String guid ;						// 唯一标示
-
 	@ColumnDate
 	private Date CreateTime;					// 创建时间
 
@@ -108,14 +105,6 @@ public final class CrtbProject implements Serializable {
 	
 	public CrtbProject(){
 		
-	}
-
-	public String getGuid() {
-		return guid;
-	}
-
-	public void setGuid(String guid) {
-		this.guid = guid;
 	}
 
 	public int getId() {

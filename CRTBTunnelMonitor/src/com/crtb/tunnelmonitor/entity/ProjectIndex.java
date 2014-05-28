@@ -13,8 +13,6 @@ import org.zw.android.framework.db.Table;
 import org.zw.android.framework.db.core.ColumnPrimaryKey;
 import org.zw.android.framework.db.core.ColumnPrimaryKey.PrimaryKeyType;
 
-import com.crtb.tunnelmonitor.utils.CrtbUtils;
-
 /**
  * 工作面: 修改时间 2014-05-27
  * 
@@ -61,24 +59,12 @@ public class ProjectIndex implements Serializable {
 	@ColumnFloat
 	private float GDLimitTotalSettlement;		// 拱顶累计沉降速率		100
 	
-	@ColumnDate
-	private Date GDCreateTime ;					// 拱顶设置时间			----扩展
-	
-	@ColumnText
-	private String GDInfo ;						// 拱顶备注信息			----扩展
-
 	@ColumnFloat
 	private float SLLimitVelocity;				// 收敛单次变形速率		5
 
 	@ColumnFloat
 	private float SLLimitTotalSettlement;		// 收敛累计变形差			100
 	
-	@ColumnDate
-	private Date  SLCreateTime ;				// 收敛设置时间			----扩展
-	
-	@ColumnText
-	private String SLInfo ;						// 收敛设置时间			----扩展
-
 	@ColumnFloat
 	private float DBLimitVelocity;				// 地表单次下沉速率		5
 
@@ -91,61 +77,16 @@ public class ProjectIndex implements Serializable {
 	@ColumnDate
 	private Date LimitedTotalSubsidenceTime ;  	// 限差时间
 	
-	@ColumnText
-	private String Guid ;						// 唯一标示 
-	
 	public ProjectIndex(){
-		setGuid(CrtbUtils.generatorGUID());
-		setInfo(getGuid());
+		
 	}
-
-	public Date getGDCreateTime() {
-		return GDCreateTime;
-	}
-
-	public String getGuid() {
-		return Guid;
-	}
-
-	public void setGuid(String guid) {
-		Guid = guid;
-	}
-
-	public void setGDCreateTime(Date gDCreateTime) {
-		GDCreateTime = gDCreateTime;
-	}
-
+	
 	public Date getLastOpenTime() {
 		return LastOpenTime;
 	}
 
 	public void setLastOpenTime(Date lastOpenTime) {
 		LastOpenTime = lastOpenTime;
-	}
-
-	public String getGDInfo() {
-		return GDInfo;
-	}
-
-	public void setGDInfo(String gDInfo) {
-		GDInfo = gDInfo;
-	}
-
-
-	public Date getSLCreateTime() {
-		return SLCreateTime;
-	}
-
-	public void setSLCreateTime(Date sLCreateTime) {
-		SLCreateTime = sLCreateTime;
-	}
-
-	public String getSLInfo() {
-		return SLInfo;
-	}
-
-	public void setSLInfo(String sLInfo) {
-		SLInfo = sLInfo;
 	}
 
 	public int getId() {
