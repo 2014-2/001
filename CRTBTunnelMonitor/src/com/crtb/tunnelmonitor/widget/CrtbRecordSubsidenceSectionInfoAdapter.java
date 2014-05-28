@@ -58,7 +58,7 @@ public class CrtbRecordSubsidenceSectionInfoAdapter extends CrtbEntityAdapter<Su
 					str.append(",");
 				}
 				
-				str.append(item.getID());
+				str.append(item.getGuid());
 				
 				inster	= true ;
 			}

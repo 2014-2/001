@@ -132,7 +132,7 @@ public final class TunnelCrossSectionIndexDao extends AbstractDao<TunnelCrossSec
 		return mDatabase.queryObjects(sql, TunnelCrossSectionIndex.class) ;
 	}
 	
-	public TunnelCrossSectionIndex querySectionIndex(String id){
+	public TunnelCrossSectionIndex querySectionIndexByGuid(String guid){
 		
 		final IAccessDatabase mDatabase = getCurrentDb();
 		
@@ -140,9 +140,9 @@ public final class TunnelCrossSectionIndexDao extends AbstractDao<TunnelCrossSec
 			return null ;
 		}
 		
-		String sql = "select * from TunnelCrossSectionIndex where ID = ?" ;
+		String sql = "select * from TunnelCrossSectionIndex where Guid = ?" ;
 		
-		return mDatabase.queryObject(sql,new String[]{id}, TunnelCrossSectionIndex.class) ;
+		return mDatabase.queryObject(sql,new String[]{guid}, TunnelCrossSectionIndex.class) ;
 	}
 
     public TunnelCrossSectionIndex querySectionIndexByChainage(double chainage) {
