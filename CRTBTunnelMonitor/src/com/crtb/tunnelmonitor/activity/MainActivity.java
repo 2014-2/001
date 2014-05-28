@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.LinearLayout;
@@ -59,6 +60,8 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 //	private TotalStationIndex info = new TotalStationIndex();
 
 	private ProjectIndex mCurrentWorkPlan;
+
+	private Toast mToast;
 
 	private boolean mBackPressedOnce = false;
 	private static final int MSG_CLEAR_BACK_PRESSED_FLAG = 0;
@@ -151,8 +154,13 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 		mTitle.setText(StringUtils.isEmpty(name) ? getString(R.string.main_title) : name);
 	}
 
-	private void notRegisteredToast() {
-	    Toast.makeText(getApplicationContext(), "该功能对未注册用户不可用！", Toast.LENGTH_LONG).show();
+	private void showToast(String msg) {
+	    if (mToast == null) {
+	        mToast = Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT);
+	    } else {
+	        mToast.setText(msg);
+	    }
+	    mToast.show();
 	}
 
 	@Override
@@ -160,7 +168,7 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 
 	    int userType = AppCRTBApplication.getInstance().getCurUserType();
 	    if (userType == CrtbUser.LICENSE_TYPE_DEFAULT && v.getId() != R.id.about) {
-	        notRegisteredToast();
+	        showToast("该功能对未注册用户不可用！");
 	        return;
 	    }
 
@@ -245,9 +253,8 @@ public class MainActivity extends BaseActivity implements OnClickListener {
             finish();
         } else {
             mBackPressedOnce = true;
-            Toast t = Toast.makeText(this, R.string.press_again_to_exit, Toast.LENGTH_LONG);
-            t.setDuration(1500);
-            t.show();
+            String msg = getString(R.string.press_again_to_exit);
+            showToast(msg);
             mHandler.sendEmptyMessageDelayed(MSG_CLEAR_BACK_PRESSED_FLAG, 1500);
         }
     }
