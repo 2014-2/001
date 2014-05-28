@@ -3,6 +3,7 @@ package com.crtb.tunnelmonitor.activity;
 import com.crtb.tunnelmonitor.common.Constant;
 import com.crtb.tunnelmonitor.dao.impl.v2.AbstractDao;
 import com.crtb.tunnelmonitor.dao.impl.v2.CrtbLicenseDao;
+import com.crtb.tunnelmonitor.entity.CrtbUser;
 import com.crtb.tunnelmonitor.utils.CrtbUtils;
 
 import ICT.utils.RSACoder;
@@ -39,10 +40,35 @@ public class RegisterActivity extends Activity implements OnClickListener {
         mRegisterCodeView = (EditText) findViewById(R.id.regist_code);
         mOk = (Button) findViewById(R.id.ok);
         mCancel = (Button) findViewById(R.id.cancel);
-        mOk.setOnClickListener(this);
-        mCancel.setOnClickListener(this);
+
         mDeviceId = getDeviceId();
         mSerialNumberView.setText(mDeviceId);
+
+        boolean registered = false;
+        if (!TextUtils.isEmpty(mDeviceId)) {
+            CrtbUser user = CrtbLicenseDao.defaultDao().queryCrtbUserByUsername(mDeviceId);
+            if (user != null) {
+                String license = user.getLicense();
+                if (!TextUtils.isEmpty(license)) {
+                    mRegisterCodeView.setText(license);
+                    registered = true;
+                }
+            }
+        }
+
+        if (registered) {
+            mSerialNumberView.setEnabled(false);
+            mRegisterCodeView.setEnabled(false);
+            mOk.setEnabled(false);
+            mCancel.setEnabled(false);
+        } else {
+            mSerialNumberView.setEnabled(true);
+            mRegisterCodeView.setEnabled(true);
+            mOk.setEnabled(true);
+            mCancel.setEnabled(true);
+            mOk.setOnClickListener(this);
+            mCancel.setOnClickListener(this);
+        }
     }
 
     private String getDeviceId() {

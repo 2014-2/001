@@ -13,23 +13,29 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="@dimen/bottom_button_height"
         android:layout_alignParentBottom="true"
-        android:background="#f5f5f5"
         android:orientation="horizontal" >
         <Button
             android:id="@+id/cancel"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:background="@drawable/bottom_bnt_selector"
+            android:textSize="20sp"
             android:text="取消" />
-
+        <ImageView
+                android:layout_width="2dip"
+                android:layout_height="fill_parent"
+                android:background="#767676" />
         <Button
             android:id="@+id/ok"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="确定" />
+            android:background="@drawable/bottom_bnt_selector"
+            android:text="确定"
+            android:textSize="20sp" />
 
     </LinearLayout>
 

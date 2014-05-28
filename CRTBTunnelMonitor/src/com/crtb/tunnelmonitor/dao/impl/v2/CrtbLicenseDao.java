@@ -6,6 +6,7 @@ import org.zw.android.framework.db.core.SQLiteParamUtils;
 import org.zw.android.framework.util.StringUtils;
 
 import android.content.Context;
+import android.text.TextUtils;
 
 import com.crtb.tunnelmonitor.AppCRTBApplication;
 import com.crtb.tunnelmonitor.entity.CrtbUser;
@@ -157,4 +158,16 @@ public final class CrtbLicenseDao extends AbstractDefaultDBDao<CrtbUser> {
         return mCrtbUser;
     }
 
+    public CrtbUser queryCrtbUserByUsername(String username) {
+        IAccessDatabase db = getDefaultDb();
+
+        if (db == null || TextUtils.isEmpty(username)) {
+            return null;
+        }
+
+        String sql = "select * from CrtbUser where username = ? ";
+
+        CrtbUser user = db.queryObject(sql, new String[] { username }, CrtbUser.class);
+        return user;
+    }
 }
