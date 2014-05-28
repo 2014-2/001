@@ -101,53 +101,6 @@
                     android:text="5" />
             </RelativeLayout>
 
-            <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
-                android:background="@null"
-                android:orientation="horizontal" >
-
-                <TextView
-                    android:layout_width="80dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:text="设置时间"
-                    android:textSize="14sp" />
-
-                <EditText
-                    android:id="@+id/vault_trans_date"
-                    style="@style/crtb_input_edit_text"
-                    android:layout_width="fill_parent"
-                    android:layout_height="42dip"
-                    android:layout_marginRight="30dp"
-                    android:editable="false" 
-                    android:focusable="false"/>
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
-                android:background="@null"
-                android:orientation="horizontal" >
-
-                <TextView
-                    android:layout_width="80dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:text="备注"
-                    android:textSize="14sp" />
-
-                <EditText
-                    android:id="@+id/vault_trans_remark"
-                    style="@style/crtb_input_edit_text"
-                    android:layout_width="fill_parent"
-                    android:layout_height="42dip"
-                    android:layout_marginRight="30dp"
-                    android:inputType="numberDecimal" />
-            </LinearLayout>
-
             <!-- 周边收敛 -->
 
             <TextView
@@ -232,53 +185,6 @@
                     android:text="5" />
             </RelativeLayout>
 
-            <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
-                android:background="@null"
-                android:orientation="horizontal" >
-
-                <TextView
-                    android:layout_width="80dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:text="设置时间"
-                    android:textSize="14sp" />
-
-                <EditText
-                    android:id="@+id/circum_astringe_date"
-                    style="@style/crtb_input_edit_text"
-                    android:layout_width="fill_parent"
-                    android:layout_height="42dip"
-                    android:layout_marginRight="30dp"
-                    android:editable="false"
-                    android:focusable="false" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
-                android:background="@null"
-                android:orientation="horizontal" >
-
-                <TextView
-                    android:layout_width="80dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:text="备注"
-                    android:textSize="14sp" />
-
-                <EditText
-                    android:id="@+id/circum_astringe_remark"
-                    style="@style/crtb_input_edit_text"
-                    android:layout_width="fill_parent"
-                    android:layout_height="42dip"
-                    android:layout_marginRight="30dp"
-                    android:inputType="numberDecimal" />
-            </LinearLayout>
-
             <!-- 地表下沉 -->
 
             <TextView
@@ -328,6 +234,53 @@
                     android:inputType="numberDecimal"
                     android:text="100" />
             </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:background="@null"
+                android:orientation="horizontal" >
+
+                <TextView
+                    android:layout_width="80dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:text="极限时间"
+                    android:textSize="14sp" />
+
+                <EditText
+                    android:id="@+id/circum_astringe_date"
+                    style="@style/crtb_input_edit_text"
+                    android:layout_width="fill_parent"
+                    android:layout_height="42dip"
+                    android:layout_marginRight="30dp"
+                    android:editable="false"
+                    android:focusable="false" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:background="@null"
+                android:orientation="horizontal" >
+
+                <TextView
+                    android:layout_width="80dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:text="备注"
+                    android:textSize="14sp" />
+
+                <EditText
+                    android:id="@+id/circum_astringe_remark"
+                    style="@style/crtb_input_edit_text"
+                    android:layout_width="fill_parent"
+                    android:layout_height="42dip"
+                    android:layout_marginRight="30dp"
+                    android:inputType="numberDecimal" />
+            </LinearLayout>
         </LinearLayout>
     </ScrollView>
 
