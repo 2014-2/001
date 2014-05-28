@@ -104,6 +104,9 @@ public class WorkNewActivity extends WorkFlowActivity implements OnClickListener
 	@InjectView(id=R.id.surface_sink_max,parent="tabTwoView")
 	private EditText mSurfaceSinkMax ;
 	
+	@InjectView(id=R.id.dibiao_velocity,parent="tabTwoView")
+	private EditText mDbvelocity ;
+	
 	////////////////////////极限时间&备注//////////////////////
 	@InjectView(id=R.id.circum_astringe_date,parent="tabTwoView",onClick="this")
 	private EditText mLimitDate;
@@ -206,6 +209,7 @@ public class WorkNewActivity extends WorkFlowActivity implements OnClickListener
 		
 		// 地表
 		mSurfaceSinkMax.setText(String.valueOf(bean.getDBLimitTotalSettlement()));
+		mDbvelocity.setText(String.valueOf(bean.getDBLimitVelocity()));
 		
 		// 极限时间
 		mLimitDate.setText(DateUtils.toDateString(bean.getLimitedTotalSubsidenceTime(),DateUtils.DATE_TIME_FORMAT));
@@ -319,6 +323,7 @@ public class WorkNewActivity extends WorkFlowActivity implements OnClickListener
 			
 			// surface
 			String surfaceMax	= mSurfaceSinkMax.getEditableText().toString().trim() ;
+			String dbVelocity 	= mDbvelocity.getEditableText().toString().trim() ;
 			
 			if(StringUtils.isEmpty(circumVel)){
 				showText("地表累计收敛极限值不能为空");
@@ -329,7 +334,7 @@ public class WorkNewActivity extends WorkFlowActivity implements OnClickListener
 			String limitDate 	= mLimitDate.getEditableText().toString().trim() ;
 			String infoStr 		= mInfo.getEditableText().toString().trim();
 			
-			float gdlimt= 0f ,gdv = 0f,sllimt= 0f ,sldv = 0f,dblimt = 0f,dbv = 0f ;
+			float gdlimt= 0f ,gdv = 0f,sllimt= 0f ,sldv = 0f,dblimt = 0f,dbv = 0f,dbvl=0f ;
 			
 			try{
 				
@@ -338,6 +343,7 @@ public class WorkNewActivity extends WorkFlowActivity implements OnClickListener
 				sllimt	= Float.valueOf(circumMax);
 				sldv	= Float.valueOf(circumVel);
 				dblimt	= Float.valueOf(surfaceMax);
+				dbvl	= Float.valueOf(dbVelocity);
 				
 			} catch(Exception e){
 				e.printStackTrace() ;
@@ -359,6 +365,7 @@ public class WorkNewActivity extends WorkFlowActivity implements OnClickListener
 				mWorkPlanBean.setSLLimitVelocity(sldv);
 				
 				mWorkPlanBean.setDBLimitTotalSettlement(dblimt);
+				mWorkPlanBean.setDBLimitVelocity(dbvl);
 				
 				mWorkPlanBean.setLimitedTotalSubsidenceTime(DateUtils.toDate(limitDate,DateUtils.DATE_TIME_FORMAT));
 				mWorkPlanBean.setInfo(infoStr);
@@ -384,6 +391,7 @@ public class WorkNewActivity extends WorkFlowActivity implements OnClickListener
 				info.setSLLimitVelocity(sldv);
 				
 				info.setDBLimitTotalSettlement(dblimt);
+				info.setDBLimitVelocity(dbvl);
 				
 				info.setLimitedTotalSubsidenceTime(DateUtils.toDate(limitDate,DateUtils.DATE_TIME_FORMAT));
 				info.setInfo(infoStr);
