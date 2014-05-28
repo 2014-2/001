@@ -45,7 +45,8 @@
                     android:layout_toRightOf="@id/name"
                     android:layout_weight="1"
                     android:hint="请选择用户名"
-                    android:paddingRight="20dp" />
+                    android:paddingRight="20dp" 
+                    android:singleLine="true"/>
 
                 <FrameLayout
                     android:id="@+id/img"
@@ -94,7 +95,8 @@
                         android:layout_marginLeft="10dp"
                         android:layout_marginRight="20dp"
                         android:layout_weight="1"
-                        android:hint="请输入身份证" />
+                        android:hint="请输入身份证" 
+                        android:singleLine="true"/>
                 </LinearLayout>
             </RelativeLayout>
 
@@ -131,7 +133,8 @@
                         android:layout_marginLeft="10dp"
                         android:layout_marginRight="20dp"
                         android:layout_toRightOf="@id/notetitle"
-                        android:paddingRight="26dp" />
+                        android:paddingRight="26dp" 
+                        android:singleLine="true"/>
                     <!-- It's no use
                     <ImageView
                         android:id="@+id/note_arrow"
