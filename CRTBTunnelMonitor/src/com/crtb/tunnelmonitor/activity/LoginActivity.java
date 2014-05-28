@@ -23,6 +23,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.ListView;
@@ -56,7 +57,8 @@ public class LoginActivity extends Activity implements OnClickListener {
 	
 	private TextView mDownload;
 	
-	private ImageView mArrow,mNotesArrow;
+	private FrameLayout mArrow;
+	//private ImageView mNotesArrow;
 	
 	private PopupWindow mPop;
 	
@@ -101,8 +103,8 @@ public class LoginActivity extends Activity implements OnClickListener {
 		
 		//login_rl_listview = (RelativeLayout) findViewById(R.id.login_rl_listview);
 		mNote=(EditText)findViewById(R.id.note);
-		mArrow=(ImageView) findViewById(R.id.img);
-		mNotesArrow=(ImageView) findViewById(R.id.note_arrow);
+		mArrow=(FrameLayout) findViewById(R.id.img);
+		//mNotesArrow=(ImageView) findViewById(R.id.note_arrow);
 		mUserName = (EditText) findViewById(R.id.username);
 		mCard = (EditText) findViewById(R.id.idcard);
 	    mDownload=(TextView) findViewById(R.id.load_teser);
@@ -153,45 +155,45 @@ public class LoginActivity extends Activity implements OnClickListener {
 			}
 		});
 	    
-	    mNotesArrow.setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View arg0) {
-				
-				if(mPop!=null && mPop.isShowing()){
-					return;
-				}
-				
-				View view=LayoutInflater.from(LoginActivity.this).inflate(R.layout.username_popup_layout, null);
-			    ListView list=(ListView) view.findViewById(R.id.list);
-			    final NameAdapter adapter=new NameAdapter();
-			    list.setAdapter(adapter);
-		        list.setOnItemClickListener(new OnItemClickListener() {
- 
-					@Override
-					public void onItemClick(AdapterView<?> arg0, View arg1,
-							int pos, long arg3) {
-						
-					 mNote.setText(adapter.getItem(pos).getInfo());
-					 
-					 if(mPop!=null){
-						 mPop.dismiss();
-						 mPop = null ;
-					 }
-					}
-		        	
-				});
-		        
-		        if(mPop == null){
-		        	mPop = new PopupWindow(view, mNote.getWidth(), LayoutParams.WRAP_CONTENT);
-				    mPop.setFocusable(true);
-				    mPop.setOutsideTouchable(true);
-				    mPop.setBackgroundDrawable(new ColorDrawable());
-		        }
-			    
-				mPop.showAsDropDown(mNote,0,0);
-			}
-		});
+//	    mNotesArrow.setOnClickListener(new OnClickListener() {
+//			
+//			@Override
+//			public void onClick(View arg0) {
+//				
+//				if(mPop!=null && mPop.isShowing()){
+//					return;
+//				}
+//				
+//				View view=LayoutInflater.from(LoginActivity.this).inflate(R.layout.username_popup_layout, null);
+//			    ListView list=(ListView) view.findViewById(R.id.list);
+//			    final NameAdapter adapter=new NameAdapter();
+//			    list.setAdapter(adapter);
+//		        list.setOnItemClickListener(new OnItemClickListener() {
+// 
+//					@Override
+//					public void onItemClick(AdapterView<?> arg0, View arg1,
+//							int pos, long arg3) {
+//						
+//					 mNote.setText(adapter.getItem(pos).getInfo());
+//					 
+//					 if(mPop!=null){
+//						 mPop.dismiss();
+//						 mPop = null ;
+//					 }
+//					}
+//		        	
+//				});
+//		        
+//		        if(mPop == null){
+//		        	mPop = new PopupWindow(view, mNote.getWidth(), LayoutParams.WRAP_CONTENT);
+//				    mPop.setFocusable(true);
+//				    mPop.setOutsideTouchable(true);
+//				    mPop.setBackgroundDrawable(new ColorDrawable());
+//		        }
+//			    
+//				mPop.showAsDropDown(mNote,0,0);
+//			}
+//		});
 	}
 
 	@Override
