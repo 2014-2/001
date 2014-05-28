@@ -192,7 +192,7 @@ public class AlertUtils {
                         && !TextUtils.isEmpty(firstCoords[2])) {
                     double firstZ = Double.valueOf(firstCoords[2]);
                     Log.d(TAG, "first z:" + firstZ + " m");
-                    double accumulativeSubsidence = thisZ - firstZ;
+                    double accumulativeSubsidence = firstZ - thisZ;
                     accumulativeSubsidence *= 1000;//CHANGE TO MILLIMETER
                     Log.d(TAG, "累计沉降: " + accumulativeSubsidence + " mm");
                     accumulativeSubsidence += sumOfDataCorrection;
@@ -255,7 +255,7 @@ public class AlertUtils {
                         && !TextUtils.isEmpty(lastCoords[2]) && lastTime != null) {
                     double lastZ = Double.valueOf(lastCoords[2]);
                     Log.d(TAG, "last z: " + lastZ + " m");
-                    double deltaZ = thisZ - lastZ;
+                    double deltaZ = lastZ - thisZ;
                     Log.d(TAG, "delta z: " + deltaZ + " m");
                     deltaZ *= 1000;//CHANGE TO MILLIMETER
                     deltaZ += thisDataCorrection;
@@ -373,7 +373,7 @@ public class AlertUtils {
 
             if (s_1First != null && s_2First != null) {
                 double lineFirstLength = getLineLength(s_1First, s_2First);
-                double convergence = lineThisLength - lineFirstLength;
+                double convergence = lineFirstLength - lineThisLength;
                 convergence *= 1000; //CHANGE TO MILLIMETER
                 convergence += sumOfCorrections;
 //                convergence = Math.abs(convergence);
@@ -422,7 +422,7 @@ public class AlertUtils {
             if (s_1Last != null && s_2Last != null) {
                 float correction = s_1Last.getDataCorrection();
                 double lineLastLength = getLineLength(s_1Last, s_2Last);
-                double deltaLenth = lineThisLength - lineLastLength;
+                double deltaLenth = lineLastLength - lineThisLength;
                 deltaLenth *= 1000;
                 deltaLenth += correction;
 //                deltaLenth = Math.abs(deltaLenth);
@@ -540,7 +540,7 @@ public class AlertUtils {
                 if (firstCoords != null && firstCoords.length == 3
                         && !TextUtils.isEmpty(firstCoords[2])) {
                     double firstZ = Double.valueOf(firstCoords[2]);
-                    double accumulativeSubsidence = thisZ - firstZ;
+                    double accumulativeSubsidence = firstZ - thisZ;
                     accumulativeSubsidence *= 1000;// CHANGE TO MILLIMETER
                     accumulativeSubsidence += sumOfDataCorrection;
                     v[0] = accumulativeSubsidence;
@@ -557,7 +557,7 @@ public class AlertUtils {
                 if (lastCoords != null && lastCoords.length == 3
                         && !TextUtils.isEmpty(lastCoords[2])) {
                     double lastZ = Double.valueOf(lastCoords[2]);
-                    double deltaZ = thisZ - lastZ;
+                    double deltaZ = lastZ - thisZ;
                     deltaZ *= 1000;// CHANGE TO MILLIMETER
                     deltaZ += thisDataCorrection;
                     v[1] = deltaZ;
@@ -603,7 +603,7 @@ public class AlertUtils {
 
             if (s_1First != null && s_2First != null) {
                 double lineFirstLength = getLineLength(s_1First, s_2First);
-                double convergence = lineThisLength - lineFirstLength;
+                double convergence = lineFirstLength - lineThisLength;
                 convergence *= 1000; //CHANGE TO MILLIMETER
                 convergence += sumOfCorrections;
                 ret[0] = convergence;
@@ -622,7 +622,7 @@ public class AlertUtils {
             if (s_1Last != null && s_2Last != null) {
                 float correction = s_1Last.getDataCorrection();
                 double lineLastLength = getLineLength(s_1Last, s_2Last);
-                double deltaLenth = lineThisLength - lineLastLength;
+                double deltaLenth = lineLastLength - lineThisLength;
                 deltaLenth *= 1000;
                 deltaLenth += correction;
                 ret[1] = deltaLenth;
@@ -887,20 +887,19 @@ public class AlertUtils {
                 if (pntType.contains("A")) {//隧道内断面
                     TunnelSettlementTotalData p = TunnelSettlementTotalDataDao.defaultDao().queryOneById(id);
                     if (p != null) {
-                        float totalCorrection = 0;
+                        float thisCorrection = correction;
                         if (isRebury) {
                             if (uType == GONGDING_LEIJI_XIACHEN_EXCEEDING) {
-                                totalCorrection = (float) (0d - uValue);
+                                thisCorrection = (float) (0d - uValue);
                             } else if (uType == GONGDINGI_XIACHEN_SULV_EXCEEDING) {
                                 double[] v = getSubsidenceValues(p);
                                 if (v != null && v.length == 2) {
-                                    totalCorrection = (float) (0d - v[1]);
+                                    thisCorrection = (float) (0d - v[1]);
                                 }
                             }
-                        } else {
-                            float curCorrection = p.getDataCorrection();
-                            totalCorrection = curCorrection + correction;
                         }
+                        float curCorrection = p.getDataCorrection();
+                        float totalCorrection = curCorrection + thisCorrection;
 //                        if (!checkExceeding(uValue + totalCorrection, uType)) {
 //                            tarAlertStatus = alertStatus;
 //                        }
@@ -920,20 +919,19 @@ public class AlertUtils {
                 } else {//地表沉降
                     SubsidenceTotalData p = SubsidenceTotalDataDao.defaultDao().queryOneById(id);
                     if (p != null) {
-                        float totalCorrection = 0;
+                        float thisCorrection = correction;
                         if (isRebury) {
                             if (uType == DIBIAO_LEIJI_XIACHEN_EXCEEDING) {
-                                totalCorrection = (float) (0d - uValue);
+                                thisCorrection = (float) (0d - uValue);
                             } else if (uType == DIBIAO_XIACHEN_SULV_EXCEEDING) {
                                 double[] v = getSubsidenceValues(p);
                                 if (v != null && v.length == 2) {
-                                    totalCorrection = (float) (0d - v[1]);
+                                    thisCorrection = (float) (0d - v[1]);
                                 }
                             }
-                        } else {
-                            float curCorrection = p.getDataCorrection();
-                            totalCorrection = curCorrection + correction;
                         }
+                        float curCorrection = p.getDataCorrection();
+                        float totalCorrection = curCorrection + thisCorrection;
 //                        if (!checkExceeding(uValue + totalCorrection, uType)) {
 //                            tarAlertStatus = alertStatus;
 //                        }
@@ -967,10 +965,10 @@ public class AlertUtils {
                 //测线的DataCorrection存在第一个点中，即SX_1
 //                float curCorrection = s_1.getDataCorrection();
 //                float totalCorrection = curCorrection + correction;
-                float totalCorrection = 0;
+                float thisCorrection = correction;
                 if (isRebury) {
                     if (uType == DIBIAO_LEIJI_XIACHEN_EXCEEDING) {
-                        totalCorrection = (float) (0d - uValue);
+                        thisCorrection = (float) (0d - uValue);
                     } else if (uType == DIBIAO_XIACHEN_SULV_EXCEEDING) {
                         String pnt1Type = s_1.getPntType();
                         String oppositePntType = pnt1Type.substring(0, pnt1Type.length() - 1) + "2";
@@ -978,13 +976,12 @@ public class AlertUtils {
                         .queryOppositePointOfALine(s_1, oppositePntType);
                         double[] v = getLineConvergenceValues(s_1, s_2);
                         if (v != null && v.length == 2) {
-                            totalCorrection = (float) (0d - v[1]);
+                            thisCorrection = (float) (0d - v[1]);
                         }
                     }
-                } else {
-                    float curCorrection = s_1.getDataCorrection();
-                    totalCorrection = curCorrection + correction;
                 }
+                float curCorrection = s_1.getDataCorrection();
+                float totalCorrection = curCorrection + thisCorrection;
 //                if (!checkExceeding(uValue + totalCorrection, uType)) {
 //                    tarAlertStatus = alertStatus;
 //                }

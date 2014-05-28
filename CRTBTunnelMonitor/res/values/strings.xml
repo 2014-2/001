@@ -135,5 +135,12 @@
     <string name="com_connect">串口连接</string>
     <string name="disconnect">断开连接</string>
 
+     <string-array name="total_station_item_menus">
+        <item>@string/edit</item>
+        <item>@string/delete</item>
+        <item>@string/bluetooth_connect</item>
+        <item>@string/com_connect</item>
+        <item>@string/disconnect</item>
+    </string-array>
 
 </resources>

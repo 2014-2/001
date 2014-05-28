@@ -3,6 +3,10 @@ package com.crtb.tunnelmonitor.entity;
 
 import java.io.Serializable;
 
+import com.crtb.tunnelmonitor.utils.AlertUtils;
+
+import android.text.TextUtils;
+
 public class AlertInfo implements Serializable {
     private static final long serialVersionUID = 1L;
     public static int count = 0;
@@ -172,6 +176,13 @@ public class AlertInfo implements Serializable {
     }
 
     public String getAlertStatusMsg() {
+        //TODO: Workaround for the "null" string problem
+        if (TextUtils.isEmpty(alertStatusMsg) || alertStatusMsg.equalsIgnoreCase("null")) {
+            if (alertStatus >= AlertUtils.ALERT_STATUS_HANDLED
+                    && alertStatus <= AlertUtils.ALERT_STATUS_HANDLING) {
+                alertStatusMsg = AlertUtils.ALERT_STATUS_MSGS[alertStatus];
+            }
+        }
         return alertStatusMsg;
     }
 
