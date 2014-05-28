@@ -123,17 +123,20 @@ public class WorkInfoDownloadActivity extends Activity {
                 	CrtbWebService.getInstance().setZoneCode(workSite.getZoneCode());
                 	CrtbWebService.getInstance().setSiteCode(workSite.getSiteCode());
                 	SiteProjectMappingDao.defaultDao().insertOrUpdate(curProjectId, workSite.getID());
-                	showProgressOverlay();
-                    DataDownloadManager downloadManager = new DataDownloadManager();
-                    downloadManager.downloadWorkSite(workSite, new DownloadListener() {
-						@Override
-						public void done(boolean success) {
-							updateStatus(success);
-							if (success) {
-								new UpdateTask().execute(workSite);
-							}
-						}
-					});
+                    loadData();
+                    Toast.makeText(this, "下载功能暂时关闭", Toast.LENGTH_LONG).show();
+                    //FIXME: 暂时屏蔽断面及测量数据下载功能
+//                	showProgressOverlay();
+//                    DataDownloadManager downloadManager = new DataDownloadManager();
+//                    downloadManager.downloadWorkSite(workSite, new DownloadListener() {
+//						@Override
+//						public void done(boolean success) {
+//							updateStatus(success);
+//							if (success) {
+//								new UpdateTask().execute(workSite);
+//							}
+//						}
+//					});
                 }
             }
         }
