@@ -10,7 +10,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Paint;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -18,16 +17,11 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.FrameLayout;
-import android.widget.ImageView;
-import android.widget.LinearLayout.LayoutParams;
-import android.widget.ListView;
 import android.widget.PopupWindow;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -49,7 +43,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 	/**登录用户信息列表*/
 	//private RelativeLayout login_rl_listview;
 	//用户名输入框
-	private EditText mUserName;
+	//private EditText mUserName;
 
 	private EditText mCard;
 	
@@ -57,7 +51,8 @@ public class LoginActivity extends Activity implements OnClickListener {
 	
 	private TextView mDownload;
 	
-	private FrameLayout mArrow;
+	//private FrameLayout mArrow;
+	private Spinner mNameSpinner;
 	//private ImageView mNotesArrow;
 	
 	private PopupWindow mPop;
@@ -103,9 +98,11 @@ public class LoginActivity extends Activity implements OnClickListener {
 		
 		//login_rl_listview = (RelativeLayout) findViewById(R.id.login_rl_listview);
 		mNote=(EditText)findViewById(R.id.note);
-		mArrow=(FrameLayout) findViewById(R.id.img);
+		//mArrow=(FrameLayout) findViewById(R.id.img);
+		mNameSpinner = (Spinner) findViewById(R.id.name_spinner);
+		mNameSpinner.setAdapter(new NameAdapter());
 		//mNotesArrow=(ImageView) findViewById(R.id.note_arrow);
-		mUserName = (EditText) findViewById(R.id.username);
+		//mUserName = (EditText) findViewById(R.id.username);
 		mCard = (EditText) findViewById(R.id.idcard);
 	    mDownload=(TextView) findViewById(R.id.load_teser);
 	    mDownload.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG);
@@ -114,46 +111,46 @@ public class LoginActivity extends Activity implements OnClickListener {
 		// 点击事件
 		login_btn.setOnClickListener(this);
 
-		mArrow.setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				
-				if(mPop!=null && mPop.isShowing()){
-					return;
-				}
-				
-				View view=LayoutInflater.from(LoginActivity.this).inflate(R.layout.username_popup_layout, null);
-			    ListView list=(ListView) view.findViewById(R.id.list);
-			    final NameAdapter adapter=new NameAdapter();
-			    list.setAdapter(adapter);
-		        list.setOnItemClickListener(new OnItemClickListener() {
- 
-					@Override
-					public void onItemClick(AdapterView<?> arg0, View arg1,
-							int pos, long arg3) {
-						
-						mUserName.setText(adapter.getItem(pos).getSurveyerName());
-					 
-					 if(mPop!=null){
-						 mPop.dismiss();
-						 mPop = null ;
-					 }
-					}
-				});
-		        
-		        if(mPop == null){
-		        	mPop= new PopupWindow(view,mUserName.getWidth(),LayoutParams.WRAP_CONTENT);
-		        	mPop.setFocusable(true);
-		        	mPop.setOutsideTouchable(true);
-		        	mPop.setBackgroundDrawable(new ColorDrawable());
-		        }
-		        
-				mPop.showAsDropDown(mUserName,0,0);
-				//mPop.showAtLocation(mUserName,Gravity.BOTTOM, 0, 0);
-			    //mPop.showAtLocation(mUserName, Gravity.TOP, 0, 0);
-			}
-		});
+//		mArrow.setOnClickListener(new OnClickListener() {
+//			
+//			@Override
+//			public void onClick(View v) {
+//				
+//				if(mPop!=null && mPop.isShowing()){
+//					return;
+//				}
+//				
+//				View view=LayoutInflater.from(LoginActivity.this).inflate(R.layout.username_popup_layout, null);
+//			    ListView list=(ListView) view.findViewById(R.id.list);
+//			    final NameAdapter adapter=new NameAdapter();
+//			    list.setAdapter(adapter);
+//		        list.setOnItemClickListener(new OnItemClickListener() {
+// 
+//					@Override
+//					public void onItemClick(AdapterView<?> arg0, View arg1,
+//							int pos, long arg3) {
+//						
+//						mUserName.setText(adapter.getItem(pos).getSurveyerName());
+//					 
+//					 if(mPop!=null){
+//						 mPop.dismiss();
+//						 mPop = null ;
+//					 }
+//					}
+//				});
+//		        
+//		        if(mPop == null){
+//		        	mPop= new PopupWindow(view,mUserName.getWidth(),LayoutParams.WRAP_CONTENT);
+//		        	mPop.setFocusable(true);
+//		        	mPop.setOutsideTouchable(true);
+//		        	mPop.setBackgroundDrawable(new ColorDrawable());
+//		        }
+//		        
+//				mPop.showAsDropDown(mUserName,0,0);
+//				//mPop.showAtLocation(mUserName,Gravity.BOTTOM, 0, 0);
+//			    //mPop.showAtLocation(mUserName, Gravity.TOP, 0, 0);
+//			}
+//		});
 	    
 //	    mNotesArrow.setOnClickListener(new OnClickListener() {
 //			
@@ -208,9 +205,13 @@ public class LoginActivity extends Activity implements OnClickListener {
 		switch (v.getId()) {
 		case R.id.login_btn:
 			//获取用户名和密码
-			String name = mUserName.getText().toString().trim();
+			//String name = mUserName.getText().toString().trim();
+			String name = "";
+			Object surveyor = mNameSpinner.getSelectedItem();
+			if (surveyor instanceof SurveyerInformation) {
+				name = ((SurveyerInformation) surveyor).getSurveyerName();
+			}
 			String card = mCard.getText().toString().trim();
-            
 			//用户验证
 			if(TextUtils.isEmpty(name)||TextUtils.isEmpty(card)){
 				Toast.makeText(this, "请输入用户名和密码", Toast.LENGTH_SHORT).show();
