@@ -251,7 +251,7 @@ public class WarningActivity extends Activity {
                                         return;
                                     }
 
-                                    RawSheetIndex sheet = RawSheetIndexDao.defaultDao().queryOneById(alert.getSheetId());
+                                    RawSheetIndex sheet = RawSheetIndexDao.defaultDao().queryOneById(Integer.valueOf(alert.getSheetId()));
                                     String date = DateUtils.toDateString(sheet.getCreateTime(),DateUtils.DATE_TIME_FORMAT);
 
                                     mHandleCompleteView.setVisibility(View.VISIBLE);
