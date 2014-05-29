@@ -92,7 +92,7 @@ public class CrtbRecordSubsidenceSectionInfoListView extends CrtbBaseListView {
 							
 							for(String id : sectionIds){
 								
-								if(id.equals(String.valueOf(item.getID()))){
+								if(id.equals(String.valueOf(item.getGuid()))){
 									item.setUsed(true);
 								}
 							}

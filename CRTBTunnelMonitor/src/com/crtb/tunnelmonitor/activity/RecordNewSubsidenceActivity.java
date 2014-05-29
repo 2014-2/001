@@ -195,7 +195,7 @@ public class RecordNewSubsidenceActivity extends WorkFlowActivity implements OnP
     		setTopbarTitle("编辑地表下沉断面记录单");
     		sectionListView.setSectionIds(recordInfo.getCrossSectionIDs());
 			
-    		section_new_et_prefix.setText(recordInfo.getPrefix());
+    		section_new_et_prefix.setText(mCurrentWorkPlan.getChainagePrefix());
 			record_Chainage.setText(String.valueOf(recordInfo.getFACEDK()));
 			record_Person.setText(recordInfo.getSurveyer());
 			record_Card.setText(recordInfo.getCertificateID());
@@ -238,7 +238,6 @@ public class RecordNewSubsidenceActivity extends WorkFlowActivity implements OnP
 			}
 						
 			// base
-			String prefix		= section_new_et_prefix.getEditableText().toString().trim() ;
 			String chainage 	= record_Chainage.getEditableText().toString().trim();// 里程
 			String person 		= record_Person.getEditableText().toString().trim();
 			String idcard 		= record_Card.getEditableText().toString().trim();
@@ -280,7 +279,6 @@ public class RecordNewSubsidenceActivity extends WorkFlowActivity implements OnP
 				recordInfo = new RawSheetIndex();
 				// 基本信息
 				recordInfo.setCrossSectionType(RawSheetIndex.CROSS_SECTION_TYPE_SUBSIDENCES);
-				recordInfo.setPrefix(prefix);
 				recordInfo.setFACEDK(CrtbUtils.formatDouble(chainage));
 				recordInfo.setCreateTime(DateUtils.toDate(currentTime,DateUtils.PART_TIME_FORMAT));
 				recordInfo.setSurveyer(person);
@@ -295,7 +293,6 @@ public class RecordNewSubsidenceActivity extends WorkFlowActivity implements OnP
 				
 				// 基本信息
 				recordInfo.setCrossSectionType(RawSheetIndex.CROSS_SECTION_TYPE_SUBSIDENCES);
-				recordInfo.setPrefix(prefix);
 				recordInfo.setFACEDK(CrtbUtils.formatDouble(chainage));
 				recordInfo.setCreateTime(DateUtils.toDate(currentTime,DateUtils.PART_TIME_FORMAT));
 				recordInfo.setSurveyer(person);

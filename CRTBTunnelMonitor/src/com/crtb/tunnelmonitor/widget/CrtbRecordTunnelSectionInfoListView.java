@@ -95,7 +95,7 @@ public class CrtbRecordTunnelSectionInfoListView extends CrtbBaseListView {
 						for(TunnelCrossSectionIndex item : list){
 							
 							for(String id : sectionIds){
-								if(id.equals(String.valueOf(item.getID()))){
+								if(id.equals(String.valueOf(item.getGuid()))){
 									item.setUsed(true);
 									break ;
 								}

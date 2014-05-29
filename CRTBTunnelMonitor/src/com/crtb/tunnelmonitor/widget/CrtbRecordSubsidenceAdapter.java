@@ -11,13 +11,21 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.crtb.tunnelmonitor.activity.R;
+import com.crtb.tunnelmonitor.dao.impl.v2.ProjectIndexDao;
+import com.crtb.tunnelmonitor.entity.ProjectIndex;
 import com.crtb.tunnelmonitor.entity.RawSheetIndex;
 import com.crtb.tunnelmonitor.utils.CrtbUtils;
 
 public class CrtbRecordSubsidenceAdapter extends CrtbEntityAdapter<RawSheetIndex> {
+	
+	private String prefix ;
 
 	protected CrtbRecordSubsidenceAdapter(Context context) {
 		super(context);
+		
+		ProjectIndex bean = ProjectIndexDao.defaultWorkPlanDao().queryEditWorkPlan() ;
+		
+		prefix	= bean != null ? bean.getChainagePrefix() : "";
 	}
 
 	protected boolean isNewestRawSheetIndex(RawSheetIndex bean){
@@ -45,7 +53,7 @@ public class CrtbRecordSubsidenceAdapter extends CrtbEntityAdapter<RawSheetIndex
 		}
 		
 		holder.chainage.setText(DateUtils.toDateString(item.getCreateTime(),DateUtils.DATE_TIME_FORMAT));
-		holder.excavation.setText(CrtbUtils.formatSectionName(item.getPrefix(), item.getFACEDK()));
+		holder.excavation.setText(CrtbUtils.formatSectionName(prefix, item.getFACEDK()));
 		
 		return convertView;
 	}

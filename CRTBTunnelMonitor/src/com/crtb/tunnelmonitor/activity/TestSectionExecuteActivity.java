@@ -218,7 +218,7 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 			
 			for(String id : ids){
 				
-				TunnelCrossSectionIndex bean = dao.querySectionIndex(id);
+				TunnelCrossSectionIndex bean = dao.querySectionIndexByGuid(id);
 				
 				if(bean != null){
 					tunnelSectionList.add(bean);
@@ -243,7 +243,7 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 			
 			for(String id : ids){
 				
-				SubsidenceCrossSectionIndex bean = dao.querySectionIndex(id);
+				SubsidenceCrossSectionIndex bean = dao.querySectionIndexByGuid(id);
 				
 				if(bean != null){
 					subsidenceSectionList.add(bean);

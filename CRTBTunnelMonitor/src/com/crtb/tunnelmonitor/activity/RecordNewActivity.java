@@ -117,7 +117,7 @@ public class RecordNewActivity extends WorkFlowActivity implements OnPageChangeL
 		
 		// find cache
 		recordInfo = CommonObject.findObject(KEY_RECORD_TUNNEL_OBJECT);
-
+		
 		// title
 		setTopbarTitle(getString(R.string.record_new_section_title));
 
@@ -174,9 +174,12 @@ public class RecordNewActivity extends WorkFlowActivity implements OnPageChangeL
     }
     
     private void loadDefault(){
+    	
         record_Person.setEnabled(true);
         record_Card.setEnabled(true);
+        
         AppCRTBApplication app = AppCRTBApplication.getInstance();
+        
         if (!app.isbLocaUser()) {
             SurveyerInformation p =  app.getCurPerson();
             if (p != null) {
@@ -194,7 +197,7 @@ public class RecordNewActivity extends WorkFlowActivity implements OnPageChangeL
     		setTopbarTitle("编辑隧道内断面记录单");
 			sectionListView.setSectionIds(recordInfo.getCrossSectionIDs());
 			
-			section_new_et_prefix.setText(recordInfo.getPrefix());
+			section_new_et_prefix.setText(mCurrentWorkPlan.getChainagePrefix());
 			record_Chainage.setText(String.valueOf(recordInfo.getFACEDK()));
 			record_Person.setText(recordInfo.getSurveyer());
 			record_Card.setText(recordInfo.getCertificateID());
@@ -236,7 +239,6 @@ public class RecordNewActivity extends WorkFlowActivity implements OnPageChangeL
 			}
 			
 			// base
-			String prefix		= section_new_et_prefix.getEditableText().toString().trim() ;
 			String chainage 	= record_Chainage.getEditableText().toString().trim();// 里程
 			String person 		= record_Person.getEditableText().toString().trim();
 			String idcard 		= record_Card.getEditableText().toString().trim();
@@ -279,7 +281,6 @@ public class RecordNewActivity extends WorkFlowActivity implements OnPageChangeL
 				
 				// 基本信息
 				recordInfo.setCrossSectionType(RawSheetIndex.CROSS_SECTION_TYPE_TUNNEL);
-				recordInfo.setPrefix(prefix);
 				recordInfo.setFACEDK(CrtbUtils.formatDouble(chainage));
 				recordInfo.setCreateTime(DateUtils.toDate(currentTime,DateUtils.PART_TIME_FORMAT));
 				recordInfo.setSurveyer(person);
@@ -293,7 +294,6 @@ public class RecordNewActivity extends WorkFlowActivity implements OnPageChangeL
 				
 				// 基本信息
 				recordInfo.setCrossSectionType(RawSheetIndex.CROSS_SECTION_TYPE_TUNNEL);
-				recordInfo.setPrefix(prefix);
 				recordInfo.setFACEDK(CrtbUtils.formatDouble(chainage));
 				recordInfo.setCreateTime(DateUtils.toDate(currentTime,DateUtils.PART_TIME_FORMAT));
 				recordInfo.setSurveyer(person);

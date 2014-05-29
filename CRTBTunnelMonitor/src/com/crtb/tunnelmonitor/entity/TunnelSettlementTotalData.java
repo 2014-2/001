@@ -33,10 +33,10 @@ public class TunnelSettlementTotalData implements Serializable {
 	private String StationId;	// 设站ID
 	
 	@ColumnText
-	private String ChainageId;	// 断面里程ID
+	private String ChainageId;	// 断面guid
 	
 	@ColumnText
-	private String SheetId;		// 记录单id
+	private String SheetId;		// 记录单guid
 	
 	@ColumnText
 	private String Coordinate;	// 测点坐标

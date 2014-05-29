@@ -10,13 +10,21 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.crtb.tunnelmonitor.activity.R;
+import com.crtb.tunnelmonitor.dao.impl.v2.ProjectIndexDao;
+import com.crtb.tunnelmonitor.entity.ProjectIndex;
 import com.crtb.tunnelmonitor.entity.RawSheetIndex;
 import com.crtb.tunnelmonitor.utils.CrtbUtils;
 
 public final class CrtbTestRecordSearchAdapter extends CrtbEntityAdapter<RawSheetIndex> {
 
+	private String prefix ;
+	
 	protected CrtbTestRecordSearchAdapter(Context context) {
 		super(context);
+		
+		ProjectIndex bean = ProjectIndexDao.defaultWorkPlanDao().queryEditWorkPlan() ;
+		
+		prefix	= bean != null ? bean.getChainagePrefix() : "";
 	}
 
 	@Override
@@ -34,7 +42,7 @@ public final class CrtbTestRecordSearchAdapter extends CrtbEntityAdapter<RawShee
 		}
 		
 		holder.recordNo.setText(String.valueOf(item.getID()));
-		holder.recordName.setText(CrtbUtils.formatSectionName(item.getPrefix(),item.getFACEDK()));
+		holder.recordName.setText(CrtbUtils.formatSectionName(prefix,item.getFACEDK()));
 		
 		return convertView ;
 	}

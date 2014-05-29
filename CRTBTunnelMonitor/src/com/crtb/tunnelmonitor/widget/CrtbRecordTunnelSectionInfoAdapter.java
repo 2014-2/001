@@ -58,7 +58,7 @@ public final class CrtbRecordTunnelSectionInfoAdapter extends CrtbEntityAdapter<
 					str.append(",");
 				}
 				
-				str.append(item.getID());
+				str.append(item.getGuid());
 
 				insert = true ;
 			}
