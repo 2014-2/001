@@ -146,7 +146,7 @@
                 android:layout_height="wrap_content"
                 android:layout_toLeftOf="@id/mi"
                 android:inputType="numberDecimal"
-                android:maxLength="12"
+                android:maxLength="6"
                 android:singleLine="true" />
         </RelativeLayout>
     </LinearLayout>

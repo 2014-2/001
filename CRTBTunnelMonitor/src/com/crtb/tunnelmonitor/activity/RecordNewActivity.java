@@ -198,7 +198,7 @@ public class RecordNewActivity extends WorkFlowActivity implements OnPageChangeL
 			sectionListView.setSectionIds(recordInfo.getCrossSectionIDs());
 			
 			section_new_et_prefix.setText(mCurrentWorkPlan.getChainagePrefix());
-			record_Chainage.setText(String.valueOf(recordInfo.getFACEDK()));
+			record_Chainage.setText(CrtbUtils.doubleToString(recordInfo.getFACEDK()));
 			record_Person.setText(recordInfo.getSurveyer());
 			record_Card.setText(recordInfo.getCertificateID());
 			record_Person.setEnabled(false);
@@ -223,13 +223,13 @@ public class RecordNewActivity extends WorkFlowActivity implements OnPageChangeL
 			break;
 		case R.id.record_buildtime :
 			
-			Date curdate = DateUtils.toDate(record_buildtime.getEditableText().toString().trim(), DateUtils.PART_TIME_FORMAT);
+			/*Date curdate = DateUtils.toDate(record_buildtime.getEditableText().toString().trim(), DateUtils.PART_TIME_FORMAT);
 			
 			if(curdate == null){
 				curdate	= DateUtils.getCurrtentTimes() ;
 			}
 			
-			CrtbDateDialogUtils.setAnyDateDialog(this, record_buildtime, curdate);
+			CrtbDateDialogUtils.setAnyDateDialog(this, record_buildtime, curdate);*/
 			break ;
 		case R.id.work_btn_queding: // 数据库
 			

@@ -259,12 +259,14 @@ public class StationActivity extends BaseActivity {
 		} catch (Exception e) {
 
 		}
-		AlertDialog dlg = new AlertDialog.Builder(StationActivity.this).create();
+        AlertDialog dlg = new AlertDialog.Builder(StationActivity.this)
+//                .setIcon(R.drawable.successgreen)
+                .setMessage("连接全站仪" + mStations.get(iListPos).getName() + result).create();
 		dlg.show();
-		Window window = dlg.getWindow();
-		window.setContentView(R.layout.connectyesdialog);
-		TextView text = (TextView) window.findViewById(R.id.connertexryes);
-		text.setText("连接全站仪" + mStations.get(iListPos).getName() + result);
+//		Window window = dlg.getWindow();
+//		window.setContentView(R.layout.connectyesdialog);
+//		TextView text = (TextView) window.findViewById(R.id.connertexryes);
+//		text.setText("连接全站仪" + mStations.get(iListPos).getName() + result);
 		return ret;
 	}
 

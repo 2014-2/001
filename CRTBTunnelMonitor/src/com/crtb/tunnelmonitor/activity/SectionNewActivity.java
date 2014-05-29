@@ -300,7 +300,7 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 			setTopbarTitle("编辑隧道内断面");
 			
 			section_new_et_prefix.setText(sectionInfo.getChainagePrefix());
-			section_new_et_Chainage.setText(String.valueOf(sectionInfo.getChainage()));
+			section_new_et_Chainage.setText(CrtbUtils.doubleToString(sectionInfo.getChainage()));
 			section_new_et_name.setText(sectionInfo.getSectionName());
 			section_new_et_calendar.setText(DateUtils.toDateString(sectionInfo.getInBuiltTime(),DateUtils.DATE_TIME_FORMAT));
 			section_new_et_width.setText(String.valueOf(sectionInfo.getWidth()));

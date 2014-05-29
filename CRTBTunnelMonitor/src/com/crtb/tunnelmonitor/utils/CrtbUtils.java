@@ -31,6 +31,11 @@ public final class CrtbUtils {
 	static DecimalFormat df = new DecimalFormat("#.0000");
 	private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	
+	public static String doubleToString(double value){
+		BigDecimal b = new BigDecimal(value);
+		return b.setScale(4,BigDecimal.ROUND_HALF_DOWN).toString();
+	}
+	
 	public static double formatDouble(double value){
 		return formatDouble(String.valueOf(value)) ; 
 	}

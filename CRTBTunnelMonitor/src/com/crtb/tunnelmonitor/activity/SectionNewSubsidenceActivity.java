@@ -210,7 +210,7 @@ public class SectionNewSubsidenceActivity extends WorkFlowActivity implements On
 			setTopbarTitle("编辑地表下沉断面");
 			
 			section_new_et_prefix.setText(subsidence.getChainagePrefix());
-			DSection_Chainage.setText(String.valueOf(subsidence.getChainage()));
+			DSection_Chainage.setText(CrtbUtils.doubleToString(subsidence.getChainage()));
 			DSection_name.setText(subsidence.getSectionName());
 			DSection_createtime.setText(DateUtils.toDateString(subsidence.getInbuiltTime(),DateUtils.DATE_TIME_FORMAT));
 			DSection_Width.setText(String.valueOf((int)subsidence.getWidth()));

@@ -22,8 +22,8 @@ public class AlertList implements Serializable {
 	@ColumnInt
 	private int ID; 						// id
 
-	@ColumnInt
-	private int SheetID; 					// 记录单id
+	@ColumnString(length = 255)
+	private String SheetID; 					// 记录单id
 
 	@ColumnInt
 	private int CrossSectionID; 			// 断面唯一id
@@ -57,11 +57,11 @@ public class AlertList implements Serializable {
 		ID = iD;
 	}
 
-	public int getSheetID() {
+	public String getSheetID() {
 		return SheetID;
 	}
 
-	public void setSheetID(int sheetID) {
+	public void setSheetID(String sheetID) {
 		SheetID = sheetID;
 	}
 
