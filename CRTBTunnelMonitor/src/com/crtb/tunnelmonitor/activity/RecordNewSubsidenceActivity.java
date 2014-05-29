@@ -246,7 +246,7 @@ public class RecordNewSubsidenceActivity extends WorkFlowActivity implements OnP
 			String currentTime 	= record_buildtime.getEditableText().toString().trim() ;
 
 			if (StringUtils.isEmpty(chainage)) {
-				showText("撑子面里程不能为空");
+				showText("掌子面里程不能为空");
 				return;
 			}
 
