@@ -190,20 +190,19 @@ public class AudioListActivity extends BaseActivity implements
 	}
 
 	@Override
-	protected void onNewIntent(Intent intent) {
-		super.onNewIntent(intent);
-		if (intent != null) {
-			Set<String> set = intent.getCategories();
-			if (set != null && set.size() > 0
-					&& set.contains(Intent.CATEGORY_LAUNCHER)) {
-				mIsStartFromWheel = true;
-				final int tabIndex = intent.getIntExtra(TAB_INDEX,
-						TAB_INDEX_LOCAL);
-				tabIndex(tabIndex);
-				Log.d(TAG, "onNewIntent tabIndex=" + tabIndex);
-			}
-		}
-	}
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        if (intent != null
+                && (intent.getCategories() == null || !intent.getCategories().contains(
+                        Intent.CATEGORY_LAUNCHER))) {
+            mIsStartFromWheel = true;
+            final int tabIndex = intent.getIntExtra(TAB_INDEX,
+                    TAB_INDEX_LOCAL);
+            tabIndex(tabIndex);
+            Log.d(TAG, "onNewIntent tabIndex=" + tabIndex);
+
+        }
+    }
 
 	/**
 	 * Reload Audio List form MediaProvider.
