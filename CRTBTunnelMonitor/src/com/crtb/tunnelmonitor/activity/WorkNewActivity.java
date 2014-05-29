@@ -38,6 +38,7 @@ import com.crtb.tunnelmonitor.WorkFlowActivity;
 import com.crtb.tunnelmonitor.dao.impl.v2.ProjectIndexDao;
 import com.crtb.tunnelmonitor.entity.ProjectIndex;
 import com.crtb.tunnelmonitor.mydefine.CrtbDateDialogUtils;
+import com.crtb.tunnelmonitor.utils.CrtbDbFileUtils;
 import com.crtb.tunnelmonitor.utils.CrtbUtils;
 
 @InjectLayout(layout=R.layout.activity_work_new)
@@ -196,8 +197,13 @@ public class WorkNewActivity extends WorkFlowActivity implements OnClickListener
 		mWorkPlanCalendar.setText(buildTime);
 		mWorkPlanUnit.setText(bean.getConstructionFirm());
 		mWorkPlanPrefix.setText(bean.getChainagePrefix());
-		mWorkPlanStart.setText(String.valueOf(bean.getStartChainage()));
-		mWorkPlanEnd.setText(String.valueOf(bean.getEndChainage()));
+		mWorkPlanStart.setText(CrtbUtils.doubleToString(bean.getStartChainage()));
+		mWorkPlanEnd.setText(CrtbUtils.doubleToString(bean.getEndChainage()));
+		
+		mWorkPlanName.setEnabled(false);
+		mWorkPlanPrefix.setEnabled(false);
+		mWorkPlanStart.setEnabled(false);
+		mWorkPlanEnd.setEnabled(false);
 		
 		// 拱顶
 		mVaultTransMax.setText(String.valueOf(bean.getGDLimitTotalSettlement()));
@@ -264,6 +270,8 @@ public class WorkNewActivity extends WorkFlowActivity implements OnClickListener
 				showText("工作面名称不能为空");
 				return ;
 			}
+			
+			
 			
 			if(StringUtils.isEmpty(date)){
 				showText("日期不能为空");
@@ -386,6 +394,11 @@ public class WorkNewActivity extends WorkFlowActivity implements OnClickListener
 				}
 			} else {
 				
+				if(CrtbDbFileUtils.checkProjectIndex(this, name)){
+					showText("已经存在同名的工作面");
+					return ;
+				}
+				
 				ProjectIndex info = new ProjectIndex() ;
 				info.setProjectName(name);
 				info.setCreateTime(DateUtils.toDate(date,DateUtils.DATE_TIME_FORMAT));
@@ -424,13 +437,13 @@ public class WorkNewActivity extends WorkFlowActivity implements OnClickListener
 			break;
 		case R.id.ed_work_new_calendar :
 			
-			curdate = DateUtils.toDate(mWorkPlanCalendar.getEditableText().toString().trim(), DateUtils.PART_TIME_FORMAT);
+			/*curdate = DateUtils.toDate(mWorkPlanCalendar.getEditableText().toString().trim(), DateUtils.PART_TIME_FORMAT);
 			
 			if(curdate == null){
 				curdate	= DateUtils.getCurrtentTimes() ;
 			}
 			
-			CrtbDateDialogUtils.setAnyDateDialog(this, mWorkPlanCalendar, curdate);
+			CrtbDateDialogUtils.setAnyDateDialog(this, mWorkPlanCalendar, curdate);*/
 			
 			break ;
 			

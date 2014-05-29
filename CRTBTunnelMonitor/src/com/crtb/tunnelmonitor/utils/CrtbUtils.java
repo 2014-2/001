@@ -37,7 +37,7 @@ public final class CrtbUtils {
 
     public static double formatDouble(String value, int scale) {
         BigDecimal b = new BigDecimal(value);
-        return b.setScale(scale, BigDecimal.ROUND_DOWN).doubleValue();
+        return b.setScale(scale, BigDecimal.ROUND_HALF_DOWN).doubleValue();
     }
 
     public static double formatDouble(double value) {
@@ -48,9 +48,14 @@ public final class CrtbUtils {
         return formatDouble(value, 4);
     }
 
+	public static String doubleToString(double value){
+		BigDecimal b = new BigDecimal(value);
+		return b.setScale(4,BigDecimal.ROUND_HALF_DOWN).toString();
+	}
+
 	public static float formatFloat(String value){
 		BigDecimal b = new BigDecimal(value);
-		return b.setScale(4,BigDecimal.ROUND_DOWN).floatValue() ;
+		return b.setScale(4,BigDecimal.ROUND_HALF_DOWN).floatValue() ;
 	}
 	
 	public static String formatSectionName(String pre, double value){

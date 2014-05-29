@@ -7,7 +7,6 @@ import org.zw.android.framework.ioc.InjectCore;
 import org.zw.android.framework.ioc.InjectLayout;
 import org.zw.android.framework.ioc.InjectResource;
 import org.zw.android.framework.ioc.InjectView;
-import org.zw.android.framework.util.StringUtils;
 
 import android.content.BroadcastReceiver;
 import android.content.Intent;
@@ -95,6 +94,14 @@ public final class WorkActivity extends WorkFlowActivity {
 			
 		} else if(position == 2){
 			
+			mProgressText	= "正在导出文件,请稍等..." ;
+			String dbname 	= bean.getProjectName();
+			String path 	= CrtbDbFileUtils.getLocalDbPath(this, dbname);
+			
+			CrtbDbFileUtils.exportDb(path, dbname, mHanlder);
+			
+		}else if(position == 3){
+			
 			String name = AppPreferences.getPreferences().getCurrentProject() ;
 			
 			if(name != null && name.equals(bean.getProjectName())){
@@ -154,7 +161,10 @@ public final class WorkActivity extends WorkFlowActivity {
 					break ;
 					
 				case MSG_EXPORT_DB_SUCCESS :
-					CrtbDialogHint dialog = new CrtbDialogHint(WorkActivity.this, R.drawable.ic_reslut_sucess, "数据库导出完成");
+					
+					String str = msg.obj != null ? msg.obj.toString() : "数据库导出完成" ;
+					
+					CrtbDialogHint dialog = new CrtbDialogHint(WorkActivity.this, R.drawable.ic_reslut_sucess, str);
 					dialog.show() ;
 					break ;
 				case MSG_EXPORT_DB_FAILED :
@@ -178,13 +188,13 @@ public final class WorkActivity extends WorkFlowActivity {
 		item.setName(getString(R.string.common_create_new));
 		systems.add(item);
 		
-		// 是否能导出
-		if(ProjectIndexDao.defaultWorkPlanDao().hasExport()){
-			item = new MenuSystemItem() ;
-			item.setIcon(R.drawable.ic_menu_export);
-			item.setName(getString(R.string.common_export));
-			systems.add(item);
-		}
+//		// 是否能导出
+//		if(ProjectIndexDao.defaultWorkPlanDao().hasExport()){
+//			item = new MenuSystemItem() ;
+//			item.setIcon(R.drawable.ic_menu_export);
+//			item.setName(getString(R.string.common_export));
+//			systems.add(item);
+//		}
 		
 		item = new MenuSystemItem() ;
 		item.setIcon(R.drawable.ic_menu_inport);
@@ -229,16 +239,6 @@ public final class WorkActivity extends WorkFlowActivity {
 			
 		} else if(name.equals(getString(R.string.common_export))){
 			
-			mProgressText	= "正在导出文件,请稍等..." ;
-			String path 	= ProjectIndexDao.defaultWorkPlanDao().getCurrentWorkDbPath() ;
-			String dbname 	= AppPreferences.getPreferences().getCurrentProject();
-			
-			if(path == null || StringUtils.isEmpty(dbname)){
-				showText("没有打开工作面");
-				return ;
-			}
-			
-			CrtbDbFileUtils.exportDb(path, dbname, mHanlder);
 		}
 	}
 

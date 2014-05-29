@@ -210,14 +210,22 @@ public class SectionNewSubsidenceActivity extends WorkFlowActivity implements On
 			setTopbarTitle("编辑地表下沉断面");
 			
 			section_new_et_prefix.setText(subsidence.getChainagePrefix());
-			DSection_Chainage.setText(String.valueOf(subsidence.getChainage()));
+			DSection_Chainage.setText(CrtbUtils.doubleToString(subsidence.getChainage()));
 			DSection_name.setText(subsidence.getSectionName());
 			DSection_createtime.setText(DateUtils.toDateString(subsidence.getInbuiltTime(),DateUtils.DATE_TIME_FORMAT));
 			DSection_Width.setText(String.valueOf((int)subsidence.getWidth()));
 			DSection_PointCount.setText(String.valueOf(subsidence.getSurveyPnts()));
 			
+			DSection_Chainage.setEnabled(false);
+			DSection_Width.setEnabled(false);
+			DSection_PointCount.setEnabled(false);
+			
 			DSection_Value1.setText(String.valueOf(subsidence.getDBU0()));
 			DSection_Value2.setText(String.valueOf(subsidence.getDBLimitVelocity()));
+			
+			DSection_Value1.setEnabled(false);
+			DSection_Value2.setEnabled(false);
+			
 			DSection_SetTime.setText(DateUtils.toDateString(subsidence.getDBU0Time(),DateUtils.DATE_TIME_FORMAT));
 			DSection_Info.setText(subsidence.getDBU0Description());
 		}
@@ -236,13 +244,13 @@ public class SectionNewSubsidenceActivity extends WorkFlowActivity implements On
 			break;
 		case R.id.section_new_et_calendar:
 			
-			curdate = DateUtils.toDate(DSection_createtime.getEditableText().toString().trim(), DateUtils.DATE_TIME_FORMAT);
+			/*curdate = DateUtils.toDate(DSection_createtime.getEditableText().toString().trim(), DateUtils.DATE_TIME_FORMAT);
 			
 			if(curdate == null){
 				curdate	= DateUtils.getCurrtentTimes() ;
 			}
 			
-			CrtbDateDialogUtils.setAnyDateDialog(this, DSection_createtime, curdate);
+			CrtbDateDialogUtils.setAnyDateDialog(this, DSection_createtime, curdate);*/
 			break ;
 		case R.id.DSection_SetTime:
 			

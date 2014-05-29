@@ -1,7 +1,6 @@
 package com.crtb.tunnelmonitor.activity;
 
 import java.util.ArrayList;
-import java.util.Date;
 
 import org.zw.android.framework.ioc.InjectCore;
 import org.zw.android.framework.ioc.InjectLayout;
@@ -37,7 +36,6 @@ import com.crtb.tunnelmonitor.dao.impl.v2.RawSheetIndexDao;
 import com.crtb.tunnelmonitor.entity.ProjectIndex;
 import com.crtb.tunnelmonitor.entity.RawSheetIndex;
 import com.crtb.tunnelmonitor.entity.SurveyerInformation;
-import com.crtb.tunnelmonitor.mydefine.CrtbDateDialogUtils;
 import com.crtb.tunnelmonitor.utils.CrtbUtils;
 import com.crtb.tunnelmonitor.widget.CrtbRecordSubsidenceSectionInfoListView;
 
@@ -196,9 +194,10 @@ public class RecordNewSubsidenceActivity extends WorkFlowActivity implements OnP
     		sectionListView.setSectionIds(recordInfo.getCrossSectionIDs());
 			
     		section_new_et_prefix.setText(mCurrentWorkPlan.getChainagePrefix());
-			record_Chainage.setText(String.valueOf(recordInfo.getFACEDK()));
+			record_Chainage.setText(CrtbUtils.doubleToString(recordInfo.getFACEDK()));
 			record_Person.setText(recordInfo.getSurveyer());
 			record_Card.setText(recordInfo.getCertificateID());
+			record_Chainage.setEnabled(false);
 			record_Person.setEnabled(false);
 			record_Card.setEnabled(false);
 			record_C.setText(String.valueOf(recordInfo.getTEMPERATURE()));
@@ -222,13 +221,13 @@ public class RecordNewSubsidenceActivity extends WorkFlowActivity implements OnP
 			break;
 		case R.id.record_buildtime :
 			
-			Date curdate = DateUtils.toDate(record_buildtime.getEditableText().toString().trim(), DateUtils.PART_TIME_FORMAT);
+			/*Date curdate = DateUtils.toDate(record_buildtime.getEditableText().toString().trim(), DateUtils.PART_TIME_FORMAT);
 			
 			if(curdate == null){
 				curdate	= DateUtils.getCurrtentTimes() ;
 			}
 			
-			CrtbDateDialogUtils.setAnyDateDialog(this, record_buildtime, curdate);
+			CrtbDateDialogUtils.setAnyDateDialog(this, record_buildtime, curdate);*/
 			break ;
 		case R.id.work_btn_queding: // 数据库
 			

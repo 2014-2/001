@@ -300,10 +300,13 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 			setTopbarTitle("编辑隧道内断面");
 			
 			section_new_et_prefix.setText(sectionInfo.getChainagePrefix());
-			section_new_et_Chainage.setText(String.valueOf(sectionInfo.getChainage()));
+			section_new_et_Chainage.setText(CrtbUtils.doubleToString(sectionInfo.getChainage()));
 			section_new_et_name.setText(sectionInfo.getSectionName());
 			section_new_et_calendar.setText(DateUtils.toDateString(sectionInfo.getInBuiltTime(),DateUtils.DATE_TIME_FORMAT));
 			section_new_et_width.setText(String.valueOf(sectionInfo.getWidth()));
+			
+			section_new_et_Chainage.setEnabled(false);
+			section_new_et_width.setEnabled(false);
 			
 			section_new_sp.setSelection(CrtbUtils.getExcavateMethod(sectionInfo.getExcavateMethod()));
 			
@@ -334,6 +337,11 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 			section_new_leiji_sl.setText(String.valueOf(sectionInfo.getSLU0()));
 			section_new_single_gd.setText(String.valueOf(sectionInfo.getGDVelocity()));
 			section_new_single_sl.setText(String.valueOf(sectionInfo.getSLLimitVelocity()));
+			
+			section_new_leiji_gd.setEnabled(false);
+			section_new_leiji_sl.setEnabled(false);
+			section_new_single_gd.setEnabled(false);
+			section_new_single_sl.setEnabled(false);
 			
 			section_new_createtime1.setText(DateUtils.toDateString(sectionInfo.getGDU0Time(),DateUtils.DATE_TIME_FORMAT));
 			section_new_createtime2.setText(DateUtils.toDateString(sectionInfo.getSLU0Time(),DateUtils.DATE_TIME_FORMAT));
@@ -390,33 +398,33 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 			break;
 		case R.id.section_new_et_calendar :
 			
-			curdate = DateUtils.toDate(section_new_et_calendar.getEditableText().toString().trim(), DateUtils.DATE_TIME_FORMAT);
+			/*curdate = DateUtils.toDate(section_new_et_calendar.getEditableText().toString().trim(), DateUtils.DATE_TIME_FORMAT);
 			
 			if(curdate == null){
 				curdate	= DateUtils.getCurrtentTimes() ;
 			}
 			
-			CrtbDateDialogUtils.setAnyDateDialog(this, section_new_et_calendar, curdate);
+			CrtbDateDialogUtils.setAnyDateDialog(this, section_new_et_calendar, curdate);*/
 			break ;
 		case R.id.section_new_createtime_gd :
 			
-			curdate = DateUtils.toDate(section_new_createtime1.getEditableText().toString().trim(), DateUtils.DATE_TIME_FORMAT);
+			/*curdate = DateUtils.toDate(section_new_createtime1.getEditableText().toString().trim(), DateUtils.DATE_TIME_FORMAT);
 			
 			if(curdate == null){
 				curdate	= DateUtils.getCurrtentTimes() ;
 			}
 			
-			CrtbDateDialogUtils.setAnyDateDialog(this, section_new_createtime1, curdate);
+			CrtbDateDialogUtils.setAnyDateDialog(this, section_new_createtime1, curdate);*/
 			break ;
 		case R.id.section_new_createtime_sl :
 			
-			curdate = DateUtils.toDate(section_new_createtime2.getEditableText().toString().trim(), DateUtils.PART_TIME_FORMAT);
+			/*curdate = DateUtils.toDate(section_new_createtime2.getEditableText().toString().trim(), DateUtils.PART_TIME_FORMAT);
 			
 			if(curdate == null){
 				curdate	= DateUtils.getCurrtentTimes() ;
 			}
 			
-			CrtbDateDialogUtils.setAnyDateDialog(this, section_new_createtime2, curdate);
+			CrtbDateDialogUtils.setAnyDateDialog(this, section_new_createtime2, curdate);*/
 			break ;
 		case R.id.work_btn_queding: // 数据库
 			

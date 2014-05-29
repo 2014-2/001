@@ -33,6 +33,7 @@
     <string-array name="work_plan_item_menus">
         <item>打开</item>
         <item>编辑</item>
+        <item>导出</item>
         <item>删除</item>
     </string-array>
 

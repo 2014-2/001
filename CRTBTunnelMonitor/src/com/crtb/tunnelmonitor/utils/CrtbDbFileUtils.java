@@ -111,6 +111,27 @@ public final class CrtbDbFileUtils {
 		return list ;
 	}
 	
+	public static String getLocalDbPath(Context context,String dbname){
+		return "/data/data/" + context.getPackageName() + "/databases/" + dbname + ".db";
+	}
+	
+	public static boolean checkProjectIndex(Context context,String name){
+		
+		List<File> list = CrtbDbFileUtils.getLocalDbFiles(context) ;
+		
+		for(File f : list){
+			
+			String fn	= f.getName() ;
+			String sn 	= fn.substring(0, fn.lastIndexOf("."));
+			
+			if(sn.equals(name)){
+				return true;
+			}
+		}
+		
+		return false ;
+	}
+	
 	public static void exportDb(final String path,
 			final String filename,AppHandler handler){
 		
@@ -123,7 +144,7 @@ public final class CrtbDbFileUtils {
 			@Override
 			public void process() {
 				
-				String outPath = getExportPath(AppConfig.DB_EXPORT_DIR) + "/" + filename ;
+				String outPath = getExportPath(AppConfig.DB_EXPORT_DIR) + "/" + filename + ".dtmsdb";
 				
 				IDbEncrypt encrypt = new DbAESEncrypt() ;
 				
@@ -136,7 +157,7 @@ public final class CrtbDbFileUtils {
 					
 					if(success){
 						AppLogger.d(TAG, "zhouwei : 数据库导出完成: " + outPath); 
-						sendMessage(MSG_EXPORT_DB_SUCCESS) ;
+						sendMessage(MSG_EXPORT_DB_SUCCESS,"已经将工作面(" + filename + ")" + "成功导出到: " + outPath) ;
 					} else {
 						sendMessage(MSG_EXPORT_DB_FAILED) ;
 					}
@@ -161,8 +182,10 @@ public final class CrtbDbFileUtils {
 			@Override
 			public void process() {
 				
-				String filename = path.substring(path.lastIndexOf("/") + 1);
-				String outPath 	= "data/data/" + context.getPackageName() + "/databases/" + filename ;
+				String filename 	= path.substring(path.lastIndexOf("/") + 1);
+				String simpleName 	= filename.substring(0, filename.lastIndexOf("."));
+				String inName 		= simpleName + ".db" ;
+				String outPath 		= "data/data/" + context.getPackageName() + "/databases/" + inName ;
 				
 				IDbEncrypt encrypt = new DbAESEncrypt() ;
 				
@@ -174,7 +197,7 @@ public final class CrtbDbFileUtils {
 					if(success){
 						
 						// 写入数据库
-						int code = ProjectIndexDao.defaultWorkPlanDao().importDb(filename) ;
+						int code = ProjectIndexDao.defaultWorkPlanDao().importDb(inName) ;
 						
 						Thread.sleep(2000);
 						

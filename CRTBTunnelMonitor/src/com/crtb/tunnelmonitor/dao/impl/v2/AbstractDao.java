@@ -33,7 +33,7 @@ public abstract class AbstractDao<T> {
 	}
 	
 	public static final String getDbUniqueName(String name){
-		return PROJECT_PREFIX + name + ".db";
+		return name + ".db";
 	}
 	
 	protected final IAccessDatabase getDefaultDb(){
