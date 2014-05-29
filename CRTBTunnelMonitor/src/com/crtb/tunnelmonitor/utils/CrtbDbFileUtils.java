@@ -161,9 +161,10 @@ public final class CrtbDbFileUtils {
 			@Override
 			public void process() {
 				
-				String filename = path.substring(path.lastIndexOf("/") + 1);
-				String simpleName = filename.substring(0, filename.lastIndexOf("."));
-				String outPath 	= "data/data/" + context.getPackageName() + "/databases/" + simpleName + ".db" ;
+				String filename 	= path.substring(path.lastIndexOf("/") + 1);
+				String simpleName 	= filename.substring(0, filename.lastIndexOf("."));
+				String inName 		= simpleName + ".db" ;
+				String outPath 		= "data/data/" + context.getPackageName() + "/databases/" + inName ;
 				
 				IDbEncrypt encrypt = new DbAESEncrypt() ;
 				
@@ -175,7 +176,7 @@ public final class CrtbDbFileUtils {
 					if(success){
 						
 						// 写入数据库
-						int code = ProjectIndexDao.defaultWorkPlanDao().importDb(filename) ;
+						int code = ProjectIndexDao.defaultWorkPlanDao().importDb(inName) ;
 						
 						Thread.sleep(2000);
 						

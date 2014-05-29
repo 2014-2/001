@@ -118,10 +118,16 @@ public final class CrtbDialogFileBrowse extends CrtbDialog {
 				
 				List<File> list = CrtbDbFileUtils.getLocalDbFiles(getContext()) ;
 				File file = adapter.getItem(position);
+				String str = file.getName() ;
+				String inName = str.substring(0, str.lastIndexOf("."));
 				
 				for(File f : list){
-					if(f.getName().equals(file.getName())){
-						Toast.makeText(getContext(), "已经存在该数据库", Toast.LENGTH_LONG).show() ;
+					
+					String fn	= f.getName() ;
+					String sn 	= fn.substring(0, fn.lastIndexOf("."));
+					
+					if(sn.equals(inName)){
+						Toast.makeText(getContext(), "已经存在该数据库", Toast.LENGTH_SHORT).show() ;
 						return ;
 					}
 				}
