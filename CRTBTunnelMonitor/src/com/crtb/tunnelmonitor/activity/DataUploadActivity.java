@@ -172,6 +172,8 @@ public class DataUploadActivity extends FragmentActivity {
     private void updateStatus(boolean isSuccess) {
         isUploading = false;
         mUploadStatusIcon.setVisibility(View.VISIBLE);
+        mUploadProgress.setIndeterminate(false);
+        mUploadProgress.setProgress(100);
         if (isSuccess) {
             mUploadStatusIcon.setImageResource(R.drawable.success);
             mUploadStatusText.setText(R.string.data_upload_success);
@@ -270,8 +272,8 @@ public class DataUploadActivity extends FragmentActivity {
                 public void onClick(View v) {
                     ProjectIndex currentProject = ProjectIndexDao.defaultWorkPlanDao().queryEditWorkPlan();
                     if (currentProject != null) {
-                    	List<SheetRecord> sheetRecords = null;
-                    	AsyncUploadTask uploadTask = null;
+                        List<SheetRecord> sheetRecords = null;
+                        AsyncUploadTask uploadTask = null;
                         switch (mPager.getCurrentItem()) {
                             // 隧道内断面
                             case 0:
@@ -279,78 +281,78 @@ public class DataUploadActivity extends FragmentActivity {
                                 if (sheetRecords != null && sheetRecords.size() > 0) {
                                     showProgressOverlay();
                                     uploadTask  = new TunnelAsyncUploadTask(new UploadListener() {
-    									@Override
-    									public void done(boolean success) {
-    										 if (success) {
-                                                 mTunnelFragment.refreshUI();
-                                             }
-                                             updateStatus(success);
-    									}
-    								});
+                                        @Override
+                                        public void done(boolean success) {
+                                            if (success) {
+                                                mTunnelFragment.refreshUI();
+                                            }
+                                            updateStatus(success);
+                                        }
+                                    });
                                     uploadTask.execute(sheetRecords);
                                 } else {
                                     Toast.makeText(getApplicationContext(), "请先选择要上传的记录单", Toast.LENGTH_LONG).show();
                                 }
-//                                TunnelDataManager uploadManager = new TunnelDataManager();
-//                                List<UploadSheetData> uploadDataList = mTunnelFragment.getUploadData();
-//                                if (uploadDataList != null && uploadDataList.size() > 0) {
-//                                    showProgressOverlay();
-//                                    uploadManager.uploadData(uploadDataList, new DataUploadListener() {
-//                                        @Override
-//                                        public void done(final boolean success) {
-//                                            runOnUiThread(new Runnable() {
-//                                                @Override
-//                                                public void run() {
-//                                                    if (success) {
-//                                                        mTunnelFragment.refreshUI();
-//                                                    }
-//                                                    updateStatus(success);
-//                                                }
-//                                            });
-//                                        }
-//                                    });
-//                                } else {
-//                                    Toast.makeText(getApplicationContext(), "请先选择要上传的记录单", Toast.LENGTH_LONG).show();
-//                                }
+                                //                                TunnelDataManager uploadManager = new TunnelDataManager();
+                                //                                List<UploadSheetData> uploadDataList = mTunnelFragment.getUploadData();
+                                //                                if (uploadDataList != null && uploadDataList.size() > 0) {
+                                //                                    showProgressOverlay();
+                                //                                    uploadManager.uploadData(uploadDataList, new DataUploadListener() {
+                                //                                        @Override
+                                //                                        public void done(final boolean success) {
+                                //                                            runOnUiThread(new Runnable() {
+                                //                                                @Override
+                                //                                                public void run() {
+                                //                                                    if (success) {
+                                //                                                        mTunnelFragment.refreshUI();
+                                //                                                    }
+                                //                                                    updateStatus(success);
+                                //                                                }
+                                //                                            });
+                                //                                        }
+                                //                                    });
+                                //                                } else {
+                                //                                    Toast.makeText(getApplicationContext(), "请先选择要上传的记录单", Toast.LENGTH_LONG).show();
+                                //                                }
                                 break;
                             case 1:
-                            	sheetRecords = mSubsidenceFragment.getUploadData();
+                                sheetRecords = mSubsidenceFragment.getUploadData();
                                 if (sheetRecords != null && sheetRecords.size() > 0) {
                                     showProgressOverlay();
                                     uploadTask  = new SubsidenceAsyncUploadTask(new UploadListener() {
-    									@Override
-    									public void done(boolean success) {
-    										 if (success) {
-    											 mSubsidenceFragment.refreshUI();
-                                             }
-                                             updateStatus(success);
-    									}
-    								});
+                                        @Override
+                                        public void done(boolean success) {
+                                            if (success) {
+                                                mSubsidenceFragment.refreshUI();
+                                            }
+                                            updateStatus(success);
+                                        }
+                                    });
                                     uploadTask.execute(sheetRecords);
                                 } else {
                                     Toast.makeText(getApplicationContext(), "请先选择要上传的记录单", Toast.LENGTH_LONG).show();
                                 }
-//                            	 SubsidenceDataManager subsidenceDataManager = new SubsidenceDataManager();
-//                                 List<com.crtb.tunnelmonitor.task.SubsidenceDataManager.UploadSheetData> uploadDataList1 = mSubsidenceFragment.getUploadData();
-//                                 if (uploadDataList1 != null && uploadDataList1.size() > 0) {
-//                                     showProgressOverlay();
-//                                     subsidenceDataManager.uploadData(uploadDataList1, new com.crtb.tunnelmonitor.task.SubsidenceDataManager.DataUploadListener() {
-//                                         @Override
-//                                         public void done(final boolean success) {
-//                                             runOnUiThread(new Runnable() {
-//                                                 @Override
-//                                                 public void run() {
-//                                                     if (success) {
-//                                                    	 mSubsidenceFragment.refreshUI();
-//                                                     }
-//                                                     updateStatus(success);
-//                                                 }
-//                                             });
-//                                         }
-//                                     });
-//                                 } else {
-//                                     Toast.makeText(getApplicationContext(), "请先选择要上传的记录单", Toast.LENGTH_LONG).show();
-//                                 }
+                                //                            	 SubsidenceDataManager subsidenceDataManager = new SubsidenceDataManager();
+                                //                                 List<com.crtb.tunnelmonitor.task.SubsidenceDataManager.UploadSheetData> uploadDataList1 = mSubsidenceFragment.getUploadData();
+                                //                                 if (uploadDataList1 != null && uploadDataList1.size() > 0) {
+                                //                                     showProgressOverlay();
+                                //                                     subsidenceDataManager.uploadData(uploadDataList1, new com.crtb.tunnelmonitor.task.SubsidenceDataManager.DataUploadListener() {
+                                //                                         @Override
+                                //                                         public void done(final boolean success) {
+                                //                                             runOnUiThread(new Runnable() {
+                                //                                                 @Override
+                                //                                                 public void run() {
+                                //                                                     if (success) {
+                                //                                                    	 mSubsidenceFragment.refreshUI();
+                                //                                                     }
+                                //                                                     updateStatus(success);
+                                //                                                 }
+                                //                                             });
+                                //                                         }
+                                //                                     });
+                                //                                 } else {
+                                //                                     Toast.makeText(getApplicationContext(), "请先选择要上传的记录单", Toast.LENGTH_LONG).show();
+                                //                                 }
                                 break;
                                 // TODO:地标下沉断面
                             default:

@@ -123,7 +123,7 @@ public class AlertUtils {
         List pastInfoList = null;
         String[] thisCoords = null;
         Date thisTime = null;
-        int sheetId = -1;
+        String sheetId = null;
         int chainageId = -1;
         String pntType = null;
         String originalDataID = null;
@@ -145,7 +145,7 @@ public class AlertUtils {
                     Integer.valueOf(tPoint.getChainageId()), tPoint.getPntType(), tPoint.getMEASNo());
             sumOfDataCorrection = thisDataCorrection + calculateSumOfDataCorrectionsOfTunnelSettlementTotalDatas(pastInfoList);
             chainageId = Integer.valueOf(((TunnelSettlementTotalData) point).getChainageId());
-            sheetId = Integer.valueOf(((TunnelSettlementTotalData) point).getSheetId());
+            sheetId = ((TunnelSettlementTotalData) point).getSheetId();
             pntType = ((TunnelSettlementTotalData) point).getPntType();
             originalDataID = String.valueOf(((TunnelSettlementTotalData) point).getID());
         } else if (point instanceof SubsidenceTotalData) {
@@ -162,7 +162,7 @@ public class AlertUtils {
                     Integer.valueOf(sPoint.getChainageId()), sPoint.getPntType(), sPoint.getMEASNo());
             sumOfDataCorrection = thisDataCorrection + calculateSumOfDataCorrectionsOfSubsidenceTotalDatas(pastInfoList);
             chainageId = Integer.valueOf(((SubsidenceTotalData) point).getChainageId());
-            sheetId = Integer.valueOf(((SubsidenceTotalData) point).getSheetId());
+            sheetId = ((SubsidenceTotalData) point).getSheetId();
             pntType = ((SubsidenceTotalData) point).getPntType();
             originalDataID = String.valueOf(((SubsidenceTotalData) point).getID());
         } else {
@@ -223,7 +223,7 @@ public class AlertUtils {
                                     new Date(System.currentTimeMillis()), String.valueOf(chainageId) + pntType, ALERT_STATUS_OPEN/*报警*/, 1/*true*/);
                         }
                     } else if (curHandlingAlertId >= 0) {
-                        if (sheetId != -1) {
+                        if (sheetId != null) {
                             AlertList al = AlertListDao.defaultDao().queryOne(sheetId, chainageId, originalDataID, uType);
                             if (al != null) {
                                 int alertId = al.getID();
@@ -299,7 +299,7 @@ public class AlertUtils {
                                     new Date(System.currentTimeMillis()), String.valueOf(chainageId) + pntType, ALERT_STATUS_OPEN/*报警*/, 1/*true*/);
                         }
                     } else if (curHandlingAlertId >= 0) {
-                        if (sheetId != -1) {
+                        if (sheetId != null) {
                             AlertList al = AlertListDao.defaultDao().queryOne(sheetId, chainageId, originalDataID, uType);
                             if (al != null) {
                                 int alertId = al.getID();
@@ -336,7 +336,7 @@ public class AlertUtils {
             return null;
         }
 
-        int sheetId = Integer.valueOf(s_1.getSheetId());
+        String sheetId = s_1.getSheetId();
         String originalDataID = s_1.getID() + ORIGINAL_ID_DIVIDER + s_2.getID();
 
         double lineThisLength = getLineLength(s_1, s_2);
@@ -398,7 +398,7 @@ public class AlertUtils {
                     }
 
                 } else if (curHandlingAlertId >= 0) {
-                    if (sheetId != -1) {
+                    if (sheetId != null) {
                         AlertList al = AlertListDao.defaultDao().queryOne(sheetId, chainageId, originalDataID, uType);
                         if (al != null) {
                             int alertId = al.getID();
@@ -461,7 +461,7 @@ public class AlertUtils {
                                 new Date(System.currentTimeMillis()), String.valueOf(chainageId) + s_1.getPntType(), ALERT_STATUS_OPEN/*报警*/, 1/*true*/);
                     }
                 } else if (curHandlingAlertId >= 0) {
-                    if (sheetId != -1) {
+                    if (sheetId != null) {
                         AlertList al = AlertListDao.defaultDao().queryOne(sheetId, chainageId, originalDataID, uType);
                         if (al != null) {
                             int alertId = al.getID();
@@ -718,7 +718,7 @@ public class AlertUtils {
 //                    ai.setAlertStatus(alertStatus);
 //                    ai.setAlertStatusMsg((alertStatus >= 0 && alertStatus < 3) ? ALERT_STATUS_MSGS[alertStatus]
 //                            : "");
-                    ai.setSheetId(c.getInt(5));
+                    ai.setSheetId(c.getString(5));
                     ai.setSectionId(c.getInt(6));
                     ai.setAlertLevel(c.getInt(7));
                     ai.setUValue(c.getDouble(8));

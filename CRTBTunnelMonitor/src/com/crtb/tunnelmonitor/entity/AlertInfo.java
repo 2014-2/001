@@ -14,7 +14,7 @@ public class AlertInfo implements Serializable {
     //    public boolean state1;
     private int alertId = -1;
     private int alertHandlingId = -1;
-    private int sheetId = -1;
+    private String sheetId = null;
     private int sectionId = -1;
     private int alertLevel;
     private float correction = 0f;
@@ -55,11 +55,11 @@ public class AlertInfo implements Serializable {
         this.alertHandlingId = alertHandlingId;
     }
 
-    public void setSheetId(int sheetId) {
+    public void setSheetId(String sheetId) {
         this.sheetId = sheetId;
     }
 
-    public int getSheetId() {
+    public String getSheetId() {
         return sheetId;
     }
 

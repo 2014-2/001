@@ -89,16 +89,16 @@ public class WorkInfoDownloadActivity extends Activity {
         loadData();
     }
 
-	private void loadData() {
-		List<WorkSiteIndex> workSites = WorkSiteIndexDao.defaultDao().queryAllWorkSite();
-		if (workSites == null) {
-			workSites = new ArrayList<WorkSiteIndex>();
-		}
-		if (workSites != null && workSites.size() > 0) {
-			mAdapter.setData(workSites);
-		}
-	}
-    
+    private void loadData() {
+        List<WorkSiteIndex> workSites = WorkSiteIndexDao.defaultDao().queryAllWorkSite();
+        if (workSites == null) {
+            workSites = new ArrayList<WorkSiteIndex>();
+        }
+        if (workSites != null && workSites.size() > 0) {
+            mAdapter.setData(workSites);
+        }
+    }
+
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
@@ -120,23 +120,23 @@ public class WorkInfoDownloadActivity extends Activity {
             if (longPressedItemPosition >= 0 && mAdapter != null) {
                 final WorkSiteIndex workSite = (WorkSiteIndex) mAdapter.getItem(longPressedItemPosition);
                 if (item != null) {
-                	CrtbWebService.getInstance().setZoneCode(workSite.getZoneCode());
-                	CrtbWebService.getInstance().setSiteCode(workSite.getSiteCode());
-                	SiteProjectMappingDao.defaultDao().insertOrUpdate(curProjectId, workSite.getID());
+                    CrtbWebService.getInstance().setZoneCode(workSite.getZoneCode());
+                    CrtbWebService.getInstance().setSiteCode(workSite.getSiteCode());
+                    SiteProjectMappingDao.defaultDao().insertOrUpdate(curProjectId, workSite.getID());
                     loadData();
                     Toast.makeText(this, "下载功能暂时关闭", Toast.LENGTH_LONG).show();
                     //FIXME: 暂时屏蔽断面及测量数据下载功能
-//                	showProgressOverlay();
-//                    DataDownloadManager downloadManager = new DataDownloadManager();
-//                    downloadManager.downloadWorkSite(workSite, new DownloadListener() {
-//						@Override
-//						public void done(boolean success) {
-//							updateStatus(success);
-//							if (success) {
-//								new UpdateTask().execute(workSite);
-//							}
-//						}
-//					});
+                    //                	showProgressOverlay();
+                    //                    DataDownloadManager downloadManager = new DataDownloadManager();
+                    //                    downloadManager.downloadWorkSite(workSite, new DownloadListener() {
+                    //						@Override
+                    //						public void done(boolean success) {
+                    //							updateStatus(success);
+                    //							if (success) {
+                    //								new UpdateTask().execute(workSite);
+                    //							}
+                    //						}
+                    //					});
                 }
             }
         }
@@ -181,6 +181,8 @@ public class WorkInfoDownloadActivity extends Activity {
     private void updateStatus(boolean isSuccess) {
         isDownloading = false;
         mDownloadStatusIcon.setVisibility(View.VISIBLE);
+        mDownloadProgress.setIndeterminate(false);
+        mDownloadProgress.setProgress(100);
         if (isSuccess) {
             mDownloadStatusIcon.setImageResource(R.drawable.success);
             mDownloadStatusText.setText(R.string.data_download_success);
@@ -223,7 +225,7 @@ public class WorkInfoDownloadActivity extends Activity {
                         });
                     } else {
                         Toast.makeText(getApplicationContext(), "请先打开工作面", Toast.LENGTH_SHORT)
-                                .show();
+                        .show();
                     }
                     menuWindow.dismiss();
                 }
@@ -259,19 +261,19 @@ public class WorkInfoDownloadActivity extends Activity {
     }
 
     class WorkSitesAdapter extends BaseAdapter {
-    	private List<WorkSiteIndex> mWorkSites;
-    	
-    	WorkSitesAdapter() {
-    		mWorkSites = new ArrayList<WorkSiteIndex>();
-    	}
-    	
-    	public void setData(List<WorkSiteIndex> workSites) {
-    		if (workSites != null) {
-    			mWorkSites = workSites;
-    			notifyDataSetChanged();
-    		}
-    	}
-    	
+        private List<WorkSiteIndex> mWorkSites;
+
+        WorkSitesAdapter() {
+            mWorkSites = new ArrayList<WorkSiteIndex>();
+        }
+
+        public void setData(List<WorkSiteIndex> workSites) {
+            if (workSites != null) {
+                mWorkSites = workSites;
+                notifyDataSetChanged();
+            }
+        }
+
         @Override
         public int getCount() {
             return mWorkSites.size();
@@ -323,20 +325,20 @@ public class WorkInfoDownloadActivity extends Activity {
             return convertView;
         }
     }
-    
+
     private class UpdateTask extends AsyncTask<WorkSiteIndex, Void, Void> {
 
-		@Override
-		protected Void doInBackground(WorkSiteIndex... params) {
-			WorkSiteIndex workSite = params[0];
-			workSite.setDownloadFlag(2);
-			WorkSiteIndexDao.defaultDao().update(workSite);
-			return null;
-		}
-    	
-		@Override
-		protected void onPostExecute(Void result) {
-			loadData();
-		}
+        @Override
+        protected Void doInBackground(WorkSiteIndex... params) {
+            WorkSiteIndex workSite = params[0];
+            workSite.setDownloadFlag(2);
+            WorkSiteIndexDao.defaultDao().update(workSite);
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+            loadData();
+        }
     }
 }
