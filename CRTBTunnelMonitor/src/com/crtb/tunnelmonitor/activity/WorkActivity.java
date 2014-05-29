@@ -238,7 +238,9 @@ public final class WorkActivity extends WorkFlowActivity {
 				return ;
 			}
 			
-			CrtbDbFileUtils.exportDb(path, dbname, mHanlder);
+			String simpleName = dbname.substring(0, dbname.lastIndexOf("."));
+			
+			CrtbDbFileUtils.exportDb(path, simpleName, mHanlder);
 		}
 	}
 
