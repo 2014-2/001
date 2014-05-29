@@ -196,8 +196,8 @@ public class WorkNewActivity extends WorkFlowActivity implements OnClickListener
 		mWorkPlanCalendar.setText(buildTime);
 		mWorkPlanUnit.setText(bean.getConstructionFirm());
 		mWorkPlanPrefix.setText(bean.getChainagePrefix());
-		mWorkPlanStart.setText(String.valueOf(bean.getStartChainage()));
-		mWorkPlanEnd.setText(String.valueOf(bean.getEndChainage()));
+		mWorkPlanStart.setText(CrtbUtils.doubleToString(bean.getStartChainage()));
+		mWorkPlanEnd.setText(CrtbUtils.doubleToString(bean.getEndChainage()));
 		
 		// 拱顶
 		mVaultTransMax.setText(String.valueOf(bean.getGDLimitTotalSettlement()));
