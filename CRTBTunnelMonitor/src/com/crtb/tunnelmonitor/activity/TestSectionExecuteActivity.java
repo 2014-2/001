@@ -308,7 +308,7 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 		return null ;
 	}*/
 	
-	private TestPointHolder createTunnelTestPointView(TunnelSettlementTotalData bean,final String type,String typeName,String suffix){
+	private TestPointHolder createTunnelTestPointView(final TunnelSettlementTotalData bean,final String type,String typeName,String suffix){
 		
 		final TestPointHolder holder 	= new TestPointHolder() ;
 		View view						= InjectCore.injectOriginalObject(holder);
@@ -364,7 +364,12 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 					return ;
 				}
 				
-				CrtbDialogDelete delete = new CrtbDialogDelete(TestSectionExecuteActivity.this,R.drawable.ic_warnning,"执行该操作将删除操作面的全部数据,无法恢复!");
+				if(bean == null){
+					showText("该测点不存在观测数据!");
+					return ;
+				}
+				
+				CrtbDialogDelete delete = new CrtbDialogDelete(TestSectionExecuteActivity.this,R.drawable.ic_warnning,"执行该操作将删除该点的观测数据，无法恢复!");
 				
 				delete.setButtonClick(new IButtonOnClick() {
 					
@@ -741,7 +746,12 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 					return ;
 				}
 				
-				CrtbDialogDelete delete = new CrtbDialogDelete(TestSectionExecuteActivity.this,R.drawable.ic_warnning,"执行该操作将删除操作面的全部数据,无法恢复!");
+				if(bean == null){
+					showText("该测点不存在观测数据!");
+					return ;
+				}
+				
+				CrtbDialogDelete delete = new CrtbDialogDelete(TestSectionExecuteActivity.this,R.drawable.ic_warnning,"执行该操作将删除该点的观测数据，无法恢复!");
 				
 				delete.setButtonClick(new IButtonOnClick() {
 					
