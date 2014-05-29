@@ -123,7 +123,7 @@ public final class CrtbDbFileUtils {
 			@Override
 			public void process() {
 				
-				String outPath = getExportPath(AppConfig.DB_EXPORT_DIR) + "/" + filename ;
+				String outPath = getExportPath(AppConfig.DB_EXPORT_DIR) + "/" + filename + ".dtmsdb";
 				
 				IDbEncrypt encrypt = new DbAESEncrypt() ;
 				
@@ -162,7 +162,8 @@ public final class CrtbDbFileUtils {
 			public void process() {
 				
 				String filename = path.substring(path.lastIndexOf("/") + 1);
-				String outPath 	= "data/data/" + context.getPackageName() + "/databases/" + filename ;
+				String simpleName = filename.substring(0, filename.lastIndexOf("."));
+				String outPath 	= "data/data/" + context.getPackageName() + "/databases/" + simpleName + ".db" ;
 				
 				IDbEncrypt encrypt = new DbAESEncrypt() ;
 				
