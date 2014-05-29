@@ -111,6 +111,23 @@ public final class CrtbDbFileUtils {
 		return list ;
 	}
 	
+	public static boolean checkProjectIndex(Context context,String name){
+		
+		List<File> list = CrtbDbFileUtils.getLocalDbFiles(context) ;
+		
+		for(File f : list){
+			
+			String fn	= f.getName() ;
+			String sn 	= fn.substring(0, fn.lastIndexOf("."));
+			
+			if(sn.equals(name)){
+				return true;
+			}
+		}
+		
+		return false ;
+	}
+	
 	public static void exportDb(final String path,
 			final String filename,AppHandler handler){
 		

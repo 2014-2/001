@@ -38,6 +38,7 @@ import com.crtb.tunnelmonitor.WorkFlowActivity;
 import com.crtb.tunnelmonitor.dao.impl.v2.ProjectIndexDao;
 import com.crtb.tunnelmonitor.entity.ProjectIndex;
 import com.crtb.tunnelmonitor.mydefine.CrtbDateDialogUtils;
+import com.crtb.tunnelmonitor.utils.CrtbDbFileUtils;
 import com.crtb.tunnelmonitor.utils.CrtbUtils;
 
 @InjectLayout(layout=R.layout.activity_work_new)
@@ -265,6 +266,8 @@ public class WorkNewActivity extends WorkFlowActivity implements OnClickListener
 				return ;
 			}
 			
+			
+			
 			if(StringUtils.isEmpty(date)){
 				showText("日期不能为空");
 				return ;
@@ -385,6 +388,11 @@ public class WorkNewActivity extends WorkFlowActivity implements OnClickListener
 					return ;
 				}
 			} else {
+				
+				if(CrtbDbFileUtils.checkProjectIndex(this, name)){
+					showText("已经存在同名的工作面");
+					return ;
+				}
 				
 				ProjectIndex info = new ProjectIndex() ;
 				info.setProjectName(name);
