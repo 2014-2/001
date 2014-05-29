@@ -298,7 +298,7 @@ OnItemLongClickListener, SearchListener, DeleteListener {
                     String text = mSearchText.getText().toString().trim();
                     if (!TextUtils.isEmpty(text)) {
                         Message msg = mHandler.obtainMessage(MSG_SHOW_SEARCH_PROGRESS_DIALOG);
-                        mHandler.sendMessageDelayed(msg, 200);
+                        mHandler.sendMessageDelayed(msg, 2000);
                         new AudioSearchTask(AudioListActivity.this, AudioListActivity.this).search(
                                 text, AudioLoaderManager.SEARCH_BY_NAME);
                     }
@@ -314,7 +314,7 @@ OnItemLongClickListener, SearchListener, DeleteListener {
                     String text = mSearchText.getText().toString();
                     if (!TextUtils.isEmpty(text)) {
                         Message msg = mHandler.obtainMessage(MSG_SHOW_SEARCH_PROGRESS_DIALOG);
-                        mHandler.sendMessageDelayed(msg, 200);
+                        mHandler.sendMessageDelayed(msg, 2000);
                         new AudioSearchTask(AudioListActivity.this, AudioListActivity.this).search(
                                 text, AudioLoaderManager.SEARCH_BY_SINGER);
                     }
