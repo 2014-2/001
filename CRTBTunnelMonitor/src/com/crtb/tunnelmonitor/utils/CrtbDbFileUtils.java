@@ -111,6 +111,10 @@ public final class CrtbDbFileUtils {
 		return list ;
 	}
 	
+	public static String getLocalDbPath(Context context,String dbname){
+		return "/data/data/" + context.getPackageName() + "/databases/" + dbname + ".db";
+	}
+	
 	public static boolean checkProjectIndex(Context context,String name){
 		
 		List<File> list = CrtbDbFileUtils.getLocalDbFiles(context) ;
@@ -153,7 +157,7 @@ public final class CrtbDbFileUtils {
 					
 					if(success){
 						AppLogger.d(TAG, "zhouwei : 数据库导出完成: " + outPath); 
-						sendMessage(MSG_EXPORT_DB_SUCCESS) ;
+						sendMessage(MSG_EXPORT_DB_SUCCESS,"已经将工作面(" + filename + ")" + "成功导出到: " + outPath) ;
 					} else {
 						sendMessage(MSG_EXPORT_DB_FAILED) ;
 					}
