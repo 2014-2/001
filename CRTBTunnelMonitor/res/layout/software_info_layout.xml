@@ -9,7 +9,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="190dp"
+        android:layout_marginTop="212dp"
         android:text="@string/project_name"
         android:textColor="@android:color/white"/>
 
