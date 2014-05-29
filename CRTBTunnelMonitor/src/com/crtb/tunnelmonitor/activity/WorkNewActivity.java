@@ -200,6 +200,11 @@ public class WorkNewActivity extends WorkFlowActivity implements OnClickListener
 		mWorkPlanStart.setText(CrtbUtils.doubleToString(bean.getStartChainage()));
 		mWorkPlanEnd.setText(CrtbUtils.doubleToString(bean.getEndChainage()));
 		
+		mWorkPlanName.setEnabled(false);
+		mWorkPlanPrefix.setEnabled(false);
+		mWorkPlanStart.setEnabled(false);
+		mWorkPlanEnd.setEnabled(false);
+		
 		// 拱顶
 		mVaultTransMax.setText(String.valueOf(bean.getGDLimitTotalSettlement()));
 		mVaultTransVelocity.setText(String.valueOf(bean.getGDLimitVelocity()));
@@ -432,13 +437,13 @@ public class WorkNewActivity extends WorkFlowActivity implements OnClickListener
 			break;
 		case R.id.ed_work_new_calendar :
 			
-			curdate = DateUtils.toDate(mWorkPlanCalendar.getEditableText().toString().trim(), DateUtils.PART_TIME_FORMAT);
+			/*curdate = DateUtils.toDate(mWorkPlanCalendar.getEditableText().toString().trim(), DateUtils.PART_TIME_FORMAT);
 			
 			if(curdate == null){
 				curdate	= DateUtils.getCurrtentTimes() ;
 			}
 			
-			CrtbDateDialogUtils.setAnyDateDialog(this, mWorkPlanCalendar, curdate);
+			CrtbDateDialogUtils.setAnyDateDialog(this, mWorkPlanCalendar, curdate);*/
 			
 			break ;
 			

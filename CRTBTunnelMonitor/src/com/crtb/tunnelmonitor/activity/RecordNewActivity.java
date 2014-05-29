@@ -1,7 +1,6 @@
 package com.crtb.tunnelmonitor.activity;
 
 import java.util.ArrayList;
-import java.util.Date;
 
 import org.zw.android.framework.ioc.InjectCore;
 import org.zw.android.framework.ioc.InjectLayout;
@@ -37,7 +36,6 @@ import com.crtb.tunnelmonitor.dao.impl.v2.RawSheetIndexDao;
 import com.crtb.tunnelmonitor.entity.ProjectIndex;
 import com.crtb.tunnelmonitor.entity.RawSheetIndex;
 import com.crtb.tunnelmonitor.entity.SurveyerInformation;
-import com.crtb.tunnelmonitor.mydefine.CrtbDateDialogUtils;
 import com.crtb.tunnelmonitor.utils.CrtbUtils;
 import com.crtb.tunnelmonitor.widget.CrtbRecordTunnelSectionInfoListView;
 
@@ -201,6 +199,7 @@ public class RecordNewActivity extends WorkFlowActivity implements OnPageChangeL
 			record_Chainage.setText(CrtbUtils.doubleToString(recordInfo.getFACEDK()));
 			record_Person.setText(recordInfo.getSurveyer());
 			record_Card.setText(recordInfo.getCertificateID());
+			record_Chainage.setEnabled(false);
 			record_Person.setEnabled(false);
 			record_Card.setEnabled(false);
 			record_C.setText(String.valueOf(recordInfo.getTEMPERATURE()));
