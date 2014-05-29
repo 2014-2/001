@@ -8,6 +8,7 @@ import org.zw.android.framework.db.ColumnDouble;
 import org.zw.android.framework.db.ColumnFloat;
 import org.zw.android.framework.db.ColumnInt;
 import org.zw.android.framework.db.ColumnString;
+import org.zw.android.framework.db.ColumnText;
 import org.zw.android.framework.db.Table;
 import org.zw.android.framework.db.core.ColumnPrimaryKey;
 import org.zw.android.framework.db.core.ColumnPrimaryKey.PrimaryKeyType;
@@ -28,7 +29,7 @@ public class AlertList implements Serializable {
 	@ColumnInt
 	private int CrossSectionID; 			// 断面唯一id
 
-	@ColumnString(length = 10)
+	@ColumnText
 	private String PntType; 					// 测点类型
 
 	@ColumnDate
@@ -43,11 +44,17 @@ public class AlertList implements Serializable {
 	@ColumnDouble
 	private double UValue; 					// 超限数值
 
-	@ColumnFloat
-	private double UMax; 					// 超限类型阈值
+	@ColumnInt
+	private int UMax; 					// 超限类型阈值
 
 	@ColumnString(length = 255)
 	private String OriginalDataID; 			// 原始数据id
+
+    @ColumnText
+    private String Info;
+
+    @ColumnInt
+    private int UploadStatus; // 上传类型 , 0表示全部状态；1表示未上传，2表示不上传，3表示部分上传
 
 	public int getID() {
 		return ID;
@@ -113,11 +120,11 @@ public class AlertList implements Serializable {
 		UValue = uValue;
 	}
 
-	public double getUMax() {
+	public int getUMax() {
 		return UMax;
 	}
 
-	public void setUMax(double uMax) {
+	public void setUMax(int uMax) {
 		UMax = uMax;
 	}
 
@@ -128,5 +135,21 @@ public class AlertList implements Serializable {
 	public void setOriginalDataID(String originalDataID) {
 		OriginalDataID = originalDataID;
 	}
+
+    public String getInfo() {
+        return Info;
+    }
+
+    public void setInfo(String info) {
+        Info = info;
+    }
+
+    public int getUploadStatus() {
+        return UploadStatus;
+    }
+
+    public void setUploadStatus(int uploadStatus) {
+        UploadStatus = uploadStatus;
+    }
 
 }

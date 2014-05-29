@@ -30,16 +30,24 @@ public final class CrtbUtils {
 	
 	static DecimalFormat df = new DecimalFormat("#.0000");
 	private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-	
-	public static double formatDouble(double value){
-		return formatDouble(String.valueOf(value)) ; 
-	}
-	
-	public static double formatDouble(String value){
-		BigDecimal b = new BigDecimal(value);
-		return b.setScale(4,BigDecimal.ROUND_DOWN).doubleValue() ;
-	}
-	
+
+    public static double formatDouble(double value, int scale) {
+        return formatDouble(String.valueOf(value), scale);
+    }
+
+    public static double formatDouble(String value, int scale) {
+        BigDecimal b = new BigDecimal(value);
+        return b.setScale(scale, BigDecimal.ROUND_DOWN).doubleValue();
+    }
+
+    public static double formatDouble(double value) {
+        return formatDouble(String.valueOf(value));
+    }
+
+    public static double formatDouble(String value) {
+        return formatDouble(value, 4);
+    }
+
 	public static float formatFloat(String value){
 		BigDecimal b = new BigDecimal(value);
 		return b.setScale(4,BigDecimal.ROUND_DOWN).floatValue() ;

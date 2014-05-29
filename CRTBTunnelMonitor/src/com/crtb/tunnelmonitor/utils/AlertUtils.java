@@ -204,9 +204,9 @@ public class AlertUtils {
 
                         //若本条预警已消警，则不再添加处理
                         if (al == null || AlertHandlingInfoDao.defaultDao().queryOne(al.getID(), ALERT_STATUS_HANDLED) == null) {
-                            accumulativeSubsidence = Math.round(accumulativeSubsidence);
+                            accumulativeSubsidence = CrtbUtils.formatDouble(accumulativeSubsidence, 1);
                             ret.leijiType = uType;
-                            ret.leijiValue = (long) accumulativeSubsidence;
+                            ret.leijiValue = accumulativeSubsidence;
                             int alertId = -1;
                             if (type == 1) {
                                 alertId = AlertListDao.defaultDao().insertOrUpdate((TunnelSettlementTotalData) point, 3/* default */,
@@ -280,9 +280,9 @@ public class AlertUtils {
 
                         //若本条预警已消警，则不再添加处理
                         if (al == null || AlertHandlingInfoDao.defaultDao().queryOne(al.getID(), ALERT_STATUS_HANDLED) == null) {
-                            subsidenceSpeed = Math.round(subsidenceSpeed);
+                            subsidenceSpeed = CrtbUtils.formatDouble(subsidenceSpeed, 1);
                             ret.sulvType = uType;
-                            ret.sulvValue = (long) subsidenceSpeed;
+                            ret.sulvValue = subsidenceSpeed;
                             int alertId = -1;
                             if (type == 1) {
                                 alertId = AlertListDao.defaultDao().insertOrUpdate((TunnelSettlementTotalData) point, 3/* default */,
@@ -383,9 +383,9 @@ public class AlertUtils {
 
                     //若本条预警已消警，则不再添加处理
                     if (al == null || AlertHandlingInfoDao.defaultDao().queryOne(al.getID(), ALERT_STATUS_HANDLED) == null) {
-                        convergence = Math.round(convergence);
+                        convergence = CrtbUtils.formatDouble(convergence, 1);
                         ret.leijiType = uType;
-                        ret.leijiValue = (long) convergence;
+                        ret.leijiValue = convergence;
                         int alertId = AlertListDao.defaultDao().insertOrUpdate(s_1, 3/* default */,
                                 uType, convergence, ACCUMULATIVE_THRESHOLD, originalDataID);
                         
@@ -448,9 +448,9 @@ public class AlertUtils {
 
                     //若本条预警已消警，则不再添加处理
                     if (al == null || AlertHandlingInfoDao.defaultDao().queryOne(al.getID(), ALERT_STATUS_HANDLED) == null) {
-                        shoulianSpeed = Math.round(shoulianSpeed);
+                        shoulianSpeed = CrtbUtils.formatDouble(shoulianSpeed, 1);
                         ret.sulvType = uType;
-                        ret.sulvValue = (long) shoulianSpeed;
+                        ret.sulvValue = shoulianSpeed;
                         int alertId = AlertListDao.defaultDao().insertOrUpdate(s_1, 3/* default */, uType, shoulianSpeed,
                                 SPEED_THRESHOLD, originalDataID);
                         String handlingRemark = null;
@@ -543,7 +543,7 @@ public class AlertUtils {
                     double accumulativeSubsidence = firstZ - thisZ;
                     accumulativeSubsidence *= 1000;// CHANGE TO MILLIMETER
                     accumulativeSubsidence += sumOfDataCorrection;
-                    v[0] = accumulativeSubsidence;
+                    v[0] = CrtbUtils.formatDouble(accumulativeSubsidence, 1);;
                 }
 
                 Object lastInfo = pastInfoList.get(pastInfoList.size() - 1);
@@ -560,7 +560,7 @@ public class AlertUtils {
                     double deltaZ = lastZ - thisZ;
                     deltaZ *= 1000;// CHANGE TO MILLIMETER
                     deltaZ += thisDataCorrection;
-                    v[1] = deltaZ;
+                    v[1] = CrtbUtils.formatDouble(deltaZ, 1);
                 }
             }
         }
@@ -680,7 +680,9 @@ public class AlertUtils {
                 + " AlertList.CrossSectionID AS sectionId,"
                 + " AlertList.AlertLeverl AS alertLevel,"
                 + " AlertList.UValue AS uvalue,"
-                + " AlertList.OriginalDataID AS originalDataID"
+                + " AlertList.OriginalDataID AS originalDataID,"
+                + " AlertList.Info AS info,"
+                + " AlertList.UploadStatus AS uploadStatus"
 //                + ","
 //                + " AlertHandlingList.Handling AS handling,"
 //                + " AlertHandlingList.HandlingTime AS handlingTime"
@@ -723,6 +725,8 @@ public class AlertUtils {
                     ai.setAlertLevel(c.getInt(7));
                     ai.setUValue(c.getDouble(8));
                     ai.setOriginalDataID(c.getString(9));
+                    ai.setAlertInfo(c.getString(10));
+                    ai.setUploadStatus(c.getInt(11));
 //                    ai.setHandling(c.getString(12));
 //                    ai.setHandlingTime(c.getString(13));
                     l.add(ai);
@@ -1215,7 +1219,7 @@ public class AlertUtils {
     public static class Exceeding {
         int leijiType = -1;
         int sulvType = -1;
-        long leijiValue = -1;
-        long sulvValue = -1;
+        double leijiValue = -1;
+        double sulvValue = -1;
     }
 }

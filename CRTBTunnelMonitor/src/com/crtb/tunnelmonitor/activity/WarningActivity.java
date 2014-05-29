@@ -31,6 +31,7 @@ import com.crtb.tunnelmonitor.entity.CrtbUser;
 import com.crtb.tunnelmonitor.entity.RawSheetIndex;
 import com.crtb.tunnelmonitor.utils.AlertManager;
 import com.crtb.tunnelmonitor.utils.AlertUtils;
+import com.crtb.tunnelmonitor.utils.CrtbUtils;
 
 public class WarningActivity extends Activity {
 
@@ -172,7 +173,7 @@ public class WarningActivity extends Activity {
                             }
                         }
                         warningValueTV.setText("超限值: "
-                                + String.format("%1$.4f", alert.getUValue() + correction)
+                                + String.format("%1$.1f", CrtbUtils.formatDouble(alert.getUValue() + correction, 1))
                                 + AlertUtils.getAlertValueUnit(alert.getUType()));
                     }
                 }
@@ -258,7 +259,7 @@ public class WarningActivity extends Activity {
                                     warningSignalTV.setText(alert.getXinghao());
                                     warningPointNumTV.setText("点号："+alert.getPntType());
                                     warningStateTV.setText("状态："+alert.getAlertStatusMsg());
-                                    warningValueTV.setText("超限值: " + String.format("%1$.4f", alert.getUValue())
+                                    warningValueTV.setText("超限值: " + String.format("%1$.1f", CrtbUtils.formatDouble(alert.getUValue(), 1))
                                             + AlertUtils.getAlertValueUnit(alert.getUType()));
                                     warningDateTV.setText(alert.getDate());
                                     warningMessageTV.setText(alert.getUTypeMsg());

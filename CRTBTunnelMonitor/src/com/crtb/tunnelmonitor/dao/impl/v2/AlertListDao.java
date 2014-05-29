@@ -123,7 +123,7 @@ public class AlertListDao extends AbstractDao<AlertList> {
             updatePointAlertItem(point, Utype, UValue, originalDataID);
             return al.getID();
         } else {
-            return insertItem(point, alertLevel, Utype, UValue, UMax, originalDataID);
+            return insertItem(point, alertLevel, Utype, UValue, (int) UMax, originalDataID);
         }
     }
 
@@ -141,7 +141,7 @@ public class AlertListDao extends AbstractDao<AlertList> {
             updatePointAlertItem(point, Utype, UValue, originalDataID);
             return al.getID();
         } else {
-            return insertItem(point, alertLevel, Utype, UValue, UMax, originalDataID);
+            return insertItem(point, alertLevel, Utype, UValue, (int)UMax, originalDataID);
         }
     }
 
@@ -156,7 +156,7 @@ public class AlertListDao extends AbstractDao<AlertList> {
      * @return
      */
     public int insertItem(TunnelSettlementTotalData point, int alertLevel, int Utype,
-            double UValue, double UMax, String originalDataID) {
+            double UValue, int UMax, String originalDataID) {
 
         Log.d(TAG, "AlertListDao insertItem TunnelSettlementTotalData");
         final IAccessDatabase mDatabase = getCurrentDb();
@@ -181,7 +181,7 @@ public class AlertListDao extends AbstractDao<AlertList> {
         al.setAlertLeverl(alertLevel);
         al.setUtype(Utype);
         al.setUValue(UValue);
-        al.setUMax((int)UMax);
+        al.setUMax(UMax);
         al.setOriginalDataID(originalDataID);
 
         int ret = mDatabase.saveObject(al);
@@ -200,7 +200,7 @@ public class AlertListDao extends AbstractDao<AlertList> {
      * @return
      */
     public int insertItem(SubsidenceTotalData point, int alertLevel, int Utype, double UValue,
-            double UMax, String originalDataID) {
+            int UMax, String originalDataID) {
 
         Log.d(TAG, "AlertListDao insertItem SubsidenceTotalData");
         final IAccessDatabase mDatabase = getCurrentDb();
@@ -217,7 +217,7 @@ public class AlertListDao extends AbstractDao<AlertList> {
         al.setAlertLeverl(alertLevel);
         al.setUtype(Utype);
         al.setUValue(UValue);
-        al.setUMax((int)UMax);
+        al.setUMax(UMax);
         al.setOriginalDataID(originalDataID);
 
         int ret = mDatabase.saveObject(al);

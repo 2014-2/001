@@ -30,6 +30,8 @@ public class AlertInfo implements Serializable {
     private String alertStatusMsg;
     private int alertStatus;
     private String chuliFangshi;
+    private int uploadStatus;
+    private String alertInfo;
 
     //    public boolean isState1() {
     //        return state1;
@@ -189,4 +191,21 @@ public class AlertInfo implements Serializable {
     public void setAlertStatusMsg(String alertStatusMsg) {
         this.alertStatusMsg = alertStatusMsg;
     }
+
+    public int getUploadStatus() {
+        return uploadStatus;
+    }
+
+    public void setUploadStatus(int uploadStatus) {
+        this.uploadStatus = uploadStatus;
+    }
+
+    public String getAlertInfo() {
+        return alertInfo;
+    }
+
+    public void setAlertInfo(String alertInfo) {
+        this.alertInfo = alertInfo;
+    }
+
 }
