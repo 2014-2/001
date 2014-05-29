@@ -135,6 +135,7 @@
                 android:layout_toLeftOf="@id/mi"
                 android:inputType="numberDecimal"
                 android:maxLength="6"
+                android:text="10"
                 android:singleLine="true" />
         </RelativeLayout>
 
