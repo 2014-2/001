@@ -286,6 +286,13 @@ public class SectionNewSubsidenceActivity extends WorkFlowActivity implements On
 				showText("断面宽度不能为空");
 				return;
 			}
+			
+			double cv = CrtbUtils.formatDouble(chainage);
+			
+			if(cv < mCurrentWorkPlan.getStartChainage() || cv > mCurrentWorkPlan.getEndChainage()){
+				showText("断面里程必须在工作面里程之内");
+				return ;
+			}
 
 			if (StringUtils.isEmpty(width)) {
 				showText("监测点不能为空");
@@ -329,7 +336,7 @@ public class SectionNewSubsidenceActivity extends WorkFlowActivity implements On
 				
 				///////////baase info//////////
 				subsidence.setChainagePrefix(prefix);
-				subsidence.setChainage(CrtbUtils.formatDouble(chainage));
+				subsidence.setChainage(cv);
 				subsidence.setWidth(CrtbUtils.formatDouble(width));
 				subsidence.setInbuiltTime(DateUtils.toDate(date, DateUtils.PART_TIME_FORMAT));
 				subsidence.setSurveyPnts(pc);
@@ -355,7 +362,7 @@ public class SectionNewSubsidenceActivity extends WorkFlowActivity implements On
 			} else {
 				
 				subsidence.setChainagePrefix(prefix);
-				subsidence.setChainage(CrtbUtils.formatDouble(chainage));
+				subsidence.setChainage(cv);
 				subsidence.setWidth(CrtbUtils.formatDouble(width));
 				subsidence.setInbuiltTime(DateUtils.toDate(date, DateUtils.PART_TIME_FORMAT));
 				subsidence.setSurveyPnts(pc);

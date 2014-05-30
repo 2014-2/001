@@ -450,6 +450,13 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 				return ;
 			}
 			
+			double cv = CrtbUtils.formatDouble(chainage);
+			
+			if(cv < mCurrentWorkPlan.getStartChainage() || cv > mCurrentWorkPlan.getEndChainage()){
+				showText("断面里程必须在工作面里程之内");
+				return ;
+			}
+			
 			String pointA	= section_new_et_a.getText().toString().trim() ;
 			String pointS1	= section_new_et_s1.getText().toString().trim() ;
 			String pointS2	= section_new_et_s2.getText().toString().trim() ;
@@ -492,7 +499,7 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 				
 				// base info
 				sectionInfo.setChainagePrefix(prefix);
-				sectionInfo.setChainage(CrtbUtils.formatDouble(chainage));
+				sectionInfo.setChainage(cv);
 				sectionInfo.setInBuiltTime(DateUtils.toDate(date, DateUtils.PART_TIME_FORMAT));
 				sectionInfo.setWidth(CrtbUtils.formatDouble(width));
 				
@@ -528,7 +535,7 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 				
 				// base info
 				sectionInfo.setChainagePrefix(prefix);
-				sectionInfo.setChainage(CrtbUtils.formatDouble(chainage));
+				sectionInfo.setChainage(cv);
 				sectionInfo.setInBuiltTime(DateUtils.toDate(date, DateUtils.PART_TIME_FORMAT));
 				sectionInfo.setWidth(CrtbUtils.formatDouble(width));
 				
