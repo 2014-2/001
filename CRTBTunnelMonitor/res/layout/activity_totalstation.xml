@@ -37,7 +37,8 @@
         android:layout_toRightOf="@id/station"
         android:layout_below="@id/header"
         android:background="@drawable/gray_bg_selector"
-        android:gravity="center" >
+        android:gravity="center"
+        android:visibility="gone" ><!-- 暂时屏蔽 -->
 
         <TextView
             android:layout_width="wrap_content"

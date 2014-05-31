@@ -16,7 +16,7 @@ public class TotalStationActivity extends Activity {
 	/**
 	 * 控点管理
 	 */
-	private LinearLayout mControlPoint;
+	private LinearLayout mControlPoint;//TODO:暂时屏蔽这个选项，需要时请先到xml文件中改为visible
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_totalstation);
@@ -27,8 +27,8 @@ public class TotalStationActivity extends Activity {
 		title.setText(R.string.total_station);
 		mStation=(LinearLayout) findViewById(R.id.station);
 		mStation.setOnClickListener(listener);
-		mControlPoint=(LinearLayout) findViewById(R.id.control_point);
-		mControlPoint.setOnClickListener(listener);
+//		mControlPoint=(LinearLayout) findViewById(R.id.control_point);
+//		mControlPoint.setOnClickListener(listener);
 	}
 	private OnClickListener listener = new OnClickListener() {
 		
@@ -39,10 +39,10 @@ public class TotalStationActivity extends Activity {
 					intent = new Intent(TotalStationActivity.this,StationActivity.class);
 					startActivity(intent);
 					break;
-				case R.id.control_point://控点管理管理
-					intent = new Intent(TotalStationActivity.this,ControlPointsActivity.class);
-					startActivity(intent);
-					break;
+//				case R.id.control_point://控点管理管理
+//					intent = new Intent(TotalStationActivity.this,ControlPointsActivity.class);
+//					startActivity(intent);
+//					break;
 			}
 			
 		}
