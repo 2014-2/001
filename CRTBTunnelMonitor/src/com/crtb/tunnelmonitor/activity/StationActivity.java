@@ -26,6 +26,7 @@ import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.crtb.tssurveyprovider.TSCommandType;
 import com.crtb.tssurveyprovider.TSConnectType;
@@ -147,7 +148,13 @@ public class StationActivity extends BaseActivity {
                 startActivityForResult(intent, 0);
                 break;
             case 3: // 删除
-                showExitGameAlert(tsInfo);
+                String curTsId = AppCRTBApplication.getInstance().getCurUsedStationId();
+                if (curTsId != null && curTsId.equals(String.valueOf(tsInfo.getID()))) {
+                    Toast.makeText(StationActivity.this, "该全站仪正在使用中，不能删除！", Toast.LENGTH_LONG).show();
+                } else {
+                    showExitGameAlert(tsInfo);
+                }
+
                 break;
             case 0: // 蓝牙连接
                 Log.d(TAG, "蓝牙连接  clicked");

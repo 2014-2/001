@@ -13,9 +13,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnFocusChangeListener;
+import android.view.View.OnTouchListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
@@ -134,6 +136,31 @@ public class TotalStationNewBluetoothActivity extends Activity implements OnClic
                 }
             }
         });
+
+        infos.setOnTouchListener(new OnTouchListener() {
+            
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (infolist == null || infolist.size() == 0) {
+                    Toast.makeText(TotalStationNewBluetoothActivity.this, "请先配对蓝牙连接！", Toast.LENGTH_SHORT).show();
+                } else {
+                    infos.performClick();
+                }
+                return true;
+            }
+        });
+
+//        infos.setOnClickListener(new OnClickListener() {
+//            
+//            @Override
+//            public void onClick(View v) {
+//                if (infolist == null || infolist.size() == 0) {
+//                    Toast.makeText(TotalStationNewBluetoothActivity.this, "请先配对蓝牙连接！", Toast.LENGTH_SHORT).show();
+//                } else {
+//                    infos.performClick();
+//                }
+//            }
+//        });
         adap(pps, pplist);
         adap(infos, btDeviceNamelist);
         onCli();
@@ -142,31 +169,28 @@ public class TotalStationNewBluetoothActivity extends Activity implements OnClic
     }
 
     private void initUI() {
-        for (TotalStationType type : TotalStationType.values()){
+        for (TotalStationType type : TotalStationType.values()) {
             pplist.add(type.getDesc());
         }
 
         BluetoothAdapter btAdapt = BluetoothAdapter.getDefaultAdapter();
-  			if (btAdapt == null) {
-  				Toast.makeText(this, "本机没有找到蓝牙硬件或驱动！", Toast.LENGTH_SHORT).show();
-  			}
-  			else {
-	   		  // 获得已配对的远程蓝牙设备的集合  
-	        Set<BluetoothDevice> devices = btAdapt.getBondedDevices();
-//	        btDevices.addAll(devices);
-	        if(devices.size() > 0){  
+        if (btAdapt == null) {
+            Toast.makeText(this, "本机没有找到蓝牙硬件或驱动！", Toast.LENGTH_SHORT).show();
+        } else {
+            // 获得已配对的远程蓝牙设备的集合
+            Set<BluetoothDevice> devices = btAdapt.getBondedDevices();
+            // btDevices.addAll(devices);
+            if (devices.size() > 0) {
                 for (Iterator<BluetoothDevice> it = devices.iterator(); it.hasNext();) {
                     BluetoothDevice device = (BluetoothDevice) it.next();
                     // 打印出远程蓝牙设备的物理地址
                     infolist.add(device.getAddress());
                     btDeviceNamelist.add(device.getName());
                 }
-	        }
-	        else 
-	        {
-	        	Toast.makeText(this, "请先配对蓝牙连接！", Toast.LENGTH_SHORT).show();
-	        }
-  			}
+            } else {
+                Toast.makeText(this, "请先配对蓝牙连接！", Toast.LENGTH_SHORT).show();
+            }
+        }
 
         pps = (Spinner) findViewById(R.id.pps);
         infos = (Spinner) findViewById(R.id.infos);
