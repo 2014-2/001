@@ -137,7 +137,7 @@ public class StationActivity extends BaseActivity {
 		// 全站仪参数数组
 		String[] tsParams;
 		switch (position) {
-		case 0: // 编辑
+		case 2: // 编辑
 			Intent intent = new Intent(StationActivity.this, TotalStationNewBluetoothActivity.class);
 			Bundle mBundle = new Bundle();
 			mBundle.putSerializable(Constant.Select_TotalStationRowClickItemsName_Data, tsInfo);
@@ -145,10 +145,10 @@ public class StationActivity extends BaseActivity {
 			intent.putExtras(mBundle);
 			startActivityForResult(intent, 0);
 			break;
-		case 1: // 删除
+		case 3: // 删除
 			showExitGameAlert(tsInfo);
 			break;
-		case 2: // 蓝牙连接
+		case 0: // 蓝牙连接
 			Log.d(TAG, "蓝牙连接  clicked");
 			tsParams = new String[] { tsInfo.getName(), tsInfo.getInfo() };
 			int ret = connect(TSConnectType.Bluetooth, tsCmdType, tsParams);
@@ -158,15 +158,15 @@ public class StationActivity extends BaseActivity {
 				AppCRTBApplication.getInstance().setCurUsedStationId(String.valueOf(tsInfo.getID()));
 			}
 			break;
-		case 3: // 串口连接
-			Log.d(TAG, "串口连接  clicked");
-			tsParams = new String[] { tsInfo.getName(), String.valueOf(tsInfo.getBaudRate()) };
-			ret = connect(TSConnectType.RS232, tsCmdType, tsParams);
-			if (ret == 1) {
-				AppCRTBApplication.getInstance().setCurUsedStationId(String.valueOf(tsInfo.getID()));
-			}
-			break;
-		case 4: // 断开连接
+//		case 3: // 串口连接
+//			Log.d(TAG, "串口连接  clicked");
+//			tsParams = new String[] { tsInfo.getName(), String.valueOf(tsInfo.getBaudRate()) };
+//			ret = connect(TSConnectType.RS232, tsCmdType, tsParams);
+//			if (ret == 1) {
+//				AppCRTBApplication.getInstance().setCurUsedStationId(String.valueOf(tsInfo.getID()));
+//			}
+//			break;
+		case 1: // 断开连接
 			ret = disconnect();
 			if (ret == 1) {
 				// mStations.get(position)
