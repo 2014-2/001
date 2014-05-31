@@ -1,6 +1,7 @@
 package com.crtb.tunnelmonitor.activity;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -10,6 +11,8 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnFocusChangeListener;
@@ -46,6 +49,7 @@ public class TotalStationNewBluetoothActivity extends Activity implements OnClic
     private List<String> infolist = null;
     private List<String> btDeviceNamelist = null;
     private TotalStationIndex editInfo = null;
+    private boolean isCreating = true;
     /** 确定按钮 */
     private Button section_btn_queding;
     /** 取消按钮 */
@@ -56,6 +60,8 @@ public class TotalStationNewBluetoothActivity extends Activity implements OnClic
     private boolean bEdit=false;
 
     private int selectedBtDevicePosition = -1;
+
+    private HashSet<String> mExistingStationNames = new HashSet<String>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,8 +78,48 @@ public class TotalStationNewBluetoothActivity extends Activity implements OnClic
 //        btDevices = new ArrayList<BluetoothDevice>();
         Bundle bundle=getIntent().getExtras();
         editInfo = (TotalStationIndex)bundle.getSerializable(Constant.Select_TotalStationRowClickItemsName_Data);
+        isCreating = (editInfo == null);
+
+        List<TotalStationIndex> stations = TotalStationInfoDao.defaultDao().queryAllTotalStations();
+        if (stations != null && stations.size() > 0) {
+            for (TotalStationIndex station : stations) {
+                mExistingStationNames.add(station.getName());
+            }
+            if (editInfo != null) {
+                mExistingStationNames.remove(editInfo.getName());
+            }
+        }
+
         bEdit=bundle.getBoolean("bEdit");
         initUI();
+
+        name.addTextChangedListener(new TextWatcher() {
+            
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                // TODO Auto-generated method stub
+                
+            }
+            
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                // TODO Auto-generated method stub
+                
+            }
+            
+            @Override
+            public void afterTextChanged(Editable s) {
+                String n = s.toString();
+                boolean contains = mExistingStationNames.contains(n);
+                if (contains) {
+                    Toast.makeText(TotalStationNewBluetoothActivity.this, "已有该名称的全站仪，请更改名称！", Toast.LENGTH_LONG).show();
+                }
+                if (section_btn_queding != null) {
+                    section_btn_queding.setEnabled(!contains);
+                }
+            }
+        });
+
         name.setOnFocusChangeListener(new OnFocusChangeListener() {
 
             @Override
