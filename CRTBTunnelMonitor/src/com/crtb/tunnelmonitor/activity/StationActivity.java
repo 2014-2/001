@@ -110,73 +110,82 @@ public class StationActivity extends BaseActivity {
 	}
 
 	@Override
-	protected void onListItemSelected(Object bean, int position, String menu) {
-		Log.d(TAG, "position: " + position + ", menu: " + menu);
-		TotalStationIndex tsInfo = (TotalStationIndex) bean;
-		// 全站仪品牌
-		TSCommandType tsCmdType = TSCommandType.NoneTS;
-		TotalStationType t = null;
-		try {
-			t = Enum.valueOf(TotalStationType.class, tsInfo.getTotalstationType());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		if (t != null) {
-			switch (t) {
-			case Leica:
-				tsCmdType = TSCommandType.LeicaGEOCOM;
-				break;
-			case LeicaTPS:
-				tsCmdType = TSCommandType.LeicaGSI16;
-				break;
+    protected void onListItemSelected(Object bean, int position, String menu) {
+        Log.d(TAG, "position: " + position + ", menu: " + menu);
+        TotalStationIndex tsInfo = (TotalStationIndex) bean;
+        // 全站仪品牌
+        TSCommandType tsCmdType = TSCommandType.NoneTS;
+        TotalStationType t = null;
+        try {
+            t = Enum.valueOf(TotalStationType.class, tsInfo.getTotalstationType());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if (t != null) {
+            switch (t) {
+                case Leica:
+                    tsCmdType = TSCommandType.LeicaGEOCOM;
+                    break;
+                case LeicaTPS:
+                    tsCmdType = TSCommandType.LeicaGSI16;
+                    break;
 
-			default:
-				break;
-			}
-		}
-		// 全站仪参数数组
-		String[] tsParams;
-		switch (position) {
-		case 2: // 编辑
-			Intent intent = new Intent(StationActivity.this, TotalStationNewBluetoothActivity.class);
-			Bundle mBundle = new Bundle();
-			mBundle.putSerializable(Constant.Select_TotalStationRowClickItemsName_Data, tsInfo);
-			mBundle.putBoolean("edit", true);
-			intent.putExtras(mBundle);
-			startActivityForResult(intent, 0);
-			break;
-		case 3: // 删除
-			showExitGameAlert(tsInfo);
-			break;
-		case 0: // 蓝牙连接
-			Log.d(TAG, "蓝牙连接  clicked");
-			tsParams = new String[] { tsInfo.getName(), tsInfo.getInfo() };
-			int ret = connect(TSConnectType.Bluetooth, tsCmdType, tsParams);
-			if (ret == 1) {
-				// mStations.get(position)
-				// .setbUse(true);
-				AppCRTBApplication.getInstance().setCurUsedStationId(String.valueOf(tsInfo.getID()));
-			}
-			break;
-//		case 3: // 串口连接
-//			Log.d(TAG, "串口连接  clicked");
-//			tsParams = new String[] { tsInfo.getName(), String.valueOf(tsInfo.getBaudRate()) };
-//			ret = connect(TSConnectType.RS232, tsCmdType, tsParams);
-//			if (ret == 1) {
-//				AppCRTBApplication.getInstance().setCurUsedStationId(String.valueOf(tsInfo.getID()));
-//			}
-//			break;
-		case 1: // 断开连接
-			ret = disconnect();
-			if (ret == 1) {
-				// mStations.get(position)
-				// .setbUse(false);
-			}
-			break;
-		default:
-			break;
-		}
-	}
+                default:
+                    break;
+            }
+        }
+        // 全站仪参数数组
+        String[] tsParams;
+        switch (position) {
+            case 2: // 编辑
+                Intent intent = new Intent(StationActivity.this,
+                        TotalStationNewBluetoothActivity.class);
+                Bundle mBundle = new Bundle();
+                mBundle.putSerializable(Constant.Select_TotalStationRowClickItemsName_Data, tsInfo);
+                mBundle.putBoolean("edit", true);
+                intent.putExtras(mBundle);
+                startActivityForResult(intent, 0);
+                break;
+            case 3: // 删除
+                showExitGameAlert(tsInfo);
+                break;
+            case 0: // 蓝牙连接
+                Log.d(TAG, "蓝牙连接  clicked");
+                tsParams = new String[] { tsInfo.getName(), tsInfo.getInfo() };
+                int ret = connect(TSConnectType.Bluetooth, tsCmdType,
+                        String.valueOf(tsInfo.getID()), tsParams);
+                if (ret == 1) {
+                    // mStations.get(position)
+                    // .setbUse(true);
+                    AppCRTBApplication.getInstance().setCurUsedStationId(
+                            String.valueOf(tsInfo.getID()));
+                }
+                break;
+            // case 3: // 串口连接
+            // Log.d(TAG, "串口连接  clicked");
+            // tsParams = new String[] { tsInfo.getName(),
+            // String.valueOf(tsInfo.getBaudRate()) };
+            // ret = connect(TSConnectType.RS232, tsCmdType, tsParams);
+            // if (ret == 1) {
+            // AppCRTBApplication.getInstance().setCurUsedStationId(String.valueOf(tsInfo.getID()));
+            // }
+            // break;
+            case 1: // 断开连接
+                ret = disconnect(String.valueOf(tsInfo.getID()));
+                if (ret == 1) {
+                    // mStations.get(position)
+                    // .setbUse(false);
+                    AppCRTBApplication.getInstance().setCurUsedStationId(null);
+                }
+                break;
+            default:
+                break;
+        }
+
+        if (adapter != null) {
+            adapter.notifyDataSetChanged();
+        }
+    }
 
 	public boolean Connect() {
 		// TSConnectType tstype = TSConnectType.Bluetooth;
@@ -244,57 +253,81 @@ public class StationActivity extends BaseActivity {
 	}
 
 	/** 连接全站仪成功 */
-	private int connect(TSConnectType type, TSCommandType tsCmdType, String[] tsParams) {
-		String result = null;
-		int ret = 0;
-		try {
-			ret = TSSurveyProvider.getDefaultAdapter().BeginConnection(type, tsCmdType, tsParams);
-			if (ret == 1) {
-				result = "成功";
-			} else {
-				result = "失败";
-			}
-			// nret = TSSurveyProvider.getDefaultAdapter().TestConnection();
+    private int connect(TSConnectType type, TSCommandType tsCmdType, String tsId, String[] tsParams) {
+        String result = null;
+        int ret = 0;
+        String curTsId = AppCRTBApplication.getInstance().getCurUsedStationId();
+        if (curTsId != null && curTsId.equals(tsId)) {
+            ret = 2;
+        } else {
+            try {
+                ret = TSSurveyProvider.getDefaultAdapter().BeginConnection(type, tsCmdType,
+                        tsParams);
+                if (ret == 1) {
+                    result = "成功";
+                } else {
+                    result = "失败";
+                }
+                // nret = TSSurveyProvider.getDefaultAdapter().TestConnection();
 
-		} catch (Exception e) {
+            } catch (Exception e) {
 
-		}
+            }
+        }
+
+        String msg = null;
+        if (ret == 2) {
+            msg = mStations.get(iListPos).getName() + "已经是成功连接状态";
+        } else {
+            msg = "连接全站仪" + mStations.get(iListPos).getName() + result;
+        }
         AlertDialog dlg = new AlertDialog.Builder(StationActivity.this)
-//                .setIcon(R.drawable.successgreen)
-                .setMessage("连接全站仪" + mStations.get(iListPos).getName() + result).create();
-		dlg.show();
-//		Window window = dlg.getWindow();
-//		window.setContentView(R.layout.connectyesdialog);
-//		TextView text = (TextView) window.findViewById(R.id.connertexryes);
-//		text.setText("连接全站仪" + mStations.get(iListPos).getName() + result);
-		return ret;
-	}
+        // .setIcon(R.drawable.successgreen)
+                .setMessage(msg).create();
+        dlg.show();
+        // Window window = dlg.getWindow();
+        // window.setContentView(R.layout.connectyesdialog);
+        // TextView text = (TextView) window.findViewById(R.id.connertexryes);
+        // text.setText("连接全站仪" + mStations.get(iListPos).getName() + result);
+        return ret;
+    }
 
-	/** 断开全站仪 */
-	private int disconnect() {
-		int ret = -1;
-		String result;
-		try {
-			ret = TSSurveyProvider.getDefaultAdapter().EndConnection();
-		} catch (Exception e) {
+    /** 断开全站仪 */
+    private int disconnect(String tsId) {
+        int ret = -1;
+        String result;
+        String curTsId = AppCRTBApplication.getInstance().getCurUsedStationId();
+        if (curTsId == null || !curTsId.equals(tsId)) {
+            ret = 2;
+        } else {
+            try {
+                ret = TSSurveyProvider.getDefaultAdapter().EndConnection();
+            } catch (Exception e) {
 
-		}
+            }
+        }
 
-		AlertDialog dlg = new AlertDialog.Builder(StationActivity.this).create();
-		dlg.show();
-		Window window = dlg.getWindow();
-		window.setContentView(R.layout.connectyesdialog);
-		ImageView icon = (ImageView) window.findViewById(R.id.icon);
-		if (ret == 1) {
-			result = "成功";
-		} else {
-			result = "失败";
-			icon.setImageResource(R.drawable.failred);
-		}
-		TextView text = (TextView) window.findViewById(R.id.connertexryes);
-		text.setText("断开连接" + mStations.get(iListPos).getName() + result);
-		return ret;
-	}
+        // Window window = dlg.getWindow();
+        // window.setContentView(R.layout.connectyesdialog);
+        // ImageView icon = (ImageView) window.findViewById(R.id.icon);
+        if (ret == 1) {
+            result = "成功";
+        } else {
+            result = "失败";
+            // icon.setImageResource(R.drawable.failred);
+        }
+        // TextView text = (TextView) window.findViewById(R.id.connertexryes);
+        // text.setText();
+        String msg = null;
+        if (ret == 2) {
+            msg = mStations.get(iListPos).getName() + "已经是断开连接状态";
+        } else {
+            msg = "断开连接" + mStations.get(iListPos).getName() + result;
+        }
+        AlertDialog dlg = new AlertDialog.Builder(StationActivity.this).setMessage(msg).create();
+        dlg.show();
+        return ret;
+    }
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
