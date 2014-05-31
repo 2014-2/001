@@ -23,6 +23,7 @@ import com.crtb.tunnelmonitor.entity.DTMSVersion;
 import com.crtb.tunnelmonitor.entity.ProjectIndex;
 import com.crtb.tunnelmonitor.entity.ProjectSettingIndex;
 import com.crtb.tunnelmonitor.entity.RawSheetIndex;
+import com.crtb.tunnelmonitor.entity.SiteProjectMapping;
 import com.crtb.tunnelmonitor.entity.StationInfoIndex;
 import com.crtb.tunnelmonitor.entity.SubsidenceCrossSectionExIndex;
 import com.crtb.tunnelmonitor.entity.SubsidenceCrossSectionIndex;
@@ -32,6 +33,7 @@ import com.crtb.tunnelmonitor.entity.SurveyerInformation;
 import com.crtb.tunnelmonitor.entity.TunnelCrossSectionExIndex;
 import com.crtb.tunnelmonitor.entity.TunnelCrossSectionIndex;
 import com.crtb.tunnelmonitor.entity.TunnelSettlementTotalData;
+import com.crtb.tunnelmonitor.entity.WorkSiteIndex;
 
 /**
  * 工程信息DAO(工作面)
@@ -178,6 +180,9 @@ public final class ProjectIndexDao extends AbstractDao<ProjectIndex> {
 			db.createTable(SurveyerInformation.class);
 			db.createTable(StationInfoIndex.class);
 			db.createTable(ControlPointsIndex.class);
+			
+			db.createTable(SiteProjectMapping.class);
+			db.createTable(WorkSiteIndex.class);
 		}
 	}
 	
