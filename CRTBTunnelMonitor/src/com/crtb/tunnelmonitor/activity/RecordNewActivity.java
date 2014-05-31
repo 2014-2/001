@@ -269,7 +269,9 @@ public class RecordNewActivity extends WorkFlowActivity implements OnPageChangeL
 			
 			float temp = 0f ;
 			try{
-				temp	= Float.valueOf(temperature) ;
+				if(!StringUtils.isEmpty(temperature)){
+					temp	= Float.valueOf(temperature) ;
+				}
 			}catch(Exception e){
 				e.printStackTrace() ;
 			}
