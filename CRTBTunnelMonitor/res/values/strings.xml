@@ -124,6 +124,8 @@
     <string name="tester_load_success">获取测量员成功</string>
     <string name="tester_load_failed">获取测量员失败</string>
     <string name="tester_load_timeout">获取测量员超时</string>
+    <string name="tester_load_invalid_username">用户名未通过验证</string>
+    <string name="tester_load_invalid_password">密码未通过验证</string>
 
     <string name="alert_point_type">点号：%s</string>
     <string name="alert_state">状态：%s</string>

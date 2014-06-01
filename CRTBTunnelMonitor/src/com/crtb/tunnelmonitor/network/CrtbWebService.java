@@ -70,6 +70,12 @@ public final class CrtbWebService {
 			@Override
 			public void onSuccess(Object[] data) {
 				String publicKey = (String)data[0];
+				if ("0".equals(publicKey)) {
+					if (callback != null) {
+						callback.onFailed("用户名未通过验证");
+					}
+					return ;
+				}
 				String encnryptPublicKey = RSACoder.encnryptRSA(Constant.testDeskey, publicKey);
 				String encnryptPassword = RSACoder.encnryptDes(password, Constant.testDeskey);
 				verifyAppUser(account, encnryptPassword, encnryptPublicKey, new RpcCallbackWrapper(new RpcCallback() {
@@ -77,9 +83,16 @@ public final class CrtbWebService {
 					@Override
 					public void onSuccess(Object[] data) {
 						String randomCode = (String) data[0];
-						setRandomCode(Long.parseLong(randomCode));
-						if (callback != null) {
-							callback.onSuccess(null);
+						final long retCode = Long.parseLong(randomCode);
+						setRandomCode(retCode);
+						if (retCode != 0) {
+							if (callback != null) {
+								callback.onSuccess(null);
+							}
+						} else {
+							if (callback != null) {
+								callback.onFailed("密码未通过验证");
+							}
 						}
 					}
 					

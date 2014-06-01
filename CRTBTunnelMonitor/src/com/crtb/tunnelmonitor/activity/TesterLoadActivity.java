@@ -170,13 +170,22 @@ public class TesterLoadActivity extends Activity implements OnClickListener {
                         });
             }
 
-            @Override
-            public void onFailed(String reason) {
-                mProgressDialog.dismiss();
-                Toast.makeText(TesterLoadActivity.this, R.string.tester_load_failed,
-                        Toast.LENGTH_LONG).show();
-            }
-        });
+			@Override
+			public void onFailed(String reason) {
+				mProgressDialog.dismiss();
+				String invalidUserName = getString(R.string.tester_load_invalid_username);
+				String invalidPassword = getString(R.string.tester_load_invalid_password);
+				if (invalidUserName.equals(reason)) {
+					Toast.makeText(TesterLoadActivity.this,
+							getString(R.string.tester_load_failed) + ": " + invalidUserName, Toast.LENGTH_LONG).show();
+				} else if (invalidPassword.equals(invalidPassword)) {
+					Toast.makeText(TesterLoadActivity.this,
+							getString(R.string.tester_load_failed) + ": " + invalidPassword, Toast.LENGTH_LONG).show();
+				} else {
+					Toast.makeText(TesterLoadActivity.this, R.string.tester_load_failed, Toast.LENGTH_LONG).show();
+				}
+			}
+		});
     }
 
     class TestorAdapter extends BaseAdapter {
