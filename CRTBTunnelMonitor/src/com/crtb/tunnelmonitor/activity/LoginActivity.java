@@ -81,6 +81,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 
                 if(intent.getAction().equals(AppConfig.ACTION_RELOAD_ALL_SURVEYER)){
                     mAllSurveyer	= SurveyerInformationDao.defaultDao().queryAllSurveyerInformation() ;
+                    mNameSpinner.setAdapter(new NameAdapter());
                 }
             }
         };
