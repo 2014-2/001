@@ -53,6 +53,7 @@ public class WarningActivity extends Activity {
     private RadioButton[] mRadioBtns;
 
     private EditText mCorrectionView;
+    private TextView mCorrectionUnitView;
     private EditText mWarningRemarkView;
 
     private TextView baojing, yixiao;
@@ -144,6 +145,7 @@ public class WarningActivity extends Activity {
 
         mRadioBtns = new RadioButton[]{mDealWayBtnNormal, mDealWayBtnDiscard, mDealWayBtnAsFirst, mDealWayBtnCorrection, mDealWayBtnRebury};
 
+        mCorrectionUnitView = (TextView) mHandleCompleteView.findViewById(R.id.correction_unit);
         mCorrectionView = (EditText) mHandleCompleteView.findViewById(R.id.add_edit);
         mCorrectionView.addTextChangedListener(new TextWatcher() {
             
@@ -291,8 +293,13 @@ public class WarningActivity extends Activity {
 
                                     if (raidoId != 0) {
                                         for (RadioButton b : mRadioBtns) {
-                                            b.setChecked(b.getId() == raidoId);
+                                            boolean selected = b.getId() == raidoId;
+                                            b.setVisibility(selected ? View.VISIBLE : View.GONE);
+                                            b.setChecked(selected);
                                         }
+                                        boolean isCorrection = raidoId == mDealWayBtnCorrection.getId();
+                                        mCorrectionUnitView.setVisibility(isCorrection ? View.VISIBLE : View.GONE);
+                                        mCorrectionView.setVisibility(isCorrection ? View.VISIBLE : View.GONE);
                                         mCheckedRaidoId = raidoId;
                                     }
                                 }
@@ -410,9 +417,11 @@ public class WarningActivity extends Activity {
         int curStatus = ai.getAlertStatus();
         float correction = 0f;
 
-        Editable e = mCorrectionView.getText();
-        if (e != null && e.length() > 0) {
-            correction = Float.valueOf(e.toString());
+        if (mCorrectionView != null && mCorrectionView.getVisibility() == View.VISIBLE) {
+            Editable e = mCorrectionView.getText();
+            if (e != null && e.length() > 0) {
+                correction = Float.valueOf(e.toString());
+            }
         }
 
         int alertId = ai.getAlertId();

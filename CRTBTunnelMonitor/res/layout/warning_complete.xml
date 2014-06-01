@@ -1,305 +1,324 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:id="@+id/complete_warning_rl"
-                android:background="#E6E6E6"
-                android:visibility="gone"
-                android:layout_width="fill_parent"
-                android:layout_below="@+id/warning_title"
-                android:layout_height="fill_parent">
+    android:id="@+id/complete_warning_rl"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:layout_below="@+id/warning_title"
+    android:background="#E6E6E6"
+    android:visibility="gone" >
+
     <ScrollView
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent">
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" >
+
         <RelativeLayout
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent">
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent" >
+
             <LinearLayout
-                    android:layout_marginRight="20dp"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginTop="5dp"
-                    android:id="@+id/part_top"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                android:id="@+id/part_top"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="5dp" >
 
                 <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="vertical" >
 
                     <TextView
-                            android:textSize="16sp"
-                            android:id="@+id/warning_signal"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Medium Text"
-                            android:textAppearance="?android:attr/textAppearanceMedium"
-                            android:textColor="#cc0080ee"/>
+                        android:id="@+id/warning_signal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Medium Text"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:textColor="#cc0080ee"
+                        android:textSize="16sp" />
 
                     <TextView
-                            android:textSize="16sp"
-                            android:id="@+id/warning_point_num"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Medium Text"
-                            android:textAppearance="?android:attr/textAppearanceMedium"/>
+                        android:id="@+id/warning_point_num"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Medium Text"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:textSize="16sp" />
 
                     <TextView
-                            android:textSize="16sp"
-                            android:id="@+id/warning_state"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Medium Text"
-                            android:textAppearance="?android:attr/textAppearanceMedium"/>
-
+                        android:id="@+id/warning_state"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Medium Text"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:textSize="16sp" />
                 </LinearLayout>
 
                 <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="vertical" >
 
                     <TextView
-                            android:textSize="16sp"
-                            android:id="@+id/warning_date"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Medium Text"
-                            android:textAppearance="?android:attr/textAppearanceMedium"
-                            android:textColor="#cc0080ee"/>
+                        android:id="@+id/warning_date"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Medium Text"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:textColor="#cc0080ee"
+                        android:textSize="16sp" />
 
                     <TextView
-                            android:textSize="16sp"
-                            android:id="@+id/warning_message"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Medium Text"
-                            android:textAppearance="?android:attr/textAppearanceMedium"/>
+                        android:id="@+id/warning_message"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Medium Text"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:textSize="16sp" />
 
                     <TextView
-                            android:textSize="16sp"
-                            android:id="@+id/warning_deal_way"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Medium Text"
-                            android:textAppearance="?android:attr/textAppearanceMedium"/>
+                        android:id="@+id/warning_deal_way"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Medium Text"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:textSize="16sp" />
                 </LinearLayout>
             </LinearLayout>
 
             <TextView
-                    android:textSize="16sp"
-                    android:id="@+id/warning_value"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
-                    android:layout_below="@+id/part_top"
-                    android:textAppearance="?android:attr/textAppearanceMedium"/>
+                android:id="@+id/warning_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/part_top"
+                android:layout_marginLeft="20dp"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textSize="16sp" />
 
             <RelativeLayout
-                    android:id="@+id/old_date"
-                    android:layout_marginTop="14dp"
-                    android:layout_marginLeft="23dp"
-                    android:layout_marginRight="23dp"
-                    android:layout_width="fill_parent"
-                    android:background="@drawable/warning_text_bg"
-                    android:layout_below="@+id/warning_value"
-                    android:layout_height="wrap_content">
+                android:id="@+id/old_date"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/warning_value"
+                android:layout_marginLeft="23dp"
+                android:layout_marginRight="23dp"
+                android:layout_marginTop="14dp"
+                android:background="@drawable/warning_text_bg" >
 
                 <TextView
-                        android:id="@+id/old_date_title"
-                        android:layout_width="fill_parent"
-                        android:text="原始数据"
-                        android:textSize="18sp"
-                        android:textColor="#cc0080ee"
-                        android:gravity="center"
-                        android:layout_height="30dp "/>
+                    android:id="@+id/old_date_title"
+                    android:layout_width="fill_parent"
+                    android:layout_height="30dp "
+                    android:gravity="center"
+                    android:text="原始数据"
+                    android:textColor="#cc0080ee"
+                    android:textSize="18sp" />
 
                 <View
-                        android:layout_width="fill_parent"
-                        android:id="@+id/old_date_line"
-                        android:layout_below="@+id/old_date_title"
-                        android:background="@color/warning_bg"
-                        android:layout_height="1dp"/>
+                    android:id="@+id/old_date_line"
+                    android:layout_width="fill_parent"
+                    android:layout_height="1dp"
+                    android:layout_below="@+id/old_date_title"
+                    android:background="@color/warning_bg" />
 
                 <LinearLayout
-                        android:layout_below="@+id/old_date_line"
-                        android:layout_width="fill_parent"
-                        android:orientation="vertical"
-                        android:padding="5dp"
-                        android:layout_height="wrap_content">
-                    <TextView
-                            android:id="@+id/old_date_mileage"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Medium Text"
-                            android:textAppearance="?android:attr/textAppearanceMedium"/>
-                    <TextView
-                            android:id="@+id/old_date_list_num"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Medium Text"
-                            android:textAppearance="?android:attr/textAppearanceMedium"/>
-                    <TextView
-                            android:id="@+id/old_date_point"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Medium Text"
-                            android:textAppearance="?android:attr/textAppearanceMedium"/>
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/old_date_line"
+                    android:orientation="vertical"
+                    android:padding="5dp" >
 
+                    <TextView
+                        android:id="@+id/old_date_mileage"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Medium Text"
+                        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                    <TextView
+                        android:id="@+id/old_date_list_num"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Medium Text"
+                        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                    <TextView
+                        android:id="@+id/old_date_point"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Medium Text"
+                        android:textAppearance="?android:attr/textAppearanceMedium" />
                 </LinearLayout>
             </RelativeLayout>
+
             <RelativeLayout
-                    android:id="@+id/deal_way"
-                    android:layout_marginTop="14dp"
-                    android:layout_marginLeft="23dp"
-                    android:layout_marginRight="23dp"
-                    android:layout_width="fill_parent"
-                    android:background="@drawable/warning_text_bg"
-                    android:layout_below="@+id/old_date"
-                    android:layout_height="wrap_content">
+                android:id="@+id/deal_way"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/old_date"
+                android:layout_marginLeft="23dp"
+                android:layout_marginRight="23dp"
+                android:layout_marginTop="14dp"
+                android:background="@drawable/warning_text_bg" >
 
                 <TextView
-                        android:id="@+id/deal_way_title"
-                        android:layout_width="fill_parent"
-                        android:text="处理方式"
-                        android:textSize="18sp"
-                        android:textColor="#cc0080ee"
-                        android:gravity="center"
-                        android:layout_height="30dp "/>
+                    android:id="@+id/deal_way_title"
+                    android:layout_width="fill_parent"
+                    android:layout_height="30dp "
+                    android:gravity="center"
+                    android:text="处理方式"
+                    android:textColor="#cc0080ee"
+                    android:textSize="18sp" />
 
                 <View
-                        android:layout_width="fill_parent"
-                        android:id="@+id/deal_way_line"
-                        android:layout_below="@+id/deal_way_title"
-                        android:background="@color/warning_bg"
-                        android:layout_height="1dp"/>
+                    android:id="@+id/deal_way_line"
+                    android:layout_width="fill_parent"
+                    android:layout_height="1dp"
+                    android:layout_below="@+id/deal_way_title"
+                    android:background="@color/warning_bg" />
 
-                <RadioGroup
-                        android:layout_margin="5dp"
-                        android:layout_below="@+id/deal_way_line"
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/deal_way_line" >
+
+                    <RadioGroup
                         android:id="@+id/radio_group"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:layout_x="1px">
-                    <RadioButton
-                            style="?android:attr/ratingBarStyleSmall"
-                            android:id="@+id/radio_button_normal"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/deal_way_normal"
-                            />
-                    <RadioButton
-                            style="?android:attr/ratingBarStyleSmall"
-                            android:id="@+id/radio_button_void"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/deal_way_void"
-                            />
-                    <RadioButton
-                            style="?android:attr/ratingBarStyleSmall"
-                            android:id="@+id/radio_button_first"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/deal_way_first"
-                            />
-                    <RadioButton
-                            style="?android:attr/ratingBarStyleSmall"
-                            android:id="@+id/radio_button_add"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/deal_way_add"
-                            />
-                    <RadioButton
-                            style="?android:attr/ratingBarStyleSmall"
-                            android:id="@+id/radio_button_rebury"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/deal_way_rebury"
-                            />
-                </RadioGroup>
+                        android:layout_centerVertical="true"
+                        android:layout_margin="5dp"
+                        android:layout_x="1px"
+                        android:orientation="vertical" >
 
-                <EditText android:layout_width="100dp"
-                          android:id="@+id/add_edit"
-                          android:layout_alignBottom="@+id/radio_group"
-                          android:layout_toRightOf="@+id/radio_group"
-                          android:gravity="center"
-                          android:textSize="12sp"
-                          android:inputType="numberDecimal|numberSigned"
-                          android:layout_marginBottom="35dp"
-                          android:layout_height="wrap_content" />
-                <TextView android:layout_width="wrap_content"
-                          android:layout_alignBottom="@+id/add_edit"
-                          android:layout_toRightOf="@+id/radio_group"
-                          android:layout_marginLeft="110dp"
-                          android:text="@string/millimeter"
-                          android:gravity="center"
-                          style="?android:attr/ratingBarStyleSmall"
-                          android:layout_height="40dp"/>
+                        <RadioButton
+                            android:id="@+id/radio_button_normal"
+                            style="?android:attr/ratingBarStyleSmall"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/deal_way_normal" />
+
+                        <RadioButton
+                            android:id="@+id/radio_button_void"
+                            style="?android:attr/ratingBarStyleSmall"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/deal_way_void" />
+
+                        <RadioButton
+                            android:id="@+id/radio_button_first"
+                            style="?android:attr/ratingBarStyleSmall"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/deal_way_first" />
+
+                        <RadioButton
+                            android:id="@+id/radio_button_add"
+                            style="?android:attr/ratingBarStyleSmall"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/deal_way_add" />
+
+                        <RadioButton
+                            android:id="@+id/radio_button_rebury"
+                            style="?android:attr/ratingBarStyleSmall"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/deal_way_rebury" />
+                    </RadioGroup>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_centerVertical="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_toRightOf="@+id/radio_group"
+                        >
+
+                        <EditText
+                            android:id="@+id/add_edit"
+                            android:layout_width="100dp"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:layout_gravity="right|center_vertical"
+                            android:inputType="numberDecimal|numberSigned"
+                            android:textSize="12sp" />
+
+                        <TextView
+                            android:id="@+id/correction_unit"
+                            style="?android:attr/ratingBarStyleSmall"
+                            android:layout_width="wrap_content"
+                            android:layout_height="40dp"
+                            android:layout_gravity="right|center_vertical"
+                            android:gravity="center"
+                            android:layout_marginLeft="5dp"
+                            android:text="@string/millimeter" />
+                    </LinearLayout>
+                </RelativeLayout>
             </RelativeLayout>
 
             <RelativeLayout
-                    android:id="@+id/warning_remark_rl"
-                    android:layout_marginTop="14dp"
-                    android:layout_marginLeft="23dp"
-                    android:layout_marginRight="23dp"
-                    android:layout_width="fill_parent"
-                    android:background="@drawable/warning_text_bg"
-                    android:layout_below="@+id/deal_way"
-                    android:layout_height="wrap_content">
+                android:id="@+id/warning_remark_rl"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/deal_way"
+                android:layout_marginLeft="23dp"
+                android:layout_marginRight="23dp"
+                android:layout_marginTop="14dp"
+                android:background="@drawable/warning_text_bg" >
 
                 <TextView
-                        android:id="@+id/remark_title"
-                        android:layout_width="fill_parent"
-                        android:text="备注"
-                        android:textSize="16sp"
-                        android:textColor="#cc0080ee"
-                        android:gravity="center"
-                        android:layout_height="30dp "/>
+                    android:id="@+id/remark_title"
+                    android:layout_width="fill_parent"
+                    android:layout_height="30dp "
+                    android:gravity="center"
+                    android:text="备注"
+                    android:textColor="#cc0080ee"
+                    android:textSize="16sp" />
 
                 <View
-                        android:layout_width="fill_parent"
-                        android:id="@+id/remark_line"
-                        android:layout_below="@+id/remark_title"
-                        android:background="@color/warning_bg"
-                        android:layout_height="1dp"/>
+                    android:id="@+id/remark_line"
+                    android:layout_width="fill_parent"
+                    android:layout_height="1dp"
+                    android:layout_below="@+id/remark_title"
+                    android:background="@color/warning_bg" />
 
                 <EditText
-                        android:id="@+id/warning_remark"
-                        android:layout_below="@+id/remark_line"
-                        android:layout_margin="10dp"
-                        android:gravity="top|left"
-                        android:padding="5dp"
-                        android:layout_width="fill_parent"
-                        android:layout_height="80dp"/>
+                    android:id="@+id/warning_remark"
+                    android:layout_width="fill_parent"
+                    android:layout_height="80dp"
+                    android:layout_below="@+id/remark_line"
+                    android:layout_margin="10dp"
+                    android:gravity="top|left"
+                    android:padding="5dp" />
             </RelativeLayout>
 
-
             <LinearLayout
-                    android:id="@+id/warning_bottom"
-                    android:layout_width="fill_parent"
-                    android:layout_height="60dp"
-                    android:layout_below="@+id/warning_remark_rl">
+                android:id="@+id/warning_bottom"
+                android:layout_width="fill_parent"
+                android:layout_height="60dp"
+                android:layout_below="@+id/warning_remark_rl" >
 
                 <Button
-                        android:id="@+id/complete_cancel"
-                        android:layout_width="fill_parent"
-                        android:layout_height="fill_parent"
-                        android:textSize="20sp"
-                        android:text="取消"
-                        android:layout_weight="1"/>
+                    android:id="@+id/complete_cancel"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:layout_weight="1"
+                    android:text="取消"
+                    android:textSize="20sp" />
+
                 <Button
-                        android:id="@+id/complete_ok"
-                        android:layout_width="fill_parent"
-                        android:layout_height="fill_parent"
-                        android:layout_weight="1"
-                        android:textSize="20sp"
-                        android:text="确定"/>
+                    android:id="@+id/complete_ok"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:layout_weight="1"
+                    android:text="确定"
+                    android:textSize="20sp" />
             </LinearLayout>
         </RelativeLayout>
-
-
     </ScrollView>
-
 
 </RelativeLayout>
