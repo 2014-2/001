@@ -51,7 +51,7 @@ public class AlertUtils {
     // 5表示地表下沉速率超限
     public static final int DIBIAO_XIACHEN_SULV_EXCEEDING = 5;
 
-    public static final String[] U_TYPE_MSGS = {"拱顶累计下沉值超限", "拱顶下沉速率超限", "收敛累计值超限", "收敛速率超限", "地表累计下沉值超限", "地表下沉速率超限"};
+    public static final String[] U_TYPE_MSGS = {"拱顶累计下沉值超限", "拱顶下沉速率超限", "累计收敛超限", "收敛速率超限", "地表累计下沉值超限", "地表下沉速率超限"};
 
     public static final int ALERT_STATUS_HANDLED = 0;
     public static final int ALERT_STATUS_OPEN = 1;
