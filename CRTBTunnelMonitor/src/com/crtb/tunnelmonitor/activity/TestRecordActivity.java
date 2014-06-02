@@ -22,14 +22,20 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.animation.TranslateAnimation;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.crtb.tunnelmonitor.CommonObject;
 import com.crtb.tunnelmonitor.WorkFlowActivity;
+import com.crtb.tunnelmonitor.dao.impl.v2.RawSheetIndexDao;
+import com.crtb.tunnelmonitor.dao.impl.v2.SubsidenceTotalDataDao;
+import com.crtb.tunnelmonitor.dao.impl.v2.TunnelSettlementTotalDataDao;
 import com.crtb.tunnelmonitor.entity.MenuSystemItem;
 import com.crtb.tunnelmonitor.entity.RawSheetIndex;
+import com.crtb.tunnelmonitor.mydefine.CrtbDialogHint;
 import com.crtb.tunnelmonitor.mydefine.CrtbDialogSearchTest;
 import com.crtb.tunnelmonitor.widget.CrtbTestRecordSubsidenceListView;
 import com.crtb.tunnelmonitor.widget.CrtbTestRecordTunnelSectionListView;
@@ -88,18 +94,62 @@ public class TestRecordActivity extends WorkFlowActivity implements OnPageChange
 		
 		// clear cache
 		CommonObject.remove(TestSectionExecuteActivity.KEY_TEST_RAWSHEET_LIST);
+		
+		mTestTunnelSectionList.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				
+				final RawSheetIndex bean = mTestTunnelSectionList.getItem(position) ;
+				
+				String[] menus = null ;
+				
+				if(position == 0){
+					menus	= new String[]{getString(R.string.common_open),getString(R.string.common_delete)};
+				} else{
+					menus	= new String[]{getString(R.string.common_open)};
+				}
+				
+				// show menu
+				clearListActionMenu() ;
+				showListActionMenu("测量管理", menus, bean);
+			}
+		}) ;
+		
+		mTestSubsidenceList.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				
+				final RawSheetIndex bean = mTestSubsidenceList.getItem(position) ;
+				
+				String[] menus = null ;
+				
+				if(position == 0){
+					menus	= new String[]{getString(R.string.common_open),getString(R.string.common_delete)};
+				} else{
+					menus	= new String[]{getString(R.string.common_open)};
+				}
+				
+				// show menu
+				clearListActionMenu() ;
+				showListActionMenu("测量管理", menus, bean);
+			}
+		}) ;
 	}
 	
 	private void loadSystemMenu(){
 		
 		List<MenuSystemItem> systems = new ArrayList<MenuSystemItem>();
 		
-		MenuSystemItem item = new MenuSystemItem() ;
+		/*MenuSystemItem item = new MenuSystemItem() ;
 		item.setIcon(R.drawable.ic_menu_open);
 		item.setName(getString(R.string.common_open));
-		systems.add(item);
+		systems.add(item);*/
 		
-		item = new MenuSystemItem() ;
+		MenuSystemItem item = new MenuSystemItem() ;
 		item.setIcon(R.drawable.ic_menu_search);
 		item.setName(getString(R.string.common_search));
 		systems.add(item);
@@ -116,32 +166,10 @@ public class TestRecordActivity extends WorkFlowActivity implements OnPageChange
 			
 			if(currIndex == 0){
 				
-				List<RawSheetIndex> list = mTestTunnelSectionList.getSelectedSection() ;
 				
-				if(list.isEmpty()){
-					showText("请选择测量单");
-				} else {
-					
-					CommonObject.putObject(TestSectionExecuteActivity.KEY_TEST_RAWSHEET_LIST, list) ;
-					
-					Intent intent = new Intent() ;
-					intent.setClass(TestRecordActivity.this, TestSectionExecuteActivity.class);
-					startActivity(intent);
-				}
 			} else {
 				
-				List<RawSheetIndex> list = mTestSubsidenceList.getSelectedSection() ;
 				
-				if(list.isEmpty()){
-					showText("请选择测量单");
-				} else {
-					
-					CommonObject.putObject(TestSectionExecuteActivity.KEY_TEST_RAWSHEET_LIST, list) ;
-					
-					Intent intent = new Intent() ;
-					intent.setClass(TestRecordActivity.this, TestSectionExecuteActivity.class);
-					startActivity(intent);
-				}
 			}
 		} else if(name.equals(getString(R.string.common_search))){
 			
@@ -157,6 +185,94 @@ public class TestRecordActivity extends WorkFlowActivity implements OnPageChange
 			}
 			
 			dialog.show() ;
+		}
+	}
+
+	@Override
+	protected void onListItemSelected(Object bean, int position, String menu) {
+		
+		final RawSheetIndex obj 	= (RawSheetIndex) bean ;
+		List<RawSheetIndex> list 	= null ;
+		CrtbDialogHint dialog 		= null ;
+		
+		// 隧道内断面
+		if(obj.getCrossSectionType() == 1){
+			
+			if(menu.equals(getString(R.string.common_open))){
+				
+				list = new ArrayList<RawSheetIndex>();
+				list.add(obj);
+				
+				CommonObject.putObject(TestSectionExecuteActivity.KEY_TEST_RAWSHEET_LIST, list) ;
+				
+				Intent intent = new Intent() ;
+				intent.setClass(TestRecordActivity.this, TestSectionExecuteActivity.class);
+				startActivity(intent);
+				
+				// 更新
+				mTestTunnelSectionList.changeStatus(obj);
+			} 
+			// 删除
+			else {
+				
+				TunnelSettlementTotalDataDao dao = TunnelSettlementTotalDataDao.defaultDao() ;
+				
+				// 是否存在测量数据
+				if(dao.checkRawSheetIndexHasData(obj.getID())){
+					dialog = new CrtbDialogHint(TestRecordActivity.this, R.drawable.ic_reslut_error, "该记录单存在测量数据，不能删除!");
+				} else {
+					
+					if(RawSheetIndexDao.defaultDao().delete(obj) == TunnelSettlementTotalDataDao.DB_EXECUTE_SUCCESS){
+						dialog = new CrtbDialogHint(TestRecordActivity.this, R.drawable.ic_reslut_sucess, "删除成功!");
+						mTestTunnelSectionList.onReload() ;
+					} else {
+						dialog = new CrtbDialogHint(TestRecordActivity.this, R.drawable.ic_reslut_error, "删除失败!");
+					}
+				}
+				
+				if(dialog != null){
+					dialog.show() ;
+				}
+			}
+			
+		} else {
+			
+			if(menu.equals(getString(R.string.common_open))){
+				
+				list = new ArrayList<RawSheetIndex>();
+				list.add(obj);
+				
+				CommonObject.putObject(TestSectionExecuteActivity.KEY_TEST_RAWSHEET_LIST, list) ;
+				
+				Intent intent = new Intent() ;
+				intent.setClass(TestRecordActivity.this, TestSectionExecuteActivity.class);
+				startActivity(intent);
+				
+				// 更新
+				mTestSubsidenceList.changeStatus(obj);
+			} 
+			// 删除
+			else {
+				
+				SubsidenceTotalDataDao dao = SubsidenceTotalDataDao.defaultDao() ;
+				
+				// 是否存在测量数据
+				if(dao.checkRawSheetIndexHasData(obj.getID())){
+					dialog = new CrtbDialogHint(TestRecordActivity.this, R.drawable.ic_reslut_error, "该记录单存在测量数据，不能删除!");
+				} else {
+					
+					if(RawSheetIndexDao.defaultDao().delete(obj) == SubsidenceTotalDataDao.DB_EXECUTE_SUCCESS){
+						dialog = new CrtbDialogHint(TestRecordActivity.this, R.drawable.ic_reslut_sucess, "删除成功!");
+						mTestSubsidenceList.onReload() ;
+					} else {
+						dialog = new CrtbDialogHint(TestRecordActivity.this, R.drawable.ic_reslut_error, "删除失败!");
+					}
+				}
+				
+				if(dialog != null){
+					dialog.show() ;
+				}
+			}
 		}
 	}
 
@@ -296,8 +412,6 @@ public class TestRecordActivity extends WorkFlowActivity implements OnPageChange
 					cursor.startAnimation(ta);
 				}
 				currIndex = 1;
-				break;
-			default:
 				break;
 			}
 		}
