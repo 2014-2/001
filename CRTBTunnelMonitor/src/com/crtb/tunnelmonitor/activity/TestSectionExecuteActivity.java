@@ -26,12 +26,15 @@ import com.crtb.tunnelmonitor.AppConfig;
 import com.crtb.tunnelmonitor.AppHandler;
 import com.crtb.tunnelmonitor.CommonObject;
 import com.crtb.tunnelmonitor.WorkFlowActivity;
+import com.crtb.tunnelmonitor.dao.impl.v2.AlertHandlingInfoDao;
+import com.crtb.tunnelmonitor.dao.impl.v2.AlertListDao;
 import com.crtb.tunnelmonitor.dao.impl.v2.RawSheetIndexDao;
 import com.crtb.tunnelmonitor.dao.impl.v2.SubsidenceCrossSectionIndexDao;
 import com.crtb.tunnelmonitor.dao.impl.v2.SubsidenceTotalDataDao;
 import com.crtb.tunnelmonitor.dao.impl.v2.SurveyerInformationDao;
 import com.crtb.tunnelmonitor.dao.impl.v2.TunnelCrossSectionIndexDao;
 import com.crtb.tunnelmonitor.dao.impl.v2.TunnelSettlementTotalDataDao;
+import com.crtb.tunnelmonitor.entity.AlertList;
 import com.crtb.tunnelmonitor.entity.RawSheetIndex;
 import com.crtb.tunnelmonitor.entity.SubsidenceCrossSectionIndex;
 import com.crtb.tunnelmonitor.entity.SubsidenceTotalData;
@@ -376,24 +379,37 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 					@Override
 					public void onClick(int id) {
 						
-						if(id == CrtbDialogDelete.BUTTON_ID_CONFIRM){
+                        if (id == CrtbDialogDelete.BUTTON_ID_CONFIRM) {
 
-							TunnelSettlementTotalDataDao dao 	= TunnelSettlementTotalDataDao.defaultDao() ;
-							TunnelSettlementTotalData obj 		= dao.queryTunnelTotalData(rawSheetBean.getID(),tunnelSection.getID(),type);
-							
-							if(obj != null){
-								
-								dao.reset(obj);
-								
-								//TODO 删除对应的超限信息
-								
-								holder.mPointX.setText("");
-								holder.mPointY.setText("");
-								holder.mPointZ.setText("");
-								holder.mPointTime.setText("");
-								holder.warringLayout.setVisibility(View.INVISIBLE);
-							}
-						}
+                            int sheetId = rawSheetBean.getID();
+                            int chainageid = tunnelSection.getID();
+                            TunnelSettlementTotalDataDao dao = TunnelSettlementTotalDataDao
+                                    .defaultDao();
+                            TunnelSettlementTotalData obj = dao.queryTunnelTotalData(sheetId,
+                                    chainageid, type);
+
+                            if (obj != null) {
+
+                                dao.reset(obj);
+
+                                List<AlertList> als = AlertListDao.defaultDao()
+                                        .queryByOrigionalDataId(String.valueOf(sheetId),
+                                                chainageid, String.valueOf(obj.getID()));
+                                if (als != null && als.size() > 0) {
+                                    for (AlertList al : als) {
+                                        int alId = al.getID();
+                                        AlertListDao.defaultDao().deleteById(alId);
+                                        AlertHandlingInfoDao.defaultDao().deleteByAlertId(alId);
+                                    }
+                                }
+
+                                holder.mPointX.setText("");
+                                holder.mPointY.setText("");
+                                holder.mPointZ.setText("");
+                                holder.mPointTime.setText("");
+                                holder.warringLayout.setVisibility(View.INVISIBLE);
+                            }
+                        }
 					}
 				}) ;
 				
@@ -761,14 +777,25 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 						if(id == CrtbDialogDelete.BUTTON_ID_CONFIRM){
 							
 							SubsidenceTotalDataDao dao 	= SubsidenceTotalDataDao.defaultDao() ;
-							SubsidenceTotalData obj = dao.querySubsidenceTotalData(rawSheetBean.getID(),subsidenceSection.getID(),type);
+							int sheetId = rawSheetBean.getID();
+							int chainageid = subsidenceSection.getID();
+							SubsidenceTotalData obj = dao.querySubsidenceTotalData(sheetId, chainageid, type);
 
-							if(obj != null){
-								
+							if(obj != null) {
+
 								dao.reset(obj);
-								
-								//TODO 删除对应的超限信息
-								
+
+                                List<AlertList> als = AlertListDao.defaultDao()
+                                        .queryByOrigionalDataId(String.valueOf(sheetId),
+                                                chainageid, String.valueOf(obj.getID()));
+                                if (als != null && als.size() > 0) {
+                                    for (AlertList al : als) {
+                                        int alId = al.getID();
+                                        AlertListDao.defaultDao().deleteById(alId);
+                                        AlertHandlingInfoDao.defaultDao().deleteByAlertId(alId);
+                                    }
+                                }
+
 								holder.mPointX.setText("");
 								holder.mPointY.setText("");
 								holder.mPointZ.setText("");

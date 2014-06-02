@@ -118,6 +118,23 @@ public class AlertListDao extends AbstractDao<AlertList> {
         return mDatabase.queryObject(sql, args, AlertList.class);
     }
 
+    public List<AlertList> queryByOrigionalDataId(String sheetId, int chainageId, String originalDataID) {
+        final IAccessDatabase db = getCurrentDb();
+        Log.d(TAG, "AlertListDao queryByOrigionalDataId, originalDataID: " + originalDataID);
+
+        if (db == null) {
+            return null;
+        }
+
+        String sql = "select * from AlertList where"
+                + " SheetID=\'" + sheetId + "\'"
+                + " AND CrossSectionID=?"
+                + " AND originalDataID=\'" + originalDataID + "\'";
+        String[] args = new String[] { String.valueOf(chainageId) };
+
+        return db.queryObjects(sql, args, AlertList.class);
+    }
+
     public int insertOrUpdate(TunnelSettlementTotalData point, int alertLevel, int Utype,
             double UValue, double UMax, String originalDataID) {
 
