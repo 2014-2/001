@@ -144,6 +144,7 @@ public class WarningActivity extends Activity {
         });
 
         mRadioBtns = new RadioButton[]{mDealWayBtnNormal, mDealWayBtnDiscard, mDealWayBtnAsFirst, mDealWayBtnCorrection, mDealWayBtnRebury};
+        mWarningRemarkView = (EditText) mHandleCompleteView.findViewById(R.id.warning_remark);
 
         mCorrectionUnitView = (TextView) mHandleCompleteView.findViewById(R.id.correction_unit);
         mCorrectionView = (EditText) mHandleCompleteView.findViewById(R.id.add_edit);
@@ -163,26 +164,29 @@ public class WarningActivity extends Activity {
             
             @Override
             public void afterTextChanged(Editable s) {
-                if (warningValueTV != null) {
-                    AlertInfo alert = alerts.get(clickedItem);
-                    if (alert != null) {
-                        Editable e = mCorrectionView.getText();
-                        float correction = 0;
-                        if (e != null && e.length() > 0) {
-                            String cstr = e.toString();
-                            if (cstr != null && !cstr.trim().endsWith("-")) {
-                                correction = Float.valueOf(cstr);
-                            }
+                AlertInfo alert = alerts.get(clickedItem);
+                if (alert != null) {
+                    Editable e = mCorrectionView.getText();
+                    float correction = 0;
+                    if (e != null && e.length() > 0) {
+                        String cstr = e.toString();
+                        if (cstr != null && !cstr.trim().endsWith("-") && !cstr.equals(".")) {
+                            correction = Float.valueOf(cstr);
                         }
+                    }
+                    if (warningValueTV != null) {
                         warningValueTV.setText("超限值: "
-                                + String.format("%1$.1f", CrtbUtils.formatDouble(alert.getUValue() + correction, 1))
+                                + String.format("%1$.1f",
+                                        CrtbUtils.formatDouble(alert.getUValue() + correction, 1))
                                 + AlertUtils.getAlertValueUnit(alert.getUType()));
+                    }
+                    if (mWarningRemarkView != null) {
+                        mWarningRemarkView.setText(getString(R.string.remark_correction, correction));
                     }
                 }
             }
         });
 
-        mWarningRemarkView = (EditText) mHandleCompleteView.findViewById(R.id.warning_remark);
         listviewInit();
 
         baojing = (TextView) findViewById(R.id.rizhi);
@@ -270,24 +274,30 @@ public class WarningActivity extends Activity {
                                     oldDateListNumTV.setText(Html.fromHtml("<font color=\"#0080ee\">记录单号: </font>" + date));
                                     oldDatePointTV.setText(Html.fromHtml("<font color=\"#0080ee\">测点: </font>" + alert.getPntType()));
                                     mCorrectionView.setText(null);
-                                    mWarningRemarkView.setText(alert.getHandling());
+//                                    mWarningRemarkView.setText(alert.getHandling());
 
                                     int raidoId = 0;
+                                    String remark = "";
                                     switch (view.getId()) {
                                         case R.id.normal:
                                             raidoId = mDealWayBtnNormal.getId();
+                                            remark = getString(R.string.deal_way_normal);
                                             break;
                                         case R.id.discard_btn:
                                             raidoId = mDealWayBtnDiscard.getId();
+                                            remark = getString(R.string.deal_way_void);
                                             break;
                                         case R.id.as_first_line:
                                             raidoId = mDealWayBtnAsFirst.getId();
+                                            remark = getString(R.string.deal_way_first);
                                             break;
                                         case R.id.correction:
                                             raidoId = mDealWayBtnCorrection.getId();
+                                            remark = getString(R.string.remark_correction, 0f);
                                             break;
                                         case R.id.rebury:
                                             raidoId = mDealWayBtnRebury.getId();
+                                            remark = getString(R.string.deal_way_rebury);
                                             break;
                                     }
 
@@ -302,6 +312,11 @@ public class WarningActivity extends Activity {
                                         mCorrectionView.setVisibility(isCorrection ? View.VISIBLE : View.GONE);
                                         mCheckedRaidoId = raidoId;
                                     }
+
+                                    if (mWarningRemarkView != null) {
+                                        mWarningRemarkView.setText(remark);
+                                    }
+
                                 }
                             }
                             break;
