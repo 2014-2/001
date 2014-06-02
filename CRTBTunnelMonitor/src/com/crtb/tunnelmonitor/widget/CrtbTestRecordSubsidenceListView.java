@@ -4,8 +4,6 @@ import java.util.List;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.view.View;
-import android.widget.AdapterView;
 
 import com.crtb.tunnelmonitor.dao.impl.v2.RawSheetIndexDao;
 import com.crtb.tunnelmonitor.entity.RawSheetIndex;
@@ -31,15 +29,10 @@ public final class CrtbTestRecordSubsidenceListView extends CrtbBaseListView {
 		setAdapter(mAdapter);
 		
 		clearCacheColor() ;
-		
-		setOnItemClickListener(new OnItemClickListener() {
-
-			@Override
-			public void onItemClick(AdapterView<?> parent, View view,
-					int position, long id) {
-				mAdapter.changeStatus(position);
-			}
-		}) ;
+	}
+	
+	public void changeStatus(RawSheetIndex obj){
+		mAdapter.changeStatus(obj);
 	}
 	
 	public RawSheetIndex getItem(int position){

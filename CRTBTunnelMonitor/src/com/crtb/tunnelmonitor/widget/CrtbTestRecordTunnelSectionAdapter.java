@@ -29,7 +29,17 @@ public class CrtbTestRecordTunnelSectionAdapter extends CrtbEntityAdapter<RawShe
 		super(context);
 	}
 	
-	protected void changeStatus(int position){
+	public void changeStatus(RawSheetIndex obj){
+		
+		if(obj == null){
+			return ;
+		}
+		
+		int position = mList.indexOf(obj);
+		
+		if(position < 0){
+			return ;
+		}
 		
 		RawSheetIndexDao dao = RawSheetIndexDao.defaultDao() ;
 		
@@ -38,7 +48,7 @@ public class CrtbTestRecordTunnelSectionAdapter extends CrtbEntityAdapter<RawShe
 			RawSheetIndex item = mList.get(index) ;
 			
 			if(index == position){
-				item.setChecked(!item.isChecked());
+				item.setChecked(true);
 			} else {
 				item.setChecked(false);
 			}
@@ -64,7 +74,7 @@ public class CrtbTestRecordTunnelSectionAdapter extends CrtbEntityAdapter<RawShe
 	}
 
 	@Override
-	public View getView(int position, View convertView, ViewGroup parent) {
+	public View getView(final int position, View convertView, ViewGroup parent) {
 		
 		HolderView holder 	= null ;
 		RawSheetIndex item 	= getItem(position);
@@ -78,7 +88,6 @@ public class CrtbTestRecordTunnelSectionAdapter extends CrtbEntityAdapter<RawShe
 		}
 		
 		holder.recordNo.setText(String.valueOf(position + 1));
-		//holder.recordName.setText(CrtbUtils.formatSectionName(item.getPrefix(),item.getFACEDK()));
 		holder.recordName.setText(DateUtils.toDateString(item.getCreateTime(),DateUtils.DATE_TIME_FORMAT));
 		
 		if(!item.isChecked()){

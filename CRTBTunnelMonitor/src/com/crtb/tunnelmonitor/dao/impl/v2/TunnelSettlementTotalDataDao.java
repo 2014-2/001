@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.zw.android.framework.IAccessDatabase;
 import org.zw.android.framework.db.core.SQLiteParamUtils;
+import org.zw.android.framework.util.StringUtils;
 
 import android.util.Log;
 
@@ -118,6 +119,34 @@ public class TunnelSettlementTotalDataDao extends AbstractDao<TunnelSettlementTo
 		String[] args = SQLiteParamUtils.toParamemter(sheetId,chainageId);
 		
 		return mDatabase.queryObjects(sql, args, TunnelSettlementTotalData.class);
+	}
+	
+	// 是否存在测量数据
+	public boolean checkRawSheetIndexHasData(int sheetId) {
+		
+		final IAccessDatabase mDatabase = getCurrentDb();
+		
+		if (mDatabase == null) {
+			return false;
+		}
+		
+		String sql = "select * from TunnelSettlementTotalData where SheetId = ?";
+		String[] args = SQLiteParamUtils.toParamemter(sheetId);
+		
+		List<TunnelSettlementTotalData> list = mDatabase.queryObjects(sql, args, TunnelSettlementTotalData.class) ;
+		
+		if(list == null || list.isEmpty()){
+			return false;
+		}
+		
+		for(TunnelSettlementTotalData data : list){
+			
+			if(!StringUtils.isEmpty(data.getCoordinate())){
+				return true ;
+			}
+		}
+		
+		return false ;
 	}
 	
     /**

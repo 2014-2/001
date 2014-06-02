@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.zw.android.framework.IAccessDatabase;
 import org.zw.android.framework.db.core.SQLiteParamUtils;
+import org.zw.android.framework.util.StringUtils;
 
 import com.crtb.tunnelmonitor.entity.SubsidenceTotalData;
 import com.crtb.tunnelmonitor.utils.AlertUtils;
@@ -122,6 +123,34 @@ public class SubsidenceTotalDataDao extends AbstractDao<SubsidenceTotalData> {
         return mDatabase.queryObjects(sql, new String[] {String.valueOf(sheetId), String.valueOf(chainageId)}, SubsidenceTotalData.class);
     }
 
+    // 是否存在测量数据
+ 	public boolean checkRawSheetIndexHasData(int sheetId) {
+ 		
+ 		final IAccessDatabase mDatabase = getCurrentDb();
+ 		
+ 		if (mDatabase == null) {
+ 			return false;
+ 		}
+ 		
+ 		String sql = "select * from SubsidenceTotalData where SheetId = ?";
+ 		String[] args = SQLiteParamUtils.toParamemter(sheetId);
+ 		
+ 		List<SubsidenceTotalData> list = mDatabase.queryObjects(sql, args, SubsidenceTotalData.class) ;
+ 		
+ 		if(list == null || list.isEmpty()){
+ 			return false;
+ 		}
+ 		
+ 		for(SubsidenceTotalData data : list){
+ 			
+ 			if(!StringUtils.isEmpty(data.getCoordinate())){
+ 				return true ;
+ 			}
+ 		}
+ 		
+ 		return false ;
+ 	}
+ 	
     /**
      * 查询 本次测量(MEASNo)之前的所有相同断面和相同测点类型的测点信息
      *
