@@ -10,7 +10,7 @@ import android.util.Log;
 import com.crtb.tunnelmonitor.AppLogger;
 
 /**
- * 标准文件导入/导出
+ * 标准文件导入/导出(文件复制)
  * 
  * @author zhouwei
  *
