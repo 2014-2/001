@@ -580,7 +580,7 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 							// tempTunnelData.add(obj);
 							
 							if(info.type.equals(AppConfig.POINT_A)){
-								doWarning(info.holder, AlertUtils.getPointSubsidenceExceedMsg(obj));
+								doWarning(info.holder, AlertUtils.getPointSubsidenceExceedMsg(obj, false));
 							} else {
 								
 								if(info.type.equals(AppConfig.POINT_S1_1)
@@ -592,7 +592,7 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 								}
 								
 								if(pS1 != null && pS2 != null){
-									doWarningLine(info.holder,pS1,pS2);
+									doWarningLine(info.holder, pS1, pS2, false);
 								}
 							}
 							
@@ -650,7 +650,7 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 							// 保存临时数据
 							// tempSubsidenceData.add(obj);
 							
-						    doWarning(info.holder, AlertUtils.getPointSubsidenceExceedMsg(obj));
+						    doWarning(info.holder, AlertUtils.getPointSubsidenceExceedMsg(obj, false));
 							showText((update ? "更新" : "保存") + "成功");
 							
 						} else {
@@ -665,9 +665,9 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 		};
 	}
 
-	private void doWarningLine(TestPointHolder holder, TunnelSettlementTotalData p1, TunnelSettlementTotalData p2){
+	private void doWarningLine(TestPointHolder holder, TunnelSettlementTotalData p1, TunnelSettlementTotalData p2, boolean readOnly){
 		
-	    String[] list = AlertUtils.getLineConvergenceExceedMsg(p1,p2);
+	    String[] list = AlertUtils.getLineConvergenceExceedMsg(p1,p2, readOnly);
 
 		doWarning(holder, list);
 
@@ -854,7 +854,7 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 			
 			// A 报警
 			if(bean != null){
-				doWarning(holder, AlertUtils.getPointSubsidenceExceedMsg(bean));
+				doWarning(holder, AlertUtils.getPointSubsidenceExceedMsg(bean, true));
 			}
 			
 			// 全断面法(A,S1(1,2))
@@ -873,7 +873,7 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 				p2 = bean ;
 				
 				if(p1 != null && p2 != null){
-					doWarningLine(holder,p1,p2);
+					doWarningLine(holder, p1, p2, true);
 				}
 			} 
 			// 台阶法(A,S1(1,2),S2(1,2))
@@ -892,7 +892,7 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 				addTestPoint(holder.mItemView);
 				
 				if(p1 != null && p2 != null){
-					doWarningLine(holder,p1,p2);
+					doWarningLine(holder,p1,p2, true);
 				}
 				
 				p1	= p2 = null ;
@@ -910,7 +910,7 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 				addTestPoint(holder.mItemView);
 				
 				if(p1 != null && p2 != null){
-					doWarningLine(holder,p1,p2);
+					doWarningLine(holder,p1,p2, true);
 				}
 			} 
 			// 三台阶法(A,S1(1,2),S2(1,2),S3(1,2))
@@ -929,7 +929,7 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 				addTestPoint(holder.mItemView);
 				
 				if(p1 != null && p2 != null){
-					doWarningLine(holder,p1,p2);
+					doWarningLine(holder,p1,p2, true);
 				}
 				
 				p1	= p2 = null ;
@@ -947,7 +947,7 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 				addTestPoint(holder.mItemView);
 				
 				if(p1 != null && p2 != null){
-					doWarningLine(holder,p1,p2);
+					doWarningLine(holder,p1,p2, true);
 				}
 				
 				p1	= p2 = null ;
@@ -965,7 +965,7 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 				addTestPoint(holder.mItemView);
 				
 				if(p1 != null && p2 != null){
-					doWarningLine(holder,p1,p2);
+					doWarningLine(holder,p1,p2, true);
 				}
 			} 
 			// 双侧壁法(A,S1(1,2),S2(1,2),S3(1,2))
@@ -984,7 +984,7 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 				addTestPoint(holder.mItemView);
 				
 				if(p1 != null && p2 != null){
-					doWarningLine(holder,p1,p2);
+					doWarningLine(holder,p1,p2, true);
 				}
 				
 				p1	= p2 = null ;
@@ -1002,7 +1002,7 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 				addTestPoint(holder.mItemView);
 				
 				if(p1 != null && p2 != null){
-					doWarningLine(holder,p1,p2);
+					doWarningLine(holder,p1,p2, true);
 				}
 				
 				p1	= p2 = null ;
@@ -1020,7 +1020,7 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 				addTestPoint(holder.mItemView);
 				
 				if(p1 != null && p2 != null){
-					doWarningLine(holder,p1,p2);
+					doWarningLine(holder,p1,p2, true);
 				}
 			}
 		} 
