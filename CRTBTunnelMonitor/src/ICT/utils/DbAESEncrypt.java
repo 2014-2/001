@@ -19,9 +19,9 @@ import org.zw.android.framework.util.StringUtils;
  */
 public final class DbAESEncrypt implements IDbEncrypt {
 
-	// 16 位密码
+	// 16 位密码 : 
 	private static String getKey() {
-		return "1234567812345678";
+		return "X34W0W2T8GS1MA54";
 	}
 
 	@SuppressLint("TrulyRandom")
