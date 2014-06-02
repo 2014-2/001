@@ -53,7 +53,7 @@ public class UserBookActivity extends Activity {
         OutputStream out = null;
 
         File file = new File(getFilesDir(), fileName);
-        if (!file.exists()) {
+//        if (!file.exists()) {
             try {
                 in = assetManager.open(fileName);
                 out = openFileOutput(file.getName(),
@@ -68,9 +68,9 @@ public class UserBookActivity extends Activity {
             } catch (Exception e) {
                 Log.e(TAG, "", e);
             }
-        } else {
-            Log.d(TAG, "userbook already there!");
-        }
+//        } else {
+//            Log.d(TAG, "userbook already there!");
+//        }
     }
 
     private void copyFile(InputStream in, OutputStream out) throws IOException {
