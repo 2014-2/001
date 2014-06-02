@@ -202,8 +202,8 @@ public class AlertUtils {
                     if (Math.abs(accumulativeSubsidence) >= ACCUMULATIVE_THRESHOLD) {
                         AlertList al = AlertListDao.defaultDao().queryOne(sheetId, chainageId, originalDataID, uType);
 
-                        //若本条预警已消警，则不再添加处理
-                        if (al == null || AlertHandlingInfoDao.defaultDao().queryOne(al.getID(), ALERT_STATUS_HANDLED) == null) {
+                        //若本条预警已消警，但重测时又超限，则需要再打开
+                        if (al == null || (curHandlingAlertId < 0 && AlertHandlingInfoDao.defaultDao().queryOne(al.getID(), ALERT_STATUS_HANDLED) != null)) {
                             accumulativeSubsidence = CrtbUtils.formatDouble(accumulativeSubsidence, 1);
                             ret.leijiType = uType;
                             ret.leijiValue = accumulativeSubsidence;
@@ -222,10 +222,11 @@ public class AlertUtils {
                             AlertHandlingInfoDao.defaultDao().insertItem(alertId, handlingRemark,
                                     new Date(System.currentTimeMillis()), String.valueOf(chainageId) + pntType, ALERT_STATUS_OPEN/*报警*/, 1/*true*/);
                         }
-                    } else if (curHandlingAlertId >= 0) {
-                        if (sheetId != null) {
-                            AlertList al = AlertListDao.defaultDao().queryOne(sheetId, chainageId, originalDataID, uType);
-                            if (al != null) {
+                    } else if (sheetId != null) {
+                        AlertList al = AlertListDao.defaultDao().queryOne(sheetId, chainageId,
+                                originalDataID, uType);
+                        if (al != null) {
+                            if (curHandlingAlertId >= 0) {
                                 int alertId = al.getID();
                                 int chainageId1 = Integer.valueOf(al.getCrossSectionID());
                                 String pntType1 = al.getPntType();
@@ -233,6 +234,8 @@ public class AlertUtils {
                                 AlertHandlingInfoDao.defaultDao().insertIfNotExist(alertId,
                                         alertId == curHandlingAlertId ? handling : null,
                                         handlingTime, duePerson, ALERT_STATUS_HANDLED, 1/* true */);
+                            } else {
+                                AlertListDao.defaultDao().delete(al);
                             }
                         }
                     }
@@ -278,8 +281,8 @@ public class AlertUtils {
                     if (Math.abs(subsidenceSpeed) >= SPEED_THRESHOLD) {
                         AlertList al = AlertListDao.defaultDao().queryOne(sheetId, chainageId, originalDataID, uType);
 
-                        //若本条预警已消警，则不再添加处理
-                        if (al == null || AlertHandlingInfoDao.defaultDao().queryOne(al.getID(), ALERT_STATUS_HANDLED) == null) {
+                        //若本条预警已消警，但重测时又超限，则需要再打开
+                        if (al == null || (curHandlingAlertId < 0 && AlertHandlingInfoDao.defaultDao().queryOne(al.getID(), ALERT_STATUS_HANDLED) == null)) {
                             subsidenceSpeed = CrtbUtils.formatDouble(subsidenceSpeed, 1);
                             ret.sulvType = uType;
                             ret.sulvValue = subsidenceSpeed;
@@ -298,10 +301,11 @@ public class AlertUtils {
                             AlertHandlingInfoDao.defaultDao().insertItem(alertId, handlingRemark,
                                     new Date(System.currentTimeMillis()), String.valueOf(chainageId) + pntType, ALERT_STATUS_OPEN/*报警*/, 1/*true*/);
                         }
-                    } else if (curHandlingAlertId >= 0) {
-                        if (sheetId != null) {
-                            AlertList al = AlertListDao.defaultDao().queryOne(sheetId, chainageId, originalDataID, uType);
-                            if (al != null) {
+                    } else if (sheetId != null) {
+                        AlertList al = AlertListDao.defaultDao().queryOne(sheetId, chainageId,
+                                originalDataID, uType);
+                        if (al != null) {
+                            if (curHandlingAlertId >= 0) {//处理
                                 int alertId = al.getID();
                                 int chainageId1 = Integer.valueOf(al.getCrossSectionID());
                                 String pntType1 = al.getPntType();
@@ -309,6 +313,8 @@ public class AlertUtils {
                                 AlertHandlingInfoDao.defaultDao().insertIfNotExist(alertId,
                                         alertId == curHandlingAlertId ? handling : null,
                                         handlingTime, duePerson, ALERT_STATUS_HANDLED, 1/* true */);
+                            } else {//重测
+                                AlertListDao.defaultDao().delete(al);
                             }
                         }
                     }
@@ -381,8 +387,8 @@ public class AlertUtils {
                 if (Math.abs(convergence) >= ACCUMULATIVE_THRESHOLD) {
                     AlertList al = AlertListDao.defaultDao().queryOne(sheetId, chainageId, originalDataID, uType);
 
-                    //若本条预警已消警，则不再添加处理
-                    if (al == null || AlertHandlingInfoDao.defaultDao().queryOne(al.getID(), ALERT_STATUS_HANDLED) == null) {
+                    //若本条预警已消警，但重测时又超限，则需要再打开
+                    if (al == null || (curHandlingAlertId < 0 && AlertHandlingInfoDao.defaultDao().queryOne(al.getID(), ALERT_STATUS_HANDLED) == null)) {
                         convergence = CrtbUtils.formatDouble(convergence, 1);
                         ret.leijiType = uType;
                         ret.leijiValue = convergence;
@@ -397,13 +403,18 @@ public class AlertUtils {
                                 new Date(System.currentTimeMillis()), String.valueOf(chainageId) + s_1.getPntType(), ALERT_STATUS_OPEN/*报警*/, 1/*true*/);
                     }
 
-                } else if (curHandlingAlertId >= 0) {
-                    if (sheetId != null) {
-                        AlertList al = AlertListDao.defaultDao().queryOne(sheetId, chainageId, originalDataID, uType);
-                        if (al != null) {
+                } else if (sheetId != null) {
+                    AlertList al = AlertListDao.defaultDao().queryOne(sheetId, chainageId,
+                            originalDataID, uType);
+                    if (al != null) {
+                        if (curHandlingAlertId >= 0) {
                             int alertId = al.getID();
-                            AlertHandlingInfoDao.defaultDao().insertIfNotExist(alertId, alertId == curHandlingAlertId ? handling : null,
-                                    handlingTime, String.valueOf(chainageId) + s_1.getPntType(), ALERT_STATUS_HANDLED, 1/*true*/);
+                            AlertHandlingInfoDao.defaultDao().insertIfNotExist(alertId,
+                                    alertId == curHandlingAlertId ? handling : null, handlingTime,
+                                    String.valueOf(chainageId) + s_1.getPntType(),
+                                    ALERT_STATUS_HANDLED, 1/* true */);
+                        } else {
+                            AlertListDao.defaultDao().delete(al);
                         }
                     }
                 }
@@ -446,8 +457,8 @@ public class AlertUtils {
                 if (Math.abs(shoulianSpeed) >= SPEED_THRESHOLD) {
                     AlertList al = AlertListDao.defaultDao().queryOne(sheetId, chainageId, originalDataID, uType);
 
-                    //若本条预警已消警，则不再添加处理
-                    if (al == null || AlertHandlingInfoDao.defaultDao().queryOne(al.getID(), ALERT_STATUS_HANDLED) == null) {
+                    //若本条预警已消警，但重测时又超限，则需要再打开
+                    if (al == null || (curHandlingAlertId < 0 && AlertHandlingInfoDao.defaultDao().queryOne(al.getID(), ALERT_STATUS_HANDLED) == null)) {
                         shoulianSpeed = CrtbUtils.formatDouble(shoulianSpeed, 1);
                         ret.sulvType = uType;
                         ret.sulvValue = shoulianSpeed;
@@ -460,13 +471,18 @@ public class AlertUtils {
                         AlertHandlingInfoDao.defaultDao().insertItem(alertId, handlingRemark,
                                 new Date(System.currentTimeMillis()), String.valueOf(chainageId) + s_1.getPntType(), ALERT_STATUS_OPEN/*报警*/, 1/*true*/);
                     }
-                } else if (curHandlingAlertId >= 0) {
-                    if (sheetId != null) {
-                        AlertList al = AlertListDao.defaultDao().queryOne(sheetId, chainageId, originalDataID, uType);
-                        if (al != null) {
+                } else if (sheetId != null) {
+                    AlertList al = AlertListDao.defaultDao().queryOne(sheetId, chainageId,
+                            originalDataID, uType);
+                    if (al != null) {
+                        if (curHandlingAlertId >= 0) {
                             int alertId = al.getID();
-                            AlertHandlingInfoDao.defaultDao().insertIfNotExist(alertId, alertId == curHandlingAlertId ? handling : null,
-                                    handlingTime, String.valueOf(chainageId) + s_1.getPntType(), ALERT_STATUS_HANDLED, 1/*true*/);
+                            AlertHandlingInfoDao.defaultDao().insertIfNotExist(alertId,
+                                    alertId == curHandlingAlertId ? handling : null, handlingTime,
+                                    String.valueOf(chainageId) + s_1.getPntType(),
+                                    ALERT_STATUS_HANDLED, 1/* true */);
+                        } else {
+                            AlertListDao.defaultDao().delete(al);
                         }
                     }
                 }

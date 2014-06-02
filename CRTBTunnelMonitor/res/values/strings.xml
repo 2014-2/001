@@ -68,11 +68,6 @@
     <string name="server_setting">用户登录</string>
     <string name="user_book">用户手册</string>
 
-    <string name="deal_way_void">数据作废</string>
-    <string name="deal_way_first">数据作为首行</string>
-    <string name="deal_way_add">添加改正值</string>
-    <string name="deal_way_normal">正常计算</string>
-    <string name="deal_way_rebury">重埋</string>
 
     <!-- 预警模块 -->
     <string name="millimeter">毫米</string>
@@ -83,12 +78,20 @@
     <string name="add_correction">添加改正值</string>
     <string name="rebury">重埋</string>
     <string name="handling_details">处理详情</string>
-    <string name="handling_count">共%d次处理</string>
 
+    <string name="handling_count">共%d次处理</string>
     <string name="handling_date">处理时间: %s</string>
     <string name="handling_person">处理人: %s</string>
     <string name="handling_remark">备注: %s</string>
     <string name="handling_status">处理后状态: %s</string>
+
+    <string name="deal_way_void">数据作废</string>
+    <string name="deal_way_first">数据作为首行</string>
+    <string name="deal_way_add">添加改正值</string>
+    <string name="deal_way_normal">正常计算</string>
+    <string name="deal_way_rebury">重埋</string>
+
+    <string name="remark_correction">添加改正值%.1f毫米</string>
 
     <!-- 升级模块 -->
     <string name="update_title">软件升级</string>
