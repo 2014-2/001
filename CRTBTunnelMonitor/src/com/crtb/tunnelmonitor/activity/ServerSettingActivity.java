@@ -32,6 +32,8 @@ public class ServerSettingActivity extends WorkFlowActivity {
         mServerIp = (EditText) findViewById(R.id.server_ip);
         mUserName = (EditText) findViewById(R.id.username);
         mPassword = (EditText) findViewById(R.id.password);
+        mUserName.setText(CrtbAppConfig.getInstance().getUserName());
+        mPassword.setText(CrtbAppConfig.getInstance().getPassword());
         mOk = (Button) findViewById(R.id.ok);
         mOk.setOnClickListener(new View.OnClickListener() {
             @Override

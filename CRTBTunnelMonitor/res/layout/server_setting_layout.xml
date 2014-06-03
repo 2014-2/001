@@ -83,8 +83,7 @@
                 android:background="@null"
                 android:singleLine="true"
                 android:hint="@string/server_settings_username_hint"
-                android:layout_toRightOf="@id/username_title"
-                android:text="cl19h1" />
+                android:layout_toRightOf="@id/username_title" />
         </RelativeLayout>
 
         <ImageView
@@ -121,8 +120,7 @@
                 android:singleLine="true"
                 android:hint="@string/server_settings_password_hint"
                 android:layout_toRightOf="@id/password_title"
-                android:password="true"
-                android:text="123456" />
+                android:password="true" />
         </RelativeLayout>
     </LinearLayout>
 
