@@ -7,6 +7,7 @@ import org.zw.android.framework.db.ColumnBoolean;
 import org.zw.android.framework.db.ColumnDate;
 import org.zw.android.framework.db.ColumnInt;
 import org.zw.android.framework.db.ColumnString;
+import org.zw.android.framework.db.ColumnText;
 import org.zw.android.framework.db.Table;
 import org.zw.android.framework.db.core.ColumnPrimaryKey;
 import org.zw.android.framework.db.core.ColumnPrimaryKey.PrimaryKeyType;
@@ -30,7 +31,7 @@ public class AlertHandlingList implements Serializable {
 	@ColumnDate
 	private Date HandlingTime;			//处理时间
 	
-	@ColumnString(length=255)
+	@ColumnText
 	private String DuePerson;			//处理人
 	
 	/*
@@ -44,6 +45,12 @@ public class AlertHandlingList implements Serializable {
 	 */
 	@ColumnInt
 	private int HandlingInfo;			// 备注
+
+	@ColumnInt
+    private int UploadStatus; // 上传类型 , 0表示全部状态；1表示未上传，2表示不上传，3表示部分上传
+
+	@ColumnText
+    private String Info;
 
 	public int getID() {
 		return ID;
@@ -100,4 +107,21 @@ public class AlertHandlingList implements Serializable {
 	public void setHandlingInfo(int handlingInfo) {
 		HandlingInfo = handlingInfo;
 	}
+
+    public int getUploadStatus() {
+        return UploadStatus;
+    }
+
+    public void setUploadStatus(int uploadStatus) {
+        UploadStatus = uploadStatus;
+    }
+
+    public String getInfo() {
+        return Info;
+    }
+
+    public void setInfo(String info) {
+        Info = info;
+    }
+
 }

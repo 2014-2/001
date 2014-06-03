@@ -130,7 +130,15 @@ public class StationActivity extends BaseActivity {
                 case LeicaTPS:
                     tsCmdType = TSCommandType.LeicaGSI16;
                     break;
-
+                case South:
+                    tsCmdType = TSCommandType.SouthNTS01;
+                    break;
+                case Sokkia:
+                    tsCmdType = TSCommandType.SokkiaTS01;
+                    break;
+                case Topcon:
+                    tsCmdType = TSCommandType.TopconTS01;
+                    break;
                 default:
                     break;
             }

@@ -3,7 +3,6 @@ package com.crtb.tunnelmonitor.task;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.crtb.tunnelmonitor.dao.impl.v2.RawSheetIndexDao;
 import com.crtb.tunnelmonitor.dao.impl.v2.SubsidenceCrossSectionExIndexDao;
 import com.crtb.tunnelmonitor.dao.impl.v2.SubsidenceCrossSectionIndexDao;
 import com.crtb.tunnelmonitor.dao.impl.v2.SubsidenceTotalDataDao;
@@ -15,19 +14,14 @@ import com.crtb.tunnelmonitor.entity.SubsidenceTotalData;
 public class SubsidenceAsyncQueryTask extends AsyncQueryTask {
 	private static final String LOG_TAG = "SubsidenceAsyncQueryTask";
 	
-	public SubsidenceAsyncQueryTask(QueryLisenter lisenter) {
-		super(lisenter);
-	}
-
-	@Override
-	public List<RawSheetIndex> queryAllRawSheetIndex() {
-		return RawSheetIndexDao.defaultDao().queryAllSubsidenceSectionRawSheetIndex();
+	public SubsidenceAsyncQueryTask(List<RawSheetIndex> sheets, QueryLisenter lisenter) {
+		super(sheets, lisenter);
 	}
 
 	@Override
 	protected List<Section> queryAllSections(int sheetId, String sectionRowIds) {
 		List<Section> sections = new ArrayList<Section>();
-		List<SubsidenceCrossSectionIndex>  sectionIndexList = SubsidenceCrossSectionIndexDao.defaultDao().querySectionByIds(sectionRowIds);
+		List<SubsidenceCrossSectionIndex>  sectionIndexList = SubsidenceCrossSectionIndexDao.defaultDao().querySectionByGuids(sectionRowIds);
 		if (sectionIndexList != null && sectionIndexList.size() > 0) {
 			for(SubsidenceCrossSectionIndex sectionIndex : sectionIndexList) {
 				SubsidenceSection section = new SubsidenceSection();
@@ -69,10 +63,10 @@ public class SubsidenceAsyncQueryTask extends AsyncQueryTask {
 	        List<SubsidenceTotalData> pointList = pointDao.querySubsidenceTotalDatas(sheetId, sectionId);
 	        if (pointList != null && pointList.size() > 0) {
 	            for(SubsidenceTotalData point : pointList) {
-	                // 1表示未上传, 2表示已上传
-	                if ("1".equals(point.getInfo())) {
-	                	measurePoints.add(point);
-	                }
+	            	// 1表示未上传, 2表示已上传
+	            	if (1 == point.getUploadStatus()) {
+	            		measurePoints.add(point);
+	            	}
 	            }
 	        }
 	        return measurePoints;

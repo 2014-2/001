@@ -26,12 +26,15 @@ import com.crtb.tunnelmonitor.AppConfig;
 import com.crtb.tunnelmonitor.AppHandler;
 import com.crtb.tunnelmonitor.CommonObject;
 import com.crtb.tunnelmonitor.WorkFlowActivity;
+import com.crtb.tunnelmonitor.dao.impl.v2.AlertHandlingInfoDao;
+import com.crtb.tunnelmonitor.dao.impl.v2.AlertListDao;
 import com.crtb.tunnelmonitor.dao.impl.v2.RawSheetIndexDao;
 import com.crtb.tunnelmonitor.dao.impl.v2.SubsidenceCrossSectionIndexDao;
 import com.crtb.tunnelmonitor.dao.impl.v2.SubsidenceTotalDataDao;
 import com.crtb.tunnelmonitor.dao.impl.v2.SurveyerInformationDao;
 import com.crtb.tunnelmonitor.dao.impl.v2.TunnelCrossSectionIndexDao;
 import com.crtb.tunnelmonitor.dao.impl.v2.TunnelSettlementTotalDataDao;
+import com.crtb.tunnelmonitor.entity.AlertList;
 import com.crtb.tunnelmonitor.entity.RawSheetIndex;
 import com.crtb.tunnelmonitor.entity.SubsidenceCrossSectionIndex;
 import com.crtb.tunnelmonitor.entity.SubsidenceTotalData;
@@ -376,24 +379,37 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 					@Override
 					public void onClick(int id) {
 						
-						if(id == CrtbDialogDelete.BUTTON_ID_CONFIRM){
+                        if (id == CrtbDialogDelete.BUTTON_ID_CONFIRM) {
 
-							TunnelSettlementTotalDataDao dao 	= TunnelSettlementTotalDataDao.defaultDao() ;
-							TunnelSettlementTotalData obj 		= dao.queryTunnelTotalData(rawSheetBean.getID(),tunnelSection.getID(),type);
-							
-							if(obj != null){
-								
-								dao.reset(obj);
-								
-								//TODO 删除对应的超限信息
-								
-								holder.mPointX.setText("");
-								holder.mPointY.setText("");
-								holder.mPointZ.setText("");
-								holder.mPointTime.setText("");
-								holder.warringLayout.setVisibility(View.INVISIBLE);
-							}
-						}
+                            int sheetId = rawSheetBean.getID();
+                            int chainageid = tunnelSection.getID();
+                            TunnelSettlementTotalDataDao dao = TunnelSettlementTotalDataDao
+                                    .defaultDao();
+                            TunnelSettlementTotalData obj = dao.queryTunnelTotalData(sheetId,
+                                    chainageid, type);
+
+                            if (obj != null) {
+
+                                dao.reset(obj);
+
+                                List<AlertList> als = AlertListDao.defaultDao()
+                                        .queryByOrigionalDataId(String.valueOf(sheetId),
+                                                chainageid, String.valueOf(obj.getID()));
+                                if (als != null && als.size() > 0) {
+                                    for (AlertList al : als) {
+                                        int alId = al.getID();
+                                        AlertListDao.defaultDao().deleteById(alId);
+                                        AlertHandlingInfoDao.defaultDao().deleteByAlertId(alId);
+                                    }
+                                }
+
+                                holder.mPointX.setText("");
+                                holder.mPointY.setText("");
+                                holder.mPointZ.setText("");
+                                holder.mPointTime.setText("");
+                                holder.warringLayout.setVisibility(View.INVISIBLE);
+                            }
+                        }
 					}
 				}) ;
 				
@@ -543,6 +559,7 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 						obj.setSurveyorID(String.valueOf(SurveyerInformationDao.defaultDao().getRowIdByCertificateID(
 						        rawSheetBean.getCertificateID())));// 测量人员id
 						obj.setInfo("1");
+						obj.setUploadStatus(1); //表示该测点未上传
 
 						TunnelSettlementTotalDataDao dao 	= TunnelSettlementTotalDataDao.defaultDao() ;
 						
@@ -580,7 +597,7 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 							// tempTunnelData.add(obj);
 							
 							if(info.type.equals(AppConfig.POINT_A)){
-								doWarning(info.holder, AlertUtils.getPointSubsidenceExceedMsg(obj));
+								doWarning(info.holder, AlertUtils.getPointSubsidenceExceedMsg(obj, false));
 							} else {
 								
 								if(info.type.equals(AppConfig.POINT_S1_1)
@@ -592,7 +609,7 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 								}
 								
 								if(pS1 != null && pS2 != null){
-									doWarningLine(info.holder,pS1,pS2);
+									doWarningLine(info.holder, pS1, pS2, false);
 								}
 							}
 							
@@ -620,6 +637,7 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 						obj.setCoordinate(info.x + "," + info.y + "," + info.z);
 						obj.setSurveyTime(DateUtils.toDate(info.time, DateUtils.DATE_TIME_FORMAT));
 						obj.setInfo("1");
+						obj.setUploadStatus(1);//表示该测点未上传
 
 						int err = TunnelSettlementTotalDataDao.DB_EXECUTE_FAILED;
 						boolean update = false;
@@ -650,7 +668,7 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 							// 保存临时数据
 							// tempSubsidenceData.add(obj);
 							
-						    doWarning(info.holder, AlertUtils.getPointSubsidenceExceedMsg(obj));
+						    doWarning(info.holder, AlertUtils.getPointSubsidenceExceedMsg(obj, false));
 							showText((update ? "更新" : "保存") + "成功");
 							
 						} else {
@@ -665,9 +683,9 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 		};
 	}
 
-	private void doWarningLine(TestPointHolder holder, TunnelSettlementTotalData p1, TunnelSettlementTotalData p2){
+	private void doWarningLine(TestPointHolder holder, TunnelSettlementTotalData p1, TunnelSettlementTotalData p2, boolean readOnly){
 		
-	    String[] list = AlertUtils.getLineConvergenceExceedMsg(p1,p2);
+	    String[] list = AlertUtils.getLineConvergenceExceedMsg(p1,p2, readOnly);
 
 		doWarning(holder, list);
 
@@ -761,14 +779,25 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 						if(id == CrtbDialogDelete.BUTTON_ID_CONFIRM){
 							
 							SubsidenceTotalDataDao dao 	= SubsidenceTotalDataDao.defaultDao() ;
-							SubsidenceTotalData obj = dao.querySubsidenceTotalData(rawSheetBean.getID(),subsidenceSection.getID(),type);
+							int sheetId = rawSheetBean.getID();
+							int chainageid = subsidenceSection.getID();
+							SubsidenceTotalData obj = dao.querySubsidenceTotalData(sheetId, chainageid, type);
 
-							if(obj != null){
-								
+							if(obj != null) {
+
 								dao.reset(obj);
-								
-								//TODO 删除对应的超限信息
-								
+
+                                List<AlertList> als = AlertListDao.defaultDao()
+                                        .queryByOrigionalDataId(String.valueOf(sheetId),
+                                                chainageid, String.valueOf(obj.getID()));
+                                if (als != null && als.size() > 0) {
+                                    for (AlertList al : als) {
+                                        int alId = al.getID();
+                                        AlertListDao.defaultDao().deleteById(alId);
+                                        AlertHandlingInfoDao.defaultDao().deleteByAlertId(alId);
+                                    }
+                                }
+
 								holder.mPointX.setText("");
 								holder.mPointY.setText("");
 								holder.mPointZ.setText("");
@@ -854,7 +883,7 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 			
 			// A 报警
 			if(bean != null){
-				doWarning(holder, AlertUtils.getPointSubsidenceExceedMsg(bean));
+				doWarning(holder, AlertUtils.getPointSubsidenceExceedMsg(bean, true));
 			}
 			
 			// 全断面法(A,S1(1,2))
@@ -873,7 +902,7 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 				p2 = bean ;
 				
 				if(p1 != null && p2 != null){
-					doWarningLine(holder,p1,p2);
+					doWarningLine(holder, p1, p2, true);
 				}
 			} 
 			// 台阶法(A,S1(1,2),S2(1,2))
@@ -892,7 +921,7 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 				addTestPoint(holder.mItemView);
 				
 				if(p1 != null && p2 != null){
-					doWarningLine(holder,p1,p2);
+					doWarningLine(holder,p1,p2, true);
 				}
 				
 				p1	= p2 = null ;
@@ -910,7 +939,7 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 				addTestPoint(holder.mItemView);
 				
 				if(p1 != null && p2 != null){
-					doWarningLine(holder,p1,p2);
+					doWarningLine(holder,p1,p2, true);
 				}
 			} 
 			// 三台阶法(A,S1(1,2),S2(1,2),S3(1,2))
@@ -929,7 +958,7 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 				addTestPoint(holder.mItemView);
 				
 				if(p1 != null && p2 != null){
-					doWarningLine(holder,p1,p2);
+					doWarningLine(holder,p1,p2, true);
 				}
 				
 				p1	= p2 = null ;
@@ -947,7 +976,7 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 				addTestPoint(holder.mItemView);
 				
 				if(p1 != null && p2 != null){
-					doWarningLine(holder,p1,p2);
+					doWarningLine(holder,p1,p2, true);
 				}
 				
 				p1	= p2 = null ;
@@ -965,7 +994,7 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 				addTestPoint(holder.mItemView);
 				
 				if(p1 != null && p2 != null){
-					doWarningLine(holder,p1,p2);
+					doWarningLine(holder,p1,p2, true);
 				}
 			} 
 			// 双侧壁法(A,S1(1,2),S2(1,2),S3(1,2))
@@ -984,7 +1013,7 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 				addTestPoint(holder.mItemView);
 				
 				if(p1 != null && p2 != null){
-					doWarningLine(holder,p1,p2);
+					doWarningLine(holder,p1,p2, true);
 				}
 				
 				p1	= p2 = null ;
@@ -1002,7 +1031,7 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 				addTestPoint(holder.mItemView);
 				
 				if(p1 != null && p2 != null){
-					doWarningLine(holder,p1,p2);
+					doWarningLine(holder,p1,p2, true);
 				}
 				
 				p1	= p2 = null ;
@@ -1020,7 +1049,7 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 				addTestPoint(holder.mItemView);
 				
 				if(p1 != null && p2 != null){
-					doWarningLine(holder,p1,p2);
+					doWarningLine(holder,p1,p2, true);
 				}
 			}
 		} 

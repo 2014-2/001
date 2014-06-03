@@ -16,7 +16,7 @@ public class SubsidenceSection extends Section {
 	@Override
 	protected boolean isUpload() {
 		boolean result = false;
-		if ("2".equals(mSection.getInfo())) {
+		if ( 2 == mSection.getUploadStatus()) {
 			result = true;
 		}
 		return result;

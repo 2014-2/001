@@ -289,6 +289,7 @@ public class RecordNewActivity extends WorkFlowActivity implements OnPageChangeL
 				recordInfo.setTEMPERATURE(temp);
 				recordInfo.setFACEDESCRIPTION(descr);
 				recordInfo.setCrossSectionIDs(sections);
+				recordInfo.setUploadStatus(1); //表示记录单未上传
 				
 				RawSheetIndexDao.defaultDao().insert(recordInfo);
 			} else {

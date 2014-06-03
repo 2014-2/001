@@ -69,6 +69,7 @@ class GetSectInfoByCodeRpc extends AbstractRpc {
 			SoapObject data = (SoapObject) result.getProperty(0);
 			int i = 0;
 			TunnelCrossSectionIndex section = new TunnelCrossSectionIndex();
+			section.setUploadStatus(2);//表示该断面已上传
 			try {
 				String name = data.getPropertyAsString(i++);
 				section.setSectionName(name);
@@ -132,6 +133,7 @@ class GetSectInfoByCodeRpc extends AbstractRpc {
 				//TODO: 1表示未上传 2表示已上传
 				String remark = data.getPropertyAsString(i++);
 				section.setInfo("2");
+				section.setUploadStatus(2); //表示该断面已上传
 			} catch (NullPointerException e) {
 				// ignore
 			}

@@ -5,6 +5,7 @@ import java.util.List;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -19,9 +20,10 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.crtb.tunnelmonitor.activity.R;
-import com.crtb.tunnelmonitor.task.AsyncQueryTask.QueryLisenter;
+import com.crtb.tunnelmonitor.dao.impl.v2.RawSheetIndexDao;
+import com.crtb.tunnelmonitor.entity.RawSheetIndex;
 import com.crtb.tunnelmonitor.task.SheetRecord;
-import com.crtb.tunnelmonitor.task.SubsidenceAsyncQueryTask;
+import com.crtb.tunnelmonitor.utils.CrtbUtils;
 
 @SuppressLint("ValidFragment")
 public class SubsidenceSectionSheetFragment extends Fragment {
@@ -67,62 +69,34 @@ public class SubsidenceSectionSheetFragment extends Fragment {
         loadData();
     }
 
-//	private void loadData() {
-//		SubsidenceDataManager subsidenceDataManager = new SubsidenceDataManager();
-//		subsidenceDataManager
-//				.loadData(new SubsidenceDataManager.DataLoadListener() {
-//					@Override
-//					public void done(List<UploadSheetData> uploadDataList) {
-//						if (uploadDataList != null && uploadDataList.size() > 0) {
-//							List<RawSheetData> sheetDataList = new ArrayList<RawSheetData>();
-//							for (UploadSheetData sheetData : uploadDataList) {
-//								sheetDataList.add(new RawSheetData(sheetData));
-//							}
-//							mAdapter.setSheetList(sheetDataList);
-//						}
-//					}
-//				});
-//	}
-    
     private void loadData() {
-    	SubsidenceAsyncQueryTask queryTask  = new SubsidenceAsyncQueryTask(new QueryLisenter() {
-			@Override
-			public void done(List<SheetRecord> records) {
-				mAdapter.setData(records);
-			}
-		});
-    	queryTask.execute();
+    	new LoadTask().execute();
     }
 
     public void refreshUI() {
-    	mHandler.postDelayed(new Runnable() {
-			@Override
-			public void run() {
-				 loadData();
-			}
-		}, 1000);
+    	loadData();
     }
 
-    public List<SheetRecord> getUploadData() {
+    public List<RawSheetIndex> getUploadData() {
         return mAdapter.getUploadData();
     }
 
     class SheetAdapter extends BaseAdapter {
-        private List<SheetRecord> mSheetRecords;
+        private List<RawSheetIndex> mSheetRecords;
 
         SheetAdapter() {
-        	mSheetRecords = new ArrayList<SheetRecord>();
+        	mSheetRecords = new ArrayList<RawSheetIndex>();
         }
 
-        public void setData(List<SheetRecord> sheetRecords) {
+        public void setData(List<RawSheetIndex> sheetRecords) {
         	mSheetRecords = sheetRecords;
             notifyDataSetChanged();
         }
 
-        public List<SheetRecord> getUploadData() {
-            List<SheetRecord> uploadDataList = new ArrayList<SheetRecord>();
+        public List<RawSheetIndex> getUploadData() {
+            List<RawSheetIndex> uploadDataList = new ArrayList<RawSheetIndex>();
             if (mSheetRecords != null && mSheetRecords.size() > 0) {
-                for(SheetRecord record : mSheetRecords) {
+                for(RawSheetIndex record : mSheetRecords) {
                     if (record.isChecked()) {
                         uploadDataList.add(record);
                     }
@@ -147,14 +121,14 @@ public class SubsidenceSectionSheetFragment extends Fragment {
         }
 
         public void revertCheck(int position) {
-        	SheetRecord sheetData = mSheetRecords.get(position);
+        	RawSheetIndex sheetData = mSheetRecords.get(position);
             sheetData.setChecked(!sheetData.isChecked());
             notifyDataSetChanged();
         }
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-        	SheetRecord record = mSheetRecords.get(position);
+        	RawSheetIndex record = mSheetRecords.get(position);
             if (convertView == null) {
                 convertView = LayoutInflater.from(getActivity()).inflate(R.layout.layout_section_item, null);
                 RawSheetDataHolder holder = new RawSheetDataHolder();
@@ -167,14 +141,23 @@ public class SubsidenceSectionSheetFragment extends Fragment {
             return convertView;
         }
 
-        private void bindView(SheetRecord data, View convertView) {
+        private void bindView(RawSheetIndex data, View convertView) {
             RawSheetDataHolder holder = (RawSheetDataHolder)convertView.getTag();
-            holder.tvCreatedTime.setText(data.getCreatedTime());
-            if (data.isUploaded()) {
-                holder.tvIsUploaded.setText("已上传");
-            } else {
-                holder.tvIsUploaded.setText("未上传");
-            }
+            holder.tvCreatedTime.setText(CrtbUtils.formatDate(data.getCreateTime()));
+            switch (data.getUploadStatus()) {
+			case 1:
+				holder.tvIsUploaded.setText("未上传");
+				break;
+			case 2:
+				holder.tvIsUploaded.setText("已上传");
+				break;
+			case 3:
+				holder.tvIsUploaded.setText("部分上传");
+				break;
+			default:
+				holder.tvIsUploaded.setText("异常");
+				break;
+			}
             if (data.isChecked()) {
                 holder.ivIsChecked.setImageResource(R.drawable.yes);
             } else {
@@ -189,32 +172,16 @@ public class SubsidenceSectionSheetFragment extends Fragment {
         ImageView ivIsChecked;
     }
 
-//    public class RawSheetData {
-//        private UploadSheetData mUploadData;
-//        private boolean mIsChecked;
-//
-//        public RawSheetData(UploadSheetData uploadData) {
-//            mUploadData = uploadData;
-//        }
-//
-//        public UploadSheetData getUploadData() {
-//            return mUploadData;
-//        }
-//
-//        public String getCreatedTime() {
-//            return CrtbUtils.formatDate(mUploadData.getRawSheet().getCreateTime());
-//        }
-//
-//        public boolean isUploaded() {
-//            return !mUploadData.needUpload();
-//        }
-//
-//        public void setChecked(boolean checked) {
-//            mIsChecked = checked;
-//        }
-//
-//        public boolean isChecked() {
-//            return mIsChecked;
-//        }
-//    }
+    private class LoadTask extends AsyncTask<Void, Void, List<RawSheetIndex>> {
+
+		@Override
+		protected List<RawSheetIndex> doInBackground(Void... params) {
+			return RawSheetIndexDao.defaultDao().queryTunnelSectionRawSheetIndex();
+		}
+		
+		@Override
+		protected void onPostExecute(List<RawSheetIndex> result) {
+			mAdapter.setData(result);
+		}
+    }
 }

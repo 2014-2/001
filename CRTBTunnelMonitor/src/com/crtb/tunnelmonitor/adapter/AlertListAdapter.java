@@ -13,6 +13,8 @@ import android.widget.TextView;
 
 import com.crtb.tunnelmonitor.activity.R;
 import com.crtb.tunnelmonitor.entity.AlertInfo;
+import com.crtb.tunnelmonitor.utils.AlertUtils;
+import com.crtb.tunnelmonitor.utils.CrtbUtils;
 
 public class AlertListAdapter extends BaseAdapter {
     private List<AlertInfo> list;
@@ -67,27 +69,31 @@ public class AlertListAdapter extends BaseAdapter {
     public View getView(int pos, View view, ViewGroup arg2) {
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         view = inflater.inflate(R.layout.list, null);
+        AlertInfo ai = list.get(pos);
         // if(list.get(pos).isState1()){
         TextView numView = (TextView) view.findViewById(R.id.list_num);
         numView.setText(String.valueOf(pos + 1));
         TextView data = (TextView) view.findViewById(R.id.date);
-        data.setText(list.get(pos).getDate());
+        data.setText(ai.getDate());
         TextView xinghao = (TextView) view.findViewById(R.id.xinghao);
-        xinghao.setText(list.get(pos).getXinghao());
+        xinghao.setText(ai.getXinghao());
         TextView dianhao = (TextView) view.findViewById(R.id.dianhao);
-        dianhao.setText("点号：" + list.get(pos).getPntType());
+        dianhao.setText("点号：" + ai.getPntType());
         TextView chushi = (TextView) view.findViewById(R.id.chulifangshi);
-        String handleWay = list.get(pos).getChuliFangshi();
+        String handleWay = ai.getChuliFangshi();
         if (handleWay == null || handleWay.equalsIgnoreCase("null")) {
             handleWay = "未作任何处理" ;//TODO: 默认
         }
         chushi.setText("处理方式：" + handleWay);
         TextView state = (TextView) view.findViewById(R.id.state);
-        state.setText("状态：" + list.get(pos).getAlertStatusMsg());
+        state.setText("状态：" + ai.getAlertStatusMsg());
         TextView message = (TextView) view.findViewById(R.id.message);
-        message.setText(list.get(pos).getUTypeMsg());
+        message.setText(ai.getUTypeMsg());
+        TextView valueView = (TextView)view.findViewById(R.id.uvalue);
+        valueView.setText("超限值: " + String.format("%1$.1f", CrtbUtils.formatDouble(ai.getUValue(), 1))
+                + AlertUtils.getAlertValueUnit(ai.getUType()));
         TextView edtstate = (TextView) view.findViewById(R.id.edtstate);
-        edtstate.setText(list.get(pos).getHandling());
+        edtstate.setText(ai.getHandling());
 
         return view;
         // }else{

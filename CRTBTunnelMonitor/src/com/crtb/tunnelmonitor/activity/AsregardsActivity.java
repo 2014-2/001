@@ -6,8 +6,10 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.crtb.tunnelmonitor.AppCRTBApplication;
+import com.crtb.tunnelmonitor.entity.CrtbUser;
 /**
  * 关于
  *@author edison.xiao
@@ -49,6 +51,12 @@ public class AsregardsActivity extends Activity implements OnClickListener{
 
     @Override
     public void onClick(View view) {
+        int userType = AppCRTBApplication.getInstance().getCurUserType();
+        if (userType == CrtbUser.LICENSE_TYPE_DEFAULT && view.getId() != R.id.register) {
+            Toast.makeText(AsregardsActivity.this, "该功能对未注册用户不可用！", Toast.LENGTH_LONG).show();
+            return;
+        }
+
         switch(view.getId()){
             case R.id.update:
                 JumpUpdate();

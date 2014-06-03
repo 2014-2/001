@@ -130,7 +130,12 @@ public class WarningDataManager {
     	WarningUploadParameter parameter = new WarningUploadParameter();
     	parameter.setSectionCode(warningData.getSectionCode());
     	parameter.setPointCode(warningData.getPointCode());
-    	parameter.setWarningLevel(alertInfo.getAlertLevel());
+		int level = alertInfo.getAlertLevel();
+		if ((level == 2) || (level == 3)) {
+			parameter.setWarningLevel(1);
+		} else if (level == 1) {
+			parameter.setWarningLevel(2);
+		}
     	parameter.setTransformSpeed((float)alertInfo.getUValue());
     	String originalID = alertInfo.getOriginalDataID();
     	List<Integer> ids = new ArrayList<Integer>();
