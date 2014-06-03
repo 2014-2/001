@@ -12,6 +12,8 @@ import org.zw.android.framework.db.Table;
 import org.zw.android.framework.db.core.ColumnPrimaryKey;
 import org.zw.android.framework.db.core.ColumnPrimaryKey.PrimaryKeyType;
 
+import com.crtb.tunnelmonitor.utils.CrtbUtils;
+
 /**
  * 预警内容实体
  */
@@ -58,7 +60,11 @@ public class AlertList implements Serializable {
     @ColumnInt
     private int UploadStatus; // 上传类型 , 0表示全部状态；1表示未上传，2表示不上传，3表示部分上传
 
-	public int getID() {
+	public AlertList() {
+	    setGUID(CrtbUtils.generatorGUID());
+    }
+
+    public int getID() {
 		return ID;
 	}
 

@@ -38,26 +38,26 @@ public class AlertHandlingInfoDao extends AbstractDao<AlertHandlingList> {
 
     public List<AlertHandlingList> queryByAlertIdOrderByHandlingTimeDesc(int alertId) {
         final IAccessDatabase db = getCurrentDb();
+        String alertGuid = AlertListDao.defaultDao().getGuidById(alertId);
 
-        if (db == null) {
+        if (alertGuid == null || db == null) {
             return null;
         }
 
+
         String sql = "SELECT * from AlertHandlingList"
                 + " WHERE"
-                + " AlertID=?"
+                + " AlertID = \'" + alertGuid + "\'"
                 + " ORDER BY HandlingTime DESC, ID DESC"
                 ;
 
-        String[] args = new String[] {
-                String.valueOf(alertId)
-        };
-
-        return db.queryObjects(sql, args, AlertHandlingList.class);
+        return db.queryObjects(sql, null, AlertHandlingList.class);
     }
 
     public AlertHandlingList queryOne(int alertId,
             int alertStatus) {
+        String alertGuid = AlertListDao.defaultDao().getGuidById(alertId);
+
         final IAccessDatabase db = getCurrentDb();
 
         if (db == null) {
@@ -65,11 +65,11 @@ public class AlertHandlingInfoDao extends AbstractDao<AlertHandlingList> {
         }
 
         String sql = "SELECT * from AlertHandlingList WHERE"
-                + " AlertID=?"
+                + " AlertID = \'" + alertGuid + "\'"
                 + " AND AlertStatus=?";
 
         String[] args = new String[] {
-                String.valueOf(alertId), String.valueOf(alertStatus)
+              String.valueOf(alertStatus)
         };
 
         return db.queryObject(sql, args, AlertHandlingList.class);
@@ -79,12 +79,13 @@ public class AlertHandlingInfoDao extends AbstractDao<AlertHandlingList> {
             int alertStatus, int handlingInfo) {
         int id = -1;
         if (queryOne(alertId, alertStatus) == null) {
-            id = insertItem(alertId, handling, handlingTime, duePerson, alertStatus, handlingInfo);
+            String guid = AlertListDao.defaultDao().getGuidById(alertId);
+            id = insertItem(guid, handling, handlingTime, duePerson, alertStatus, handlingInfo);
         }
         return id;
     }
 
-    public int insertItem(int alertId, String handling, Date handlingTime, String duePerson,
+    public int insertItem(String alertId, String handling, Date handlingTime, String duePerson,
             int alertStatus, int handlingInfo) {
         Log.d(TAG, "AlertHandlingInfoDao insertItem");
         final IAccessDatabase mDatabase = getCurrentDb();
@@ -117,12 +118,12 @@ public class AlertHandlingInfoDao extends AbstractDao<AlertHandlingList> {
     }
 
     public void deleteByAlertId(int alertId) {
+        String alertGuid = AlertListDao.defaultDao().getGuidById(alertId);
         IAccessDatabase db = getCurrentDb();
-        if (db != null) {
+        if (alertGuid != null && db != null) {
             String sql = "DELETE FROM AlertHandlingList"
-                    + " WHERE AlertID=?";
-            String[] args = new String[]{String.valueOf(alertId)};
-            db.execute(sql, args);
+                    + " WHERE AlertID = \'" + alertGuid + "\'";
+            db.execute(sql, null);
         }
     }
 

@@ -231,7 +231,8 @@ public class AlertUtils {
                                 if (curHandlingAlertId >= 0 && alertId == curHandlingAlertId) {
                                     handlingRemark = handling;
                                 }
-                                AlertHandlingInfoDao.defaultDao().insertItem(alertId, handlingRemark,
+                                String guid = AlertListDao.defaultDao().getGuidById(alertId);
+                                AlertHandlingInfoDao.defaultDao().insertItem(guid, handlingRemark,
                                         new Date(System.currentTimeMillis()), String.valueOf(chainageId) + pntType, ALERT_STATUS_OPEN/*报警*/, 1/*true*/);
 //                            }
                         }
@@ -312,7 +313,8 @@ public class AlertUtils {
                                 if (curHandlingAlertId >= 0 && alertId == curHandlingAlertId) {
                                     handlingRemark = handling;
                                 }
-                                AlertHandlingInfoDao.defaultDao().insertItem(alertId, handlingRemark,
+                                String guid = AlertListDao.defaultDao().getGuidById(alertId);
+                                AlertHandlingInfoDao.defaultDao().insertItem(guid, handlingRemark,
                                         new Date(System.currentTimeMillis()), String.valueOf(chainageId) + pntType, ALERT_STATUS_OPEN/*报警*/, 1/*true*/);
 //                            }
                         }
@@ -417,7 +419,8 @@ public class AlertUtils {
                             if (curHandlingAlertId >= 0 && alertId == curHandlingAlertId) {
                                 handlingRemark = handling;
                             }
-                            AlertHandlingInfoDao.defaultDao().insertItem(alertId, handlingRemark,
+                            String guid = AlertListDao.defaultDao().getGuidById(alertId);
+                            AlertHandlingInfoDao.defaultDao().insertItem(guid, handlingRemark,
                                     new Date(System.currentTimeMillis()), String.valueOf(chainageId) + s_1.getPntType(), ALERT_STATUS_OPEN/*报警*/, 1/*true*/);
 //                        }
                     }
@@ -487,7 +490,9 @@ public class AlertUtils {
                             if (curHandlingAlertId >= 0 && alertId == curHandlingAlertId) {
                                 handlingRemark = handling;
                             }
-                            AlertHandlingInfoDao.defaultDao().insertItem(alertId, handlingRemark,
+
+                            String guid = AlertListDao.defaultDao().getGuidById(alertId);
+                            AlertHandlingInfoDao.defaultDao().insertItem(guid, handlingRemark,
                                     new Date(System.currentTimeMillis()), String.valueOf(chainageId) + s_1.getPntType(), ALERT_STATUS_OPEN/*报警*/, 1/*true*/);
 //                        }
                     }
@@ -834,30 +839,44 @@ public class AlertUtils {
     }
 
     public static int getAlertCountOfState(int state) {
-
-        Log.d(TAG, "getAlertCountOfState");
-
-        String sql = "SELECT * FROM AlertList INNER JOIN AlertHandlingList"
-                + " ON AlertList.ID=AlertHandlingList.AlertID"
-                + " WHERE AlertStatus=?";
-        String[] args = new String[] { String.valueOf(state) };
         int count = 0;
-        Cursor c = null;
-        try {
-            c = AlertListDao.defaultDao().executeQuerySQL(sql, args);
-            if (c != null) {
-                count = c.getCount();
-            }
-        } catch (SQLiteException e) {
-            Log.e(TAG, "getAlertCountOfState", e);
-        } finally {
-            if (c != null) {
-                c.close();
+        List<AlertInfo> ls = getAlertInfoList();
+        if (ls != null) {
+            for (AlertInfo ai : ls) {
+                if (ai.getAlertStatus() == state) {
+                    count++;
+                }
             }
         }
-        Log.d(TAG, "getAlertCountOfState, return count: " + count);
+
         return count;
     }
+
+//    public static int getAlertCountOfState(int state) {
+//
+//        Log.d(TAG, "getAlertCountOfState");
+//
+//        String sql = "SELECT * FROM AlertList INNER JOIN AlertHandlingList"
+//                + " ON AlertList.ID=AlertHandlingList.AlertID"
+//                + " WHERE AlertStatus=?";
+//        String[] args = new String[] { String.valueOf(state) };
+//        int count = 0;
+//        Cursor c = null;
+//        try {
+//            c = AlertListDao.defaultDao().executeQuerySQL(sql, args);
+//            if (c != null) {
+//                count = c.getCount();
+//            }
+//        } catch (SQLiteException e) {
+//            Log.e(TAG, "getAlertCountOfState", e);
+//        } finally {
+//            if (c != null) {
+//                c.close();
+//            }
+//        }
+//        Log.d(TAG, "getAlertCountOfState, return count: " + count);
+//        return count;
+//    }
 
 // DO NOT USE, THIS IS NOT RIGHT
 //    public static boolean checkExceeding(double uValue, int uType) {
@@ -1164,8 +1183,9 @@ public class AlertUtils {
                                 if (i < size - 1) {
                                     AlertListDao.defaultDao().delete(alert);
                                 } else if (curAlertId != alertId) {//alertId 在handleAlert中已处理
+                                    String guid = AlertListDao.defaultDao().getGuidById(curAlertId);
                                     AlertHandlingInfoDao.defaultDao()
-                                            .insertItem(curAlertId, handling, handlingTime,
+                                            .insertItem(guid, handling, handlingTime,
                                                     duePerson, alertStatus, 1/* true */);
                                 }
                             }

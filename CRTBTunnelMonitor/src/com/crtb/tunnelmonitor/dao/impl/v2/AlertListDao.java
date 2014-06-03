@@ -11,6 +11,7 @@ import android.util.Log;
 import com.crtb.tunnelmonitor.entity.AlertList;
 import com.crtb.tunnelmonitor.entity.SubsidenceTotalData;
 import com.crtb.tunnelmonitor.entity.TunnelSettlementTotalData;
+import com.crtb.tunnelmonitor.utils.CrtbUtils;
 
 public class AlertListDao extends AbstractDao<AlertList> {
 
@@ -64,6 +65,11 @@ public class AlertListDao extends AbstractDao<AlertList> {
         String[] args = new String[] { String.valueOf(id) };
 
         return mDatabase.queryObject(sql, args, AlertList.class);
+    }
+
+    public String getGuidById(int id) {
+        AlertList al = queryOneById(id);
+        return al != null ? al.getGUID() : null;
     }
 
     public void deleteById(int id) {

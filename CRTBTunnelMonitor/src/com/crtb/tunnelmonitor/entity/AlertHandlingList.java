@@ -17,20 +17,20 @@ import org.zw.android.framework.db.core.ColumnPrimaryKey.PrimaryKeyType;
  */
 @Table(TableName="AlertHandlingList")
 public class AlertHandlingList implements Serializable {
-	
+
 	@ColumnPrimaryKey(Type = PrimaryKeyType.AUTO)
 	@ColumnInt
 	private int ID;						//id
-	
-	@ColumnInt
-	private int AlertID;				//预警id
-	
+
+	@ColumnString(length=255)
+	private String AlertID;				//预警id
+
 	@ColumnString(length=255)
 	private String Handling;				//处理内容
-	
+
 	@ColumnDate
 	private Date HandlingTime;			//处理时间
-	
+
 	@ColumnText
 	private String DuePerson;			//处理人
 	
@@ -60,11 +60,11 @@ public class AlertHandlingList implements Serializable {
 		ID = iD;
 	}
 
-	public int getAlertID() {
+	public String getAlertID() {
 		return AlertID;
 	}
 
-	public void setAlertID(int alertID) {
+	public void setAlertID(String alertID) {
 		AlertID = alertID;
 	}
 
