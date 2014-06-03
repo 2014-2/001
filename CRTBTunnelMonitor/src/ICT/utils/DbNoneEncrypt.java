@@ -7,8 +7,6 @@ import org.zw.android.framework.util.StringUtils;
 
 import android.util.Log;
 
-import com.crtb.tunnelmonitor.AppLogger;
-
 /**
  * 标准文件导入/导出(文件复制)
  * 
@@ -69,9 +67,6 @@ public final class DbNoneEncrypt implements IDbEncrypt {
 			int read = -1 ;
 			
 			while((read = in.read(buffer)) > 0){
-				
-				AppLogger.d(TAG, "zhouwei : 导入数据库..."); 
-				
 				out.write(buffer, 0, read);
 				out.flush() ;
 			}
