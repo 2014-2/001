@@ -5,7 +5,6 @@ import java.util.Date;
 
 import org.zw.android.framework.db.ColumnDate;
 import org.zw.android.framework.db.ColumnDouble;
-import org.zw.android.framework.db.ColumnFloat;
 import org.zw.android.framework.db.ColumnInt;
 import org.zw.android.framework.db.ColumnString;
 import org.zw.android.framework.db.ColumnText;
@@ -22,6 +21,9 @@ public class AlertList implements Serializable {
 	@ColumnPrimaryKey(Type = PrimaryKeyType.AUTO)
 	@ColumnInt
 	private int ID; 						// id
+
+    @ColumnText
+    private String GUID ;                   // 唯一标示
 
 	@ColumnString(length = 255)
 	private String SheetID; 					// 记录单id
@@ -64,9 +66,17 @@ public class AlertList implements Serializable {
 		ID = iD;
 	}
 
-	public String getSheetID() {
-		return SheetID;
-	}
+    public String getGUID() {
+        return GUID;
+    }
+
+    public void setGUID(String gUID) {
+        GUID = gUID;
+    }
+
+    public String getSheetID() {
+        return SheetID;
+    }
 
 	public void setSheetID(String sheetID) {
 		SheetID = sheetID;
