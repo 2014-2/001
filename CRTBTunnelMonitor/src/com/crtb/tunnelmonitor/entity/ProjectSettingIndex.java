@@ -31,11 +31,16 @@ public class ProjectSettingIndex implements Serializable {
 	@ColumnInt
 	private int ProjectID;
 
-	@ColumnDate
-	private Date YMDFormat;
+	@ColumnInt
+	private int YMDFormat;		// 0（YYYY-MM-DD）；                     
+								// 1（YYYY-M-D）；                
+								// 2 (YY-MM-DD）；                
+								// 3 (YY-M-D)
 
-	@ColumnDate
-	private Date HMSFormat;
+	@ColumnInt
+	private int HMSFormat;		// 0（HH:MM:SS）；                     
+								// 1（HH:MM）；                
+								// 2（HH）；
 
 	@ColumnString(length = 255)
 	private String ChainagePrefix;
@@ -58,6 +63,22 @@ public class ProjectSettingIndex implements Serializable {
 		return ProjectName;
 	}
 
+	public int getYMDFormat() {
+		return YMDFormat;
+	}
+
+	public void setYMDFormat(int yMDFormat) {
+		YMDFormat = yMDFormat;
+	}
+
+	public int getHMSFormat() {
+		return HMSFormat;
+	}
+
+	public void setHMSFormat(int hMSFormat) {
+		HMSFormat = hMSFormat;
+	}
+
 	public void setProjectName(String projectName) {
 		ProjectName = projectName;
 	}
@@ -68,22 +89,6 @@ public class ProjectSettingIndex implements Serializable {
 
 	public void setProjectID(int projectID) {
 		ProjectID = projectID;
-	}
-
-	public Date getYMDFormat() {
-		return YMDFormat;
-	}
-
-	public void setYMDFormat(Date yMDFormat) {
-		YMDFormat = yMDFormat;
-	}
-
-	public Date getHMSFormat() {
-		return HMSFormat;
-	}
-
-	public void setHMSFormat(Date hMSFormat) {
-		HMSFormat = hMSFormat;
 	}
 
 	public String getChainagePrefix() {

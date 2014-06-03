@@ -332,13 +332,13 @@ public class SectionNewSubsidenceActivity extends WorkFlowActivity implements On
 				return;
 			}
 			
-			// 是否存在相同里程的断面
-			if(dao.querySectionIndexByChainage(cv) != null){
-				showText("已经存在相同里程的断面");
-				return ;
-			}
-			
 			if(subsidence == null){
+				
+				// 是否存在相同里程的断面
+				if(dao.querySectionIndexByChainage(cv) != null){
+					showText("已经存在相同里程的断面");
+					return ;
+				}
 				
 				subsidence = new SubsidenceCrossSectionIndex() ;
 				

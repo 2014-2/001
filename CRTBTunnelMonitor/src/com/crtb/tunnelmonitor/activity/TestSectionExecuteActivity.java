@@ -35,6 +35,7 @@ import com.crtb.tunnelmonitor.dao.impl.v2.SurveyerInformationDao;
 import com.crtb.tunnelmonitor.dao.impl.v2.TunnelCrossSectionIndexDao;
 import com.crtb.tunnelmonitor.dao.impl.v2.TunnelSettlementTotalDataDao;
 import com.crtb.tunnelmonitor.entity.AlertList;
+import com.crtb.tunnelmonitor.entity.ExcavateMethodEnum;
 import com.crtb.tunnelmonitor.entity.RawSheetIndex;
 import com.crtb.tunnelmonitor.entity.SubsidenceCrossSectionIndex;
 import com.crtb.tunnelmonitor.entity.SubsidenceTotalData;
@@ -863,14 +864,13 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 		if(sectionType == RawSheetIndex.CROSS_SECTION_TYPE_TUNNEL){
 			
 			TunnelSettlementTotalDataDao dao = TunnelSettlementTotalDataDao.defaultDao();
-			String method 	= tunnelSection.getExcavateMethod() ;
-			int type 		= CrtbUtils.getExcavateMethod(CrtbUtils.getExcavateMethodByStr(method));
+			int type 		= tunnelSection.getExcavateMethod() ;
 			pS1				= null ;
 			pS2				= null ;
 			TestPointHolder holder = null ;
 			
-			if(type == -1){
-				showText("无效开挖类型: " + method);
+			if(type < 0){
+				showText("无效开挖类型: " + type);
 				return ;
 			}
 			
@@ -891,7 +891,7 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 			}
 			
 			// 全断面法(A,S1(1,2))
-			if(type == 0){
+			if(type == ExcavateMethodEnum.QD.getCode()){
 				
 				// S1-1
 				bean 	= dao.queryTunnelTotalData(rawSheetBean.getID(),tunnelSection.getID(), AppConfig.POINT_S1_1);
@@ -910,7 +910,7 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 				}
 			} 
 			// 台阶法(A,S1(1,2),S2(1,2))
-			else if(type == 1){
+			else if(type == ExcavateMethodEnum.DT.getCode()){
 				
 				// S1-1
 				bean 	= dao.queryTunnelTotalData(rawSheetBean.getID(),tunnelSection.getID(), AppConfig.POINT_S1_1);
@@ -947,7 +947,7 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 				}
 			} 
 			// 三台阶法(A,S1(1,2),S2(1,2),S3(1,2))
-			else if(type == 2){
+			else if(type == ExcavateMethodEnum.ST.getCode()){
 				
 				// S1-1
 				bean 	= dao.queryTunnelTotalData(rawSheetBean.getID(),tunnelSection.getID(), AppConfig.POINT_S1_1);
@@ -1002,7 +1002,7 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 				}
 			} 
 			// 双侧壁法(A,S1(1,2),S2(1,2),S3(1,2))
-			else if(type == 3){
+			else if(type == ExcavateMethodEnum.SC.getCode()){
 				
 				// S1-1
 				bean 	= dao.queryTunnelTotalData(rawSheetBean.getID(),tunnelSection.getID(), AppConfig.POINT_S1_1);

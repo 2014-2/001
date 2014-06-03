@@ -17,6 +17,7 @@ import android.util.Log;
 import com.crtb.tunnelmonitor.AppCRTBApplication;
 import com.crtb.tunnelmonitor.dao.impl.v2.ProjectIndexDao;
 import com.crtb.tunnelmonitor.entity.CrtbUser;
+import com.crtb.tunnelmonitor.entity.ExcavateMethodEnum;
 import com.crtb.tunnelmonitor.entity.ProjectIndex;
 import com.crtb.tunnelmonitor.entity.SubsidenceCrossSectionIndex;
 import com.crtb.tunnelmonitor.entity.SurveyerInformation;
@@ -185,7 +186,7 @@ public final class CrtbUtils {
         String sectionCode = CrtbWebService.getInstance().getSiteCode()
                 + String.format("%04d", sectionSequence);
         outParamter.setSectioCode(sectionCode);
-        String digMethod = getExcavateMethodCode(section.getExcavateMethod());
+        String digMethod = getExcavateMethodCode(ExcavateMethodEnum.parser(section.getExcavateMethod()).getName());
         outParamter.setDigMethod(digMethod);
         String pointList = "";
         if ("QD".equals(digMethod)) {// 全断面法

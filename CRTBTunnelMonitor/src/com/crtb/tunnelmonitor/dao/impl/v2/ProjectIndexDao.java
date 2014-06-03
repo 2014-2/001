@@ -337,8 +337,8 @@ public final class ProjectIndexDao extends AbstractDao<ProjectIndex> {
 			setting.setChainagePrefix(bean.getChainagePrefix());
 			setting.setInfo(bean.getInfo());
 			setting.setProjectID(bean.getId());
-			setting.setYMDFormat(DateUtils.toDate(DateUtils.toDateString(bean.getCreateTime()), DateUtils.DATE_FORMAT));
-			setting.setHMSFormat(DateUtils.toDate(DateUtils.toDateString(bean.getCreateTime()), DateUtils.DATE_FORMAT));
+			setting.setYMDFormat(0);
+			setting.setHMSFormat(0);
 			db.saveObject(setting);
 			
 			ProjectIndex obj = db.queryObject("select * from ProjectIndex where ProjectName = ? ", new String[]{dbName}, ProjectIndex.class) ;

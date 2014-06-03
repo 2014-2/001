@@ -25,6 +25,7 @@ import com.crtb.tunnelmonitor.entity.SubsidenceCrossSectionIndex;
 import com.crtb.tunnelmonitor.entity.SubsidenceSettlementARCHING;
 import com.crtb.tunnelmonitor.entity.SubsidenceTotalData;
 import com.crtb.tunnelmonitor.entity.SurveyerInformation;
+import com.crtb.tunnelmonitor.entity.TotalStationIndex;
 import com.crtb.tunnelmonitor.entity.TunnelCrossSectionExIndex;
 import com.crtb.tunnelmonitor.entity.TunnelCrossSectionIndex;
 import com.crtb.tunnelmonitor.entity.TunnelSettlementTotalData;
@@ -77,6 +78,7 @@ public abstract class AbstractDao<T> {
 		db.createTable(ControlPointsIndex.class);
 		db.createTable(SubsidenceCrossSectionExIndex.class);
 		
+		db.createTable(TotalStationIndex.class);
 		db.createTable(AlertList.class);
 		db.createTable(AlertHandlingList.class);
 		db.createTable(CrownSettlementARCHING.class);

@@ -39,6 +39,7 @@ import com.crtb.tunnelmonitor.CommonObject;
 import com.crtb.tunnelmonitor.WorkFlowActivity;
 import com.crtb.tunnelmonitor.dao.impl.v2.ProjectIndexDao;
 import com.crtb.tunnelmonitor.dao.impl.v2.TunnelCrossSectionIndexDao;
+import com.crtb.tunnelmonitor.entity.ExcavateMethodEnum;
 import com.crtb.tunnelmonitor.entity.ProjectIndex;
 import com.crtb.tunnelmonitor.entity.TunnelCrossSectionIndex;
 import com.crtb.tunnelmonitor.utils.CrtbUtils;
@@ -307,7 +308,7 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 			section_new_et_Chainage.setEnabled(false);
 			section_new_et_width.setEnabled(false);
 			
-			section_new_sp.setSelection(CrtbUtils.getExcavateMethod(sectionInfo.getExcavateMethod()));
+			section_new_sp.setSelection(CrtbUtils.getExcavateMethod(ExcavateMethodEnum.parser(sectionInfo.getExcavateMethod()).getName()));
 			
 			if(sectionInfo.getSurveyPntName() != null){
 				
@@ -494,13 +495,13 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 				return ;
 			}
 			
-			// 是否存在相同里程的断面
-			if(dao.querySectionIndexByChainage(cv) != null){
-				showText("已经存在相同里程的断面");
-				return ;
-			}
-			
 			if(sectionInfo == null){
+				
+				// 是否存在相同里程的断面
+				if(dao.querySectionIndexByChainage(cv) != null){
+					showText("已经存在相同里程的断面");
+					return ;
+				}
 				
 				sectionInfo = new TunnelCrossSectionIndex() ;
 				
@@ -526,7 +527,7 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 				sectionInfo.setSLU0Description(zbdes);
 				
 				// excavation
-				sectionInfo.setExcavateMethod((String)section_new_sp.getSelectedItem());
+				sectionInfo.setExcavateMethod(ExcavateMethodEnum.parser((String)section_new_sp.getSelectedItem()).getCode());
 				
 				int code = dao.insert(sectionInfo);
 				
@@ -547,7 +548,7 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 				sectionInfo.setWidth(CrtbUtils.formatDouble(width));
 				
 				// excavation
-				sectionInfo.setExcavateMethod((String)section_new_sp.getSelectedItem());
+				sectionInfo.setExcavateMethod(ExcavateMethodEnum.parser((String)section_new_sp.getSelectedItem()).getCode());
 				
 				sectionInfo.setSurveyPntName(pointA + "," + pointS1 + "," + pointS2 + "," + pointS3);
 				
