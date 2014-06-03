@@ -285,6 +285,7 @@ public class RecordNewSubsidenceActivity extends WorkFlowActivity implements OnP
 				recordInfo.setTEMPERATURE(temp);
 				recordInfo.setFACEDESCRIPTION(descr);
 				recordInfo.setCrossSectionIDs(sections);
+				recordInfo.setUploadStatus(1); //表示记录单未上传
 				
 				RawSheetIndexDao.defaultDao().insert(recordInfo);
 				

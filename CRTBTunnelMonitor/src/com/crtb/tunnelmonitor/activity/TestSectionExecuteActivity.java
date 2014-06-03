@@ -559,6 +559,7 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 						obj.setSurveyorID(String.valueOf(SurveyerInformationDao.defaultDao().getRowIdByCertificateID(
 						        rawSheetBean.getCertificateID())));// 测量人员id
 						obj.setInfo("1");
+						obj.setUploadStatus(1); //表示该测点未上传
 
 						TunnelSettlementTotalDataDao dao 	= TunnelSettlementTotalDataDao.defaultDao() ;
 						
@@ -636,6 +637,7 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 						obj.setCoordinate(info.x + "," + info.y + "," + info.z);
 						obj.setSurveyTime(DateUtils.toDate(info.time, DateUtils.DATE_TIME_FORMAT));
 						obj.setInfo("1");
+						obj.setUploadStatus(1);//表示该测点未上传
 
 						int err = TunnelSettlementTotalDataDao.DB_EXECUTE_FAILED;
 						boolean update = false;

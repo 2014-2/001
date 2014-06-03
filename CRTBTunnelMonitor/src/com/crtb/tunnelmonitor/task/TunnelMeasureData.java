@@ -252,6 +252,7 @@ public class TunnelMeasureData extends MeasureData {
 				TunnelSettlementTotalDataDao dao = TunnelSettlementTotalDataDao.defaultDao();
 				for (TunnelSettlementTotalData point : mMeasurePoints) {
 					point.setInfo("2");
+					point.setUploadStatus(2); //表示该测点已上传
 					dao.update(point);
 				}
 			}

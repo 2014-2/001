@@ -91,6 +91,7 @@ class GetMonitorValueInfoRpc extends AbstractRpc {
 						pointTestData.setSurveyTime(CrtbUtils.parseDate(time));
 						//将测量点数据标记已上传
 						pointTestData.setInfo("2");
+						pointTestData.setUploadStatus(2); //表示该测点已上传
 						pointTestData.setPntType("A");
 						//TODO: 无法获取此数据，暂时用0代替
 						pointTestData.setSurveyorID(String.valueOf(0));
