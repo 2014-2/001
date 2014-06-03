@@ -39,6 +39,7 @@ public class TunnelAsyncUploadTask extends AsyncUploadTask {
 					public void run() {
 						TunnelCrossSectionIndexDao dao = TunnelCrossSectionIndexDao.defaultDao();
 						sectionIndex.setInfo("2");
+						sectionIndex.setUploadStatus(2); //表示该断面已上传
 						dao.update(sectionIndex);
 						TunnelCrossSectionExIndexDao sectionExIndexDao = TunnelCrossSectionExIndexDao.defaultDao();
 						TunnelCrossSectionExIndex sectionExIndex = new TunnelCrossSectionExIndex();

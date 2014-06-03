@@ -39,6 +39,7 @@ public class SubsidenceAsyncUploadTask extends AsyncUploadTask {
 					public void run() {
 						SubsidenceCrossSectionIndexDao dao = SubsidenceCrossSectionIndexDao.defaultDao();
 						sectionIndex.setInfo("2");
+						sectionIndex.setUploadStatus(2);//表示该断面已上传
 						dao.update(sectionIndex);
 						SubsidenceCrossSectionExIndexDao sectionExIndexDao = SubsidenceCrossSectionExIndexDao.defaultDao();
 						SubsidenceCrossSectionExIndex sectionExIndex = new SubsidenceCrossSectionExIndex();

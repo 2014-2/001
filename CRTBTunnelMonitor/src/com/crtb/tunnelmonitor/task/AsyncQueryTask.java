@@ -16,16 +16,18 @@ public abstract class AsyncQueryTask extends AsyncTask<Void, Void, List<SheetRec
 		public void done(List<SheetRecord> records);
 	}
 	
+	private List<RawSheetIndex> mSheets;
 	private QueryLisenter mLisenter;
 	
-	AsyncQueryTask(QueryLisenter lisenter) {
+	AsyncQueryTask(List<RawSheetIndex> sheets, QueryLisenter lisenter) {
+		mSheets = sheets;
 		mLisenter = lisenter;
 	}
 	
 	@Override
 	protected List<SheetRecord> doInBackground(Void... params) {
 		 List<SheetRecord> sheetRecords = new ArrayList<SheetRecord>();
-		 List<RawSheetIndex> rawSheets = queryAllRawSheetIndex();
+		 List<RawSheetIndex> rawSheets = getAllRawSheetIndex();
 		 if (rawSheets != null && rawSheets.size() > 0) {
 			 for(RawSheetIndex sheet : rawSheets) {
 				 SheetRecord record = new SheetRecord();
@@ -49,7 +51,9 @@ public abstract class AsyncQueryTask extends AsyncTask<Void, Void, List<SheetRec
 	 * 查询所有的记录单
 	 * @return
 	 */
-	protected abstract List<RawSheetIndex> queryAllRawSheetIndex();
+	protected List<RawSheetIndex> getAllRawSheetIndex() {
+		return mSheets;
+	}
 	
 	/**
 	 * 查询所有的断面
@@ -58,5 +62,6 @@ public abstract class AsyncQueryTask extends AsyncTask<Void, Void, List<SheetRec
 	 * @param sheetId
 	 * @return
 	 */
-	protected abstract List<Section> queryAllSections(int sheetId, String sectionRowIds);
+	protected abstract List<Section> queryAllSections(int sheetId, String sectionGuids);
+	
 }
