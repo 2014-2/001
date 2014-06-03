@@ -70,6 +70,7 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 	static final int MSG_TEST_SUCCESS	= 3 ;
 	static final int MSG_ERROR_NOT_TEST	= 4 ;
 	static final int MSG_ERROR_NOT_RESET= 5 ;
+	static final int MSG_ERROR_TS		= 6 ;
 	
 	@InjectView(id=R.id.test_bottom_layout)
 	private LinearLayout mBottomLayout ;
@@ -461,7 +462,7 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 		        int nret = ts.GetCoord(0, 0, point);
 		        
 		        if (nret != 1) {
-		            mHanlder.sendMessage(MSG_TEST_ERROR);
+		            mHanlder.obtainMessage(MSG_ERROR_TS,nret,0).sendToTarget();
 		            return;
 		        }
 		        
@@ -538,6 +539,9 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 					break ;
 				case MSG_ERROR_NOT_RESET :
 					showText("该记录不能被删除");
+					break ;
+				case MSG_ERROR_TS :
+					showText(AppConfig.getTSErrorCode(msg.arg1));
 					break ;
 				case MSG_TEST_SUCCESS :
 					
