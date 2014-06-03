@@ -96,7 +96,7 @@ public final class WorkActivity extends WorkFlowActivity {
 			
 			mProgressText	= "正在导出文件,请稍等..." ;
 			String dbname 	= bean.getProjectName();
-			String path 	= CrtbDbFileUtils.getLocalDbPath(this, dbname);
+			String path 	= CrtbDbFileUtils.getLocalDbPath(dbname);
 			
 			CrtbDbFileUtils.exportDb(path, dbname, mHanlder);
 			
@@ -188,14 +188,6 @@ public final class WorkActivity extends WorkFlowActivity {
 		item.setName(getString(R.string.common_create_new));
 		systems.add(item);
 		
-//		// 是否能导出
-//		if(ProjectIndexDao.defaultWorkPlanDao().hasExport()){
-//			item = new MenuSystemItem() ;
-//			item.setIcon(R.drawable.ic_menu_export);
-//			item.setName(getString(R.string.common_export));
-//			systems.add(item);
-//		}
-		
 		item = new MenuSystemItem() ;
 		item.setIcon(R.drawable.ic_menu_inport);
 		item.setName(getString(R.string.common_inport));
@@ -236,8 +228,6 @@ public final class WorkActivity extends WorkFlowActivity {
 			} else {
 				showText("没有可导入的数据库文件");
 			}
-			
-		} else if(name.equals(getString(R.string.common_export))){
 			
 		}
 	}

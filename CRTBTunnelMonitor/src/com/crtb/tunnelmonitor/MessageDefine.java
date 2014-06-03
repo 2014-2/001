@@ -19,4 +19,19 @@ public interface MessageDefine {
 	// 导入数据库文件
 	public static final int MSG_INPORT_DB_FAILED						= MSG_EXPORT_DB_SUCCESS + 1 ;
 	public static final int MSG_INPORT_DB_SUCCESS						= MSG_INPORT_DB_FAILED + 1 ;
+	
+	// 初始化数据库
+	public static final int MSG_LOAD_TEMP_DB							= MSG_INPORT_DB_SUCCESS + 1 ;
+	
+	// 工作面创建
+	public static final int MSG_NEW_PROJECT_SUCCESS						= MSG_LOAD_TEMP_DB + 1 ;
+	public static final int MSG_NEW_PROJECT_FAILED						= MSG_NEW_PROJECT_SUCCESS + 1 ;
+	
+	// 工作面更新
+	public static final int MSG_UPDATE_PROJECT_SUCCESS					= MSG_NEW_PROJECT_FAILED + 1 ;
+	public static final int MSG_UPDATE_PROJECT_FAILED					= MSG_UPDATE_PROJECT_SUCCESS + 1 ;
+	
+	// 工作面更新
+	public static final int MSG_DELETE_PROJECT_SUCCESS					= MSG_UPDATE_PROJECT_FAILED + 1 ;
+	public static final int MSG_DELETE_PROJECT_FAILED					= MSG_DELETE_PROJECT_SUCCESS + 1 ;
 }
