@@ -5,6 +5,7 @@ import java.util.List;
 import org.zw.android.framework.IAccessDatabase;
 import org.zw.android.framework.impl.ExecuteAsyncTaskImpl;
 
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.crtb.tunnelmonitor.AppCRTBApplication;
@@ -175,6 +176,24 @@ public final class TunnelCrossSectionIndexDao extends AbstractDao<TunnelCrossSec
 			return null;
 		}
 		String sql = "select * from TunnelCrossSectionIndex where ID IN (" + rowIds +")";
+		return mDatabase.queryObjects(sql, TunnelCrossSectionIndex.class);
+	}
+    
+	public List<TunnelCrossSectionIndex> querySectionByGuids(String guids) {
+		if (TextUtils.isEmpty(guids)) {
+			return null;
+		} 
+		final IAccessDatabase mDatabase = getCurrentDb();
+		if (mDatabase == null) {
+			return null;
+		}
+		String[] guidInfo = guids.split(",");
+		StringBuilder sb = new StringBuilder();
+		for (String guid : guidInfo) {
+			sb.append("\'").append(guid).append("\'").append(",");
+		}
+		sb.deleteCharAt(sb.lastIndexOf(","));
+		String sql = "select * from TunnelCrossSectionIndex where Guid IN (" + sb.toString() + ")";
 		return mDatabase.queryObjects(sql, TunnelCrossSectionIndex.class);
 	}
 }

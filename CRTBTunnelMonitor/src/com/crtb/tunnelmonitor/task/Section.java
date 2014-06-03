@@ -3,8 +3,6 @@ package com.crtb.tunnelmonitor.task;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.R.integer;
-
 /**
  * 断面
  * 
@@ -43,12 +41,12 @@ public abstract class Section {
 
 	public boolean needUpload() {
 		boolean result = false;
-		if (!isUpload()) {
-			result = true;
-		}
 		if (mMeasureData != null && mMeasureData.size() > 0) {
 			result = true;
 		}
+//		if (!isUpload()) {
+//			result = true;
+//		}
 		return result;
 	}
 
