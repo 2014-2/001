@@ -257,14 +257,9 @@ public final class CrtbDbFileUtils {
 						Thread.sleep(500);
 						
 						if(code == 100){
-							
-							AppLogger.d(TAG, "zhouwei : 数据库导入失败"); 
-							
-							sendMessage(MSG_INPORT_DB_FAILED,"非注册用户,只能保存1个工作面") ;
+							sendMessage(MSG_INPORT_DB_FAILED,"试用版用户, 最多只能有1个工作面") ;
 						} else {
-							
 							AppLogger.d(TAG, "zhouwei : 数据库导入完成: " + outPath); 
-							
 							sendMessage(MSG_INPORT_DB_SUCCESS) ;
 						}
 					} else {

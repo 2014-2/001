@@ -425,7 +425,7 @@ public class WorkNewActivity extends WorkFlowActivity implements OnClickListener
 				
 				// 保存数据
 				if(code == 100){
-					showText("非注册用户，只能创建2个工作面");
+					showText("试用版用户，最多只能有1个工作面");
 					return ;
 				} else if(code == ProjectIndexDao.DB_EXECUTE_FAILED){
 					showText("保存失败");
