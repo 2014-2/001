@@ -8,9 +8,19 @@ package ICT.utils;
  */
 public interface IDbEncrypt {
 
-	// 加密文件
+	/**
+	 * 加密文件
+	 * @param srcFile
+	 * @param destFile
+	 * @return
+	 */
 	public boolean encrypt(String srcFile, String destFile) ;
 	
-	// 解密文件
+	/**
+	 * 解密文件
+	 * @param srcFile
+	 * @param destFile
+	 * @return
+	 */
 	public boolean decrypt(String srcFile, String destFile) ;
 }

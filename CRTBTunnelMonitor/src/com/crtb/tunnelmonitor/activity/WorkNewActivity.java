@@ -14,6 +14,7 @@ import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.os.Bundle;
+import android.os.Message;
 import android.os.Parcelable;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -33,6 +34,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.crtb.tunnelmonitor.AppHandler;
 import com.crtb.tunnelmonitor.CommonObject;
 import com.crtb.tunnelmonitor.WorkFlowActivity;
 import com.crtb.tunnelmonitor.dao.impl.v2.ProjectIndexDao;
@@ -271,8 +273,6 @@ public class WorkNewActivity extends WorkFlowActivity implements OnClickListener
 				return ;
 			}
 			
-			
-			
 			if(StringUtils.isEmpty(date)){
 				showText("日期不能为空");
 				return ;
@@ -392,6 +392,7 @@ public class WorkNewActivity extends WorkFlowActivity implements OnClickListener
 					showText("更新工作面失败");
 					return ;
 				}
+				
 			} else {
 				
 				if(CrtbDbFileUtils.checkProjectIndex(this, name)){
@@ -406,6 +407,7 @@ public class WorkNewActivity extends WorkFlowActivity implements OnClickListener
 				info.setChainagePrefix(pref);
 				info.setStartChainage(sm);
 				info.setEndChainage(em);
+				info.setLastOpenTime(DateUtils.toDate(date,DateUtils.DATE_TIME_FORMAT));
 				
 				info.setGDLimitTotalSettlement(gdlimt);
 				info.setGDLimitVelocity(gdv);
@@ -460,6 +462,30 @@ public class WorkNewActivity extends WorkFlowActivity implements OnClickListener
 			break;
 		}
 
+	}
+
+	@Override
+	protected AppHandler getHandler() {
+		return new AppHandler(this){
+
+			@Override
+			protected void dispose(Message msg) {
+				switch(msg.what){
+				case MSG_UPDATE_PROJECT_SUCCESS :
+				case MSG_NEW_PROJECT_SUCCESS :
+					
+					
+					break ;
+				case MSG_NEW_PROJECT_FAILED :
+					showText("保存失败");
+					break ;
+				case MSG_UPDATE_PROJECT_FAILED :
+					showText("更新失败");
+					break ;
+				}
+			}
+			
+		};
 	}
 
 	private void InitImageView() {

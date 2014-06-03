@@ -41,7 +41,6 @@ import com.crtb.tunnelmonitor.dao.impl.v2.ProjectIndexDao;
 import com.crtb.tunnelmonitor.dao.impl.v2.TunnelCrossSectionIndexDao;
 import com.crtb.tunnelmonitor.entity.ProjectIndex;
 import com.crtb.tunnelmonitor.entity.TunnelCrossSectionIndex;
-import com.crtb.tunnelmonitor.mydefine.CrtbDateDialogUtils;
 import com.crtb.tunnelmonitor.utils.CrtbUtils;
 
 /**
@@ -428,6 +427,8 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 			break ;
 		case R.id.work_btn_queding: // 数据库
 			
+			final TunnelCrossSectionIndexDao dao = TunnelCrossSectionIndexDao.defaultDao() ;
+			
 			// base
 			String prefix		= section_new_et_prefix.getEditableText().toString().trim() ;
 			String chainage 	= section_new_et_Chainage.getEditableText().toString().trim();// 里程
@@ -493,6 +494,12 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 				return ;
 			}
 			
+			// 是否存在相同里程的断面
+			if(dao.querySectionIndexByChainage(cv) != null){
+				showText("已经存在相同里程的断面");
+				return ;
+			}
+			
 			if(sectionInfo == null){
 				
 				sectionInfo = new TunnelCrossSectionIndex() ;
@@ -521,7 +528,7 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 				// excavation
 				sectionInfo.setExcavateMethod((String)section_new_sp.getSelectedItem());
 				
-				int code = TunnelCrossSectionIndexDao.defaultDao().insert(sectionInfo);
+				int code = dao.insert(sectionInfo);
 				
 				// 保存数据
 				if(code == 100){
@@ -554,7 +561,7 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 				sectionInfo.setSLU0Time(DateUtils.toDate(zbtime, DateUtils.PART_TIME_FORMAT));
 				sectionInfo.setSLU0Description(zbdes);
 				
-				TunnelCrossSectionIndexDao.defaultDao().update(sectionInfo);
+				dao.update(sectionInfo);
 			}
 			
 			setResult(RESULT_OK);

@@ -264,6 +264,8 @@ public class SectionNewSubsidenceActivity extends WorkFlowActivity implements On
 			break ;
 		case R.id.work_btn_queding: // 数据库
 			
+			final SubsidenceCrossSectionIndexDao dao = SubsidenceCrossSectionIndexDao.defaultDao() ;
+			
 			// base
 			String prefix		= section_new_et_prefix.getEditableText().toString().trim() ;
 			String chainage 	= DSection_Chainage.getEditableText().toString().trim();// 里程
@@ -330,6 +332,12 @@ public class SectionNewSubsidenceActivity extends WorkFlowActivity implements On
 				return;
 			}
 			
+			// 是否存在相同里程的断面
+			if(dao.querySectionIndexByChainage(cv) != null){
+				showText("已经存在相同里程的断面");
+				return ;
+			}
+			
 			if(subsidence == null){
 				
 				subsidence = new SubsidenceCrossSectionIndex() ;
@@ -350,7 +358,7 @@ public class SectionNewSubsidenceActivity extends WorkFlowActivity implements On
 				subsidence.setUploadStatus(1); //表示该断面未上传
 				
 				// insert
-				int code = SubsidenceCrossSectionIndexDao.defaultDao().insert(subsidence);
+				int code = dao.insert(subsidence);
 				
 				// 保存数据
 				if(code == 100){
@@ -375,7 +383,7 @@ public class SectionNewSubsidenceActivity extends WorkFlowActivity implements On
 				subsidence.setInfo(remark);
 
 				// insert
-				SubsidenceCrossSectionIndexDao.defaultDao().update(subsidence);
+				dao.update(subsidence);
 			}
 			
 			setResult(RESULT_OK);
