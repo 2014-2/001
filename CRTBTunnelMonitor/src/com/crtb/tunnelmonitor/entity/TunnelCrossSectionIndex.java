@@ -39,8 +39,8 @@ public class TunnelCrossSectionIndex implements Serializable {
     @ColumnText
 	private String Guid ;				// 唯一标示
 	
-    @ColumnString(length = 255)
-    private String ExcavateMethod;  	// 施工方法
+    @ColumnInt
+    private int ExcavateMethod;  		// 施工方法
 
     @ColumnString(length = 255)
     private String SurveyPntName; 		// 测点编号: 测量点对应的别名: A,S1,S2,S3
@@ -51,7 +51,7 @@ public class TunnelCrossSectionIndex implements Serializable {
     @ColumnText
     private String Info; 				// 备注
     
-    @ColumnString(length = 64)
+    @ColumnString(length = 255)
     private String ChainagePrefix; 		// 里程前缀 默认是工程前缀
     
     //@ColumnString(length=255) //NOT A COLUMN IN THE DB TABLE
@@ -155,15 +155,15 @@ public class TunnelCrossSectionIndex implements Serializable {
 		Width = width;
 	}
 
-	public String getExcavateMethod() {
-        return ExcavateMethod;
-    }
+	public int getExcavateMethod() {
+		return ExcavateMethod;
+	}
 
-    public void setExcavateMethod(String excavateMethod) {
-        ExcavateMethod = excavateMethod;
-    }
+	public void setExcavateMethod(int excavateMethod) {
+		ExcavateMethod = excavateMethod;
+	}
 
-    public String getSurveyPntName() {
+	public String getSurveyPntName() {
         return SurveyPntName;
     }
 

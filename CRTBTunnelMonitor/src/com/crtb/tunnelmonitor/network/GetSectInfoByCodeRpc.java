@@ -10,6 +10,7 @@ import org.zw.android.framework.util.DateUtils;
 
 import android.util.Log;
 
+import com.crtb.tunnelmonitor.entity.ExcavateMethodEnum;
 import com.crtb.tunnelmonitor.entity.TunnelCrossSectionIndex;
 
 class GetSectInfoByCodeRpc extends AbstractRpc {
@@ -86,7 +87,7 @@ class GetSectInfoByCodeRpc extends AbstractRpc {
 			}
 			try {
 				String digMehtod = data.getPropertyAsString(i++);
-				section.setExcavateMethod(digMehtod);
+				section.setExcavateMethod(ExcavateMethodEnum.parser(digMehtod).getCode());
 			} catch (NullPointerException e) {
 				// ignore
 			}

@@ -27,14 +27,17 @@ public class SubsidenceCrossSectionExIndex implements Serializable {
 	@ColumnInt
 	private int ID;
 	
-	@ColumnString(length = 64)
-	private String guid ;			// 唯一标示 -----------扩展
+	@ColumnText
+	private String Guid ;			// 唯一标示
 	
-	@ColumnString(length = 64)
-	private String sectionGuid ;	// 断面guid ---- 扩展
+	@ColumnText
+	private String sectionGuid ;	// 断面guid
 	
 	@ColumnInt
 	private int SECT_ID;		    // SECT_ID 断面数据库id
+	
+	@ColumnString(length = 64)
+	private String HOLEENDKILO ;	// 增加字段
 	
 	@ColumnString(length=64)
 	private String ZONECODE;		// ZONECODE 工区代码
@@ -88,18 +91,6 @@ public class SubsidenceCrossSectionExIndex implements Serializable {
 		setGuid(CrtbUtils.generatorGUID());
 	}
 
-	public int getID() {
-		return ID;
-	}
-
-	public String getGuid() {
-		return guid;
-	}
-
-	public void setGuid(String guid) {
-		this.guid = guid;
-	}
-	
 	public String getSectionGuid() {
 		return sectionGuid;
 	}
@@ -108,8 +99,28 @@ public class SubsidenceCrossSectionExIndex implements Serializable {
 		this.sectionGuid = sectionGuid;
 	}
 
+	public int getID() {
+		return ID;
+	}
+
+	public String getGuid() {
+		return Guid;
+	}
+
+	public void setGuid(String guid) {
+		Guid = guid;
+	}
+
 	public void setID(int iD) {
 		ID = iD;
+	}
+
+	public String getHOLEENDKILO() {
+		return HOLEENDKILO;
+	}
+
+	public void setHOLEENDKILO(String hOLEENDKILO) {
+		HOLEENDKILO = hOLEENDKILO;
 	}
 
 	public String getZONECODE() {
