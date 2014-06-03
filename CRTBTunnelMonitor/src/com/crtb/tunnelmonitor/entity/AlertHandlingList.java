@@ -43,8 +43,8 @@ public class AlertHandlingList implements Serializable {
 	/*
 	 * true表示（2.1）的处理方式；false表示（2.2）的处理方式下填写“人工处理”
 	 */
-	@ColumnInt
-	private int HandlingInfo;			// 备注
+	@ColumnBoolean
+	private boolean HandlingInfo;			// 备注
 
 	@ColumnInt
     private int UploadStatus; // 上传类型 , 0表示全部状态；1表示未上传，2表示不上传，3表示部分上传
@@ -100,11 +100,11 @@ public class AlertHandlingList implements Serializable {
 		AlertStatus = alertStatus;
 	}
 
-	public int getHandlingInfo() {
+	public boolean getHandlingInfo() {
 		return HandlingInfo;
 	}
 
-	public void setHandlingInfo(int handlingInfo) {
+	public void setHandlingInfo(boolean handlingInfo) {
 		HandlingInfo = handlingInfo;
 	}
 

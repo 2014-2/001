@@ -100,7 +100,7 @@ public class AlertHandlingInfoDao extends AbstractDao<AlertHandlingList> {
         ah.setHandlingTime(handlingTime);
         ah.setDuePerson(duePerson);
         ah.setAlertStatus(alertStatus);
-        ah.setHandlingInfo(handlingInfo);
+        ah.setHandlingInfo(handlingInfo == 1);
 
         int ret = mDatabase.saveObject(ah);
         Log.d(TAG, "AlertHandlingInfoDao insertItem, ret: " + ret);
