@@ -48,15 +48,14 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="40dp"
                     android:layout_marginRight="40dp"
-                    android:background="@drawable/rect_border_2"
                     android:orientation="vertical"
                     android:paddingBottom="10dp"
                     android:paddingTop="10dp" >
 
                     <ImageView
                         android:id="@+id/img_fangfa"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="160dp"
+                        android:layout_height="120dp"
                         android:layout_gravity="center_horizontal"
                         android:background="@drawable/ic_full_face" />
                 </LinearLayout>
