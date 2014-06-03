@@ -1,15 +1,11 @@
 package com.crtb.tunnelmonitor.activity;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.zw.android.framework.util.StringUtils;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.LinearLayout;
@@ -26,7 +22,6 @@ import com.crtb.tunnelmonitor.common.Constant;
 import com.crtb.tunnelmonitor.dao.impl.v2.CrtbLicenseDao;
 import com.crtb.tunnelmonitor.dao.impl.v2.ProjectIndexDao;
 import com.crtb.tunnelmonitor.entity.CrtbUser;
-import com.crtb.tunnelmonitor.entity.TotalStationIndex;
 import com.crtb.tunnelmonitor.entity.ProjectIndex;
 
 /**
@@ -74,9 +69,6 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 		// clear all activity
 		AppActivityManager.finishAllActivity();
 
-		// current edit workplan
-		mCurrentWorkPlan = ProjectIndexDao.defaultWorkPlanDao().queryEditWorkPlan();
-		
 		// remove current workplan from cache
 		CommonObject.remove(KEY_CURRENT_WORKPLAN);
 
@@ -137,10 +129,11 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 		mWarn.setOnClickListener(this);
 		mServer.setOnClickListener(this);
 		mAbout.setOnClickListener(this);
+		
 		AppCRTBApplication app = AppCRTBApplication.getInstance();
+		
 		if (app.isbLocaUser()) {
 			mServer.setVisibility(View.INVISIBLE);
-
 		}
 	}
 
@@ -148,10 +141,11 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 	protected void onResume() {
 		super.onResume();
 		
-		mCurrentWorkPlan = ProjectIndexDao.defaultWorkPlanDao().queryEditWorkPlan();
-		
 		String name = AppPreferences.getPreferences().getCurrentSimpleProjectName();
 		mTitle.setText(StringUtils.isEmpty(name) ? getString(R.string.main_title) : name);
+		
+		// 加载数据库
+		mCurrentWorkPlan = ProjectIndexDao.defaultWorkPlanDao().queryEditWorkPlan();
 	}
 
 	private void showToast(String msg) {
@@ -171,8 +165,8 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 	        showToast("该功能对未注册用户不可用！");
 	        return;
 	    }
-
-		switch (v.getId()) {
+	    
+	    switch (v.getId()) {
 		case R.id.worksection:// 工作面
 		{
 			intent = new Intent(MainActivity.this, WorkActivity.class);
@@ -248,6 +242,14 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 	}
 
     @Override
+	protected void onDestroy() {
+		super.onDestroy();
+		
+		// 关闭当前数据库
+		ProjectIndexDao.defaultWorkPlanDao().closeCurrentDb() ;
+	}
+
+	@Override
     public void onBackPressed() {
         if (mBackPressedOnce) {
             finish();

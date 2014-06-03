@@ -30,9 +30,6 @@ import android.widget.TextView;
 
 import com.crtb.tunnelmonitor.CommonObject;
 import com.crtb.tunnelmonitor.WorkFlowActivity;
-import com.crtb.tunnelmonitor.dao.impl.v2.RawSheetIndexDao;
-import com.crtb.tunnelmonitor.dao.impl.v2.SubsidenceTotalDataDao;
-import com.crtb.tunnelmonitor.dao.impl.v2.TunnelSettlementTotalDataDao;
 import com.crtb.tunnelmonitor.entity.MenuSystemItem;
 import com.crtb.tunnelmonitor.entity.RawSheetIndex;
 import com.crtb.tunnelmonitor.mydefine.CrtbDialogHint;
@@ -103,13 +100,7 @@ public class TestRecordActivity extends WorkFlowActivity implements OnPageChange
 				
 				final RawSheetIndex bean = mTestTunnelSectionList.getItem(position) ;
 				
-				String[] menus = null ;
-				
-				if(position == 0){
-					menus	= new String[]{getString(R.string.common_open),getString(R.string.common_delete)};
-				} else{
-					menus	= new String[]{getString(R.string.common_open)};
-				}
+				String[] menus = new String[]{getString(R.string.common_open)};
 				
 				// show menu
 				clearListActionMenu() ;
@@ -142,19 +133,19 @@ public class TestRecordActivity extends WorkFlowActivity implements OnPageChange
 	
 	private void loadSystemMenu(){
 		
-		List<MenuSystemItem> systems = new ArrayList<MenuSystemItem>();
+		/*List<MenuSystemItem> systems = new ArrayList<MenuSystemItem>();
 		
-		/*MenuSystemItem item = new MenuSystemItem() ;
+		MenuSystemItem item = new MenuSystemItem() ;
 		item.setIcon(R.drawable.ic_menu_open);
 		item.setName(getString(R.string.common_open));
-		systems.add(item);*/
+		systems.add(item);
 		
 		MenuSystemItem item = new MenuSystemItem() ;
 		item.setIcon(R.drawable.ic_menu_search);
 		item.setName(getString(R.string.common_search));
 		systems.add(item);
 		
-		createSystemMenu(systems);
+		createSystemMenu(systems);*/
 	}
 
 	@Override
@@ -162,16 +153,7 @@ public class TestRecordActivity extends WorkFlowActivity implements OnPageChange
 		
 		final String name = menu.getName() ;
 		
-		if(name.equals(getString(R.string.common_open))){
-			
-			if(currIndex == 0){
-				
-				
-			} else {
-				
-				
-			}
-		} else if(name.equals(getString(R.string.common_search))){
+		if(name.equals(getString(R.string.common_search))){
 			
 			CrtbDialogSearchTest dialog = null ;
 			
@@ -215,7 +197,7 @@ public class TestRecordActivity extends WorkFlowActivity implements OnPageChange
 			// 删除
 			else {
 				
-				TunnelSettlementTotalDataDao dao = TunnelSettlementTotalDataDao.defaultDao() ;
+				/*TunnelSettlementTotalDataDao dao = TunnelSettlementTotalDataDao.defaultDao() ;
 				
 				// 是否存在测量数据
 				if(dao.checkRawSheetIndexHasData(obj.getID())){
@@ -232,7 +214,7 @@ public class TestRecordActivity extends WorkFlowActivity implements OnPageChange
 				
 				if(dialog != null){
 					dialog.show() ;
-				}
+				}*/
 			}
 			
 		} else {
@@ -254,7 +236,7 @@ public class TestRecordActivity extends WorkFlowActivity implements OnPageChange
 			// 删除
 			else {
 				
-				SubsidenceTotalDataDao dao = SubsidenceTotalDataDao.defaultDao() ;
+				/*SubsidenceTotalDataDao dao = SubsidenceTotalDataDao.defaultDao() ;
 				
 				// 是否存在测量数据
 				if(dao.checkRawSheetIndexHasData(obj.getID())){
@@ -271,7 +253,7 @@ public class TestRecordActivity extends WorkFlowActivity implements OnPageChange
 				
 				if(dialog != null){
 					dialog.show() ;
-				}
+				}*/
 			}
 		}
 	}

@@ -132,7 +132,7 @@ public final class CrtbDialogFileBrowse extends CrtbDialog {
 					}
 				}
 				
-				// inport
+				// 导入
 				CrtbDbFileUtils.importDb(getContext(), file.getAbsolutePath(), mHanlder);
 			}
 		}) ;
