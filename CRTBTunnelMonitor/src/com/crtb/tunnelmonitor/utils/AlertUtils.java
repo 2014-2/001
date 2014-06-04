@@ -216,7 +216,7 @@ public class AlertUtils {
                         ret.leijiType = uType;
                         ret.leijiValue = accumulativeSubsidence;
                         if (!readOnly) {
-                            AlertList al = AlertListDao.defaultDao().queryOne(sheetId, chainageId, originalDataID, uType);
+//                            AlertList al = AlertListDao.defaultDao().queryOne(sheetId, chainageId, originalDataID, uType);
                             //若本条预警已消警，但重测时又超限，则需要再打开
 //                            if (al == null || curHandlingAlertId < 0) {
                                 int alertId = -1;
@@ -231,8 +231,12 @@ public class AlertUtils {
                                 if (curHandlingAlertId >= 0 && alertId == curHandlingAlertId) {
                                     handlingRemark = handling;
                                 }
-                                String guid = AlertListDao.defaultDao().getGuidById(alertId);
-                                AlertHandlingInfoDao.defaultDao().insertItem(guid, handlingRemark,
+
+                                if (curHandlingAlertId < 0) {//重测
+                                    AlertHandlingInfoDao.defaultDao().deleteByAlertId(alertId);
+                                }
+
+                                AlertHandlingInfoDao.defaultDao().insertItem(alertId, handlingRemark,
                                         new Date(System.currentTimeMillis()), String.valueOf(chainageId) + pntType, ALERT_STATUS_OPEN/*报警*/, 1/*true*/);
 //                            }
                         }
@@ -249,8 +253,8 @@ public class AlertUtils {
                                         alertId == curHandlingAlertId ? handling : null,
                                         handlingTime, duePerson, ALERT_STATUS_HANDLED, 1/* true */);
                             } else {
-                                AlertListDao.defaultDao().deleteById(alertId);
                                 AlertHandlingInfoDao.defaultDao().deleteByAlertId(alertId);
+                                AlertListDao.defaultDao().deleteById(alertId);
                             }
                         }
                     }
@@ -298,7 +302,7 @@ public class AlertUtils {
                         ret.sulvType = uType;
                         ret.sulvValue = subsidenceSpeed;
                         if (!readOnly) {
-                            AlertList al = AlertListDao.defaultDao().queryOne(sheetId, chainageId, originalDataID, uType);
+//                            AlertList al = AlertListDao.defaultDao().queryOne(sheetId, chainageId, originalDataID, uType);
                             //若本条预警已消警，但重测时又超限，则需要再打开
 //                            if (al == null || curHandlingAlertId < 0) {
                                 int alertId = -1;
@@ -313,8 +317,12 @@ public class AlertUtils {
                                 if (curHandlingAlertId >= 0 && alertId == curHandlingAlertId) {
                                     handlingRemark = handling;
                                 }
-                                String guid = AlertListDao.defaultDao().getGuidById(alertId);
-                                AlertHandlingInfoDao.defaultDao().insertItem(guid, handlingRemark,
+
+                                if (curHandlingAlertId < 0) {//重测
+                                    AlertHandlingInfoDao.defaultDao().deleteByAlertId(alertId);
+                                }
+
+                                AlertHandlingInfoDao.defaultDao().insertItem(alertId, handlingRemark,
                                         new Date(System.currentTimeMillis()), String.valueOf(chainageId) + pntType, ALERT_STATUS_OPEN/*报警*/, 1/*true*/);
 //                            }
                         }
@@ -331,8 +339,8 @@ public class AlertUtils {
                                         alertId == curHandlingAlertId ? handling : null,
                                         handlingTime, duePerson, ALERT_STATUS_HANDLED, 1/* true */);
                             } else {//重测
-                                AlertListDao.defaultDao().deleteById(alertId);
                                 AlertHandlingInfoDao.defaultDao().deleteByAlertId(alertId);
+                                AlertListDao.defaultDao().deleteById(alertId);
                             }
                         }
                     }
@@ -409,7 +417,7 @@ public class AlertUtils {
                     ret.leijiType = uType;
                     ret.leijiValue = convergence;
                     if (!readOnly) {
-                        AlertList al = AlertListDao.defaultDao().queryOne(sheetId, chainageId, originalDataID, uType);
+//                        AlertList al = AlertListDao.defaultDao().queryOne(sheetId, chainageId, originalDataID, uType);
                         //若本条预警已消警，但重测时又超限，则需要再打开
 //                        if (al == null || curHandlingAlertId < 0) {
                             int alertId = AlertListDao.defaultDao().insertOrUpdate(s_1, 3/* default */,
@@ -419,8 +427,12 @@ public class AlertUtils {
                             if (curHandlingAlertId >= 0 && alertId == curHandlingAlertId) {
                                 handlingRemark = handling;
                             }
-                            String guid = AlertListDao.defaultDao().getGuidById(alertId);
-                            AlertHandlingInfoDao.defaultDao().insertItem(guid, handlingRemark,
+
+                            if (curHandlingAlertId < 0) {//重测
+                                AlertHandlingInfoDao.defaultDao().deleteByAlertId(alertId);
+                            }
+
+                            AlertHandlingInfoDao.defaultDao().insertItem(alertId, handlingRemark,
                                     new Date(System.currentTimeMillis()), String.valueOf(chainageId) + s_1.getPntType(), ALERT_STATUS_OPEN/*报警*/, 1/*true*/);
 //                        }
                     }
@@ -436,8 +448,8 @@ public class AlertUtils {
                                     String.valueOf(chainageId) + s_1.getPntType(),
                                     ALERT_STATUS_HANDLED, 1/* true */);
                         } else {
-                            AlertListDao.defaultDao().deleteById(alertId);
                             AlertHandlingInfoDao.defaultDao().deleteByAlertId(alertId);
+                            AlertListDao.defaultDao().deleteById(alertId);
                         }
                     }
                 }
@@ -481,7 +493,7 @@ public class AlertUtils {
                     ret.sulvType = uType;
                     ret.sulvValue = shoulianSpeed;
                     if (!readOnly) {
-                        AlertList al = AlertListDao.defaultDao().queryOne(sheetId, chainageId, originalDataID, uType);
+//                        AlertList al = AlertListDao.defaultDao().queryOne(sheetId, chainageId, originalDataID, uType);
                         //若本条预警已消警，但重测时又超限，则需要再打开
 //                        if (al == null || curHandlingAlertId < 0) {
                             int alertId = AlertListDao.defaultDao().insertOrUpdate(s_1, 3/* default */, uType, shoulianSpeed,
@@ -491,8 +503,11 @@ public class AlertUtils {
                                 handlingRemark = handling;
                             }
 
-                            String guid = AlertListDao.defaultDao().getGuidById(alertId);
-                            AlertHandlingInfoDao.defaultDao().insertItem(guid, handlingRemark,
+                            if (curHandlingAlertId < 0) {//重测
+                                AlertHandlingInfoDao.defaultDao().deleteByAlertId(alertId);
+                            }
+
+                            AlertHandlingInfoDao.defaultDao().insertItem(alertId, handlingRemark,
                                     new Date(System.currentTimeMillis()), String.valueOf(chainageId) + s_1.getPntType(), ALERT_STATUS_OPEN/*报警*/, 1/*true*/);
 //                        }
                     }
@@ -507,8 +522,8 @@ public class AlertUtils {
                                     String.valueOf(chainageId) + s_1.getPntType(),
                                     ALERT_STATUS_HANDLED, 1/* true */);
                         } else {
-                            AlertListDao.defaultDao().deleteById(alertId);
                             AlertHandlingInfoDao.defaultDao().deleteByAlertId(alertId);
+                            AlertListDao.defaultDao().deleteById(alertId);
                         }
                     }
                 }
@@ -1183,9 +1198,8 @@ public class AlertUtils {
                                 if (i < size - 1) {
                                     AlertListDao.defaultDao().delete(alert);
                                 } else if (curAlertId != alertId) {//alertId 在handleAlert中已处理
-                                    String guid = AlertListDao.defaultDao().getGuidById(curAlertId);
                                     AlertHandlingInfoDao.defaultDao()
-                                            .insertItem(guid, handling, handlingTime,
+                                            .insertItem(curAlertId, handling, handlingTime,
                                                     duePerson, alertStatus, 1/* true */);
                                 }
                             }
