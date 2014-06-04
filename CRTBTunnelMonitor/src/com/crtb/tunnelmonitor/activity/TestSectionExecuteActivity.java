@@ -459,25 +459,19 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 		    
 		    Coordinate3D point = new Coordinate3D(null);
 		    
-		    try {
-		        int nret = ts.GetCoord(0, 0, point);
-		        
-		        if (nret != 1) {
-		            mHanlder.obtainMessage(MSG_ERROR_TS,nret,0).sendToTarget();
-		            return;
-		        }
-		        
-		        if(point.N == 0d 
-		                || point.E == 0d 
-		                || point.H == 0d){
-		            mHanlder.sendMessage(MSG_ERROR_CONNECT);
-		            return ;
-		        }
-		        
-		    } catch (InterruptedException e) {
-		        e.printStackTrace();
-		        return;
-		    }
+		    int nret = ts.GetCoord(0, 0, point);
+            
+            if (nret != 1) {
+                mHanlder.obtainMessage(MSG_ERROR_TS,nret,0).sendToTarget();
+                return;
+            }
+            
+            if(point.N == 0d 
+                    || point.E == 0d 
+                    || point.H == 0d){
+                mHanlder.sendMessage(MSG_ERROR_CONNECT);
+                return ;
+            }
 
 		    x = String.format("%1$.4f", point.N);
 		    y = String.format("%1$.4f", point.E);
