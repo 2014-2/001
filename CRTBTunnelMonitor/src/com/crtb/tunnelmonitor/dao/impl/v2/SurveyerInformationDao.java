@@ -3,6 +3,7 @@ package com.crtb.tunnelmonitor.dao.impl.v2;
 import java.util.List;
 
 import org.zw.android.framework.IAccessDatabase;
+import org.zw.android.framework.util.StringUtils;
 
 import android.util.Log;
 
@@ -32,7 +33,7 @@ public class SurveyerInformationDao extends AbstractDao<SurveyerInformation> {
 			return DB_EXECUTE_FAILED ;
 		}
 		
-		final IAccessDatabase db = getDefaultDb() ;
+		final IAccessDatabase db = getCurrentDb() ;
 		
 		if(db == null){
 			
@@ -51,7 +52,7 @@ public class SurveyerInformationDao extends AbstractDao<SurveyerInformation> {
 			return DB_EXECUTE_FAILED ;
 		}
 		
-		final IAccessDatabase db = getDefaultDb();
+		final IAccessDatabase db = getCurrentDb();
 		
 		if(db == null){
 			
@@ -70,7 +71,7 @@ public class SurveyerInformationDao extends AbstractDao<SurveyerInformation> {
 			return DB_EXECUTE_FAILED ;
 		}
 		
-		final IAccessDatabase db = getDefaultDb();
+		final IAccessDatabase db = getCurrentDb();
 		
 		if(db == null){
 			
@@ -84,7 +85,7 @@ public class SurveyerInformationDao extends AbstractDao<SurveyerInformation> {
 
 	public void deleteAll(){
 		
-		final IAccessDatabase mDatabase = getDefaultDb();
+		final IAccessDatabase mDatabase = getCurrentDb();
 		
 		if(mDatabase == null){
 			return ;
@@ -95,7 +96,7 @@ public class SurveyerInformationDao extends AbstractDao<SurveyerInformation> {
 	
 	public SurveyerInformation querySurveyerByName(String name){
 		
-		final IAccessDatabase mDatabase = getDefaultDb();
+		final IAccessDatabase mDatabase = getCurrentDb();
 		
 		if(mDatabase == null){
 			return null ;
@@ -106,9 +107,28 @@ public class SurveyerInformationDao extends AbstractDao<SurveyerInformation> {
 		return mDatabase.queryObject(sql, new String[]{name}, SurveyerInformation.class);
 	}
 	
+	/**
+	 * 查询测量人员
+	 * 
+	 * @param guid	: 记录单guid
+	 * @return
+	 */
+	public SurveyerInformation querySurveyerBySheetIndexGuid(String guid){
+		
+		final IAccessDatabase mDatabase = getCurrentDb();
+		
+		if(mDatabase == null || StringUtils.isEmpty(guid)){
+			return null ;
+		}
+		
+		String sql = "select * from SurveyerInformation where ProjectID = ?" ;
+		
+		return mDatabase.queryObject(sql, new String[]{guid}, SurveyerInformation.class);
+	}
+	
 	public List<SurveyerInformation> queryAllSurveyerInformation(){
 		
-		final IAccessDatabase mDatabase = getDefaultDb();
+		final IAccessDatabase mDatabase = getCurrentDb();
 		
 		if(mDatabase == null){
 			return null ;
@@ -122,7 +142,7 @@ public class SurveyerInformationDao extends AbstractDao<SurveyerInformation> {
     public int getRowIdByCertificateID(String certificateID) {
         int id = -1;
         if (certificateID != null) {
-            final IAccessDatabase mDatabase = getDefaultDb();
+            final IAccessDatabase mDatabase = getCurrentDb();
 
             if (mDatabase != null) {
                 String sql = "select * from SurveyerInformation where CertificateID = ?";
