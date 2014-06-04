@@ -88,13 +88,16 @@ public class TunnelCrossSectionIndex implements Serializable {
     private float LAYVALUE; 			// 埋深值
 
     @ColumnString(length = 255)
-    private String ROCKGRADE; 			// 围岩级别
+    private String ROCKGRADE; 			// 围岩级别 使用罗马数字I，II，III，IV，V，VI
 
     private boolean used;				// 是否选中----------扩展
 
     public TunnelCrossSectionIndex(){
     	setUploadStatus(1);// 未上传
     	setGuid(CrtbUtils.generatorGUID());
+    	setLAYVALUE(0.0f); // 默认值
+    	setLithologic(""); // 默认值
+    	setROCKGRADE("I"); // 默认值
     }
     
     public int getID() {

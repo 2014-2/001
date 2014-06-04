@@ -353,8 +353,8 @@ public class SectionNewSubsidenceActivity extends WorkFlowActivity implements On
 				subsidence.setDBU0(CrtbUtils.formatFloat(dbu0));
 				subsidence.setDBLimitVelocity(CrtbUtils.formatFloat(dbl));
 				subsidence.setDBU0Time(DateUtils.toDate(buildtime,DateUtils.PART_TIME_FORMAT));
-				//TODO: info被用来标记数据是否上传：1表示未上传, 2表示已上传
-				subsidence.setInfo("1");
+				// TODO: info被用来标记数据是否上传：1表示未上传, 2表示已上传
+				// subsidence.setInfo("1");
 				subsidence.setUploadStatus(1); //表示该断面未上传
 				
 				// insert

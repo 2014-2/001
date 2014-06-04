@@ -593,8 +593,8 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 				sectionInfo.setInBuiltTime(DateUtils.toDate(date, DateUtils.PART_TIME_FORMAT));
 				sectionInfo.setWidth(CrtbUtils.formatDouble(width));
 				
-				//TODO: 表示数据未上传
-				sectionInfo.setInfo("1"); 
+				// TODO: 表示数据未上传
+				// sectionInfo.setInfo("1"); 
 				
 				sectionInfo.setSurveyPntName(str.toString());
 				
