@@ -95,7 +95,6 @@ public class TunnelCrossSectionIndex implements Serializable {
     public TunnelCrossSectionIndex(){
     	setUploadStatus(1);// 未上传
     	setGuid(CrtbUtils.generatorGUID());
-    	setInfo(getGuid());
     }
     
     public int getID() {

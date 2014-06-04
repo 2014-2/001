@@ -332,22 +332,50 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 				
 				String[] str = sectionInfo.getSurveyPntName().split(",") ;
 				
+				// A,S1,S2,S3
+				// aa, bb-1, bb-2, cc-1, cc-2, dd-1, dd-2
 				int len = str.length ;
 				
-				if(len == 1){
-					section_new_et_a.setText(str[0]);
-				} else if(len == 2){
-					section_new_et_a.setText(str[0]);
-					section_new_et_s1.setText(str[1]);
-				} else if(len == 3){
-					section_new_et_a.setText(str[0]);
-					section_new_et_s1.setText(str[1]);
-					section_new_et_s2.setText(str[2]);
-				} else if(len == 4){
-					section_new_et_a.setText(str[0]);
-					section_new_et_s1.setText(str[1]);
-					section_new_et_s2.setText(str[2]);
-					section_new_et_s3.setText(str[3]);
+				// A
+				section_new_et_a.setText(str[0].equals("A") ? "" : str[0]);
+				
+				// S1
+				if(len >= 3){
+					
+					String s1 = str[1];
+					String ss = s1.substring(0,s1.lastIndexOf("-"));
+					
+					if(ss.equals("S1")){
+						section_new_et_s1.setText("");
+					} else {
+						section_new_et_s1.setText(ss);
+					}
+				} 
+				
+				// S2
+				if(len >= 5){
+					
+					String s1 = str[3];
+					String ss = s1.substring(0,s1.lastIndexOf("-"));
+					
+					if(ss.equals("S2")){
+						section_new_et_s2.setText("");
+					} else {
+						section_new_et_s2.setText(ss);
+					}
+				} 
+				
+				// S3
+				if(len >= 7){
+					
+					String s1 = str[5];
+					String ss = s1.substring(0,s1.lastIndexOf("-"));
+					
+					if(ss.equals("S3")){
+						section_new_et_s3.setText("");
+					} else {
+						section_new_et_s3.setText(ss);
+					}
 				}
 			}
 			
@@ -513,6 +541,42 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 				return ;
 			}
 			
+			StringBuilder str = new StringBuilder() ;
+			
+			str.append(StringUtils.isEmpty(pointA) ? "A" : pointA);
+			str.append(",");
+			
+			// s1
+			if(StringUtils.isEmpty(pointS1)){
+				str.append("S1-1,");
+				str.append("S1-2");
+			} else {
+				str.append(pointS1 + "-1,");
+				str.append(pointS1 + "-2");
+			}
+			
+			str.append(",");
+			
+			// s2
+			if(StringUtils.isEmpty(pointS2)){
+				str.append("S2-1,");
+				str.append("S2-2");
+			} else {
+				str.append(pointS2 + "-1,");
+				str.append(pointS2 + "-2");
+			}
+			
+			str.append(",");
+			
+			// s3 
+			if(StringUtils.isEmpty(pointS3)){
+				str.append("S3-1,");
+				str.append("S3-2");
+			} else {
+				str.append(pointS3 + "-1,");
+				str.append(pointS3 + "-2");
+			}
+			
 			if(sectionInfo == null){
 				
 				// 是否存在相同里程的断面
@@ -532,7 +596,7 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 				//TODO: 表示数据未上传
 				sectionInfo.setInfo("1"); 
 				
-				sectionInfo.setSurveyPntName(pointA + "," + pointS1 + "," + pointS2 + "," + pointS3);
+				sectionInfo.setSurveyPntName(str.toString());
 				
 				sectionInfo.setGDU0(Float.valueOf(gdlj));
 				sectionInfo.setGDVelocity(Float.valueOf(gdsl));
@@ -568,7 +632,7 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 				// excavation
 				sectionInfo.setExcavateMethod(ExcavateMethodEnum.parser((String)section_new_sp.getSelectedItem()).getCode());
 				
-				sectionInfo.setSurveyPntName(pointA + "," + pointS1 + "," + pointS2 + "," + pointS3);
+				sectionInfo.setSurveyPntName(str.toString());
 				
 				sectionInfo.setGDU0(Float.valueOf(gdlj));
 				sectionInfo.setGDVelocity(Float.valueOf(gdsl));

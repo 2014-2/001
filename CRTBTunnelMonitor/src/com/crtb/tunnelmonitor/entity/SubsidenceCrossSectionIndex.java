@@ -84,7 +84,6 @@ public class SubsidenceCrossSectionIndex implements Serializable {
 	
 	public SubsidenceCrossSectionIndex(){
 		setGuid(CrtbUtils.generatorGUID());
-		setInfo(getGuid());
 	}
 
 	public int getID() {
