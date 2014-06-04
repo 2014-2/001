@@ -715,13 +715,13 @@ public class StationActivity extends BaseActivity {
 			public void onClick(View v) {
 				TotalStationIndex tsInfo = (TotalStationIndex) adapter.getItem(iListPos);
 				if (tsInfo != null) {
-					if (!tsInfo.isUsed()) {
+//					if (!tsInfo.isUsed()) {
 						TotalStationInfoDao.defaultDao().delete(tsInfo);
 						adapter.remove(tsInfo);
 						showDialog("操作成功");
-					} else {
-						showDialog("当前全站仪正在使用中，无法删除");
-					}
+//					} else {
+//						showDialog("当前全站仪正在使用中，无法删除");
+//					}
 				}
 				dialog.dismiss();
 			}
