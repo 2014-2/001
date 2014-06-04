@@ -293,6 +293,24 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 		loadDefault();
 	}
 	
+	private static int getExcavateMethod(String method) {
+		
+		if (method == null) {
+			return -1;
+		}
+
+		if (method.equals("全断面法")) {
+			return 0;
+		} else if (method.equals("台阶法")) {
+			return 1;
+		} else if (method.equals("三台阶法")) {
+			return 2;
+		} else if (method.equals("双侧壁法")) {
+			return 3;
+		}
+		
+		return -1;
+	}
 	private void loadDefault(){
 		
 		if(sectionInfo != null){
@@ -308,7 +326,7 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 			section_new_et_Chainage.setEnabled(false);
 			section_new_et_width.setEnabled(false);
 			
-			section_new_sp.setSelection(CrtbUtils.getExcavateMethod(ExcavateMethodEnum.parser(sectionInfo.getExcavateMethod()).getName()));
+			section_new_sp.setSelection(getExcavateMethod(ExcavateMethodEnum.parser(sectionInfo.getExcavateMethod()).getName()));
 			
 			if(sectionInfo.getSurveyPntName() != null){
 				
@@ -386,7 +404,7 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 	@Override
 	public void onClick(View v) {
 		
-		Date curdate = null ;
+		// Date curdate = null ;
 		
 		switch (v.getId()) {
 		case R.id.work_btn_quxiao:
@@ -433,7 +451,7 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 			// base
 			String prefix		= section_new_et_prefix.getEditableText().toString().trim() ;
 			String chainage 	= section_new_et_Chainage.getEditableText().toString().trim();// 里程
-			String name 		= section_new_et_name.getEditableText().toString().trim();
+			// String name 		= section_new_et_name.getEditableText().toString().trim();
 			String date 		= section_new_et_calendar.getEditableText().toString().trim();
 			String width 		= section_new_et_width.getEditableText().toString().trim();
 			
