@@ -44,18 +44,18 @@ public class TotalStationIndex implements Serializable {
     @ColumnText
     private String Info;				//备注
 
-    @ColumnString(length=32)
-    private String cmd;                 //串口
+//    @ColumnString(length=32)
+//    private String cmd;                 //串口
 
-    @ColumnBoolean
-    private boolean used;				// 是否选中
-    
-    @ColumnBoolean
-    private boolean checked;				// 是否使用
-    
+//    @ColumnBoolean
+//    private boolean used;				// 是否选中
+
+//    @ColumnBoolean
+//    private boolean checked;				// 是否使用
+
     public TotalStationIndex(){
-    	setUsed(false);
-    	setChecked(false);
+//    	setUsed(false);
+//    	setChecked(false);
     }
 
 	public int getID() {
@@ -130,27 +130,27 @@ public class TotalStationIndex implements Serializable {
 		Info = info;
 	}
 
-	public String getCmd() {
-		return cmd;
-	}
-
-	public void setCmd(String cmd) {
-		this.cmd = cmd;
-	}
-
-	public boolean isUsed() {
-		return used;
-	}
-
-	public void setUsed(boolean used) {
-		this.used = used;
-	}
-
-	public boolean isChecked() {
-		return checked;
-	}
-
-	public void setChecked(boolean checked) {
-		this.checked = checked;
-	}
+//	public String getCmd() {
+//		return cmd;
+//	}
+//
+//	public void setCmd(String cmd) {
+//		this.cmd = cmd;
+//	}
+//
+//	public boolean isUsed() {
+//		return used;
+//	}
+//
+//	public void setUsed(boolean used) {
+//		this.used = used;
+//	}
+//
+//	public boolean isChecked() {
+//		return checked;
+//	}
+//
+//	public void setChecked(boolean checked) {
+//		this.checked = checked;
+//	}
 }
