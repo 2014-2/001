@@ -12,10 +12,13 @@ import android.util.Log;
 
 import com.crtb.tunnelmonitor.dao.impl.v2.AlertHandlingInfoDao;
 import com.crtb.tunnelmonitor.dao.impl.v2.AlertListDao;
+import com.crtb.tunnelmonitor.dao.impl.v2.CrownSettlementARCHINGDao;
 import com.crtb.tunnelmonitor.dao.impl.v2.SubsidenceTotalDataDao;
 import com.crtb.tunnelmonitor.dao.impl.v2.TunnelSettlementTotalDataDao;
 import com.crtb.tunnelmonitor.entity.AlertHandlingList;
 import com.crtb.tunnelmonitor.entity.AlertList;
+import com.crtb.tunnelmonitor.entity.CrownSettlementARCHING;
+import com.crtb.tunnelmonitor.entity.SubsidenceSettlementARCHING;
 import com.crtb.tunnelmonitor.entity.SubsidenceTotalData;
 import com.crtb.tunnelmonitor.entity.TunnelSettlementTotalData;
 import com.crtb.tunnelmonitor.entity.AlertInfo;
@@ -143,40 +146,47 @@ public class AlertUtils {
         float sumOfDataCorrection = 0f;
         float thisDataCorrection = 0f;
 
+        CrownSettlementARCHING cArc = null;
+        SubsidenceSettlementARCHING sArc = null;
+
         if (point instanceof TunnelSettlementTotalData) {
             if (((TunnelSettlementTotalData) point).getDataStatus() == POINT_DATASTATUS_AS_FIRSTLINE) {
                 return ret;
             }
-
+            cArc = new CrownSettlementARCHING();
             type = 1;
             TunnelSettlementTotalData tPoint = (TunnelSettlementTotalData) point;
+            cArc.setOriginalDataId(tPoint.getGuid());
             thisCoords = tPoint.getCoordinate().split(",");
             thisTime = tPoint.getSurveyTime();
             thisDataCorrection = tPoint.getDataCorrection();
             pastInfoList = TunnelSettlementTotalDataDao.defaultDao().queryInfoBeforeMEASNo(
                     Integer.valueOf(tPoint.getChainageId()), tPoint.getPntType(), tPoint.getMEASNo());
             sumOfDataCorrection = thisDataCorrection + calculateSumOfDataCorrectionsOfTunnelSettlementTotalDatas(pastInfoList);
-            chainageId = Integer.valueOf(((TunnelSettlementTotalData) point).getChainageId());
-            sheetId = ((TunnelSettlementTotalData) point).getSheetId();
-            pntType = ((TunnelSettlementTotalData) point).getPntType();
-            originalDataID = String.valueOf(((TunnelSettlementTotalData) point).getID());
+            chainageId = Integer.valueOf(tPoint.getChainageId());
+            sheetId = tPoint.getSheetId();
+            cArc.setSheetId(sheetId);
+            pntType = tPoint.getPntType();
+            originalDataID = String.valueOf(tPoint.getID());
         } else if (point instanceof SubsidenceTotalData) {
             if (((SubsidenceTotalData) point).getDataStatus() == POINT_DATASTATUS_AS_FIRSTLINE) {
                 return ret;
             }
-
+            sArc = new SubsidenceSettlementARCHING();
             type = 2;
             SubsidenceTotalData sPoint = (SubsidenceTotalData) point;
+            sArc.setOriginalDataId(sPoint.getGuid());
             thisCoords = sPoint.getCoordinate().split(",");
             thisTime = sPoint.getSurveyTime();
             thisDataCorrection = sPoint.getDataCorrection();
             pastInfoList = SubsidenceTotalDataDao.defaultDao().queryInfoBeforeMEASNo(
                     Integer.valueOf(sPoint.getChainageId()), sPoint.getPntType(), sPoint.getMEASNo());
             sumOfDataCorrection = thisDataCorrection + calculateSumOfDataCorrectionsOfSubsidenceTotalDatas(pastInfoList);
-            chainageId = Integer.valueOf(((SubsidenceTotalData) point).getChainageId());
-            sheetId = ((SubsidenceTotalData) point).getSheetId();
-            pntType = ((SubsidenceTotalData) point).getPntType();
-            originalDataID = String.valueOf(((SubsidenceTotalData) point).getID());
+            chainageId = Integer.valueOf(sPoint.getChainageId());
+            sheetId = sPoint.getSheetId();
+            sArc.setSheetId(sheetId);
+            pntType = sPoint.getPntType();
+            originalDataID = String.valueOf(sPoint.getID());
         } else {
             return null;
         }
@@ -211,8 +221,14 @@ public class AlertUtils {
 //                    accumulativeSubsidence = Math.abs(accumulativeSubsidence);
                     int uType = type == 1 ? GONGDING_LEIJI_XIACHEN_EXCEEDING
                             : DIBIAO_LEIJI_XIACHEN_EXCEEDING;
+                    accumulativeSubsidence = CrtbUtils.formatDouble(accumulativeSubsidence, 1);
+                    if (type == 1) {
+                        cArc.setTotalSettlement(accumulativeSubsidence);
+                    } else if (type == 2) {
+                        
+                    }
+                    
                     if (Math.abs(accumulativeSubsidence) >= ACCUMULATIVE_THRESHOLD) {
-                        accumulativeSubsidence = CrtbUtils.formatDouble(accumulativeSubsidence, 1);
                         ret.leijiType = uType;
                         ret.leijiValue = accumulativeSubsidence;
                         if (!readOnly) {
@@ -238,6 +254,7 @@ public class AlertUtils {
 
                                 AlertHandlingInfoDao.defaultDao().insertItem(alertId, handlingRemark,
                                         new Date(System.currentTimeMillis()), String.valueOf(chainageId) + pntType, ALERT_STATUS_OPEN/*报警*/, 1/*true*/);
+
 //                            }
                         }
                     } else if (!readOnly && sheetId != null) {

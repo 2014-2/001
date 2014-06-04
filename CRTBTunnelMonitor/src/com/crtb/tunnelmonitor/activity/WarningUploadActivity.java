@@ -35,7 +35,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.crtb.tunnelmonitor.dao.impl.v2.AlertListDao;
 import com.crtb.tunnelmonitor.entity.AlertInfo;
+import com.crtb.tunnelmonitor.entity.AlertList;
 import com.crtb.tunnelmonitor.network.CrtbWebService;
 import com.crtb.tunnelmonitor.network.RpcCallback;
 import com.crtb.tunnelmonitor.task.WarningDataManager;
@@ -123,10 +125,33 @@ public class WarningUploadActivity extends Activity {
         if (isSuccess) {
             mUploadStatusIcon.setImageResource(R.drawable.success);
             mUploadStatusText.setText(R.string.data_upload_alert_success);
+
+            List<WarningUploadData> warningDataList = mAdapter.getWarningData();
+            if (warningDataList != null && warningDataList.size() > 0) {
+                for (WarningUploadData uploadData : warningDataList) {
+                    if (uploadData.isChecked()) {
+                        UploadWarningData uW = uploadData.getUploadWarningData();
+                        if (uW != null) {
+                            AlertInfo ai = uW.getAlertInfo();
+                            if (ai != null) {
+                                int alertId = ai.getAlertId();
+                                AlertList bean = AlertListDao.defaultDao().queryOneById(alertId);
+                                if (bean != null) {
+                                    bean.setUploadStatus(2);
+                                    AlertListDao.defaultDao().update(bean);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            loadData();
         } else {
             mUploadStatusIcon.setImageResource(R.drawable.fail);
             mUploadStatusText.setText(R.string.data_upload_alert_fail);
         }
+
     }
 
     private void loadData() {
@@ -376,6 +401,12 @@ public class WarningUploadActivity extends Activity {
         }
 
         public boolean isUploaded() {
+            if (mUploadWarningData != null) {
+                AlertInfo ai = mUploadWarningData.getAlertInfo();
+                if (ai != null) {
+                    return ai.getUploadStatus() == 2;
+                }
+            }
             return false;
         }
 
