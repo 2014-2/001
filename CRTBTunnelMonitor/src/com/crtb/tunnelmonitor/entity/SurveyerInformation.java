@@ -31,13 +31,13 @@ public class SurveyerInformation implements Serializable {
 	private String Guid ;					// guid
 	
 	@ColumnString(length=64)
-	private String Password;				//密码
+	private String Password;				// 密码
 	
 	@ColumnText
-	private String Info;					//备注
+	private String Info;					// 备注
 	
-	@ColumnInt
-	private int ProjectID;					//工作面id
+	@ColumnText
+	private String ProjectID;				// 记录单guid
 	
 	public SurveyerInformation(){
 		setGuid(CrtbUtils.generatorGUID());
@@ -91,11 +91,12 @@ public class SurveyerInformation implements Serializable {
 		Info = info;
 	}
 
-	public int getProjectID() {
+	public String getProjectID() {
 		return ProjectID;
 	}
 
-	public void setProjectID(int projectID) {
+	public void setProjectID(String projectID) {
 		ProjectID = projectID;
 	}
+
 }

@@ -33,6 +33,7 @@ import com.crtb.tunnelmonitor.AppCRTBApplication;
 import com.crtb.tunnelmonitor.CommonObject;
 import com.crtb.tunnelmonitor.WorkFlowActivity;
 import com.crtb.tunnelmonitor.dao.impl.v2.RawSheetIndexDao;
+import com.crtb.tunnelmonitor.dao.impl.v2.SurveyerInformationDao;
 import com.crtb.tunnelmonitor.entity.ProjectIndex;
 import com.crtb.tunnelmonitor.entity.RawSheetIndex;
 import com.crtb.tunnelmonitor.entity.SurveyerInformation;
@@ -100,7 +101,8 @@ public class RecordNewActivity extends WorkFlowActivity implements OnPageChangeL
     @InjectView(id=R.id.section_use_list,parent="mSectionListLayout")
     private CrtbRecordTunnelSectionInfoListView sectionListView ;
     
-	private RawSheetIndex recordInfo = null;
+	private RawSheetIndex recordInfo 		= null;
+	private SurveyerInformation surveyer 	= null ;
 	private boolean editRawSheet , editSection ;
 	
 	private ProjectIndex mCurrentWorkPlan;
@@ -195,10 +197,12 @@ public class RecordNewActivity extends WorkFlowActivity implements OnPageChangeL
     		setTopbarTitle("编辑隧道内断面记录单");
 			sectionListView.setSectionIds(recordInfo.getCrossSectionIDs());
 			
+			surveyer = SurveyerInformationDao.defaultDao().querySurveyerBySheetIndexGuid(recordInfo.getGuid());
+			
 			section_new_et_prefix.setText(mCurrentWorkPlan.getChainagePrefix());
 			record_Chainage.setText(CrtbUtils.doubleToString(recordInfo.getFACEDK()));
-			record_Person.setText(recordInfo.getSurveyer());
-			record_Card.setText(recordInfo.getCertificateID());
+			record_Person.setText(surveyer.getSurveyerName());
+			record_Card.setText(surveyer.getCertificateID());
 			record_Chainage.setEnabled(false);
 			record_Person.setEnabled(false);
 			record_Card.setEnabled(false);
@@ -236,6 +240,8 @@ public class RecordNewActivity extends WorkFlowActivity implements OnPageChangeL
 				showText("你不能保存,请进入选择断面");
 				return ;
 			}
+			
+			SurveyerInformationDao InfoDao = SurveyerInformationDao.defaultDao() ;
 			
 			// base
 			String chainage 	= record_Chainage.getEditableText().toString().trim();// 里程
@@ -284,26 +290,34 @@ public class RecordNewActivity extends WorkFlowActivity implements OnPageChangeL
 				recordInfo.setCrossSectionType(RawSheetIndex.CROSS_SECTION_TYPE_TUNNEL);
 				recordInfo.setFACEDK(CrtbUtils.formatDouble(chainage));
 				recordInfo.setCreateTime(DateUtils.toDate(currentTime,DateUtils.PART_TIME_FORMAT));
-				recordInfo.setSurveyer(person);
-				recordInfo.setCertificateID(idcard);
 				recordInfo.setTEMPERATURE(temp);
 				recordInfo.setFACEDESCRIPTION(descr);
 				recordInfo.setCrossSectionIDs(sections);
 				recordInfo.setUploadStatus(1); //表示记录单未上传
 				
 				RawSheetIndexDao.defaultDao().insert(recordInfo);
+				
+				surveyer = new SurveyerInformation() ;
+				surveyer.setSurveyerName(person);
+				surveyer.setCertificateID(idcard);
+				surveyer.setProjectID(recordInfo.getGuid());
+				
+				// 保存测量人员
+				InfoDao.insert(surveyer);
+				
 			} else {
 				
 				// 基本信息
 				recordInfo.setCrossSectionType(RawSheetIndex.CROSS_SECTION_TYPE_TUNNEL);
 				recordInfo.setFACEDK(CrtbUtils.formatDouble(chainage));
 				recordInfo.setCreateTime(DateUtils.toDate(currentTime,DateUtils.PART_TIME_FORMAT));
-				recordInfo.setSurveyer(person);
-				recordInfo.setCertificateID(idcard);
 				recordInfo.setTEMPERATURE(temp);
 				recordInfo.setFACEDESCRIPTION(descr);
 				recordInfo.setCrossSectionIDs(sections);
 				
+				// 更新测量人员
+				
+				// 更新记录单
 				RawSheetIndexDao.defaultDao().update(recordInfo);
 			}
 			

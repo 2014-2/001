@@ -7,7 +7,6 @@ import org.zw.android.framework.db.ColumnBoolean;
 import org.zw.android.framework.db.ColumnDate;
 import org.zw.android.framework.db.ColumnDouble;
 import org.zw.android.framework.db.ColumnInt;
-import org.zw.android.framework.db.ColumnString;
 import org.zw.android.framework.db.ColumnText;
 import org.zw.android.framework.db.Table;
 import org.zw.android.framework.db.core.ColumnPrimaryKey;
@@ -61,18 +60,11 @@ public class RawSheetIndex implements Serializable {
 											// TunnelCrossSectionIndex
 											// SubsidenceCrossSectionIndex
 	
-	@ColumnString(length=100)
-	private String Surveyer ;				// 测量人员  ------扩展
-	
-	@ColumnString(length=20)
-	private String CertificateID;			// 测量人员id------扩展
-
 	@ColumnBoolean
 	private boolean checked ;				// 是否选择
 	
 	public RawSheetIndex(){
 		setGuid(CrtbUtils.generatorGUID());
-		setInfo(getGuid());
 	}
 	
 	public int getID() {
@@ -105,22 +97,6 @@ public class RawSheetIndex implements Serializable {
 
 	public void setChecked(boolean checked) {
 		this.checked = checked;
-	}
-
-	public String getSurveyer() {
-		return Surveyer;
-	}
-
-	public void setSurveyer(String surveyer) {
-		Surveyer = surveyer;
-	}
-
-	public String getCertificateID() {
-		return CertificateID;
-	}
-
-	public void setCertificateID(String certificateID) {
-		CertificateID = certificateID;
 	}
 
 	public int getCrossSectionType() {
