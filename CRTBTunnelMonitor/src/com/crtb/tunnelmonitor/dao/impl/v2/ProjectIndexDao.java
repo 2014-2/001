@@ -166,11 +166,11 @@ public final class ProjectIndexDao extends AbstractDao<ProjectIndex> {
     }
 
 	// 导入数据库
-	public final int importDb(String dbName){
+	public final int importDb(ProjectIndex obj){
 		
 		final CrtbUser user = CrtbLicenseDao.defaultDao().queryCrtbUser() ;
 		
-		if(user == null){
+		if(user == null || obj == null){
 			return DB_EXECUTE_FAILED ;
 		}
 
@@ -198,77 +198,38 @@ public final class ProjectIndexDao extends AbstractDao<ProjectIndex> {
 			}
 		}
 		
-		// 解密文件
-		String tempName	= getDbUniqueTempName(dbName);
-		String[] info 	= CrtbDbFileUtils.openDbFile(dbName);
+		// 保存到管理数据库
 		
-		if(info == null){
-			return DB_EXECUTE_FAILED ; 
-		}
+		CrtbProject pro = new CrtbProject() ;
+		pro.setUsername(user.getUsername());
 		
-		// 打开数据库
-		final IAccessDatabase db = mFramework.openDatabaseByName(tempName, 0);
+		// 第一次保存工作面对应的数据库名称
+		pro.setDbName(obj.getProjectName());
 		
-		if(db == null){
-			return DB_EXECUTE_FAILED ; 
-		}
+		pro.setProjectId(obj.getId());
+		pro.setProjectName(obj.getProjectName());
+		pro.setCreateTime(obj.getCreateTime());
+		pro.setStartChainage(obj.getStartChainage());
+		pro.setEndChainage(obj.getEndChainage());
+		pro.setLastOpenTime(obj.getLastOpenTime());
+		pro.setInfo(obj.getInfo());
 		
-		String sql = "select * from ProjectIndex" ;
+		pro.setChainagePrefix(obj.getChainagePrefix());
 		
-		ProjectIndex obj = db.queryObject(sql, null, ProjectIndex.class);
-		int code = DB_EXECUTE_FAILED ;
+		pro.setGDLimitVelocity(obj.getGDLimitVelocity());
+		pro.setGDLimitTotalSettlement(obj.getGDLimitTotalSettlement());
 		
-		if(obj != null){
-			
-			CrtbProject pro = new CrtbProject() ;
-			pro.setUsername(user.getUsername());
-			
-			// 第一次保存工作面对应的数据库名称
-			pro.setDbName(dbName);
-			
-			pro.setProjectId(obj.getId());
-			pro.setProjectName(obj.getProjectName());
-			pro.setCreateTime(obj.getCreateTime());
-			pro.setStartChainage(obj.getStartChainage());
-			pro.setEndChainage(obj.getEndChainage());
-			pro.setLastOpenTime(obj.getLastOpenTime());
-			pro.setInfo(obj.getInfo());
-			
-			pro.setChainagePrefix(obj.getChainagePrefix());
-			
-			pro.setGDLimitVelocity(obj.getGDLimitVelocity());
-			pro.setGDLimitTotalSettlement(obj.getGDLimitTotalSettlement());
-			
-			pro.setSLLimitVelocity(obj.getSLLimitVelocity());
-			pro.setSLLimitTotalSettlement(obj.getSLLimitTotalSettlement());
-			
-			pro.setDBLimitVelocity(obj.getDBLimitVelocity());
-			pro.setDBLimitTotalSettlement(obj.getDBLimitTotalSettlement());
-			
-			pro.setConstructionFirm(obj.getConstructionFirm());
-			pro.setLimitedTotalSubsidenceTime(obj.getLimitedTotalSubsidenceTime());
-			
-			// 保存工作面到默认数据库中
-			int noerror = getDefaultDb().saveObject(pro) ;
-			
-			// 保存失败
-			if(noerror < 0){
-				
-				db.execute("delete from ProjectIndex where Id = ", new String[]{String.valueOf(obj.getId())});
-				
-				code = DB_EXECUTE_FAILED ;
-			} else {
-				code = DB_EXECUTE_SUCCESS ;
-			}
-		}
+		pro.setSLLimitVelocity(obj.getSLLimitVelocity());
+		pro.setSLLimitTotalSettlement(obj.getSLLimitTotalSettlement());
 		
-		// 删除数据库缓存
-		mFramework.removeDatabaseByName(dbName);
+		pro.setDBLimitVelocity(obj.getDBLimitVelocity());
+		pro.setDBLimitTotalSettlement(obj.getDBLimitTotalSettlement());
 		
-		// 删除临时数据库
-		CrtbDbFileUtils.closeDbFile(tempName);
+		pro.setConstructionFirm(obj.getConstructionFirm());
+		pro.setLimitedTotalSubsidenceTime(obj.getLimitedTotalSubsidenceTime());
 		
-		return code ;
+		// 保存工作面到默认数据库中
+		return getDefaultDb().saveObject(pro) > 0 ?  DB_EXECUTE_SUCCESS : DB_EXECUTE_FAILED ;
 	}
 
 	/**
@@ -504,20 +465,20 @@ public final class ProjectIndexDao extends AbstractDao<ProjectIndex> {
 			return DB_EXECUTE_FAILED ;
 		}
 		
-		String dbName	= bean.getProjectName() ;
+		String proName	= bean.getProjectName() ;
 		
-		getDefaultDb().execute("delete from CrtbProject where dbName = ? ", new String[]{dbName}) ;
+		getDefaultDb().execute("delete from CrtbProject where ProjectName = ? ", new String[]{proName}) ;
 		
 		// 删除数据库缓存
-		FrameworkFacade.getFrameworkFacade().removeDatabaseByName(dbName);
+		FrameworkFacade.getFrameworkFacade().removeDatabaseByName(proName);
 		
 		// 删除原始文件
-		String srcPath = CrtbDbFileUtils.getLocalDbPath(dbName);
+		String srcPath = CrtbDbFileUtils.getLocalDbPath(proName);
 		File file = new File(srcPath);
 		file.delete();
 		
 		// 临时文件
-		srcPath = CrtbDbFileUtils.getLocalDbTempPath(dbName);
+		srcPath = CrtbDbFileUtils.getLocalDbTempPath(proName);
 		if(srcPath != null){
 			file = new File(srcPath);
 			file.delete();

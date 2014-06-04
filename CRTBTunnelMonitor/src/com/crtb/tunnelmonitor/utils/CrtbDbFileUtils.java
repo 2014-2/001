@@ -4,7 +4,9 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.zw.android.framework.IAccessDatabase;
 import org.zw.android.framework.impl.ExecuteAsyncTaskImpl;
+import org.zw.android.framework.impl.FrameworkFacade;
 import org.zw.android.framework.util.StringUtils;
 
 import ICT.utils.DbAESEncrypt;
@@ -19,6 +21,7 @@ import com.crtb.tunnelmonitor.AppHandler;
 import com.crtb.tunnelmonitor.AppLogger;
 import com.crtb.tunnelmonitor.BaseAsyncTask;
 import com.crtb.tunnelmonitor.dao.impl.v2.ProjectIndexDao;
+import com.crtb.tunnelmonitor.entity.ProjectIndex;
 
 /**
  * 数据库文件导入导出
@@ -225,7 +228,7 @@ public final class CrtbDbFileUtils {
 	 * @param path
 	 * @param handler
 	 */
-	public static void importDb(final Context context,
+	public static void importDb(final Context context,final List<ProjectIndex> oldList,
 			final String path,
 			AppHandler handler){
 		
@@ -238,36 +241,111 @@ public final class CrtbDbFileUtils {
 			@Override
 			public void process() {
 				
-				String fullName 	= path.substring(path.lastIndexOf("/") + 1);
-				String dbName 		= fullName.substring(0, fullName.lastIndexOf("."));
-				String outPath 		= getLocalDbPath(dbName);
+				// 为了防止用户修改文件名称
+				//////////////////////////////////////////打开导入数据库//////////////////////////////
 				
-				IDbEncrypt encrypt 	= new DbNoneEncrypt();//new DbAESEncrypt() ;
+				// 导入的临时文件名称
+				String importName = "import_temp" ;
 				
-				try {
+				// 解密器(文件复制)
+				IDbEncrypt encrypt 	= new DbNoneEncrypt();
+				String outPath 		= getLocalDbPath(importName);
+				String outTempPath 	= getLocalDbTempPath(importName);
+				
+				boolean success 	= encrypt.decrypt(path, outPath) ;
+				
+				if(!success){
+					sendMessage(MSG_INPORT_DB_FAILED,"文件解密失败") ;
+					return ;
+				}
+				
+				// 打开工作面
+				String[] info 	= CrtbDbFileUtils.openDbFile(importName);
+				
+				if(info == null){
+					sendMessage(MSG_INPORT_DB_FAILED,"工作面导入失败!") ;
+					return ;
+				}
+				
+				// 打开数据库
+				final IAccessDatabase db = FrameworkFacade.getFrameworkFacade().openDatabaseByName(importName + ".temp", 0);
+				
+				// 检测是否存在相同的工作面
+				
+				if(db == null){
+					sendMessage(MSG_INPORT_DB_FAILED,"打开数据库失败!") ;
+					return ;
+				}
+				
+				String sql = "select * from ProjectIndex" ;
+				
+				ProjectIndex obj = db.queryObject(sql, null, ProjectIndex.class);
+				
+				if(obj == null){
+					sendMessage(MSG_INPORT_DB_FAILED,"导入数据库中没有工作面，无法导入") ;
+					return ;
+				}
+				
+				// 清除缓存
+				FrameworkFacade.getFrameworkFacade().removeDatabaseByName(importName + ".temp");
+				
+				// 密码文件
+				File file = new File(outPath);
+				file.delete() ;
+				
+				// 解密文件
+				file = new File(outTempPath);
+				file.delete() ;
+				
+				// 是否存在相同工作面
+				if(oldList != null){
 					
-					// 解密
-					boolean success = encrypt.decrypt(path, outPath) ;
-					
-					if(success){
-						
-						// 写入数据库
-						int code = ProjectIndexDao.defaultWorkPlanDao().importDb(dbName) ;
-						
-						Thread.sleep(500);
-						
-						if(code == 100){
-							sendMessage(MSG_INPORT_DB_FAILED,"试用版用户, 最多只能有1个工作面") ;
-						} else {
-							AppLogger.d(TAG, "zhouwei : 数据库导入完成: " + outPath); 
-							sendMessage(MSG_INPORT_DB_SUCCESS) ;
+					for(ProjectIndex pro : oldList){
+						if(pro.getProjectName().equals(obj.getProjectName())){
+							sendMessage(MSG_INPORT_DB_FAILED,"已经存在相同工作面") ;
+							return ;
 						}
-					} else {
-						sendMessage(MSG_INPORT_DB_FAILED) ;
 					}
-				} catch (Exception e1) {
-					e1.printStackTrace();
-					sendMessage(MSG_INPORT_DB_FAILED) ;
+				}
+				
+				//////////////////////////////////正式导入////////////////////////////////
+				
+				// 导入的数据库名称
+				String dbName 		= obj.getProjectName() ;
+				String newPath 		= getLocalDbPath(dbName);
+				
+				// 文件重新复制
+				success 	= encrypt.decrypt(path, newPath) ;
+				
+				if(!success){
+					sendMessage(MSG_INPORT_DB_FAILED,"文件解密失败") ;
+					return ;
+				}
+				
+				// 导入的文件
+				file = new File(newPath);
+				
+				// 写入数据库
+				int code = ProjectIndexDao.defaultWorkPlanDao().importDb(obj) ;
+				
+				if(code == ProjectIndexDao.DB_EXECUTE_FAILED){
+					
+					file.delete() ;
+					
+					sendMessage(MSG_INPORT_DB_FAILED,"数据库导入失败") ;
+					
+				} else if(code == 100){
+					
+					file.delete() ;
+					
+					sendMessage(MSG_INPORT_DB_FAILED,"试用版用户, 最多只能有1个工作面") ;
+					
+				} else {
+					
+					AppLogger.d(TAG, "zhouwei : 数据库导入完成: " + outPath); 
+					
+					// 导入完成
+					sendMessage(MSG_INPORT_DB_SUCCESS) ;
 				}
 			}
 		}) ;

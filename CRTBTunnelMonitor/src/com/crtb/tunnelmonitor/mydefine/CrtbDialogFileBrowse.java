@@ -17,6 +17,8 @@ import android.widget.Toast;
 
 import com.crtb.tunnelmonitor.AppHandler;
 import com.crtb.tunnelmonitor.activity.R;
+import com.crtb.tunnelmonitor.dao.impl.v2.ProjectIndexDao;
+import com.crtb.tunnelmonitor.entity.ProjectIndex;
 import com.crtb.tunnelmonitor.utils.CrtbDbFileUtils;
 import com.crtb.tunnelmonitor.widget.CrtbBaseAdapter;
 
@@ -29,7 +31,8 @@ import com.crtb.tunnelmonitor.widget.CrtbBaseAdapter;
 public final class CrtbDialogFileBrowse extends CrtbDialog {
 	
 	private int			 	mHeight = 300 ;
-	private List<File>		mList ;
+	private List<File> 		mInportFileList ;
+	private List<ProjectIndex> 	mProjectList ;
 	private AppHandler		mHanlder ;
 	private CrtbDialogConnecting	mProgressDialog ;
 	private TextView		mTitle ;
@@ -40,7 +43,9 @@ public final class CrtbDialogFileBrowse extends CrtbDialog {
 		
 		mHomeHandler = handler ;
 		mHeight	= height ;
-		mList	= CrtbDbFileUtils.getImportFiles() ;
+		mInportFileList	= CrtbDbFileUtils.getImportFiles() ;
+		mProjectList	= ProjectIndexDao.defaultWorkPlanDao().queryAllWorkPlan() ;
+		
 		mHanlder= new AppHandler(context){
 
 			@Override
@@ -89,7 +94,7 @@ public final class CrtbDialogFileBrowse extends CrtbDialog {
 	}
 	
 	public boolean hasIuputFiles(){
-		return mList != null && mList.size() > 0 ;
+		return mInportFileList != null && mInportFileList.size() > 0 ;
 	}
 
 	@Override
@@ -116,28 +121,15 @@ public final class CrtbDialogFileBrowse extends CrtbDialog {
 				
 				dismiss() ;
 				
-				List<File> list = CrtbDbFileUtils.getLocalDbFiles(getContext()) ;
+				// 选择的导入文件
 				File file = adapter.getItem(position);
-				String str = file.getName() ;
-				String inName = str.substring(0, str.lastIndexOf("."));
-				
-				for(File f : list){
-					
-					String fn	= f.getName() ;
-					String sn 	= fn.substring(0, fn.lastIndexOf("."));
-					
-					if(sn.equals(inName)){
-						Toast.makeText(getContext(), "已经存在该数据库", Toast.LENGTH_SHORT).show() ;
-						return ;
-					}
-				}
 				
 				// 导入
-				CrtbDbFileUtils.importDb(getContext(), file.getAbsolutePath(), mHanlder);
+				CrtbDbFileUtils.importDb(getContext(), mProjectList,file.getAbsolutePath(), mHanlder);
 			}
 		}) ;
 		
-		if(mList == null || mList.isEmpty()){
+		if(mInportFileList == null || mInportFileList.isEmpty()){
 			mTitle.setText("没有可导入的文件");
 			Toast.makeText(getContext(), "没有可导入的文件", Toast.LENGTH_LONG).show() ;
 		}
@@ -151,12 +143,12 @@ public final class CrtbDialogFileBrowse extends CrtbDialog {
 
 		@Override
 		public int getCount() {
-			return mList != null ? mList.size() : 0 ;
+			return mInportFileList != null ? mInportFileList.size() : 0 ;
 		}
 
 		@Override
 		public File getItem(int position) {
-			return mList != null ? mList.get(position) : null;
+			return mInportFileList != null ? mInportFileList.get(position) : null;
 		}
 
 		@Override
