@@ -103,7 +103,7 @@ public final class CrtbUtils {
         String sectionCode = CrtbWebService.getInstance().getSiteCode()
                 + String.format("%04d", sectionSequence);
         outParamter.setSectioCode(sectionCode);
-        String digMethod = ExcavateMethodEnum.parser(section.getExcavateMethod()).getName();
+        String digMethod = ExcavateMethodEnum.parser(section.getExcavateMethod()).toString();
         outParamter.setDigMethod(digMethod);
         String pointList = "";
         if ("QD".equals(digMethod)) {// 全断面法
