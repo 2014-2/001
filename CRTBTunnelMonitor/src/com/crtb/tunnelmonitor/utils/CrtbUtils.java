@@ -1,7 +1,6 @@
 package com.crtb.tunnelmonitor.utils;
 
 import java.math.BigDecimal;
-import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -27,9 +26,15 @@ import com.crtb.tunnelmonitor.network.CrtbWebService;
 import com.crtb.tunnelmonitor.network.PointUploadParameter;
 import com.crtb.tunnelmonitor.network.SectionUploadParamter;
 
+/**
+ * 所有的浮点数精确到3位
+ * 
+ * @author zhouwei
+ *
+ */
 public final class CrtbUtils {
 	
-	static DecimalFormat df = new DecimalFormat("#.0000");
+	// static DecimalFormat df = new DecimalFormat("#.0000");
 	private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     public static double formatDouble(double value, int scale) {
@@ -46,22 +51,22 @@ public final class CrtbUtils {
     }
 
     public static double formatDouble(String value) {
-        return formatDouble(value, 4);
+        return formatDouble(value, 3);
     }
 
 	public static String doubleToString(double value){
 		BigDecimal b = new BigDecimal(value);
-		return b.setScale(4,BigDecimal.ROUND_HALF_DOWN).toString();
+		return b.setScale(3,BigDecimal.ROUND_HALF_DOWN).toString();
 	}
 
 	public static float formatFloat(String value){
 		BigDecimal b = new BigDecimal(value);
-		return b.setScale(4,BigDecimal.ROUND_HALF_DOWN).floatValue() ;
+		return b.setScale(3,BigDecimal.ROUND_HALF_DOWN).floatValue() ;
 	}
 	
 	public static String formatSectionName(String pre, double value){
 		
-		String str	= String.valueOf(value);
+		String str	= doubleToString(value);
 		double v	= formatDouble(value);
 		
 		String km 	= String.valueOf((int)(v / 1000));

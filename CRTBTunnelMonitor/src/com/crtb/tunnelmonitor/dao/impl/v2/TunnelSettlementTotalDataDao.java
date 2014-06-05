@@ -51,7 +51,7 @@ public class TunnelSettlementTotalDataDao extends AbstractDao<TunnelSettlementTo
 		mDatabase.execute(sql, SQLiteParamUtils.toParamemter(bean.getID()));
 	}
 
-    public List<TunnelSettlementTotalData> queryAllOrderByTimeDesc(String pntType) {
+    public List<TunnelSettlementTotalData> queryAllOrderByMEASNoDesc(String pntType) {
 
         final IAccessDatabase mDatabase = getCurrentDb();
 
@@ -59,7 +59,7 @@ public class TunnelSettlementTotalDataDao extends AbstractDao<TunnelSettlementTo
             return null;
         }
 
-        String sql = "select * from TunnelSettlementTotalData where PntType=? ORDER BY SurveyTime DESC";
+        String sql = "select * from TunnelSettlementTotalData where PntType=? ORDER BY MEASNo DESC";
         String[] args = SQLiteParamUtils.toParamemter(pntType);
 
         return mDatabase.queryObjects(sql, args,TunnelSettlementTotalData.class);
