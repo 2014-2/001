@@ -276,7 +276,7 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 		mContainerLayout.addView(view);
 	}
 	
-	private TestPointHolder createTunnelTestPointView(final TunnelSettlementTotalData bean,final String type,String typeName,String suffix){
+	private TestPointHolder createTunnelTestPointView(final TunnelSettlementTotalData bean,final TestPointHolder holder1,final String type,String typeName,String suffix){
 		
 		final TestPointHolder holder 	= new TestPointHolder() ;
 		View view						= InjectCore.injectOriginalObject(holder);
@@ -324,7 +324,7 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 				}
 				
 				// 测量
-				connectSurveyProvider(holder,type,RawSheetIndex.CROSS_SECTION_TYPE_TUNNEL);
+				connectSurveyProvider(holder,holder1,type,RawSheetIndex.CROSS_SECTION_TYPE_TUNNEL);
 			}
 		}) ;
 		
@@ -398,7 +398,7 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 	}
 	
 	// 异步测量
-	private void connectSurveyProvider(final TestPointHolder holder,final String type,final int sectionType){
+	private void connectSurveyProvider(final TestPointHolder holder,final  TestPointHolder holde1 ,final String type,final int sectionType){
 		
 		// 暂时去掉优化
 		/*ExecuteAsyncTaskImpl.defaultSyncExecutor().executeTask(new BaseAsyncTask(mHanlder){
@@ -462,6 +462,7 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 		
 		TestInfo info = new TestInfo() ;
 		info.holder	= holder ;
+		info.holder1= holde1 ;
 		info.type	= type ;// 测点类型
 		info.sectionType	= sectionType ;// 断面类型
 		
@@ -577,7 +578,7 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 							// tempTunnelData.add(obj);
 							
 							if(info.type.equals(AppConfig.POINT_A)){
-								doWarning(info.holder, AlertUtils.getPointSubsidenceExceedMsg(obj, false));
+								doWarning(info.holder,info.holder1, AlertUtils.getPointSubsidenceExceedMsg(obj, false));
 							} else {
 								
 								if(info.type.equals(AppConfig.POINT_S1_1)
@@ -589,7 +590,7 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 								}
 								
 								if(pS1 != null && pS2 != null){
-									doWarningLine(info.holder, pS1, pS2, false);
+									doWarningLine(info.holder,info.holder1, pS1, pS2, false);
 								}
 							}
 							
@@ -652,7 +653,7 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 							// 保存临时数据
 							// tempSubsidenceData.add(obj);
 							
-						    doWarning(info.holder, AlertUtils.getPointSubsidenceExceedMsg(obj, false));
+						    doWarning(info.holder, info.holder1, AlertUtils.getPointSubsidenceExceedMsg(obj, false));
 							showText((update ? "更新" : "保存") + "成功");
 							
 						} else {
@@ -667,25 +668,25 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 		};
 	}
 
-	private void doWarningLine(TestPointHolder holder, TunnelSettlementTotalData p1, TunnelSettlementTotalData p2, boolean readOnly){
+	private void doWarningLine(TestPointHolder view1,TestPointHolder view2, TunnelSettlementTotalData p1, TunnelSettlementTotalData p2, boolean readOnly){
 		
 	    String[] list = AlertUtils.getLineConvergenceExceedMsg(p1,p2, readOnly);
 
-		doWarning(holder, list);
+		doWarning(view1,view2, list);
 
 		pS1 = null;
 		pS2 = null;
 	}
 	
-	private void doWarning(TestPointHolder holder, String[] list){
+	private void doWarning(TestPointHolder view1,TestPointHolder view2, String[] list){
 		
 		if(list == null || list.length == 0){
 			System.out.println("zhouwei : 检查拱顶 ------ 没有错误");
 			return ;
 		}
 		
-		holder.warringLayout.removeAllViews() ;
-		holder.warringLayout.setVisibility(View.VISIBLE);
+		view1.warringLayout.removeAllViews() ;
+		view1.warringLayout.setVisibility(View.VISIBLE);
 		
 		for(String msg : list){
 			
@@ -695,7 +696,14 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 			
 			if(!StringUtils.isEmpty(msg)){
 				tv.setText(msg);
-				holder.warringLayout.addView(tv);
+				
+				if(view1 != null){
+					view1.warringLayout.addView(tv);
+				}
+				
+				if(view2 != null){
+					view2.warringLayout.addView(tv);
+				}
 			}
 		}
 	}
@@ -741,7 +749,7 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 				}
 				
 				// 测量
-				connectSurveyProvider(holder,type,RawSheetIndex.CROSS_SECTION_TYPE_SUBSIDENCES);
+				connectSurveyProvider(holder,null,type,RawSheetIndex.CROSS_SECTION_TYPE_SUBSIDENCES);
 			}
 		}) ;
 		
@@ -859,7 +867,8 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 			int type 		= tunnelSection.getExcavateMethod() ;
 			pS1				= null ;
 			pS2				= null ;
-			TestPointHolder holder = null ;
+			TestPointHolder holder1 = null ;
+			TestPointHolder holder 	= null ;
 			
 			if(type < 0){
 				showText("无效开挖类型: " + type);
@@ -874,12 +883,12 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 			
 			// A
 			bean 	= dao.queryTunnelTotalData(rawSheetBean.getGuid(),tunnelSection.getGuid(), AppConfig.POINT_A);
-			holder 	= createTunnelTestPointView(bean,AppConfig.POINT_A,getPntName(0),"");
+			holder 	= createTunnelTestPointView(bean,null,AppConfig.POINT_A,getPntName(0),"");
 			addTestPoint(holder.mItemView);
 			
 			// A 报警
 			if(bean != null){
-				doWarning(holder, AlertUtils.getPointSubsidenceExceedMsg(bean, true));
+				doWarning(holder,null, AlertUtils.getPointSubsidenceExceedMsg(bean, true));
 			}
 			
 			// 全断面法(A,S1(1,2))
@@ -887,18 +896,18 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 				
 				// S1-1
 				bean 	= dao.queryTunnelTotalData(rawSheetBean.getGuid(),tunnelSection.getGuid(), AppConfig.POINT_S1_1);
-				holder 	= createTunnelTestPointView(bean,AppConfig.POINT_S1_1,getPntName(1),"") ;
-				addTestPoint(holder.mItemView);
+				holder1 = createTunnelTestPointView(bean,null,AppConfig.POINT_S1_1,getPntName(1),"") ;
+				addTestPoint(holder1.mItemView);
 				p1 = bean ;
 				
 				// S1-2
 				bean 	= dao.queryTunnelTotalData(rawSheetBean.getGuid(),tunnelSection.getGuid(), AppConfig.POINT_S1_2);
-				holder 	= createTunnelTestPointView(bean,AppConfig.POINT_S1_2,getPntName(2),"");
+				holder 	= createTunnelTestPointView(bean,holder1,AppConfig.POINT_S1_2,getPntName(2),"");
 				addTestPoint(holder.mItemView);
 				p2 = bean ;
 				
 				if(p1 != null && p2 != null){
-					doWarningLine(holder, p1, p2, true);
+					doWarningLine(holder,holder1, p1, p2, true);
 				}
 			} 
 			// 台阶法(A,S1(1,2),S2(1,2))
@@ -906,36 +915,36 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 				
 				// S1-1
 				bean 	= dao.queryTunnelTotalData(rawSheetBean.getGuid(),tunnelSection.getGuid(), AppConfig.POINT_S1_1);
-				holder 	= createTunnelTestPointView(bean,AppConfig.POINT_S1_1,getPntName(1),"") ;
+				holder1 = createTunnelTestPointView(bean,null,AppConfig.POINT_S1_1,getPntName(1),"") ;
 				p1 		= bean ;
-				addTestPoint(holder.mItemView);
+				addTestPoint(holder1.mItemView);
 				
 				// S1-2
 				bean 	= dao.queryTunnelTotalData(rawSheetBean.getGuid(),tunnelSection.getGuid(), AppConfig.POINT_S1_2);
-				holder 	= createTunnelTestPointView(bean,AppConfig.POINT_S1_2,getPntName(2),"") ;
+				holder 	= createTunnelTestPointView(bean,holder1,AppConfig.POINT_S1_2,getPntName(2),"") ;
 				p2		= bean ;
 				addTestPoint(holder.mItemView);
 				
 				if(p1 != null && p2 != null){
-					doWarningLine(holder,p1,p2, true);
+					doWarningLine(holder,holder1,p1,p2, true);
 				}
 				
 				p1	= p2 = null ;
 				
 				// S2-1
 				bean 	= dao.queryTunnelTotalData(rawSheetBean.getGuid(),tunnelSection.getGuid(), AppConfig.POINT_S2_1);
-				holder 	= createTunnelTestPointView(bean,AppConfig.POINT_S2_1,getPntName(3),"") ;
+				holder1 = createTunnelTestPointView(bean,null,AppConfig.POINT_S2_1,getPntName(3),"") ;
 				p1 		= bean ;
-				addTestPoint(holder.mItemView);
+				addTestPoint(holder1.mItemView);
 				
 				// S2-2
 				bean 	= dao.queryTunnelTotalData(rawSheetBean.getGuid(),tunnelSection.getGuid(), AppConfig.POINT_S2_2);
-				holder 	= createTunnelTestPointView(bean,AppConfig.POINT_S2_2,getPntName(4),"") ;
+				holder 	= createTunnelTestPointView(bean,holder1,AppConfig.POINT_S2_2,getPntName(4),"") ;
 				p2 		= bean ;
 				addTestPoint(holder.mItemView);
 				
 				if(p1 != null && p2 != null){
-					doWarningLine(holder,p1,p2, true);
+					doWarningLine(holder,holder1,p1,p2, true);
 				}
 			} 
 			// 三台阶法(A,S1(1,2),S2(1,2),S3(1,2))
@@ -943,54 +952,54 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 				
 				// S1-1
 				bean 	= dao.queryTunnelTotalData(rawSheetBean.getGuid(),tunnelSection.getGuid(), AppConfig.POINT_S1_1);
-				holder 	= createTunnelTestPointView(bean,AppConfig.POINT_S1_1,getPntName(1),"") ;
+				holder1 = createTunnelTestPointView(bean,null,AppConfig.POINT_S1_1,getPntName(1),"") ;
 				p1		= bean ;
-				addTestPoint(holder.mItemView);
+				addTestPoint(holder1.mItemView);
 				
 				// S1-2
 				bean 	= dao.queryTunnelTotalData(rawSheetBean.getGuid(),tunnelSection.getGuid(), AppConfig.POINT_S1_2);
-				holder 	= createTunnelTestPointView(bean,AppConfig.POINT_S1_2,getPntName(2),"") ;
+				holder 	= createTunnelTestPointView(bean,holder1,AppConfig.POINT_S1_2,getPntName(2),"") ;
 				p2		= bean ;
 				addTestPoint(holder.mItemView);
 				
 				if(p1 != null && p2 != null){
-					doWarningLine(holder,p1,p2, true);
+					doWarningLine(holder,holder1,p1,p2, true);
 				}
 				
 				p1	= p2 = null ;
 				
 				// S2-1
 				bean 	= dao.queryTunnelTotalData(rawSheetBean.getGuid(),tunnelSection.getGuid(), AppConfig.POINT_S2_1);
-				holder 	= createTunnelTestPointView(bean,AppConfig.POINT_S2_1,getPntName(3),"") ;
+				holder1 = createTunnelTestPointView(bean,null,AppConfig.POINT_S2_1,getPntName(3),"") ;
 				p1		= bean ;
-				addTestPoint(holder.mItemView);
+				addTestPoint(holder1.mItemView);
 				
 				// S2-2
 				bean 	= dao.queryTunnelTotalData(rawSheetBean.getGuid(),tunnelSection.getGuid(), AppConfig.POINT_S2_2);
-				holder 	= createTunnelTestPointView(bean,AppConfig.POINT_S2_2,getPntName(4),"") ;
+				holder 	= createTunnelTestPointView(bean,holder1,AppConfig.POINT_S2_2,getPntName(4),"") ;
 				p2		= bean ;
 				addTestPoint(holder.mItemView);
 				
 				if(p1 != null && p2 != null){
-					doWarningLine(holder,p1,p2, true);
+					doWarningLine(holder,holder1,p1,p2, true);
 				}
 				
 				p1	= p2 = null ;
 				
 				// S3-1
 				bean 	= dao.queryTunnelTotalData(rawSheetBean.getGuid(),tunnelSection.getGuid(), AppConfig.POINT_S3_1);
-				holder 	= createTunnelTestPointView(bean,AppConfig.POINT_S3_1,getPntName(5),"") ;
+				holder1	= createTunnelTestPointView(bean,null,AppConfig.POINT_S3_1,getPntName(5),"") ;
 				p1		= bean ;
-				addTestPoint(holder.mItemView);
+				addTestPoint(holder1.mItemView);
 				
 				// S3-2
 				bean 	= dao.queryTunnelTotalData(rawSheetBean.getGuid(),tunnelSection.getGuid(), AppConfig.POINT_S3_2);
-				holder 	= createTunnelTestPointView(bean,AppConfig.POINT_S3_2,getPntName(6),"") ;
+				holder 	= createTunnelTestPointView(bean,holder1,AppConfig.POINT_S3_2,getPntName(6),"") ;
 				p2		= bean ;
 				addTestPoint(holder.mItemView);
 				
 				if(p1 != null && p2 != null){
-					doWarningLine(holder,p1,p2, true);
+					doWarningLine(holder,holder1,p1,p2, true);
 				}
 			} 
 			// 双侧壁法(A,S1(1,2),S2(1,2),S3(1,2))
@@ -998,54 +1007,54 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 				
 				// S1-1
 				bean 	= dao.queryTunnelTotalData(rawSheetBean.getGuid(),tunnelSection.getGuid(), AppConfig.POINT_S1_1);
-				holder 	= createTunnelTestPointView(bean,AppConfig.POINT_S1_1,getPntName(1),"") ;
+				holder1	= createTunnelTestPointView(bean,null,AppConfig.POINT_S1_1,getPntName(1),"") ;
 				p1		= bean ;
-				addTestPoint(holder.mItemView);
+				addTestPoint(holder1.mItemView);
 				
 				// S1-2
 				bean 	= dao.queryTunnelTotalData(rawSheetBean.getGuid(),tunnelSection.getGuid(), AppConfig.POINT_S1_2);
-				holder 	= createTunnelTestPointView(bean,AppConfig.POINT_S1_2,getPntName(2),"") ;
+				holder 	= createTunnelTestPointView(bean,holder1,AppConfig.POINT_S1_2,getPntName(2),"") ;
 				p2		= bean ;
 				addTestPoint(holder.mItemView);
 				
 				if(p1 != null && p2 != null){
-					doWarningLine(holder,p1,p2, true);
+					doWarningLine(holder,holder1,p1,p2, true);
 				}
 				
 				p1	= p2 = null ;
 				
 				// S2-1
 				bean 	= dao.queryTunnelTotalData(rawSheetBean.getGuid(),tunnelSection.getGuid(), AppConfig.POINT_S2_1);
-				holder 	= createTunnelTestPointView(bean,AppConfig.POINT_S2_1,getPntName(3),"") ;
+				holder1	= createTunnelTestPointView(bean,null,AppConfig.POINT_S2_1,getPntName(3),"") ;
 				p1		= bean ;
-				addTestPoint(holder.mItemView);
+				addTestPoint(holder1.mItemView);
 				
 				// S2-2
 				bean 	= dao.queryTunnelTotalData(rawSheetBean.getGuid(),tunnelSection.getGuid(), AppConfig.POINT_S2_2);
-				holder 	= createTunnelTestPointView(bean,AppConfig.POINT_S2_2,getPntName(4),"") ;
+				holder 	= createTunnelTestPointView(bean,holder1,AppConfig.POINT_S2_2,getPntName(4),"") ;
 				p2		= bean ;
 				addTestPoint(holder.mItemView);
 				
 				if(p1 != null && p2 != null){
-					doWarningLine(holder,p1,p2, true);
+					doWarningLine(holder,holder1,p1,p2, true);
 				}
 				
 				p1	= p2 = null ;
 				
 				// S3-1
 				bean 	= dao.queryTunnelTotalData(rawSheetBean.getGuid(),tunnelSection.getGuid(), AppConfig.POINT_S3_1);
-				holder 	= createTunnelTestPointView(bean,AppConfig.POINT_S3_1,getPntName(5),"") ;
+				holder1	= createTunnelTestPointView(bean,null,AppConfig.POINT_S3_1,getPntName(5),"") ;
 				p1		= bean ;
-				addTestPoint(holder.mItemView);
+				addTestPoint(holder1.mItemView);
 				
 				// S3-2
 				bean 	= dao.queryTunnelTotalData(rawSheetBean.getGuid(),tunnelSection.getGuid(), AppConfig.POINT_S3_2);
-				holder 	= createTunnelTestPointView(bean,AppConfig.POINT_S3_2,getPntName(6),"") ;
+				holder 	= createTunnelTestPointView(bean,holder1,AppConfig.POINT_S3_2,getPntName(6),"") ;
 				p2		= bean ;
 				addTestPoint(holder.mItemView);
 				
 				if(p1 != null && p2 != null){
-					doWarningLine(holder,p1,p2, true);
+					doWarningLine(holder,holder1,p1,p2, true);
 				}
 			}
 		} 
@@ -1072,7 +1081,7 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 				
 				// 预警信息
 				if(bean != null){
-					doWarning(item, AlertUtils.getPointSubsidenceExceedMsg(bean, true));
+					doWarning(item,null, AlertUtils.getPointSubsidenceExceedMsg(bean, true));
 				}
 			}
 		}
@@ -1212,6 +1221,7 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 	
 	final class TestInfo {
 		
+		TestPointHolder holder1 ;
 		TestPointHolder holder ;
 		String type ;
 		int sectionType;
