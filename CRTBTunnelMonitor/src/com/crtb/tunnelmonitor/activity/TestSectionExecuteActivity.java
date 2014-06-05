@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.os.Message;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -687,7 +688,7 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 		}
 	}
 	
-	private View createSubsidenceTestPointView(final SubsidenceTotalData bean,final String type){
+	private TestPointHolder createSubsidenceTestPointView(final SubsidenceTotalData bean,final String type){
 		
 		final TestPointHolder holder 	= new TestPointHolder() ;
 		
@@ -695,6 +696,7 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 		
 		// 测点类型
 		holder.mPointType.setText(type);
+		holder.mItemView = view ;
 		
 		// 从已经测量的数据中查找
 		// SubsidenceTotalData bean = findSubsidenceData(type);
@@ -785,7 +787,7 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 			}
 		});
 
-		return view ;
+		return holder ;
 	}
 	
 	// 得到测量点名称: 0 A, 1 S1, 2 S2, 3 S3
@@ -1039,7 +1041,15 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 				String index = String.valueOf(id + 1) ;
 				
 				bean = dao.querySubsidenceTotalData(rawSheetBean.getGuid(),subsidenceSection.getGuid(),index);
-				addTestPoint(createSubsidenceTestPointView(bean,index));
+				
+				TestPointHolder item = createSubsidenceTestPointView(bean,index) ;
+				
+				addTestPoint(item.mItemView);
+				
+				// 预警信息
+				if(bean != null){
+					doWarning(item, AlertUtils.getPointSubsidenceExceedMsg(bean, true));
+				}
 			}
 		}
 	}
