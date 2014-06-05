@@ -93,7 +93,7 @@ public class TunnelSettlementTotalDataDao extends AbstractDao<TunnelSettlementTo
     }
 
     // 查询已经存在的测量点信息
-	public TunnelSettlementTotalData queryTunnelTotalData(int sheetId,int chainageId,String pntType) {
+	public TunnelSettlementTotalData queryTunnelTotalData(String sheetId,String chainageId,String pntType) {
 		
 		final IAccessDatabase mDatabase = getCurrentDb();
 		

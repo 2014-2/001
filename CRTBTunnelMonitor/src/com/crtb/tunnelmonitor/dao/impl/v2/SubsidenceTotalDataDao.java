@@ -101,7 +101,7 @@ public class SubsidenceTotalDataDao extends AbstractDao<SubsidenceTotalData> {
     }
 
     // 查询已经存在的测量点信息
-    public SubsidenceTotalData querySubsidenceTotalData(int sheetId, int chainageId, String pntType) {
+    public SubsidenceTotalData querySubsidenceTotalData(String sheetId, String chainageId, String pntType) {
 
         final IAccessDatabase mDatabase = getCurrentDb();
 

@@ -275,46 +275,6 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 		mContainerLayout.addView(view);
 	}
 	
-	/*private TunnelSettlementTotalData findTunnelData(String ptype){
-		
-		if(tunnelSection == null || ptype == null){
-			return null ;
-		}
-		
-		int sid = tunnelSection.getID() ;
-		
-		for(TunnelSettlementTotalData bean : tempTunnelData){
-			
-			String type = bean.getPntType() ;
-			
-			if(bean.getChainageId() == sid && type != null && type.equals(ptype)){
-				return bean ;
-			}
-		}
-		
-		return null ;
-	}
-	
-	private SubsidenceTotalData findSubsidenceData(String ptype){
-		
-		if(subsidenceSection == null || ptype == null){
-			return null ;
-		}
-		
-		int sid = subsidenceSection.getID() ;
-		
-		for(SubsidenceTotalData bean : tempSubsidenceData){
-			
-			String type = bean.getPntType() ;
-			
-			if(bean.getChainageId() == sid && type != null && type.equals(ptype)){
-				return bean ;
-			}
-		}
-		
-		return null ;
-	}*/
-	
 	private TestPointHolder createTunnelTestPointView(final TunnelSettlementTotalData bean,final String type,String typeName,String suffix){
 		
 		final TestPointHolder holder 	= new TestPointHolder() ;
@@ -385,8 +345,8 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 						
                         if (id == CrtbDialogDelete.BUTTON_ID_CONFIRM) {
 
-                            int sheetId = rawSheetBean.getID();
-                            int chainageid = tunnelSection.getID();
+                            String sheetId = rawSheetBean.getGuid() ;
+                            String chainageid = tunnelSection.getGuid();
                             TunnelSettlementTotalDataDao dao = TunnelSettlementTotalDataDao
                                     .defaultDao();
                             TunnelSettlementTotalData obj = dao.queryTunnelTotalData(sheetId,
@@ -574,7 +534,7 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 						int err = TunnelSettlementTotalDataDao.DB_EXECUTE_FAILED;
 						boolean update = false;
 						// 存在的测量点信息
-						TunnelSettlementTotalData old = dao.queryTunnelTotalData(rawSheetBean.getID(),tunnelSection.getID(),info.type);
+						TunnelSettlementTotalData old = dao.queryTunnelTotalData(rawSheetBean.getGuid(),tunnelSection.getGuid(),info.type);
 						if (old != null) {
 						    //UPDATE
 						    //obj.setMEASNo(old.getMEASNo());
@@ -631,7 +591,7 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 						SubsidenceTotalDataDao dao 	= SubsidenceTotalDataDao.defaultDao() ;
 						
 						// 存在的测量点信息
-						SubsidenceTotalData old = dao.querySubsidenceTotalData(rawSheetBean.getID(),subsidenceSection.getID(),info.type);
+						SubsidenceTotalData old = dao.querySubsidenceTotalData(rawSheetBean.getGuid(),subsidenceSection.getGuid(),info.type);
 						
 						final SubsidenceTotalData obj = new SubsidenceTotalData() ;
 						// DTMS  DBDesign_V1.7.9_20140604 - 修改追踪表.xlsx
@@ -790,8 +750,8 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 						if(id == CrtbDialogDelete.BUTTON_ID_CONFIRM){
 							
 							SubsidenceTotalDataDao dao 	= SubsidenceTotalDataDao.defaultDao() ;
-							int sheetId = rawSheetBean.getID();
-							int chainageid = subsidenceSection.getID();
+							String sheetId = rawSheetBean.getGuid() ;
+							String chainageid = subsidenceSection.getGuid();
 							SubsidenceTotalData obj = dao.querySubsidenceTotalData(sheetId, chainageid, type);
 
 							if(obj != null) {
@@ -799,7 +759,7 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 								dao.reset(obj);
 
                                 List<AlertList> als = AlertListDao.defaultDao()
-                                        .queryByOrigionalDataId(String.valueOf(sheetId),
+                                        .queryByOrigionalDataId(sheetId,
                                                 chainageid, String.valueOf(obj.getID()));
                                 if (als != null && als.size() > 0) {
                                     for (AlertList al : als) {
@@ -887,7 +847,7 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 			TunnelSettlementTotalData p1 = null , p2 = null ;
 			
 			// A
-			bean 	= dao.queryTunnelTotalData(rawSheetBean.getID(),tunnelSection.getID(), AppConfig.POINT_A);
+			bean 	= dao.queryTunnelTotalData(rawSheetBean.getGuid(),tunnelSection.getGuid(), AppConfig.POINT_A);
 			holder 	= createTunnelTestPointView(bean,AppConfig.POINT_A,getPntName(0),"");
 			addTestPoint(holder.mItemView);
 			
@@ -900,13 +860,13 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 			if(type == ExcavateMethodEnum.QD.getCode()){
 				
 				// S1-1
-				bean 	= dao.queryTunnelTotalData(rawSheetBean.getID(),tunnelSection.getID(), AppConfig.POINT_S1_1);
+				bean 	= dao.queryTunnelTotalData(rawSheetBean.getGuid(),tunnelSection.getGuid(), AppConfig.POINT_S1_1);
 				holder 	= createTunnelTestPointView(bean,AppConfig.POINT_S1_1,getPntName(1),"") ;
 				addTestPoint(holder.mItemView);
 				p1 = bean ;
 				
 				// S1-2
-				bean 	= dao.queryTunnelTotalData(rawSheetBean.getID(),tunnelSection.getID(), AppConfig.POINT_S1_2);
+				bean 	= dao.queryTunnelTotalData(rawSheetBean.getGuid(),tunnelSection.getGuid(), AppConfig.POINT_S1_2);
 				holder 	= createTunnelTestPointView(bean,AppConfig.POINT_S1_2,getPntName(2),"");
 				addTestPoint(holder.mItemView);
 				p2 = bean ;
@@ -919,13 +879,13 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 			else if(type == ExcavateMethodEnum.DT.getCode()){
 				
 				// S1-1
-				bean 	= dao.queryTunnelTotalData(rawSheetBean.getID(),tunnelSection.getID(), AppConfig.POINT_S1_1);
+				bean 	= dao.queryTunnelTotalData(rawSheetBean.getGuid(),tunnelSection.getGuid(), AppConfig.POINT_S1_1);
 				holder 	= createTunnelTestPointView(bean,AppConfig.POINT_S1_1,getPntName(1),"") ;
 				p1 		= bean ;
 				addTestPoint(holder.mItemView);
 				
 				// S1-2
-				bean 	= dao.queryTunnelTotalData(rawSheetBean.getID(),tunnelSection.getID(), AppConfig.POINT_S1_2);
+				bean 	= dao.queryTunnelTotalData(rawSheetBean.getGuid(),tunnelSection.getGuid(), AppConfig.POINT_S1_2);
 				holder 	= createTunnelTestPointView(bean,AppConfig.POINT_S1_2,getPntName(2),"") ;
 				p2		= bean ;
 				addTestPoint(holder.mItemView);
@@ -937,13 +897,13 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 				p1	= p2 = null ;
 				
 				// S2-1
-				bean 	= dao.queryTunnelTotalData(rawSheetBean.getID(),tunnelSection.getID(), AppConfig.POINT_S2_1);
+				bean 	= dao.queryTunnelTotalData(rawSheetBean.getGuid(),tunnelSection.getGuid(), AppConfig.POINT_S2_1);
 				holder 	= createTunnelTestPointView(bean,AppConfig.POINT_S2_1,getPntName(3),"") ;
 				p1 		= bean ;
 				addTestPoint(holder.mItemView);
 				
 				// S2-2
-				bean 	= dao.queryTunnelTotalData(rawSheetBean.getID(),tunnelSection.getID(), AppConfig.POINT_S2_2);
+				bean 	= dao.queryTunnelTotalData(rawSheetBean.getGuid(),tunnelSection.getGuid(), AppConfig.POINT_S2_2);
 				holder 	= createTunnelTestPointView(bean,AppConfig.POINT_S2_2,getPntName(4),"") ;
 				p2 		= bean ;
 				addTestPoint(holder.mItemView);
@@ -956,13 +916,13 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 			else if(type == ExcavateMethodEnum.ST.getCode()){
 				
 				// S1-1
-				bean 	= dao.queryTunnelTotalData(rawSheetBean.getID(),tunnelSection.getID(), AppConfig.POINT_S1_1);
+				bean 	= dao.queryTunnelTotalData(rawSheetBean.getGuid(),tunnelSection.getGuid(), AppConfig.POINT_S1_1);
 				holder 	= createTunnelTestPointView(bean,AppConfig.POINT_S1_1,getPntName(1),"") ;
 				p1		= bean ;
 				addTestPoint(holder.mItemView);
 				
 				// S1-2
-				bean 	= dao.queryTunnelTotalData(rawSheetBean.getID(),tunnelSection.getID(), AppConfig.POINT_S1_2);
+				bean 	= dao.queryTunnelTotalData(rawSheetBean.getGuid(),tunnelSection.getGuid(), AppConfig.POINT_S1_2);
 				holder 	= createTunnelTestPointView(bean,AppConfig.POINT_S1_2,getPntName(2),"") ;
 				p2		= bean ;
 				addTestPoint(holder.mItemView);
@@ -974,13 +934,13 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 				p1	= p2 = null ;
 				
 				// S2-1
-				bean 	= dao.queryTunnelTotalData(rawSheetBean.getID(),tunnelSection.getID(), AppConfig.POINT_S2_1);
+				bean 	= dao.queryTunnelTotalData(rawSheetBean.getGuid(),tunnelSection.getGuid(), AppConfig.POINT_S2_1);
 				holder 	= createTunnelTestPointView(bean,AppConfig.POINT_S2_1,getPntName(3),"") ;
 				p1		= bean ;
 				addTestPoint(holder.mItemView);
 				
 				// S2-2
-				bean 	= dao.queryTunnelTotalData(rawSheetBean.getID(),tunnelSection.getID(), AppConfig.POINT_S2_2);
+				bean 	= dao.queryTunnelTotalData(rawSheetBean.getGuid(),tunnelSection.getGuid(), AppConfig.POINT_S2_2);
 				holder 	= createTunnelTestPointView(bean,AppConfig.POINT_S2_2,getPntName(4),"") ;
 				p2		= bean ;
 				addTestPoint(holder.mItemView);
@@ -992,13 +952,13 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 				p1	= p2 = null ;
 				
 				// S3-1
-				bean 	= dao.queryTunnelTotalData(rawSheetBean.getID(),tunnelSection.getID(), AppConfig.POINT_S3_1);
+				bean 	= dao.queryTunnelTotalData(rawSheetBean.getGuid(),tunnelSection.getGuid(), AppConfig.POINT_S3_1);
 				holder 	= createTunnelTestPointView(bean,AppConfig.POINT_S3_1,getPntName(5),"") ;
 				p1		= bean ;
 				addTestPoint(holder.mItemView);
 				
 				// S3-2
-				bean 	= dao.queryTunnelTotalData(rawSheetBean.getID(),tunnelSection.getID(), AppConfig.POINT_S3_2);
+				bean 	= dao.queryTunnelTotalData(rawSheetBean.getGuid(),tunnelSection.getGuid(), AppConfig.POINT_S3_2);
 				holder 	= createTunnelTestPointView(bean,AppConfig.POINT_S3_2,getPntName(6),"") ;
 				p2		= bean ;
 				addTestPoint(holder.mItemView);
@@ -1011,13 +971,13 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 			else if(type == ExcavateMethodEnum.SC.getCode()){
 				
 				// S1-1
-				bean 	= dao.queryTunnelTotalData(rawSheetBean.getID(),tunnelSection.getID(), AppConfig.POINT_S1_1);
+				bean 	= dao.queryTunnelTotalData(rawSheetBean.getGuid(),tunnelSection.getGuid(), AppConfig.POINT_S1_1);
 				holder 	= createTunnelTestPointView(bean,AppConfig.POINT_S1_1,getPntName(1),"") ;
 				p1		= bean ;
 				addTestPoint(holder.mItemView);
 				
 				// S1-2
-				bean 	= dao.queryTunnelTotalData(rawSheetBean.getID(),tunnelSection.getID(), AppConfig.POINT_S1_2);
+				bean 	= dao.queryTunnelTotalData(rawSheetBean.getGuid(),tunnelSection.getGuid(), AppConfig.POINT_S1_2);
 				holder 	= createTunnelTestPointView(bean,AppConfig.POINT_S1_2,getPntName(2),"") ;
 				p2		= bean ;
 				addTestPoint(holder.mItemView);
@@ -1029,13 +989,13 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 				p1	= p2 = null ;
 				
 				// S2-1
-				bean 	= dao.queryTunnelTotalData(rawSheetBean.getID(),tunnelSection.getID(), AppConfig.POINT_S2_1);
+				bean 	= dao.queryTunnelTotalData(rawSheetBean.getGuid(),tunnelSection.getGuid(), AppConfig.POINT_S2_1);
 				holder 	= createTunnelTestPointView(bean,AppConfig.POINT_S2_1,getPntName(3),"") ;
 				p1		= bean ;
 				addTestPoint(holder.mItemView);
 				
 				// S2-2
-				bean 	= dao.queryTunnelTotalData(rawSheetBean.getID(),tunnelSection.getID(), AppConfig.POINT_S2_2);
+				bean 	= dao.queryTunnelTotalData(rawSheetBean.getGuid(),tunnelSection.getGuid(), AppConfig.POINT_S2_2);
 				holder 	= createTunnelTestPointView(bean,AppConfig.POINT_S2_2,getPntName(4),"") ;
 				p2		= bean ;
 				addTestPoint(holder.mItemView);
@@ -1047,13 +1007,13 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 				p1	= p2 = null ;
 				
 				// S3-1
-				bean 	= dao.queryTunnelTotalData(rawSheetBean.getID(),tunnelSection.getID(), AppConfig.POINT_S3_1);
+				bean 	= dao.queryTunnelTotalData(rawSheetBean.getGuid(),tunnelSection.getGuid(), AppConfig.POINT_S3_1);
 				holder 	= createTunnelTestPointView(bean,AppConfig.POINT_S3_1,getPntName(5),"") ;
 				p1		= bean ;
 				addTestPoint(holder.mItemView);
 				
 				// S3-2
-				bean 	= dao.queryTunnelTotalData(rawSheetBean.getID(),tunnelSection.getID(), AppConfig.POINT_S3_2);
+				bean 	= dao.queryTunnelTotalData(rawSheetBean.getGuid(),tunnelSection.getGuid(), AppConfig.POINT_S3_2);
 				holder 	= createTunnelTestPointView(bean,AppConfig.POINT_S3_2,getPntName(6),"") ;
 				p2		= bean ;
 				addTestPoint(holder.mItemView);
@@ -1078,7 +1038,7 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 				
 				String index = String.valueOf(id + 1) ;
 				
-				bean = dao.querySubsidenceTotalData(rawSheetBean.getID(),subsidenceSection.getID(),index);
+				bean = dao.querySubsidenceTotalData(rawSheetBean.getGuid(),subsidenceSection.getGuid(),index);
 				addTestPoint(createSubsidenceTestPointView(bean,index));
 			}
 		}

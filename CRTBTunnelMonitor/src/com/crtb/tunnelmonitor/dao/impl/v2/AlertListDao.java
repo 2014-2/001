@@ -124,7 +124,7 @@ public class AlertListDao extends AbstractDao<AlertList> {
         return mDatabase.queryObject(sql, args, AlertList.class);
     }
 
-    public List<AlertList> queryByOrigionalDataId(String sheetId, int chainageId, String originalDataID) {
+    public List<AlertList> queryByOrigionalDataId(String sheetId, String chainageId, String originalDataID) {
         final IAccessDatabase db = getCurrentDb();
         Log.d(TAG, "AlertListDao queryByOrigionalDataId, originalDataID: " + originalDataID);
 
