@@ -114,7 +114,7 @@ public class SubsidenceTotalDataDao extends AbstractDao<SubsidenceTotalData> {
         return mDatabase.queryObject(sql, new String[]{String.valueOf(sheetId),String.valueOf(chainageId),pntType},SubsidenceTotalData.class);
     }
 
-    public List<SubsidenceTotalData> querySubsidenceTotalDatas(int sheetId, int chainageId) {
+    public List<SubsidenceTotalData> querySubsidenceTotalDatas(String sheetId, String chainageId) {
         final IAccessDatabase mDatabase = getCurrentDb();
         if (mDatabase == null) {
             return null;

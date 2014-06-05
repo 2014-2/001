@@ -107,7 +107,7 @@ public class TunnelSettlementTotalDataDao extends AbstractDao<TunnelSettlementTo
 		return mDatabase.queryObject(sql, args,TunnelSettlementTotalData.class);
 	}
 
-	public List<TunnelSettlementTotalData> queryTunnelTotalDatas(int sheetId, int chainageId) {
+	public List<TunnelSettlementTotalData> queryTunnelTotalDatas(String sheetId, String chainageId) {
 		
 		final IAccessDatabase mDatabase = getCurrentDb();
 		

@@ -106,7 +106,7 @@ public class AsyncUpdateTask {
 					break;
 				}
 				//断面相关测点查询
-				List<TunnelSettlementTotalData> pointList = TunnelSettlementTotalDataDao.defaultDao().queryTunnelTotalDatas(sheetIndex.getID(), sectionIndex.getID());
+				List<TunnelSettlementTotalData> pointList = TunnelSettlementTotalDataDao.defaultDao().queryTunnelTotalDatas(sheetIndex.getGuid(), sectionIndex.getGuid());
 				if (pointList != null && pointList.size() > 0) {
 					totalPoints += pointList.size();
 					for(TunnelSettlementTotalData point : pointList) {
@@ -153,7 +153,7 @@ public class AsyncUpdateTask {
 					break;
 				}
 				//断面相关测点查询
-		        List<SubsidenceTotalData> pointList =  SubsidenceTotalDataDao.defaultDao().querySubsidenceTotalDatas(sheetIndex.getID(), sectionIndex.getID());
+		        List<SubsidenceTotalData> pointList =  SubsidenceTotalDataDao.defaultDao().querySubsidenceTotalDatas(sheetIndex.getGuid(), sectionIndex.getGuid());
 		        if (pointList != null && pointList.size() > 0) {
 					totalPoints += pointList.size();
 					for(SubsidenceTotalData point : pointList) {

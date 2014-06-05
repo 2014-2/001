@@ -19,7 +19,7 @@ public class SubsidenceAsyncQueryTask extends AsyncQueryTask {
 	}
 
 	@Override
-	protected List<Section> queryAllSections(int sheetId, String sectionRowIds) {
+	protected List<Section> queryAllSections(String sheetGuid, String sectionRowIds) {
 		List<Section> sections = new ArrayList<Section>();
 		List<SubsidenceCrossSectionIndex>  sectionIndexList = SubsidenceCrossSectionIndexDao.defaultDao().querySectionByGuids(sectionRowIds);
 		if (sectionIndexList != null && sectionIndexList.size() > 0) {
@@ -35,7 +35,7 @@ public class SubsidenceAsyncQueryTask extends AsyncQueryTask {
 				}
 				//断面的未上传测量数据
                 List<MeasureData> measureDataList = new ArrayList<MeasureData>();
-                List<SubsidenceTotalData> measurePoints = getUnUploadMeasurePoints(sheetId, sectionIndex.getID());
+                List<SubsidenceTotalData> measurePoints = getUnUploadMeasurePoints(sheetGuid, sectionIndex.getGuid());
                 if (measurePoints != null && measurePoints.size() > 0) {
                 	 int measureNo = -1;
                      SubsidenceMeasureData measureData = null;
@@ -57,10 +57,10 @@ public class SubsidenceAsyncQueryTask extends AsyncQueryTask {
 		return sections;
 	}
 
-	 public List<SubsidenceTotalData> getUnUploadMeasurePoints(int sheetId, int sectionId) {
+	 public List<SubsidenceTotalData> getUnUploadMeasurePoints(String sheetGuid, String sectionGuid) {
 	    	SubsidenceTotalDataDao pointDao = SubsidenceTotalDataDao.defaultDao();
 	        List<SubsidenceTotalData> measurePoints = new ArrayList<SubsidenceTotalData>();
-	        List<SubsidenceTotalData> pointList = pointDao.querySubsidenceTotalDatas(sheetId, sectionId);
+	        List<SubsidenceTotalData> pointList = pointDao.querySubsidenceTotalDatas(sheetGuid, sectionGuid);
 	        if (pointList != null && pointList.size() > 0) {
 	            for(SubsidenceTotalData point : pointList) {
 	            	// 1表示未上传, 2表示已上传

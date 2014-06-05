@@ -32,7 +32,7 @@ public abstract class AsyncQueryTask extends AsyncTask<Void, Void, List<SheetRec
 			 for(RawSheetIndex sheet : rawSheets) {
 				 SheetRecord record = new SheetRecord();
 				 record.setRawSheet(sheet);
-				 List<Section> uploadSections = queryAllSections(sheet.getID(), sheet.getCrossSectionIDs());
+				 List<Section> uploadSections = queryAllSections(sheet.getGuid(), sheet.getCrossSectionIDs());
 				 record.setUnUpLoadSection(uploadSections);
 				 sheetRecords.add(record);
 			 }
@@ -62,6 +62,6 @@ public abstract class AsyncQueryTask extends AsyncTask<Void, Void, List<SheetRec
 	 * @param sheetId
 	 * @return
 	 */
-	protected abstract List<Section> queryAllSections(int sheetId, String sectionGuids);
+	protected abstract List<Section> queryAllSections(String sheetGuid, String sectionGuids);
 	
 }

@@ -19,7 +19,7 @@ public class TunnelAsyncQueryTask extends AsyncQueryTask {
 	}
 
 	@Override
-	protected List<Section> queryAllSections(int sheetId, String sectionRowIds) {
+	protected List<Section> queryAllSections(String sheetGuid, String sectionRowIds) {
 		List<Section> sections = new ArrayList<Section>();
 		List<TunnelCrossSectionIndex> sectionIndexList = TunnelCrossSectionIndexDao.defaultDao().querySectionByGuids(sectionRowIds);
 		if (sectionIndexList != null && sectionIndexList.size() > 0) {
@@ -35,7 +35,7 @@ public class TunnelAsyncQueryTask extends AsyncQueryTask {
 				}
 				//断面的未上传测量数据
                 List<MeasureData> measureDataList = new ArrayList<MeasureData>();
-                List<TunnelSettlementTotalData> measurePoints = getUnUploadMeasurePoints(sheetId, sectionIndex.getID());
+                List<TunnelSettlementTotalData> measurePoints = getUnUploadMeasurePoints(sheetGuid, sectionIndex.getGuid());
                 if (measurePoints != null && measurePoints.size() > 0) {
                 	 int measureNo = -1;
                      TunnelMeasureData measureData = null;
@@ -57,7 +57,7 @@ public class TunnelAsyncQueryTask extends AsyncQueryTask {
 		return sections;
 	}
 	
-	private List<TunnelSettlementTotalData> getUnUploadMeasurePoints(int sheetId, int sectionId) {
+	private List<TunnelSettlementTotalData> getUnUploadMeasurePoints(String sheetId, String sectionId) {
         TunnelSettlementTotalDataDao pointDao = TunnelSettlementTotalDataDao.defaultDao();
         List<TunnelSettlementTotalData> unUploadMeasurePoints = new ArrayList<TunnelSettlementTotalData>();
         List<TunnelSettlementTotalData> pointList = pointDao.queryTunnelTotalDatas(sheetId, sectionId);
