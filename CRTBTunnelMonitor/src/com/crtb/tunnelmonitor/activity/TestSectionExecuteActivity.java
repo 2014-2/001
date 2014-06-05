@@ -592,6 +592,14 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 
                                 // 保存测量数据
                                 // tempTunnelData.add(obj);
+                            	
+                            	if(info.holder != null){
+                            		info.holder.warringLayout.removeAllViews() ;
+                            	}
+                            	
+                            	if(info.holder1 != null){
+                            		info.holder1.warringLayout.removeAllViews() ;
+                            	}
 
                                 if (info.type.equals(AppConfig.POINT_A)) {
                                     doWarning(info.holder, info.holder1,
@@ -615,15 +623,7 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
                                 		p2 = dao.queryTunnelTotalData(rawSheetBean.getGuid(), tunnelSection.getGuid(), AppConfig.POINT_S3_2);
                                 	}
 
-                                    /*if (info.type.equals(AppConfig.POINT_S1_1)
-                                            || info.type.equals(AppConfig.POINT_S2_1)
-                                            || info.type.equals(AppConfig.POINT_S3_1)) {
-                                        pS1 = obj;
-                                    } else {
-                                        pS2 = obj;
-                                    }*/
-
-                                    if (p1 != null && p2 != null) {
+                                	if (p1 != null && p2 != null) {
                                         doWarningLine(info.holder, info.holder1, p1, p2, false);
                                     }
                                 }
@@ -689,6 +689,14 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 
                                 // 保存临时数据
                                 // tempSubsidenceData.add(obj);
+                            	
+                            	if(info.holder != null){
+                            		info.holder.warringLayout.removeAllViews() ;
+                            	}
+                            	
+                            	if(info.holder1 != null){
+                            		info.holder1.warringLayout.removeAllViews() ;
+                            	}
 
                                 doWarning(info.holder, info.holder1,
                                         AlertUtils.getPointSubsidenceExceedMsg(obj, false));
