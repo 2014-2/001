@@ -164,6 +164,9 @@ public class WarningActivity extends Activity {
             
             @Override
             public void afterTextChanged(Editable s) {
+                if (alerts == null) {
+                    return;
+                }
                 AlertInfo alert = alerts.get(clickedItem);
                 if (alert != null) {
                     Editable e = mCorrectionView.getText();

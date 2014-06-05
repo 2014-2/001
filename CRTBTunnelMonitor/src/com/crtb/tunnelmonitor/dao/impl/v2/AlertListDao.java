@@ -1,16 +1,19 @@
 
 package com.crtb.tunnelmonitor.dao.impl.v2;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.zw.android.framework.IAccessDatabase;
 
 import android.database.Cursor;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.crtb.tunnelmonitor.entity.AlertList;
 import com.crtb.tunnelmonitor.entity.SubsidenceTotalData;
 import com.crtb.tunnelmonitor.entity.TunnelSettlementTotalData;
+import com.crtb.tunnelmonitor.utils.AlertUtils;
 import com.crtb.tunnelmonitor.utils.CrtbUtils;
 
 public class AlertListDao extends AbstractDao<AlertList> {
@@ -128,17 +131,33 @@ public class AlertListDao extends AbstractDao<AlertList> {
         final IAccessDatabase db = getCurrentDb();
         Log.d(TAG, "AlertListDao queryByOrigionalDataId, originalDataID: " + originalDataID);
 
-        if (db == null) {
+        if (db == null || TextUtils.isEmpty(originalDataID)) {
             return null;
         }
 
         String sql = "select * from AlertList where"
                 + " SheetID=?"
-                + " AND CrossSectionID=?"
-                + " AND originalDataID=?";
-        String[] args = new String[] { sheetId, String.valueOf(chainageId), originalDataID };
+                + " AND CrossSectionID=?";
+//                + " AND originalDataID=?";
+        String[] args = new String[] { sheetId, String.valueOf(chainageId) };
 
-        return db.queryObjects(sql, args, AlertList.class);
+        List<AlertList> l = db.queryObjects(sql, args, AlertList.class);
+        
+        List<AlertList> ll = new ArrayList<AlertList>();
+        for (AlertList a : l) {
+            String oid = a.getOriginalDataID();
+            if (oid.contains(AlertUtils.ORIGINAL_ID_DIVIDER)) {
+                String[] s = oid.split(AlertUtils.ORIGINAL_ID_DIVIDER);
+                if (s.length == 2) {
+                    if (originalDataID.equals(s[0]) || originalDataID.equals(s[1])) {
+                        ll.add(a);
+                    }
+                }
+            } else if (oid.equals(originalDataID)) {
+                ll.add(a);
+            }
+        }
+        return ll;
     }
 
     public int insertOrUpdate(TunnelSettlementTotalData point, int alertLevel, int Utype,
