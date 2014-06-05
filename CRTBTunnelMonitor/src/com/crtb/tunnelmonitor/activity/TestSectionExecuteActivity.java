@@ -597,17 +597,34 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
                                     doWarning(info.holder, info.holder1,
                                             AlertUtils.getPointSubsidenceExceedMsg(obj, false));
                                 } else {
+                                	
+                                	TunnelSettlementTotalData p1 = null , p2 = null ;
+                                	
+                                	// 重新查询测量数据
+                                	if(info.type.equals(AppConfig.POINT_S1_1) 
+                                			|| info.type.equals(AppConfig.POINT_S1_2)){
+                                		p1 = dao.queryTunnelTotalData(rawSheetBean.getGuid(), tunnelSection.getGuid(), AppConfig.POINT_S1_1);
+                                		p2 = dao.queryTunnelTotalData(rawSheetBean.getGuid(), tunnelSection.getGuid(), AppConfig.POINT_S1_2);
+                                	} else if(info.type.equals(AppConfig.POINT_S2_1) 
+                                			|| info.type.equals(AppConfig.POINT_S2_2)){
+                                		p1 = dao.queryTunnelTotalData(rawSheetBean.getGuid(), tunnelSection.getGuid(), AppConfig.POINT_S2_1);
+                                		p2 = dao.queryTunnelTotalData(rawSheetBean.getGuid(), tunnelSection.getGuid(), AppConfig.POINT_S2_2);
+                                	} else if(info.type.equals(AppConfig.POINT_S3_1) 
+                                			|| info.type.equals(AppConfig.POINT_S3_2)){
+                                		p1 = dao.queryTunnelTotalData(rawSheetBean.getGuid(), tunnelSection.getGuid(), AppConfig.POINT_S3_1);
+                                		p2 = dao.queryTunnelTotalData(rawSheetBean.getGuid(), tunnelSection.getGuid(), AppConfig.POINT_S3_2);
+                                	}
 
-                                    if (info.type.equals(AppConfig.POINT_S1_1)
+                                    /*if (info.type.equals(AppConfig.POINT_S1_1)
                                             || info.type.equals(AppConfig.POINT_S2_1)
                                             || info.type.equals(AppConfig.POINT_S3_1)) {
                                         pS1 = obj;
                                     } else {
                                         pS2 = obj;
-                                    }
+                                    }*/
 
-                                    if (pS1 != null && pS2 != null) {
-                                        doWarningLine(info.holder, info.holder1, pS1, pS2, false);
+                                    if (p1 != null && p2 != null) {
+                                        doWarningLine(info.holder, info.holder1, p1, p2, false);
                                     }
                                 }
 
