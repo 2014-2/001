@@ -2,6 +2,7 @@
 package com.crtb.tunnelmonitor.activity;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.zw.android.framework.ioc.InjectCore;
@@ -298,9 +299,10 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
                 holder.mPointZ.setText(str[2]);
             }
 
+            Date t = bean.getSurveyTime();
             // 测试时间
-            holder.mPointTime.setText(DateUtils.toDateString(bean.getSurveyTime(),
-                    DateUtils.DATE_TIME_FORMAT));
+            holder.mPointTime.setText(t != null ? DateUtils.toDateString(t,
+                    DateUtils.DATE_TIME_FORMAT) : "");
         }
 
         // 测点类型
@@ -710,8 +712,11 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
         for (String msg : list) {
 
             TextView tv = new TextView(this);
+            TextView tv2 = new TextView(this);
             tv.setTextColor(Color.RED);
             tv.setTextSize(12);
+            tv2.setTextColor(Color.RED);
+            tv2.setTextSize(12);
 
             if (!StringUtils.isEmpty(msg)) {
                 tv.setText(msg);
@@ -721,7 +726,7 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
                 }
 
                 if (view2 != null) {
-                    view2.warringLayout.addView(tv);
+                    view2.warringLayout.addView(tv2);
                 }
             }
         }
@@ -753,9 +758,11 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
                 holder.mPointZ.setText(str[2]);
             }
 
+            Date t = bean.getSurveyTime();
+
             // 测试时间
-            holder.mPointTime.setText(DateUtils.toDateString(bean.getSurveyTime(),
-                    DateUtils.DATE_TIME_FORMAT));
+            holder.mPointTime.setText(t != null ? DateUtils.toDateString(t,
+                    DateUtils.DATE_TIME_FORMAT) : "");
         }
 
         // 测量

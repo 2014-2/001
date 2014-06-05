@@ -47,11 +47,11 @@ public class AlertHandlingInfoDao extends AbstractDao<AlertHandlingList> {
 
         String sql = "SELECT * from AlertHandlingList"
                 + " WHERE"
-                + " AlertID=\'" + alertGuid + "\'"
+                + " AlertID=?"
                 + " ORDER BY HandlingTime DESC, ID DESC"
                 ;
 
-        return db.queryObjects(sql, null, AlertHandlingList.class);
+        return db.queryObjects(sql, new String[]{alertGuid}, AlertHandlingList.class);
     }
 
     public AlertHandlingList queryOne(int alertId,
@@ -65,11 +65,11 @@ public class AlertHandlingInfoDao extends AbstractDao<AlertHandlingList> {
         }
 
         String sql = "SELECT * from AlertHandlingList WHERE"
-                + " AlertID=\'" + alertGuid + "\'"
+                + " AlertID=?"
                 + " AND AlertStatus=?";
 
         String[] args = new String[] {
-              String.valueOf(alertStatus)
+                alertGuid, String.valueOf(alertStatus)
         };
 
         return db.queryObject(sql, args, AlertHandlingList.class);

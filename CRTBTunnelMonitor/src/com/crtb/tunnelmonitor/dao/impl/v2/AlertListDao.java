@@ -96,12 +96,12 @@ public class AlertListDao extends AbstractDao<AlertList> {
             return;
         }
 
-        String sql = "delete from AlertList where SheetID=\'" + sheetId + "\'"
+        String sql = "delete from AlertList where SheetID=?"
                 + " AND CrossSectionID=?"
                 + " AND Utype=?"
-                + " AND originalDataID=\'" + originalDataID + "\'";
+                + " AND originalDataID=?";
 
-        String[] args = new String[] { String.valueOf(chainageId), String.valueOf(uType) };
+        String[] args = new String[] {sheetId, String.valueOf(chainageId), String.valueOf(uType), originalDataID };
 
         mDatabase.execute(sql, args);
 
@@ -115,11 +115,11 @@ public class AlertListDao extends AbstractDao<AlertList> {
             return null;
         }
 
-        String sql = "select * from AlertList where SheetID=\'" + sheetId + "\'"
+        String sql = "select * from AlertList where SheetID=?"
                 + " AND CrossSectionID=?"
                 + " AND Utype=?"
-                + " AND originalDataID=\'" + originalDataID + "\'";
-        String[] args = new String[] { chainageId, String.valueOf(uType) };
+                + " AND originalDataID=?";
+        String[] args = new String[] {sheetId, chainageId, String.valueOf(uType), originalDataID };
 
         return mDatabase.queryObject(sql, args, AlertList.class);
     }
@@ -133,10 +133,10 @@ public class AlertListDao extends AbstractDao<AlertList> {
         }
 
         String sql = "select * from AlertList where"
-                + " SheetID=\'" + sheetId + "\'"
+                + " SheetID=?"
                 + " AND CrossSectionID=?"
-                + " AND originalDataID=\'" + originalDataID + "\'";
-        String[] args = new String[] { String.valueOf(chainageId) };
+                + " AND originalDataID=?";
+        String[] args = new String[] { sheetId, String.valueOf(chainageId), originalDataID };
 
         return db.queryObjects(sql, args, AlertList.class);
     }
@@ -272,12 +272,12 @@ public class AlertListDao extends AbstractDao<AlertList> {
         }
 
         String sql = "UPDATE AlertList" + " SET UValue=" + UValue
-                + " WHERE SheetID=\'" + sheetId + "\'"
+                + " WHERE SheetID=?"
                 + " AND CrossSectionID=?"
                 + " AND Utype=?"
-                + " AND originalDataID=\'" + originalDataID + "\'";
+                + " AND originalDataID=?";
 
-        String[] args = new String[] { chainageId, String.valueOf(Utype) };
+        String[] args = new String[] {sheetId, chainageId, String.valueOf(Utype), originalDataID };
 
         db.execute(sql, args);
     }

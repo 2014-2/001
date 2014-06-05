@@ -30,7 +30,7 @@ public class AlertList implements Serializable {
 	@ColumnString(length = 255)
 	private String SheetID; 					// 记录单id
 
-	@ColumnInt
+	@ColumnText
 	private String CrossSectionID; 			// 断面唯一id
 
 	@ColumnText

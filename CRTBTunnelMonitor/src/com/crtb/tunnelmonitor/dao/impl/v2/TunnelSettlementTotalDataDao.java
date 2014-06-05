@@ -221,15 +221,14 @@ public class TunnelSettlementTotalDataDao extends AbstractDao<TunnelSettlementTo
 		}
 		
         TunnelSettlementTotalData point2 = null;
-        String sql = "select * from TunnelSettlementTotalData where chainageId="
+        String sql = "select * from TunnelSettlementTotalData where chainageId=?"
                 // 同一个断面
-                + point1.getChainageId()
                 // 同一次测量
                 + " AND MEASNo=?"
-                + " AND pntType=\'" + point2Type + "\'";
+                + " AND pntType=?";
 
         List<TunnelSettlementTotalData> list = mDatabase.queryObjects(sql,
-                new String[] { String.valueOf(point1.getMEASNo()) },
+                new String[] { point1.getChainageId(), String.valueOf(point1.getMEASNo()), point2Type },
                 TunnelSettlementTotalData.class);
 
         if (list != null && list.size() == 1) {

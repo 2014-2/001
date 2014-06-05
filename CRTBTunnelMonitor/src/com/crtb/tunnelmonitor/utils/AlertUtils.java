@@ -324,7 +324,7 @@ public class AlertUtils {
                 }
 
                 if (lastCoords != null && lastCoords.length == 3
-                        && !TextUtils.isEmpty(lastCoords[2]) && lastTime != null) {
+                        && !TextUtils.isEmpty(lastCoords[2]) && thisTime != null && lastTime != null) {
                     double lastZ = Double.valueOf(lastCoords[2]);
                     Log.d(TAG, "last z: " + lastZ + " m");
                     double deltaZ = lastZ - thisZ;
@@ -426,11 +426,15 @@ public class AlertUtils {
         double lineThisLength = getLineLength(s_1, s_2);
         Date s_1ThisTime = s_1.getSurveyTime();
         Date s_2ThisTime = s_2.getSurveyTime();
-        Date thisTimeDate = s_1ThisTime;
-        double thisTime = s_1ThisTime.getTime();
-        if (s_2ThisTime.getTime() > thisTime) {
-            thisTime = s_2ThisTime.getTime();
-            thisTimeDate = s_2ThisTime;
+        double thisTime = -1;
+        if (s_1ThisTime != null && s_2ThisTime != null) {
+
+            Date thisTimeDate = s_1ThisTime;
+            thisTime = s_1ThisTime.getTime();
+            if (s_2ThisTime.getTime() > thisTime) {
+                thisTime = s_2ThisTime.getTime();
+                thisTimeDate = s_2ThisTime;
+            }
         }
 
         String chainageId = s_1.getChainageId();
@@ -531,7 +535,7 @@ public class AlertUtils {
                     break;
                 }
             }
-            if (s_1Last != null && s_2Last != null) {
+            if (s_1Last != null && s_2Last != null && thisTime != -1) {
                 double lineLastLength = getLineLength(s_1Last, s_2Last);
                 double deltaLenth = lineLastLength - lineThisLength;
                 deltaLenth *= 1000;
@@ -539,6 +543,9 @@ public class AlertUtils {
 //                deltaLenth = Math.abs(deltaLenth);
                 Date s_1LastTime = s_1Last.getSurveyTime();
                 Date s_2LastTime = s_2Last.getSurveyTime();
+                if (s_1LastTime == null || s_2LastTime == null) {
+                    return ret;
+                }
                 double lastTime = s_1LastTime.getTime();
                 if (s_2LastTime.getTime() > lastTime) {
                     lastTime = s_2LastTime.getTime();
