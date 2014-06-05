@@ -317,6 +317,13 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 			
 			@Override
 			public void onClick(View v) {
+				
+				if(bean != null && bean.getUploadStatus() == 2){
+					showText("数据已经上传,不能测量");
+					return ;
+				}
+				
+				// 测量
 				connectSurveyProvider(holder,type,RawSheetIndex.CROSS_SECTION_TYPE_TUNNEL);
 			}
 		}) ;
@@ -334,6 +341,11 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 				
 				if(bean == null){
 					showText("该测点不存在观测数据!");
+					return ;
+				}
+				
+				if(bean.getUploadStatus() == 2){
+					showText("数据已经上传,不能删除!");
 					return ;
 				}
 				
@@ -722,6 +734,13 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 			
 			@Override
 			public void onClick(View v) {
+				
+				if(bean != null && bean.getUploadStatus() == 2){
+					showText("数据已经上传,不能测量");
+					return ;
+				}
+				
+				// 测量
 				connectSurveyProvider(holder,type,RawSheetIndex.CROSS_SECTION_TYPE_SUBSIDENCES);
 			}
 		}) ;
@@ -739,6 +758,11 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 				
 				if(bean == null){
 					showText("该测点不存在观测数据!");
+					return ;
+				}
+				
+				if(bean.getUploadStatus() == 2){
+					showText("数据已经上传,不能删除!");
 					return ;
 				}
 				
