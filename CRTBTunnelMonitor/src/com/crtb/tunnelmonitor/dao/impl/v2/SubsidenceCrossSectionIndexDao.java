@@ -101,7 +101,7 @@ public final class SubsidenceCrossSectionIndexDao extends AbstractDao<Subsidence
 					return ;
 				}
 				
-				String sql = "select * from SubsidenceCrossSectionIndex" ;
+				String sql = "select * from SubsidenceCrossSectionIndex ORDER BY Chainage ASC" ;
 				
 				List<SubsidenceCrossSectionIndex> list = mDatabase.queryObjects(sql, SubsidenceCrossSectionIndex.class) ;
 				

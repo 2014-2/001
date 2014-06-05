@@ -115,7 +115,7 @@ public final class TunnelCrossSectionIndexDao extends AbstractDao<TunnelCrossSec
 			return null;
 		}
 		
-		String sql = "select * from TunnelCrossSectionIndex order by Chainage ASC" ;
+		String sql = "select * from TunnelCrossSectionIndex ORDER BY Chainage ASC" ;
 		
 		return mDatabase.queryObjects(sql, TunnelCrossSectionIndex.class) ;
 	}
