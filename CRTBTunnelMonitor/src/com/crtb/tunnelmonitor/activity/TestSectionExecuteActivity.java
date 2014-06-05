@@ -21,7 +21,6 @@ import android.widget.TextView;
 import com.crtb.tssurveyprovider.Coordinate3D;
 import com.crtb.tssurveyprovider.ISurveyProvider;
 import com.crtb.tssurveyprovider.TSSurveyProvider;
-import com.crtb.tunnelmonitor.AppCRTBApplication;
 import com.crtb.tunnelmonitor.AppConfig;
 import com.crtb.tunnelmonitor.AppHandler;
 import com.crtb.tunnelmonitor.CommonObject;
@@ -31,7 +30,6 @@ import com.crtb.tunnelmonitor.dao.impl.v2.AlertListDao;
 import com.crtb.tunnelmonitor.dao.impl.v2.RawSheetIndexDao;
 import com.crtb.tunnelmonitor.dao.impl.v2.SubsidenceCrossSectionIndexDao;
 import com.crtb.tunnelmonitor.dao.impl.v2.SubsidenceTotalDataDao;
-import com.crtb.tunnelmonitor.dao.impl.v2.SurveyerInformationDao;
 import com.crtb.tunnelmonitor.dao.impl.v2.TunnelCrossSectionIndexDao;
 import com.crtb.tunnelmonitor.dao.impl.v2.TunnelSettlementTotalDataDao;
 import com.crtb.tunnelmonitor.entity.AlertList;
@@ -127,7 +125,7 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 		if(bean instanceof List<?>){
 			rawSheets 		= (List<RawSheetIndex>) bean ;
 			rawSheetBean	= rawSheets.get(rawSheetIndex);
-			surveyer		= SurveyerInformationDao.defaultDao().querySurveyerBySheetIndexGuid(rawSheetBean.getGuid());
+			surveyer		= RawSheetIndexDao.defaultDao().querySurveyerBySheetIndexGuid(rawSheetBean.getGuid());
 		}
 		
 		// 加载测量数据
@@ -153,7 +151,7 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 		rawSheetIndex += 1;
 		
 		rawSheetBean 	= rawSheets.get(rawSheetIndex);
-		surveyer		= SurveyerInformationDao.defaultDao().querySurveyerBySheetIndexGuid(rawSheetBean.getGuid());
+		surveyer		= RawSheetIndexDao.defaultDao().querySurveyerBySheetIndexGuid(rawSheetBean.getGuid());
 		sectionIndex	= 0 ;
 		tunnelSection	= null ;
 		subsidenceSection = null ;
@@ -183,7 +181,7 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 		rawSheetIndex-- ;
 		
 		rawSheetBean 	= rawSheets.get(rawSheetIndex);
-		surveyer		= SurveyerInformationDao.defaultDao().querySurveyerBySheetIndexGuid(rawSheetBean.getGuid());
+		surveyer		= RawSheetIndexDao.defaultDao().querySurveyerBySheetIndexGuid(rawSheetBean.getGuid());
 		sectionIndex	= 0 ;
 		tunnelSection	= null ;
 		subsidenceSection = null ;

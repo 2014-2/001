@@ -195,7 +195,7 @@ public class RecordNewSubsidenceActivity extends WorkFlowActivity implements OnP
     		setTopbarTitle("编辑地表下沉断面记录单");
     		sectionListView.setSectionIds(recordInfo.getCrossSectionIDs());
     		
-    		surveyer = SurveyerInformationDao.defaultDao().querySurveyerBySheetIndexGuid(recordInfo.getGuid());
+    		surveyer = RawSheetIndexDao.defaultDao().querySurveyerBySheetIndexGuid(recordInfo.getGuid());
 			
     		section_new_et_prefix.setText(mCurrentWorkPlan.getChainagePrefix());
 			record_Chainage.setText(CrtbUtils.doubleToString(recordInfo.getFACEDK()));
@@ -240,8 +240,6 @@ public class RecordNewSubsidenceActivity extends WorkFlowActivity implements OnP
 				return ;
 			}
 			
-			SurveyerInformationDao InfoDao = SurveyerInformationDao.defaultDao() ;
-						
 			// base
 			String chainage 	= record_Chainage.getEditableText().toString().trim();// 里程
 			String person 		= record_Person.getEditableText().toString().trim();
@@ -299,7 +297,7 @@ public class RecordNewSubsidenceActivity extends WorkFlowActivity implements OnP
 				surveyer.setProjectID(recordInfo.getGuid());
 				
 				// 保存测量人员
-				InfoDao.insert(surveyer);
+				RawSheetIndexDao.defaultDao().insertSurveyer(surveyer);
 				
 			} else {
 				

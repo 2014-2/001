@@ -33,7 +33,6 @@ import com.crtb.tunnelmonitor.AppCRTBApplication;
 import com.crtb.tunnelmonitor.CommonObject;
 import com.crtb.tunnelmonitor.WorkFlowActivity;
 import com.crtb.tunnelmonitor.dao.impl.v2.RawSheetIndexDao;
-import com.crtb.tunnelmonitor.dao.impl.v2.SurveyerInformationDao;
 import com.crtb.tunnelmonitor.entity.ProjectIndex;
 import com.crtb.tunnelmonitor.entity.RawSheetIndex;
 import com.crtb.tunnelmonitor.entity.SurveyerInformation;
@@ -197,7 +196,7 @@ public class RecordNewActivity extends WorkFlowActivity implements OnPageChangeL
     		setTopbarTitle("编辑隧道内断面记录单");
 			sectionListView.setSectionIds(recordInfo.getCrossSectionIDs());
 			
-			surveyer = SurveyerInformationDao.defaultDao().querySurveyerBySheetIndexGuid(recordInfo.getGuid());
+			surveyer = RawSheetIndexDao.defaultDao().querySurveyerBySheetIndexGuid(recordInfo.getGuid());
 			
 			section_new_et_prefix.setText(mCurrentWorkPlan.getChainagePrefix());
 			record_Chainage.setText(CrtbUtils.doubleToString(recordInfo.getFACEDK()));
@@ -240,8 +239,6 @@ public class RecordNewActivity extends WorkFlowActivity implements OnPageChangeL
 				showText("你不能保存,请进入选择断面");
 				return ;
 			}
-			
-			SurveyerInformationDao InfoDao = SurveyerInformationDao.defaultDao() ;
 			
 			// base
 			String chainage 	= record_Chainage.getEditableText().toString().trim();// 里程
@@ -303,7 +300,7 @@ public class RecordNewActivity extends WorkFlowActivity implements OnPageChangeL
 				surveyer.setProjectID(recordInfo.getGuid());
 				
 				// 保存测量人员
-				InfoDao.insert(surveyer);
+				RawSheetIndexDao.defaultDao().insertSurveyer(surveyer);
 				
 			} else {
 				

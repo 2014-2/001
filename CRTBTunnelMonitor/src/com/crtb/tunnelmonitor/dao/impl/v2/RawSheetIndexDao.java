@@ -3,8 +3,12 @@ package com.crtb.tunnelmonitor.dao.impl.v2;
 import java.util.List;
 
 import org.zw.android.framework.IAccessDatabase;
+import org.zw.android.framework.util.StringUtils;
+
+import android.util.Log;
 
 import com.crtb.tunnelmonitor.entity.RawSheetIndex;
+import com.crtb.tunnelmonitor.entity.SurveyerInformation;
 
 /**
  * 记录单信息表
@@ -27,6 +31,48 @@ public class RawSheetIndexDao extends AbstractDao<RawSheetIndex> {
 		}
 		
 		return _instance ;
+	}
+	
+	/**
+	 * 保存测量人员信息
+	 * @param bean
+	 * @return
+	 */
+	public int insertSurveyer(SurveyerInformation bean) {
+		
+		if(bean == null){
+			return DB_EXECUTE_FAILED ;
+		}
+		
+		final IAccessDatabase db = getCurrentDb() ;
+		
+		if(db == null){
+			
+			Log.e("AbstractDao", "zhouwei : insert db is null");
+			
+			return DB_EXECUTE_FAILED ;
+		}
+		
+		return db.saveObject(bean) > -1 ? DB_EXECUTE_SUCCESS : DB_EXECUTE_FAILED;
+	}
+	
+	/**
+	 * 查询测量人员
+	 * 
+	 * @param guid	: 记录单guid
+	 * @return
+	 */
+	public SurveyerInformation querySurveyerBySheetIndexGuid(String guid){
+		
+		final IAccessDatabase mDatabase = getCurrentDb();
+		
+		if(mDatabase == null || StringUtils.isEmpty(guid)){
+			return null ;
+		}
+		
+		String sql = "select * from SurveyerInformation where ProjectID = ?" ;
+		
+		return mDatabase.queryObject(sql, new String[]{guid}, SurveyerInformation.class);
 	}
 
     public RawSheetIndex queryOneById(int id) {
