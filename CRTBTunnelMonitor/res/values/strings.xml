@@ -100,7 +100,7 @@
     <string name="adapt_to">适用于：隧道围岩量测</string>
     <string name="version">Version：%s</string>
     <string name="copyright">Copy©2014\n中铁天宝数字工程有限责任公司\nAll Rights Reserved.</string>
-    <string name="description">"围岩监测解决方案-外业数据采集软件主要用于在隧道监控量测现场，建立于多种型号全站仪的连接，实时采集断面的观测数据与预警提醒，并对超限进行超限处理。并严格按照现行《铁路隧道监控量测数据接口规定》上传数据至工管中心。"</string>
+    <string name="description">"围岩监测解决方案-外业数据采集软件主要用于在隧道监控量测现场，建立与多种型号全站仪的连接，实时采集断面的观测数据与预警提醒，并对超限进行超限处理。并严格按照现行《铁路隧道监控量测数据接口规定》上传数据至工管中心。"</string>
     <string name="software_update">软件升级</string>
     
     <!-- 服务器模块 -->
