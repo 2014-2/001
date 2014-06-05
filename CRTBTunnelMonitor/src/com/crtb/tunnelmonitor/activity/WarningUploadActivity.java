@@ -132,13 +132,17 @@ public class WarningUploadActivity extends Activity {
                     if (uploadData.isChecked()) {
                         UploadWarningData uW = uploadData.getUploadWarningData();
                         if (uW != null) {
-                            AlertInfo ai = uW.getAlertInfo();
-                            if (ai != null) {
-                                int alertId = ai.getAlertId();
-                                AlertList bean = AlertListDao.defaultDao().queryOneById(alertId);
-                                if (bean != null) {
-                                    bean.setUploadStatus(2);
-                                    AlertListDao.defaultDao().update(bean);
+                            ArrayList<AlertInfo> ais = uW.getAlertInfos();
+                            if (ais != null && ais.size() > 0) {
+                                for (AlertInfo ai : ais) {
+                                    if (ai != null) {
+                                        int alertId = ai.getAlertId();
+                                        AlertList bean = AlertListDao.defaultDao().queryOneById(alertId);
+                                        if (bean != null) {
+                                            bean.setUploadStatus(2);
+                                            AlertListDao.defaultDao().update(bean);
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -252,7 +256,18 @@ public class WarningUploadActivity extends Activity {
         List<WarningUploadData> allData = mAdapter.getWarningData();
         for (WarningUploadData data : allData) {
             if (data.isChecked()) {
-                checkedData.add(data.getUploadWarningData().getAlertInfo());
+                UploadWarningData d = data.getUploadWarningData();
+                if (d != null) {
+                    AlertInfo leiji = d.getLeijiAlert();
+                    if (leiji != null) {
+                        checkedData.add(leiji);
+                    }
+                    AlertInfo sulv = d.getSulvAlert();
+                    if (sulv != null) {
+                        checkedData.add(sulv);
+                    }
+                    
+                }
             }
         }
         return checkedData;
@@ -373,8 +388,11 @@ public class WarningUploadActivity extends Activity {
 
         private void bindView(WarningUploadData warningData, View convertView) {
             ViewHolder holder = (ViewHolder)convertView.getTag();
-            holder.mWarningTime.setText(warningData.getUploadWarningData().getAlertInfo().getDate());
-            holder.mWarningState.setText(warningData.getUploadWarningData().getAlertInfo().getAlertStatusMsg());
+            AlertInfo ai = warningData.getUploadWarningData().getAlertInfo();
+            if (ai != null) {
+                holder.mWarningTime.setText(ai.getDate());
+                holder.mWarningState.setText(ai.getAlertStatusMsg());
+            }
             if (warningData.isUploaded()) {
                 holder.mWarningUpload.setText("已上传");
             } else {

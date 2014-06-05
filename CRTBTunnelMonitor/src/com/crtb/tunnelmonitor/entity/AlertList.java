@@ -31,7 +31,7 @@ public class AlertList implements Serializable {
 	private String SheetID; 					// 记录单id
 
 	@ColumnInt
-	private int CrossSectionID; 			// 断面唯一id
+	private String CrossSectionID; 			// 断面唯一id
 
 	@ColumnText
 	private String PntType; 					// 测点类型
@@ -88,11 +88,11 @@ public class AlertList implements Serializable {
 		SheetID = sheetID;
 	}
 
-	public int getCrossSectionID() {
+	public String getCrossSectionID() {
 		return CrossSectionID;
 	}
 
-	public void setCrossSectionID(int crossSectionID) {
+	public void setCrossSectionID(String crossSectionID) {
 		CrossSectionID = crossSectionID;
 	}
 

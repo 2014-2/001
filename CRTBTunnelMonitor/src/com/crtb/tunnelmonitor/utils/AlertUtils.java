@@ -3,23 +3,37 @@ package com.crtb.tunnelmonitor.utils;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import android.database.Cursor;
 import android.database.sqlite.SQLiteException;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.crtb.tunnelmonitor.AppCRTBApplication;
 import com.crtb.tunnelmonitor.dao.impl.v2.AlertHandlingInfoDao;
 import com.crtb.tunnelmonitor.dao.impl.v2.AlertListDao;
 import com.crtb.tunnelmonitor.dao.impl.v2.CrownSettlementARCHINGDao;
+import com.crtb.tunnelmonitor.dao.impl.v2.SubsidenceCrossSectionExIndexDao;
+import com.crtb.tunnelmonitor.dao.impl.v2.SubsidenceCrossSectionIndexDao;
 import com.crtb.tunnelmonitor.dao.impl.v2.SubsidenceTotalDataDao;
+import com.crtb.tunnelmonitor.dao.impl.v2.TunnelCrossSectionExIndexDao;
+import com.crtb.tunnelmonitor.dao.impl.v2.TunnelCrossSectionIndexDao;
 import com.crtb.tunnelmonitor.dao.impl.v2.TunnelSettlementTotalDataDao;
 import com.crtb.tunnelmonitor.entity.AlertHandlingList;
 import com.crtb.tunnelmonitor.entity.AlertList;
 import com.crtb.tunnelmonitor.entity.CrownSettlementARCHING;
+import com.crtb.tunnelmonitor.entity.MergedAlert;
+import com.crtb.tunnelmonitor.entity.SubsidenceCrossSectionExIndex;
+import com.crtb.tunnelmonitor.entity.SubsidenceCrossSectionIndex;
 import com.crtb.tunnelmonitor.entity.SubsidenceSettlementARCHING;
 import com.crtb.tunnelmonitor.entity.SubsidenceTotalData;
+import com.crtb.tunnelmonitor.entity.TunnelCrossSectionExIndex;
+import com.crtb.tunnelmonitor.entity.TunnelCrossSectionIndex;
 import com.crtb.tunnelmonitor.entity.TunnelSettlementTotalData;
 import com.crtb.tunnelmonitor.entity.AlertInfo;
 
@@ -139,50 +153,54 @@ public class AlertUtils {
         String[] thisCoords = null;
         Date thisTime = null;
         String sheetId = null;
-        int chainageId = -1;
+        String chainageId = null;
         String pntType = null;
         String originalDataID = null;
 
         float sumOfDataCorrection = 0f;
         float thisDataCorrection = 0f;
 
+        int dataStatus = POINT_DATASTATUS_NONE;
+
         CrownSettlementARCHING cArc = null;
         SubsidenceSettlementARCHING sArc = null;
 
         if (point instanceof TunnelSettlementTotalData) {
-            if (((TunnelSettlementTotalData) point).getDataStatus() == POINT_DATASTATUS_AS_FIRSTLINE) {
+            TunnelSettlementTotalData tPoint = (TunnelSettlementTotalData) point;
+            dataStatus = tPoint.getDataStatus();
+            if (dataStatus == POINT_DATASTATUS_AS_FIRSTLINE) {
                 return ret;
             }
             cArc = new CrownSettlementARCHING();
             type = 1;
-            TunnelSettlementTotalData tPoint = (TunnelSettlementTotalData) point;
             cArc.setOriginalDataId(tPoint.getGuid());
             thisCoords = tPoint.getCoordinate().split(",");
             thisTime = tPoint.getSurveyTime();
             thisDataCorrection = tPoint.getDataCorrection();
             pastInfoList = TunnelSettlementTotalDataDao.defaultDao().queryInfoBeforeMEASNo(
-                    Integer.valueOf(tPoint.getChainageId()), tPoint.getPntType(), tPoint.getMEASNo());
+                    tPoint.getChainageId(), tPoint.getPntType(), tPoint.getMEASNo());
             sumOfDataCorrection = thisDataCorrection + calculateSumOfDataCorrectionsOfTunnelSettlementTotalDatas(pastInfoList);
-            chainageId = Integer.valueOf(tPoint.getChainageId());
+            chainageId = tPoint.getChainageId();
             sheetId = tPoint.getSheetId();
             cArc.setSheetId(sheetId);
             pntType = tPoint.getPntType();
             originalDataID = String.valueOf(tPoint.getID());
         } else if (point instanceof SubsidenceTotalData) {
-            if (((SubsidenceTotalData) point).getDataStatus() == POINT_DATASTATUS_AS_FIRSTLINE) {
+            SubsidenceTotalData sPoint = (SubsidenceTotalData) point;
+            dataStatus = sPoint.getDataStatus();
+            if (dataStatus == POINT_DATASTATUS_AS_FIRSTLINE) {
                 return ret;
             }
             sArc = new SubsidenceSettlementARCHING();
             type = 2;
-            SubsidenceTotalData sPoint = (SubsidenceTotalData) point;
             sArc.setOriginalDataId(sPoint.getGuid());
             thisCoords = sPoint.getCoordinate().split(",");
             thisTime = sPoint.getSurveyTime();
             thisDataCorrection = sPoint.getDataCorrection();
             pastInfoList = SubsidenceTotalDataDao.defaultDao().queryInfoBeforeMEASNo(
-                    Integer.valueOf(sPoint.getChainageId()), sPoint.getPntType(), sPoint.getMEASNo());
+                    sPoint.getChainageId(), sPoint.getPntType(), sPoint.getMEASNo());
             sumOfDataCorrection = thisDataCorrection + calculateSumOfDataCorrectionsOfSubsidenceTotalDatas(pastInfoList);
-            chainageId = Integer.valueOf(sPoint.getChainageId());
+            chainageId = sPoint.getChainageId();
             sheetId = sPoint.getSheetId();
             sArc.setSheetId(sheetId);
             pntType = sPoint.getPntType();
@@ -193,6 +211,21 @@ public class AlertUtils {
 
         if (thisCoords == null || thisCoords.length < 3) {
             return null;
+        }
+
+        if (curHandlingAlertId > 0 && dataStatus == POINT_DATASTATUS_DISCARD) {
+            List<AlertList> l = AlertListDao.defaultDao().queryByOrigionalDataId(sheetId,
+                    chainageId, originalDataID);
+            for (AlertList al : l) {
+                if (al != null) {
+                    int aid = al.getID();
+                    AlertHandlingInfoDao
+                            .defaultDao()
+                            .insertIfNotExist(aid, handling, handlingTime,
+                                    AppCRTBApplication.getInstance().mUserName, ALERT_STATUS_HANDLED, 1/* true */);
+                }
+            }
+            return ret;
         }
 
         if (pastInfoList != null && pastInfoList.size() > 0) {
@@ -253,7 +286,7 @@ public class AlertUtils {
                                 }
 
                                 AlertHandlingInfoDao.defaultDao().insertItem(alertId, handlingRemark,
-                                        new Date(System.currentTimeMillis()), String.valueOf(chainageId) + pntType, ALERT_STATUS_OPEN/*报警*/, 1/*true*/);
+                                        new Date(System.currentTimeMillis()), AppCRTBApplication.getInstance().mUserName, ALERT_STATUS_OPEN/*报警*/, 1/*true*/);
 
 //                            }
                         }
@@ -263,9 +296,9 @@ public class AlertUtils {
                         if (al != null) {
                             int alertId = al.getID();
                             if (curHandlingAlertId >= 0) {
-                                int chainageId1 = Integer.valueOf(al.getCrossSectionID());
-                                String pntType1 = al.getPntType();
-                                String duePerson = String.valueOf(chainageId1) + pntType1;
+//                                int chainageId1 = Integer.valueOf(al.getCrossSectionID());
+//                                String pntType1 = al.getPntType();
+                                String duePerson = AppCRTBApplication.getInstance().mUserName;
                                 AlertHandlingInfoDao.defaultDao().insertIfNotExist(alertId,
                                         alertId == curHandlingAlertId ? handling : null,
                                         handlingTime, duePerson, ALERT_STATUS_HANDLED, 1/* true */);
@@ -340,7 +373,7 @@ public class AlertUtils {
                                 }
 
                                 AlertHandlingInfoDao.defaultDao().insertItem(alertId, handlingRemark,
-                                        new Date(System.currentTimeMillis()), String.valueOf(chainageId) + pntType, ALERT_STATUS_OPEN/*报警*/, 1/*true*/);
+                                        new Date(System.currentTimeMillis()), AppCRTBApplication.getInstance().mUserName, ALERT_STATUS_OPEN/*报警*/, 1/*true*/);
 //                            }
                         }
                     } else if (!readOnly && sheetId != null) {
@@ -349,9 +382,9 @@ public class AlertUtils {
                         if (al != null) {
                             int alertId = al.getID();
                             if (curHandlingAlertId >= 0) {//处理
-                                int chainageId1 = Integer.valueOf(al.getCrossSectionID());
-                                String pntType1 = al.getPntType();
-                                String duePerson = String.valueOf(chainageId1) + pntType1;
+//                                int chainageId1 = Integer.valueOf(al.getCrossSectionID());
+//                                String pntType1 = al.getPntType();
+                                String duePerson = AppCRTBApplication.getInstance().mUserName;
                                 AlertHandlingInfoDao.defaultDao().insertIfNotExist(alertId,
                                         alertId == curHandlingAlertId ? handling : null,
                                         handlingTime, duePerson, ALERT_STATUS_HANDLED, 1/* true */);
@@ -400,7 +433,23 @@ public class AlertUtils {
             thisTimeDate = s_2ThisTime;
         }
 
-        int chainageId = Integer.valueOf(s_1.getChainageId());
+        String chainageId = s_1.getChainageId();
+
+        int dataStatus = s_1.getDataStatus();
+        if (curHandlingAlertId > 0 && dataStatus == POINT_DATASTATUS_DISCARD) {
+            List<AlertList> l = AlertListDao.defaultDao().queryByOrigionalDataId(sheetId,
+                    chainageId, originalDataID);
+            for (AlertList al : l) {
+                if (al != null) {
+                    int aid = al.getID();
+                    AlertHandlingInfoDao
+                            .defaultDao()
+                            .insertIfNotExist(aid, handling, handlingTime,
+                                    AppCRTBApplication.getInstance().mUserName, ALERT_STATUS_HANDLED, 1/* true */);
+                }
+            }
+            return ret;
+        }
 
         List<TunnelSettlementTotalData> s_1InfoList = TunnelSettlementTotalDataDao.defaultDao()
                 .queryInfoBeforeMEASNo(chainageId, s_1.getPntType(), s_1.getMEASNo());
@@ -450,7 +499,7 @@ public class AlertUtils {
                             }
 
                             AlertHandlingInfoDao.defaultDao().insertItem(alertId, handlingRemark,
-                                    new Date(System.currentTimeMillis()), String.valueOf(chainageId) + s_1.getPntType(), ALERT_STATUS_OPEN/*报警*/, 1/*true*/);
+                                    new Date(System.currentTimeMillis()), AppCRTBApplication.getInstance().mUserName, ALERT_STATUS_OPEN/*报警*/, 1/*true*/);
 //                        }
                     }
 
@@ -462,7 +511,7 @@ public class AlertUtils {
                         if (curHandlingAlertId >= 0) {
                             AlertHandlingInfoDao.defaultDao().insertIfNotExist(alertId,
                                     alertId == curHandlingAlertId ? handling : null, handlingTime,
-                                    String.valueOf(chainageId) + s_1.getPntType(),
+                                            AppCRTBApplication.getInstance().mUserName,
                                     ALERT_STATUS_HANDLED, 1/* true */);
                         } else {
                             AlertHandlingInfoDao.defaultDao().deleteByAlertId(alertId);
@@ -525,7 +574,7 @@ public class AlertUtils {
                             }
 
                             AlertHandlingInfoDao.defaultDao().insertItem(alertId, handlingRemark,
-                                    new Date(System.currentTimeMillis()), String.valueOf(chainageId) + s_1.getPntType(), ALERT_STATUS_OPEN/*报警*/, 1/*true*/);
+                                    new Date(System.currentTimeMillis()), AppCRTBApplication.getInstance().mUserName, ALERT_STATUS_OPEN/*报警*/, 1/*true*/);
 //                        }
                     }
                 } else if (!readOnly && sheetId != null) {
@@ -536,7 +585,7 @@ public class AlertUtils {
                         if (curHandlingAlertId >= 0) {
                             AlertHandlingInfoDao.defaultDao().insertIfNotExist(alertId,
                                     alertId == curHandlingAlertId ? handling : null, handlingTime,
-                                    String.valueOf(chainageId) + s_1.getPntType(),
+                                            AppCRTBApplication.getInstance().mUserName,
                                     ALERT_STATUS_HANDLED, 1/* true */);
                         } else {
                             AlertHandlingInfoDao.defaultDao().deleteByAlertId(alertId);
@@ -573,7 +622,7 @@ public class AlertUtils {
             thisCoords = tPoint.getCoordinate().split(",");
             thisDataCorrection = tPoint.getDataCorrection();
             pastInfoList = TunnelSettlementTotalDataDao.defaultDao().queryInfoBeforeMEASNo(
-                    Integer.valueOf(tPoint.getChainageId()), tPoint.getPntType(), tPoint.getMEASNo());
+                    tPoint.getChainageId(), tPoint.getPntType(), tPoint.getMEASNo());
             sumOfDataCorrection = thisDataCorrection
                     + calculateSumOfDataCorrectionsOfTunnelSettlementTotalDatas(pastInfoList);
         } else if (point instanceof SubsidenceTotalData) {
@@ -586,7 +635,7 @@ public class AlertUtils {
             thisCoords = sPoint.getCoordinate().split(",");
             thisDataCorrection = sPoint.getDataCorrection();
             pastInfoList = SubsidenceTotalDataDao.defaultDao().queryInfoBeforeMEASNo(
-                    Integer.valueOf(sPoint.getChainageId()), sPoint.getPntType(), sPoint.getMEASNo());
+                    sPoint.getChainageId(), sPoint.getPntType(), sPoint.getMEASNo());
             sumOfDataCorrection = thisDataCorrection
                     + calculateSumOfDataCorrectionsOfSubsidenceTotalDatas(pastInfoList);
         } else {
@@ -653,7 +702,7 @@ public class AlertUtils {
 
         double lineThisLength = getLineLength(s_1, s_2);
 
-        int chainageId = Integer.valueOf(s_1.getChainageId());
+        String chainageId = s_1.getChainageId();
 
         List<TunnelSettlementTotalData> s_1InfoList = TunnelSettlementTotalDataDao.defaultDao()
                 .queryInfoBeforeMEASNo(chainageId, s_1.getPntType(), s_1.getMEASNo());
@@ -736,6 +785,43 @@ public class AlertUtils {
         return Math.sqrt(squar);
     }
 
+    public static ArrayList<MergedAlert> getMergedAlerts() {
+        ArrayList<MergedAlert> mal = new ArrayList<MergedAlert>();
+        HashMap<String, MergedAlert> mm = new HashMap<String, MergedAlert>();
+        ArrayList<AlertInfo> ais = getAlertInfoList();
+        if (ais != null && ais.size() > 0) {
+            for (AlertInfo ai : ais) {
+                String key = ai.getOriginalDataID() + ai.getPntType();
+                if (mm.containsKey(key)) {
+                    MergedAlert ma = mm.get(key);
+                    int utype = ai.getUType();
+                    if (utype == DIBIAO_LEIJI_XIACHEN_EXCEEDING || utype == GONGDING_LEIJI_XIACHEN_EXCEEDING || utype == SHOULIAN_LEIJI_EXCEEDING) {
+                        ma.setLeijiAlert(ai);
+                    } else {
+                        ma.setSulvAlert(ai);
+                    }
+                } else {
+                    MergedAlert ma = new MergedAlert();
+                    int utype = ai.getUType();
+                    if (utype == DIBIAO_LEIJI_XIACHEN_EXCEEDING || utype == GONGDING_LEIJI_XIACHEN_EXCEEDING || utype == SHOULIAN_LEIJI_EXCEEDING) {
+                        ma.setLeijiAlert(ai);
+                    } else {
+                        ma.setSulvAlert(ai);
+                    }
+                    mm.put(key, ma);
+                }
+            }
+        }
+        
+        Iterator iter = mm.entrySet().iterator();
+        while (iter.hasNext()) {
+            Map.Entry entry = (Map.Entry) iter.next();
+            MergedAlert val = (MergedAlert) entry.getValue();
+            mal.add(val);
+        }
+        return mal;
+    }
+
     public static ArrayList<AlertInfo> getAlertInfoList() {
         Log.d(TAG, "getAlertInfoList");
 
@@ -745,7 +831,7 @@ public class AlertUtils {
         String sql = "SELECT"
                 + " AlertList.ID AS alertId,"
 //                + " AlertHandlingList.ID AS alertHandlingId,"
-                + " TunnelCrossSectionIndex.Chainage AS chainage,"
+//                + " TunnelCrossSectionIndex.Chainage AS chainage,"
                 + " AlertList.AlertTime AS date,"
                 + " AlertList.PntType AS pntType,"
                 + " AlertList.Utype AS utype,"
@@ -763,8 +849,8 @@ public class AlertUtils {
                 + " FROM AlertList"
 //                + " LEFT JOIN AlertHandlingList"
 //                + " ON AlertList.ID=AlertHandlingList.AlertID"
-                + " LEFT JOIN TunnelCrossSectionIndex"
-                + " ON AlertList.CrossSectionID=TunnelCrossSectionIndex.ID"
+//                + " LEFT JOIN TunnelCrossSectionIndex"
+//                + " ON AlertList.CrossSectionID=TunnelCrossSectionIndex.ID"
                 + " ORDER BY"
 //                + " CASE AlertHandlingList.AlertStatus"
 //                + "   WHEN 1 THEN 0"
@@ -783,24 +869,24 @@ public class AlertUtils {
                     AlertInfo ai = new AlertInfo();
                     ai.setAlertId(c.getInt(0));
 //                    ai.setAlertHandlingId(c.getInt(1));
-                    ai.setXinghao(CrtbUtils.formatSectionName(prefix, c.getDouble(1)));
-                    String dateStr = c.getString(2);
+//                    ai.setXinghao(CrtbUtils.formatSectionName(prefix, c.getDouble(1)));
+                    String dateStr = c.getString(1);
                     ai.setDate(dateStr);
-                    ai.setPntType(c.getString(3));
-                    int uType = c.getInt(4);
+                    ai.setPntType(c.getString(2));
+                    int uType = c.getInt(3);
                     ai.setUType(uType);
                     ai.setUTypeMsg((uType >= GONGDING_LEIJI_XIACHEN_EXCEEDING && uType <= DIBIAO_XIACHEN_SULV_EXCEEDING) ? U_TYPE_MSGS[uType] : "");
 //                    int alertStatus = c.getInt(5);
 //                    ai.setAlertStatus(alertStatus);
 //                    ai.setAlertStatusMsg((alertStatus >= 0 && alertStatus < 3) ? ALERT_STATUS_MSGS[alertStatus]
 //                            : "");
-                    ai.setSheetId(c.getString(5));
-                    ai.setSectionId(c.getInt(6));
-                    ai.setAlertLevel(c.getInt(7));
-                    ai.setUValue(c.getDouble(8));
-                    ai.setOriginalDataID(c.getString(9));
-                    ai.setAlertInfo(c.getString(10));
-                    ai.setUploadStatus(c.getInt(11));
+                    ai.setSheetId(c.getString(4));
+                    ai.setSectionId(c.getInt(5));
+                    ai.setAlertLevel(c.getInt(6));
+                    ai.setUValue(c.getDouble(7));
+                    ai.setOriginalDataID(c.getString(8));
+                    ai.setAlertInfo(c.getString(9));
+                    ai.setUploadStatus(c.getInt(10));
 //                    ai.setHandling(c.getString(12));
 //                    ai.setHandlingTime(c.getString(13));
                     l.add(ai);
@@ -840,8 +926,32 @@ public class AlertUtils {
                 dataId = oriId;
             }
 
+            int utype = ai.getUType();
+            if (utype == DIBIAO_LEIJI_XIACHEN_EXCEEDING || utype == DIBIAO_XIACHEN_SULV_EXCEEDING) {
+                int secid = ai.getSectionId();
+                SubsidenceCrossSectionIndex si = SubsidenceCrossSectionIndexDao.defaultDao().querySectionById(secid);
+                if (si != null) {
+                    ai.setXinghao(CrtbUtils.formatSectionName(prefix, si.getChainage()));
+                }
+
+                SubsidenceCrossSectionExIndex siex = SubsidenceCrossSectionExIndexDao.defaultDao().querySectionById(secid);
+                if (siex != null) {
+                    ai.setSECTCODE(siex.getSECTCODE());
+                }
+            } else {
+                int secid = ai.getSectionId();
+                TunnelCrossSectionIndex si = TunnelCrossSectionIndexDao.defaultDao().querySectionById(secid);
+                if (si != null) {
+                    ai.setXinghao(CrtbUtils.formatSectionName(prefix, si.getChainage()));
+                }
+                
+                TunnelCrossSectionExIndex siex = TunnelCrossSectionExIndexDao.defaultDao().querySectionById(secid);
+                if (siex != null) {
+                    ai.setSECTCODE(siex.getSECTCODE());
+                }
+            }
+
             if (!TextUtils.isEmpty(dataId)) {
-                int utype = ai.getUType();
                 if (utype == DIBIAO_LEIJI_XIACHEN_EXCEEDING || utype == DIBIAO_XIACHEN_SULV_EXCEEDING) {
                     SubsidenceTotalData data = SubsidenceTotalDataDao.defaultDao().queryOneById(Integer.valueOf(dataId));
                     if (data != null) {
@@ -956,11 +1066,11 @@ public class AlertUtils {
 //        int uType = al.getUtype();
 //        int tarAlertStatus = curAlertStatus;
         String originalID = al.getOriginalDataID();
-        int chainageId = Integer.valueOf(al.getCrossSectionID());
+        String chainageId = al.getCrossSectionID();
         String pntType = al.getPntType();
         int uType = al.getUtype();
         double uValue = al.getUValue();
-        String duePerson = String.valueOf(chainageId) + pntType;
+        String duePerson = AppCRTBApplication.getInstance().mUserName;
 
         if (!TextUtils.isEmpty(originalID)) {
             ArrayList<Integer> ids = new ArrayList<Integer>();
@@ -998,7 +1108,7 @@ public class AlertUtils {
                         TunnelSettlementTotalDataDao.defaultDao().updateDataStatus(id, dataStatus, totalCorrection);
 
                         if (dataStatus == POINT_DATASTATUS_AS_FIRSTLINE
-                                || (dataStatus == POINT_DATASTATUS_CORRECTION)) {
+                                || dataStatus == POINT_DATASTATUS_CORRECTION) {
                             // STEP 4
                             measNo = p.getMEASNo();
 //                            AlertHandlingInfoDao.defaultDao().deleteByAlertId(alertId);
@@ -1006,6 +1116,8 @@ public class AlertUtils {
 //                            if (dataStatus == POINT_DATASTATUS_CORRECTION && correction != 0) {
 //                                handleSameTunnelPointOtherAlertsByCorrection(p, alertId, correction, handlingTime);
 //                            }
+                        } else if (dataStatus == POINT_DATASTATUS_DISCARD) {
+                            checkPointSubsidenceExceed(p, alertId, handling, handlingTime, false);
                         }
                     }
                 } else {//地表沉降
@@ -1031,7 +1143,7 @@ public class AlertUtils {
                                 totalCorrection);
 
                         if (dataStatus == POINT_DATASTATUS_AS_FIRSTLINE
-                                || (dataStatus == POINT_DATASTATUS_CORRECTION)) {
+                                || dataStatus == POINT_DATASTATUS_CORRECTION) {
                             // STEP 4
                             measNo = p.getMEASNo();
 //                            AlertHandlingInfoDao.defaultDao().deleteByAlertId(alertId);
@@ -1039,6 +1151,8 @@ public class AlertUtils {
 //                            if (dataStatus == POINT_DATASTATUS_CORRECTION && correction != 0) {
 //                                handleSameGroundPointOtherAlertsByCorrection(p, alertId, correction, handlingTime);
 //                            }
+                        } else if (dataStatus == POINT_DATASTATUS_DISCARD) {
+                            checkPointSubsidenceExceed(p, alertId, handling, handlingTime, false);
                         }
                     }
                 }
@@ -1054,6 +1168,10 @@ public class AlertUtils {
             } else {//测线
                 TunnelSettlementTotalData s_1 = TunnelSettlementTotalDataDao.defaultDao()
                         .queryOneById(ids.get(0));
+                String pnt1Type = s_1.getPntType();
+                String oppositePntType = pnt1Type.substring(0, pnt1Type.length() - 1) + "2";
+                TunnelSettlementTotalData s_2 = TunnelSettlementTotalDataDao.defaultDao()
+                        .queryOppositePointOfALine(s_1, oppositePntType);
                 //测线的DataCorrection存在第一个点中，即SX_1
 //                float curCorrection = s_1.getDataCorrection();
 //                float totalCorrection = curCorrection + correction;
@@ -1062,10 +1180,6 @@ public class AlertUtils {
                     if (uType == SHOULIAN_LEIJI_EXCEEDING) {
                         thisCorrection = (float) (0d - uValue);
                     } else if (uType == SHOULIAN_SULV_EXCEEDING) {
-                        String pnt1Type = s_1.getPntType();
-                        String oppositePntType = pnt1Type.substring(0, pnt1Type.length() - 1) + "2";
-                        TunnelSettlementTotalData s_2 = TunnelSettlementTotalDataDao.defaultDao()
-                        .queryOppositePointOfALine(s_1, oppositePntType);
                         double[] v = getLineConvergenceValues(s_1, s_2);
                         if (v != null && v.length == 2) {
                             thisCorrection = (float) (0d - v[1]);
@@ -1081,7 +1195,8 @@ public class AlertUtils {
                     TunnelSettlementTotalDataDao.defaultDao().updateDataStatus(id, dataStatus, totalCorrection);
                 }
                 if (dataStatus == POINT_DATASTATUS_AS_FIRSTLINE
-                        || (dataStatus == POINT_DATASTATUS_CORRECTION)) {
+                        || dataStatus == POINT_DATASTATUS_CORRECTION
+                        || dataStatus == POINT_DATASTATUS_DISCARD) {
                     // STEP 4
 
                     if (dataStatus == POINT_DATASTATUS_AS_FIRSTLINE) {
@@ -1089,15 +1204,17 @@ public class AlertUtils {
                         String s1Type = s_1.getPntType();
                         handleAsFirstLine(alertId, alertStatus, handling, duePerson, handlingTime,
                                 chainageId, s1Type, s_1.getMEASNo());
-                        String oppositePntType = s1Type.substring(0, s1Type.length() - 1) + "2";
+                        String oppositeType = s1Type.substring(0, s1Type.length() - 1) + "2";
                         handleAsFirstLine(alertId, alertStatus, handling, duePerson, handlingTime,
-                                chainageId, oppositePntType, s_1.getMEASNo());
+                                chainageId, oppositeType, s_1.getMEASNo());
                     }
 
 //                    AlertHandlingInfoDao.defaultDao().deleteByAlertId(alertId);
 
                     updateLineConvergenceAlertsAfterCorrection(chainageId, s_1.getPntType(),
                             s_1.getMEASNo(), alertId, handling, handlingTime);
+                } else if (dataStatus == POINT_DATASTATUS_DISCARD) {
+                    checkLineConvergenceExceed(s_1, s_2, alertId, handling, handlingTime, false);
                 }
             }
         }
@@ -1163,7 +1280,7 @@ public class AlertUtils {
 
     // 本条数据作为首行，即 将之前数据均设为不参与计算;然后删除本条（包括）之前的数据产生的所有预警信息
     public static void handleAsFirstLine(int alertId, int alertStatus, String handling,
-            String duePerson, Date handlingTime, int chainageId, String pntType, int MEASNo) {
+            String duePerson, Date handlingTime, String chainageId, String pntType, int MEASNo) {
         if (pntType.contains("A") || pntType.contains("S")) {// 隧道内断面
             List<TunnelSettlementTotalData> ls = TunnelSettlementTotalDataDao.defaultDao()
                     .queryInfoBeforeMEASNo(chainageId, pntType, MEASNo + 1);
@@ -1231,7 +1348,7 @@ public class AlertUtils {
         }
     }
 
-    public static void updatePointSubsidenceAlertsAfterCorrection(int chainageId, String pntType,
+    public static void updatePointSubsidenceAlertsAfterCorrection(String chainageId, String pntType,
             int MEASNo, int curHandlingAlertId, String handling, Date handlingTime) {
         Log.d(TAG, "updatePointSubsidenceAlertsAfterCorrection, pntType: " + pntType);
         if (pntType.contains("A")) {//隧道内断面
@@ -1253,7 +1370,7 @@ public class AlertUtils {
         }
     }
 
-    public static void updateLineConvergenceAlertsAfterCorrection(int chainageId, String pntType,
+    public static void updateLineConvergenceAlertsAfterCorrection(String chainageId, String pntType,
             int MEASNo, int curHandlingAlertId, String handling, Date handlingTime) {
         Log.d(TAG, "updateLineConvergenceAlertsAfterCorrection, pntType: " + pntType);
         if (pntType.contains("S") && pntType.endsWith("1")) {//测线左点

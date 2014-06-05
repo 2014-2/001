@@ -4,12 +4,15 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import android.R.integer;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.crtb.tunnelmonitor.AppCRTBApplication;
 import com.crtb.tunnelmonitor.dao.impl.v2.TunnelCrossSectionExIndexDao;
 import com.crtb.tunnelmonitor.dao.impl.v2.TunnelSettlementTotalDataDao;
 import com.crtb.tunnelmonitor.entity.AlertInfo;
+import com.crtb.tunnelmonitor.entity.MergedAlert;
 import com.crtb.tunnelmonitor.entity.TunnelCrossSectionExIndex;
 import com.crtb.tunnelmonitor.entity.TunnelSettlementTotalData;
 import com.crtb.tunnelmonitor.network.CrtbWebService;
@@ -59,15 +62,26 @@ public class WarningDataManager {
 		@Override
 		protected List<UploadWarningData> doInBackground(Void... params) {
 			List<UploadWarningData> uploadWarningDataList = new ArrayList<UploadWarningData>();
-			ArrayList<AlertInfo> alertInfoList = AlertUtils.getAlertInfoList();
-			if (alertInfoList != null && alertInfoList.size() > 0) {
-				for(AlertInfo alertInfo : alertInfoList) {
+//			ArrayList<AlertInfo> alertInfoList = AlertUtils.getAlertInfoList();
+//			if (alertInfoList != null && alertInfoList.size() > 0) {
+//				for(AlertInfo alertInfo : alertInfoList) {
+//					UploadWarningData warningData = new UploadWarningData();
+//					warningData.setAlertInfo(alertInfo);
+//					warningData.setSectionCode(alertInfo.getSECTCODE());
+//					uploadWarningDataList.add(warningData);
+//				}
+//			}
+			ArrayList<MergedAlert> mal = AlertUtils.getMergedAlerts();
+			if (mal != null && mal.size() > 0) {
+			    for (MergedAlert ma : mal) {
 					UploadWarningData warningData = new UploadWarningData();
-					warningData.setAlertInfo(alertInfo);
-					warningData.setSectionCode(getSectionCodeById(alertInfo.getSectionId()));
+			        warningData.setLeijiAlert(ma.getLeijiAlert());
+			        warningData.setSulvAlert(ma.getSulvAlert());
+					warningData.setSectionCode(warningData.getAlertInfo().getSECTCODE());
 					uploadWarningDataList.add(warningData);
-				}
+			    }
 			}
+			
 //			if (uploadWarningDataList.size() == 0) {
 //				UploadWarningData fakeWarningData = new UploadWarningData();
 //				AlertInfo fakeAlertInfo = new AlertInfo();
@@ -91,15 +105,15 @@ public class WarningDataManager {
 
 	}
 
-	private String getSectionCodeById(int sectionId) {
-		String sectionCode = "";
-		TunnelCrossSectionExIndexDao sectionExIndexDao = TunnelCrossSectionExIndexDao.defaultDao();
-		TunnelCrossSectionExIndex sectionExIndex = sectionExIndexDao.querySectionById(sectionId);
-		if (sectionExIndex != null) {
-			sectionCode = sectionExIndex.getSECTCODE();
-		}
-		return sectionCode;
-	}
+//	private String getSectionCodeById(int sectionId) {
+//		String sectionCode = "";
+//		TunnelCrossSectionExIndexDao sectionExIndexDao = TunnelCrossSectionExIndexDao.defaultDao();
+//		TunnelCrossSectionExIndex sectionExIndex = sectionExIndexDao.querySectionById(sectionId);
+//		if (sectionExIndex != null) {
+//			sectionCode = sectionExIndex.getSECTCODE();
+//		}
+//		return sectionCode;
+//	}
 	
 	private class DataUploadTask extends AsyncTask<List<UploadWarningData>, Void, Void> {
 
@@ -136,7 +150,8 @@ public class WarningDataManager {
 		} else if (level == 1) {
 			parameter.setWarningLevel(2);
 		}
-    	parameter.setTransformSpeed((float)alertInfo.getUValue());
+		AlertInfo sulvalert = warningData.getSulvAlert();
+    	parameter.setTransformSpeed(sulvalert != null ? (float)sulvalert.getUValue() : 0.5f);
     	String originalID = alertInfo.getOriginalDataID();
     	List<Integer> ids = new ArrayList<Integer>();
         if (originalID.contains(AlertUtils.ORIGINAL_ID_DIVIDER)) {
@@ -147,19 +162,20 @@ public class WarningDataManager {
         } else {
             ids.add(Integer.valueOf(originalID));
         }
-        float pointValue = 0.0f;
-        TunnelSettlementTotalDataDao dao = TunnelSettlementTotalDataDao.defaultDao();
-        if (ids.size() == 1) {
-        	TunnelSettlementTotalData point = dao.queryOneById(ids.get(0));
-        	pointValue = Float.parseFloat(point.getCoordinate().split(",")[2]);
-        } else {
-        	TunnelSettlementTotalData point1 = dao.queryOneById(ids.get(0));
-        	TunnelSettlementTotalData point2 = dao.queryOneById(ids.get(1));
-        	pointValue = (float) AlertUtils.getLineLength(point1, point2);
-        }
-    	parameter.setWarningPointValue(pointValue);
+//        float pointValue = 0.0f;
+//        TunnelSettlementTotalDataDao dao = TunnelSettlementTotalDataDao.defaultDao();
+//        if (ids.size() == 1) {
+//        	TunnelSettlementTotalData point = dao.queryOneById(ids.get(0));
+//        	pointValue = Float.parseFloat(point.getCoordinate().split(",")[2]);
+//        } else {
+//        	TunnelSettlementTotalData point1 = dao.queryOneById(ids.get(0));
+//        	TunnelSettlementTotalData point2 = dao.queryOneById(ids.get(1));
+//        	pointValue = (float) AlertUtils.getLineLength(point1, point2);
+//        }
+        AlertInfo leijiAlert = warningData.getLeijiAlert();
+    	parameter.setWarningPointValue((float) (leijiAlert != null ? leijiAlert.getUValue() : 0.5f));
     	parameter.setWarningDate(CrtbUtils.parseDate(alertInfo.getDate()));
-    	parameter.setWarningPerson("杨工");
+    	parameter.setWarningPerson(AppCRTBApplication.mUserName);
     	parameter.setWarningDescription(alertInfo.getAlertStatusMsg());
     	parameter.setWarningEndTime(CrtbUtils.parseDate(alertInfo.getHandlingTime()));
     	parameter.setWarningResult(alertInfo.getAlertStatus());
@@ -181,15 +197,31 @@ public class WarningDataManager {
     }
     
     public class UploadWarningData {
-    	private AlertInfo mAlertInfo;
+    	private AlertInfo mLeijiAlert;
+    	private AlertInfo mSulvAlert;
     	private String mSectionCode;
     	
-    	public void setAlertInfo(AlertInfo alertInfo) {
-    		mAlertInfo = alertInfo;
+    	public ArrayList<AlertInfo> getAlertInfos() {
+    	    ArrayList<AlertInfo> as = new ArrayList<AlertInfo>();
+    	    as.add(mLeijiAlert);
+    	    as.add(mSulvAlert);
+    	    return as;
+    	}
+
+    	public AlertInfo getAlertInfo() {
+    	    if (mLeijiAlert != null) {
+    	        return mLeijiAlert;
+    	    } else {
+    	        return mSulvAlert;
+    	    }
+    	}
+	
+    	public void setLeijiAlert(AlertInfo alertInfo) {
+    		mLeijiAlert = alertInfo;
     	}
     	
-    	public AlertInfo getAlertInfo() {
-    		return mAlertInfo;
+    	public AlertInfo getLeijiAlert() {
+    		return mLeijiAlert;
     	}
     	
     	public void setSectionCode(String sectionCode) {
@@ -200,19 +232,32 @@ public class WarningDataManager {
     		return mSectionCode;
     	}
     	
-    	public String getPointCode() {
+    	public AlertInfo getSulvAlert() {
+            return mSulvAlert;
+        }
+
+        public void setSulvAlert(AlertInfo sulvAlert) {
+            mSulvAlert = sulvAlert;
+        }
+
+        public String getPointCode() {
+            AlertInfo ai = getAlertInfo();
     		String pointCode = "";
-    		if ("A".equals(mAlertInfo.getPntType())) {
+    		if ("A".equals(ai.getPntType())) {
     			pointCode = mSectionCode + "GD01";
     		}
-    		if ("S1".equals(mAlertInfo.getPntType())) {
+    		else if ("S1".equals(ai.getPntType())) {
     			pointCode = mSectionCode + "SL01" + "#" + mSectionCode + "SL02";
     		}
-    		if ("S2".equals(mAlertInfo.getPntType())) {
+    		else if ("S2".equals(ai.getPntType())) {
     			pointCode = mSectionCode + "SL03" + "#" + mSectionCode + "SL04";
     		}
-    		if ("S3".equals(mAlertInfo.getPntType())) {
+    		else if ("S3".equals(ai.getPntType())) {
     			pointCode = mSectionCode + "SL05" + "#" + mSectionCode + "SL06";
+    		}
+    		else
+    		{
+    			pointCode = mSectionCode + String.format("DB%02d", Integer.parseInt(ai.getPntType())-1);
     		}
     		return pointCode;
     	}

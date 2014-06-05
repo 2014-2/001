@@ -159,7 +159,7 @@ public class SubsidenceTotalDataDao extends AbstractDao<SubsidenceTotalData> {
      * @param MEASNo 本次测量是第几次测量
      * @return 查询到的测点信息List
      */
-    public List<SubsidenceTotalData> queryInfoBeforeMEASNo(int chainageId, String pntType,
+    public List<SubsidenceTotalData> queryInfoBeforeMEASNo(String chainageId, String pntType,
             int MEASNo) {
 
         final IAccessDatabase mDatabase = getCurrentDb();
@@ -169,8 +169,8 @@ public class SubsidenceTotalDataDao extends AbstractDao<SubsidenceTotalData> {
         }
 
         String sql = "select * from SubsidenceTotalData where"
-                + " chainageId=" + chainageId
-                + " AND pntType=" + pntType
+                + " chainageId=\'" + chainageId + "\'"
+                + " AND pntType=\'" + pntType + "\'"
                 + " AND MEASNo < " + String.valueOf(MEASNo)
                 + " AND DataStatus != "
                 + String.valueOf(AlertUtils.POINT_DATASTATUS_DISCARD)
@@ -187,7 +187,7 @@ public class SubsidenceTotalDataDao extends AbstractDao<SubsidenceTotalData> {
      * @param MEASNo 本次测量是第几次测量
      * @return 查询到的测点信息List
      */
-    public List<SubsidenceTotalData> queryInfoAfterMEASNo(int chainageId, String pntType,
+    public List<SubsidenceTotalData> queryInfoAfterMEASNo(String chainageId, String pntType,
             int MEASNo) {
         
         final IAccessDatabase mDatabase = getCurrentDb();
@@ -197,8 +197,8 @@ public class SubsidenceTotalDataDao extends AbstractDao<SubsidenceTotalData> {
         }
         
         String sql = "select * from SubsidenceTotalData where"
-                + " chainageId=" + chainageId
-                + " AND pntType=" + pntType
+                + " chainageId=\'" + chainageId + "\'"
+                + " AND pntType=\'" + pntType + "\'"
                 + " AND MEASNo >= " + String.valueOf(MEASNo)
                 + " AND DataStatus != "
                 + String.valueOf(AlertUtils.POINT_DATASTATUS_DISCARD)

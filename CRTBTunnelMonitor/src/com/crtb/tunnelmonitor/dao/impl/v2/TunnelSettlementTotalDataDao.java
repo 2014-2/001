@@ -51,7 +51,7 @@ public class TunnelSettlementTotalDataDao extends AbstractDao<TunnelSettlementTo
 		mDatabase.execute(sql, SQLiteParamUtils.toParamemter(bean.getID()));
 	}
 
-    public List<TunnelSettlementTotalData> queryAllOrderByMEASNoDesc(String pntType) {
+    public List<TunnelSettlementTotalData> queryAllOrderByTimeDesc(String pntType) {
 
         final IAccessDatabase mDatabase = getCurrentDb();
 
@@ -59,7 +59,7 @@ public class TunnelSettlementTotalDataDao extends AbstractDao<TunnelSettlementTo
             return null;
         }
 
-        String sql = "select * from TunnelSettlementTotalData where PntType=? ORDER BY MEASNo DESC";
+        String sql = "select * from TunnelSettlementTotalData where PntType=? ORDER BY SurveyTime DESC";
         String[] args = SQLiteParamUtils.toParamemter(pntType);
 
         return mDatabase.queryObjects(sql, args,TunnelSettlementTotalData.class);
@@ -161,7 +161,7 @@ public class TunnelSettlementTotalDataDao extends AbstractDao<TunnelSettlementTo
      * @return 查询到的测点信息List
      */
     public List<TunnelSettlementTotalData> queryInfoBeforeMEASNo(
-            int chainageId, String pntType, int MEASNo) {
+            String chainageId, String pntType, int MEASNo) {
 
         final IAccessDatabase mDatabase = getCurrentDb();
 
@@ -169,8 +169,8 @@ public class TunnelSettlementTotalDataDao extends AbstractDao<TunnelSettlementTo
             return null;
         }
 
-        String sql = "select * from TunnelSettlementTotalData where chainageId="
-                + chainageId
+        String sql = "select * from TunnelSettlementTotalData where chainageId=\'"
+                + chainageId + "\'"
                 + " AND pntType=\'"
                 + pntType
                 + "\' AND MEASNo<?"
@@ -193,7 +193,7 @@ public class TunnelSettlementTotalDataDao extends AbstractDao<TunnelSettlementTo
      *            本次测量是第几次测量
      * @return 查询到的测点信息List
      */
-    public List<TunnelSettlementTotalData> queryInfoAfterMEASNo(int chainageId, String pntType,
+    public List<TunnelSettlementTotalData> queryInfoAfterMEASNo(String chainageId, String pntType,
             int MEASNo) {
 
         final IAccessDatabase mDatabase = getCurrentDb();
@@ -202,7 +202,7 @@ public class TunnelSettlementTotalDataDao extends AbstractDao<TunnelSettlementTo
             return null;
         }
 
-        String sql = "select * from TunnelSettlementTotalData where chainageId=" + chainageId
+        String sql = "select * from TunnelSettlementTotalData where chainageId=\'" + chainageId + "\'"
                 + " AND pntType=\'" + pntType + "\' AND MEASNo>=?" + " AND DataStatus != ?"
                 + " order by MEASNo ASC";
 

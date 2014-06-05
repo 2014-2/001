@@ -32,6 +32,7 @@ public class AlertInfo implements Serializable {
     private String chuliFangshi;
     private int uploadStatus;
     private String alertInfo;
+    private String SECTCODE;
 
     //    public boolean isState1() {
     //        return state1;
@@ -206,6 +207,14 @@ public class AlertInfo implements Serializable {
 
     public void setAlertInfo(String alertInfo) {
         this.alertInfo = alertInfo;
+    }
+
+    public String getSECTCODE() {
+        return SECTCODE;
+    }
+
+    public void setSECTCODE(String sECTCODE) {
+        SECTCODE = sECTCODE;
     }
 
 }

@@ -107,7 +107,7 @@ public class AlertListDao extends AbstractDao<AlertList> {
 
     }
 
-    public AlertList queryOne(String sheetId, int chainageId, String originalDataID, int uType) {
+    public AlertList queryOne(String sheetId, String chainageId, String originalDataID, int uType) {
         final IAccessDatabase mDatabase = getCurrentDb();
         Log.d(TAG, "AlertListDao queryOne, uType: " + uType);
 
@@ -119,7 +119,7 @@ public class AlertListDao extends AbstractDao<AlertList> {
                 + " AND CrossSectionID=?"
                 + " AND Utype=?"
                 + " AND originalDataID=\'" + originalDataID + "\'";
-        String[] args = new String[] { String.valueOf(chainageId), String.valueOf(uType) };
+        String[] args = new String[] { chainageId, String.valueOf(uType) };
 
         return mDatabase.queryObject(sql, args, AlertList.class);
     }
@@ -146,7 +146,7 @@ public class AlertListDao extends AbstractDao<AlertList> {
 
         Log.d(TAG, "AlertListDao insertOrUpdate TunnelSettlementTotalData");
         String sheetId = point.getSheetId();
-        int chainageId = Integer.valueOf(point.getChainageId());
+        String chainageId = point.getChainageId();
 
 //        String pntType = point.getPntType();
 
@@ -171,7 +171,7 @@ public class AlertListDao extends AbstractDao<AlertList> {
         Log.d(TAG, "AlertListDao insertOrUpdate SubsidenceTotalData");
 
         String sheetId = point.getSheetId();
-        int chainageId = Integer.valueOf(point.getChainageId());
+        String chainageId = point.getChainageId();
 //        String pntType = point.getPntType();
 
         AlertList al = queryOne(sheetId, chainageId, originalDataID, Utype);
@@ -214,7 +214,7 @@ public class AlertListDao extends AbstractDao<AlertList> {
         }
 
         al.setSheetID(point.getSheetId());
-        al.setCrossSectionID(Integer.valueOf(point.getChainageId()));
+        al.setCrossSectionID(point.getChainageId());
         al.setPntType(pntType);
         al.setAlertTime(point.getSurveyTime());
         al.setAlertLeverl(alertLevel);
@@ -250,7 +250,7 @@ public class AlertListDao extends AbstractDao<AlertList> {
 
         AlertList al = new AlertList();
         al.setSheetID(point.getSheetId());
-        al.setCrossSectionID(Integer.valueOf(point.getChainageId()));
+        al.setCrossSectionID(point.getChainageId());
         al.setPntType(point.getPntType());
         al.setAlertTime(point.getSurveyTime());
         al.setAlertLeverl(alertLevel);
@@ -264,7 +264,7 @@ public class AlertListDao extends AbstractDao<AlertList> {
         return ret;
     }
 
-    public void updatePointAlertItem(String sheetId, int chainageId, int Utype, double UValue,
+    public void updatePointAlertItem(String sheetId, String chainageId, int Utype, double UValue,
             String originalDataID) {
         IAccessDatabase db = getCurrentDb();
         if (db == null) {
@@ -277,7 +277,7 @@ public class AlertListDao extends AbstractDao<AlertList> {
                 + " AND Utype=?"
                 + " AND originalDataID=\'" + originalDataID + "\'";
 
-        String[] args = new String[] { String.valueOf(chainageId), String.valueOf(Utype) };
+        String[] args = new String[] { chainageId, String.valueOf(Utype) };
 
         db.execute(sql, args);
     }
@@ -286,7 +286,7 @@ public class AlertListDao extends AbstractDao<AlertList> {
             String originalDataID) {
         Log.d(TAG, "AlertListDao updatePointAlertItem TunnelSettlementTotalData");
         String sheetId = point.getSheetId();
-        int chainageId = Integer.valueOf(point.getChainageId());
+        String chainageId = point.getChainageId();
 
         updatePointAlertItem(sheetId, chainageId, Utype, UValue, originalDataID);
     }
@@ -295,7 +295,7 @@ public class AlertListDao extends AbstractDao<AlertList> {
             String originalDataID) {
         Log.d(TAG, "AlertListDao updatePointAlertItem SubsidenceTotalData");
         String sheetId = point.getSheetId();
-        int chainageId = Integer.valueOf(point.getChainageId());
+        String chainageId = point.getChainageId();
 
         updatePointAlertItem(sheetId, chainageId, Utype, UValue, originalDataID);
     }
