@@ -339,12 +339,16 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 					return ;
 				}
 				
-				if(bean == null){
+				final TunnelSettlementTotalDataDao dao = TunnelSettlementTotalDataDao.defaultDao() ;
+				
+				TunnelSettlementTotalData data = dao.queryTunnelTotalData(rawSheetBean.getGuid(),tunnelSection.getGuid(), type);
+				
+				if(data == null){
 					showText("该测点不存在观测数据!");
 					return ;
 				}
 				
-				if(bean.getUploadStatus() == 2){
+				if(data.getUploadStatus() == 2){
 					showText("数据已经上传,不能删除!");
 					return ;
 				}
@@ -764,12 +768,16 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 					return ;
 				}
 				
-				if(bean == null){
+				SubsidenceTotalDataDao dao = SubsidenceTotalDataDao.defaultDao() ;
+				
+				SubsidenceTotalData data = dao.querySubsidenceTotalData(rawSheetBean.getGuid(),subsidenceSection.getGuid(),type);
+				
+				if(data == null){
 					showText("该测点不存在观测数据!");
 					return ;
 				}
 				
-				if(bean.getUploadStatus() == 2){
+				if(data.getUploadStatus() == 2){
 					showText("数据已经上传,不能删除!");
 					return ;
 				}
