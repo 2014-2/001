@@ -110,7 +110,7 @@ public final class SubsidenceCrossSectionIndexDao extends AbstractDao<Subsidence
 				if(list != null){
 					
 					for(SubsidenceCrossSectionIndex section : list){
-						section.setHasTestData(dao.checkSectionTestData(section.getID()));
+						section.setHasTestData(dao.checkSectionTestData(section.getGuid()));
 					}
 				}
 				

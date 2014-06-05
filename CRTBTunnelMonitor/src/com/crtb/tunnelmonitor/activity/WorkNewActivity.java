@@ -299,13 +299,13 @@ public class WorkNewActivity extends WorkFlowActivity implements OnClickListener
 			double sm	= CrtbUtils.formatDouble(start);
 			double em	= CrtbUtils.formatDouble(end);
 			
-			if(sm <= 0.0d){
-				showText("开始里程必须大于0");
+			if(sm < 0.0d){
+				showText("开始里程必须大于等于0");
 				return ;
 			}
 			
-			if(em <= 0.0d){
-				showText("结束里程必须大于0");
+			if(em < 0.0d){
+				showText("结束里程必须大于等于0");
 				return ;
 			}
 			

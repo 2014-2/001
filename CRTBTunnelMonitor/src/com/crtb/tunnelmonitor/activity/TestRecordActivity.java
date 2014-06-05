@@ -116,13 +116,7 @@ public class TestRecordActivity extends WorkFlowActivity implements OnPageChange
 				
 				final RawSheetIndex bean = mTestSubsidenceList.getItem(position) ;
 				
-				String[] menus = null ;
-				
-				if(position == 0){
-					menus	= new String[]{getString(R.string.common_open),getString(R.string.common_delete)};
-				} else{
-					menus	= new String[]{getString(R.string.common_open)};
-				}
+				String[] menus = new String[]{getString(R.string.common_open)} ;
 				
 				// show menu
 				clearListActionMenu() ;
