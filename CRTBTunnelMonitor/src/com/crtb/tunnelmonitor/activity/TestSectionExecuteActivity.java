@@ -378,7 +378,8 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 
                             if (obj != null) {
 
-                                dao.reset(obj);
+                                // dao.reset(obj);
+                            	dao.delete(obj);
 
                                 List<AlertList> als = AlertListDao.defaultDao()
                                         .queryByOrigionalDataId(String.valueOf(sheetId),
@@ -826,7 +827,8 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 
                             if (obj != null) {
 
-                                dao.reset(obj);
+                            	//dao.reset(obj);
+                                dao.delete(obj);
 
                                 List<AlertList> als = AlertListDao.defaultDao()
                                         .queryByOrigionalDataId(sheetId, chainageid,
