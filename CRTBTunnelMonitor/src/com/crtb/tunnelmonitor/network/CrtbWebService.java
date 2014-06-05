@@ -138,7 +138,8 @@ public final class CrtbWebService {
 	 * @param callback
 	 */
 	public void verifyAppUser(String account, String encnryptPassword, String encnryptPublicKey, RpcCallback callback) {
-		VerifyAppUserRpc rpc = new VerifyAppUserRpc(account, encnryptPassword, AppCRTBApplication.getDeviceMac(), encnryptPublicKey, new RpcCallbackWrapper(callback));
+
+	    VerifyAppUserRpc rpc = new VerifyAppUserRpc(account, encnryptPassword, AppCRTBApplication.getDeviceMac(), encnryptPublicKey, new RpcCallbackWrapper(callback));
 		sendRequestAsync(rpc, USRE_AUTH_URL);
 		//RpcSendTask task = new RpcSendTask(rpc, USRE_AUTH_URL);
 		//task.execute();
