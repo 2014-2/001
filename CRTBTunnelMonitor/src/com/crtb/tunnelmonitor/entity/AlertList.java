@@ -40,7 +40,7 @@ public class AlertList implements Serializable {
 	private Date AlertTime; 				// 预警时间
 
 	@ColumnInt
-	private int AlertLeverl; 				// 预警等级
+	private int AlertLevel; 				// 预警等级
 
 	@ColumnInt
 	private int Utype; 						// 超限类型
@@ -113,11 +113,11 @@ public class AlertList implements Serializable {
 	}
 
 	public int getAlertLeverl() {
-		return AlertLeverl;
+		return AlertLevel;
 	}
 
 	public void setAlertLeverl(int alertLeverl) {
-		AlertLeverl = alertLeverl;
+		AlertLevel = alertLeverl;
 	}
 
 	public int getUtype() {
