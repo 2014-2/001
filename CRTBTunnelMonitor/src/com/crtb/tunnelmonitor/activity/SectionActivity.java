@@ -33,11 +33,13 @@ import com.crtb.tunnelmonitor.dao.impl.v2.SubsidenceCrossSectionExIndexDao;
 import com.crtb.tunnelmonitor.dao.impl.v2.SubsidenceCrossSectionIndexDao;
 import com.crtb.tunnelmonitor.dao.impl.v2.TunnelCrossSectionExIndexDao;
 import com.crtb.tunnelmonitor.dao.impl.v2.TunnelCrossSectionIndexDao;
+import com.crtb.tunnelmonitor.dao.impl.v2.TunnelSettlementTotalDataDao;
 import com.crtb.tunnelmonitor.entity.MenuSystemItem;
 import com.crtb.tunnelmonitor.entity.SubsidenceCrossSectionExIndex;
 import com.crtb.tunnelmonitor.entity.SubsidenceCrossSectionIndex;
 import com.crtb.tunnelmonitor.entity.TunnelCrossSectionExIndex;
 import com.crtb.tunnelmonitor.entity.TunnelCrossSectionIndex;
+import com.crtb.tunnelmonitor.entity.TunnelSettlementTotalData;
 import com.crtb.tunnelmonitor.mydefine.CrtbDialogHint;
 import com.crtb.tunnelmonitor.mydefine.CrtbDialogResult;
 import com.crtb.tunnelmonitor.widget.SectionSubsidenceListView;
@@ -140,8 +142,18 @@ public class SectionActivity extends WorkFlowActivity implements OnPageChangeLis
 				
 			} else if(position == 1){
 				
+				List<TunnelSettlementTotalData> list = TunnelSettlementTotalDataDao.defaultDao().queryTunnelTotalDataSection(section.getGuid());
+				
+				if(list != null && list.size() > 0){
+					CrtbDialogHint hint = new CrtbDialogHint(SectionActivity.this, R.drawable.ic_warnning, "该断面存在测量数据,不可删除!");
+					hint.show() ;
+					return ;
+				}
+				
 				int code = TunnelCrossSectionIndexDao.defaultDao().delete(section);
+				
 				TunnelCrossSectionExIndex sectionExIndex = TunnelCrossSectionExIndexDao.defaultDao().querySectionById(section.getID());
+				
 				if (sectionExIndex != null) {
 					int result =TunnelCrossSectionExIndexDao.defaultDao().delete(sectionExIndex);
 					if (result != AbstractDao.DB_EXECUTE_SUCCESS) {
@@ -165,7 +177,9 @@ public class SectionActivity extends WorkFlowActivity implements OnPageChangeLis
 		} else if(bean instanceof SubsidenceCrossSectionIndex){
 			
 			SubsidenceCrossSectionIndex section = (SubsidenceCrossSectionIndex)bean ;
+			
 			SubsidenceCrossSectionExIndex sectionExIndex = SubsidenceCrossSectionExIndexDao.defaultDao().querySectionById(section.getID());
+			
 			if (sectionExIndex != null) {
 				int result = SubsidenceCrossSectionExIndexDao.defaultDao().delete(sectionExIndex);
 				if (result != AbstractDao.DB_EXECUTE_SUCCESS) {

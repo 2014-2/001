@@ -57,7 +57,7 @@ public class SubsidenceTotalDataDao extends AbstractDao<SubsidenceTotalData> {
         return mDatabase.queryObjects(sql, args, SubsidenceTotalData.class);
     }
 
-	public boolean checkSectionTestData(int id){
+	public boolean checkSectionTestData(String guid){
 		
 		final IAccessDatabase mDatabase = getCurrentDb();
 
@@ -67,7 +67,7 @@ public class SubsidenceTotalDataDao extends AbstractDao<SubsidenceTotalData> {
 		
 		String sql = "select * from SubsidenceTotalData where ChainageId = ? limit 0,1";
 		
-		SubsidenceTotalData data = mDatabase.queryObject(sql, new String[] {String.valueOf(id) }, SubsidenceTotalData.class) ;
+		SubsidenceTotalData data = mDatabase.queryObject(sql, new String[] {String.valueOf(guid) }, SubsidenceTotalData.class) ;
 		 
 		return data != null;
 	}
