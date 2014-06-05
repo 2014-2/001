@@ -313,6 +313,11 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 	}
 	private void loadDefault(){
 		
+		section_new_leiji_gd.setEnabled(false);
+		section_new_leiji_sl.setEnabled(false);
+		section_new_single_gd.setEnabled(false);
+		section_new_single_sl.setEnabled(false);
+		
 		if(sectionInfo != null){
 			
 			setTopbarTitle("编辑隧道内断面");
@@ -383,11 +388,6 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 			section_new_leiji_sl.setText(String.valueOf(sectionInfo.getSLU0()));
 			section_new_single_gd.setText(String.valueOf(sectionInfo.getGDVelocity()));
 			section_new_single_sl.setText(String.valueOf(sectionInfo.getSLLimitVelocity()));
-			
-			section_new_leiji_gd.setEnabled(false);
-			section_new_leiji_sl.setEnabled(false);
-			section_new_single_gd.setEnabled(false);
-			section_new_single_sl.setEnabled(false);
 			
 			section_new_createtime1.setText(DateUtils.toDateString(sectionInfo.getGDU0Time(),DateUtils.DATE_TIME_FORMAT));
 			section_new_createtime2.setText(DateUtils.toDateString(sectionInfo.getSLU0Time(),DateUtils.DATE_TIME_FORMAT));

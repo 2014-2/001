@@ -205,6 +205,9 @@ public class SectionNewSubsidenceActivity extends WorkFlowActivity implements On
 
 	private void loadDefault(){
 		
+		DSection_Value1.setEnabled(false);
+		DSection_Value2.setEnabled(false);
+		
 		if(subsidence != null){
 			
 			setTopbarTitle("编辑地表下沉断面");
@@ -222,9 +225,6 @@ public class SectionNewSubsidenceActivity extends WorkFlowActivity implements On
 			
 			DSection_Value1.setText(String.valueOf(subsidence.getDBU0()));
 			DSection_Value2.setText(String.valueOf(subsidence.getDBLimitVelocity()));
-			
-			DSection_Value1.setEnabled(false);
-			DSection_Value2.setEnabled(false);
 			
 			DSection_SetTime.setText(DateUtils.toDateString(subsidence.getDBU0Time(),DateUtils.DATE_TIME_FORMAT));
 			DSection_Info.setText(subsidence.getDBU0Description());
