@@ -845,7 +845,7 @@ public class AlertUtils {
 //                + " AlertHandlingList.AlertStatus AS status,"
                 + " AlertList.SheetID AS sheetId,"
                 + " AlertList.CrossSectionID AS sectionId,"
-                + " AlertList.AlertLeverl AS alertLevel,"
+                + " AlertList.AlertLevel AS alertLevel,"
                 + " AlertList.UValue AS uvalue,"
                 + " AlertList.OriginalDataID AS originalDataID,"
                 + " AlertList.Info AS info,"
