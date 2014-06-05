@@ -188,8 +188,7 @@ public class TunnelMeasureData extends MeasureData {
             TunnelSettlementTotalData first = mMeasurePoints.size() > 0 ? mMeasurePoints.get(0)
                     : null;
             if (first != null) {
-                int sheetId = Integer.valueOf(first.getSheetId());
-                RawSheetIndex sheet = RawSheetIndexDao.defaultDao().queryOneById(sheetId);
+                RawSheetIndex sheet = RawSheetIndexDao.defaultDao().queryOneByGuid(first.getSheetId());
                 if (sheet != null) {
                     mFaceDescription = sheet.getFACEDESCRIPTION();
                 }
@@ -201,14 +200,11 @@ public class TunnelMeasureData extends MeasureData {
     public float getFaceDistance() {
         TunnelSettlementTotalData first = mMeasurePoints.size() > 0 ? mMeasurePoints.get(0) : null;
         if (first != null) {
-            int chainageId = Integer.valueOf(first.getChainageId());
             TunnelCrossSectionIndex section = TunnelCrossSectionIndexDao.defaultDao()
-                    .querySectionById(chainageId);
+                    .querySectionByGuid(first.getChainageId());
             if (section != null) {
                 double chainage = section.getChainage();
-
-                int sheetId = Integer.valueOf(first.getSheetId());
-                RawSheetIndex sheet = RawSheetIndexDao.defaultDao().queryOneById(sheetId);
+                RawSheetIndex sheet = RawSheetIndexDao.defaultDao().queryOneByGuid(first.getSheetId());
                 if (sheet != null) {
                     double facedk = sheet.getFACEDK();
                     mFaceDistance = (float) (facedk - chainage);

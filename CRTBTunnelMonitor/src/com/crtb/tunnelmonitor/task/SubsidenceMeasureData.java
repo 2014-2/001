@@ -79,8 +79,7 @@ public class SubsidenceMeasureData extends MeasureData {
             SubsidenceTotalData first = mMeasurePoints.size() > 0 ? mMeasurePoints.get(0)
                     : null;
             if (first != null) {
-                int sheetId = Integer.valueOf(first.getSheetId());
-                RawSheetIndex sheet = RawSheetIndexDao.defaultDao().queryOneById(sheetId);
+                RawSheetIndex sheet = RawSheetIndexDao.defaultDao().queryOneByGuid(first.getSheetId());
                 if (sheet != null) {
                     mFaceDescription = sheet.getFACEDESCRIPTION();
                 }
@@ -98,8 +97,7 @@ public class SubsidenceMeasureData extends MeasureData {
             if (section != null) {
                 double chainage = section.getChainage();
 
-                int sheetId = Integer.valueOf(first.getSheetId());
-                RawSheetIndex sheet = RawSheetIndexDao.defaultDao().queryOneById(sheetId);
+                RawSheetIndex sheet = RawSheetIndexDao.defaultDao().queryOneByGuid(first.getSheetId());
                 if (sheet != null) {
                     double facedk = sheet.getFACEDK();
                     mFaceDistance  = (float) (facedk - chainage);
