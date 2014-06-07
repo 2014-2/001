@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.zw.android.framework.ioc.InjectCore;
 import org.zw.android.framework.ioc.InjectLayout;
-import org.zw.android.framework.ioc.InjectResource;
 import org.zw.android.framework.ioc.InjectView;
 
 import android.content.BroadcastReceiver;
@@ -17,11 +16,13 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 
+import com.crtb.tunnelmonitor.AppCRTBApplication;
 import com.crtb.tunnelmonitor.AppHandler;
 import com.crtb.tunnelmonitor.AppPreferences;
 import com.crtb.tunnelmonitor.CommonObject;
 import com.crtb.tunnelmonitor.WorkFlowActivity;
 import com.crtb.tunnelmonitor.dao.impl.v2.ProjectIndexDao;
+import com.crtb.tunnelmonitor.entity.CrtbUser;
 import com.crtb.tunnelmonitor.entity.MenuSystemItem;
 import com.crtb.tunnelmonitor.entity.ProjectIndex;
 import com.crtb.tunnelmonitor.mydefine.CrtbDialogConnecting;
@@ -43,9 +44,6 @@ public final class WorkActivity extends WorkFlowActivity {
 	
 	@InjectView(id=R.id.list_view_workplans)
 	private CrtbWorkPlanListView mListView ;
-	
-	@InjectResource(stringArray=R.array.work_plan_item_menus)
-	private String[] workpalnItemMenu ;
 	
 	// delete dialog
 	private CrtbDialogHint 	mWarringDialog ;
@@ -76,23 +74,27 @@ public final class WorkActivity extends WorkFlowActivity {
 	@Override
 	protected void onListItemSelected(Object obj, int position, String menu) {
 		
+		if(obj == null || menu == null){
+			return ;
+		}
+		
 		final ProjectIndex bean = (ProjectIndex) obj ;
 		
-		if(position == 0){
+		if(menu.equals(getString(R.string.common_open))){
 			
 			// current edit workplan
 			ProjectIndexDao.defaultWorkPlanDao().updateCurrentWorkPlan(bean);
 			
 			finish() ;
 			
-		} else if(position == 1){
+		} else if(menu.equals(getString(R.string.common_edit))){
 			
 			CommonObject.putObject(WorkNewActivity.KEY_WORKPLAN_OBJECT,bean);
 			Intent intent = new Intent() ;
 			intent.setClass(WorkActivity.this, WorkNewActivity.class);
 			startActivity(intent);
 			
-		} else if(position == 2){
+		} else if(menu.equals(getString(R.string.common_export))){
 			
 			mProgressText	= "正在导出文件,请稍等..." ;
 			String dbname 	= bean.getProjectName();
@@ -100,7 +102,7 @@ public final class WorkActivity extends WorkFlowActivity {
 			
 			CrtbDbFileUtils.exportDb(path, dbname, mHanlder);
 			
-		}else if(position == 3){
+		}else if(menu.equals(getString(R.string.common_delete))){
 			
 			String name = AppPreferences.getPreferences().getCurrentProject() ;
 			
@@ -241,7 +243,30 @@ public final class WorkActivity extends WorkFlowActivity {
 				
 				ProjectIndex bean = mListView.getItem(position) ;
 				
-				showListActionMenu(getString(R.string.work_plan_title), workpalnItemMenu, bean);
+				String[] menus = null ;
+				
+				int type = AppCRTBApplication.getInstance().getCurUserType() ;
+				
+				if(type == CrtbUser.LICENSE_TYPE_DEFAULT 
+						|| type == CrtbUser.LICENSE_TYPE_TRIAL){
+					
+					menus	= new String[]{getString(R.string.common_open),
+											getString(R.string.common_edit),
+											getString(R.string.common_delete)} ;
+					
+				} else if(type == CrtbUser.LICENSE_TYPE_REGISTERED){
+					
+					menus	= new String[]{getString(R.string.common_open),
+							getString(R.string.common_edit),
+							getString(R.string.common_export),
+							getString(R.string.common_delete)} ;
+				}
+				
+				if(menus == null){
+					return ;
+				}
+				
+				showListActionMenu(getString(R.string.work_plan_title), menus, bean);
 			}
 		}) ;
 		

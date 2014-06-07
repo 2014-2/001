@@ -20,8 +20,13 @@ import com.crtb.tunnelmonitor.AppConfig;
 import com.crtb.tunnelmonitor.AppHandler;
 import com.crtb.tunnelmonitor.AppLogger;
 import com.crtb.tunnelmonitor.BaseAsyncTask;
+import com.crtb.tunnelmonitor.dao.impl.v2.AbstractDao;
+import com.crtb.tunnelmonitor.dao.impl.v2.CrtbLicenseDao;
 import com.crtb.tunnelmonitor.dao.impl.v2.ProjectIndexDao;
+import com.crtb.tunnelmonitor.entity.CrtbUser;
 import com.crtb.tunnelmonitor.entity.ProjectIndex;
+import com.crtb.tunnelmonitor.entity.SubsidenceCrossSectionIndex;
+import com.crtb.tunnelmonitor.entity.TunnelCrossSectionIndex;
 
 /**
  * 数据库文件导入导出
@@ -267,10 +272,15 @@ public final class CrtbDbFileUtils {
 					return ;
 				}
 				
+				final CrtbUser user = CrtbLicenseDao.defaultDao().queryCrtbUser() ;
+				
+				if(user == null){
+					sendMessage(MSG_INPORT_DB_FAILED,"当前用户类型错误,无法导入!") ;
+					return  ;
+				}
+				
 				// 打开数据库
 				final IAccessDatabase db = FrameworkFacade.getFrameworkFacade().openDatabaseByName(importName + ".temp", 0);
-				
-				// 检测是否存在相同的工作面
 				
 				if(db == null){
 					sendMessage(MSG_INPORT_DB_FAILED,"打开数据库失败!") ;
@@ -283,6 +293,28 @@ public final class CrtbDbFileUtils {
 				
 				if(obj == null){
 					sendMessage(MSG_INPORT_DB_FAILED,"导入数据库中没有工作面，无法导入") ;
+					return ;
+				}
+				
+				int maxSection = user.getUsertype() == CrtbUser.LICENSE_TYPE_REGISTERED ? -1 : AbstractDao.TRIAL_USER_MAX_SECTION_COUNT ;
+				
+				// 判断导入的隧道内工作面
+				sql = "select * from TunnelCrossSectionIndex" ;
+				
+				List<TunnelCrossSectionIndex> tl = db.queryObjects(sql, TunnelCrossSectionIndex.class);
+				
+				if(tl != null && tl.size() > maxSection){
+					sendMessage(MSG_INPORT_DB_FAILED,"试用版用户,不能导入超过10个工作面") ;
+					return ;
+				}
+				
+				// 判断导入的隧道下沉工作面
+				sql = "select * from SubsidenceCrossSectionIndex" ;
+				
+				List<SubsidenceCrossSectionIndex> sl = db.queryObjects(sql, SubsidenceCrossSectionIndex.class);
+				
+				if(sl != null && sl.size() > maxSection){
+					sendMessage(MSG_INPORT_DB_FAILED,"试用版用户,不能导入超过10个工作面") ;
 					return ;
 				}
 				
@@ -301,7 +333,11 @@ public final class CrtbDbFileUtils {
 				if(oldList != null){
 					
 					for(ProjectIndex pro : oldList){
-						if(pro.getProjectName().equals(obj.getProjectName())){
+						
+						String on	= pro.getProjectName().toLowerCase();
+						String nn	= obj.getProjectName().toLowerCase() ;
+						
+						if(on.equals(nn)){
 							sendMessage(MSG_INPORT_DB_FAILED,"已经存在相同工作面") ;
 							return ;
 						}

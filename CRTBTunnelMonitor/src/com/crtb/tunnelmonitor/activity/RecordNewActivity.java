@@ -157,8 +157,8 @@ public class RecordNewActivity extends WorkFlowActivity implements OnPageChangeL
 				int posDot = temp.indexOf(".");
 				
 				if(posDot >= 0){
-					if (temp.length() - posDot - 1 > 4) {
-						edt.delete(posDot + 5, posDot + 6);
+					if (temp.length() - posDot - 1 > 3) {
+						edt.delete(posDot + 4, posDot + 5);
 					}
 				}
 				

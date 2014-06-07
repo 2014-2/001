@@ -128,6 +128,7 @@ public class SectionActivity extends WorkFlowActivity implements OnPageChangeLis
 	@Override
 	protected void onListItemSelected(Object bean, int position, String menu) {
 		
+		// 隧道内断面
 		if(bean instanceof TunnelCrossSectionIndex){
 			
 			TunnelCrossSectionIndex section = (TunnelCrossSectionIndex)bean ;
@@ -155,7 +156,9 @@ public class SectionActivity extends WorkFlowActivity implements OnPageChangeLis
 				TunnelCrossSectionExIndex sectionExIndex = TunnelCrossSectionExIndexDao.defaultDao().querySectionById(section.getID());
 				
 				if (sectionExIndex != null) {
+					
 					int result =TunnelCrossSectionExIndexDao.defaultDao().delete(sectionExIndex);
+					
 					if (result != AbstractDao.DB_EXECUTE_SUCCESS) {
 						Log.e("SectionActivity", "delete TunnelCrossSectionExIndex failed!");
 					}
@@ -174,7 +177,9 @@ public class SectionActivity extends WorkFlowActivity implements OnPageChangeLis
 					dialog.show() ;
 				}
 			}
-		} else if(bean instanceof SubsidenceCrossSectionIndex){
+		} 
+		// 地表下沉断面
+		else if(bean instanceof SubsidenceCrossSectionIndex){
 			
 			SubsidenceCrossSectionIndex section = (SubsidenceCrossSectionIndex)bean ;
 			

@@ -44,8 +44,8 @@ public abstract class AbstractDao<T> {
 	public static final int DB_EXECUTE_DOING	= -2 ; //执行中
 	public static final int DB_EXECUTE_FAILED	= -1 ; //执行失败
 	
-	public static final int TRIAL_USER_MAX_PROJECTINDEX_COUNT	= 1 ; // 试用版用户最大工作面数
-	public static final int TRIAL_USER_MAX_SECTION_COUNT	= 2 ; // 试用版用户最大断面数
+	public static final int TRIAL_USER_MAX_PROJECTINDEX_COUNT	= 1 ; 	// 试用版用户最大工作面数
+	public static final int TRIAL_USER_MAX_SECTION_COUNT		= 10 ; 	// 试用版用户最大断面数
 	
 	static final String TAG						= "AbstractDao" ;
 	

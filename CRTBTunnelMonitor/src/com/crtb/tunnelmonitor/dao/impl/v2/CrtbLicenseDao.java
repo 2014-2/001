@@ -127,33 +127,29 @@ public final class CrtbLicenseDao extends AbstractDefaultDBDao<CrtbUser> {
      */
     public CrtbUser queryCrtbUser() {
 
-//        if (mCrtbUser == null
-//                || (mDefaultUsername != null && mDefaultUsername.equals(mCrtbUser.getUsername()))) {
+    	IAccessDatabase db = getDefaultDb();
 
-            IAccessDatabase db = getDefaultDb();
+		if (db == null) {
+			return null;
+		}
 
-            if (db == null) {
-                return null;
-            }
+		// 查询注册用户
+		String sql = "select * from CrtbUser where username <> ? ";
 
-            // 查询注册用户
-            String sql = "select * from CrtbUser where username <> ? ";
+		String[] args = SQLiteParamUtils.toParamemter(mDefaultUsername);
 
-            String[] args = SQLiteParamUtils.toParamemter(mDefaultUsername);
+		// 注册用户
+		CrtbUser user = db.queryObject(sql, args, CrtbUser.class);
 
-            // 注册用户
-            CrtbUser user = db.queryObject(sql, args, CrtbUser.class);
+		if (user != null) {
+			mCrtbUser = user;
+		}
 
-            if (user != null) {
-                mCrtbUser = user;
-            }
-
-            // 默认注册用户
-            else {
-                sql = "select * from CrtbUser where username = ? ";
-                mCrtbUser = db.queryObject(sql, args, CrtbUser.class);
-            }
-//        }
+		// 默认注册用户
+		else {
+			sql = "select * from CrtbUser where username = ? ";
+			mCrtbUser = db.queryObject(sql, args, CrtbUser.class);
+		}
 
         return mCrtbUser;
     }

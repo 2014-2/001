@@ -1,7 +1,6 @@
 package com.crtb.tunnelmonitor.activity;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import org.zw.android.framework.ioc.InjectCore;
@@ -38,7 +37,6 @@ import com.crtb.tunnelmonitor.dao.impl.v2.ProjectIndexDao;
 import com.crtb.tunnelmonitor.dao.impl.v2.SubsidenceCrossSectionIndexDao;
 import com.crtb.tunnelmonitor.entity.ProjectIndex;
 import com.crtb.tunnelmonitor.entity.SubsidenceCrossSectionIndex;
-import com.crtb.tunnelmonitor.mydefine.CrtbDateDialogUtils;
 import com.crtb.tunnelmonitor.utils.CrtbUtils;
 
 /**
@@ -154,8 +152,8 @@ public class SectionNewSubsidenceActivity extends WorkFlowActivity implements On
 				int posDot = temp.indexOf(".");
 				
 				if(posDot >= 0){
-					if (temp.length() - posDot - 1 > 4) {
-						edt.delete(posDot + 5, posDot + 6);
+					if (temp.length() - posDot - 1 > 3) {
+						edt.delete(posDot + 4, posDot + 5);
 					}
 				}
 				
@@ -234,7 +232,7 @@ public class SectionNewSubsidenceActivity extends WorkFlowActivity implements On
 	@Override
 	public void onClick(View v) {
 		
-		Date curdate = null ;
+		// Date curdate = null ;
 		
 		switch (v.getId()) {
 		case R.id.work_btn_quxiao:
@@ -254,13 +252,13 @@ public class SectionNewSubsidenceActivity extends WorkFlowActivity implements On
 			break ;
 		case R.id.DSection_SetTime:
 			
-			curdate = DateUtils.toDate(DSection_SetTime.getEditableText().toString().trim(), DateUtils.DATE_TIME_FORMAT);
+			/*curdate = DateUtils.toDate(DSection_SetTime.getEditableText().toString().trim(), DateUtils.DATE_TIME_FORMAT);
 			
 			if(curdate == null){
 				curdate	= DateUtils.getCurrtentTimes() ;
 			}
 			
-			CrtbDateDialogUtils.setAnyDateDialog(this, DSection_SetTime, curdate);
+			CrtbDateDialogUtils.setAnyDateDialog(this, DSection_SetTime, curdate);*/
 			break ;
 		case R.id.work_btn_queding: // 数据库
 			
@@ -269,7 +267,7 @@ public class SectionNewSubsidenceActivity extends WorkFlowActivity implements On
 			// base
 			String prefix		= section_new_et_prefix.getEditableText().toString().trim() ;
 			String chainage 	= DSection_Chainage.getEditableText().toString().trim();// 里程
-			String name 		= DSection_name.getEditableText().toString().trim();
+			//String name 		= DSection_name.getEditableText().toString().trim();
 			String date 		= DSection_createtime.getEditableText().toString().trim();
 			String width 		= DSection_Width.getEditableText().toString().trim();
 			String point 		= DSection_PointCount.getEditableText().toString().trim();
@@ -353,8 +351,8 @@ public class SectionNewSubsidenceActivity extends WorkFlowActivity implements On
 				subsidence.setDBU0(CrtbUtils.formatFloat(dbu0));
 				subsidence.setDBLimitVelocity(CrtbUtils.formatFloat(dbl));
 				subsidence.setDBU0Time(DateUtils.toDate(buildtime,DateUtils.PART_TIME_FORMAT));
-				// TODO: info被用来标记数据是否上传：1表示未上传, 2表示已上传
-				// subsidence.setInfo("1");
+				
+				// 1表示未上传, 2表示已上传
 				subsidence.setUploadStatus(1); //表示该断面未上传
 				
 				// insert

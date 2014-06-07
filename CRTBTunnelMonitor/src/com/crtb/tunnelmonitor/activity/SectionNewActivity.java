@@ -1,7 +1,6 @@
 package com.crtb.tunnelmonitor.activity;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import org.zw.android.framework.ioc.InjectCore;
@@ -165,6 +164,7 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 		// title
 		setTopbarTitle(getString(R.string.section_new_title));
 		
+		// 断面对象
 		sectionInfo	= CommonObject.findObject(KEY_NEW_TUNNEL_SECTION_OBJECT);
 		
 		// init ViewPager
@@ -220,6 +220,11 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 			}
 		}) ;
 		
+		// 是否可以编辑
+		if(sectionInfo != null){
+			section_new_sp.setClickable(false);
+		}
+		
 		String date = DateUtils.toDateString(DateUtils.getCurrtentTimes(), DateUtils.DATE_TIME_FORMAT) ;
 		section_new_et_calendar.setText(date);
 		section_new_createtime1.setText(date);
@@ -245,8 +250,8 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 				int posDot = temp.indexOf(".");
 				
 				if(posDot >= 0){
-					if (temp.length() - posDot - 1 > 4) {
-						edt.delete(posDot + 5, posDot + 6);
+					if (temp.length() - posDot - 1 > 3) {
+						edt.delete(posDot + 4, posDot + 5);
 					}
 				}
 				
@@ -290,6 +295,7 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 			}
 		}) ;
 		
+		// 加载默认数据
 		loadDefault();
 	}
 	
@@ -331,6 +337,12 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 			section_new_et_Chainage.setEnabled(false);
 			section_new_et_width.setEnabled(false);
 			
+			// 开挖方式
+			section_new_et_a.setEnabled(false);
+			section_new_et_s1.setEnabled(false);
+			section_new_et_s2.setEnabled(false);
+			section_new_et_s3.setEnabled(false);
+			
 			section_new_sp.setSelection(getExcavateMethod(ExcavateMethodEnum.parser(sectionInfo.getExcavateMethod()).getName()));
 			
 			if(sectionInfo.getSurveyPntName() != null){
@@ -348,7 +360,12 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 				if(len >= 3){
 					
 					String s1 = str[1];
-					String ss = s1.substring(0,s1.lastIndexOf("-"));
+					String ss = s1 ;
+					
+					// 兼容以前的bug
+					if(s1.lastIndexOf("-") > 0){
+						ss = s1.substring(0,s1.lastIndexOf("-"));
+					}
 					
 					if(ss.equals("S1")){
 						section_new_et_s1.setText("");
@@ -361,7 +378,12 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 				if(len >= 5){
 					
 					String s1 = str[3];
-					String ss = s1.substring(0,s1.lastIndexOf("-"));
+					String ss = s1 ;
+					
+					// 兼容以前的bug
+					if(s1.lastIndexOf("-") > 0){
+						ss = s1.substring(0,s1.lastIndexOf("-"));
+					}
 					
 					if(ss.equals("S2")){
 						section_new_et_s2.setText("");
@@ -374,7 +396,12 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 				if(len >= 7){
 					
 					String s1 = str[5];
-					String ss = s1.substring(0,s1.lastIndexOf("-"));
+					String ss = s1;
+					
+					// 兼容以前的bug
+					if(s1.lastIndexOf("-") > 0){
+						ss = s1.substring(0,s1.lastIndexOf("-"));
+					}
 					
 					if(ss.equals("S3")){
 						section_new_et_s3.setText("");
@@ -592,11 +619,10 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 				sectionInfo.setChainage(cv);
 				sectionInfo.setInBuiltTime(DateUtils.toDate(date, DateUtils.PART_TIME_FORMAT));
 				sectionInfo.setWidth(CrtbUtils.formatDouble(width));
-				
-				// TODO: 表示数据未上传
-				// sectionInfo.setInfo("1"); 
-				
 				sectionInfo.setSurveyPntName(str.toString());
+				
+				// 1表示未上传, 2表示已上传
+				sectionInfo.setUploadStatus(1); //表示该断面未上传
 				
 				sectionInfo.setGDU0(Float.valueOf(gdlj));
 				sectionInfo.setGDVelocity(Float.valueOf(gdsl));
