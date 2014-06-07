@@ -1,5 +1,7 @@
 package com.crtb.tunnelmonitor.entity;
 
+import android.R.integer;
+
 /**
  * 开挖方式
  * @author zhouwei
@@ -25,25 +27,31 @@ public enum ExcavateMethodEnum {
 	//SC-双侧壁法
 	//DB-地表下沉
 	
-	DT("台阶法",1),
-	ST("三台阶法",2),
-	QD("全断面法",3),
-	HX("环行开发法",4),
-	CD("中壁",5),
-	CRD("中壁",6),
-	SC("双侧壁法",7),
-	UNKOWN("未知",-10) ;
+	DT("台阶法",1, 5),
+	ST("三台阶法",2, 7),
+	QD("全断面法",3, 3),
+	HX("环行开发法",4, 0),
+	CD("中壁",5, 0),
+	CRD("中壁",6, 0),
+	SC("双侧壁法",7, 7),
+	UNKOWN("未知",-10, -1) ;
 
 	private String name ;
 	private int code ;
+	private int points;
 	
-	ExcavateMethodEnum(String name,int code){
+	ExcavateMethodEnum(String name,int code, int points){
 		this.name	= name ;
 		this.code	= code ;
+		this.points = points;
 	}
 	
 	public int getCode(){
 		return code ;
+	}
+	
+	public int getPoints() {
+		return points;
 	}
 	
 	public String getName(){
