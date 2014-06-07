@@ -175,7 +175,7 @@ public class DataUploadActivity extends FragmentActivity {
         mProgressOverlay.setVisibility(View.GONE);
     }
 
-    private void updateStatus(boolean isSuccess) {
+    private void updateStatus(boolean isSuccess, int code) {
         isUploading = false;
         mUploadStatusIcon.setVisibility(View.VISIBLE);
         mUploadProgress.setIndeterminate(false);
@@ -185,7 +185,14 @@ public class DataUploadActivity extends FragmentActivity {
             mUploadStatusText.setText(R.string.data_upload_success);
         } else {
             mUploadStatusIcon.setImageResource(R.drawable.fail);
-            mUploadStatusText.setText(R.string.data_upload_fail);
+            switch (code) {
+			case AsyncUploadTask.CODE_NO_MEASURE_DATA:
+				mUploadStatusText.setText(R.string.data_upload_fail_1);
+				break;
+			default:
+				mUploadStatusText.setText(R.string.data_upload_fail);
+				break;
+			}
         }
     }
 
@@ -336,14 +343,14 @@ public class DataUploadActivity extends FragmentActivity {
 						showProgressOverlay();
 						AsyncUploadTask uploadTask = new TunnelAsyncUploadTask(new UploadListener() {
 							@Override
-							public void done(final boolean success) {
+							public void done(final boolean success, final int code) {
 								AsyncUpdateTask updateTask = new AsyncUpdateTask(AsyncUpdateTask.TYPE_TUNNEL, records, new UpdateListener() {
 									@Override
 									public void done() {
 										if (success) {
 											mTunnelFragment.refreshUI();
 										}
-										updateStatus(success);
+										updateStatus(success, code);
 									}
 								});
 								updateTask.execute();
@@ -370,14 +377,14 @@ public class DataUploadActivity extends FragmentActivity {
 			            showProgressOverlay();
 			            AsyncUploadTask uploadTask  = new SubsidenceAsyncUploadTask(new UploadListener() {
 			                @Override
-			                public void done(final boolean success) {
+			                public void done(final boolean success, final int code) {
 			                	AsyncUpdateTask updateTask = new AsyncUpdateTask(AsyncUpdateTask.TYPE_SUBSIDENCE, records, new UpdateListener() {
 									@Override
 									public void done() {
 										if (success) {
 					                        mSubsidenceFragment.refreshUI();
 					                    }
-					                    updateStatus(success);
+					                    updateStatus(success, code);
 									}
 								});
 			                	updateTask.execute();

@@ -111,6 +111,7 @@
     <string name="data_uploading">上传中，请稍候</string>
     <string name="data_upload_success">上传记录单成功!</string>
     <string name="data_upload_fail">上传失败,连接超时!</string>
+    <string name="data_upload_fail_1">上传失败,记录单中无有效观测数据!</string>
     
     <string name="data_downloading">正在下载数据</string>
     <string name="data_download_success">下载成功!</string>

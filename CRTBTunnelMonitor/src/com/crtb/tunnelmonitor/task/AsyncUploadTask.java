@@ -13,13 +13,17 @@ import com.crtb.tunnelmonitor.network.DataCounter.CounterListener;
 
 public abstract class AsyncUploadTask extends AsyncTask<List<SheetRecord>, Void, Void> {
 	private static final String LOG_TAG = "AsyncUploadTask";
+	/** 数据上传成功 */
+	public static final int CODE_SUCCESS = 100;
+	/** 记录单中无有效的观测数据 */
+	public static final int CODE_NO_MEASURE_DATA = 101;
 
 	public interface UploadListener {
 		/**
 		 * 
 		 * @param success
 		 */
-		public void done(boolean success);
+		public void done(boolean success, int code);
 	}
 
 	private UploadListener mListener;
@@ -54,7 +58,7 @@ public abstract class AsyncUploadTask extends AsyncTask<List<SheetRecord>, Void,
 							new CounterListener() {
 								@Override
 								public void done(boolean success) {
-									notifyDone(success);
+									notifyDone(success, CODE_SUCCESS);
 								}
 							});
 					for (Section section : allUploadSection) {
@@ -67,7 +71,7 @@ public abstract class AsyncUploadTask extends AsyncTask<List<SheetRecord>, Void,
 						}
 					}
 				} else {
-					notifyDone(true);
+					notifyDone(false, CODE_NO_MEASURE_DATA);
 				}
 			} else {
 				Log.w(LOG_TAG, "empty data.");
@@ -94,12 +98,12 @@ public abstract class AsyncUploadTask extends AsyncTask<List<SheetRecord>, Void,
 	protected abstract void uploadMeasureDataList(String sectionCode, List<MeasureData> measureDataList,
 			DataCounter sectionUploadCounter);
 
-	private void notifyDone(final boolean flag) {
+	private void notifyDone(final boolean flag, final int code) {
 		mHandler.post(new Runnable() {
 			@Override
 			public void run() {
 				if (mListener != null) {
-					mListener.done(flag);
+					mListener.done(flag, code);
 				}
 			}
 		});
