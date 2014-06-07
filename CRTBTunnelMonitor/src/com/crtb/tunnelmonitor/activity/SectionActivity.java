@@ -105,7 +105,9 @@ public class SectionActivity extends WorkFlowActivity implements OnPageChangeLis
 				
 				TunnelCrossSectionIndex bean = mSectionTunnelList.getItem(position);
 				
-				showListActionMenu("断面管理", new String[]{"编辑","删除"}, bean);
+				String[] menus = {getString(R.string.common_edit),getString(R.string.common_delete)} ;
+				
+				showListActionMenu("断面管理", menus , bean);
 			}
 		}) ;
 		
@@ -116,7 +118,9 @@ public class SectionActivity extends WorkFlowActivity implements OnPageChangeLis
 				
 				SubsidenceCrossSectionIndex bean = mSectionSubsidenceList.getItem(position);
 				
-				showListActionMenu("断面管理", new String[]{"编辑","删除"}, bean);
+				String[] menus = {getString(R.string.common_edit),getString(R.string.common_delete)} ;
+				
+				showListActionMenu("断面管理", menus, bean);
 			}
 		}) ;
 		
@@ -128,12 +132,17 @@ public class SectionActivity extends WorkFlowActivity implements OnPageChangeLis
 	@Override
 	protected void onListItemSelected(Object bean, int position, String menu) {
 		
+		if(bean == null || menu == null){
+			return ;
+		}
+		
 		// 隧道内断面
 		if(bean instanceof TunnelCrossSectionIndex){
 			
 			TunnelCrossSectionIndex section = (TunnelCrossSectionIndex)bean ;
 			
-			if(position == 0){
+			// 编辑
+			if(menu.equals(getString(R.string.common_edit))){
 				
 				CommonObject.putObject(SectionNewActivity.KEY_NEW_TUNNEL_SECTION_OBJECT, section);
 				
@@ -141,7 +150,9 @@ public class SectionActivity extends WorkFlowActivity implements OnPageChangeLis
 				intent.setClass(SectionActivity.this, SectionNewActivity.class);
 				startActivity(intent);
 				
-			} else if(position == 1){
+			} 
+			// 删除
+			else if(menu.equals(getString(R.string.common_delete))){
 				
 				List<TunnelSettlementTotalData> list = TunnelSettlementTotalDataDao.defaultDao().queryTunnelTotalDataSection(section.getGuid());
 				
@@ -192,7 +203,8 @@ public class SectionActivity extends WorkFlowActivity implements OnPageChangeLis
 				}
 			}
 			
-			if(position == 0){
+			// 编辑
+			if(menu.equals(getString(R.string.common_edit))){
 				
 				CommonObject.putObject(SectionNewSubsidenceActivity.KEY_NEW_SUBSIDENCE_SECTION_OBJECT, section);
 				
@@ -200,12 +212,14 @@ public class SectionActivity extends WorkFlowActivity implements OnPageChangeLis
 				intent.setClass(SectionActivity.this, SectionNewSubsidenceActivity.class);
 				startActivity(intent);
 				
-			} else if(position == 1){
+			} 
+			// 删除
+			else if(menu.equals(getString(R.string.common_delete))){
 				
 				if(section.isHasTestData()){
 					CrtbDialogHint hint = new CrtbDialogHint(SectionActivity.this, R.drawable.ic_warnning, "该断面存在测量数据,不可删除!");
 					hint.show() ;
-				} else{
+				} else {
 					
 					int code = SubsidenceCrossSectionIndexDao.defaultDao().delete(section);
 					

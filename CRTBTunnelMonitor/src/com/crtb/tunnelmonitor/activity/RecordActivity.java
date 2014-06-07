@@ -98,9 +98,9 @@ public class RecordActivity extends WorkFlowActivity implements OnPageChangeList
 				String[] menus = null ;
 				
 				if(bean.getUploadStatus() == 2){
-					menus = new String[]{"打开","查看"} ;
+					menus = new String[]{getString(R.string.common_open),getString(R.string.common_look)} ;
 				} else {
-					menus = new String[]{"打开","编辑","删除"} ;
+					menus = new String[]{getString(R.string.common_open),getString(R.string.common_edit),getString(R.string.common_delete)} ;
 				}
 				
 				showListActionMenu("记录单管理", menus, bean);
@@ -117,9 +117,9 @@ public class RecordActivity extends WorkFlowActivity implements OnPageChangeList
 				String[] menus = null ;
 				
 				if(bean.getUploadStatus() == 2){
-					menus = new String[]{"打开","查看"} ;
+					menus = new String[]{getString(R.string.common_open),getString(R.string.common_look)} ;
 				} else {
-					menus = new String[]{"打开","编辑","删除"} ;
+					menus = new String[]{getString(R.string.common_open),getString(R.string.common_edit),getString(R.string.common_delete)} ;
 				}
 				
 				showListActionMenu("记录单管理",menus , bean);
@@ -169,12 +169,16 @@ public class RecordActivity extends WorkFlowActivity implements OnPageChangeList
 	@Override
 	protected void onListItemSelected(Object bean, int position, String menu) {
 		
+		if(bean == null || menu == null){
+			return ;
+		}
+		
 		if(bean instanceof RawSheetIndex){
 			
 			final RawSheetIndex info = (RawSheetIndex) bean ;
 			
 			// 打开---> 测量
-			if(position == 0){
+			if(menu.equals(getString(R.string.common_open))){
 				
 				List<RawSheetIndex> list = new ArrayList<RawSheetIndex>();
 				list.add(info);
@@ -185,8 +189,9 @@ public class RecordActivity extends WorkFlowActivity implements OnPageChangeList
 				intent.setClass(this, TestSectionExecuteActivity.class);
 				startActivity(intent);
 			} 
-			// 编辑
-			else if(position == 1){
+			// 编辑|查看
+			else if(menu.equals(getString(R.string.common_edit)) 
+					|| menu.equals(getString(R.string.common_look))){
 				
 				Intent intent = new Intent() ;
 				
@@ -209,7 +214,7 @@ public class RecordActivity extends WorkFlowActivity implements OnPageChangeList
 				
 			} 
 			// 删除
-			else if(position == 2){
+			else if(menu.equals(getString(R.string.common_delete))){
 				
 				// 已经上传不能删除
 				if(info.getUploadStatus() == 2){
