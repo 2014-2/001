@@ -59,7 +59,7 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 
     private static boolean DEBUG = false ;// DEBUG FLAG, set to true to generate
                                          // fake data
-    private static int COUNT = 0 ;// TODO: REMOVE: JUST FOR DEBUG
+    private static int COUNT = 0;// TODO: REMOVE: JUST FOR DEBUG
     private static double X = 2.3614D;
     private static double Y = 3.7607D;
     private static double Z = 1378.1012D;
@@ -390,9 +390,11 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
                                
                                 if (als != null && als.size() > 0) {
                                     for (AlertList al : als) {
-                                        int alId = al.getID();
-                                        AlertListDao.defaultDao().deleteById(alId);
-                                        AlertHandlingInfoDao.defaultDao().deleteByAlertId(alId);
+                                        if (al.getUploadStatus() != 2) {
+                                            int alId = al.getID();
+                                            AlertHandlingInfoDao.defaultDao().deleteByAlertId(alId);
+                                            AlertListDao.defaultDao().deleteById(alId);
+                                        }
                                     }
                                 }
 
@@ -921,10 +923,11 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
                                 if (als != null && als.size() > 0) {
                                 	
                                     for (AlertList al : als) {
-                                        int alId = al.getID();
-                                        AlertListDao.defaultDao().deleteById(alId);
-                                        AlertHandlingInfoDao.defaultDao().deleteByAlertId(alId);
-                                    }
+                                        if (al.getUploadStatus() != 2) {
+                                            int alId = al.getID();
+                                            AlertHandlingInfoDao.defaultDao().deleteByAlertId(alId);
+                                            AlertListDao.defaultDao().deleteById(alId);
+                                        }}
                                 }
 
                                 holder.mPointX.setText("");

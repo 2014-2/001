@@ -193,6 +193,7 @@
                         android:layout_x="1px"
                         android:orientation="vertical" >
 
+                        <!-- 
                         <RadioButton
                             android:id="@+id/radio_button_normal"
                             style="?android:attr/ratingBarStyleSmall"
@@ -213,7 +214,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/deal_way_first" />
-
+                        -->
                         <RadioButton
                             android:id="@+id/radio_button_add"
                             style="?android:attr/ratingBarStyleSmall"
