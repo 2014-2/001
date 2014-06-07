@@ -420,7 +420,7 @@ public final class CrtbDbFileUtils {
 		try{
 			
 			// 数据库名称
-			int pos 	= dbName.lastIndexOf(".");
+			int pos 	= -1;//dbName.lastIndexOf(".");
 			String name = dbName ;
 			
 			if(pos > 0){
@@ -461,7 +461,7 @@ public final class CrtbDbFileUtils {
 		try{
 			
 			// 数据库名称
-			int pos 	= dbName.lastIndexOf(".");
+			int pos 	= -1;//dbName.lastIndexOf(".");
 			String name = dbName ;
 			
 			if(pos > 0){
