@@ -82,7 +82,7 @@ public class CrtbRecordSubsidenceSectionInfoAdapter extends CrtbEntityAdapter<Su
 		}
 		
 		holder.chainage.setText(item.getSectionName());
-		holder.distance.setText(String.valueOf(CrtbUtils.formatDouble(defChainage - item.getChainage())));
+		holder.distance.setText(String.valueOf(Math.abs(CrtbUtils.formatDouble(defChainage - item.getChainage()))));
 		
 		if(item.isUsed()){
 			holder.status.setBackgroundResource(R.drawable.use);

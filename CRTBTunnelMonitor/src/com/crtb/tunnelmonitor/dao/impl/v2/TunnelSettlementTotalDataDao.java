@@ -107,6 +107,7 @@ public class TunnelSettlementTotalDataDao extends AbstractDao<TunnelSettlementTo
 		return mDatabase.queryObject(sql, args,TunnelSettlementTotalData.class);
 	}
 
+	// 查询本记录单下，对应断面的所有测量数据
 	public List<TunnelSettlementTotalData> queryTunnelTotalDatas(String sheetId, String chainageId) {
 		
 		final IAccessDatabase mDatabase = getCurrentDb();

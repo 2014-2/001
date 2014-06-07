@@ -107,6 +107,7 @@ public class RecordNewSubsidenceActivity extends WorkFlowActivity implements OnP
 	private RawSheetIndex recordInfo 		= null;
 	private SurveyerInformation surveyer 	= null ;
 	private boolean editRawSheet , editSection ;
+	private String	sectionGuis				= null ;
 	
 	private ProjectIndex mCurrentWorkPlan;
     
@@ -199,7 +200,8 @@ public class RecordNewSubsidenceActivity extends WorkFlowActivity implements OnP
     		editRawSheet	= true ;
     		
     		setTopbarTitle("编辑地表下沉断面记录单");
-    		sectionListView.setSectionIds(recordInfo.getCrossSectionIDs());
+    		sectionGuis	= recordInfo.getCrossSectionIDs() ;
+    		sectionListView.setSectionIds(recordInfo.getGuid(),sectionGuis);
     		
     		surveyer = RawSheetIndexDao.defaultDao().querySurveyerBySheetIndexGuid(recordInfo.getGuid());
 			
@@ -316,6 +318,14 @@ public class RecordNewSubsidenceActivity extends WorkFlowActivity implements OnP
 				RawSheetIndexDao.defaultDao().insertSurveyer(surveyer);
 				
 			} else {
+				
+				// 是否需要改为部分上传状态
+				if(recordInfo.getUploadStatus() == 2 && sectionGuis != null){
+					
+					if(!sectionGuis.equals(sections)){
+						recordInfo.setUploadStatus(3);
+					}
+				}
 				
 				// 基本信息
 				recordInfo.setCrossSectionType(RawSheetIndex.CROSS_SECTION_TYPE_SUBSIDENCES);

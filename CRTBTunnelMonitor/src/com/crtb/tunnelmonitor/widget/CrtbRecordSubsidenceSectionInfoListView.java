@@ -8,13 +8,17 @@ import android.os.Message;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Toast;
 
 import com.crtb.tunnelmonitor.AppHandler;
 import com.crtb.tunnelmonitor.dao.impl.v2.SubsidenceCrossSectionIndexDao;
+import com.crtb.tunnelmonitor.dao.impl.v2.SubsidenceTotalDataDao;
 import com.crtb.tunnelmonitor.entity.SubsidenceCrossSectionIndex;
+import com.crtb.tunnelmonitor.entity.SubsidenceTotalData;
 
 public class CrtbRecordSubsidenceSectionInfoListView extends CrtbBaseListView {
 	
+	private String sheetGuid ;
 	private CrtbRecordSubsidenceSectionInfoAdapter mAdapter ;
 	private List<String> sectionIds = new ArrayList<String>() ;
 	
@@ -22,7 +26,7 @@ public class CrtbRecordSubsidenceSectionInfoListView extends CrtbBaseListView {
 		this(context, null);
 	}
 
-	public CrtbRecordSubsidenceSectionInfoListView(Context context, AttributeSet attrs) {
+	public CrtbRecordSubsidenceSectionInfoListView(final Context context, AttributeSet attrs) {
 		super(context, attrs);
 		
 		mAdapter	= new CrtbRecordSubsidenceSectionInfoAdapter(context);
@@ -30,10 +34,33 @@ public class CrtbRecordSubsidenceSectionInfoListView extends CrtbBaseListView {
 		
 		clearCacheColor() ;
 		
+		final SubsidenceTotalDataDao dao = SubsidenceTotalDataDao.defaultDao() ;
+		
 		setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,int position, long id) {
+				
+				if(sheetGuid != null){
+					
+					SubsidenceCrossSectionIndex section = getItem(position);
+					
+					 List<SubsidenceTotalData> list = dao.querySubsidenceTotalDatas(sheetGuid, section.getGuid());
+					
+					if(list != null){
+						
+						for(SubsidenceTotalData item : list){
+							
+							if(item.getUploadStatus() == 2){
+								Toast.makeText(context, "该断面下的测量数据已经上传，不能取消断面", Toast.LENGTH_SHORT).show();
+								return ;
+							}
+						}
+						
+					}
+				}
+				
+				// 更新列表
 				mAdapter.changeStatus(position);
 			}
 		}) ;
@@ -51,7 +78,10 @@ public class CrtbRecordSubsidenceSectionInfoListView extends CrtbBaseListView {
 		mAdapter.setChainage(value);
 	}
 	
-	public void setSectionIds(String section){
+	// 初始化参数
+	public void setSectionIds(String sheetGuid,String section){
+		
+		this.sheetGuid	= sheetGuid ;
 		
 		if(section != null){
 			

@@ -8,10 +8,13 @@ import android.os.Message;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Toast;
 
 import com.crtb.tunnelmonitor.AppHandler;
 import com.crtb.tunnelmonitor.dao.impl.v2.TunnelCrossSectionIndexDao;
+import com.crtb.tunnelmonitor.dao.impl.v2.TunnelSettlementTotalDataDao;
 import com.crtb.tunnelmonitor.entity.TunnelCrossSectionIndex;
+import com.crtb.tunnelmonitor.entity.TunnelSettlementTotalData;
 
 /**
  * 
@@ -20,6 +23,7 @@ import com.crtb.tunnelmonitor.entity.TunnelCrossSectionIndex;
  */
 public class CrtbRecordTunnelSectionInfoListView extends CrtbBaseListView {
 	
+	private String sheetGuid ;
 	private CrtbRecordTunnelSectionInfoAdapter mAdapter ;
 	private List<String> sectionIds = new ArrayList<String>() ;
 	
@@ -27,7 +31,7 @@ public class CrtbRecordTunnelSectionInfoListView extends CrtbBaseListView {
 		this(context, null);
 	}
 
-	public CrtbRecordTunnelSectionInfoListView(Context context, AttributeSet attrs) {
+	public CrtbRecordTunnelSectionInfoListView(final Context context, AttributeSet attrs) {
 		super(context, attrs);
 		
 		mAdapter	= new CrtbRecordTunnelSectionInfoAdapter(context);
@@ -35,10 +39,33 @@ public class CrtbRecordTunnelSectionInfoListView extends CrtbBaseListView {
 		
 		clearCacheColor() ;
 		
+		final TunnelSettlementTotalDataDao dao = TunnelSettlementTotalDataDao.defaultDao() ;
+		
 		setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,int position, long id) {
+				
+				if(sheetGuid != null){
+					
+					TunnelCrossSectionIndex section = mAdapter.getItem(position);
+					
+					// 改断面下的所有测量数据，上传状态
+					List<TunnelSettlementTotalData> list = dao.queryTunnelTotalDatas(sheetGuid, section.getGuid());
+			
+					if(list != null){
+						
+						for(TunnelSettlementTotalData item : list){
+							
+							if(item.getUploadStatus() == 2){
+								Toast.makeText(context, "该断面下的测量数据已经上传，不能取消断面", Toast.LENGTH_SHORT).show();
+								return ;
+							}
+						}
+					}
+				}
+				
+				// 更新列表
 				mAdapter.changeStatus(position);
 			}
 		}) ;
@@ -56,7 +83,15 @@ public class CrtbRecordTunnelSectionInfoListView extends CrtbBaseListView {
 		return mAdapter.getSelectedSection();
 	}
 	
-	public void setSectionIds(String section){
+	/**
+	 * 设置初始值
+	 * 
+	 * @param sheetGuid		: 记录单guid
+	 * @param section
+	 */
+	public void setSectionIds(String sheetGuid,String section){
+		
+		this.sheetGuid = sheetGuid ;
 		
 		if(section != null){
 			

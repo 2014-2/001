@@ -107,6 +107,7 @@ public class RecordNewActivity extends WorkFlowActivity implements OnPageChangeL
 	private RawSheetIndex recordInfo 		= null;
 	private SurveyerInformation surveyer 	= null ;
 	private boolean editRawSheet , editSection ;
+	private String	sectionGuis				= null ;
 	
 	private ProjectIndex mCurrentWorkPlan;
     
@@ -198,7 +199,8 @@ public class RecordNewActivity extends WorkFlowActivity implements OnPageChangeL
     		editRawSheet	= true ;
     		
     		setTopbarTitle("编辑隧道内断面记录单");
-			sectionListView.setSectionIds(recordInfo.getCrossSectionIDs());
+    		sectionGuis	= recordInfo.getCrossSectionIDs() ;
+			sectionListView.setSectionIds(recordInfo.getGuid(),sectionGuis);
 			
 			surveyer = RawSheetIndexDao.defaultDao().querySurveyerBySheetIndexGuid(recordInfo.getGuid());
 			
@@ -318,6 +320,14 @@ public class RecordNewActivity extends WorkFlowActivity implements OnPageChangeL
 				RawSheetIndexDao.defaultDao().insertSurveyer(surveyer);
 				
 			} else {
+				
+				// 重新设置记录单上传状态: 部分上传状态
+				if(recordInfo.getUploadStatus() == 2 && sectionGuis != null){
+					
+					if(!sectionGuis.equals(sections)){
+						recordInfo.setUploadStatus(3);
+					}
+				}
 				
 				// 基本信息
 				recordInfo.setCrossSectionType(RawSheetIndex.CROSS_SECTION_TYPE_TUNNEL);

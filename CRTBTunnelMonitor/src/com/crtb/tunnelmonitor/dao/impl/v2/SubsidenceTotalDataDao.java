@@ -114,12 +114,17 @@ public class SubsidenceTotalDataDao extends AbstractDao<SubsidenceTotalData> {
         return mDatabase.queryObject(sql, new String[]{String.valueOf(sheetId),String.valueOf(chainageId),pntType},SubsidenceTotalData.class);
     }
 
+    // 记录单下，该断面的测量数据
     public List<SubsidenceTotalData> querySubsidenceTotalDatas(String sheetId, String chainageId) {
+    	
         final IAccessDatabase mDatabase = getCurrentDb();
+        
         if (mDatabase == null) {
             return null;
         }
+        
         String sql = "select * from SubsidenceTotalData where SheetId = ? and ChainageId = ? order by MEASNo asc";
+        
         return mDatabase.queryObjects(sql, new String[] {String.valueOf(sheetId), String.valueOf(chainageId)}, SubsidenceTotalData.class);
     }
 
