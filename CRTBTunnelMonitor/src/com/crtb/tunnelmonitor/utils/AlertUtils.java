@@ -184,7 +184,7 @@ public class AlertUtils {
             sheetId = tPoint.getSheetId();
             cArc.setSheetId(sheetId);
             pntType = tPoint.getPntType();
-            originalDataID = String.valueOf(tPoint.getID());
+            originalDataID = String.valueOf(tPoint.getGuid());
         } else if (point instanceof SubsidenceTotalData) {
             SubsidenceTotalData sPoint = (SubsidenceTotalData) point;
             dataStatus = sPoint.getDataStatus();
@@ -204,7 +204,7 @@ public class AlertUtils {
             sheetId = sPoint.getSheetId();
             sArc.setSheetId(sheetId);
             pntType = sPoint.getPntType();
-            originalDataID = String.valueOf(sPoint.getID());
+            originalDataID = String.valueOf(sPoint.getGuid());
         } else {
             return null;
         }
@@ -420,7 +420,7 @@ public class AlertUtils {
         }
 
         String sheetId = s_1.getSheetId();
-        String originalDataID = s_1.getID() + ORIGINAL_ID_DIVIDER + s_2.getID();
+        String originalDataID = s_1.getGuid() + ORIGINAL_ID_DIVIDER + s_2.getGuid();
         float thisCorrection = s_1.getDataCorrection();
 
         double lineThisLength = getLineLength(s_1, s_2);

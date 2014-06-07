@@ -14,7 +14,6 @@ import com.crtb.tunnelmonitor.entity.AlertList;
 import com.crtb.tunnelmonitor.entity.SubsidenceTotalData;
 import com.crtb.tunnelmonitor.entity.TunnelSettlementTotalData;
 import com.crtb.tunnelmonitor.utils.AlertUtils;
-import com.crtb.tunnelmonitor.utils.CrtbUtils;
 
 public class AlertListDao extends AbstractDao<AlertList> {
 
@@ -92,7 +91,9 @@ public class AlertListDao extends AbstractDao<AlertList> {
     }
 
     public void deleteAlert(String sheetId, int chainageId, String originalDataID, int uType) {
-        final IAccessDatabase mDatabase = getCurrentDb();
+       
+    	final IAccessDatabase mDatabase = getCurrentDb();
+        
         Log.d(TAG, "AlertListDao deleteAlert, uType: " + uType);
 
         if (mDatabase == null) {
@@ -111,8 +112,10 @@ public class AlertListDao extends AbstractDao<AlertList> {
     }
 
     public AlertList queryOne(String sheetId, String chainageId, String originalDataID, int uType) {
-        final IAccessDatabase mDatabase = getCurrentDb();
-        Log.d(TAG, "AlertListDao queryOne, uType: " + uType);
+      
+    	final IAccessDatabase mDatabase = getCurrentDb();
+        
+    	Log.d(TAG, "AlertListDao queryOne, uType: " + uType);
 
         if (mDatabase == null) {
             return null;
@@ -122,14 +125,17 @@ public class AlertListDao extends AbstractDao<AlertList> {
                 + " AND CrossSectionID=?"
                 + " AND Utype=?"
                 + " AND originalDataID=?";
+        
         String[] args = new String[] {sheetId, chainageId, String.valueOf(uType), originalDataID };
 
         return mDatabase.queryObject(sql, args, AlertList.class);
     }
 
     public List<AlertList> queryByOrigionalDataId(String sheetId, String chainageId, String originalDataID) {
-        final IAccessDatabase db = getCurrentDb();
-        Log.d(TAG, "AlertListDao queryByOrigionalDataId, originalDataID: " + originalDataID);
+        
+    	final IAccessDatabase db = getCurrentDb();
+        
+    	Log.d(TAG, "AlertListDao queryByOrigionalDataId, originalDataID: " + originalDataID);
 
         if (db == null || TextUtils.isEmpty(originalDataID)) {
             return null;
@@ -144,10 +150,15 @@ public class AlertListDao extends AbstractDao<AlertList> {
         List<AlertList> l = db.queryObjects(sql, args, AlertList.class);
         
         List<AlertList> ll = new ArrayList<AlertList>();
+        
         for (AlertList a : l) {
+        	
             String oid = a.getOriginalDataID();
+            
             if (oid.contains(AlertUtils.ORIGINAL_ID_DIVIDER)) {
+            	
                 String[] s = oid.split(AlertUtils.ORIGINAL_ID_DIVIDER);
+                
                 if (s.length == 2) {
                     if (originalDataID.equals(s[0]) || originalDataID.equals(s[1])) {
                         ll.add(a);

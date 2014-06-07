@@ -49,10 +49,10 @@ public class AlertList implements Serializable {
 	private double UValue; 					// 超限数值
 
 	@ColumnInt
-	private int UMax; 					// 超限类型阈值
+	private int UMax; 						// 超限类型阈值
 
-	@ColumnString(length = 255)
-	private String OriginalDataID; 			// 原始数据id
+	@ColumnText
+	private String OriginalDataID; 			// 原始数据的guid,guid,guid
 
     @ColumnText
     private String Info;
