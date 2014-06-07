@@ -98,7 +98,7 @@ public class RecordActivity extends WorkFlowActivity implements OnPageChangeList
 				String[] menus = null ;
 				
 				if(bean.getUploadStatus() == 2){
-					menus = new String[]{getString(R.string.common_open),getString(R.string.common_look)} ;
+					menus = new String[]{getString(R.string.common_open),getString(R.string.common_edit)} ;
 				} else {
 					menus = new String[]{getString(R.string.common_open),getString(R.string.common_edit),getString(R.string.common_delete)} ;
 				}
@@ -117,7 +117,7 @@ public class RecordActivity extends WorkFlowActivity implements OnPageChangeList
 				String[] menus = null ;
 				
 				if(bean.getUploadStatus() == 2){
-					menus = new String[]{getString(R.string.common_open),getString(R.string.common_look)} ;
+					menus = new String[]{getString(R.string.common_open),getString(R.string.common_edit)} ;
 				} else {
 					menus = new String[]{getString(R.string.common_open),getString(R.string.common_edit),getString(R.string.common_delete)} ;
 				}

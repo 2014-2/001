@@ -27,7 +27,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.crtb.tunnelmonitor.AppCRTBApplication;
@@ -55,8 +54,8 @@ public class RecordNewSubsidenceActivity extends WorkFlowActivity implements OnP
 	@InjectView(id=R.id.cursor)
 	private ImageView cursor;
 	
-	@InjectView(id=R.id.bottom_layout)
-	private RelativeLayout bottomLayout ;
+	//@InjectView(id=R.id.bottom_layout)
+	//private RelativeLayout bottomLayout ;
 	
     ArrayList<View> list = new ArrayList<View>();
     
@@ -224,7 +223,7 @@ public class RecordNewSubsidenceActivity extends WorkFlowActivity implements OnP
 				record_dotype.setEnabled(false);
 				record_buildtime.setEnabled(false);
 				
-				bottomLayout.setVisibility(View.INVISIBLE);
+				// bottomLayout.setVisibility(View.INVISIBLE);
 			}
     	
     	} else {
