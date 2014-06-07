@@ -89,7 +89,8 @@
                     style="@style/crtb_input_edit_text"
                     android:layout_width="190dp"
                     android:layout_height="42dip"
-                    android:layout_marginLeft="10dp" />
+                    android:layout_marginLeft="10dp"
+                    android:maxLength="50" />
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -117,7 +118,7 @@
                     android:layout_width="190dp"
                     android:layout_height="42dip"
                     android:layout_marginLeft="10dp"
-                    android:maxLength="5"
+                    android:maxLength="20"
                     android:text="DK" />
 
                 <ImageView
