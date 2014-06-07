@@ -80,7 +80,7 @@ public class WarningUploadActivity extends Activity {
         mlvWarningList.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                mAdapter.revertCheck(position);
+                mAdapter.setCheckStatus(position);
             }
         });
         mAdapter = new WarningUploadAdapter();
@@ -334,13 +334,18 @@ public class WarningUploadActivity extends Activity {
 
     private class WarningUploadAdapter extends BaseAdapter {
         private List<WarningUploadData> mWarningDataList;
+        private int mCheckedPosition = -1;
 
         WarningUploadAdapter() {
             mWarningDataList = new ArrayList<WarningUploadData>();
         }
 
         public void setWarningData(List<WarningUploadData> warningDataList) {
-            if (warningDataList != null) {
+            if (warningDataList != null && warningDataList.size() > 0) {
+				for (WarningUploadData warningData : warningDataList) {
+					warningData.setChecked(false);
+				}
+            	mCheckedPosition = -1;
                 mWarningDataList = warningDataList;
                 notifyDataSetChanged();
             }
@@ -350,11 +355,24 @@ public class WarningUploadActivity extends Activity {
             return mWarningDataList;
         }
 
-        public void revertCheck(int position) {
-            WarningUploadData warningUploadData = mWarningDataList.get(position);
-            warningUploadData.setChecked(!warningUploadData.isChecked());
-            notifyDataSetChanged();
-        }
+        public void setCheckStatus(int position) {
+			if (mCheckedPosition != -1) {
+				WarningUploadData oldWarningData = mWarningDataList.get(mCheckedPosition);
+				oldWarningData.setChecked(false);
+				if (mCheckedPosition != position) {
+					WarningUploadData newWarningData = mWarningDataList.get(position);
+					newWarningData.setChecked(true);
+					mCheckedPosition = position;
+				} else {
+					mCheckedPosition = -1;
+				}
+			} else {
+				WarningUploadData warningData = mWarningDataList.get(position);
+				warningData.setChecked(true);
+				mCheckedPosition = position;
+			}
+			notifyDataSetChanged();
+		}
 
         @Override
         public int getCount() {
