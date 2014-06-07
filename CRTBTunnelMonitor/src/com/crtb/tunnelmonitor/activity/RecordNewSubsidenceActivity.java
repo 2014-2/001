@@ -27,13 +27,13 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.crtb.tunnelmonitor.AppCRTBApplication;
 import com.crtb.tunnelmonitor.CommonObject;
 import com.crtb.tunnelmonitor.WorkFlowActivity;
 import com.crtb.tunnelmonitor.dao.impl.v2.RawSheetIndexDao;
-import com.crtb.tunnelmonitor.dao.impl.v2.SurveyerInformationDao;
 import com.crtb.tunnelmonitor.entity.ProjectIndex;
 import com.crtb.tunnelmonitor.entity.RawSheetIndex;
 import com.crtb.tunnelmonitor.entity.SurveyerInformation;
@@ -54,6 +54,9 @@ public class RecordNewSubsidenceActivity extends WorkFlowActivity implements OnP
 	
 	@InjectView(id=R.id.cursor)
 	private ImageView cursor;
+	
+	@InjectView(id=R.id.bottom_layout)
+	private RelativeLayout bottomLayout ;
 	
     ArrayList<View> list = new ArrayList<View>();
     
@@ -175,9 +178,12 @@ public class RecordNewSubsidenceActivity extends WorkFlowActivity implements OnP
     }
     
     private void loadDefault(){
+    	
         record_Person.setEnabled(true);
         record_Card.setEnabled(true);
+        
         AppCRTBApplication app = AppCRTBApplication.getInstance();
+        
         if (!app.isbLocaUser()) {
             SurveyerInformation p =  app.getCurPerson();
             if (p != null) {
@@ -201,13 +207,23 @@ public class RecordNewSubsidenceActivity extends WorkFlowActivity implements OnP
 			record_Chainage.setText(CrtbUtils.doubleToString(recordInfo.getFACEDK()));
 			record_Person.setText(surveyer.getSurveyerName());
 			record_Card.setText(surveyer.getCertificateID());
-			record_Chainage.setEnabled(false);
-			record_Person.setEnabled(false);
-			record_Card.setEnabled(false);
 			record_C.setText(String.valueOf(recordInfo.getTEMPERATURE()));
 			record_dotype.setText(recordInfo.getFACEDESCRIPTION());
 			
 			record_buildtime.setText(DateUtils.toDateString(recordInfo.getCreateTime(),DateUtils.PART_TIME_FORMAT)) ;
+			
+			record_Chainage.setEnabled(false);
+			record_Person.setEnabled(false);
+			record_Card.setEnabled(false);
+			
+			// 是否上传
+			if (recordInfo.getUploadStatus() == 2) {
+				record_C.setEnabled(false);
+				record_dotype.setEnabled(false);
+				record_buildtime.setEnabled(false);
+				
+				bottomLayout.setVisibility(View.INVISIBLE);
+			}
     	
     	} else {
     		editRawSheet	= false ;

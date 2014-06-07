@@ -95,7 +95,15 @@ public class RecordActivity extends WorkFlowActivity implements OnPageChangeList
 				
 				RawSheetIndex bean = mTunnelSectionList.getItem(position) ;
 				
-				showListActionMenu("记录单管理", new String[]{"打开","编辑","删除"}, bean);
+				String[] menus = null ;
+				
+				if(bean.getUploadStatus() == 2){
+					menus = new String[]{"打开","查看"} ;
+				} else {
+					menus = new String[]{"打开","编辑","删除"} ;
+				}
+				
+				showListActionMenu("记录单管理", menus, bean);
 			}
 		}) ;
 
@@ -106,7 +114,15 @@ public class RecordActivity extends WorkFlowActivity implements OnPageChangeList
 				
 				RawSheetIndex bean = mSubsidenceSectionList.getItem(position) ;
 				
-				showListActionMenu("记录单管理", new String[]{"打开","编辑","删除"}, bean);
+				String[] menus = null ;
+				
+				if(bean.getUploadStatus() == 2){
+					menus = new String[]{"打开","查看"} ;
+				} else {
+					menus = new String[]{"打开","编辑","删除"} ;
+				}
+				
+				showListActionMenu("记录单管理",menus , bean);
 			}
 		}) ;
 		
