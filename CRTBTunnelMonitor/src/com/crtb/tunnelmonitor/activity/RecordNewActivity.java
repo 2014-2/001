@@ -216,6 +216,7 @@ public class RecordNewActivity extends WorkFlowActivity implements OnPageChangeL
 			
 			// 是否上传
 			if(recordInfo.getUploadStatus() == 2){
+				
 				record_C.setEnabled(false);
 				record_dotype.setEnabled(false);
 				record_buildtime.setEnabled(false);

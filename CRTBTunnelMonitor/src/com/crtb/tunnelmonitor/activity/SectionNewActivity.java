@@ -31,6 +31,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -59,6 +60,9 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 	
 	@InjectView(id=R.id.cursor)
 	private ImageView cursor;
+	
+	@InjectView(id=R.id.bottom_layout)
+	private RelativeLayout bottomLayout ;
 
 	private TextView t1, t2, t3;// 页卡头标
 
@@ -317,6 +321,7 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 		
 		return -1;
 	}
+	
 	private void loadDefault(){
 		
 		section_new_leiji_gd.setEnabled(false);
@@ -421,6 +426,13 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 			
 			section_new_remark_gd.setText(sectionInfo.getGDU0Description());
 			section_new_remark_sl.setText(sectionInfo.getSLU0Description());
+			
+			if(sectionInfo.getUploadStatus() == 2){
+				bottomLayout.setVisibility(View.INVISIBLE);
+				
+				section_new_remark_gd.setEnabled(false);
+				section_new_remark_sl.setEnabled(false);
+			}
 		}
 	}
 

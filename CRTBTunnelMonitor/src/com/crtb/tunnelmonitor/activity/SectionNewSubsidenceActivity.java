@@ -29,6 +29,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.crtb.tunnelmonitor.CommonObject;
@@ -50,6 +51,9 @@ public class SectionNewSubsidenceActivity extends WorkFlowActivity implements On
   
 	@InjectView(id=R.id.vPager)
 	private ViewPager mPager;
+	
+	@InjectView(id=R.id.bottom_layout)
+	private RelativeLayout bottomLayout ;
 	
     private List<View> listViews = new ArrayList<View>() ;
     private ImageView cursor;
@@ -226,6 +230,12 @@ public class SectionNewSubsidenceActivity extends WorkFlowActivity implements On
 			
 			DSection_SetTime.setText(DateUtils.toDateString(subsidence.getDBU0Time(),DateUtils.DATE_TIME_FORMAT));
 			DSection_Info.setText(subsidence.getDBU0Description());
+			
+			if(subsidence.getUploadStatus() == 2){
+				bottomLayout.setVisibility(View.INVISIBLE);
+				
+				DSection_Info.setEnabled(false);
+			}
 		}
 	}
 

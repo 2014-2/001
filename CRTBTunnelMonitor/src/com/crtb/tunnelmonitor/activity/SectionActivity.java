@@ -24,6 +24,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.crtb.tunnelmonitor.CommonObject;
@@ -105,7 +106,13 @@ public class SectionActivity extends WorkFlowActivity implements OnPageChangeLis
 				
 				TunnelCrossSectionIndex bean = mSectionTunnelList.getItem(position);
 				
-				String[] menus = {getString(R.string.common_edit),getString(R.string.common_delete)} ;
+				String[] menus = null ;
+				
+				if(bean.getUploadStatus() == 2){
+					menus = new String[]{getString(R.string.common_look),getString(R.string.common_delete)} ;
+				} else {
+					menus = new String[]{getString(R.string.common_edit),getString(R.string.common_delete)} ;
+				}
 				
 				showListActionMenu("断面管理", menus , bean);
 			}
@@ -118,7 +125,13 @@ public class SectionActivity extends WorkFlowActivity implements OnPageChangeLis
 				
 				SubsidenceCrossSectionIndex bean = mSectionSubsidenceList.getItem(position);
 				
-				String[] menus = {getString(R.string.common_edit),getString(R.string.common_delete)} ;
+				String[] menus = null ;
+				
+				if(bean.getUploadStatus() == 2){
+					menus = new String[]{getString(R.string.common_look),getString(R.string.common_delete)} ;
+				} else {
+					menus = new String[]{getString(R.string.common_edit),getString(R.string.common_delete)} ;
+				}
 				
 				showListActionMenu("断面管理", menus, bean);
 			}
@@ -142,7 +155,8 @@ public class SectionActivity extends WorkFlowActivity implements OnPageChangeLis
 			TunnelCrossSectionIndex section = (TunnelCrossSectionIndex)bean ;
 			
 			// 编辑
-			if(menu.equals(getString(R.string.common_edit))){
+			if(menu.equals(getString(R.string.common_edit))
+					|| menu.equals(getString(R.string.common_look))){
 				
 				CommonObject.putObject(SectionNewActivity.KEY_NEW_TUNNEL_SECTION_OBJECT, section);
 				
@@ -204,7 +218,8 @@ public class SectionActivity extends WorkFlowActivity implements OnPageChangeLis
 			}
 			
 			// 编辑
-			if(menu.equals(getString(R.string.common_edit))){
+			if(menu.equals(getString(R.string.common_edit))
+					|| menu.equals(getString(R.string.common_look))){
 				
 				CommonObject.putObject(SectionNewSubsidenceActivity.KEY_NEW_SUBSIDENCE_SECTION_OBJECT, section);
 				
