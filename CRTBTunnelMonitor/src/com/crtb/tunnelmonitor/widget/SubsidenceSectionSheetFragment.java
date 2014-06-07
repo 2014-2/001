@@ -63,7 +63,7 @@ public class SubsidenceSectionSheetFragment extends Fragment {
         mSheetList.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                mAdapter.revertCheck(position);
+                mAdapter.setCheckStatus(position);
             }
         });
         loadData();
@@ -83,15 +83,24 @@ public class SubsidenceSectionSheetFragment extends Fragment {
 
     class SheetAdapter extends BaseAdapter {
         private List<RawSheetIndex> mSheetRecords;
+        private int mCheckedPosition = -1;
 
         SheetAdapter() {
         	mSheetRecords = new ArrayList<RawSheetIndex>();
         }
 
-        public void setData(List<RawSheetIndex> sheetRecords) {
-        	mSheetRecords = sheetRecords;
-            notifyDataSetChanged();
-        }
+		public void setData(List<RawSheetIndex> sheetRecords) {
+			/** 保持数据全部未选中状态 */
+			if (sheetRecords != null && sheetRecords.size() > 0) {
+				for (RawSheetIndex sheet : sheetRecords) {
+					sheet.setChecked(false);
+				}
+				mCheckedPosition = -1;
+				mSheetRecords = sheetRecords;
+				notifyDataSetChanged();
+			}
+
+		}
 
         public List<RawSheetIndex> getUploadData() {
             List<RawSheetIndex> uploadDataList = new ArrayList<RawSheetIndex>();
@@ -120,11 +129,24 @@ public class SubsidenceSectionSheetFragment extends Fragment {
             return position;
         }
 
-        public void revertCheck(int position) {
-        	RawSheetIndex sheetData = mSheetRecords.get(position);
-            sheetData.setChecked(!sheetData.isChecked());
-            notifyDataSetChanged();
-        }
+		public void setCheckStatus(int position) {
+			if (mCheckedPosition != -1) {
+				RawSheetIndex oldSheetData = mSheetRecords.get(mCheckedPosition);
+				oldSheetData.setChecked(false);
+				if (mCheckedPosition != position) {
+					RawSheetIndex newSheetData = mSheetRecords.get(position);
+					newSheetData.setChecked(true);
+					mCheckedPosition = position;
+				} else {
+					mCheckedPosition = -1;
+				}
+			} else {
+				RawSheetIndex sheetData = mSheetRecords.get(position);
+				sheetData.setChecked(true);
+				mCheckedPosition = position;
+			}
+			notifyDataSetChanged();
+		}
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
