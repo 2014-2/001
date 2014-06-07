@@ -80,7 +80,8 @@
                         android:id="@+id/section_new_et_a"
                         android:layout_width="100dip"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="20dip" />
+                        android:layout_marginLeft="20dip"
+                        android:maxLength="10" />
 
                     <TextView
                         style="@style/work_plan_label"
@@ -90,7 +91,8 @@
                         android:id="@+id/section_new_et_s1"
                         android:layout_width="100dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp" />
+                        android:layout_marginLeft="10dp"
+                        android:maxLength="10" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -109,7 +111,8 @@
                         android:id="@+id/section_new_et_s2"
                         android:layout_width="100dip"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="12dip" />
+                        android:layout_marginLeft="12dip"
+                        android:maxLength="10" />
 
                     <TextView
                         android:id="@+id/section_new_et_s3_label"
@@ -122,7 +125,8 @@
                         android:layout_width="100dip"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dip"
-                        android:visibility="invisible" />
+                        android:visibility="invisible"
+                        android:maxLength="10" />
                 </LinearLayout>
             </RelativeLayout>
         </LinearLayout>
