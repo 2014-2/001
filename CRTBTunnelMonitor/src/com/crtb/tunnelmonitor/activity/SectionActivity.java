@@ -24,7 +24,6 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.crtb.tunnelmonitor.CommonObject;
@@ -168,6 +167,12 @@ public class SectionActivity extends WorkFlowActivity implements OnPageChangeLis
 			// 删除
 			else if(menu.equals(getString(R.string.common_delete))){
 				
+				if(section.getUploadStatus() == 2){
+					showText("断面已经上传，不能删除!");
+					return ;
+				}
+				
+				// 是否存在测量数据
 				List<TunnelSettlementTotalData> list = TunnelSettlementTotalDataDao.defaultDao().queryTunnelTotalDataSection(section.getGuid());
 				
 				if(list != null && list.size() > 0){
@@ -176,6 +181,7 @@ public class SectionActivity extends WorkFlowActivity implements OnPageChangeLis
 					return ;
 				}
 				
+				// 删除断面
 				int code = TunnelCrossSectionIndexDao.defaultDao().delete(section);
 				
 				TunnelCrossSectionExIndex sectionExIndex = TunnelCrossSectionExIndexDao.defaultDao().querySectionById(section.getID());
@@ -208,13 +214,10 @@ public class SectionActivity extends WorkFlowActivity implements OnPageChangeLis
 			
 			SubsidenceCrossSectionIndex section = (SubsidenceCrossSectionIndex)bean ;
 			
-			SubsidenceCrossSectionExIndex sectionExIndex = SubsidenceCrossSectionExIndexDao.defaultDao().querySectionById(section.getID());
-			
-			if (sectionExIndex != null) {
-				int result = SubsidenceCrossSectionExIndexDao.defaultDao().delete(sectionExIndex);
-				if (result != AbstractDao.DB_EXECUTE_SUCCESS) {
-					Log.e("SectionActivity", "delete SubsidenceCrossSectionExIndex failed!");
-				}
+			// 断面是否上传
+			if(section.getUploadStatus() == 2){
+				showText("断面已经上传，不能删除!");
+				return ;
 			}
 			
 			// 编辑
@@ -231,25 +234,42 @@ public class SectionActivity extends WorkFlowActivity implements OnPageChangeLis
 			// 删除
 			else if(menu.equals(getString(R.string.common_delete))){
 				
+				// 是否存在数据
 				if(section.isHasTestData()){
 					CrtbDialogHint hint = new CrtbDialogHint(SectionActivity.this, R.drawable.ic_warnning, "该断面存在测量数据,不可删除!");
 					hint.show() ;
+					return ;
+				}
+				
+				// 删除断面
+				int code = SubsidenceCrossSectionIndexDao.defaultDao().delete(section);
+				
+				CrtbDialogResult dialog = null ;
+				
+				if(code == SubsidenceCrossSectionIndexDao.DB_EXECUTE_SUCCESS){
+					
+					dialog = new CrtbDialogResult(SectionActivity.this, R.drawable.ic_reslut_sucess, "删除成功");
+					
+					// 删除扩展
+					SubsidenceCrossSectionExIndex sectionExIndex = SubsidenceCrossSectionExIndexDao.defaultDao().querySectionById(section.getID());
+					
+					if (sectionExIndex != null) {
+						
+						int result = SubsidenceCrossSectionExIndexDao.defaultDao().delete(sectionExIndex);
+						
+						if (result != AbstractDao.DB_EXECUTE_SUCCESS) {
+							Log.e("SectionActivity", "delete SubsidenceCrossSectionExIndex failed!");
+						}
+					}
+					
+					// 重新加载断面列表
+					mSectionSubsidenceList.onReload() ;
 				} else {
-					
-					int code = SubsidenceCrossSectionIndexDao.defaultDao().delete(section);
-					
-					CrtbDialogResult dialog = null ;
-					
-					if(code == SubsidenceCrossSectionIndexDao.DB_EXECUTE_SUCCESS){
-						dialog = new CrtbDialogResult(SectionActivity.this, R.drawable.ic_reslut_sucess, "删除成功");
-						mSectionSubsidenceList.onReload() ;
-					} else {
-						dialog = new CrtbDialogResult(SectionActivity.this, R.drawable.ic_reslut_error, "删除失败");
-					}
-					
-					if(dialog != null){
-						dialog.show() ;
-					}
+					dialog = new CrtbDialogResult(SectionActivity.this, R.drawable.ic_reslut_error, "删除失败");
+				}
+				
+				if(dialog != null){
+					dialog.show() ;
 				}
 			}
 		}
