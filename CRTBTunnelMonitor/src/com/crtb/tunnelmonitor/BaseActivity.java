@@ -215,9 +215,32 @@ public abstract class BaseActivity extends Activity {
 			
 			char[] array = idcard.toCharArray() ;
 			
-			for(int index = array.length -1 ; index >= 0 ; index--){
+			// 最后一位
+			int index 	= array.length -1 ;
+			char ch 	= array[index];
+			
+			if(!(ch == '0'
+					|| ch == '1'
+					|| ch == '2'
+					|| ch == '3'
+					|| ch == '4'
+					|| ch == '5'
+					|| ch == '6'
+					|| ch == '7'
+					|| ch == '8'
+					|| ch == '9'
+					|| ch == 'x'
+					|| ch == 'X')){
+				return false ;
+			}
+			
+			// 其他位数
+			index--;
+			
+			// 其他
+			for(; index >= 0 ; index--){
 				
-				char ch = array[index];
+				ch = array[index];
 				
 				if(!(ch == '0'
 						|| ch == '1'
@@ -228,8 +251,7 @@ public abstract class BaseActivity extends Activity {
 						|| ch == '6'
 						|| ch == '7'
 						|| ch == '8'
-						|| ch == '9'
-						|| ch == 'x')){
+						|| ch == '9' )){
 					return false ;
 				}
 			}
