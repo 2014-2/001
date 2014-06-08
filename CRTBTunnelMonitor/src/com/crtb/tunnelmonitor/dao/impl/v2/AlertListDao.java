@@ -247,7 +247,7 @@ public class AlertListDao extends AbstractDao<AlertList> {
         al.setCrossSectionID(point.getChainageId());
         al.setPntType(pntType);
         al.setAlertTime(point.getSurveyTime());
-        al.setAlertLeverl(alertLevel);
+        al.setAlertLevel(alertLevel);
         al.setUtype(Utype);
         al.setUValue(UValue);
         al.setUMax(UMax);
@@ -283,7 +283,7 @@ public class AlertListDao extends AbstractDao<AlertList> {
         al.setCrossSectionID(point.getChainageId());
         al.setPntType(point.getPntType());
         al.setAlertTime(point.getSurveyTime());
-        al.setAlertLeverl(alertLevel);
+        al.setAlertLevel(alertLevel);
         al.setUtype(Utype);
         al.setUValue(UValue);
         al.setUMax(UMax);

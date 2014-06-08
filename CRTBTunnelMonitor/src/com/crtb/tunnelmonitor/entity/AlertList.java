@@ -112,11 +112,11 @@ public class AlertList implements Serializable {
 		AlertTime = alertTime;
 	}
 
-	public int getAlertLeverl() {
+	public int getAlertLevel() {
 		return AlertLevel;
 	}
 
-	public void setAlertLeverl(int alertLeverl) {
+	public void setAlertLevel(int alertLeverl) {
 		AlertLevel = alertLeverl;
 	}
 
