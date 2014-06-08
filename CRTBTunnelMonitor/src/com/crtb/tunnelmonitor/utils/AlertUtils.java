@@ -819,12 +819,14 @@ public class AlertUtils {
         ArrayList<MergedAlert> malb = null;
         ArrayList<MergedAlert> mal = getMergedAlerts();
         Date date = mergedAlert.getSheetDate();
-        if (date != null) {
+        String sectionGuid = mergedAlert.getSectionGuid();
+        if (date != null && sectionGuid != null) {
             if (mal != null && mal.size() > 0) {
                 malb = new ArrayList<MergedAlert>();
                 for (MergedAlert ma : mal) {
+                    String secId = ma.getSectionGuid();
                     Date d = ma.getSheetDate();
-                    if (d != null && d.before(date)) {
+                    if (secId != null && secId.equals(sectionGuid) && d != null && d.before(date)) {
                         malb.add(ma);
                     }
                 }

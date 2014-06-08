@@ -12,6 +12,7 @@ public class MergedAlert {
     private AlertInfo sulvAlert = null;
     private String sheetId = null;
     private Date sheetDate = null;
+    private String sectionGuid = null;
 
     public AlertInfo getLeijiAlert() {
         return leijiAlert;
@@ -19,13 +20,19 @@ public class MergedAlert {
 
     public void setLeijiAlert(AlertInfo leijiAlert) {
         this.leijiAlert = leijiAlert;
-        if (sheetId == null && leijiAlert != null) {
-            sheetId = leijiAlert.getSheetId();
-            if (sheetId != null && sheetDate == null) {
-                RawSheetIndex sheet = RawSheetIndexDao.defaultDao().queryOneByGuid(sheetId);
-                if (sheet != null) {
-                    sheetDate = sheet.getCreateTime();
+        if (leijiAlert != null) {
+            if (sheetId == null) {
+                sheetId = leijiAlert.getSheetId();
+                if (sheetId != null && sheetDate == null) {
+                    RawSheetIndex sheet = RawSheetIndexDao.defaultDao().queryOneByGuid(sheetId);
+                    if (sheet != null) {
+                        sheetDate = sheet.getCreateTime();
+                    }
                 }
+            }
+
+            if (sectionGuid == null) {
+                sectionGuid = leijiAlert.getSectionId();
             }
         }
     }
@@ -36,13 +43,19 @@ public class MergedAlert {
 
     public void setSulvAlert(AlertInfo sulvAlert) {
         this.sulvAlert = sulvAlert;
-        if (sheetId == null && sulvAlert != null) {
-            sheetId = sulvAlert.getSheetId();
-            if (sheetId != null && sheetDate == null) {
-                RawSheetIndex sheet = RawSheetIndexDao.defaultDao().queryOneByGuid(sheetId);
-                if (sheet != null) {
-                    sheetDate = sheet.getCreateTime();
+        if (sulvAlert != null) {
+            if (sheetId == null) {
+                sheetId = sulvAlert.getSheetId();
+                if (sheetId != null && sheetDate == null) {
+                    RawSheetIndex sheet = RawSheetIndexDao.defaultDao().queryOneByGuid(sheetId);
+                    if (sheet != null) {
+                        sheetDate = sheet.getCreateTime();
+                    }
                 }
+            }
+
+            if (sectionGuid == null) {
+                sectionGuid = sulvAlert.getSectionId();
             }
         }
     }
@@ -55,7 +68,11 @@ public class MergedAlert {
         return sheetDate;
     }
 
-    //是否已上传
+    public String getSectionGuid() {
+        return sectionGuid;
+    }
+
+    // 是否已上传
     public boolean isUploaded() {
         if (leijiAlert != null && leijiAlert.getUploadStatus() != 2) {
             return false;
@@ -68,7 +85,7 @@ public class MergedAlert {
         return true;
     }
 
-    //是否已销警
+    // 是否已销警
     public boolean isHandled() {
         if (leijiAlert != null && leijiAlert.getAlertStatus() != AlertUtils.ALERT_STATUS_HANDLED) {
             return false;
