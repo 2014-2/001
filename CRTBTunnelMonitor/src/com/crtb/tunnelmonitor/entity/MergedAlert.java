@@ -13,6 +13,7 @@ public class MergedAlert {
     private String sheetId = null;
     private Date sheetDate = null;
     private String sectionGuid = null;
+    private String pntType = null;
 
     public AlertInfo getLeijiAlert() {
         return leijiAlert;
@@ -33,6 +34,14 @@ public class MergedAlert {
 
             if (sectionGuid == null) {
                 sectionGuid = leijiAlert.getSectionId();
+            }
+
+            if (pntType == null) {
+                pntType = leijiAlert.getPntType();
+                if (pntType != null && pntType.length() > 3 && pntType.startsWith("S")
+                        && pntType.contains("-")) {
+                    pntType = pntType.substring(0, pntType.length() - 2);
+                }
             }
         }
     }
@@ -57,6 +66,14 @@ public class MergedAlert {
             if (sectionGuid == null) {
                 sectionGuid = sulvAlert.getSectionId();
             }
+
+            if (pntType == null) {
+                pntType = sulvAlert.getPntType();
+                if (pntType != null && pntType.length() > 3 && pntType.startsWith("S")
+                        && pntType.contains("-")) {
+                    pntType = pntType.substring(0, pntType.length() - 2);
+                }
+            }
         }
     }
 
@@ -70,6 +87,10 @@ public class MergedAlert {
 
     public String getSectionGuid() {
         return sectionGuid;
+    }
+
+    public String getPntType() {
+        return pntType;
     }
 
     // 是否已上传
