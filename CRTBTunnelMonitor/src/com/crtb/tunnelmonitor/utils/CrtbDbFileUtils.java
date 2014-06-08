@@ -272,12 +272,14 @@ public final class CrtbDbFileUtils {
 					return ;
 				}
 				
-				final CrtbUser user = CrtbLicenseDao.defaultDao().queryCrtbUser() ;
+				// final CrtbUser user = CrtbLicenseDao.defaultDao().queryCrtbUser() ;
 				
-				if(user == null){
+				final int currentUserType	= AppCRTBApplication.getInstance().getCurUserType() ;
+				
+				/*if(user == null){
 					sendMessage(MSG_INPORT_DB_FAILED,"当前用户类型错误,无法导入!") ;
 					return  ;
-				}
+				}*/
 				
 				// 打开数据库
 				final IAccessDatabase db = FrameworkFacade.getFrameworkFacade().openDatabaseByName(importName + ".temp", 0);
@@ -296,7 +298,7 @@ public final class CrtbDbFileUtils {
 					return ;
 				}
 				
-				int maxSection = user.getUsertype() == CrtbUser.LICENSE_TYPE_REGISTERED ? -1 : AbstractDao.TRIAL_USER_MAX_SECTION_COUNT ;
+				int maxSection = currentUserType == CrtbUser.LICENSE_TYPE_REGISTERED ? 1000 : AbstractDao.TRIAL_USER_MAX_SECTION_COUNT ;
 				
 				// 判断导入的隧道内工作面
 				sql = "select * from TunnelCrossSectionIndex" ;
@@ -304,7 +306,7 @@ public final class CrtbDbFileUtils {
 				List<TunnelCrossSectionIndex> tl = db.queryObjects(sql, TunnelCrossSectionIndex.class);
 				
 				if(tl != null && tl.size() > maxSection){
-					sendMessage(MSG_INPORT_DB_FAILED,"试用版用户,不能导入超过10个工作面") ;
+					sendMessage(MSG_INPORT_DB_FAILED,"试用版用户,不能导入超过10个断面的工作面") ;
 					return ;
 				}
 				
@@ -314,7 +316,7 @@ public final class CrtbDbFileUtils {
 				List<SubsidenceCrossSectionIndex> sl = db.queryObjects(sql, SubsidenceCrossSectionIndex.class);
 				
 				if(sl != null && sl.size() > maxSection){
-					sendMessage(MSG_INPORT_DB_FAILED,"试用版用户,不能导入超过10个工作面") ;
+					sendMessage(MSG_INPORT_DB_FAILED,"试用版用户,不能导入超过10个断面的工作面") ;
 					return ;
 				}
 				
