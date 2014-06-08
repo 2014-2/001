@@ -151,6 +151,8 @@ public class WarningDataManager {
 			parameter.setWarningLevel(1);
 		} else if (level == 1) {
 			parameter.setWarningLevel(2);
+		} else {
+			parameter.setWarningLevel(1);
 		}
 		AlertInfo sulvalert = warningData.getSulvAlert();
     	parameter.setTransformSpeed(sulvalert != null ? (float)sulvalert.getUValue() : 0.5f);

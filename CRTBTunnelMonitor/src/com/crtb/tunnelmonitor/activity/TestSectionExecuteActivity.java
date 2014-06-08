@@ -57,7 +57,7 @@ import com.crtb.tunnelmonitor.utils.Time;
 @InjectLayout(layout = R.layout.activity_testrecord_execute)
 public class TestSectionExecuteActivity extends WorkFlowActivity implements View.OnClickListener {
 
-    private static boolean DEBUG = true ;// DEBUG FLAG, set to true to generate
+    private static boolean DEBUG = false;// DEBUG FLAG, set to true to generate
                                          // fake data
     private static int COUNT = 0;// TODO: REMOVE: JUST FOR DEBUG
     private static double X = 2.3614D;
