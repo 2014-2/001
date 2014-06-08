@@ -375,16 +375,23 @@ public final class ProjectIndexDao extends AbstractDao<ProjectIndex> {
 		// 更新工作面
         String dbName 	= bean.getProjectName() ;
         String dbTemp	= getDbUniqueTempName(dbName) ;
+        String path 	= CrtbDbFileUtils.getLocalDbTempPath(dbName);
         
-        // 打开数据库
-        String[] info = CrtbDbFileUtils.openDbFile(dbTemp);
+        // 数据库打开信息
+        String[] info 	= null ;
         
-        if(info == null){
-        	return DB_EXECUTE_FAILED ;
+        // 临时文件是否存在
+        File file = new File(path);
+        
+        if(!file.exists()){
+        	
+        	 // 打开数据库
+            info = CrtbDbFileUtils.openDbFile(dbName);
+            
+            if(info == null){
+            	return DB_EXECUTE_FAILED ;
+            }
         }
-        
-        // 清空缓存
-        mFramework.removeDatabaseByName(dbTemp);
         
         // 生成新文件
 		final IAccessDatabase db = mFramework.openDatabaseByName(dbTemp, 0);
@@ -442,14 +449,16 @@ public final class ProjectIndexDao extends AbstractDao<ProjectIndex> {
 				//db.execute("update RawSheetIndex set prefix = ?",param);
 				
 				// 生成加密文件
-				info = CrtbDbFileUtils.closeDbFile(dbName);
-				
-				// 清除数据库缓存
-				mFramework.removeDatabaseByName(dbTemp);
-				
 				if(info != null){
-					return DB_EXECUTE_SUCCESS ;
+					
+					// 重新加密文件
+					info = CrtbDbFileUtils.closeDbFile(dbName);
+					
+					// 清除数据库缓存
+					mFramework.removeDatabaseByName(dbTemp);
 				}
+				
+				return DB_EXECUTE_SUCCESS ;
 			}
 			
 		} catch(Exception e){
