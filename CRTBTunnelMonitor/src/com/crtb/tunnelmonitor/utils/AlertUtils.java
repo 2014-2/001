@@ -148,6 +148,10 @@ public class AlertUtils {
         Log.d(TAG, "checkPointSubsidenceExceed");
         Exceeding ret = new Exceeding();
 
+        if (handling == null) {
+            handling = "";
+        }
+
         int type = 0;
         List pastInfoList = null;
         String[] thisCoords = null;
@@ -276,8 +280,8 @@ public class AlertUtils {
                                     alertId = AlertListDao.defaultDao().insertOrUpdate((SubsidenceTotalData) point, 3/* default */,
                                             uType, accumulativeSubsidence, ACCUMULATIVE_THRESHOLD, originalDataID);
                                 }
-                                String handlingRemark = null;
-                                if (curHandlingAlertId >= 0 && alertId == curHandlingAlertId) {
+                                String handlingRemark = "";
+                                if (curHandlingAlertId >= 0 /*&& alertId == curHandlingAlertId*/) {
                                     handlingRemark = handling;
                                 }
 
@@ -363,8 +367,8 @@ public class AlertUtils {
                                     alertId = AlertListDao.defaultDao().insertOrUpdate((SubsidenceTotalData) point, 3/* default */,
                                             uType, subsidenceSpeed, SPEED_THRESHOLD, originalDataID);
                                 }
-                                String handlingRemark = null;
-                                if (curHandlingAlertId >= 0 && alertId == curHandlingAlertId) {
+                                String handlingRemark = "";
+                                if (curHandlingAlertId >= 0 /*&& alertId == curHandlingAlertId*/) {
                                     handlingRemark = handling;
                                 }
 
@@ -417,6 +421,10 @@ public class AlertUtils {
 
         if (s_1 == null || s_2 == null) {
             return null;
+        }
+
+        if (handling == null) {
+            handling = "";
         }
 
         String sheetId = s_1.getSheetId();
@@ -493,8 +501,8 @@ public class AlertUtils {
                             int alertId = AlertListDao.defaultDao().insertOrUpdate(s_1, 3/* default */,
                                     uType, convergence, ACCUMULATIVE_THRESHOLD, originalDataID);
                             
-                            String handlingRemark = null;
-                            if (curHandlingAlertId >= 0 && alertId == curHandlingAlertId) {
+                            String handlingRemark = "";
+                            if (curHandlingAlertId >= 0 /*&& alertId == curHandlingAlertId*/) {
                                 handlingRemark = handling;
                             }
 
@@ -571,8 +579,8 @@ public class AlertUtils {
 //                        if (al == null || curHandlingAlertId < 0) {
                             int alertId = AlertListDao.defaultDao().insertOrUpdate(s_1, 3/* default */, uType, shoulianSpeed,
                                     SPEED_THRESHOLD, originalDataID);
-                            String handlingRemark = null;
-                            if (curHandlingAlertId >= 0 && alertId == curHandlingAlertId) {
+                            String handlingRemark = "";
+                            if (curHandlingAlertId >= 0 /*&& alertId == curHandlingAlertId*/) {
                                 handlingRemark = handling;
                             }
 
@@ -1324,6 +1332,9 @@ public class AlertUtils {
     // 本条数据作为首行，即 将之前数据均设为不参与计算;然后删除本条（包括）之前的数据产生的所有预警信息
     public static void handleAsFirstLine(int alertId, int alertStatus, String handling,
             String duePerson, Date handlingTime, String chainageId, String pntType, int MEASNo) {
+        if (handling == null) {
+            handling = "";
+        }
         if (pntType.contains("A") || pntType.contains("S")) {// 隧道内断面
             List<TunnelSettlementTotalData> ls = TunnelSettlementTotalDataDao.defaultDao()
                     .queryInfoBeforeMEASNo(chainageId, pntType, MEASNo + 1);

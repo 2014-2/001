@@ -78,6 +78,9 @@ public class AlertHandlingInfoDao extends AbstractDao<AlertHandlingList> {
     public int insertIfNotExist(int alertId, String handling, Date handlingTime, String duePerson,
             int alertStatus, int handlingInfo) {
         int id = -1;
+        if (handling == null) {
+            handling = "";
+        }
         if (queryOne(alertId, alertStatus) == null) {
             id = insertItem(alertId, handling, handlingTime, duePerson, alertStatus, handlingInfo);
         }
@@ -91,6 +94,10 @@ public class AlertHandlingInfoDao extends AbstractDao<AlertHandlingList> {
 
         if (mDatabase == null) {
             return -1;
+        }
+
+        if (handling == null) {
+            handling = "";
         }
 
         String guid = AlertListDao.defaultDao().getGuidById(alertId);
