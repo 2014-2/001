@@ -3,6 +3,8 @@ package com.crtb.tunnelmonitor.widget;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.R.bool;
+import android.R.integer;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.os.AsyncTask;
@@ -81,6 +83,10 @@ public class TunnelSectionSheetFragment extends Fragment {
         return mAdapter.getUploadData();
     }
 
+    public boolean checkData() {
+    	return mAdapter.checkData();
+    }
+    
     class SheetAdapter extends BaseAdapter {
         private List<RawSheetIndex> mSheetRecords;
         private int mCheckedPosition = -1;
@@ -102,6 +108,22 @@ public class TunnelSectionSheetFragment extends Fragment {
 
 		}
 
+		public boolean checkData() {
+			boolean canUpload = true;
+			if (mCheckedPosition != -1) {
+				for (int i = mCheckedPosition - 1; i >= 0; i--) {
+					final int uploadStatus = mSheetRecords.get(i).getUploadStatus();
+					if ((uploadStatus == 1) || (uploadStatus == 3)) {
+						canUpload = false;
+						break;
+					}
+				}
+			} else {
+				canUpload = false;
+			}
+			return canUpload;
+		}
+		
         public List<RawSheetIndex> getUploadData() {
             List<RawSheetIndex> uploadDataList = new ArrayList<RawSheetIndex>();
             if (mSheetRecords != null && mSheetRecords.size() > 0) {

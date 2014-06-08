@@ -81,6 +81,10 @@ public class SubsidenceSectionSheetFragment extends Fragment {
         return mAdapter.getUploadData();
     }
 
+    public boolean checkData() {
+    	return mAdapter.checkData();
+    }
+    
     class SheetAdapter extends BaseAdapter {
         private List<RawSheetIndex> mSheetRecords;
         private int mCheckedPosition = -1;
@@ -114,6 +118,22 @@ public class SubsidenceSectionSheetFragment extends Fragment {
             return uploadDataList;
         }
 
+        public boolean checkData() {
+			boolean canUpload = true;
+			if (mCheckedPosition != -1) {
+				for (int i = mCheckedPosition - 1; i >= 0; i--) {
+					final int uploadStatus = mSheetRecords.get(i).getUploadStatus();
+					if ((uploadStatus == 1) || (uploadStatus == 3)) {
+						canUpload = false;
+						break;
+					}
+				}
+			} else {
+				canUpload = false;
+			}
+			return canUpload;
+		}
+        
         @Override
         public int getCount() {
             return mSheetRecords.size();

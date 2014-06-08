@@ -333,6 +333,10 @@ public class DataUploadActivity extends FragmentActivity {
     }
     
 	private void uploadTunnelSheets() {
+		if (!mTunnelFragment.checkData()) {
+			Toast.makeText(DataUploadActivity.this, R.string.data_upload_promote, Toast.LENGTH_LONG).show();
+			return ;
+		}
 		List<RawSheetIndex> sheetRecords = mTunnelFragment.getUploadData();
 		if (sheetRecords != null && sheetRecords.size() > 0) {
 			TunnelAsyncQueryTask queryTask = new TunnelAsyncQueryTask(sheetRecords, new QueryLisenter() {
@@ -367,6 +371,10 @@ public class DataUploadActivity extends FragmentActivity {
 	}
     
     private void uploadSubsidenceSheets() {
+    	if (!mSubsidenceFragment.checkData()) {
+			Toast.makeText(DataUploadActivity.this, R.string.data_upload_promote, Toast.LENGTH_LONG).show();
+			return ;
+		}
     	List<RawSheetIndex> sheetRecords = mSubsidenceFragment.getUploadData();
         if (sheetRecords != null && sheetRecords.size() > 0) {
         	SubsidenceAsyncQueryTask queryTask = new SubsidenceAsyncQueryTask(sheetRecords, new QueryLisenter() {
