@@ -229,7 +229,7 @@ public class RecordActivity extends WorkFlowActivity implements OnPageChangeList
 					// 是否最后一条数据
 					if(mTunnelSectionList.isLastRawSheetIndex(info)){
 						
-						CrtbDialogDelete delete = new CrtbDialogDelete(RecordActivity.this,R.drawable.ic_warnning,"执行该操作将删除操作面的全部数据,不可恢复!");
+						CrtbDialogDelete delete = new CrtbDialogDelete(RecordActivity.this,R.drawable.ic_warnning,"执行该操作将删除记录单的全部数据,不可恢复!");
 						
 						delete.setButtonClick(new IButtonOnClick() {
 							
@@ -262,7 +262,7 @@ public class RecordActivity extends WorkFlowActivity implements OnPageChangeList
 					// 是否最后一条数据
 					if(mSubsidenceSectionList.isLastRawSheetIndex(info)){
 						
-						CrtbDialogDelete delete = new CrtbDialogDelete(RecordActivity.this,R.drawable.ic_warnning,"执行该操作将删除操作面的全部数据,不可恢复!");
+						CrtbDialogDelete delete = new CrtbDialogDelete(RecordActivity.this,R.drawable.ic_warnning,"执行该操作将删除记录单的全部数据,不可恢复!");
 						
 						delete.setButtonClick(new IButtonOnClick() {
 							
