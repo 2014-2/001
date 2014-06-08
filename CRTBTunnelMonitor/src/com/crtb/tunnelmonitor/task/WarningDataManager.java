@@ -74,6 +74,7 @@ public class WarningDataManager {
 			ArrayList<MergedAlert> mal = AlertUtils.getMergedAlerts();
 			if (mal != null && mal.size() > 0) {
 			    for (MergedAlert ma : mal) {
+			        boolean can = AlertUtils.mergedAlertCanBeUploaded(ma);
 					UploadWarningData warningData = new UploadWarningData();
 			        warningData.setLeijiAlert(ma.getLeijiAlert());
 			        warningData.setSulvAlert(ma.getSulvAlert());

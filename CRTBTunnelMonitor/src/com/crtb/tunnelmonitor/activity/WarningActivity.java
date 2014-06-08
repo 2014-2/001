@@ -127,11 +127,11 @@ public class WarningActivity extends Activity {
 
         mHandleCompleteView= (RelativeLayout) findViewById(R.id.complete_warning_rl);
         mDealWayRadios = (RadioGroup) mHandleCompleteView.findViewById(R.id.radio_group);
-        mDealWayBtnDiscard = (RadioButton) mDealWayRadios.findViewById(R.id.radio_button_void);
-        mDealWayBtnAsFirst = (RadioButton) mDealWayRadios.findViewById(R.id.radio_button_first);
+//        mDealWayBtnDiscard = (RadioButton) mDealWayRadios.findViewById(R.id.radio_button_void);
+//        mDealWayBtnAsFirst = (RadioButton) mDealWayRadios.findViewById(R.id.radio_button_first);
         mDealWayBtnCorrection = (RadioButton) mDealWayRadios.findViewById(R.id.radio_button_add);
         mDealWayBtnRebury = (RadioButton) mDealWayRadios.findViewById(R.id.radio_button_rebury);
-        mDealWayBtnNormal = (RadioButton) mDealWayRadios.findViewById(R.id.radio_button_normal);
+//        mDealWayBtnNormal = (RadioButton) mDealWayRadios.findViewById(R.id.radio_button_normal);
         mDealWayRadios.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 
             @Override
@@ -376,37 +376,37 @@ public class WarningActivity extends Activity {
         listview = (ListView) findViewById(R.id.listView12);
         listview.setDividerHeight(1);
         listview.setAdapter(adapter);
-//        listview.setOnItemLongClickListener(new OnItemLongClickListener() {
-//
-//            @Override
-//            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-//                if (mUserType != CrtbUser.LICENSE_TYPE_REGISTERED) {
-//                    Toast.makeText(getApplicationContext(), "预警处理对非注册用户不可用!", Toast.LENGTH_LONG).show();
-//                    return true;
-//                }
-//                
-//                if (oldChooseView != null) {
-//                    oldChooseView.setBackgroundResource(R.color.warning_bg);
-//                }
-//                
-//                view.setBackgroundResource(R.color.lightyellow);
-//                clickedItem = position;
-//                if (alerts.get(position).getAlertStatus() == 1) {//"开"
-//                    handlingStep = 0;
-//                    warningMenu.setVisibility(View.VISIBLE);
-//                }
-//                if (alerts.get(position).getAlertStatus() == 2) {//"正在处理"
-//                    handlingStep = 1;
-//                    warningMenu.setVisibility(View.VISIBLE);
-//                }
-//                if (alerts.get(position).getAlertStatus() == 0) {//"已消警"
-//                    warningMenu.setVisibility(View.VISIBLE);
-////                    Toast.makeText(WarningActivity.this, "已消警", Toast.LENGTH_LONG).show();
-//                }
-//                oldChooseView = view;
-//                return true;
-//            }
-//        });
+        listview.setOnItemLongClickListener(new OnItemLongClickListener() {
+
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                if (mUserType != CrtbUser.LICENSE_TYPE_REGISTERED) {
+                    Toast.makeText(getApplicationContext(), "预警处理对非注册用户不可用!", Toast.LENGTH_LONG).show();
+                    return true;
+                }
+                
+                if (oldChooseView != null) {
+                    oldChooseView.setBackgroundResource(R.color.warning_bg);
+                }
+                
+                view.setBackgroundResource(R.color.lightyellow);
+                clickedItem = position;
+                if (alerts.get(position).getAlertStatus() == 1) {//"开"
+                    handlingStep = 0;
+                    warningMenu.setVisibility(View.VISIBLE);
+                }
+                if (alerts.get(position).getAlertStatus() == 2) {//"正在处理"
+                    handlingStep = 1;
+                    warningMenu.setVisibility(View.VISIBLE);
+                }
+                if (alerts.get(position).getAlertStatus() == 0) {//"已消警"
+                    warningMenu.setVisibility(View.VISIBLE);
+//                    Toast.makeText(WarningActivity.this, "已消警", Toast.LENGTH_LONG).show();
+                }
+                oldChooseView = view;
+                return true;
+            }
+        });
 
 //        listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 //            @Override

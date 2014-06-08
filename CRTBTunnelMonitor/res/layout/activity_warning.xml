@@ -57,6 +57,7 @@
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:layout_alignParentBottom="true">
+        <!-- 暂时把这几个设为gone -->
         <Button
                 android:id="@+id/normal"
                 android:layout_width="120dp"
@@ -67,6 +68,7 @@
                 android:textSize="16sp"
                 android:text="@string/normal_cal"
                 android:textColor="@color/white"
+                android:visibility="gone"
                 />
         <View
                 android:id="@+id/line1"
@@ -74,7 +76,8 @@
                 android:layout_alignLeft="@+id/discard_btn"
                 android:layout_above="@+id/discard_btn"
                 android:layout_width="120dp"
-                android:layout_height="1dp"/>
+                android:layout_height="1dp"
+                android:visibility="gone"/>
 
         <Button
                 android:id="@+id/discard_btn"
@@ -86,14 +89,15 @@
                 android:textSize="16sp"
                 android:text="@string/discarded"
                 android:textColor="@color/white"
-                />
+                android:visibility="gone"/>
         <View
                 android:id="@+id/line2"
                 android:background="#e0000000"
                 android:layout_alignLeft="@+id/as_first_line"
                 android:layout_above="@+id/as_first_line"
                 android:layout_width="120dp"
-                android:layout_height="1dp"/>
+                android:layout_height="1dp"
+                android:visibility="gone"/>
         <Button
                 android:id="@+id/as_first_line"
                 android:layout_width="120dp"
@@ -103,14 +107,15 @@
                 android:text="@string/as_first_line"
                 android:textColor="@color/white"
                 android:layout_centerInParent="true"
-                />
+                android:visibility="gone"/>
         <View
                 android:id="@+id/line3"
                 android:background="#e0000000"
                 android:layout_alignLeft="@+id/as_first_line"
                 android:layout_below="@+id/as_first_line"
                 android:layout_width="120dp"
-                android:layout_height="1dp"/>
+                android:layout_height="1dp"
+                android:visibility="gone"/>
         <Button
                 android:id="@+id/correction"
                 android:layout_width="120dp"
@@ -156,8 +161,7 @@
                 android:background="#b0000000"
                 android:textSize="16sp"
                 android:text="@string/handling_details"
-                android:textColor="@color/white"
-                />
+                android:textColor="@color/white"/>
     </RelativeLayout>
 
     <include layout="@layout/warning_complete"/>

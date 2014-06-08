@@ -302,7 +302,7 @@ public class AlertUtils {
                                 AlertHandlingInfoDao.defaultDao().insertIfNotExist(alertId,
                                         alertId == curHandlingAlertId ? handling : null,
                                         handlingTime, duePerson, ALERT_STATUS_HANDLED, 1/* true */);
-                            } else {
+                            } else if (al.getUploadStatus() != 2) {
                                 AlertHandlingInfoDao.defaultDao().deleteByAlertId(alertId);
                                 AlertListDao.defaultDao().deleteById(alertId);
                             }
@@ -388,7 +388,7 @@ public class AlertUtils {
                                 AlertHandlingInfoDao.defaultDao().insertIfNotExist(alertId,
                                         alertId == curHandlingAlertId ? handling : null,
                                         handlingTime, duePerson, ALERT_STATUS_HANDLED, 1/* true */);
-                            } else {//重测
+                            } else if (al.getUploadStatus() != 2) {//重测
                                 AlertHandlingInfoDao.defaultDao().deleteByAlertId(alertId);
                                 AlertListDao.defaultDao().deleteById(alertId);
                             }
@@ -517,7 +517,7 @@ public class AlertUtils {
                                     alertId == curHandlingAlertId ? handling : null, handlingTime,
                                             AppCRTBApplication.getInstance().mUserName,
                                     ALERT_STATUS_HANDLED, 1/* true */);
-                        } else {
+                        } else if (al.getUploadStatus() != 2) {
                             AlertHandlingInfoDao.defaultDao().deleteByAlertId(alertId);
                             AlertListDao.defaultDao().deleteById(alertId);
                         }
@@ -594,7 +594,7 @@ public class AlertUtils {
                                     alertId == curHandlingAlertId ? handling : null, handlingTime,
                                             AppCRTBApplication.getInstance().mUserName,
                                     ALERT_STATUS_HANDLED, 1/* true */);
-                        } else {
+                        } else if (al.getUploadStatus() != 2) {
                             AlertHandlingInfoDao.defaultDao().deleteByAlertId(alertId);
                             AlertListDao.defaultDao().deleteById(alertId);
                         }
@@ -790,6 +790,40 @@ public class AlertUtils {
                 + Math.pow(Double.valueOf(s_1cs[1]) - Double.valueOf(s_2cs[1]), 2)// y
                 + Math.pow(Double.valueOf(s_1cs[2]) - Double.valueOf(s_2cs[2]), 2);// z
         return Math.sqrt(squar);
+    }
+
+    public static boolean mergedAlertCanBeUploaded(MergedAlert ma) {
+        ArrayList<MergedAlert> l = getMergedAlertsBefore(ma);
+        if (l == null || l.size() == 0) {
+            return true;
+        }
+
+        for (MergedAlert m : l) {
+            if (!m.isHandled() || !m.isUploaded()) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    public static ArrayList<MergedAlert> getMergedAlertsBefore(MergedAlert mergedAlert) {
+        ArrayList<MergedAlert> malb = null;
+        ArrayList<MergedAlert> mal = getMergedAlerts();
+        Date date = mergedAlert.getSheetDate();
+        if (date != null) {
+            if (mal != null && mal.size() > 0) {
+                malb = new ArrayList<MergedAlert>();
+                for (MergedAlert ma : mal) {
+                    Date d = ma.getSheetDate();
+                    if (d != null && d.before(date)) {
+                        malb.add(ma);
+                    }
+                }
+            }
+        }
+
+        return malb;
     }
 
     public static ArrayList<MergedAlert> getMergedAlerts() {
