@@ -26,6 +26,7 @@ public class AlertInfo implements Serializable {
     private String date;
     private String pntType;
     private String uTypeMsg;
+    private String duePerson;
     private int uType;
     private String alertStatusMsg;
     private int alertStatus;
@@ -215,6 +216,14 @@ public class AlertInfo implements Serializable {
 
     public void setSECTCODE(String sECTCODE) {
         SECTCODE = sECTCODE;
+    }
+
+    public String getDuePerson() {
+        return duePerson;
+    }
+
+    public void setDuePerson(String duePerson) {
+        this.duePerson = duePerson;
     }
 
 }

@@ -6,6 +6,7 @@ import java.util.List;
 
 import android.R.integer;
 import android.os.AsyncTask;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.crtb.tunnelmonitor.AppCRTBApplication;
@@ -74,7 +75,7 @@ public class WarningDataManager {
 			ArrayList<MergedAlert> mal = AlertUtils.getMergedAlerts();
 			if (mal != null && mal.size() > 0) {
 			    for (MergedAlert ma : mal) {
-			        boolean can = AlertUtils.mergedAlertCanBeUploaded(ma);
+//			        boolean can = AlertUtils.mergedAlertCanBeUploaded(ma);
 					UploadWarningData warningData = new UploadWarningData();
 			        warningData.setLeijiAlert(ma.getLeijiAlert());
 			        warningData.setSulvAlert(ma.getSulvAlert());
@@ -177,7 +178,11 @@ public class WarningDataManager {
         AlertInfo leijiAlert = warningData.getLeijiAlert();
     	parameter.setWarningPointValue((float) (leijiAlert != null ? leijiAlert.getUValue() : 0.5f));
     	parameter.setWarningDate(CrtbUtils.parseDate(alertInfo.getDate()));
-    	parameter.setWarningPerson(AppCRTBApplication.mUserName);
+    	String duePerson = alertInfo.getDuePerson();
+    	if (TextUtils.isEmpty(duePerson)) {
+    	    duePerson = AppCRTBApplication.mUserName;
+    	}
+    	parameter.setWarningPerson(duePerson);
     	parameter.setWarningDescription(alertInfo.getAlertStatusMsg());
     	parameter.setWarningEndTime(CrtbUtils.parseDate(alertInfo.getHandlingTime()));
     	parameter.setWarningResult(alertInfo.getAlertStatus());

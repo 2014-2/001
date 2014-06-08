@@ -960,6 +960,7 @@ public class AlertUtils {
                         : "");
                 ai.setHandling(ah.getHandling());
                 ai.setHandlingTime(CrtbUtils.formatDate(ah.getHandlingTime()));
+                ai.setDuePerson(ah.getDuePerson());
             }
 
             String oriId = ai.getOriginalDataID();
