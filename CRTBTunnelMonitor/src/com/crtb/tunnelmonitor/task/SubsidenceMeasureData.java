@@ -91,9 +91,8 @@ public class SubsidenceMeasureData extends MeasureData {
     public float getFaceDistance() {
         SubsidenceTotalData first = mMeasurePoints.size() > 0 ? mMeasurePoints.get(0) : null;
         if (first != null) {
-            int chainageId = Integer.valueOf(first.getChainageId());
             SubsidenceCrossSectionIndex section = SubsidenceCrossSectionIndexDao.defaultDao()
-                    .querySectionById(chainageId);
+                    .querySectionByGuid(first.getChainageId());
             if (section != null) {
                 double chainage = section.getChainage();
 

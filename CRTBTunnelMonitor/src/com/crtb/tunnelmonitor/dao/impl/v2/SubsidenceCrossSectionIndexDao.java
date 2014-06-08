@@ -175,7 +175,13 @@ public final class SubsidenceCrossSectionIndexDao extends AbstractDao<Subsidence
 		if (mDatabase == null) {
 			return null;
 		}
-		String sql = "select * from SubsidenceCrossSectionIndex where Guid IN (" + guids + ")";
+		String[] guidInfo = guids.split(",");
+		StringBuilder sb = new StringBuilder();
+		for (String guid : guidInfo) {
+			sb.append("\'").append(guid).append("\'").append(",");
+		}
+		sb.deleteCharAt(sb.lastIndexOf(","));
+		String sql = "select * from SubsidenceCrossSectionIndex where Guid IN (" + sb.toString() + ")";
 		return mDatabase.queryObjects(sql, SubsidenceCrossSectionIndex.class);
 	}
 
