@@ -44,6 +44,7 @@ import com.crtb.tunnelmonitor.task.WarningDataManager;
 import com.crtb.tunnelmonitor.task.WarningDataManager.UploadWarningData;
 import com.crtb.tunnelmonitor.task.WarningDataManager.WarningLoadListener;
 import com.crtb.tunnelmonitor.task.WarningDataManager.WarningUploadListener;
+import com.crtb.tunnelmonitor.utils.AlertUtils;
 
 public class WarningUploadActivity extends Activity {
     private static final String LOG_TAG = "WarningUploadActivity";
@@ -218,22 +219,27 @@ public class WarningUploadActivity extends Activity {
                             if (uploadData.isChecked()) {
                                 uploadWarningDataList.add(uploadData.getUploadWarningData());
                             }
-                        }
-                        if (uploadWarningDataList.size() > 0) {
-                            showProgressOverlay();
-                            dataManager.uploadData(uploadWarningDataList,
-                                    new WarningUploadListener() {
-                                @Override
-                                public void done(final boolean success) {
-                                    runOnUiThread(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            updateStatus(success);
-                                        }
-                                    });
-                                }
-                            });
-                        }
+						}
+						if (uploadWarningDataList.size() > 0) {
+							UploadWarningData warningData = uploadWarningDataList.get(0);
+							if (AlertUtils.mergedAlertCanBeUploaded(warningData.getMergedAlert())) {
+								showProgressOverlay();
+								dataManager.uploadData(uploadWarningDataList, new WarningUploadListener() {
+									@Override
+									public void done(final boolean success) {
+										runOnUiThread(new Runnable() {
+											@Override
+											public void run() {
+												updateStatus(success);
+											}
+										});
+									}
+								});
+							} else {
+								Toast.makeText(WarningUploadActivity.this, R.string.alert_upload_promote,
+										Toast.LENGTH_LONG).show();
+							}
+						}
                     }
                     menuWindow.dismiss();
                 }
