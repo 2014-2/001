@@ -15,7 +15,7 @@ public class AlertInfo implements Serializable {
     private int alertId = -1;
     private int alertHandlingId = -1;
     private String sheetId = null;
-    private int sectionId = -1;
+    private String sectionId = null;
     private int alertLevel;
     private float correction = 0f;
     private double uvalue;
@@ -66,11 +66,11 @@ public class AlertInfo implements Serializable {
         return sheetId;
     }
 
-    public void setSectionId(int sectionId) {
+    public void setSectionId(String sectionId) {
         this.sectionId = sectionId;
     }
 
-    public int getSectionId() {
+    public String getSectionId() {
         return sectionId;
     }
 

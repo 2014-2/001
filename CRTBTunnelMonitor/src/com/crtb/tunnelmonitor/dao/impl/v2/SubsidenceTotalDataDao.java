@@ -86,6 +86,20 @@ public class SubsidenceTotalDataDao extends AbstractDao<SubsidenceTotalData> {
                 SubsidenceTotalData.class);
     }
     
+    public SubsidenceTotalData queryOneByGuid(String guid) {
+        
+        final IAccessDatabase mDatabase = getCurrentDb();
+        
+        if (mDatabase == null) {
+            return null;
+        }
+        
+        String sql = "select * from SubsidenceTotalData where Guid = ?";
+        
+        return mDatabase.queryObject(sql, new String[] { guid },
+                SubsidenceTotalData.class);
+    }
+    
     // 删除测量单的所有测量数据
     public void removeSubsidenceTotalDataBySheetId(int sheetid){
     	
@@ -220,6 +234,18 @@ public class SubsidenceTotalDataDao extends AbstractDao<SubsidenceTotalData> {
                     + ", DataCorrection=" + ((dataStatus == AlertUtils.POINT_DATASTATUS_CORRECTION) ? correction : 0f)
                     + " WHERE ID=?";
             String[] args = new String[]{String.valueOf(id)};
+            db.execute(sql, args);
+        }
+    }
+
+    public void updateDataStatus(String guid, int dataStatus, float correction) {
+        IAccessDatabase db = getCurrentDb();
+        if (db != null) {
+            String sql = "UPDATE SubsidenceTotalData"
+                    + " SET DataStatus=dataStatus"
+                    + ", DataCorrection=" + ((dataStatus == AlertUtils.POINT_DATASTATUS_CORRECTION) ? correction : 0f)
+                    + " WHERE Guid=?";
+            String[] args = new String[]{guid};
             db.execute(sql, args);
         }
     }

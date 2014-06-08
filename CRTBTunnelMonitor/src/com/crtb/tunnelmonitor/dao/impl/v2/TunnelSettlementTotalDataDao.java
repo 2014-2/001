@@ -78,6 +78,19 @@ public class TunnelSettlementTotalDataDao extends AbstractDao<TunnelSettlementTo
         return mDatabase.queryObject(sql, SQLiteParamUtils.toParamemter(id), TunnelSettlementTotalData.class);
     }
     
+    public TunnelSettlementTotalData queryOneByGuid(String guid) {
+        
+        final IAccessDatabase mDatabase = getCurrentDb();
+        
+        if (mDatabase == null || guid == null) {
+            return null;
+        }
+        
+        String sql = "select * from TunnelSettlementTotalData where Guid = ?";
+        
+        return mDatabase.queryObject(sql, new String[] {guid}, TunnelSettlementTotalData.class);
+    }
+    
     // 删除测量单的所有测量数据
     public void removeTotalDataBySheetId(int sheetid){
     	
@@ -237,6 +250,25 @@ public class TunnelSettlementTotalDataDao extends AbstractDao<TunnelSettlementTo
         }
 
         return point2;
+    }
+
+    public void updateDataStatus(String guid, int dataStatus, float correction) {
+        
+        Log.d(TAG, "TunnelSettlementTotalData updateDataStatus");
+        
+        IAccessDatabase db = getCurrentDb();
+        
+        if (db != null) {
+            
+            String sql = "UPDATE TunnelSettlementTotalData"
+                    + " SET DataStatus=" + dataStatus
+                    + ", DataCorrection=" + ((dataStatus == AlertUtils.POINT_DATASTATUS_CORRECTION) ? correction : 0f)
+                    + " WHERE Guid=?";
+            
+            String[] args = new String[]{guid};
+            
+            db.execute(sql, args);
+        }
     }
 
     public void updateDataStatus(int id, int dataStatus, float correction) {

@@ -188,4 +188,14 @@ public final class SubsidenceCrossSectionIndexDao extends AbstractDao<Subsidence
         String[] args = new String[] { String.valueOf(id) };
         return mDatabase.queryObject(sql, args, SubsidenceCrossSectionIndex.class);
     }
+
+    public SubsidenceCrossSectionIndex querySectionByGuid(String guid) {
+        final IAccessDatabase mDatabase = getCurrentDb();
+        if (mDatabase == null) {
+            return null;
+        }
+        String sql = "select * from SubsidenceCrossSectionIndex where Guid=?";
+        String[] args = new String[] { guid };
+        return mDatabase.queryObject(sql, args, SubsidenceCrossSectionIndex.class);
+    }
 }

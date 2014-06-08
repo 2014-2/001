@@ -922,7 +922,7 @@ public class AlertUtils {
 //                    ai.setAlertStatusMsg((alertStatus >= 0 && alertStatus < 3) ? ALERT_STATUS_MSGS[alertStatus]
 //                            : "");
                     ai.setSheetId(c.getString(4));
-                    ai.setSectionId(c.getInt(5));
+                    ai.setSectionId(c.getString(5));
                     ai.setAlertLevel(c.getInt(6));
                     ai.setUValue(c.getDouble(7));
                     ai.setOriginalDataID(c.getString(8));
@@ -969,37 +969,39 @@ public class AlertUtils {
 
             int utype = ai.getUType();
             if (utype == DIBIAO_LEIJI_XIACHEN_EXCEEDING || utype == DIBIAO_XIACHEN_SULV_EXCEEDING) {
-                int secid = ai.getSectionId();
-                SubsidenceCrossSectionIndex si = SubsidenceCrossSectionIndexDao.defaultDao().querySectionById(secid);
+                String secid = ai.getSectionId();
+                SubsidenceCrossSectionIndex si = SubsidenceCrossSectionIndexDao.defaultDao().querySectionByGuid(secid);
                 if (si != null) {
                     ai.setXinghao(CrtbUtils.formatSectionName(prefix, si.getChainage()));
+
+                    SubsidenceCrossSectionExIndex siex = SubsidenceCrossSectionExIndexDao.defaultDao().querySectionById(si.getID());
+                    if (siex != null) {
+                        ai.setSECTCODE(siex.getSECTCODE());
+                    }
                 }
 
-                SubsidenceCrossSectionExIndex siex = SubsidenceCrossSectionExIndexDao.defaultDao().querySectionById(secid);
-                if (siex != null) {
-                    ai.setSECTCODE(siex.getSECTCODE());
-                }
             } else {
-                int secid = ai.getSectionId();
-                TunnelCrossSectionIndex si = TunnelCrossSectionIndexDao.defaultDao().querySectionById(secid);
+                String secid = ai.getSectionId();
+                TunnelCrossSectionIndex si = TunnelCrossSectionIndexDao.defaultDao().querySectionByGuid(secid);
                 if (si != null) {
                     ai.setXinghao(CrtbUtils.formatSectionName(prefix, si.getChainage()));
+
+                    TunnelCrossSectionExIndex siex = TunnelCrossSectionExIndexDao.defaultDao().querySectionById(si.getID());
+                    if (siex != null) {
+                        ai.setSECTCODE(siex.getSECTCODE());
+                    }
                 }
                 
-                TunnelCrossSectionExIndex siex = TunnelCrossSectionExIndexDao.defaultDao().querySectionById(secid);
-                if (siex != null) {
-                    ai.setSECTCODE(siex.getSECTCODE());
-                }
             }
 
             if (!TextUtils.isEmpty(dataId)) {
                 if (utype == DIBIAO_LEIJI_XIACHEN_EXCEEDING || utype == DIBIAO_XIACHEN_SULV_EXCEEDING) {
-                    SubsidenceTotalData data = SubsidenceTotalDataDao.defaultDao().queryOneById(Integer.valueOf(dataId));
+                    SubsidenceTotalData data = SubsidenceTotalDataDao.defaultDao().queryOneByGuid(dataId);
                     if (data != null) {
                         ai.setCorrection(data.getDataCorrection());
                     }
                 } else {
-                    TunnelSettlementTotalData data = TunnelSettlementTotalDataDao.defaultDao().queryOneById(Integer.valueOf(dataId));
+                    TunnelSettlementTotalData data = TunnelSettlementTotalDataDao.defaultDao().queryOneByGuid(dataId);
                     if (data != null) {
                         ai.setCorrection(data.getDataCorrection());
                     }
@@ -1114,21 +1116,21 @@ public class AlertUtils {
         String duePerson = AppCRTBApplication.getInstance().mUserName;
 
         if (!TextUtils.isEmpty(originalID)) {
-            ArrayList<Integer> ids = new ArrayList<Integer>();
+            ArrayList<String> guids = new ArrayList<String>();
             if (originalID.contains(ORIGINAL_ID_DIVIDER)) {
                 String[] idStrs = originalID.split(ORIGINAL_ID_DIVIDER);
                 for (String idStr : idStrs) {
-                    ids.add(Integer.valueOf(idStr));
+                    guids.add(idStr);
                 }
             } else {
-                ids.add(Integer.valueOf(originalID));
+                guids.add(originalID);
             }
 
-            if (ids.size() == 1) {//测点
-                int id = ids.get(0);
+            if (guids.size() == 1) {//测点
+                String guid = guids.get(0);
                 int measNo = -1;
                 if (pntType.contains("A")) {//隧道内断面
-                    TunnelSettlementTotalData p = TunnelSettlementTotalDataDao.defaultDao().queryOneById(id);
+                    TunnelSettlementTotalData p = TunnelSettlementTotalDataDao.defaultDao().queryOneByGuid(guid);
                     if (p != null) {
                         float thisCorrection = correction;
                         if (isRebury) {
@@ -1146,7 +1148,7 @@ public class AlertUtils {
 //                        if (!checkExceeding(uValue + totalCorrection, uType)) {
 //                            tarAlertStatus = alertStatus;
 //                        }
-                        TunnelSettlementTotalDataDao.defaultDao().updateDataStatus(id, dataStatus, totalCorrection);
+                        TunnelSettlementTotalDataDao.defaultDao().updateDataStatus(guid, dataStatus, totalCorrection);
 
                         if (dataStatus == POINT_DATASTATUS_AS_FIRSTLINE
                                 || dataStatus == POINT_DATASTATUS_CORRECTION) {
@@ -1162,7 +1164,7 @@ public class AlertUtils {
                         }
                     }
                 } else {//地表沉降
-                    SubsidenceTotalData p = SubsidenceTotalDataDao.defaultDao().queryOneById(id);
+                    SubsidenceTotalData p = SubsidenceTotalDataDao.defaultDao().queryOneByGuid(guid);
                     if (p != null) {
                         float thisCorrection = correction;
                         if (isRebury) {
@@ -1180,7 +1182,7 @@ public class AlertUtils {
 //                        if (!checkExceeding(uValue + totalCorrection, uType)) {
 //                            tarAlertStatus = alertStatus;
 //                        }
-                        SubsidenceTotalDataDao.defaultDao().updateDataStatus(id, dataStatus,
+                        SubsidenceTotalDataDao.defaultDao().updateDataStatus(guid, dataStatus,
                                 totalCorrection);
 
                         if (dataStatus == POINT_DATASTATUS_AS_FIRSTLINE
@@ -1208,7 +1210,7 @@ public class AlertUtils {
                 }
             } else {//测线
                 TunnelSettlementTotalData s_1 = TunnelSettlementTotalDataDao.defaultDao()
-                        .queryOneById(ids.get(0));
+                        .queryOneByGuid(guids.get(0));
                 String pnt1Type = s_1.getPntType();
                 String oppositePntType = pnt1Type.substring(0, pnt1Type.length() - 1) + "2";
                 TunnelSettlementTotalData s_2 = TunnelSettlementTotalDataDao.defaultDao()
@@ -1232,8 +1234,8 @@ public class AlertUtils {
 //                if (!checkExceeding(uValue + totalCorrection, uType)) {
 //                    tarAlertStatus = alertStatus;
 //                }
-                for (int id : ids) {
-                    TunnelSettlementTotalDataDao.defaultDao().updateDataStatus(id, dataStatus, totalCorrection);
+                for (String guid : guids) {
+                    TunnelSettlementTotalDataDao.defaultDao().updateDataStatus(guid, dataStatus, totalCorrection);
                 }
                 if (dataStatus == POINT_DATASTATUS_AS_FIRSTLINE
                         || dataStatus == POINT_DATASTATUS_CORRECTION
