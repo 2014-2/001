@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:background="@null" >
+
+    <RelativeLayout
+        android:id="@+id/bottom_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="@dimen/bottom_button_height" >
+
+        <LinearLayout
+            android:id="@+id/bottom_panel"
+            android:layout_width="fill_parent"
+            android:layout_height="@dimen/bottom_button_height"
+            android:orientation="horizontal" >
+
+            <Button
+                android:id="@+id/work_btn_quxiao"
+                android:layout_width="0dp"
+                android:layout_height="fill_parent"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:background="@drawable/bottom_bnt_selector"
+                android:text="取消"
+                android:textSize="20sp" />
+
+            <ImageView
+                android:layout_width="2dip"
+                android:layout_height="fill_parent"
+                android:background="#767676" />
+
+            <Button
+                android:id="@+id/work_btn_queding"
+                android:layout_width="0dp"
+                android:layout_height="fill_parent"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:background="@drawable/bottom_bnt_selector"
+                android:text="确定"
+                android:textSize="20sp" />
+        </LinearLayout>
+    </RelativeLayout>
+
+</RelativeLayout>

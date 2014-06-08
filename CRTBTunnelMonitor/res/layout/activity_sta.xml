@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/workplan_top_color" >
+
+    <include
+        android:id="@+id/header"
+        layout="@layout/activity_topbar_layout" >
+    </include>
+
+    <RelativeLayout
+        android:id="@+id/conre1"
+        android:layout_width="fill_parent"
+        android:layout_height="40dip"
+        android:layout_below="@id/header" >
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:gravity="center_vertical" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="35dp"
+                android:layout_weight="1"
+                android:gravity="center_vertical|left"
+                android:text="名称"
+                android:textSize="16sp" />
+
+        </LinearLayout>
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/conre1"
+        android:background="#FFFFFF" >
+
+        <ListView
+            android:id="@+id/lv_conlist"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:listSelector="@drawable/total_station_item_selector"
+            android:descendantFocusability="blocksDescendants" />"
+    </LinearLayout>
+
+</RelativeLayout>

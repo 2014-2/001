@@ -1,0 +1,428 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:background="@null"
+        android:paddingTop="10dp" >
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:orientation="vertical" >
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/rect_border"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="40dp"
+                    android:gravity="center"
+                    android:text="累计变形极限值(毫米)" />
+
+                <View
+                    android:layout_width="fill_parent"
+                    android:layout_height="2px"
+                    android:background="#d5d5d5" />
+
+                <RelativeLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:background="@null"
+                    android:orientation="horizontal" >
+
+                    <ImageView
+                        android:id="@+id/right"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
+                        android:layout_marginTop="16dp"
+                        android:background="@drawable/x" />
+
+                    <TextView
+                        android:id="@+id/left"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="10dp"
+                        android:gravity="center"
+                        android:text="拱顶下沉" />
+
+                    <EditText
+                        android:id="@+id/section_new_leiji_gd"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="20dp"
+                        android:layout_toLeftOf="@id/right"
+                        android:layout_toRightOf="@id/left"
+                        android:inputType="numberDecimal"
+                        android:singleLine="true" 
+                        android:text="100"/>
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="20dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@null"
+                    android:orientation="horizontal" >
+
+                    <ImageView
+                        android:id="@+id/right"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
+                        android:layout_marginTop="16dp"
+                        android:background="@drawable/x" />
+
+                    <TextView
+                        android:id="@+id/left"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="10dp"
+                        android:gravity="center"
+                        android:text="周边收敛" />
+
+                    <EditText
+                        android:id="@+id/section_new_leiji_sl"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="20dp"
+                        android:layout_toLeftOf="@id/right"
+                        android:layout_toRightOf="@id/left"
+                        android:inputType="numberDecimal"
+                        android:singleLine="true"
+                        android:text="100" />
+                </RelativeLayout>
+            </LinearLayout>
+
+            <!-- 周边收敛 -->
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/rect_border"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="40dp"
+                    android:gravity="center"
+                    android:text="变形速率极限值(毫米/天)" />
+
+                <View
+                    android:layout_width="fill_parent"
+                    android:layout_height="2px"
+                    android:background="#d5d5d5" />
+
+                <RelativeLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:background="@null"
+                    android:orientation="horizontal" >
+
+                    <ImageView
+                        android:id="@+id/right"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
+                        android:layout_marginTop="16dp"
+                        android:background="@drawable/x" />
+
+                    <TextView
+                        android:id="@+id/left"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="10dp"
+                        android:gravity="center"
+                        android:text="拱顶下沉" />
+
+                    <EditText
+                        android:id="@+id/section_new_single_gd"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="20dp"
+                        android:layout_toLeftOf="@id/right"
+                        android:layout_toRightOf="@id/left"
+                        android:inputType="numberDecimal"
+                        android:singleLine="true"
+                        android:text="5" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="20dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@null"
+                    android:orientation="horizontal" >
+
+                    <ImageView
+                        android:id="@+id/right"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
+                        android:layout_marginTop="16dp"
+                        android:background="@drawable/x" />
+
+                    <TextView
+                        android:id="@+id/left"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="10dp"
+                        android:gravity="center"
+                        android:text="周边收敛" />
+
+                    <EditText
+                        android:id="@+id/section_new_single_sl"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="20dp"
+                        android:layout_toLeftOf="@id/right"
+                        android:layout_toRightOf="@id/left"
+                        android:inputType="numberDecimal"
+                        android:singleLine="true"
+                        android:text="5" />
+                </RelativeLayout>
+            </LinearLayout>
+
+            <!-- 设置时间 -->
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/rect_border"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="40dp"
+                    android:gravity="center"
+                    android:text="设置时间" />
+
+                <View
+                    android:layout_width="fill_parent"
+                    android:layout_height="2px"
+                    android:background="#d5d5d5" />
+
+                <RelativeLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:background="@null"
+                    android:orientation="horizontal" >
+
+                    <ImageView
+                        android:id="@+id/right"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
+                        android:layout_marginTop="16dp"
+                        android:background="@drawable/x"
+                        android:visibility="invisible" />
+
+                    <TextView
+                        android:id="@+id/left"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="10dp"
+                        android:gravity="center"
+                        android:text="拱顶下沉" />
+
+                    <EditText
+                        android:id="@+id/section_new_createtime_gd"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="20dp"
+                        android:layout_toLeftOf="@id/right"
+                        android:layout_toRightOf="@id/left"
+                        android:editable="false"
+                        android:focusable="false"
+                        android:inputType="text"
+                        android:singleLine="true"
+                        android:text="" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="20dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@null"
+                    android:orientation="horizontal" >
+
+                    <ImageView
+                        android:id="@+id/right"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
+                        android:layout_marginTop="16dp"
+                        android:background="@drawable/x"
+                        android:visibility="invisible" />
+
+                    <TextView
+                        android:id="@+id/left"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="10dp"
+                        android:gravity="center"
+                        android:text="周边收敛" />
+
+                    <EditText
+                        android:id="@+id/section_new_createtime_sl"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="20dp"
+                        android:layout_toLeftOf="@id/right"
+                        android:layout_toRightOf="@id/left"
+                        android:editable="false"
+                        android:focusable="false"
+                        android:inputType="text"
+                        android:singleLine="true"
+                        android:text="" />
+                </RelativeLayout>
+            </LinearLayout>
+
+            <!-- 备注 -->
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/rect_border"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="40dp"
+                    android:gravity="center"
+                    android:text="备注" />
+
+                <View
+                    android:layout_width="fill_parent"
+                    android:layout_height="2px"
+                    android:background="#d5d5d5" />
+
+                <RelativeLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:background="@null"
+                    android:orientation="horizontal" >
+
+                    <ImageView
+                        android:id="@+id/right"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginTop="16dp"
+                        android:background="@drawable/x"
+                        android:visibility="invisible" />
+
+                    <TextView
+                        android:id="@+id/left"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="10dp"
+                        android:gravity="center"
+                        android:text="拱顶下沉" />
+
+                    <EditText
+                        android:id="@+id/section_new_remark_gd"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="20dp"
+                        android:layout_toLeftOf="@id/right"
+                        android:layout_toRightOf="@id/left"
+                        android:inputType="text"
+                        android:singleLine="true" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="20dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@null"
+                    android:orientation="horizontal" >
+
+                    <ImageView
+                        android:id="@+id/right"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginTop="16dp"
+                        android:background="@drawable/x"
+                        android:visibility="invisible" />
+
+                    <TextView
+                        android:id="@+id/left"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="10dp"
+                        android:gravity="center"
+                        android:text="周边收敛" />
+
+                    <EditText
+                        android:id="@+id/section_new_remark_sl"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="20dp"
+                        android:layout_toLeftOf="@id/right"
+                        android:layout_toRightOf="@id/left"
+                        android:inputType="text"
+                        android:singleLine="true" />
+                </RelativeLayout>
+            </LinearLayout>
+
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="20dp" />
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

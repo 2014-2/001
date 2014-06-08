@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">TunnelMonitor</string>
+    <string name="action_settings">Settings</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="total_station">全站仪</string>
+    <string name="total_station_manage">全站仪连接管理</string>
+    <string name="new_control_station_title">新建全站仪连接</string>
+    <string name="edit_control_station_title">编辑全站仪</string>
+    <string name="new_control_point_title">新建控制点</string>
+    <string name="edit_control_point_title">编辑控制点</string>
+    <string name="upload_warning_data">上传预警信息</string>
+    <string name="download_work_data">下载工作面</string>
+    <string name="download_work_site">下载工点</string>
+    <string name="review_warning_title">查看预警信息</string>
+
+    <string name="press_again_to_exit">再按一次退出程序</string>
+
+    <!-- common -->
+    <string name="common_create_new">新建</string>
+    <string name="common_export">导出</string>
+    <string name="common_inport">导入</string>
+    <string name="common_open">打开</string>
+    <string name="common_edit">编辑</string>
+    <string name="common_delete">删除</string>
+    <string name="common_search">搜索</string>
+    <string name="common_look">查看</string>
+
+    <!-- 工作面模块 -->
+    <string name="work_plan_title">工作面管理</string>
+    <string name="work_plan_create_title">新建工作面</string>
+
+    <string-array name="work_plan_item_menus">
+        <item>打开</item>
+        <item>编辑</item>
+        <item>导出</item>
+        <item>删除</item>
+    </string-array>
+
+    <!-- 断面模块 -->
+    <string name="section_title">断面管理</string>
+    <string name="section_new_title">新建隧道内断面</string>
+    <string name="section_new_subsidence_title">新建地表下沉断面</string>
+    
+     <string-array name="section_excavation">
+        <item>全断面法</item>
+        <item>台阶法</item>
+        <item>三台阶法</item>
+        <item>双侧壁法</item>
+    </string-array>
+
+    <!-- 记录单模块 -->
+    <string name="record_title">记录单管理</string>
+    <string name="record_new_section_title">新建隧道内断面记录单</string>
+    <string name="record_new_section_subisdence_title">新建地表下沉断面记录单</string>
+
+    <!-- 测量模块 -->
+    <string name="test_record_title">测量</string>
+    
+    
+    <string name="system_name">隧道围岩监测采集终端系统</string>
+    <string name="about">关于</string>
+    <string name="server_interact">服务器交互</string>
+    <string name="cancel">取消</string>
+    <string name="ok">确定</string>
+    <string name="control_point_manage">控制点管理</string>
+    <string name="main_title">隧道名称</string>
+    <string name="server_setting">用户登录</string>
+    <string name="user_book">用户手册</string>
+
+
+    <!-- 预警模块 -->
+    <string name="millimeter">毫米</string>
+
+    <string name="normal_cal">正常计算</string>
+    <string name="discarded">不参与计算</string>
+    <string name="as_first_line">作为首行</string>
+    <string name="add_correction">添加改正值</string>
+    <string name="rebury">重埋</string>
+    <string name="handling_details">处理详情</string>
+
+    <string name="handling_count">共%d次处理</string>
+    <string name="handling_date">处理时间: %s</string>
+    <string name="handling_person">处理人: %s</string>
+    <string name="handling_remark">备注: %s</string>
+    <string name="handling_status">处理后状态: %s</string>
+
+    <string name="deal_way_void">数据作废</string>
+    <string name="deal_way_first">数据作为首行</string>
+    <string name="deal_way_add">添加改正值</string>
+    <string name="deal_way_normal">正常计算</string>
+    <string name="deal_way_rebury">重埋</string>
+
+    <string name="remark_correction">添加改正值%.1f毫米</string>
+
+    <!-- 升级模块 -->
+    <string name="update_title">软件升级</string>
+    <!-- 关于页面 -->
+    <string name="project_name">中铁天宝数字隧道监测方案</string>
+    <string name="adapt_to">适用于：隧道围岩量测</string>
+    <string name="version">Version：%s</string>
+    <string name="copyright">Copy©2014\n中铁天宝数字工程有限责任公司\nAll Rights Reserved.</string>
+    <string name="description">"围岩监测解决方案-外业数据采集软件主要用于在隧道监控量测现场，建立与多种型号全站仪的连接，实时采集断面的观测数据与预警提醒，并对超限进行超限处理。并严格按照现行《铁路隧道监控量测数据接口规定》上传数据至工管中心。"</string>
+    <string name="software_update">软件升级</string>
+    
+    <!-- 服务器模块 -->
+    <string name="server_settings_ip_hint">输入服务器地址</string>
+    <string name="server_settings_username_hint">输入用户名</string>
+    <string name="server_settings_password_hint">输入密码</string>
+    <string name="server_data_upload_title">数据上传</string>
+    <string name="data_uploading">上传中，请稍候</string>
+    <string name="data_upload_success">上传记录单成功!</string>
+    <string name="data_upload_fail">上传失败,连接超时!</string>
+    <string name="data_upload_fail_1">上传失败,记录单中无有效观测数据!</string>
+    
+    <string name="data_downloading">正在下载数据</string>
+    <string name="data_download_success">下载成功!</string>
+    <string name="data_download_fail">下载失败,连接超时!</string>
+    
+    <string name="data_uploading_alert">上传中，请稍候</string>
+    <string name="data_upload_alert_success">上传预警成功!</string>
+    <string name="data_upload_alert_fail">上传预警信息失败,连接超时!</string>
+    
+    <string name="server_please_wait">登录中,请稍候…</string>
+    <string name="server_login_success">登录成功</string>
+    <string name="server_login_failed">登录失败</string>
+    <string name="tester_loading">正在下载测量员信息，请稍候…</string>
+    <string name="tester_load_success">获取测量员成功</string>
+    <string name="tester_load_failed">获取测量员失败</string>
+    <string name="tester_load_timeout">获取测量员超时</string>
+    <string name="tester_load_invalid_username">用户名未通过验证</string>
+    <string name="tester_load_invalid_password">密码未通过验证</string>
+
+    <string name="alert_point_type">点号：%s</string>
+    <string name="alert_state">状态：%s</string>
+    <string name="alert_handle_method">处理方式：%s</string>
+    
+    <!-- 全站仪模块 -->
+    <string name="edit">编辑</string>
+    <string name="delete">删除</string>
+    <string name="bluetooth_connect">蓝牙连接</string>
+    <string name="com_connect">串口连接</string>
+    <string name="disconnect">断开连接</string>
+
+     <string-array name="total_station_item_menus">
+        <item>@string/bluetooth_connect</item>
+        <item>@string/disconnect</item>
+        <item>@string/edit</item>
+        <item>@string/delete</item>
+<!--         <item>@string/com_connect</item>   -->
+    </string-array>
+
+</resources>

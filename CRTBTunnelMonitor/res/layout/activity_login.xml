@@ -1,0 +1,202 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical" >
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:background="@drawable/banner" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="20dip"
+            android:background="@drawable/white_rect_border"
+            android:orientation="vertical" >
+
+            <RelativeLayout
+                android:id="@+id/namelayout"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dip" >
+
+                <TextView
+                    android:id="@+id/name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="20dp"
+                    android:text="用户名"
+                    android:textSize="19sp" />
+
+                <!-- 
+                <EditText
+                    android:id="@+id/username"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_toRightOf="@id/name"
+                    android:layout_weight="1"
+                    android:hint="请选择用户名"
+                    android:paddingRight="20dp"
+                    android:singleLine="true" />
+
+                <FrameLayout
+                    android:id="@+id/img"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="26dp" >
+
+                    <ImageView
+                        android:layout_width="15dp"
+                        android:layout_height="10dp"
+                        android:layout_gravity="center"
+                        android:background="@drawable/arrow_down"
+                        android:contentDescription="@null" />
+                </FrameLayout> -->
+
+                <Spinner
+                    android:id="@+id/name_spinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" 
+                    android:layout_toRightOf="@id/name" 
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="20dp"
+                    android:paddingRight="20dp" />
+            </RelativeLayout>
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="5dp"
+                android:background="#d9d9d9" />
+
+            <RelativeLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dip" >
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true" >
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="20dp"
+                        android:text="身份证"
+                        android:textSize="19sp" />
+
+                    <EditText
+                        android:id="@+id/idcard"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="20dp"
+                        android:layout_weight="1"
+                        android:hint="请输入身份证"
+                        android:inputType="textPassword"
+                        android:maxLength="18"
+                        android:singleLine="true" />
+                </LinearLayout>
+            </RelativeLayout>
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="5dp"
+                android:background="#d9d9d9" />
+
+            <RelativeLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp" >
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true" >
+
+                    <TextView
+                        android:id="@+id/notetitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="20dp"
+                        android:text="备    注"
+                        android:textSize="19sp" />
+
+                    <EditText
+                        android:id="@+id/note"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="20dp"
+                        android:layout_toRightOf="@id/notetitle"
+                        android:paddingRight="26dp"
+                        android:singleLine="true" />
+                    <!--
+                    It's no use
+                    <ImageView
+                        android:id="@+id/note_arrow"
+                        android:layout_width="15dp"
+                        android:layout_height="10dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="26dp"
+                        android:background="@drawable/arrow_down"
+                        android:contentDescription="@null" />
+                    -->
+                </RelativeLayout>
+            </RelativeLayout>
+        </LinearLayout>
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" >
+
+            <Button
+                android:id="@+id/login_btn"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_centerHorizontal="true"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/green_bg_selector"
+                android:text="登录"
+                android:textColor="@color/white"
+                android:textSize="19sp" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp" >
+
+            <TextView
+                android:id="@+id/load_teser"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:text="载入测量员信息"
+                android:textColor="#61acb8"
+                android:textSize="19sp" />
+        </RelativeLayout>
+    </LinearLayout>
+
+</ScrollView>

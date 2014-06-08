@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <include
+        android:id="@+id/header"
+        layout="@layout/activity_topbar_layout" >
+    </include>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_below="@id/header"
+        android:layout_above="@id/bottom_layout"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dip" >
+
+            <TextView
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dip"
+                android:text="名称"
+                android:textSize="15sp" />
+
+            <EditText
+                android:id="@+id/point_name"
+                android:layout_width="0dp"
+                android:layout_height="50dip"
+                android:layout_marginRight="10dip"
+                android:layout_weight="1" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
+                android:text="*"
+                android:textColor="#ff0000"
+                android:textSize="18sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dip" >
+
+            <TextView
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dip"
+                android:text="X(m)"
+                android:textSize="15sp" />
+
+            <EditText
+                android:id="@+id/point_x"
+                android:layout_width="fill_parent"
+                android:layout_height="50dip"
+                android:layout_marginRight="35dp"
+                android:layout_weight="1"
+                android:inputType="numberDecimal"
+                android:text="0" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dip" >
+
+            <TextView
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dip"
+                android:text="Y(m)"
+                android:textSize="15sp" />
+
+            <EditText
+                android:id="@+id/point_y"
+                android:layout_width="fill_parent"
+                android:layout_height="50dip"
+                android:layout_marginRight="35dp"
+                android:layout_weight="1"
+                android:inputType="numberDecimal"
+                android:text="0" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dip" >
+
+            <TextView
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dip"
+                android:text="Z(m)"
+                android:textSize="15sp" />
+
+            <EditText
+                android:id="@+id/point_z"
+                android:layout_width="fill_parent"
+                android:layout_height="50dip"
+                android:layout_marginRight="35dip"
+                android:layout_weight="1"
+                android:inputType="numberDecimal"
+                android:text="0" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dip" >
+
+            <TextView
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dip"
+                android:text="备注"
+                android:textSize="15sp" />
+
+            <EditText
+                android:id="@+id/point_info"
+                android:layout_width="fill_parent"
+                android:layout_height="50dip"
+                android:layout_marginRight="35dip"
+                android:layout_weight="1"
+                android:hint="最多输入10个字符"
+                android:maxLength="10" />
+        </LinearLayout>
+
+    </LinearLayout>
+    
+    <include
+        android:id="@+id/bottom_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        layout="@layout/activity_bottom_layout" />
+
+</RelativeLayout>

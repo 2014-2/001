@@ -1,0 +1,31 @@
+# Keep all Fragments in this package, which are used by reflection.
+
+-dontskipnonpubliclibraryclasses
+-dontoptimize
+-dontwarn com.google.**
+-dontwarn android.support.**
+-dontwarn com.crtb.log.**
+-dontwarn com.crtb.tssurveyprovider.**
+-dontwarn com.crtb.utils.**
+-dontwarn com.rebcenter.**
+-dontwarn org.**
+-keep class com.google.**{*;}
+-keep class android.support.**{*;}
+-keep class com.crtb.log.**{*;}
+-keep class com.crtb.tssurveyprovider.**{*;}
+########################
+####add by wei.zhou 2014-05-03
+-keep class com.crtb.tunnelmonitor.entity.**{*;}
+-keep class com.crtb.tunnelmonitor.activity.**{*;}
+########################
+-keep class com.crtb.utils.**{*;}
+-keep class com.rebcenter.**{*;}
+-keep class android.**{*;}
+-keep class org.**{*;}
+-keepattributes *Annotation*
+-libraryjars libs/android-support-v4.jar
+-libraryjars libs/commons-codec-1.4.jar
+-libraryjars libs/ksoap2-3.2.0.jar
+-libraryjars libs/org-android-framework.jar
+-libraryjars libs/TSSurveyProvider.jar
+-libraryjars libs/update.jar

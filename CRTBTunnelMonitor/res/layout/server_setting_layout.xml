@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#eeeeee"
+    android:orientation="vertical" >
+
+    <include
+        android:id="@+id/topbar"
+        layout="@layout/activity_topbar_layout" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/topbar"
+        android:layout_margin="10dp"
+        android:background="@drawable/rect_border_server_settings"
+        android:orientation="vertical" >
+
+        <RelativeLayout
+            android:id="@+id/ip_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:layout_marginTop="5dp" >
+
+            <TextView
+                android:id="@+id/ip_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:text="服务器"
+                android:textColor="#6b6b6b"
+                android:textSize="19sp" />
+
+            <EditText
+                android:id="@+id/server_ip"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="20dp"
+                android:singleLine="true"
+                android:background="@null"
+                android:text="http://61.237.239.144/fxkz/basedown"
+                android:hint="@string/server_settings_ip_hint"
+                android:layout_toRightOf="@id/ip_title" />
+        </RelativeLayout>
+
+        <ImageView
+            android:id="@+id/divider1"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#d9d9d9" />
+
+        <RelativeLayout
+            android:id="@+id/name_layout"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:layout_marginTop="5dp" >
+
+            <TextView
+                android:id="@+id/username_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:text="用户名"
+                android:textColor="#6b6b6b"
+                android:textSize="19sp" />
+
+            <EditText
+                android:id="@+id/username"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="20dp"
+                android:background="@null"
+                android:singleLine="true"
+                android:hint="@string/server_settings_username_hint"
+                android:layout_toRightOf="@id/username_title" />
+        </RelativeLayout>
+
+        <ImageView
+            android:id="@+id/divider2"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#d9d9d9" />
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:layout_marginTop="5dp" >
+
+            <TextView
+                android:id="@+id/password_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:text="密    码"
+                android:textColor="#6b6b6b"
+                android:textSize="19sp" />
+
+            <EditText
+                android:id="@+id/password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="20dp"
+                android:background="@null"
+                android:singleLine="true"
+                android:hint="@string/server_settings_password_hint"
+                android:layout_toRightOf="@id/password_title"
+                android:password="true" />
+        </RelativeLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/bottom_panel"
+        android:layout_width="fill_parent"
+        android:layout_height="@dimen/bottom_button_height"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal" >
+
+        <Button
+            android:id="@+id/cancel"
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:background="@drawable/bottom_bnt_selector"
+            android:text="@string/cancel"
+            android:textSize="20sp" />
+
+        <ImageView
+            android:layout_width="2dip"
+            android:layout_height="fill_parent"
+            android:background="#767676" />
+
+        <Button
+            android:id="@+id/ok"
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:background="@drawable/bottom_bnt_selector"
+            android:text="@string/ok"
+            android:textSize="20sp" />
+    </LinearLayout>
+
+</RelativeLayout>

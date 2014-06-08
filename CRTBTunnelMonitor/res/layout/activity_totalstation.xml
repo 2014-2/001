@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/total"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <include
+        android:id="@+id/header"
+        layout="@layout/activity_topbar_layout" >
+    </include>
+
+    <LinearLayout
+        android:id="@+id/station"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/header"
+        android:layout_marginBottom="40dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="20dp"
+        android:background="@drawable/gray_bg_selector"
+        android:gravity="center" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableTop="@drawable/station"
+            android:text="@string/total_station" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/control_point"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="10dp"
+        android:layout_toRightOf="@id/station"
+        android:layout_below="@id/header"
+        android:background="@drawable/gray_bg_selector"
+        android:gravity="center"
+        android:visibility="gone" ><!-- 暂时屏蔽 -->
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableTop="@drawable/controlpoint"
+            android:text="@string/control_point_manage" />
+    </LinearLayout>
+
+</RelativeLayout>
