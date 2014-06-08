@@ -304,7 +304,7 @@ public class AlertUtils {
 //                                String pntType1 = al.getPntType();
                                 String duePerson = AppCRTBApplication.getInstance().mUserName;
                                 AlertHandlingInfoDao.defaultDao().insertIfNotExist(alertId,
-                                        alertId == curHandlingAlertId ? handling : null,
+                                        alertId == curHandlingAlertId ? handling : "",
                                         handlingTime, duePerson, ALERT_STATUS_HANDLED, 1/* true */);
                             } else if (al.getUploadStatus() != 2) {
                                 AlertHandlingInfoDao.defaultDao().deleteByAlertId(alertId);
@@ -390,7 +390,7 @@ public class AlertUtils {
 //                                String pntType1 = al.getPntType();
                                 String duePerson = AppCRTBApplication.getInstance().mUserName;
                                 AlertHandlingInfoDao.defaultDao().insertIfNotExist(alertId,
-                                        alertId == curHandlingAlertId ? handling : null,
+                                        alertId == curHandlingAlertId ? handling : "",
                                         handlingTime, duePerson, ALERT_STATUS_HANDLED, 1/* true */);
                             } else if (al.getUploadStatus() != 2) {//重测
                                 AlertHandlingInfoDao.defaultDao().deleteByAlertId(alertId);
@@ -522,7 +522,7 @@ public class AlertUtils {
                         int alertId = al.getID();
                         if (curHandlingAlertId >= 0) {
                             AlertHandlingInfoDao.defaultDao().insertIfNotExist(alertId,
-                                    alertId == curHandlingAlertId ? handling : null, handlingTime,
+                                    alertId == curHandlingAlertId ? handling : "", handlingTime,
                                             AppCRTBApplication.getInstance().mUserName,
                                     ALERT_STATUS_HANDLED, 1/* true */);
                         } else if (al.getUploadStatus() != 2) {
@@ -599,7 +599,7 @@ public class AlertUtils {
                         int alertId = al.getID();
                         if (curHandlingAlertId >= 0) {
                             AlertHandlingInfoDao.defaultDao().insertIfNotExist(alertId,
-                                    alertId == curHandlingAlertId ? handling : null, handlingTime,
+                                    alertId == curHandlingAlertId ? handling : "", handlingTime,
                                             AppCRTBApplication.getInstance().mUserName,
                                     ALERT_STATUS_HANDLED, 1/* true */);
                         } else if (al.getUploadStatus() != 2) {
@@ -1352,8 +1352,8 @@ public class AlertUtils {
                                     AlertHandlingInfoDao.defaultDao().deleteByAlertId(curAlertId);
                                     AlertListDao.defaultDao().delete(alert);
                                 } else {
-                                    String handlingRemark = null;
-                                    if (alertId >= 0 && alertId == curAlertId) {
+                                    String handlingRemark = "";
+                                    if (alertId >= 0 /*&& alertId == curAlertId*/) {
                                         handlingRemark = handling;
                                     }
                                     AlertHandlingInfoDao.defaultDao()
