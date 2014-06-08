@@ -44,11 +44,11 @@ public class WarningActivity extends Activity {
     private RelativeLayout warningMenu;
     private RelativeLayout mHandleCompleteView;
     private RadioGroup mDealWayRadios;
-    private RadioButton mDealWayBtnDiscard;
-    private RadioButton mDealWayBtnAsFirst;
+//    private RadioButton mDealWayBtnDiscard;
+//    private RadioButton mDealWayBtnAsFirst;
     private RadioButton mDealWayBtnCorrection;
     private RadioButton mDealWayBtnRebury;
-    private RadioButton mDealWayBtnNormal;
+//    private RadioButton mDealWayBtnNormal;
 
     private RadioButton[] mRadioBtns;
 
@@ -60,7 +60,7 @@ public class WarningActivity extends Activity {
     private TextView warningSignalTV, warningPointNumTV, warningStateTV,
             warningValueTV, warningDateTV, warningMessageTV, warningDealWayTV,
             oldDateMileageTV, oldDateListNumTV, oldDatePointTV;
-    private Button normalCalBtn, discardBtn, asFirstLineBtn, correctionBtn, reburyBtn, handlingDetailBtn, completeOkBtn,completeCancelBtn;
+    private Button /*normalCalBtn, discardBtn, asFirstLineBtn,*/ correctionBtn, reburyBtn, handlingDetailBtn, completeOkBtn,completeCancelBtn;
     private View oldChooseView;
     private int clickedItem;
     private int handlingStep;
@@ -106,12 +106,12 @@ public class WarningActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_warning);
         //rela = (LinearLayout) findViewById(R.id.rela);
-        normalCalBtn = (Button) findViewById(R.id.normal);
-        setBtnClickListener(normalCalBtn);
-        discardBtn = (Button) findViewById(R.id.discard_btn);
-        setBtnClickListener(discardBtn);
-        asFirstLineBtn = (Button) findViewById(R.id.as_first_line);
-        setBtnClickListener(asFirstLineBtn);
+//        normalCalBtn = (Button) findViewById(R.id.normal);
+//        setBtnClickListener(normalCalBtn);
+//        discardBtn = (Button) findViewById(R.id.discard_btn);
+//        setBtnClickListener(discardBtn);
+//        asFirstLineBtn = (Button) findViewById(R.id.as_first_line);
+//        setBtnClickListener(asFirstLineBtn);
         correctionBtn = (Button) findViewById(R.id.correction);
         setBtnClickListener(correctionBtn);
         reburyBtn = (Button) findViewById(R.id.rebury);
@@ -143,7 +143,7 @@ public class WarningActivity extends Activity {
             }
         });
 
-        mRadioBtns = new RadioButton[]{mDealWayBtnNormal, mDealWayBtnDiscard, mDealWayBtnAsFirst, mDealWayBtnCorrection, mDealWayBtnRebury};
+        mRadioBtns = new RadioButton[]{/*mDealWayBtnNormal, mDealWayBtnDiscard, mDealWayBtnAsFirst, */mDealWayBtnCorrection, mDealWayBtnRebury};
         mWarningRemarkView = (EditText) mHandleCompleteView.findViewById(R.id.warning_remark);
 
         mCorrectionUnitView = (TextView) mHandleCompleteView.findViewById(R.id.correction_unit);
@@ -240,9 +240,9 @@ public class WarningActivity extends Activity {
 //                            break;
 //                    }
 //                    break;
-                case R.id.normal:
-                case R.id.discard_btn:
-                case R.id.as_first_line:
+//                case R.id.normal:
+//                case R.id.discard_btn:
+//                case R.id.as_first_line:
                 case R.id.correction:
                 case R.id.rebury:
                     switch (handlingStep) {
@@ -284,18 +284,18 @@ public class WarningActivity extends Activity {
                                     int raidoId = 0;
                                     String remark = "";
                                     switch (view.getId()) {
-                                        case R.id.normal:
-                                            raidoId = mDealWayBtnNormal.getId();
-                                            remark = getString(R.string.deal_way_normal);
-                                            break;
-                                        case R.id.discard_btn:
-                                            raidoId = mDealWayBtnDiscard.getId();
-                                            remark = getString(R.string.deal_way_void);
-                                            break;
-                                        case R.id.as_first_line:
-                                            raidoId = mDealWayBtnAsFirst.getId();
-                                            remark = getString(R.string.deal_way_first);
-                                            break;
+//                                        case R.id.normal:
+//                                            raidoId = mDealWayBtnNormal.getId();
+//                                            remark = getString(R.string.deal_way_normal);
+//                                            break;
+//                                        case R.id.discard_btn:
+//                                            raidoId = mDealWayBtnDiscard.getId();
+//                                            remark = getString(R.string.deal_way_void);
+//                                            break;
+//                                        case R.id.as_first_line:
+//                                            raidoId = mDealWayBtnAsFirst.getId();
+//                                            remark = getString(R.string.deal_way_first);
+//                                            break;
                                         case R.id.correction:
                                             raidoId = mDealWayBtnCorrection.getId();
                                             remark = getString(R.string.remark_correction, 0f);
@@ -340,10 +340,11 @@ public class WarningActivity extends Activity {
                     break;
                 case R.id.complete_ok:
                     //alerts.get(clickedItem).setAlertStatusMsg(sss[2]);
-                    if (mCheckedRaidoId == mDealWayBtnDiscard.getId()
-                            || mCheckedRaidoId == mDealWayBtnAsFirst.getId()
-                            || mCheckedRaidoId == mDealWayBtnCorrection.getId()
-                            || mCheckedRaidoId == mDealWayBtnNormal.getId()
+                    if (
+//                            mCheckedRaidoId == mDealWayBtnDiscard.getId()
+//                            || mCheckedRaidoId == mDealWayBtnAsFirst.getId() ||
+                             mCheckedRaidoId == mDealWayBtnCorrection.getId()
+//                            || mCheckedRaidoId == mDealWayBtnNormal.getId()
                             || mCheckedRaidoId == mDealWayBtnRebury.getId()) {
                         handleAlert();
                         handlingStep = 2;
@@ -446,19 +447,19 @@ public class WarningActivity extends Activity {
 
         int alertId = ai.getAlertId();
         int dataStatus = AlertUtils.POINT_DATASTATUS_NONE;
-        if (mCheckedRaidoId == mDealWayBtnDiscard.getId()) {
+       /* if (mCheckedRaidoId == mDealWayBtnDiscard.getId()) {
             Log.d(TAG, "Handling way: discard data");
             dataStatus = AlertUtils.POINT_DATASTATUS_DISCARD;
         } else if (mCheckedRaidoId == mDealWayBtnAsFirst.getId()) {
             Log.d(TAG, "Handling way: As First line");
             dataStatus = AlertUtils.POINT_DATASTATUS_AS_FIRSTLINE;
-        } else if (mCheckedRaidoId == mDealWayBtnCorrection.getId()) {
+        } else */if (mCheckedRaidoId == mDealWayBtnCorrection.getId()) {
             Log.d(TAG, "Handling way: Correction");
             dataStatus = AlertUtils.POINT_DATASTATUS_CORRECTION;
-        } else if (mCheckedRaidoId == mDealWayBtnNormal.getId()) {
+        }/* else if (mCheckedRaidoId == mDealWayBtnNormal.getId()) {
             Log.d(TAG, "Handling way: Normal");
             dataStatus = AlertUtils.POINT_DATASTATUS_NORMAL;
-        } else if (mCheckedRaidoId == mDealWayBtnRebury.getId()) {
+        } */else if (mCheckedRaidoId == mDealWayBtnRebury.getId()) {
             Log.d(TAG, "Handling way: Rebury");
             isRebury = true;
             dataStatus = AlertUtils.POINT_DATASTATUS_CORRECTION;

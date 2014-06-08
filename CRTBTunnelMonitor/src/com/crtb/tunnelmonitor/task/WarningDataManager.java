@@ -153,16 +153,17 @@ public class WarningDataManager {
 		}
 		AlertInfo sulvalert = warningData.getSulvAlert();
     	parameter.setTransformSpeed(sulvalert != null ? (float)sulvalert.getUValue() : 0.5f);
-    	String originalID = alertInfo.getOriginalDataID();
-    	List<Integer> ids = new ArrayList<Integer>();
-        if (originalID.contains(AlertUtils.ORIGINAL_ID_DIVIDER)) {
-            String[] idStrs = originalID.split(AlertUtils.ORIGINAL_ID_DIVIDER);
-            for (String idStr : idStrs) {
-                ids.add(Integer.valueOf(idStr));
-            }
-        } else {
-            ids.add(Integer.valueOf(originalID));
-        }
+//    	String originalID = alertInfo.getOriginalDataID();
+//    	List<Integer> ids = new ArrayList<Integer>();
+//        if (originalID.contains(AlertUtils.ORIGINAL_ID_DIVIDER)) {
+//            String[] idStrs = originalID.split(AlertUtils.ORIGINAL_ID_DIVIDER);
+//            for (String idStr : idStrs) {
+//                ids.add(Integer.valueOf(idStr));
+//            }
+//        } else {
+//            ids.add(Integer.valueOf(originalID));
+//        }
+
 //        float pointValue = 0.0f;
 //        TunnelSettlementTotalDataDao dao = TunnelSettlementTotalDataDao.defaultDao();
 //        if (ids.size() == 1) {
@@ -239,6 +240,13 @@ public class WarningDataManager {
 
         public void setSulvAlert(AlertInfo sulvAlert) {
             mSulvAlert = sulvAlert;
+        }
+
+        public MergedAlert getMergedAlert() {
+            MergedAlert ma = new MergedAlert();
+            ma.setLeijiAlert(mLeijiAlert);
+            ma.setSulvAlert(mSulvAlert);
+            return ma;
         }
 
         public String getPointCode() {

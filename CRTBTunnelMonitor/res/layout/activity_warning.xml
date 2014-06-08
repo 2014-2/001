@@ -57,7 +57,7 @@
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:layout_alignParentBottom="true">
-        <!-- 暂时把这几个设为gone -->
+        <!-- 暂时把这几个设为gone
         <Button
                 android:id="@+id/normal"
                 android:layout_width="120dp"
@@ -116,12 +116,13 @@
                 android:layout_width="120dp"
                 android:layout_height="1dp"
                 android:visibility="gone"/>
+                 -->
         <Button
                 android:id="@+id/correction"
                 android:layout_width="120dp"
                 android:layout_height="50dp"
-                android:layout_alignLeft="@id/as_first_line"
-                android:layout_below="@id/line3"
+                android:layout_alignLeft="@+id/rebury"
+                android:layout_above="@+id/line4"
                 android:background="#b0000000"
                 android:textSize="16sp"
                 android:text="@string/add_correction"
@@ -130,16 +131,15 @@
         <View
                 android:id="@+id/line4"
                 android:background="#e0000000"
-                android:layout_alignLeft="@id/as_first_line"
-                android:layout_below="@id/correction"
+                android:layout_alignLeft="@+id/rebury"
+                android:layout_above="@+id/rebury"
                 android:layout_width="120dp"
                 android:layout_height="1dp"/>
         <Button
                 android:id="@+id/rebury"
                 android:layout_width="120dp"
                 android:layout_height="50dp"
-                android:layout_alignLeft="@id/as_first_line"
-                android:layout_below="@id/line4"
+                android:layout_centerInParent="true"
                 android:background="#b0000000"
                 android:textSize="16sp"
                 android:text="@string/rebury"
@@ -148,7 +148,7 @@
         <View
                 android:id="@+id/line5"
                 android:background="#e0000000"
-                android:layout_alignLeft="@id/as_first_line"
+                android:layout_alignLeft="@id/rebury"
                 android:layout_below="@id/rebury"
                 android:layout_width="120dp"
                 android:layout_height="1dp"/>
@@ -156,7 +156,7 @@
                 android:id="@+id/handling_detail"
                 android:layout_width="120dp"
                 android:layout_height="50dp"
-                android:layout_alignLeft="@id/as_first_line"
+                android:layout_alignLeft="@id/rebury"
                 android:layout_below="@id/line5"
                 android:background="#b0000000"
                 android:textSize="16sp"
