@@ -118,7 +118,7 @@ public class StationActivity extends BaseActivity {
         TSCommandType tsCmdType = TSCommandType.NoneTS;
         TotalStationType t = null;
         try {
-            t = TotalStationType.parser(tsInfo.getTotalstationType());
+            t = Enum.valueOf(TotalStationType.class, tsInfo.getTotalstationType());
         } catch (Exception e) {
             e.printStackTrace();
         }

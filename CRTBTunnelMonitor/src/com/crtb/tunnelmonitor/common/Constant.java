@@ -51,48 +51,7 @@ public class Constant {
 
         public String getDesc() { 
                 return desc; 
-        }
-
-        // Add by Carl
-        public static TotalStationType parser(String name){
-            
-            if(name == null){
-                return Leica ;
-            }
-            
-            if(name.equals(Leica.getDesc())){
-                return Leica ;
-            } else if(name.equals(Trimble.getDesc())){
-                return Trimble ;
-            } else if(name.equals(LeicaTPS.getDesc())){
-                return LeicaTPS ;
-            } else if(name.equals(Topcon.getDesc())){
-                return Topcon ;
-            } else if(name.equals(Pentax.getDesc())){
-                return Pentax ;
-            } else if(name.equals(Sokkia.getDesc())){
-                return Sokkia ;
-            } else if(name.equals(Nikon.getDesc())){
-                return Nikon ;
-            } else if(name.equals(South.getDesc())){
-                return South ;
-            } else if(name.equals(South302.getDesc())){
-                return South302 ;
-            } else if(name.equals(KTS.getDesc())){
-                return KTS ;
-            } else if(name.equals(SanDing.getDesc())){
-                return SanDing ;
-            } else if(name.equals(RuiDe.getDesc())){
-                return RuiDe ;
-            } else if(name.equals(Foif.getDesc())){
-                return Foif ;
-            } else if(name.equals(GeMax.getDesc())){
-                return GeMax ;
-            } else if(name.equals(Kovan.getDesc())){
-                return Kovan ;
-            } 
-            return Leica ;
-        }
+        }	
     }
 	public static final CharSequence ControlPointsItems[] = { "蓝牙连接", "串口连接", "断开连接"};
 	/*工作面行点击菜单项选择name和value*/
