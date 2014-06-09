@@ -396,9 +396,16 @@ public class AlertUtils {
 //                                int chainageId1 = Integer.valueOf(al.getCrossSectionID());
 //                                String pntType1 = al.getPntType();
                                 String duePerson = AppCRTBApplication.getInstance().mUserName;
-                                AlertHandlingInfoDao.defaultDao().insertIfNotExist(alertId,
+                                AlertHandlingInfoDao.defaultDao().insertItem(alertId,
                                         alertId == curHandlingAlertId ? handling : "",
                                         handlingTime, duePerson, ALERT_STATUS_HANDLED, 1/* true */);
+                                if (type == 1) {
+                                    alertId = AlertListDao.defaultDao().insertOrUpdate((TunnelSettlementTotalData) point, 3/* default */,
+                                            uType, subsidenceSpeed, SPEED_THRESHOLD, originalDataID);
+                                } else {
+                                    alertId = AlertListDao.defaultDao().insertOrUpdate((SubsidenceTotalData) point, 3/* default */,
+                                            uType, subsidenceSpeed, SPEED_THRESHOLD, originalDataID);
+                                }
                             } else if (al.getUploadStatus() != 2) {//重测
                                 AlertHandlingInfoDao.defaultDao().deleteByAlertId(alertId);
                                 AlertListDao.defaultDao().deleteById(alertId);
@@ -528,10 +535,12 @@ public class AlertUtils {
                     if (al != null) {
                         int alertId = al.getID();
                         if (curHandlingAlertId >= 0) {
-                            AlertHandlingInfoDao.defaultDao().insertIfNotExist(alertId,
+                            AlertHandlingInfoDao.defaultDao().insertItem(alertId,
                                     alertId == curHandlingAlertId ? handling : "", handlingTime,
                                             AppCRTBApplication.getInstance().mUserName,
                                     ALERT_STATUS_HANDLED, 1/* true */);
+                            AlertListDao.defaultDao().insertOrUpdate(s_1, 3/* default */,
+                                    uType, convergence, ACCUMULATIVE_THRESHOLD, originalDataID);
                         } else if (al.getUploadStatus() != 2) {
                             AlertHandlingInfoDao.defaultDao().deleteByAlertId(alertId);
                             AlertListDao.defaultDao().deleteById(alertId);
@@ -1493,5 +1502,84 @@ public class AlertUtils {
         int sulvType = -1;
         double leijiValue = -1;
         double sulvValue = -1;
+    }
+
+    public static double getLineConvergenceExceedTime(TunnelSettlementTotalData s_1,
+            TunnelSettlementTotalData s_2) {
+        double ret = 0;
+        if (s_1 == null || s_2 == null) {
+            return ret;
+        }
+
+        Date s_1ThisTime = s_1.getSurveyTime();
+        Date s_2ThisTime = s_2.getSurveyTime();
+        double thisTime = -1;
+        if (s_1ThisTime != null && s_2ThisTime != null) {
+
+            Date thisTimeDate = s_1ThisTime;
+            thisTime = s_1ThisTime.getTime();
+            if (s_2ThisTime.getTime() > thisTime) {
+                thisTime = s_2ThisTime.getTime();
+                thisTimeDate = s_2ThisTime;
+            }
+        }
+
+        String chainageId = s_1.getChainageId();
+
+        
+
+        List<TunnelSettlementTotalData> s_1InfoList = TunnelSettlementTotalDataDao.defaultDao()
+                .queryInfoBeforeMEASNo(chainageId, s_1.getPntType(), s_1.getMEASNo());
+        if (s_1InfoList != null && s_1InfoList.size() > 0) {
+
+            int s = s_1InfoList.size();
+            String s_2pntType = s_2.getPntType();
+
+            TunnelSettlementTotalData s_1First = null;
+            TunnelSettlementTotalData s_2First = null;
+            for (int i = 0; i < s; i++) {
+                s_1First = s_1InfoList.get(i);
+                s_2First = TunnelSettlementTotalDataDao.defaultDao()
+                        .queryOppositePointOfALine(s_1First, s_2pntType);
+                if (s_1First != null && s_2First != null) {
+                    break;
+                }
+            }
+
+            TunnelSettlementTotalData s_1Last = null;
+            TunnelSettlementTotalData s_2Last = null;
+            for (int i = 1; i <= s; i++) {
+                s_1Last = s_1InfoList.get(s - i);
+                s_2Last = TunnelSettlementTotalDataDao.defaultDao()
+                        .queryOppositePointOfALine(s_1Last, s_2pntType);
+                if (s_1Last != null && s_2Last != null) {
+                    break;
+                }
+            }
+            if (s_1Last != null && s_2Last != null && thisTime != -1) {
+//                deltaLenth = Math.abs(deltaLenth);
+                Date s_1LastTime = s_1Last.getSurveyTime();
+                Date s_2LastTime = s_2Last.getSurveyTime();
+                if (s_1LastTime == null || s_2LastTime == null) {
+                    return ret;
+                }
+                double lastTime = s_1LastTime.getTime();
+                if (s_2LastTime.getTime() > lastTime) {
+                    lastTime = s_2LastTime.getTime();
+                }
+                double deltaTime = Math.abs((thisTime - lastTime));
+                if (deltaTime < Time.ONE_HOUR) {
+                    deltaTime = Time.ONE_HOUR;//ONE HOUR at least to avoid infinity
+                }
+                double deltaTInDay = (deltaTime / Time.DAY_MILLISECEND_RATIO);
+                double h = 1d/24d;
+                if (deltaTInDay < h) {
+                    deltaTInDay = h;
+                }
+                return deltaTInDay;
+            }
+        }
+
+        return ret;
     }
 }

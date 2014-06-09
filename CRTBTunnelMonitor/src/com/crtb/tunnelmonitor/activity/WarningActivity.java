@@ -3,6 +3,7 @@ package com.crtb.tunnelmonitor.activity;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Random;
 
 import org.zw.android.framework.util.DateUtils;
@@ -15,6 +16,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.text.Editable;
 import android.text.Html;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
@@ -26,12 +28,17 @@ import com.crtb.tunnelmonitor.AppCRTBApplication;
 import com.crtb.tunnelmonitor.adapter.AlertListAdapter;
 import com.crtb.tunnelmonitor.dao.impl.v2.AlertHandlingInfoDao;
 import com.crtb.tunnelmonitor.dao.impl.v2.RawSheetIndexDao;
+import com.crtb.tunnelmonitor.dao.impl.v2.SubsidenceTotalDataDao;
+import com.crtb.tunnelmonitor.dao.impl.v2.TunnelSettlementTotalDataDao;
 import com.crtb.tunnelmonitor.entity.AlertInfo;
 import com.crtb.tunnelmonitor.entity.CrtbUser;
 import com.crtb.tunnelmonitor.entity.RawSheetIndex;
+import com.crtb.tunnelmonitor.entity.SubsidenceTotalData;
+import com.crtb.tunnelmonitor.entity.TunnelSettlementTotalData;
 import com.crtb.tunnelmonitor.utils.AlertManager;
 import com.crtb.tunnelmonitor.utils.AlertUtils;
 import com.crtb.tunnelmonitor.utils.CrtbUtils;
+import com.crtb.tunnelmonitor.utils.Time;
 
 public class WarningActivity extends Activity {
 
@@ -169,15 +176,22 @@ public class WarningActivity extends Activity {
                 }
                 AlertInfo alert = alerts.get(clickedItem);
                 if (alert != null) {
+                    boolean isSV = alert.getUType() == AlertUtils.SHOULIAN_SULV_EXCEEDING || 
+                            alert.getUType() == AlertUtils.GONGDINGI_XIACHEN_SULV_EXCEEDING ||
+                            alert.getUType() == AlertUtils.DIBIAO_XIACHEN_SULV_EXCEEDING;
+                   
                     Editable e = mCorrectionView.getText();
-                    float correction = 0;
+                    double correction = (double) 0;
                     if (e != null && e.length() > 0) {
                         String cstr = e.toString();
                         if (cstr != null && !cstr.trim().endsWith("-") && !cstr.equals(".")) {
-                            correction = Float.valueOf(cstr);
+                            correction = Double.valueOf(cstr);
                         }
                     }
                     if (warningValueTV != null) {
+                        if (isSV) {
+                            correction = correction/getDeltaTime();
+                        }
                         warningValueTV.setText("超限值: "
                                 + String.format("%1$.1f",
                                         CrtbUtils.formatDouble(alert.getUValue() + correction, 1))
@@ -260,7 +274,6 @@ public class WarningActivity extends Activity {
                                         }
                                         return;
                                     }
-
                                     //FIXME: TIM 
                                    // RawSheetIndex sheet = RawSheetIndexDao.defaultDao().queryOneById(Integer.valueOf(alert.getSheetId()));
                                     RawSheetIndex sheet = RawSheetIndexDao.defaultDao().queryOneByGuid(alert.getSheetId());
@@ -533,5 +546,88 @@ public class WarningActivity extends Activity {
             }
         }
         
+    }
+
+    double getDeltaTime() {
+        AlertInfo currentAlert = alerts.get(clickedItem);;
+        Date thisTime = null;
+        List pastInfoList = null;
+        int type = 0;
+        if (currentAlert == null) {
+            return 1;
+        }
+        String originalID = currentAlert.getOriginalDataID();
+        if (!TextUtils.isEmpty(originalID)) {
+            ArrayList<String> guids = new ArrayList<String>();
+            if (originalID.contains(AlertUtils.ORIGINAL_ID_DIVIDER)) {
+                String[] idStrs = originalID.split(AlertUtils.ORIGINAL_ID_DIVIDER);
+                for (String idStr : idStrs) {
+                    guids.add(idStr);
+                }
+            } else {
+                guids.add(originalID);
+            }
+
+            if (guids.size() == 1) {//测点
+                String guid = guids.get(0);
+                int measNo = -1;
+                if (currentAlert.getPntType().contains("A")) {//隧道内断面
+                    type = 1;
+                    TunnelSettlementTotalData tPoint = TunnelSettlementTotalDataDao.defaultDao().queryOneByGuid(guid);
+                    if (tPoint != null) {
+                        pastInfoList = TunnelSettlementTotalDataDao.defaultDao().queryInfoBeforeMEASNo(
+                                tPoint.getChainageId(), tPoint.getPntType(), tPoint.getMEASNo());
+                        thisTime = tPoint.getSurveyTime();
+                    }
+                } else {
+                    // Subsidence
+                    type = 2;
+                    SubsidenceTotalData sPoint = SubsidenceTotalDataDao.defaultDao().queryOneByGuid(guid);
+                    if (sPoint != null) {
+                        pastInfoList = SubsidenceTotalDataDao.defaultDao().queryInfoBeforeMEASNo(
+                                sPoint.getChainageId(), sPoint.getPntType(), sPoint.getMEASNo());
+                        thisTime = sPoint.getSurveyTime();
+                    }
+                }
+            } else {
+                TunnelSettlementTotalData s_1 = TunnelSettlementTotalDataDao.defaultDao()
+                        .queryOneByGuid(guids.get(0));
+                String pnt1Type = s_1.getPntType();
+                String oppositePntType = pnt1Type.substring(0, pnt1Type.length() - 1) + "2";
+                TunnelSettlementTotalData s_2 = TunnelSettlementTotalDataDao.defaultDao()
+                        .queryOppositePointOfALine(s_1, oppositePntType);
+                return AlertUtils.getLineConvergenceExceedTime(s_1, s_2);
+            }
+        } 
+
+        if (pastInfoList != null) {
+            Object lastInfo = pastInfoList.get(pastInfoList.size() - 1);
+            String[] lastCoords = null;
+            Date lastTime = null;
+            if (type == 1) {
+                lastCoords = ((TunnelSettlementTotalData) lastInfo).getCoordinate().split(",");
+                lastTime = ((TunnelSettlementTotalData) lastInfo).getSurveyTime();
+//            thisDataCorrection = ((TunnelSettlementTotalData) lastInfo).getDataCorrection();
+            } else if (type == 2) {
+                lastCoords = ((SubsidenceTotalData) lastInfo).getCoordinate().split(",");
+                lastTime = ((SubsidenceTotalData) lastInfo).getSurveyTime();
+//            thisDataCorrection = ((SubsidenceTotalData) lastInfo).getDataCorrection();
+            }
+            
+            if (thisTime != null && lastTime != null) {
+                long deltaT = Math.abs(thisTime.getTime() - lastTime.getTime());
+                Log.d(TAG, "delta t: " + deltaT + " ms");
+                if (deltaT < Time.ONE_HOUR) {
+                    deltaT = Time.ONE_HOUR;//ONE HOUR at least to avoid infinity
+                }
+                double deltaTInDay = ((double)deltaT / Time.DAY_MILLISECEND_RATIO);
+                double h = 1d/24d;
+                if (deltaTInDay == 0) {
+                    deltaTInDay = h;
+                }
+                return deltaTInDay;
+            }
+        }
+        return 1;
     }
 }
