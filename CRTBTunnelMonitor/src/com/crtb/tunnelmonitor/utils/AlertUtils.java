@@ -303,9 +303,16 @@ public class AlertUtils {
 //                                int chainageId1 = Integer.valueOf(al.getCrossSectionID());
 //                                String pntType1 = al.getPntType();
                                 String duePerson = AppCRTBApplication.getInstance().mUserName;
-                                AlertHandlingInfoDao.defaultDao().insertIfNotExist(alertId,
+                                AlertHandlingInfoDao.defaultDao().insertItem(alertId,
                                         alertId == curHandlingAlertId ? handling : "",
                                         handlingTime, duePerson, ALERT_STATUS_HANDLED, 1/* true */);
+                                if (type == 1) {
+                                    AlertListDao.defaultDao().insertOrUpdate((TunnelSettlementTotalData) point, 3/* default */,
+                                            uType, accumulativeSubsidence, ACCUMULATIVE_THRESHOLD, originalDataID);
+                                } else {
+                                    AlertListDao.defaultDao().insertOrUpdate((SubsidenceTotalData) point, 3/* default */,
+                                            uType, accumulativeSubsidence, ACCUMULATIVE_THRESHOLD, originalDataID);
+                                }
                             } else if (al.getUploadStatus() != 2) {
                                 AlertHandlingInfoDao.defaultDao().deleteByAlertId(alertId);
                                 AlertListDao.defaultDao().deleteById(alertId);
