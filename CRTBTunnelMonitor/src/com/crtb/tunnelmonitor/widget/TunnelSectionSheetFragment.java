@@ -30,7 +30,7 @@ import com.crtb.tunnelmonitor.utils.CrtbUtils;
 @SuppressLint("ValidFragment")
 public class TunnelSectionSheetFragment extends Fragment {
     private ListView mSheetList;
-    private SheetAdapter mAdapter;
+    private SheetAdapter mAdapter = new SheetAdapter();
     private Handler mHandler = new Handler();
 
     public TunnelSectionSheetFragment() {
@@ -60,7 +60,6 @@ public class TunnelSectionSheetFragment extends Fragment {
 
     private void init() {
         mSheetList = (ListView)getView().findViewById(R.id.section_list);
-        mAdapter = new SheetAdapter();
         mSheetList.setAdapter(mAdapter);
         mSheetList.setOnItemClickListener(new OnItemClickListener() {
             @Override
