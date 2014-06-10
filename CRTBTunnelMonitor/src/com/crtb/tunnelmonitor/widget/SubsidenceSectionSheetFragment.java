@@ -218,7 +218,7 @@ public class SubsidenceSectionSheetFragment extends Fragment {
 
 		@Override
 		protected List<RawSheetIndex> doInBackground(Void... params) {
-			return RawSheetIndexDao.defaultDao().queryAllSubsidenceSectionRawSheetIndex();
+			return RawSheetIndexDao.defaultDao().queryAllSubsidenceSectionRawSheetIndexASC();
 		}
 		
 		@Override

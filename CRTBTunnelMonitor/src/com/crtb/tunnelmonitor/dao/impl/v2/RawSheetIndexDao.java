@@ -114,7 +114,22 @@ public class RawSheetIndexDao extends AbstractDao<RawSheetIndex> {
 		
 		return mDatabase.queryObjects(sql, new String[]{String.valueOf(RawSheetIndex.CROSS_SECTION_TYPE_TUNNEL)}, RawSheetIndex.class);
 	}
-	
+
+	// 隧道内记录单
+	public List<RawSheetIndex> queryTunnelSectionRawSheetIndexASC() {
+
+		final IAccessDatabase mDatabase = getCurrentDb();
+
+		if (mDatabase == null) {
+			return null;
+		}
+
+		String sql = "select * from RawSheetIndex where CrossSectionType = ? ORDER BY CreateTime ASC";
+
+		return mDatabase.queryObjects(sql, new String[] { String.valueOf(RawSheetIndex.CROSS_SECTION_TYPE_TUNNEL) },
+				RawSheetIndex.class);
+	}
+
 	// 地表下沉断面记录单
 	public List<RawSheetIndex> queryAllSubsidenceSectionRawSheetIndex() {
 		
@@ -127,6 +142,21 @@ public class RawSheetIndexDao extends AbstractDao<RawSheetIndex> {
 		String sql = "select * from RawSheetIndex where CrossSectionType = ? ORDER BY CreateTime DESC";
 		
 		return mDatabase.queryObjects(sql, new String[]{String.valueOf(RawSheetIndex.CROSS_SECTION_TYPE_SUBSIDENCES)}, RawSheetIndex.class);
+	}
+	
+	// 地表下沉断面记录单
+	public List<RawSheetIndex> queryAllSubsidenceSectionRawSheetIndexASC() {
+
+		final IAccessDatabase mDatabase = getCurrentDb();
+
+		if (mDatabase == null) {
+			return null;
+		}
+
+		String sql = "select * from RawSheetIndex where CrossSectionType = ? ORDER BY CreateTime ASC";
+
+		return mDatabase.queryObjects(sql,
+				new String[] { String.valueOf(RawSheetIndex.CROSS_SECTION_TYPE_SUBSIDENCES) }, RawSheetIndex.class);
 	}
 	
 	// 是否最新记录单
