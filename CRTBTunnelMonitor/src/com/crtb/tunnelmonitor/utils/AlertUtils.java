@@ -304,7 +304,7 @@ public class AlertUtils {
 //                                String pntType1 = al.getPntType();
                                 String duePerson = AppCRTBApplication.getInstance().mUserName;
                                 AlertHandlingInfoDao.defaultDao().insertItem(alertId,
-                                        alertId == curHandlingAlertId ? handling : "",
+                                        handling,
                                         handlingTime, duePerson, ALERT_STATUS_HANDLED, 1/* true */);
                                 if (type == 1) {
                                     AlertListDao.defaultDao().insertOrUpdate((TunnelSettlementTotalData) point, 3/* default */,
@@ -397,7 +397,7 @@ public class AlertUtils {
 //                                String pntType1 = al.getPntType();
                                 String duePerson = AppCRTBApplication.getInstance().mUserName;
                                 AlertHandlingInfoDao.defaultDao().insertItem(alertId,
-                                        alertId == curHandlingAlertId ? handling : "",
+                                        handling,
                                         handlingTime, duePerson, ALERT_STATUS_HANDLED, 1/* true */);
                                 if (type == 1) {
                                     alertId = AlertListDao.defaultDao().insertOrUpdate((TunnelSettlementTotalData) point, 3/* default */,
@@ -536,7 +536,7 @@ public class AlertUtils {
                         int alertId = al.getID();
                         if (curHandlingAlertId >= 0) {
                             AlertHandlingInfoDao.defaultDao().insertItem(alertId,
-                                    alertId == curHandlingAlertId ? handling : "", handlingTime,
+                                     handling, handlingTime,
                                             AppCRTBApplication.getInstance().mUserName,
                                     ALERT_STATUS_HANDLED, 1/* true */);
                             AlertListDao.defaultDao().insertOrUpdate(s_1, 3/* default */,
@@ -614,10 +614,12 @@ public class AlertUtils {
                     if (al != null) {
                         int alertId = al.getID();
                         if (curHandlingAlertId >= 0) {
-                            AlertHandlingInfoDao.defaultDao().insertIfNotExist(alertId,
-                                    alertId == curHandlingAlertId ? handling : "", handlingTime,
+                            AlertHandlingInfoDao.defaultDao().insertItem(alertId,
+                                     handling, handlingTime,
                                             AppCRTBApplication.getInstance().mUserName,
                                     ALERT_STATUS_HANDLED, 1/* true */);
+                            AlertListDao.defaultDao().insertOrUpdate(s_1, 3/* default */, uType, shoulianSpeed,
+                                    SPEED_THRESHOLD, originalDataID);
                         } else if (al.getUploadStatus() != 2) {
                             AlertHandlingInfoDao.defaultDao().deleteByAlertId(alertId);
                             AlertListDao.defaultDao().deleteById(alertId);
