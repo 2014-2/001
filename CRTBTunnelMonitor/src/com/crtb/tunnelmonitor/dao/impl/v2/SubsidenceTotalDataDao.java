@@ -142,8 +142,12 @@ public class SubsidenceTotalDataDao extends AbstractDao<SubsidenceTotalData> {
         return mDatabase.queryObjects(sql, new String[] {String.valueOf(sheetId), String.valueOf(chainageId)}, SubsidenceTotalData.class);
     }
 
-    // 是否存在测量数据
- 	public boolean checkRawSheetIndexHasData(int sheetId) {
+    /**
+     * 是否存在测量数据 
+     * @param guid
+     * @return
+     */
+ 	public boolean checkRawSheetIndexHasData(String guid) {
  		
  		final IAccessDatabase mDatabase = getCurrentDb();
  		
@@ -152,7 +156,7 @@ public class SubsidenceTotalDataDao extends AbstractDao<SubsidenceTotalData> {
  		}
  		
  		String sql = "select * from SubsidenceTotalData where SheetId = ?";
- 		String[] args = SQLiteParamUtils.toParamemter(sheetId);
+ 		String[] args = SQLiteParamUtils.toParamemter(guid);
  		
  		List<SubsidenceTotalData> list = mDatabase.queryObjects(sql, args, SubsidenceTotalData.class) ;
  		

@@ -316,4 +316,17 @@ public class TunnelSettlementTotalDataDao extends AbstractDao<TunnelSettlementTo
 		return mDatabase.queryObjects(sql, SQLiteParamUtils.toParamemter(guid),TunnelSettlementTotalData.class);
 	}
 	
+	public List<TunnelSettlementTotalData> queryTunnelTotalDataSheet(String guid) {
+		
+		final IAccessDatabase mDatabase = getCurrentDb();
+		
+		if (mDatabase == null) {
+			return null;
+		}
+		
+		String sql = "select * from TunnelSettlementTotalData where SheetId = ? limit 0,1 ";
+		
+		return mDatabase.queryObjects(sql, SQLiteParamUtils.toParamemter(guid),TunnelSettlementTotalData.class);
+	}
+	
 }

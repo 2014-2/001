@@ -29,8 +29,11 @@ import android.widget.TextView;
 import com.crtb.tunnelmonitor.CommonObject;
 import com.crtb.tunnelmonitor.WorkFlowActivity;
 import com.crtb.tunnelmonitor.dao.impl.v2.RawSheetIndexDao;
+import com.crtb.tunnelmonitor.dao.impl.v2.SubsidenceTotalDataDao;
+import com.crtb.tunnelmonitor.dao.impl.v2.TunnelSettlementTotalDataDao;
 import com.crtb.tunnelmonitor.entity.MenuSystemItem;
 import com.crtb.tunnelmonitor.entity.RawSheetIndex;
+import com.crtb.tunnelmonitor.entity.TunnelSettlementTotalData;
 import com.crtb.tunnelmonitor.mydefine.CrtbDialogDelete;
 import com.crtb.tunnelmonitor.mydefine.CrtbDialogDelete.IButtonOnClick;
 import com.crtb.tunnelmonitor.mydefine.CrtbDialogHint;
@@ -229,7 +232,17 @@ public class RecordActivity extends WorkFlowActivity implements OnPageChangeList
 					// 是否最后一条数据
 					if(mTunnelSectionList.isLastRawSheetIndex(info)){
 						
-						CrtbDialogDelete delete = new CrtbDialogDelete(RecordActivity.this,R.drawable.ic_warnning,"执行该操作将删除记录单的全部数据,不可恢复!");
+						// 是否存在测量数据
+						List<TunnelSettlementTotalData> list = TunnelSettlementTotalDataDao.defaultDao().queryTunnelTotalDataSheet(info.getGuid());
+						
+						if(list != null && list.size() > 0){
+							CrtbDialogHint hint = new CrtbDialogHint(RecordActivity.this, R.drawable.ic_warnning, "该记录单存在测量数据,不可删除!");
+							hint.show() ;
+							return ;
+						}
+						
+						// 提示删除
+						CrtbDialogDelete delete = new CrtbDialogDelete(RecordActivity.this,R.drawable.ic_warnning,"执行该操作将删除记录单的数据,不可恢复!");
 						
 						delete.setButtonClick(new IButtonOnClick() {
 							
@@ -261,6 +274,13 @@ public class RecordActivity extends WorkFlowActivity implements OnPageChangeList
 					
 					// 是否最后一条数据
 					if(mSubsidenceSectionList.isLastRawSheetIndex(info)){
+						
+						// 是否存在测量数据
+						if(SubsidenceTotalDataDao.defaultDao().checkRawSheetIndexHasData(info.getGuid())){
+							CrtbDialogHint hint = new CrtbDialogHint(RecordActivity.this, R.drawable.ic_warnning, "该记录单存在测量数据,不可删除!");
+							hint.show() ;
+							return ;
+						}
 						
 						CrtbDialogDelete delete = new CrtbDialogDelete(RecordActivity.this,R.drawable.ic_warnning,"执行该操作将删除记录单的全部数据,不可恢复!");
 						
