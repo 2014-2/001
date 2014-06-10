@@ -121,8 +121,8 @@ public class WarningActivity extends Activity {
 //        setBtnClickListener(asFirstLineBtn);
         correctionBtn = (Button) findViewById(R.id.correction);
         setBtnClickListener(correctionBtn);
-        reburyBtn = (Button) findViewById(R.id.rebury);
-        setBtnClickListener(reburyBtn);
+//        reburyBtn = (Button) findViewById(R.id.rebury);
+//        setBtnClickListener(reburyBtn);
         handlingDetailBtn = (Button) findViewById(R.id.handling_detail);
         setBtnClickListener(handlingDetailBtn);
 
@@ -259,7 +259,7 @@ public class WarningActivity extends Activity {
 //                case R.id.discard_btn:
 //                case R.id.as_first_line:
                 case R.id.correction:
-                case R.id.rebury:
+//                case R.id.rebury:
                     switch (handlingStep) {
                         case 0:
                         case 1:
@@ -314,10 +314,10 @@ public class WarningActivity extends Activity {
                                             raidoId = mDealWayBtnCorrection.getId();
                                             remark = getString(R.string.remark_correction, 0f);
                                             break;
-                                        case R.id.rebury:
-                                            raidoId = mDealWayBtnRebury.getId();
-                                            remark = getString(R.string.deal_way_rebury);
-                                            break;
+//                                        case R.id.rebury:
+//                                            raidoId = mDealWayBtnRebury.getId();
+//                                            remark = getString(R.string.deal_way_rebury);
+//                                            break;
                                     }
 
                                     if (raidoId != 0) {
