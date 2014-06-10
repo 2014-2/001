@@ -189,12 +189,13 @@ public class WarningActivity extends Activity {
                         }
                     }
                     if (warningValueTV != null) {
+                        double realCorrection = correction;
                         if (isSV) {
-                            correction = correction/getDeltaTime();
+                            realCorrection = correction/getDeltaTime();
                         }
                         warningValueTV.setText("超限值: "
                                 + String.format("%1$.1f",
-                                        CrtbUtils.formatDouble(alert.getUValue() + correction, 1))
+                                        CrtbUtils.formatDouble(alert.getUValue() + realCorrection, 1))
                                 + AlertUtils.getAlertValueUnit(alert.getUType()));
                     }
                     if (mWarningRemarkView != null) {
