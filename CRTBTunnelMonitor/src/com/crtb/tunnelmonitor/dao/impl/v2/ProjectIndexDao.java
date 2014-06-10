@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.zw.android.framework.IAccessDatabase;
-import org.zw.android.framework.impl.FrameworkFacade;
 
 import android.util.Log;
 
@@ -476,11 +475,12 @@ public final class ProjectIndexDao extends AbstractDao<ProjectIndex> {
 		}
 		
 		String proName	= bean.getProjectName() ;
+		String dbTemp	= getDbUniqueTempName(proName) ;
 		
 		getDefaultDb().execute("delete from CrtbProject where ProjectName = ? ", new String[]{proName}) ;
 		
 		// 删除数据库缓存
-		FrameworkFacade.getFrameworkFacade().removeDatabaseByName(proName);
+		mFramework.removeDatabaseByName(dbTemp);
 		
 		// 删除原始文件
 		String srcPath = CrtbDbFileUtils.getLocalDbPath(proName);

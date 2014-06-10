@@ -21,7 +21,6 @@ import com.crtb.tunnelmonitor.AppHandler;
 import com.crtb.tunnelmonitor.AppLogger;
 import com.crtb.tunnelmonitor.BaseAsyncTask;
 import com.crtb.tunnelmonitor.dao.impl.v2.AbstractDao;
-import com.crtb.tunnelmonitor.dao.impl.v2.CrtbLicenseDao;
 import com.crtb.tunnelmonitor.dao.impl.v2.ProjectIndexDao;
 import com.crtb.tunnelmonitor.entity.CrtbUser;
 import com.crtb.tunnelmonitor.entity.ProjectIndex;
