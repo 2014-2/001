@@ -63,7 +63,8 @@ public class WorkInfoDownloadActivity extends Activity {
 
     private boolean isDownloading = true;
     private int longPressedItemPosition = -1;
-    private static final int CONTEXT_MENU_DOWNLOAD_WORKSITE = 0;
+    private static final int CONTEXT_MENU_DOWNLOAD_WORKSITE  = 0;
+    private static final int CONTEXT_MENU_ASSOCIATE_WORKSITE = 1;
 
     private int curProjectId = -1;
 
@@ -112,6 +113,7 @@ public class WorkInfoDownloadActivity extends Activity {
         }
         menu.setHeaderTitle(workSiteName);
         menu.add(0, CONTEXT_MENU_DOWNLOAD_WORKSITE, 0, "下载");
+        menu.add(1, CONTEXT_MENU_ASSOCIATE_WORKSITE, 0, "关联");
     }
 
     @Override
@@ -136,6 +138,16 @@ public class WorkInfoDownloadActivity extends Activity {
 							}
 						}
 					});
+                }
+            }
+        } else if (item.getItemId() == CONTEXT_MENU_ASSOCIATE_WORKSITE) {
+            if (longPressedItemPosition >= 0 && mAdapter != null) {
+                final WorkSiteIndex workSite = (WorkSiteIndex) mAdapter.getItem(longPressedItemPosition);
+                if (item != null) {
+                    CrtbWebService.getInstance().setZoneCode(workSite.getZoneCode());
+                    CrtbWebService.getInstance().setSiteCode(workSite.getSiteCode());
+                    SiteProjectMappingDao.defaultDao().insertOrUpdate(curProjectId, workSite.getID());
+                    loadData();
                 }
             }
         }
