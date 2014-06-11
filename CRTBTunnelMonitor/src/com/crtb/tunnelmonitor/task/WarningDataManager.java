@@ -155,7 +155,7 @@ public class WarningDataManager {
 			parameter.setWarningLevel(1);
 		}
 		AlertInfo sulvalert = warningData.getSulvAlert();
-    	parameter.setTransformSpeed(sulvalert != null ? (float)sulvalert.getUValue() : 0.5f);
+    	parameter.setTransformSpeed(sulvalert != null ? (float)sulvalert.getUValue() - sulvalert.getCorrection(): 0.5f);
 //    	String originalID = alertInfo.getOriginalDataID();
 //    	List<Integer> ids = new ArrayList<Integer>();
 //        if (originalID.contains(AlertUtils.ORIGINAL_ID_DIVIDER)) {
@@ -178,16 +178,17 @@ public class WarningDataManager {
 //        	pointValue = (float) AlertUtils.getLineLength(point1, point2);
 //        }
         AlertInfo leijiAlert = warningData.getLeijiAlert();
-    	parameter.setWarningPointValue((float) (leijiAlert != null ? leijiAlert.getUValue() : 0.5f));
+    	parameter.setWarningPointValue((float) (leijiAlert != null ? leijiAlert.getUValue() - leijiAlert.getCorrection() : 0.5f));
     	parameter.setWarningDate(CrtbUtils.parseDate(alertInfo.getDate()));
     	String duePerson = alertInfo.getDuePerson();
     	if (TextUtils.isEmpty(duePerson)) {
     	    duePerson = AppCRTBApplication.mUserName;
     	}
     	parameter.setWarningPerson(duePerson);
-    	parameter.setWarningDescription(alertInfo.getAlertStatusMsg());
+    	parameter.setWarningDescription(alertInfo.getHandling());
     	parameter.setWarningEndTime(CrtbUtils.parseDate(alertInfo.getHandlingTime()));
-    	parameter.setWarningResult(alertInfo.getAlertStatus());
+    	// On website, 1 means alert, 0 means closed. but local database & windows has the different define.
+    	parameter.setWarningResult(alertInfo.getAlertStatus() == 1 ? 0 : 1);
     	parameter.setRemark(alertInfo.getHandling());
         CrtbWebService.getInstance().uploadWarningData(parameter, new RpcCallback() {
 
