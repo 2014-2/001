@@ -337,6 +337,13 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
                         RawSheetIndex.CROSS_SECTION_TYPE_TUNNEL);
             }
         });
+        
+        // 使测量清除按钮不可用
+        if(bean == null 
+        		|| bean.getUploadStatus() == 2
+        		|| !rawSheetCanTest){
+        	holder.mPointResetBnt.setEnabled(false);
+        }
 
         // 清除
         holder.mPointResetBnt.setOnClickListener(new View.OnClickListener() {
@@ -402,7 +409,9 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
                                 holder.mPointY.setText("");
                                 holder.mPointZ.setText("");
                                 holder.mPointTime.setText("");
+                                holder.warringLayout.removeAllViews();
                                 holder.warringLayout.setVisibility(View.INVISIBLE);
+                                holder.mPointResetBnt.setEnabled(false);
                             }
                         }
                     }
@@ -541,7 +550,12 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
                         info.holder.mPointY.setText(info.y);
                         info.holder.mPointZ.setText(info.z);
                         info.holder.mPointTime.setText(info.time);
-
+                        
+                        // 按钮可用
+                        if(info.holder != null){
+                        	info.holder.mPointResetBnt.setEnabled(true);
+                        }
+                        
                         // 隧道内断面
                         if (info.sectionType == RawSheetIndex.CROSS_SECTION_TYPE_TUNNEL) {
 
@@ -594,7 +608,7 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
                                 err = dao.insert(obj);
                                 update = false;
                             }
-
+                            
                             if (err == TunnelSettlementTotalDataDao.DB_EXECUTE_SUCCESS) {
 
                                 // 保存测量数据
@@ -795,13 +809,17 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 
             TextView tv = new TextView(this);
             TextView tv2 = new TextView(this);
+            
             tv.setTextColor(Color.RED);
             tv.setTextSize(12);
+            
             tv2.setTextColor(Color.RED);
             tv2.setTextSize(12);
 
             if (!StringUtils.isEmpty(msg)) {
+            	
                 tv.setText(msg);
+                tv2.setText(msg);
 
                 if (view1 != null) {
                 	view1.warringLayout.setVisibility(View.VISIBLE);
@@ -870,6 +888,13 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
                         RawSheetIndex.CROSS_SECTION_TYPE_SUBSIDENCES);
             }
         });
+        
+        // 使测量清除按钮不可用
+        if(bean == null 
+        		|| bean.getUploadStatus() == 2
+        		|| !rawSheetCanTest){
+        	holder.mPointResetBnt.setEnabled(false);
+        }
 
         // 清除
         holder.mPointResetBnt.setOnClickListener(new View.OnClickListener() {
@@ -936,6 +961,7 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
                                 holder.mPointTime.setText("");
                                 holder.warringLayout.removeAllViews();
                                 holder.warringLayout.setVisibility(View.INVISIBLE);
+                                holder.mPointResetBnt.setEnabled(false);
                             }
                         }
                     }
@@ -963,18 +989,6 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
         }
 
         String[] array = str.split(",");
-
-        /*
-         * if(index == 0 && array.length >= 1){
-         * return array[0];
-         * } else if(index == 1 && array.length >=2 ){
-         * return array[1];
-         * } else if(index == 2 && array.length >= 3){
-         * return array[2];
-         * } else if(index == 3 && array.length >= 4){
-         * return array[3];
-         * }
-         */
 
         return index < array.length ? array[index] : "";
     }
@@ -1382,7 +1396,7 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 
     final class TestInfo {
 
-        TestPointHolder holder1;
+    	TestPointHolder holder1;
         TestPointHolder holder;
         String type;
         int sectionType;
