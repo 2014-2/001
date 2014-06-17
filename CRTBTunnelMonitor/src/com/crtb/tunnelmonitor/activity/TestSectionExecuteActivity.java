@@ -46,6 +46,7 @@ import com.crtb.tunnelmonitor.mydefine.CrtbDialogConnecting;
 import com.crtb.tunnelmonitor.mydefine.CrtbDialogDelete;
 import com.crtb.tunnelmonitor.mydefine.CrtbDialogDelete.IButtonOnClick;
 import com.crtb.tunnelmonitor.mydefine.CrtbDialogHint;
+import com.crtb.tunnelmonitor.mydefine.CrtbDialogTest;
 import com.crtb.tunnelmonitor.utils.AlertUtils;
 import com.crtb.tunnelmonitor.utils.Time;
 
@@ -425,8 +426,10 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
     }
 
     // 异步测量
-    private void connectSurveyProvider(final TestPointHolder holder, final TestPointHolder holde1,
-            final String type, final int sectionType) {
+    private void connectSurveyProvider(final TestPointHolder holder, 
+    		final TestPointHolder holde1,
+            final String type, 
+            final int sectionType) {
 
         // 暂时去掉优化
         /*
@@ -479,10 +482,37 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
             z = String.format("%1$.4f", point.H);
             
         } else {
-            x = String.format("%1$.4f", X - COUNT * 0.05);
+        	
+            /*x = String.format("%1$.4f", X - COUNT * 0.05);
             y = String.format("%1$.4f", Y - COUNT * 0.05);
             z = String.format("%1$.4f", Z - COUNT * 0.05);
-            COUNT++;
+            COUNT++;*/
+            
+        	// for debug
+            CrtbDialogTest.Callback callback = new CrtbDialogTest.Callback() {
+				
+				@Override
+				public void callback(double xx, double yy, double zz, String time) {
+					
+					TestInfo info = new TestInfo();
+			        info.holder = holder;
+			        info.holder1 = holde1;
+			        info.type = type;// 测点类型
+			        info.sectionType = sectionType;// 断面类型
+
+			        info.x = String.format("%1$.4f", xx);
+			        info.y = String.format("%1$.4f", yy);;
+			        info.z = String.format("%1$.4f", zz);
+			        info.time = time;
+
+			        mHanlder.sendMessage(MSG_TEST_SUCCESS, info);
+				}
+			};
+			
+            CrtbDialogTest diglog = new CrtbDialogTest(TestSectionExecuteActivity.this,callback) ;
+            diglog.show() ;
+            
+            return ;
         }
 
         String time = Time.getDateEN();
@@ -500,7 +530,7 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 
         mHanlder.sendMessage(MSG_TEST_SUCCESS, info);
     }
-
+    
     @Override
     protected AppHandler getHandler() {
         return new AppHandler(this) {
@@ -882,7 +912,7 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
                     showText("数据已经上传,不能测量");
                     return;
                 }
-
+                
                 // 测量
                 connectSurveyProvider(holder, null, type,
                         RawSheetIndex.CROSS_SECTION_TYPE_SUBSIDENCES);

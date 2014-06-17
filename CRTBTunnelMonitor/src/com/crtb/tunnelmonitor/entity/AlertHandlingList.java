@@ -100,7 +100,7 @@ public class AlertHandlingList implements Serializable {
 		AlertStatus = alertStatus;
 	}
 
-	public boolean getHandlingInfo() {
+    public boolean isHandlingInfo() {
 		return HandlingInfo;
 	}
 
@@ -108,7 +108,7 @@ public class AlertHandlingList implements Serializable {
 		HandlingInfo = handlingInfo;
 	}
 
-    public int getUploadStatus() {
+	public int getUploadStatus() {
         return UploadStatus;
     }
 
