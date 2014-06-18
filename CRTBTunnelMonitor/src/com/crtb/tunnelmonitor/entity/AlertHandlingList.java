@@ -124,4 +124,7 @@ public class AlertHandlingList implements Serializable {
         Info = info;
     }
 
+    public AlertHandlingList() {
+        setUploadStatus(1);
+    }
 }
