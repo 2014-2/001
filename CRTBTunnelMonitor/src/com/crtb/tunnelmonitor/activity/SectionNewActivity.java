@@ -539,7 +539,8 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 			
 			double cv = CrtbUtils.formatDouble(chainage);
 			
-			if(cv < mCurrentWorkPlan.getStartChainage() || cv > mCurrentWorkPlan.getEndChainage()){
+			if(cv < mCurrentWorkPlan.getStartChainage() 
+					|| cv > mCurrentWorkPlan.getEndChainage()){
 				showText("断面里程必须在工作面里程之内");
 				return ;
 			}
@@ -596,24 +597,28 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 			
 			str.append(",");
 			
-			// s2
-			if(StringUtils.isEmpty(pointS2)){
-				str.append("S2-1,");
-				str.append("S2-2");
-			} else {
-				str.append(pointS2 + "-1,");
-				str.append(pointS2 + "-2");
+			// s2 wei.zhou 开挖方式不同，对应的pnyName 不一样 (2014-6-18)
+			if(section_new_et_s2.getVisibility() == View.VISIBLE){
+				if(StringUtils.isEmpty(pointS2)){
+					str.append("S2-1,");
+					str.append("S2-2");
+				} else {
+					str.append(pointS2 + "-1,");
+					str.append(pointS2 + "-2");
+				}
+				
+				str.append(",");
 			}
 			
-			str.append(",");
-			
-			// s3 
-			if(StringUtils.isEmpty(pointS3)){
-				str.append("S3-1,");
-				str.append("S3-2");
-			} else {
-				str.append(pointS3 + "-1,");
-				str.append(pointS3 + "-2");
+			// s3  wei.zhou 开挖方式不同，对应的pnyName 不一样 (2014-6-18)
+			if(section_new_et_s3.getVisibility() == View.VISIBLE){
+				if(StringUtils.isEmpty(pointS3)){
+					str.append("S3-1,");
+					str.append("S3-2");
+				} else {
+					str.append(pointS3 + "-1,");
+					str.append(pointS3 + "-2");
+				}
 			}
 			
 			if(sectionInfo == null){

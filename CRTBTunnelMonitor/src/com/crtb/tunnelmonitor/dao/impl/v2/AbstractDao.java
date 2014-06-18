@@ -65,7 +65,8 @@ public abstract class AbstractDao<T> {
 			return ;
 		}
 		
-		db.createTable(DTMSVersion.class);
+		// wei.zhou 不需要此表(2014-6-18)
+		// db.createTable(DTMSVersion.class);
 		db.createTable(DTMSProjectVersion.class);
 		db.createTable(ProjectSettingIndex.class);
 		

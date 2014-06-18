@@ -60,7 +60,6 @@ public class RawSheetIndex implements Serializable {
 											// TunnelCrossSectionIndex
 											// SubsidenceCrossSectionIndex
 	
-	@ColumnBoolean
 	private boolean checked ;				// 是否选择
 	
 	public RawSheetIndex(){
