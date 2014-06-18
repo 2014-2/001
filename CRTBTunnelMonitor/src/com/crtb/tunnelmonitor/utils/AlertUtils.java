@@ -384,7 +384,7 @@ public class AlertUtils {
                                 }
 
                                 AlertHandlingInfoDao.defaultDao().insertItem(alertId, handlingRemark,
-                                        new Date(System.currentTimeMillis()), AppCRTBApplication.getInstance().mUserName, ALERT_STATUS_OPEN/*报警*/, 1/*true*/);
+                                        new Date(System.currentTimeMillis()), AppCRTBApplication.getInstance().mUserName, ALERT_STATUS_OPEN/*报警*/, 0/*false*/);
 //                            }
                         }
                     } else if (!readOnly && sheetId != null) {
@@ -605,7 +605,7 @@ public class AlertUtils {
                             }
 
                             AlertHandlingInfoDao.defaultDao().insertItem(alertId, handlingRemark,
-                                    new Date(System.currentTimeMillis()), AppCRTBApplication.getInstance().mUserName, ALERT_STATUS_OPEN/*报警*/, 1/*true*/);
+                                    new Date(System.currentTimeMillis()), AppCRTBApplication.getInstance().mUserName, ALERT_STATUS_OPEN/*报警*/, 0/*false*/);
 //                        }
                     }
                 } else if (!readOnly && sheetId != null) {
