@@ -226,7 +226,7 @@ public class AlertUtils {
                     AlertHandlingInfoDao
                             .defaultDao()
                             .insertIfNotExist(aid, handling, handlingTime,
-                                    AppCRTBApplication.getInstance().mUserName, ALERT_STATUS_HANDLED, 1/* true */);
+                                    AppCRTBApplication.getInstance().mUserName, ALERT_STATUS_HANDLED, 0/*false*/);
                 }
             }
             return ret;
@@ -290,7 +290,7 @@ public class AlertUtils {
                                 }
 
                                 AlertHandlingInfoDao.defaultDao().insertItem(alertId, handlingRemark,
-                                        new Date(System.currentTimeMillis()), AppCRTBApplication.getInstance().mUserName, ALERT_STATUS_OPEN/*报警*/, 1/*true*/);
+                                        new Date(System.currentTimeMillis()), AppCRTBApplication.getInstance().mUserName, ALERT_STATUS_OPEN/*报警*/, 0/*false*/);
 
 //                            }
                         }
@@ -471,7 +471,7 @@ public class AlertUtils {
                     AlertHandlingInfoDao
                             .defaultDao()
                             .insertIfNotExist(aid, handling, handlingTime,
-                                    AppCRTBApplication.getInstance().mUserName, ALERT_STATUS_HANDLED, 1/* true */);
+                                    AppCRTBApplication.getInstance().mUserName, ALERT_STATUS_HANDLED, 0/*false*/);
                 }
             }
             return ret;
@@ -525,7 +525,7 @@ public class AlertUtils {
                             }
 
                             AlertHandlingInfoDao.defaultDao().insertItem(alertId, handlingRemark,
-                                    new Date(System.currentTimeMillis()), AppCRTBApplication.getInstance().mUserName, ALERT_STATUS_OPEN/*报警*/, 1/*true*/);
+                                    new Date(System.currentTimeMillis()), AppCRTBApplication.getInstance().mUserName, ALERT_STATUS_OPEN/*报警*/, 0/*false*/);
 //                        }
                     }
 
@@ -1382,7 +1382,7 @@ public class AlertUtils {
                                     }
                                     AlertHandlingInfoDao.defaultDao()
                                             .insertIfNotExist(curAlertId, handlingRemark, handlingTime,
-                                                    duePerson, alertStatus, 1/* true */);
+                                                    duePerson, alertStatus, 0/*false*/);
                                 }
                             }
                         }
@@ -1412,7 +1412,7 @@ public class AlertUtils {
                                 } else if (curAlertId != alertId) {//alertId 在handleAlert中已处理
                                     AlertHandlingInfoDao.defaultDao()
                                             .insertItem(curAlertId, handling, handlingTime,
-                                                    duePerson, alertStatus, 1/* true */);
+                                                    duePerson, alertStatus, 0/*false*/);
                                 }
                             }
                         }

@@ -47,7 +47,7 @@ public class AlertHandlingList implements Serializable {
 	private boolean HandlingInfo;			// 备注
 
 	@ColumnInt
-    private int UploadStatus; // 上传类型 , 0表示全部状态；1表示未上传，2表示不上传，3表示部分上传
+    private int UploadStatus; // 上传类型 , 0表示全部状态；1表示未上传，2表示已上传，3表示部分上传
 
 	@ColumnText
     private String Info;
