@@ -58,7 +58,7 @@ public class AlertHandlingListAdapter extends BaseAdapter {
             ViewHolder holder = (ViewHolder) v.getTag();
             holder.dateView.setText(mContext.getString(R.string.handling_date, CrtbUtils.formatDate(item.getHandlingTime())));
             holder.personView.setText(mContext.getString(R.string.handling_person, item.getDuePerson()));
-            String handling = item.getHandling();
+            String handling = item.getInfo();
             if (handling == null || handling.equalsIgnoreCase("null")) {
                 handling = "";
             }

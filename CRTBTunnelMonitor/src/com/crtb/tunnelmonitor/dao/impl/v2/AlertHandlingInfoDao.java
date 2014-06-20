@@ -104,7 +104,7 @@ public class AlertHandlingInfoDao extends AbstractDao<AlertHandlingList> {
 
         AlertHandlingList ah = new AlertHandlingList();
         ah.setAlertID(guid);
-        ah.setHandling(handling);
+        ah.setInfo(handling);
         ah.setHandlingTime(handlingTime);
         ah.setDuePerson(duePerson);
         ah.setAlertStatus(alertStatus);

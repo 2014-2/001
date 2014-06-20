@@ -25,8 +25,8 @@ public class AlertHandlingList implements Serializable {
 	@ColumnString(length=255)
 	private String AlertID;				//预警id
 
-	@ColumnString(length=255)
-	private String Handling;				//处理内容
+	@ColumnInt
+	private int Handling;				//Handling method: 添加修正值...
 
 	@ColumnDate
 	private Date HandlingTime;			//处理时间
@@ -44,7 +44,7 @@ public class AlertHandlingList implements Serializable {
 	 * true表示（2.1）的处理方式；false表示（2.2）的处理方式下填写“人工处理”
 	 */
 	@ColumnBoolean
-	private boolean HandlingInfo;			// 备注
+	private boolean HandlingInfo;			// Default 1, not use now.
 
 	@ColumnInt
     private int UploadStatus; // 上传类型 , 0表示全部状态；1表示未上传，2表示已上传，3表示部分上传
@@ -68,13 +68,13 @@ public class AlertHandlingList implements Serializable {
 		AlertID = alertID;
 	}
 
-	public String getHandling() {
-		return Handling;
-	}
+    public int getHandling() {
+        return Handling;
+    }
 
-	public void setHandling(String handling) {
-		Handling = handling;
-	}
+    public void setHandling(int handling) {
+        Handling = handling;
+    }
 
 	public Date getHandlingTime() {
 		return HandlingTime;
@@ -122,6 +122,7 @@ public class AlertHandlingList implements Serializable {
 
     public void setInfo(String info) {
         Info = info;
+        setHandling(3);// default 3 for 添加修正值
     }
 
     public AlertHandlingList() {

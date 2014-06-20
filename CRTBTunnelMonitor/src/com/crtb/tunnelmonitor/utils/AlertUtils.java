@@ -80,7 +80,7 @@ public class AlertUtils {
     public static final int POINT_DATASTATUS_AS_FIRSTLINE = 2;
     public static final int POINT_DATASTATUS_CORRECTION = 3;
     public static final int POINT_DATASTATUS_NORMAL = 4;
-
+    public static final String[] ALERT_HANDLING = {"没有处理", "不参与计算", "作为首行", "添加改正值", "正常参与计算"};
     /**
      * @param point
      * @param readOnly 为true时该方法不会对数据库做出任何修改，只返回预警信息
@@ -981,7 +981,7 @@ public class AlertUtils {
                 ai.setAlertStatus(alertStatus);
                 ai.setAlertStatusMsg((alertStatus >= ALERT_STATUS_HANDLED && alertStatus <= ALERT_STATUS_HANDLING) ? ALERT_STATUS_MSGS[alertStatus]
                         : "");
-                ai.setHandling(ah.getHandling());
+                ai.setHandling(ah.getInfo());
                 ai.setHandlingTime(CrtbUtils.formatDate(ah.getHandlingTime()));
                 ai.setDuePerson(ah.getDuePerson());
             }
@@ -1040,7 +1040,8 @@ public class AlertUtils {
                 }
             }
 
-            ai.setChuliFangshi(((ai.getAlertStatus() == ALERT_STATUS_OPEN) && (ai.getCorrection() == 0)) ? "未作任何处理" : "自由处理");
+            ai.setChuliFangshi(ah.getHandling()< ALERT_HANDLING.length ? ALERT_HANDLING[ah.getHandling()] : "自由处理");
+//            ai.setChuliFangshi(((ai.getAlertStatus() == ALERT_STATUS_OPEN) && (ai.getCorrection() == 0)) ? "未作任何处理" : "自由处理");
 
         }
         return l;
