@@ -62,6 +62,7 @@ public class AlertList implements Serializable {
 
 	public AlertList() {
 	    setGUID(CrtbUtils.generatorGUID());
+	    setUploadStatus(1);
     }
 
     public int getID() {
