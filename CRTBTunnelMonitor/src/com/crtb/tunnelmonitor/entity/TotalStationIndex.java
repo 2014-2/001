@@ -82,7 +82,7 @@ public class TotalStationIndex implements Serializable {
 		Name = name;
 	}
 
-    public String getTotalstationType() {
+    public String getTotalstationTypeString() {
         Set set = Constant.TotalStationIndex.entrySet();
         Iterator it = set.iterator();
         while (it.hasNext()) {
@@ -91,6 +91,10 @@ public class TotalStationIndex implements Serializable {
                 return (String) entry.getKey();
             }
         }
+        return TotalstationType;
+    }
+
+    public String getTotalstationType() {
         return TotalstationType;
     }
 

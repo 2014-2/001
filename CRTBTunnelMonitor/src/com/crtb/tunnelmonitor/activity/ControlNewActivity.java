@@ -206,7 +206,7 @@ public class ControlNewActivity extends Activity implements OnClickListener {
         if (editInfo != null) {
             ts_new_tv_header.setText(R.string.edit_control_station_title);
             for (TotalStationType type : TotalStationType.values()){
-                if(type.name().equals(editInfo.getTotalstationType()))
+                if(type.name().equals(editInfo.getTotalstationTypeString()))
                 {
                     pps.setSelection(pplist.indexOf(type.getDesc()));
                     break;
