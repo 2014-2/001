@@ -1,6 +1,8 @@
 
 package com.crtb.tunnelmonitor.common;
 
+import java.util.HashMap;
+
 /**
  * 常量定义
  */
@@ -26,23 +28,43 @@ public class Constant {
 		"尼康","南方","南方302",
 		"科力达","三鼎","瑞得",
 		"苏一光","中纬","科维"};
+	public static final HashMap TotalStationIndex = new HashMap<String, String>() {
+        {
+            put("Leica", "4");
+            put("Trimble", "8");
+            put("LeicaTPS", "0");
+            put("Topcon", "9");
+            put("Pentax", "10");
+            put("Sokkia", "5");
+            put("Nikon", "11");
+            put("South", "6");
+            put("South302", "7");
+            put("KTS", "12");
+            put("SanDing", "13");
+            put("RuiDe", "14");
+            put("Foif", "17");
+            put("GeMax", "15");
+            put("Kovan", "16");
+        }
+    };
+
 	public enum TotalStationType
 	{
-		Leica("徕卡"),	
-		Trimble("天宝"),
-		LeicaTPS("徕卡TPS"),
-		Topcon("拓普康"),
-		Pentax("宾得"),
-		Sokkia("索佳"),
-		Nikon("尼康"),
-		South("南方"),
-		South302("南方302"),
-		KTS("科力达"),
-		SanDing("三鼎"),
-		RuiDe("瑞得"),
-		Foif("苏一光"),
-		GeMax("中纬"),
-		Kovan("科维");
+		Leica("徕卡"),	//4
+		Trimble("天宝"),//8
+		LeicaTPS("徕卡TPS"),//0
+		Topcon("拓普康"),//9
+		Pentax("宾得"),//10
+		Sokkia("索佳"),//5
+		Nikon("尼康"),//11
+		South("南方"),//6
+		South302("南方302"),//7
+		KTS("科力达"),//12
+		SanDing("三鼎"),//13
+		RuiDe("瑞得"),//14
+		Foif("苏一光"),//17
+		GeMax("中纬"),//15
+		Kovan("科维");//16
 		private final String desc; 
 
         private TotalStationType(String desc) { 

@@ -1,6 +1,9 @@
 package com.crtb.tunnelmonitor.entity;
 
 import java.io.Serializable;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 
 import org.zw.android.framework.db.ColumnBoolean;
 import org.zw.android.framework.db.ColumnInt;
@@ -9,6 +12,8 @@ import org.zw.android.framework.db.ColumnText;
 import org.zw.android.framework.db.Table;
 import org.zw.android.framework.db.core.ColumnPrimaryKey;
 import org.zw.android.framework.db.core.ColumnPrimaryKey.PrimaryKeyType;
+
+import com.crtb.tunnelmonitor.common.Constant;
 
 /**
  * 全站仪连接参数信息
@@ -56,6 +61,9 @@ public class TotalStationIndex implements Serializable {
     public TotalStationIndex(){
 //    	setUsed(false);
 //    	setChecked(false);
+        setBaudRate(9600);
+        setDatabits(8);
+        setStopbits(1);
     }
 
 	public int getID() {
@@ -74,12 +82,20 @@ public class TotalStationIndex implements Serializable {
 		Name = name;
 	}
 
-	public String getTotalstationType() {
-		return TotalstationType;
-	}
+    public String getTotalstationType() {
+        Set set = Constant.TotalStationIndex.entrySet();
+        Iterator it = set.iterator();
+        while (it.hasNext()) {
+            Map.Entry entry = (Map.Entry) it.next();
+            if (entry.getValue().equals(TotalstationType)) {
+                return (String) entry.getKey();
+            }
+        }
+        return TotalstationType;
+    }
 
 	public void setTotalstationType(String totalstationType) {
-		TotalstationType = totalstationType;
+		TotalstationType = (String) Constant.TotalStationIndex.get(totalstationType);
 	}
 
 	public int getBaudRate() {
