@@ -489,6 +489,7 @@ public class AppCRTBApplication extends Application {
             String deviceId = telephonyManager.getDeviceId();
             if (!TextUtils.isEmpty(deviceId)) {
                 if (deviceId.length() >= 12) {
+                    deviceId = deviceId.substring(deviceId.length() - 12);
                     StringBuilder sb = new StringBuilder();
                     sb.append(deviceId.substring(0, 2));
                     sb.append(":");
