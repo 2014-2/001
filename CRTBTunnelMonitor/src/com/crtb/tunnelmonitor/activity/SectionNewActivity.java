@@ -1,6 +1,7 @@
 package com.crtb.tunnelmonitor.activity;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.zw.android.framework.ioc.InjectCore;
@@ -42,6 +43,7 @@ import com.crtb.tunnelmonitor.dao.impl.v2.TunnelCrossSectionIndexDao;
 import com.crtb.tunnelmonitor.entity.ExcavateMethodEnum;
 import com.crtb.tunnelmonitor.entity.ProjectIndex;
 import com.crtb.tunnelmonitor.entity.TunnelCrossSectionIndex;
+import com.crtb.tunnelmonitor.mydefine.CrtbDateDialogUtils;
 import com.crtb.tunnelmonitor.utils.CrtbUtils;
 
 /**
@@ -107,7 +109,7 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 	@InjectView(id=R.id.img_fangfa,parent="mExcavationInfoLayout")
 	private ImageView section_method ;
 	
-	@InjectView(id=R.id.section_new_sp,parent="mExcavationInfoLayout",onClick="this")
+	@InjectView(id=R.id.section_new_sp,parent="mExcavationInfoLayout")
 	private Spinner section_new_sp;
 	
 	@InjectView(id=R.id.section_new_et_a,parent="mExcavationInfoLayout")
@@ -159,6 +161,7 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 	private TunnelCrossSectionIndex sectionInfo ;
 	
 	private ProjectIndex mCurrentWorkPlan;
+	private boolean editTime ;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -234,7 +237,7 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 		}) ;
 		
 		// 围岩级别
-		section_new_sp.setOnItemSelectedListener(new OnItemSelectedListener() {
+		rockgrade.setOnItemSelectedListener(new OnItemSelectedListener() {
 
 			@Override
 			public void onItemSelected(AdapterView<?> parent, View view,
@@ -253,6 +256,9 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 			section_new_sp.setClickable(false);
 			rockgrade.setClickable(false);
 		}
+		
+		// 时间是否可以编辑
+		editTime	= sectionInfo != null ;
 		
 		String date = DateUtils.toDateString(DateUtils.getCurrtentTimes(), DateUtils.DATE_TIME_FORMAT) ;
 		section_new_et_calendar.setText(date);
@@ -499,7 +505,7 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 	@Override
 	public void onClick(View v) {
 		
-		// Date curdate = null ;
+		Date curdate = null ;
 		
 		switch (v.getId()) {
 		case R.id.work_btn_quxiao:
@@ -511,13 +517,18 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 			break;
 		case R.id.section_new_et_calendar :
 			
-			/*curdate = DateUtils.toDate(section_new_et_calendar.getEditableText().toString().trim(), DateUtils.DATE_TIME_FORMAT);
+			if(editTime){
+				return ;
+			}
+			
+			curdate = DateUtils.toDate(section_new_et_calendar.getEditableText().toString().trim(), DateUtils.DATE_TIME_FORMAT);
 			
 			if(curdate == null){
 				curdate	= DateUtils.getCurrtentTimes() ;
 			}
 			
-			CrtbDateDialogUtils.setAnyDateDialog(this, section_new_et_calendar, curdate);*/
+			CrtbDateDialogUtils.setAnyDateDialog(this, section_new_et_calendar, curdate);
+			
 			break ;
 		case R.id.section_new_createtime_gd :
 			
@@ -565,7 +576,14 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 				return ;
 			}
 			
-			double cv = CrtbUtils.formatDouble(chainage);
+			double w 	=  CrtbUtils.formatDouble(width) ;
+			
+			if(w <= 0.0d){
+				showText("断面宽度必须大于0");
+				return ;
+			}
+			
+			double cv 	= CrtbUtils.formatDouble(chainage);
 			
 			if(cv < mCurrentWorkPlan.getStartChainage() 
 					|| cv > mCurrentWorkPlan.getEndChainage()){
@@ -665,7 +683,7 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 				sectionInfo.setChainagePrefix(prefix);
 				sectionInfo.setChainage(cv);
 				sectionInfo.setInbuiltTime(DateUtils.toDate(date, DateUtils.DATE_TIME_FORMAT));
-				sectionInfo.setWidth(CrtbUtils.formatDouble(width));
+				sectionInfo.setWidth(w);
 				sectionInfo.setSurveyPntName(str.toString());
 				
 				// 1表示未上传, 2表示已上传
@@ -702,7 +720,7 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 				sectionInfo.setChainagePrefix(prefix);
 				sectionInfo.setChainage(cv);
 				sectionInfo.setInbuiltTime(DateUtils.toDate(date, DateUtils.DATE_TIME_FORMAT));
-				sectionInfo.setWidth(CrtbUtils.formatDouble(width));
+				sectionInfo.setWidth(w);
 				
 				// excavation
 				sectionInfo.setExcavateMethod(ExcavateMethodEnum.parser((String)section_new_sp.getSelectedItem()).getCode());
