@@ -595,10 +595,11 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 				str.append(pointS1 + "-2");
 			}
 			
-			str.append(",");
-			
 			// s2 wei.zhou 开挖方式不同，对应的pnyName 不一样 (2014-6-18)
 			if(section_new_et_s2.getVisibility() == View.VISIBLE){
+				
+				str.append(",");
+				
 				if(StringUtils.isEmpty(pointS2)){
 					str.append("S2-1,");
 					str.append("S2-2");
@@ -606,12 +607,13 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 					str.append(pointS2 + "-1,");
 					str.append(pointS2 + "-2");
 				}
-				
-				str.append(",");
 			}
 			
 			// s3  wei.zhou 开挖方式不同，对应的pnyName 不一样 (2014-6-18)
 			if(section_new_et_s3.getVisibility() == View.VISIBLE){
+				
+				str.append(",");
+				
 				if(StringUtils.isEmpty(pointS3)){
 					str.append("S3-1,");
 					str.append("S3-2");
