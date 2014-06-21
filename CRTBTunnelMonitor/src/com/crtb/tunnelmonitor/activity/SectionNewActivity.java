@@ -380,7 +380,7 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 			section_new_et_width.setEnabled(false);
 			
 			section_new_sp.setSelection(getExcavateMethod(ExcavateMethodEnum.parser(sectionInfo.getExcavateMethod()).getName()));
-			rockgrade.setSelection(getRockgrade(sectionInfo.getROCKGRADE()));
+			rockgrade.setSelection(CrtbUtils.getRockgrade(sectionInfo.getROCKGRADE()));
 			
 			if(sectionInfo.getSurveyPntName() != null){
 				

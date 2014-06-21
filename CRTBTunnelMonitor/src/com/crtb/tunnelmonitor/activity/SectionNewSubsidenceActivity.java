@@ -246,7 +246,7 @@ public class SectionNewSubsidenceActivity extends WorkFlowActivity implements On
 			DSection_Width.setEnabled(false);
 			DSection_PointCount.setEnabled(false);
 			
-			rockgrade.setSelection(getRockgrade(subsidence.getROCKGRADE()));
+			rockgrade.setSelection(CrtbUtils.getRockgrade(subsidence.getROCKGRADE()));
 			
 			DSection_Value1.setText(String.valueOf(subsidence.getDBU0()));
 			DSection_Value2.setText(String.valueOf(subsidence.getDBLimitVelocity()));

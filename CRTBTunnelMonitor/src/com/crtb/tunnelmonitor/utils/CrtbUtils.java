@@ -80,6 +80,29 @@ public final class CrtbUtils {
 		return UUID.randomUUID().toString() ;
 	}
 	
+	public static int getRockgrade(String str){
+		
+		if (str == null) {
+			return 0;
+		}
+		
+		if(str.equals("I")){
+			return 0 ;
+		} else if(str.equals("II")){
+			return 1 ;
+		} else if(str.equals("III")){
+			return 2 ;
+		} else if(str.equals("IV")){
+			return 3 ;
+		} else if(str.equals("V")){
+			return 4 ;
+		} else if(str.equals("VI")){
+			return 5 ;
+		}
+		
+		return 0;
+	}
+	
     public static Date parseDate(String text) {
         Date result = null;
         if (!TextUtils.isEmpty(text)) {
@@ -148,7 +171,7 @@ public final class CrtbUtils {
 
         // TODO: 暂时取不到数据，使用固定值3
         // outParamter.setWallRockLevel(Integer.valueOf(section.getLithologi()));
-        outParamter.setWallRockLevel(3);
+        outParamter.setWallRockLevel(getRockgrade(section.getROCKGRADE()) + 1);
 
         // TODO:若取不到数据,使用当前时间
         Date builtTime = section.getInbuiltTime();
@@ -193,7 +216,7 @@ public final class CrtbUtils {
         outParamter.setU0Remark(dbU0Des);
         // TODO: 暂时取不到数据，使用固定值3
         // outParamter.setWallRockLevel(Integer.valueOf(section.getLithologic()));
-        outParamter.setWallRockLevel(3);
+        outParamter.setWallRockLevel(getRockgrade(section.getROCKGRADE()) + 1);
         Date inBuiltTime = section.getInbuiltTime();
         outParamter.setFirstMeasureDate(inBuiltTime != null ? inBuiltTime : new Date());
         outParamter.setRemark(section.getInfo());
