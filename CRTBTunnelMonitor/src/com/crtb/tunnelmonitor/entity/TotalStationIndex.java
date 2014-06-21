@@ -98,9 +98,13 @@ public class TotalStationIndex implements Serializable {
         return TotalstationType;
     }
 
-	public void setTotalstationType(String totalstationType) {
+	public void setTotalstationTypeString(String totalstationType) {
 		TotalstationType = (String) Constant.TotalStationIndex.get(totalstationType);
 	}
+
+    public void setTotalstationType(String totalstationType) {
+        TotalstationType = totalstationType;
+    }
 
 	public int getBaudRate() {
 		return BaudRate;

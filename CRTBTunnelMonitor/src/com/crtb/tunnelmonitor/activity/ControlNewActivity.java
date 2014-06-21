@@ -160,7 +160,7 @@ public class ControlNewActivity extends Activity implements OnClickListener {
                 for (TotalStationType type : TotalStationType.values()){
                     if(type.getDesc().equals(pp.getText().toString()))
                     {
-                        ts.setTotalstationType(type.name());
+                        ts.setTotalstationTypeString(type.name());
                         break;
                     }
                 }
