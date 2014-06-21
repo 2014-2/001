@@ -1,6 +1,7 @@
 package com.crtb.tunnelmonitor.activity;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.zw.android.framework.ioc.InjectCore;
@@ -40,6 +41,7 @@ import com.crtb.tunnelmonitor.dao.impl.v2.ProjectIndexDao;
 import com.crtb.tunnelmonitor.dao.impl.v2.SubsidenceCrossSectionIndexDao;
 import com.crtb.tunnelmonitor.entity.ProjectIndex;
 import com.crtb.tunnelmonitor.entity.SubsidenceCrossSectionIndex;
+import com.crtb.tunnelmonitor.mydefine.CrtbDateDialogUtils;
 import com.crtb.tunnelmonitor.utils.CrtbUtils;
 
 /**
@@ -114,6 +116,7 @@ public class SectionNewSubsidenceActivity extends WorkFlowActivity implements On
 	private SubsidenceCrossSectionIndex subsidence = null;
 	
 	private ProjectIndex mCurrentWorkPlan;
+	private boolean editTime ;
 
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -135,6 +138,8 @@ public class SectionNewSubsidenceActivity extends WorkFlowActivity implements On
 		
 		// prefix
 		section_new_et_prefix.setText(mCurrentWorkPlan.getChainagePrefix());
+		
+		editTime = subsidence != null ;
 		
 		// default
 		String date = DateUtils.toDateString(DateUtils.getCurrtentTimes(), DateUtils.DATE_TIME_FORMAT) ;
@@ -260,7 +265,7 @@ public class SectionNewSubsidenceActivity extends WorkFlowActivity implements On
 	@Override
 	public void onClick(View v) {
 		
-		// Date curdate = null ;
+		Date curdate = null ;
 		
 		switch (v.getId()) {
 		case R.id.work_btn_quxiao:
@@ -270,13 +275,17 @@ public class SectionNewSubsidenceActivity extends WorkFlowActivity implements On
 			break;
 		case R.id.section_new_et_calendar:
 			
-			/*curdate = DateUtils.toDate(DSection_createtime.getEditableText().toString().trim(), DateUtils.DATE_TIME_FORMAT);
+			if(editTime){
+				return ;
+			}
+			
+			curdate = DateUtils.toDate(DSection_createtime.getEditableText().toString().trim(), DateUtils.DATE_TIME_FORMAT);
 			
 			if(curdate == null){
 				curdate	= DateUtils.getCurrtentTimes() ;
 			}
 			
-			CrtbDateDialogUtils.setAnyDateDialog(this, DSection_createtime, curdate);*/
+			CrtbDateDialogUtils.setAnyDateDialog(this, DSection_createtime, curdate);
 			break ;
 		case R.id.DSection_SetTime:
 			

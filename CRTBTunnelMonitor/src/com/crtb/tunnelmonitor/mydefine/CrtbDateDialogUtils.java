@@ -58,7 +58,8 @@ public final class CrtbDateDialogUtils {
 											+ DateUtils.pad(monthOfYear + 1) + "-"
 											+ DateUtils.pad(dayOfMonth) + " "
 											+ DateUtils.pad(hour) + ":"
-											+ DateUtils.pad(minute));
+											+ DateUtils.pad(minute) + ":"
+											+ "00");
 								}
 							}, mHour, mMinute, true) ;
 						}
@@ -137,7 +138,8 @@ public final class CrtbDateDialogUtils {
 										+ DateUtils.pad(monthOfYear + 1) + "-"
 										+ DateUtils.pad(dayOfMonth) + " "
 										+ DateUtils.pad(hour) + ":"
-										+ DateUtils.pad(minute));
+										+ DateUtils.pad(minute) + ":"
+										+ "00");
 							}
 						}, mHour, mMinute, true).show();
 					}
