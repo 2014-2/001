@@ -342,7 +342,7 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 			section_new_et_prefix.setText(sectionInfo.getChainagePrefix());
 			section_new_et_Chainage.setText(CrtbUtils.doubleToString(sectionInfo.getChainage()));
 			section_new_et_name.setText(sectionInfo.getSectionName());
-			section_new_et_calendar.setText(DateUtils.toDateString(sectionInfo.getInBuiltTime(),DateUtils.DATE_TIME_FORMAT));
+			section_new_et_calendar.setText(DateUtils.toDateString(sectionInfo.getInbuiltTime(),DateUtils.DATE_TIME_FORMAT));
 			section_new_et_width.setText(String.valueOf(sectionInfo.getWidth()));
 			
 			section_new_et_Chainage.setEnabled(false);
@@ -359,7 +359,9 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 				int len = str.length ;
 				
 				// A
-				section_new_et_a.setText(str[0].equals("A") ? "" : str[0]);
+				if(str.length > 1){
+					section_new_et_a.setText(str[0].equals("A") ? "" : str[0]);
+				}
 				
 				// S1
 				if(len >= 3){
@@ -636,7 +638,7 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 				// base info
 				sectionInfo.setChainagePrefix(prefix);
 				sectionInfo.setChainage(cv);
-				sectionInfo.setInBuiltTime(DateUtils.toDate(date, DateUtils.PART_TIME_FORMAT));
+				sectionInfo.setInbuiltTime(DateUtils.toDate(date, DateUtils.DATE_TIME_FORMAT));
 				sectionInfo.setWidth(CrtbUtils.formatDouble(width));
 				sectionInfo.setSurveyPntName(str.toString());
 				
@@ -645,12 +647,12 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 				
 				sectionInfo.setGDU0(Float.valueOf(gdlj));
 				sectionInfo.setGDVelocity(Float.valueOf(gdsl));
-				sectionInfo.setGDU0Time(DateUtils.toDate(gdtime, DateUtils.PART_TIME_FORMAT));
+				sectionInfo.setGDU0Time(DateUtils.toDate(gdtime, DateUtils.DATE_TIME_FORMAT));
 				sectionInfo.setGDU0Description(gddes);
 				
 				sectionInfo.setSLU0(Float.valueOf(zblj));
 				sectionInfo.setSLLimitVelocity(Float.valueOf(zbsl));
-				sectionInfo.setSLU0Time(DateUtils.toDate(zbtime, DateUtils.PART_TIME_FORMAT));
+				sectionInfo.setSLU0Time(DateUtils.toDate(zbtime, DateUtils.DATE_TIME_FORMAT));
 				sectionInfo.setSLU0Description(zbdes);
 				
 				// excavation
@@ -671,7 +673,7 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 				// base info
 				sectionInfo.setChainagePrefix(prefix);
 				sectionInfo.setChainage(cv);
-				sectionInfo.setInBuiltTime(DateUtils.toDate(date, DateUtils.PART_TIME_FORMAT));
+				sectionInfo.setInbuiltTime(DateUtils.toDate(date, DateUtils.DATE_TIME_FORMAT));
 				sectionInfo.setWidth(CrtbUtils.formatDouble(width));
 				
 				// excavation
@@ -681,12 +683,12 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 				
 				sectionInfo.setGDU0(Float.valueOf(gdlj));
 				sectionInfo.setGDVelocity(Float.valueOf(gdsl));
-				sectionInfo.setGDU0Time(DateUtils.toDate(gdtime, DateUtils.PART_TIME_FORMAT));
+				sectionInfo.setGDU0Time(DateUtils.toDate(gdtime, DateUtils.DATE_TIME_FORMAT));
 				sectionInfo.setGDU0Description(gddes);
 				
 				sectionInfo.setSLU0(Float.valueOf(zblj));
 				sectionInfo.setSLLimitVelocity(Float.valueOf(zbsl));
-				sectionInfo.setSLU0Time(DateUtils.toDate(zbtime, DateUtils.PART_TIME_FORMAT));
+				sectionInfo.setSLU0Time(DateUtils.toDate(zbtime, DateUtils.DATE_TIME_FORMAT));
 				sectionInfo.setSLU0Description(zbdes);
 				
 				dao.update(sectionInfo);

@@ -31,7 +31,7 @@ public class TunnelCrossSectionIndex implements Serializable {
     private double Chainage; 			// 断面里程值
     
     @ColumnDate
-    private Date InBuiltTime; 			// 埋设时间
+    private Date InbuiltTime; 			// 埋设时间
     
     @ColumnDouble
     private double Width; 				// 断面宽度
@@ -141,15 +141,15 @@ public class TunnelCrossSectionIndex implements Serializable {
         Chainage = chainage;
     }
 
-    public Date getInBuiltTime() {
-        return InBuiltTime;
-    }
+    public Date getInbuiltTime() {
+		return InbuiltTime;
+	}
 
-    public void setInBuiltTime(Date inBuiltTime) {
-        InBuiltTime = inBuiltTime;
-    }
+	public void setInbuiltTime(Date inbuiltTime) {
+		InbuiltTime = inbuiltTime;
+	}
 
-    public double getWidth() {
+	public double getWidth() {
 		return Width;
 	}
 

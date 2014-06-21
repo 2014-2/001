@@ -151,7 +151,7 @@ public final class CrtbUtils {
         outParamter.setWallRockLevel(3);
 
         // TODO:若取不到数据,使用当前时间
-        Date builtTime = section.getInBuiltTime();
+        Date builtTime = section.getInbuiltTime();
         outParamter.setFirstMeasureDate(builtTime != null ? builtTime : new Date());
         outParamter.setRemark(section.getInfo());
     }

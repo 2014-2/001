@@ -362,14 +362,14 @@ public class SectionNewSubsidenceActivity extends WorkFlowActivity implements On
 				subsidence.setChainagePrefix(prefix);
 				subsidence.setChainage(cv);
 				subsidence.setWidth(CrtbUtils.formatDouble(width));
-				subsidence.setInbuiltTime(DateUtils.toDate(date, DateUtils.PART_TIME_FORMAT));
+				subsidence.setInbuiltTime(DateUtils.toDate(date, DateUtils.DATE_TIME_FORMAT));
 				subsidence.setSurveyPnts(pc);
 				subsidence.setSurveyPntName(pntName.toString());
 				
 				//
 				subsidence.setDBU0(CrtbUtils.formatFloat(dbu0));
 				subsidence.setDBLimitVelocity(CrtbUtils.formatFloat(dbl));
-				subsidence.setDBU0Time(DateUtils.toDate(buildtime,DateUtils.PART_TIME_FORMAT));
+				subsidence.setDBU0Time(DateUtils.toDate(buildtime,DateUtils.DATE_TIME_FORMAT));
 				
 				// 1表示未上传, 2表示已上传
 				subsidence.setUploadStatus(1); //表示该断面未上传
@@ -390,14 +390,14 @@ public class SectionNewSubsidenceActivity extends WorkFlowActivity implements On
 				subsidence.setChainagePrefix(prefix);
 				subsidence.setChainage(cv);
 				subsidence.setWidth(CrtbUtils.formatDouble(width));
-				subsidence.setInbuiltTime(DateUtils.toDate(date, DateUtils.PART_TIME_FORMAT));
+				subsidence.setInbuiltTime(DateUtils.toDate(date, DateUtils.DATE_TIME_FORMAT));
 				subsidence.setSurveyPnts(pc);
 				subsidence.setSurveyPntName(pntName.toString());
 				
 				//
 				subsidence.setDBU0(CrtbUtils.formatFloat(dbu0));
 				subsidence.setDBLimitVelocity(CrtbUtils.formatFloat(dbl));
-				subsidence.setDBU0Time(DateUtils.toDate(buildtime,DateUtils.PART_TIME_FORMAT));
+				subsidence.setDBU0Time(DateUtils.toDate(buildtime,DateUtils.DATE_TIME_FORMAT));
 				subsidence.setInfo(remark);
 
 				// insert
