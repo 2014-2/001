@@ -5,6 +5,7 @@ import java.util.List;
 import android.content.Context;
 import android.util.AttributeSet;
 
+import com.crtb.tunnelmonitor.AppPreferences;
 import com.crtb.tunnelmonitor.dao.impl.v2.RawSheetIndexDao;
 import com.crtb.tunnelmonitor.entity.RawSheetIndex;
 
@@ -57,6 +58,21 @@ public final class CrtbTestRecordTunnelSectionListView extends CrtbBaseListView 
 	public void onReload() {
 		
 		List<RawSheetIndex> list = RawSheetIndexDao.defaultDao().queryTunnelSectionRawSheetIndex();
+		
+		AppPreferences pf = AppPreferences.getPreferences() ;
+		int id = pf.getInt(AppPreferences.KEY_CURRENT_TUNNEL_INDEX);
+		
+		if(list != null && id >= 0){
+			for(RawSheetIndex bean : list){
+				
+				if(bean.getID() == id){
+					bean.setChecked(true);
+				} else {
+					bean.setChecked(false);
+				}
+			}
+		}
+		
 		mAdapter.loadEntityDatas(list);
 	}
 	

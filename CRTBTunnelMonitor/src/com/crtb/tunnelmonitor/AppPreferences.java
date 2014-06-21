@@ -15,7 +15,9 @@ import android.preference.PreferenceManager;
  */
 public final class AppPreferences {
 	
-	static final String KEY_CURRENT_PROJECT				= "_key_current_project" ; // 当前项目
+	public static final String KEY_CURRENT_PROJECT				= "_key_current_project" ; 		// 当前项目
+	public static final String KEY_CURRENT_TUNNEL_INDEX			= "_key_current_tunnel_index" ; // 隧道内断面
+	public static final String KEY_CURRENT_SUBSIDENCE_INDEX		= "_key_current_subsidence_index" ; // 地表下沉
 	
 	private static AppPreferences _instance ;
 	private SharedPreferences 	mSharedPreferences ;

@@ -13,8 +13,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.crtb.tunnelmonitor.AppPreferences;
 import com.crtb.tunnelmonitor.activity.R;
-import com.crtb.tunnelmonitor.dao.impl.v2.RawSheetIndexDao;
 import com.crtb.tunnelmonitor.entity.RawSheetIndex;
 
 /**
@@ -35,25 +35,20 @@ public class CrtbTestRecordSubsidenceAdapter extends CrtbEntityAdapter<RawSheetI
 			return ;
 		}
 		
-		int position = mList.indexOf(obj);
+		AppPreferences pf = AppPreferences.getPreferences() ;
+		pf.putInt(AppPreferences.KEY_CURRENT_TUNNEL_INDEX, obj.getID());
 		
-		if(position < 0){
-			return ;
-		}
-		
-		RawSheetIndexDao dao = RawSheetIndexDao.defaultDao() ;
+		int id = pf.getInt(AppPreferences.KEY_CURRENT_TUNNEL_INDEX);
 		
 		for(int index = 0 ,size = mList.size() ; index < size ; index++){
 			
 			RawSheetIndex item = mList.get(index) ;
 			
-			if(index == position){
+			if(index == id){
 				item.setChecked(true);
 			} else {
 				item.setChecked(false);
 			}
-			
-			dao.update(item);
 		}
 		
 		notifyDataSetChanged() ;
