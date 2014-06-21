@@ -12,6 +12,8 @@ import org.zw.android.framework.db.Table;
 import org.zw.android.framework.db.core.ColumnPrimaryKey;
 import org.zw.android.framework.db.core.ColumnPrimaryKey.PrimaryKeyType;
 
+import com.crtb.tunnelmonitor.utils.AlertUtils;
+
 /**
  * 预警日志实体
  */
@@ -122,7 +124,11 @@ public class AlertHandlingList implements Serializable {
 
     public void setInfo(String info) {
         Info = info;
-        setHandling(3);// default 3 for 添加修正值
+        for (int i =0; i< AlertUtils.ALERT_HANDLING.length; i++) {
+            if (info.contains(AlertUtils.ALERT_HANDLING[i])) {
+                setHandling(i);
+            }
+        }
     }
 
     public AlertHandlingList() {

@@ -86,10 +86,10 @@
     <string name="handling_remark">备注: %s</string>
     <string name="handling_status">处理后状态: %s</string>
 
-    <string name="deal_way_void">数据作废</string>
-    <string name="deal_way_first">数据作为首行</string>
+    <string name="deal_way_void">不参与计算</string>
+    <string name="deal_way_first">作为首行</string>
     <string name="deal_way_add">添加改正值</string>
-    <string name="deal_way_normal">正常计算</string>
+    <string name="deal_way_normal">正常参与计算</string>
     <string name="deal_way_rebury">重埋</string>
 
     <string name="remark_correction">添加改正值%.1f毫米</string>
