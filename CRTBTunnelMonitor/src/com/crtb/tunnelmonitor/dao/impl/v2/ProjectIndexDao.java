@@ -292,14 +292,14 @@ public final class ProjectIndexDao extends AbstractDao<ProjectIndex> {
 		if(code > 0){
 			
 			// 保存工程配置文件表
-			ProjectSettingIndex setting = new ProjectSettingIndex() ;
+			/*ProjectSettingIndex setting = new ProjectSettingIndex() ;
 			setting.setProjectName(dbName);
 			setting.setChainagePrefix(bean.getChainagePrefix());
 			setting.setInfo(bean.getInfo());
 			setting.setProjectID(bean.getId());
 			setting.setYMDFormat(0);
 			setting.setHMSFormat(0);
-			db.saveObject(setting);
+			db.saveObject(setting);*/
 			
 			ProjectIndex obj = db.queryObject("select * from ProjectIndex where ProjectName = ? ", new String[]{dbName}, ProjectIndex.class) ;
 			
