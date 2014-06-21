@@ -329,6 +329,12 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 		section_new_single_gd.setEnabled(false);
 		section_new_single_sl.setEnabled(false);
 		
+		// 开挖方式
+		section_new_et_a.setEnabled(false);
+		section_new_et_s1.setEnabled(false);
+		section_new_et_s2.setEnabled(false);
+		section_new_et_s3.setEnabled(false);
+		
 		if(sectionInfo != null){
 			
 			setTopbarTitle("编辑隧道内断面");
@@ -341,12 +347,6 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 			
 			section_new_et_Chainage.setEnabled(false);
 			section_new_et_width.setEnabled(false);
-			
-			// 开挖方式
-			section_new_et_a.setEnabled(false);
-			section_new_et_s1.setEnabled(false);
-			section_new_et_s2.setEnabled(false);
-			section_new_et_s3.setEnabled(false);
 			
 			section_new_sp.setSelection(getExcavateMethod(ExcavateMethodEnum.parser(sectionInfo.getExcavateMethod()).getName()));
 			
