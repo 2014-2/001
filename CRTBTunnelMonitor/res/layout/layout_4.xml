@@ -52,7 +52,7 @@
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="15dp"
         android:orientation="horizontal" >
 
         <TextView
@@ -82,7 +82,7 @@
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="40dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="15dp"
         android:orientation="horizontal" >
 
         <TextView
@@ -109,7 +109,7 @@
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="40dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="15dp"
         android:orientation="horizontal" >
 
         <TextView
@@ -147,15 +147,15 @@
                 android:layout_toLeftOf="@id/mi"
                 android:inputType="numberDecimal"
                 android:maxLength="6"
-                android:text="10"
-                android:singleLine="true" />
+                android:singleLine="true"
+                android:text="10" />
         </RelativeLayout>
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="40dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="15dp"
         android:orientation="horizontal" >
 
         <TextView
@@ -195,6 +195,39 @@
                 android:inputType="numberDecimal"
                 android:maxLength="2"
                 android:singleLine="true" />
+        </RelativeLayout>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/x"
+            android:visibility="invisible" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="60dp"
+        android:layout_marginTop="15dp"
+        android:orientation="horizontal" >
+
+        <TextView
+            style="@style/work_plan_label"
+            android:layout_gravity="center_vertical"
+            android:text="围岩级别" />
+
+        <RelativeLayout
+            android:layout_width="210dp"
+            android:layout_height="wrap_content" >
+
+            <Spinner
+                android:id="@+id/section_rockgrade"
+                android:layout_width="wrap_content"
+                android:layout_height="50dip"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="20dp"
+                android:layout_toRightOf="@id/tv" />
         </RelativeLayout>
 
         <ImageView

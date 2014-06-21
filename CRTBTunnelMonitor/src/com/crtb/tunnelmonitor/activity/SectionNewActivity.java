@@ -96,6 +96,9 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 	
 	@InjectView(id=R.id.section_new_et_width,parent="mBaseInfoLayout")
 	private EditText section_new_et_width;
+	
+	@InjectView(id=R.id.section_rockgrade,parent="mBaseInfoLayout")
+	private Spinner rockgrade ;
 
 	///////////////////////////////excavation info//////////////////////////////
 	@InjectView(layout=R.layout.section_new_kaiwa)
@@ -185,6 +188,12 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		section_new_sp.setAdapter(adapter) ;
 		
+		// 围岩级别
+		ArrayAdapter<?> adapter2 = ArrayAdapter.createFromResource(this, R.array.rockgrade_array,  
+                android.R.layout.simple_spinner_item) ;
+		adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		rockgrade.setAdapter(adapter2) ;
+		
 		section_new_sp.setOnItemSelectedListener(new OnItemSelectedListener() {
 
 			@Override
@@ -224,9 +233,25 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 			}
 		}) ;
 		
+		// 围岩级别
+		section_new_sp.setOnItemSelectedListener(new OnItemSelectedListener() {
+
+			@Override
+			public void onItemSelected(AdapterView<?> parent, View view,
+					int position, long id) {
+				
+			}
+
+			@Override
+			public void onNothingSelected(AdapterView<?> parent) {
+				
+			}
+		});
+		
 		// 是否可以编辑
 		if(sectionInfo != null){
 			section_new_sp.setClickable(false);
+			rockgrade.setClickable(false);
 		}
 		
 		String date = DateUtils.toDateString(DateUtils.getCurrtentTimes(), DateUtils.DATE_TIME_FORMAT) ;
@@ -349,6 +374,7 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 			section_new_et_width.setEnabled(false);
 			
 			section_new_sp.setSelection(getExcavateMethod(ExcavateMethodEnum.parser(sectionInfo.getExcavateMethod()).getName()));
+			rockgrade.setSelection(getRockgrade(sectionInfo.getROCKGRADE()));
 			
 			if(sectionInfo.getSurveyPntName() != null){
 				
@@ -657,6 +683,8 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 				
 				// excavation
 				sectionInfo.setExcavateMethod(ExcavateMethodEnum.parser((String)section_new_sp.getSelectedItem()).getCode());
+				// 围岩级别
+				sectionInfo.setROCKGRADE(rockgrade.getSelectedItem().toString()) ;
 				
 				int code = dao.insert(sectionInfo);
 				
@@ -678,6 +706,8 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 				
 				// excavation
 				sectionInfo.setExcavateMethod(ExcavateMethodEnum.parser((String)section_new_sp.getSelectedItem()).getCode());
+				// 围岩级别
+				sectionInfo.setROCKGRADE(rockgrade.getSelectedItem().toString()) ;
 				
 				sectionInfo.setSurveyPntName(str.toString());
 				

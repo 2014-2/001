@@ -25,11 +25,13 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.crtb.tunnelmonitor.CommonObject;
@@ -89,6 +91,9 @@ public class SectionNewSubsidenceActivity extends WorkFlowActivity implements On
     
     @InjectView(id=R.id.section_new_et_pc,parent="mBaseInfoLayout")
     private EditText DSection_PointCount;
+    
+    @InjectView(id=R.id.section_rockgrade,parent="mBaseInfoLayout")
+	private Spinner rockgrade ;
     
     ////////////////////////////////deformation info//////////////////
     @InjectView(layout=R.layout.layout_2)
@@ -201,6 +206,17 @@ public class SectionNewSubsidenceActivity extends WorkFlowActivity implements On
 			}
 		}) ;
 		
+		// 围岩级别
+		ArrayAdapter<?> adapter2 = ArrayAdapter.createFromResource(this,
+				R.array.rockgrade_array, android.R.layout.simple_spinner_item);
+		adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		rockgrade.setAdapter(adapter2);
+		
+		// 是否可以编辑
+		if (subsidence != null) {
+			rockgrade.setClickable(false);
+		}
+		
 		//
 		loadDefault();
     }
@@ -224,6 +240,8 @@ public class SectionNewSubsidenceActivity extends WorkFlowActivity implements On
 			DSection_Chainage.setEnabled(false);
 			DSection_Width.setEnabled(false);
 			DSection_PointCount.setEnabled(false);
+			
+			rockgrade.setSelection(getRockgrade(subsidence.getROCKGRADE()));
 			
 			DSection_Value1.setText(String.valueOf(subsidence.getDBU0()));
 			DSection_Value2.setText(String.valueOf(subsidence.getDBLimitVelocity()));
@@ -366,6 +384,9 @@ public class SectionNewSubsidenceActivity extends WorkFlowActivity implements On
 				subsidence.setSurveyPnts(pc);
 				subsidence.setSurveyPntName(pntName.toString());
 				
+				// 围岩级别
+				subsidence.setROCKGRADE(rockgrade.getSelectedItem().toString()) ;
+				
 				//
 				subsidence.setDBU0(CrtbUtils.formatFloat(dbu0));
 				subsidence.setDBLimitVelocity(CrtbUtils.formatFloat(dbl));
@@ -393,6 +414,9 @@ public class SectionNewSubsidenceActivity extends WorkFlowActivity implements On
 				subsidence.setInbuiltTime(DateUtils.toDate(date, DateUtils.DATE_TIME_FORMAT));
 				subsidence.setSurveyPnts(pc);
 				subsidence.setSurveyPntName(pntName.toString());
+				
+				// 围岩级别
+				subsidence.setROCKGRADE(rockgrade.getSelectedItem().toString()) ;
 				
 				//
 				subsidence.setDBU0(CrtbUtils.formatFloat(dbu0));
