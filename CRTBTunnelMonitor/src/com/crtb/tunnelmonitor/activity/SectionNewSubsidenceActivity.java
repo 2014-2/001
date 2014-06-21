@@ -340,6 +340,14 @@ public class SectionNewSubsidenceActivity extends WorkFlowActivity implements On
 				return;
 			}
 			
+			StringBuilder pntName = new StringBuilder() ;
+			for(int index = 0 ; index < pc ; index++){
+				
+				if(index > 0){
+					pntName.append(",");
+				}
+			}
+			
 			if(subsidence == null){
 				
 				// 是否存在相同里程的断面
@@ -356,6 +364,7 @@ public class SectionNewSubsidenceActivity extends WorkFlowActivity implements On
 				subsidence.setWidth(CrtbUtils.formatDouble(width));
 				subsidence.setInbuiltTime(DateUtils.toDate(date, DateUtils.PART_TIME_FORMAT));
 				subsidence.setSurveyPnts(pc);
+				subsidence.setSurveyPntName(pntName.toString());
 				
 				//
 				subsidence.setDBU0(CrtbUtils.formatFloat(dbu0));
@@ -383,7 +392,8 @@ public class SectionNewSubsidenceActivity extends WorkFlowActivity implements On
 				subsidence.setWidth(CrtbUtils.formatDouble(width));
 				subsidence.setInbuiltTime(DateUtils.toDate(date, DateUtils.PART_TIME_FORMAT));
 				subsidence.setSurveyPnts(pc);
-
+				subsidence.setSurveyPntName(pntName.toString());
+				
 				//
 				subsidence.setDBU0(CrtbUtils.formatFloat(dbu0));
 				subsidence.setDBLimitVelocity(CrtbUtils.formatFloat(dbl));
