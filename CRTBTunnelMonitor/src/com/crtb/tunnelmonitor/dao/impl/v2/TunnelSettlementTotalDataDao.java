@@ -170,12 +170,12 @@ public class TunnelSettlementTotalDataDao extends AbstractDao<TunnelSettlementTo
      *            断面里程ID
      * @param pntType
      *            测点类型
-     * @param MEASNo
+     * @param id
      *            本次测量是第几次测量
      * @return 查询到的测点信息List
      */
-    public List<TunnelSettlementTotalData> queryInfoBeforeMEASNo(
-            String chainageId, String pntType, int MEASNo) {
+    public List<TunnelSettlementTotalData> queryInfoBeforeMeasId(
+            String chainageId, String pntType, int id) {
 
         final IAccessDatabase mDatabase = getCurrentDb();
 
@@ -187,11 +187,11 @@ public class TunnelSettlementTotalDataDao extends AbstractDao<TunnelSettlementTo
                 + chainageId + "\'"
                 + " AND pntType=\'"
                 + pntType
-                + "\' AND MEASNo<?"
+                + "\' AND ID<?"
                 + " AND DataStatus != ?"
-                + " order by MEASNo ASC";
+                + " order by ID ASC";
 
-        String[] args = new String[] {String.valueOf(MEASNo), String.valueOf(AlertUtils.POINT_DATASTATUS_DISCARD)};
+        String[] args = new String[] {String.valueOf(id), String.valueOf(AlertUtils.POINT_DATASTATUS_DISCARD)};
         
         return mDatabase.queryObjects(sql, args, TunnelSettlementTotalData.class);
     }
@@ -203,12 +203,12 @@ public class TunnelSettlementTotalDataDao extends AbstractDao<TunnelSettlementTo
      *            断面里程ID
      * @param pntType
      *            测点类型
-     * @param MEASNo
+     * @param id
      *            本次测量是第几次测量
      * @return 查询到的测点信息List
      */
-    public List<TunnelSettlementTotalData> queryInfoAfterMEASNo(String chainageId, String pntType,
-            int MEASNo) {
+    public List<TunnelSettlementTotalData> queryInfoAfterMeasId(String chainageId, String pntType,
+            int id) {
 
         final IAccessDatabase mDatabase = getCurrentDb();
 
@@ -217,10 +217,10 @@ public class TunnelSettlementTotalDataDao extends AbstractDao<TunnelSettlementTo
         }
 
         String sql = "select * from TunnelSettlementTotalData where chainageId=\'" + chainageId + "\'"
-                + " AND pntType=\'" + pntType + "\' AND MEASNo>=?" + " AND DataStatus != ?"
-                + " order by MEASNo ASC";
+                + " AND pntType=\'" + pntType + "\' AND ID>=?" + " AND DataStatus != ?"
+                + " order by ID ASC";
 
-        String[] args = new String[] { String.valueOf(MEASNo),
+        String[] args = new String[] { String.valueOf(id),
                 String.valueOf(AlertUtils.POINT_DATASTATUS_DISCARD) };
         
         return mDatabase.queryObjects(sql, args, TunnelSettlementTotalData.class);

@@ -43,7 +43,7 @@ public class SubsidenceTotalDataDao extends AbstractDao<SubsidenceTotalData> {
 		mDatabase.execute(sql, SQLiteParamUtils.toParamemter(bean.getID()));
 	}
 
-    public List<SubsidenceTotalData> queryAllOrderByMEASNoDesc(String pntType) {
+    public List<SubsidenceTotalData> queryAllOrderByIdDesc(String pntType) {
 
         final IAccessDatabase mDatabase = getCurrentDb();
 
@@ -51,7 +51,7 @@ public class SubsidenceTotalDataDao extends AbstractDao<SubsidenceTotalData> {
             return null;
         }
 
-        String sql = "select * from SubsidenceTotalData where PntType=? ORDER BY MEASNo DESC";
+        String sql = "select * from SubsidenceTotalData where PntType=? ORDER BY ID DESC";
         String[] args = new String[] { pntType };
 
         return mDatabase.queryObjects(sql, args, SubsidenceTotalData.class);
@@ -179,11 +179,11 @@ public class SubsidenceTotalDataDao extends AbstractDao<SubsidenceTotalData> {
      *
      * @param chainageId 断面里程ID
      * @param pntType 测点类型
-     * @param MEASNo 本次测量是第几次测量
+     * @param id 本次测量是第几次测量
      * @return 查询到的测点信息List
      */
-    public List<SubsidenceTotalData> queryInfoBeforeMEASNo(String chainageId, String pntType,
-            int MEASNo) {
+    public List<SubsidenceTotalData> queryInfoBeforeMeasId(String chainageId, String pntType,
+            int id) {
 
         final IAccessDatabase mDatabase = getCurrentDb();
 
@@ -194,10 +194,10 @@ public class SubsidenceTotalDataDao extends AbstractDao<SubsidenceTotalData> {
         String sql = "select * from SubsidenceTotalData where"
                 + " chainageId=\'" + chainageId + "\'"
                 + " AND pntType=\'" + pntType + "\'"
-                + " AND MEASNo < " + String.valueOf(MEASNo)
+                + " AND ID < " + String.valueOf(id)
                 + " AND DataStatus != "
                 + String.valueOf(AlertUtils.POINT_DATASTATUS_DISCARD)
-                + " order by MEASNo ASC";
+                + " order by ID ASC";
 
         return mDatabase.queryObjects(sql, SubsidenceTotalData.class);
     }
@@ -207,11 +207,11 @@ public class SubsidenceTotalDataDao extends AbstractDao<SubsidenceTotalData> {
      *
      * @param chainageId 断面里程ID
      * @param pntType 测点类型
-     * @param MEASNo 本次测量是第几次测量
+     * @param measId 本次测量是第几次测量
      * @return 查询到的测点信息List
      */
-    public List<SubsidenceTotalData> queryInfoAfterMEASNo(String chainageId, String pntType,
-            int MEASNo) {
+    public List<SubsidenceTotalData> queryInfoAfterMeasId(String chainageId, String pntType,
+            int measId) {
         
         final IAccessDatabase mDatabase = getCurrentDb();
         
@@ -222,10 +222,10 @@ public class SubsidenceTotalDataDao extends AbstractDao<SubsidenceTotalData> {
         String sql = "select * from SubsidenceTotalData where"
                 + " chainageId=\'" + chainageId + "\'"
                 + " AND pntType=\'" + pntType + "\'"
-                + " AND MEASNo >= " + String.valueOf(MEASNo)
+                + " AND ID >= " + String.valueOf(measId)
                 + " AND DataStatus != "
                 + String.valueOf(AlertUtils.POINT_DATASTATUS_DISCARD)
-                + " order by MEASNo ASC";
+                + " order by ID ASC";
         
         return mDatabase.queryObjects(sql, SubsidenceTotalData.class);
     }

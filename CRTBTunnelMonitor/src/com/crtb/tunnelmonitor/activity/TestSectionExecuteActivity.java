@@ -766,7 +766,7 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
                                 obj.setDataStatus(0);
                                 int lastMEASNo = 0;
                                 List<SubsidenceTotalData> l = dao
-                                        .queryAllOrderByMEASNoDesc(info.type);
+                                        .queryAllOrderByIdDesc(info.type);
                                 if (l != null && l.size() > 0) {
                                     SubsidenceTotalData last = l.get(0);
                                     lastMEASNo = last.getMEASNo();

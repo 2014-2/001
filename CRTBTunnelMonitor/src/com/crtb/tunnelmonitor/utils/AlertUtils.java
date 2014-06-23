@@ -181,8 +181,8 @@ public class AlertUtils {
             thisCoords = tPoint.getCoordinate().split(",");
             thisTime = tPoint.getSurveyTime();
             thisDataCorrection = tPoint.getDataCorrection();
-            pastInfoList = TunnelSettlementTotalDataDao.defaultDao().queryInfoBeforeMEASNo(
-                    tPoint.getChainageId(), tPoint.getPntType(), tPoint.getMEASNo());
+            pastInfoList = TunnelSettlementTotalDataDao.defaultDao().queryInfoBeforeMeasId(
+                    tPoint.getChainageId(), tPoint.getPntType(), tPoint.getID());
             sumOfDataCorrection = thisDataCorrection + calculateSumOfDataCorrectionsOfTunnelSettlementTotalDatas(pastInfoList);
             chainageId = tPoint.getChainageId();
             sheetId = tPoint.getSheetId();
@@ -201,8 +201,8 @@ public class AlertUtils {
             thisCoords = sPoint.getCoordinate().split(",");
             thisTime = sPoint.getSurveyTime();
             thisDataCorrection = sPoint.getDataCorrection();
-            pastInfoList = SubsidenceTotalDataDao.defaultDao().queryInfoBeforeMEASNo(
-                    sPoint.getChainageId(), sPoint.getPntType(), sPoint.getMEASNo());
+            pastInfoList = SubsidenceTotalDataDao.defaultDao().queryInfoBeforeMeasId(
+                    sPoint.getChainageId(), sPoint.getPntType(), sPoint.getID());
             sumOfDataCorrection = thisDataCorrection + calculateSumOfDataCorrectionsOfSubsidenceTotalDatas(pastInfoList);
             chainageId = sPoint.getChainageId();
             sheetId = sPoint.getSheetId();
@@ -478,7 +478,7 @@ public class AlertUtils {
         }
 
         List<TunnelSettlementTotalData> s_1InfoList = TunnelSettlementTotalDataDao.defaultDao()
-                .queryInfoBeforeMEASNo(chainageId, s_1.getPntType(), s_1.getMEASNo());
+                .queryInfoBeforeMeasId(chainageId, s_1.getPntType(), s_1.getID());
         if (s_1InfoList != null && s_1InfoList.size() > 0) {
 
             int s = s_1InfoList.size();
@@ -654,8 +654,8 @@ public class AlertUtils {
             TunnelSettlementTotalData tPoint = (TunnelSettlementTotalData) point;
             thisCoords = tPoint.getCoordinate().split(",");
             thisDataCorrection = tPoint.getDataCorrection();
-            pastInfoList = TunnelSettlementTotalDataDao.defaultDao().queryInfoBeforeMEASNo(
-                    tPoint.getChainageId(), tPoint.getPntType(), tPoint.getMEASNo());
+            pastInfoList = TunnelSettlementTotalDataDao.defaultDao().queryInfoBeforeMeasId(
+                    tPoint.getChainageId(), tPoint.getPntType(), tPoint.getID());
             sumOfDataCorrection = thisDataCorrection
                     + calculateSumOfDataCorrectionsOfTunnelSettlementTotalDatas(pastInfoList);
         } else if (point instanceof SubsidenceTotalData) {
@@ -667,8 +667,8 @@ public class AlertUtils {
             SubsidenceTotalData sPoint = (SubsidenceTotalData) point;
             thisCoords = sPoint.getCoordinate().split(",");
             thisDataCorrection = sPoint.getDataCorrection();
-            pastInfoList = SubsidenceTotalDataDao.defaultDao().queryInfoBeforeMEASNo(
-                    sPoint.getChainageId(), sPoint.getPntType(), sPoint.getMEASNo());
+            pastInfoList = SubsidenceTotalDataDao.defaultDao().queryInfoBeforeMeasId(
+                    sPoint.getChainageId(), sPoint.getPntType(), sPoint.getID());
             sumOfDataCorrection = thisDataCorrection
                     + calculateSumOfDataCorrectionsOfSubsidenceTotalDatas(pastInfoList);
         } else {
@@ -738,7 +738,7 @@ public class AlertUtils {
         String chainageId = s_1.getChainageId();
 
         List<TunnelSettlementTotalData> s_1InfoList = TunnelSettlementTotalDataDao.defaultDao()
-                .queryInfoBeforeMEASNo(chainageId, s_1.getPntType(), s_1.getMEASNo());
+                .queryInfoBeforeMeasId(chainageId, s_1.getPntType(), s_1.getID());
         if (s_1InfoList != null && s_1InfoList.size() > 0) {
 
             int s = s_1InfoList.size();
@@ -1164,7 +1164,7 @@ public class AlertUtils {
 
             if (guids.size() == 1) {//测点
                 String guid = guids.get(0);
-                int measNo = -1;
+                int id = -1;
                 if (pntType.contains("A")) {//隧道内断面
                     TunnelSettlementTotalData p = TunnelSettlementTotalDataDao.defaultDao().queryOneByGuid(guid);
                     if (p != null) {
@@ -1189,7 +1189,7 @@ public class AlertUtils {
                         if (dataStatus == POINT_DATASTATUS_AS_FIRSTLINE
                                 || dataStatus == POINT_DATASTATUS_CORRECTION) {
                             // STEP 4
-                            measNo = p.getMEASNo();
+                            id = p.getID();
 //                            AlertHandlingInfoDao.defaultDao().deleteByAlertId(alertId);
 
 //                            if (dataStatus == POINT_DATASTATUS_CORRECTION && correction != 0) {
@@ -1224,7 +1224,7 @@ public class AlertUtils {
                         if (dataStatus == POINT_DATASTATUS_AS_FIRSTLINE
                                 || dataStatus == POINT_DATASTATUS_CORRECTION) {
                             // STEP 4
-                            measNo = p.getMEASNo();
+                            id = p.getID();
 //                            AlertHandlingInfoDao.defaultDao().deleteByAlertId(alertId);
 
 //                            if (dataStatus == POINT_DATASTATUS_CORRECTION && correction != 0) {
@@ -1236,13 +1236,13 @@ public class AlertUtils {
                     }
                 }
 
-                if (measNo != -1) {
+                if (id != -1) {
                     if (dataStatus == POINT_DATASTATUS_AS_FIRSTLINE) {
 //                        tarAlertStatus = alertStatus;
                         handleAsFirstLine(alertId, alertStatus, handling, duePerson, handlingTime,
-                                chainageId, pntType, measNo);
+                                chainageId, pntType, id);
                     }
-                    updatePointSubsidenceAlertsAfterCorrection(chainageId, pntType, measNo, alertId, handling, handlingTime);
+                    updatePointSubsidenceAlertsAfterCorrection(chainageId, pntType, id, alertId, handling, handlingTime);
                 }
             } else {//测线
                 TunnelSettlementTotalData s_1 = TunnelSettlementTotalDataDao.defaultDao()
@@ -1282,16 +1282,16 @@ public class AlertUtils {
 //                        tarAlertStatus = alertStatus;
                         String s1Type = s_1.getPntType();
                         handleAsFirstLine(alertId, alertStatus, handling, duePerson, handlingTime,
-                                chainageId, s1Type, s_1.getMEASNo());
+                                chainageId, s1Type, s_1.getID());
                         String oppositeType = s1Type.substring(0, s1Type.length() - 1) + "2";
                         handleAsFirstLine(alertId, alertStatus, handling, duePerson, handlingTime,
-                                chainageId, oppositeType, s_1.getMEASNo());
+                                chainageId, oppositeType, s_1.getID());
                     }
 
 //                    AlertHandlingInfoDao.defaultDao().deleteByAlertId(alertId);
 
                     updateLineConvergenceAlertsAfterCorrection(chainageId, s_1.getPntType(),
-                            s_1.getMEASNo(), alertId, handling, handlingTime);
+                            s_1.getID(), alertId, handling, handlingTime);
                 } else if (dataStatus == POINT_DATASTATUS_DISCARD) {
                     checkLineConvergenceExceed(s_1, s_2, alertId, handling, handlingTime, false);
                 }
@@ -1359,13 +1359,13 @@ public class AlertUtils {
 
     // 本条数据作为首行，即 将之前数据均设为不参与计算;然后删除本条（包括）之前的数据产生的所有预警信息
     public static void handleAsFirstLine(int alertId, int alertStatus, String handling,
-            String duePerson, Date handlingTime, String chainageId, String pntType, int MEASNo) {
+            String duePerson, Date handlingTime, String chainageId, String pntType, int measDataId) {
         if (handling == null) {
             handling = "";
         }
         if (pntType.contains("A") || pntType.contains("S")) {// 隧道内断面
             List<TunnelSettlementTotalData> ls = TunnelSettlementTotalDataDao.defaultDao()
-                    .queryInfoBeforeMEASNo(chainageId, pntType, MEASNo + 1);
+                    .queryInfoBeforeMeasId(chainageId, pntType, measDataId + 1);
             int size = ls.size();
             if (ls != null && size > 0) {
                 for (int i = 0; i < size; i++) {
@@ -1399,7 +1399,7 @@ public class AlertUtils {
             }
         } else {// 地表沉降
             List<SubsidenceTotalData> ls = SubsidenceTotalDataDao.defaultDao()
-                    .queryInfoBeforeMEASNo(chainageId, pntType, MEASNo + 1);
+                    .queryInfoBeforeMeasId(chainageId, pntType, measDataId + 1);
             int size = ls.size();
             if (ls != null && size > 0) {
                 for (int i = 0; i < size; i++) {
@@ -1431,11 +1431,11 @@ public class AlertUtils {
     }
 
     public static void updatePointSubsidenceAlertsAfterCorrection(String chainageId, String pntType,
-            int MEASNo, int curHandlingAlertId, String handling, Date handlingTime) {
+            int measId, int curHandlingAlertId, String handling, Date handlingTime) {
         Log.d(TAG, "updatePointSubsidenceAlertsAfterCorrection, pntType: " + pntType);
         if (pntType.contains("A")) {//隧道内断面
             List<TunnelSettlementTotalData> ls = TunnelSettlementTotalDataDao.defaultDao()
-                    .queryInfoAfterMEASNo(chainageId, pntType, MEASNo);
+                    .queryInfoAfterMeasId(chainageId, pntType, measId);
             if (ls != null && ls.size() > 0) {
                 for (TunnelSettlementTotalData p : ls) {
                     checkPointSubsidenceExceed(p, curHandlingAlertId, handling, handlingTime, false);
@@ -1443,7 +1443,7 @@ public class AlertUtils {
             }
         } else {//地表沉降
             List<SubsidenceTotalData> ls = SubsidenceTotalDataDao.defaultDao()
-                    .queryInfoAfterMEASNo(chainageId, pntType, MEASNo);
+                    .queryInfoAfterMeasId(chainageId, pntType, measId);
             if (ls != null && ls.size() > 0) {
                 for (SubsidenceTotalData p : ls) {
                     checkPointSubsidenceExceed(p, curHandlingAlertId, handling, handlingTime, false);
@@ -1453,12 +1453,12 @@ public class AlertUtils {
     }
 
     public static void updateLineConvergenceAlertsAfterCorrection(String chainageId, String pntType,
-            int MEASNo, int curHandlingAlertId, String handling, Date handlingTime) {
+            int measId, int curHandlingAlertId, String handling, Date handlingTime) {
         Log.d(TAG, "updateLineConvergenceAlertsAfterCorrection, pntType: " + pntType);
         if (pntType.contains("S") && pntType.endsWith("1")) {//测线左点
             String oppositePntType = pntType.substring(0, pntType.length() - 1) + "2";
             List<TunnelSettlementTotalData> ls = TunnelSettlementTotalDataDao.defaultDao()
-                    .queryInfoAfterMEASNo(chainageId, pntType, MEASNo);
+                    .queryInfoAfterMeasId(chainageId, pntType, measId);
             if (ls != null && ls.size() > 0) {
                 for (TunnelSettlementTotalData s_1 : ls) {
                     TunnelSettlementTotalData s_2 = TunnelSettlementTotalDataDao.defaultDao()
@@ -1535,7 +1535,7 @@ public class AlertUtils {
         
 
         List<TunnelSettlementTotalData> s_1InfoList = TunnelSettlementTotalDataDao.defaultDao()
-                .queryInfoBeforeMEASNo(chainageId, s_1.getPntType(), s_1.getMEASNo());
+                .queryInfoBeforeMeasId(chainageId, s_1.getPntType(), s_1.getID());
         if (s_1InfoList != null && s_1InfoList.size() > 0) {
 
             int s = s_1InfoList.size();

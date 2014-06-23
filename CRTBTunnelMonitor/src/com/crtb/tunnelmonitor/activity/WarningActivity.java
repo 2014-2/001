@@ -576,8 +576,8 @@ public class WarningActivity extends Activity {
                     type = 1;
                     TunnelSettlementTotalData tPoint = TunnelSettlementTotalDataDao.defaultDao().queryOneByGuid(guid);
                     if (tPoint != null) {
-                        pastInfoList = TunnelSettlementTotalDataDao.defaultDao().queryInfoBeforeMEASNo(
-                                tPoint.getChainageId(), tPoint.getPntType(), tPoint.getMEASNo());
+                        pastInfoList = TunnelSettlementTotalDataDao.defaultDao().queryInfoBeforeMeasId(
+                                tPoint.getChainageId(), tPoint.getPntType(), tPoint.getID());
                         thisTime = tPoint.getSurveyTime();
                     }
                 } else {
@@ -585,8 +585,8 @@ public class WarningActivity extends Activity {
                     type = 2;
                     SubsidenceTotalData sPoint = SubsidenceTotalDataDao.defaultDao().queryOneByGuid(guid);
                     if (sPoint != null) {
-                        pastInfoList = SubsidenceTotalDataDao.defaultDao().queryInfoBeforeMEASNo(
-                                sPoint.getChainageId(), sPoint.getPntType(), sPoint.getMEASNo());
+                        pastInfoList = SubsidenceTotalDataDao.defaultDao().queryInfoBeforeMeasId(
+                                sPoint.getChainageId(), sPoint.getPntType(), sPoint.getID());
                         thisTime = sPoint.getSurveyTime();
                     }
                 }
