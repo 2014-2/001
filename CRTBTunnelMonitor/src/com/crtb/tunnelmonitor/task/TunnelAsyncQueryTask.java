@@ -40,8 +40,13 @@ public class TunnelAsyncQueryTask extends AsyncQueryTask {
                 	 int measureNo = -1;
                      TunnelMeasureData measureData = null;
                      for(TunnelSettlementTotalData point : measurePoints) {
-                         if (measureNo != point.getMEASNo()) {
-                             measureNo = point.getMEASNo();
+                           // Yongdong: The same sheet should test at the same time. And MeasNo is always 1 now.
+//                         if (measureNo != point.getMEASNo()) {
+//                             measureNo = point.getMEASNo();
+//                             measureData = new TunnelMeasureData();
+//                             measureDataList.add(measureData);
+//                         }
+                         if (measureData == null) {
                              measureData = new TunnelMeasureData();
                              measureDataList.add(measureData);
                          }
