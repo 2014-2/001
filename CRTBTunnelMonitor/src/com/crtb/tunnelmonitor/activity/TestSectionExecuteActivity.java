@@ -656,8 +656,8 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
                                     rawSheetBean.getGuid(), tunnelSection.getGuid(), info.type);
                             if (old != null) {
                                 // UPDATE
-                                 obj.setMEASNo(old.getMEASNo() + 1);
-//                                obj.setMEASNo(1);
+//                                 obj.setMEASNo(old.getMEASNo() + 1);
+                                obj.setMEASNo(1);
                                 obj.setID(old.getID());
                                 obj.setDataStatus(old.getDataStatus());
                                 err = dao.update(obj);
@@ -667,13 +667,13 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
                                 obj.setDataStatus(0);
                                 int lastMEASNo = 0;
                                 List<TunnelSettlementTotalData> l = dao
-                                        .queryAllOrderByMEASNoDesc(info.type);
+                                        .queryAllOrderByMeasIdDesc(info.type);
                                 if (l != null && l.size() > 0) {
                                     TunnelSettlementTotalData last = l.get(0);
                                     lastMEASNo = last.getMEASNo();
                                 }
-                                 obj.setMEASNo(lastMEASNo + 1);
-//                                obj.setMEASNo(1); // 始终为1
+//                                 obj.setMEASNo(lastMEASNo + 1);
+                                obj.setMEASNo(1); // 始终为1
                                 err = dao.insert(obj);
                                 update = false;
                             }
@@ -755,8 +755,8 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 
                             if (old != null) {
                                 // UPDATE
-                                 obj.setMEASNo(old.getMEASNo());// 测量次数始终为1
-//                                obj.setMEASNo(1);
+//                                 obj.setMEASNo(old.getMEASNo());// 测量次数始终为1
+                                obj.setMEASNo(1);
                                 obj.setID(old.getID());
                                 obj.setDataStatus(old.getDataStatus());
                                 err = dao.update(obj);
@@ -771,8 +771,8 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
                                     SubsidenceTotalData last = l.get(0);
                                     lastMEASNo = last.getMEASNo();
                                 }
-                                 obj.setMEASNo(lastMEASNo + 1);// 测量次数始终为1
-//                                obj.setMEASNo(1);
+//                                 obj.setMEASNo(lastMEASNo + 1);// 测量次数始终为1
+                                obj.setMEASNo(1);
                                 err = dao.insert(obj);
                                 update = false;
                             }
