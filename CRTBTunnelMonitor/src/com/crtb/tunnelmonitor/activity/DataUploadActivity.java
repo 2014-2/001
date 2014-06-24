@@ -5,7 +5,9 @@ import java.util.List;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
@@ -334,9 +336,32 @@ public class DataUploadActivity extends FragmentActivity {
     
 	private void uploadTunnelSheets() {
 		if (!mTunnelFragment.checkData()) {
-			Toast.makeText(DataUploadActivity.this, R.string.data_upload_promote, Toast.LENGTH_LONG).show();
-			return ;
+			AlertDialog.Builder builder = new Builder(this);
+			builder.setMessage(R.string.data_upload_promote_content);
+			builder.setTitle(R.string.data_upload_promote_title);
+			builder.setPositiveButton(R.string.data_upload_confirm, new DialogInterface.OnClickListener() {
+				
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					dialog.dismiss();
+					doUploadTunnelSheets();
+				}
+			});
+			builder.setNegativeButton(R.string.data_upload_deny, new DialogInterface.OnClickListener() {
+				
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					dialog.dismiss();
+					//Nothing need to do
+				}
+			});
+			builder.create().show();
+		} else {
+			doUploadTunnelSheets();
 		}
+	}
+    
+	private void doUploadTunnelSheets() {
 		List<RawSheetIndex> sheetRecords = mTunnelFragment.getUploadData();
 		if (sheetRecords != null && sheetRecords.size() > 0) {
 			TunnelAsyncQueryTask queryTask = new TunnelAsyncQueryTask(sheetRecords, new QueryLisenter() {
@@ -369,12 +394,35 @@ public class DataUploadActivity extends FragmentActivity {
 			Toast.makeText(getApplicationContext(), "请先选择要上传的记录单", Toast.LENGTH_LONG).show();
 		}
 	}
-    
+	
     private void uploadSubsidenceSheets() {
     	if (!mSubsidenceFragment.checkData()) {
-			Toast.makeText(DataUploadActivity.this, R.string.data_upload_promote, Toast.LENGTH_LONG).show();
-			return ;
+    		AlertDialog.Builder builder = new Builder(this);
+			builder.setMessage(R.string.data_upload_promote_content);
+			builder.setTitle(R.string.data_upload_promote_title);
+			builder.setPositiveButton(R.string.data_upload_confirm, new DialogInterface.OnClickListener() {
+				
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					dialog.dismiss();
+					doUploadSubsidenceSheets();
+				}
+			});
+			builder.setNegativeButton(R.string.data_upload_deny, new DialogInterface.OnClickListener() {
+				
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					dialog.dismiss();
+					//Nothing need to do
+				}
+			});
+			builder.create().show();
+		} else {
+			doUploadSubsidenceSheets();
 		}
+    }
+    
+    private void doUploadSubsidenceSheets() {
     	List<RawSheetIndex> sheetRecords = mSubsidenceFragment.getUploadData();
         if (sheetRecords != null && sheetRecords.size() > 0) {
         	SubsidenceAsyncQueryTask queryTask = new SubsidenceAsyncQueryTask(sheetRecords, new QueryLisenter() {
