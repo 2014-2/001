@@ -58,7 +58,7 @@ import com.crtb.tunnelmonitor.utils.Time;
 @InjectLayout(layout = R.layout.activity_testrecord_execute)
 public class TestSectionExecuteActivity extends WorkFlowActivity implements View.OnClickListener {
 
-    private static boolean DEBUG = true;// DEBUG FLAG, set to true to generate
+    private static boolean DEBUG = false ;// DEBUG FLAG, set to true to generate
                                          // fake data
     private static int COUNT = 0;// TODO: REMOVE: JUST FOR DEBUG
     private static double X = 2.3614D;
@@ -684,7 +684,7 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
                                 // tempTunnelData.add(obj);
                             	
                             	// 删除隧道内断面预警
-                                deleteSubsidenceAlertInfo(rawSheetBean.getGuid(), tunnelSection.getGuid(), obj.getGuid());
+                            	deleteTunnelAlertInfo(rawSheetBean.getGuid(), tunnelSection.getGuid(), old != null ? old.getGuid() : obj.getGuid());
                             	
                             	if(info.holder != null){
                             		info.holder.warringLayout.removeAllViews() ;
@@ -783,7 +783,7 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
                                 // tempSubsidenceData.add(obj);
                             	
                             	// 删除下沉预警
-                                deleteSubsidenceAlertInfo(rawSheetBean.getGuid(), subsidenceSection.getGuid(), obj.getGuid());
+                                deleteSubsidenceAlertInfo(rawSheetBean.getGuid(), subsidenceSection.getGuid(), old != null ? old.getGuid() : obj.getGuid());
                             	
                             	if(info.holder != null){
                             		info.holder.warringLayout.removeAllViews() ;
