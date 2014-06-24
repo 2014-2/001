@@ -382,29 +382,19 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 
                         if (id == CrtbDialogDelete.BUTTON_ID_CONFIRM) {
 
-                            String sheetId = rawSheetBean.getGuid();
-                            String chainageid = tunnelSection.getGuid();
-                            TunnelSettlementTotalDataDao dao = TunnelSettlementTotalDataDao
-                                    .defaultDao();
-                            TunnelSettlementTotalData obj = dao.queryTunnelTotalData(sheetId,
-                                    chainageid, type);
+                            String sheetId 		= rawSheetBean.getGuid();
+                            String chainageid 	= tunnelSection.getGuid();
+                            
+                            TunnelSettlementTotalDataDao dao 	= TunnelSettlementTotalDataDao.defaultDao();
+                            TunnelSettlementTotalData obj 		= dao.queryTunnelTotalData(sheetId,chainageid, type);
 
                             if (obj != null) {
 
                                 // dao.reset(obj);
                             	dao.delete(obj);
 
-                                List<AlertList> als = AlertListDao.defaultDao().queryByOrigionalDataId(String.valueOf(sheetId),chainageid, String.valueOf(obj.getGuid()));
-                               
-                                if (als != null && als.size() > 0) {
-                                    for (AlertList al : als) {
-                                        if (al.getUploadStatus() != 2) {
-                                            int alId = al.getID();
-                                            AlertHandlingInfoDao.defaultDao().deleteByAlertId(alId);
-                                            AlertListDao.defaultDao().deleteById(alId);
-                                        }
-                                    }
-                                }
+                            	// 删除预警
+                            	deleteTunnelAlertInfo(sheetId,chainageid,obj.getGuid());
 
                                 holder.mPointX.setText("");
                                 holder.mPointY.setText("");
@@ -423,6 +413,55 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
         });
 
         return holder;
+    }
+    
+    /**
+     * 删除隧道内预警信息
+     */
+    private void deleteTunnelAlertInfo(String sheetId, String chainageid, String guid){
+    	
+		if (sheetId == null || chainageid == null || guid == null) {
+			return;
+		}
+
+		List<AlertList> als = AlertListDao.defaultDao().queryByOrigionalDataId(String.valueOf(sheetId), chainageid, guid);
+
+		if (als != null && als.size() > 0) {
+			for (AlertList al : als) {
+				if (al.getUploadStatus() != 2) {
+					int alId = al.getID();
+					AlertHandlingInfoDao.defaultDao().deleteByAlertId(alId);
+					AlertListDao.defaultDao().deleteById(alId);
+				}
+			}
+		}
+    }
+    
+    /**
+     * 删除地表下沉预警
+     * 
+     * @param sheetId
+     * @param chainageid
+     * @param guid
+     */
+    private void deleteSubsidenceAlertInfo(String sheetId, String chainageid, String guid){
+    	
+    	if(sheetId == null || chainageid == null || guid == null){
+    		return ;
+    	}
+    	
+    	List<AlertList> als = AlertListDao.defaultDao().queryByOrigionalDataId(sheetId, chainageid,guid);
+        
+        if (als != null && als.size() > 0) {
+        	
+			for (AlertList al : als) {
+				if (al.getUploadStatus() != 2) {
+					int alId = al.getID();
+					AlertHandlingInfoDao.defaultDao().deleteByAlertId(alId);
+					AlertListDao.defaultDao().deleteById(alId);
+				}
+			}
+        }
     }
 
     // 异步测量
@@ -644,6 +683,9 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
                                 // 保存测量数据
                                 // tempTunnelData.add(obj);
                             	
+                            	// 删除隧道内断面预警
+                                deleteSubsidenceAlertInfo(rawSheetBean.getGuid(), tunnelSection.getGuid(), obj.getGuid());
+                            	
                             	if(info.holder != null){
                             		info.holder.warringLayout.removeAllViews() ;
                             	}
@@ -739,6 +781,9 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 
                                 // 保存临时数据
                                 // tempSubsidenceData.add(obj);
+                            	
+                            	// 删除下沉预警
+                                deleteSubsidenceAlertInfo(rawSheetBean.getGuid(), subsidenceSection.getGuid(), obj.getGuid());
                             	
                             	if(info.holder != null){
                             		info.holder.warringLayout.removeAllViews() ;
@@ -962,28 +1007,18 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 
                         if (id == CrtbDialogDelete.BUTTON_ID_CONFIRM) {
 
-                            SubsidenceTotalDataDao dao = SubsidenceTotalDataDao.defaultDao();
-                            String sheetId = rawSheetBean.getGuid();
-                            String chainageid = subsidenceSection.getGuid();
-                            SubsidenceTotalData obj = dao.querySubsidenceTotalData(sheetId,
-                                    chainageid, type);
+                            SubsidenceTotalDataDao dao 	= SubsidenceTotalDataDao.defaultDao();
+                            String sheetId 				= rawSheetBean.getGuid();
+                            String chainageid 			= subsidenceSection.getGuid();
+                            SubsidenceTotalData obj 	= dao.querySubsidenceTotalData(sheetId,chainageid, type);
 
                             if (obj != null) {
 
                             	//dao.reset(obj);
                                 dao.delete(obj);
-
-                                List<AlertList> als = AlertListDao.defaultDao().queryByOrigionalDataId(sheetId, chainageid,obj.getGuid());
                                 
-                                if (als != null && als.size() > 0) {
-                                	
-                                    for (AlertList al : als) {
-                                        if (al.getUploadStatus() != 2) {
-                                            int alId = al.getID();
-                                            AlertHandlingInfoDao.defaultDao().deleteByAlertId(alId);
-                                            AlertListDao.defaultDao().deleteById(alId);
-                                        }}
-                                }
+                                // 删除预警
+                                deleteSubsidenceAlertInfo(sheetId, chainageid, obj.getGuid());
 
                                 holder.mPointX.setText("");
                                 holder.mPointY.setText("");
