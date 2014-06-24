@@ -71,7 +71,7 @@ public class AlertListDao extends AbstractDao<AlertList> {
 
     public String getGuidById(int id) {
         AlertList al = queryOneById(id);
-        return al != null ? al.getGUID() : null;
+        return al != null ? al.getGuid() : null;
     }
 
     public void deleteById(int id) {
@@ -153,7 +153,7 @@ public class AlertListDao extends AbstractDao<AlertList> {
         
         for (AlertList a : l) {
         	
-            String oid = a.getOriginalDataID();
+            String oid = a.getOriginalDataId();
             
             if (oid.contains(AlertUtils.ORIGINAL_ID_DIVIDER)) {
             	
@@ -190,7 +190,7 @@ public class AlertListDao extends AbstractDao<AlertList> {
 
         if (al != null) {
             updatePointAlertItem(point, Utype, UValue, originalDataID);
-            return al.getID();
+            return al.getId();
         } else {
             return insertItem(point, alertLevel, Utype, UValue, (int) UMax, originalDataID);
         }
@@ -208,7 +208,7 @@ public class AlertListDao extends AbstractDao<AlertList> {
 
         if (al != null) {
             updatePointAlertItem(point, Utype, UValue, originalDataID);
-            return al.getID();
+            return al.getId();
         } else {
             return insertItem(point, alertLevel, Utype, UValue, (int)UMax, originalDataID);
         }
@@ -243,15 +243,15 @@ public class AlertListDao extends AbstractDao<AlertList> {
             pntType = pntType.substring(0, pntType.length() - 2);
         }
 
-        al.setSheetID(point.getSheetId());
-        al.setCrossSectionID(point.getChainageId());
+        al.setSheetId(point.getSheetId());
+        al.setCrossSectionId(point.getChainageId());
         al.setPntType(pntType);
         al.setAlertTime(point.getSurveyTime());
         al.setAlertLevel(alertLevel);
-        al.setUtype(Utype);
+        al.setUType(Utype);
         al.setUValue(UValue);
         al.setUMax(UMax);
-        al.setOriginalDataID(originalDataID);
+        al.setOriginalDataId(originalDataID);
 
         int ret = mDatabase.saveObject(al);
         Log.d(TAG, "AlertListDao insertItem, ret: " + ret);
@@ -279,15 +279,15 @@ public class AlertListDao extends AbstractDao<AlertList> {
         }
 
         AlertList al = new AlertList();
-        al.setSheetID(point.getSheetId());
-        al.setCrossSectionID(point.getChainageId());
+        al.setSheetId(point.getSheetId());
+        al.setCrossSectionId(point.getChainageId());
         al.setPntType(point.getPntType());
         al.setAlertTime(point.getSurveyTime());
         al.setAlertLevel(alertLevel);
-        al.setUtype(Utype);
+        al.setUType(Utype);
         al.setUValue(UValue);
         al.setUMax(UMax);
-        al.setOriginalDataID(originalDataID);
+        al.setOriginalDataId(originalDataID);
 
         int ret = mDatabase.saveObject(al);
         Log.d(TAG, "AlertListDao insertItem, ret: " + ret);

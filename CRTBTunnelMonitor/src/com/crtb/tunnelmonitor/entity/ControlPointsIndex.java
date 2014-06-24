@@ -2,7 +2,6 @@ package com.crtb.tunnelmonitor.entity;
 
 import java.io.Serializable;
 
-import org.zw.android.framework.db.ColumnBoolean;
 import org.zw.android.framework.db.ColumnDouble;
 import org.zw.android.framework.db.ColumnInt;
 import org.zw.android.framework.db.ColumnString;
@@ -41,10 +40,8 @@ public class ControlPointsIndex implements Serializable {
     @ColumnText
     private String Guid ;		// guid
 
-    @ColumnBoolean
     private boolean used; 		// 使用
 
-    @ColumnBoolean
     private boolean checked; 	// 选中
 
     public ControlPointsIndex(){

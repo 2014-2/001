@@ -22,16 +22,16 @@ public class AlertList implements Serializable {
 
 	@ColumnPrimaryKey(Type = PrimaryKeyType.AUTO)
 	@ColumnInt
-	private int ID; 						// id
+	private int Id; 						// id
 
     @ColumnText
-    private String GUID ;                   // 唯一标示
+    private String Guid ;                   // 唯一标示
 
 	@ColumnString(length = 255)
-	private String SheetID; 					// 记录单id
+	private String SheetId; 					// 记录单id
 
 	@ColumnText
-	private String CrossSectionID; 			// 断面唯一id
+	private String CrossSectionId; 				// 断面唯一id
 
 	@ColumnText
 	private String PntType; 					// 测点类型
@@ -43,7 +43,7 @@ public class AlertList implements Serializable {
 	private int AlertLevel; 				// 预警等级
 
 	@ColumnInt
-	private int Utype; 						// 超限类型
+	private int UType; 						// 超限类型
 
 	@ColumnDouble
 	private double UValue; 					// 超限数值
@@ -52,7 +52,7 @@ public class AlertList implements Serializable {
 	private int UMax; 						// 超限类型阈值
 
 	@ColumnText
-	private String OriginalDataID; 			// 原始数据的guid,guid,guid
+	private String OriginalDataId; 			// 原始数据的guid,guid,guid
 
     @ColumnText
     private String Info;
@@ -61,41 +61,9 @@ public class AlertList implements Serializable {
     private int UploadStatus; // 上传类型 , 0表示全部状态；1表示未上传，2表示不上传，3表示部分上传
 
 	public AlertList() {
-	    setGUID(CrtbUtils.generatorGUID());
+	    setGuid(CrtbUtils.generatorGUID());
 	    setUploadStatus(1);
     }
-
-    public int getID() {
-		return ID;
-	}
-
-	public void setID(int iD) {
-		ID = iD;
-	}
-
-    public String getGUID() {
-        return GUID;
-    }
-
-    public void setGUID(String gUID) {
-        GUID = gUID;
-    }
-
-    public String getSheetID() {
-        return SheetID;
-    }
-
-	public void setSheetID(String sheetID) {
-		SheetID = sheetID;
-	}
-
-	public String getCrossSectionID() {
-		return CrossSectionID;
-	}
-
-	public void setCrossSectionID(String crossSectionID) {
-		CrossSectionID = crossSectionID;
-	}
 
 	public String getPntType() {
 		return PntType;
@@ -121,14 +89,6 @@ public class AlertList implements Serializable {
 		AlertLevel = alertLeverl;
 	}
 
-	public int getUtype() {
-		return Utype;
-	}
-
-	public void setUtype(int utype) {
-		Utype = utype;
-	}
-
 	public double getUValue() {
 		return UValue;
 	}
@@ -143,14 +103,6 @@ public class AlertList implements Serializable {
 
 	public void setUMax(int uMax) {
 		UMax = uMax;
-	}
-
-	public String getOriginalDataID() {
-		return OriginalDataID;
-	}
-
-	public void setOriginalDataID(String originalDataID) {
-		OriginalDataID = originalDataID;
 	}
 
     public String getInfo() {
@@ -168,5 +120,53 @@ public class AlertList implements Serializable {
     public void setUploadStatus(int uploadStatus) {
         UploadStatus = uploadStatus;
     }
+
+	public int getId() {
+		return Id;
+	}
+
+	public void setId(int id) {
+		Id = id;
+	}
+
+	public String getGuid() {
+		return Guid;
+	}
+
+	public void setGuid(String guid) {
+		Guid = guid;
+	}
+
+	public String getSheetId() {
+		return SheetId;
+	}
+
+	public void setSheetId(String sheetId) {
+		SheetId = sheetId;
+	}
+
+	public String getCrossSectionId() {
+		return CrossSectionId;
+	}
+
+	public void setCrossSectionId(String crossSectionId) {
+		CrossSectionId = crossSectionId;
+	}
+
+	public int getUType() {
+		return UType;
+	}
+
+	public void setUType(int uType) {
+		UType = uType;
+	}
+
+	public String getOriginalDataId() {
+		return OriginalDataId;
+	}
+
+	public void setOriginalDataId(String originalDataId) {
+		OriginalDataId = originalDataId;
+	}
 
 }

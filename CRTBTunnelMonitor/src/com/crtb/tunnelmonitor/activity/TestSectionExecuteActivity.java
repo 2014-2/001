@@ -429,7 +429,7 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
 		if (als != null && als.size() > 0) {
 			for (AlertList al : als) {
 				if (al.getUploadStatus() != 2) {
-					int alId = al.getID();
+					int alId = al.getId();
 					AlertHandlingInfoDao.defaultDao().deleteByAlertId(alId);
 					AlertListDao.defaultDao().deleteById(alId);
 				}
@@ -456,7 +456,7 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
         	
 			for (AlertList al : als) {
 				if (al.getUploadStatus() != 2) {
-					int alId = al.getID();
+					int alId = al.getId();
 					AlertHandlingInfoDao.defaultDao().deleteByAlertId(alId);
 					AlertListDao.defaultDao().deleteById(alId);
 				}
