@@ -222,7 +222,7 @@ public class AlertUtils {
                     chainageId, originalDataID);
             for (AlertList al : l) {
                 if (al != null) {
-                    int aid = al.getID();
+                    int aid = al.getId();
                     AlertHandlingInfoDao
                             .defaultDao()
                             .insertIfNotExist(aid, handling, handlingTime,
@@ -298,7 +298,7 @@ public class AlertUtils {
                         AlertList al = AlertListDao.defaultDao().queryOne(sheetId, chainageId,
                                 originalDataID, uType);
                         if (al != null) {
-                            int alertId = al.getID();
+                            int alertId = al.getId();
                             if (curHandlingAlertId >= 0) {
 //                                int chainageId1 = Integer.valueOf(al.getCrossSectionID());
 //                                String pntType1 = al.getPntType();
@@ -391,7 +391,7 @@ public class AlertUtils {
                         AlertList al = AlertListDao.defaultDao().queryOne(sheetId, chainageId,
                                 originalDataID, uType);
                         if (al != null) {
-                            int alertId = al.getID();
+                            int alertId = al.getId();
                             if (curHandlingAlertId >= 0) {//处理
 //                                int chainageId1 = Integer.valueOf(al.getCrossSectionID());
 //                                String pntType1 = al.getPntType();
@@ -467,7 +467,7 @@ public class AlertUtils {
                     chainageId, originalDataID);
             for (AlertList al : l) {
                 if (al != null) {
-                    int aid = al.getID();
+                    int aid = al.getId();
                     AlertHandlingInfoDao
                             .defaultDao()
                             .insertIfNotExist(aid, handling, handlingTime,
@@ -533,7 +533,7 @@ public class AlertUtils {
                     AlertList al = AlertListDao.defaultDao().queryOne(sheetId, chainageId,
                             originalDataID, uType);
                     if (al != null) {
-                        int alertId = al.getID();
+                        int alertId = al.getId();
                         if (curHandlingAlertId >= 0) {
                             AlertHandlingInfoDao.defaultDao().insertItem(alertId,
                                      handling, handlingTime,
@@ -612,7 +612,7 @@ public class AlertUtils {
                     AlertList al = AlertListDao.defaultDao().queryOne(sheetId, chainageId,
                             originalDataID, uType);
                     if (al != null) {
-                        int alertId = al.getID();
+                        int alertId = al.getId();
                         if (curHandlingAlertId >= 0) {
                             AlertHandlingInfoDao.defaultDao().insertItem(alertId,
                                      handling, handlingTime,
@@ -1144,10 +1144,10 @@ public class AlertUtils {
 //        double uValue = al.getUValue();
 //        int uType = al.getUtype();
 //        int tarAlertStatus = curAlertStatus;
-        String originalID = al.getOriginalDataID();
-        String chainageId = al.getCrossSectionID();
+        String originalID = al.getOriginalDataId();
+        String chainageId = al.getCrossSectionId();
         String pntType = al.getPntType();
-        int uType = al.getUtype();
+        int uType = al.getUType();
         double uValue = al.getUValue();
         String duePerson = AppCRTBApplication.getInstance().mUserName;
 
@@ -1375,7 +1375,7 @@ public class AlertUtils {
                     if (alerts != null && alerts.size() > 0) {
                         for (AlertList alert : alerts) {
                             if (alert != null) {
-                                int curAlertId = alert.getID();
+                                int curAlertId = alert.getId();
                                 if (i < size - 1) {
                                     AlertHandlingInfoDao.defaultDao().deleteByAlertId(curAlertId);
                                     AlertListDao.defaultDao().delete(alert);
@@ -1409,7 +1409,7 @@ public class AlertUtils {
                     if (alerts != null && alerts.size() > 0) {
                         for (AlertList alert : alerts) {
                             if (alert != null) {
-                                int curAlertId = alert.getID();
+                                int curAlertId = alert.getId();
                                 AlertHandlingInfoDao.defaultDao().deleteByAlertId(curAlertId);
                                 if (i < size - 1) {
                                     AlertListDao.defaultDao().delete(alert);
