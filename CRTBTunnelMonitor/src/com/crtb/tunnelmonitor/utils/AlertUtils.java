@@ -1040,8 +1040,11 @@ public class AlertUtils {
                 }
             }
 
-            ai.setChuliFangshi(ah.getHandling()< ALERT_HANDLING.length ? ALERT_HANDLING[ah.getHandling()] : "自由处理");
-//            ai.setChuliFangshi(((ai.getAlertStatus() == ALERT_STATUS_OPEN) && (ai.getCorrection() == 0)) ? "未作任何处理" : "自由处理");
+            if (ah != null) {
+                ai.setChuliFangshi(ah.getHandling()< ALERT_HANDLING.length ? ALERT_HANDLING[ah.getHandling()] : "自由处理");
+            } else {
+                ai.setChuliFangshi(((ai.getAlertStatus() == ALERT_STATUS_OPEN) && (ai.getCorrection() == 0)) ? "未作任何处理" : "自由处理");
+            }
 
         }
         return l;

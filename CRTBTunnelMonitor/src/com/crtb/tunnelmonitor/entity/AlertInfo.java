@@ -29,7 +29,7 @@ public class AlertInfo implements Serializable {
     private String duePerson;
     private int uType;
     private String alertStatusMsg;
-    private int alertStatus;
+    private int alertStatus = 1;
     private String chuliFangshi;
     private int uploadStatus;
     private String alertInfo;
