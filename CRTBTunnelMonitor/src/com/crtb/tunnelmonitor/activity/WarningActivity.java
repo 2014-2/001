@@ -601,7 +601,7 @@ public class WarningActivity extends Activity {
             }
         } 
 
-        if (pastInfoList != null) {
+        if (pastInfoList != null && pastInfoList.size() > 0) {
             Object lastInfo = pastInfoList.get(pastInfoList.size() - 1);
             String[] lastCoords = null;
             Date lastTime = null;
