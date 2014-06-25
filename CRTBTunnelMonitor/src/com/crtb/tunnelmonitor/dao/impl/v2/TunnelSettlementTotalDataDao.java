@@ -51,7 +51,7 @@ public class TunnelSettlementTotalDataDao extends AbstractDao<TunnelSettlementTo
 		mDatabase.execute(sql, SQLiteParamUtils.toParamemter(bean.getID()));
 	}
 
-    public List<TunnelSettlementTotalData> queryAllOrderByMEASNoDesc(String pntType) {
+    public List<TunnelSettlementTotalData> queryAllOrderByMeasIdDesc(String pntType) {
 
         final IAccessDatabase mDatabase = getCurrentDb();
 
@@ -59,7 +59,7 @@ public class TunnelSettlementTotalDataDao extends AbstractDao<TunnelSettlementTo
             return null;
         }
 
-        String sql = "select * from TunnelSettlementTotalData where PntType=? ORDER BY MEASNo DESC";
+        String sql = "select * from TunnelSettlementTotalData where PntType=? ORDER BY ID DESC";
         String[] args = SQLiteParamUtils.toParamemter(pntType);
 
         return mDatabase.queryObjects(sql, args,TunnelSettlementTotalData.class);
@@ -114,7 +114,7 @@ public class TunnelSettlementTotalDataDao extends AbstractDao<TunnelSettlementTo
 			return null ;
 		}
 		
-		String sql 	= "select * from TunnelSettlementTotalData where SheetId = ? and ChainageId = ? and PntType = ? order by MEASNo desc" ;
+		String sql 	= "select * from TunnelSettlementTotalData where SheetId = ? and ChainageId = ? and PntType = ? order by ID desc" ;
 		String[] args = SQLiteParamUtils.toParamemter(sheetId,chainageId,pntType);
 		
 		return mDatabase.queryObject(sql, args,TunnelSettlementTotalData.class);
@@ -129,7 +129,7 @@ public class TunnelSettlementTotalDataDao extends AbstractDao<TunnelSettlementTo
 			return null;
 		}
 		
-		String sql = "select * from TunnelSettlementTotalData where SheetId = ? and ChainageId = ? order by MEASNo asc";
+		String sql = "select * from TunnelSettlementTotalData where SheetId = ? and ChainageId = ? order by ID asc";
 		String[] args = SQLiteParamUtils.toParamemter(sheetId,chainageId);
 		
 		return mDatabase.queryObjects(sql, args, TunnelSettlementTotalData.class);
