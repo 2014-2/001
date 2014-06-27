@@ -171,6 +171,8 @@ public class AlertListDao extends AbstractDao<AlertList> {
         return ll;
     }
 
+    // Yongdong: For fixing bug, the method will ignore UVaule update.
+    // UValue should not be change when set some correction.
     public int insertOrUpdate(TunnelSettlementTotalData point, int alertLevel, int Utype,
             double UValue, double UMax, String originalDataID) {
 
@@ -189,13 +191,15 @@ public class AlertListDao extends AbstractDao<AlertList> {
         AlertList al = queryOne(sheetId, chainageId, originalDataID, Utype);
 
         if (al != null) {
-            updatePointAlertItem(point, Utype, UValue, originalDataID);
+            updatePointAlertItem(point, Utype, al.getUValue()/*UValue*/, originalDataID);
             return al.getId();
         } else {
             return insertItem(point, alertLevel, Utype, UValue, (int) UMax, originalDataID);
         }
     }
 
+    // Yongdong: For fixing bug, the method will ignore UVaule update.
+    // UValue should not be change when set some correction.
     public int insertOrUpdate(SubsidenceTotalData point, int alertLevel, int Utype, double UValue,
             double UMax, String originalDataID) {
         Log.d(TAG, "AlertListDao insertOrUpdate SubsidenceTotalData");
@@ -207,7 +211,7 @@ public class AlertListDao extends AbstractDao<AlertList> {
         AlertList al = queryOne(sheetId, chainageId, originalDataID, Utype);
 
         if (al != null) {
-            updatePointAlertItem(point, Utype, UValue, originalDataID);
+            updatePointAlertItem(point, Utype, al.getUValue()/*UValue*/, originalDataID);
             return al.getId();
         } else {
             return insertItem(point, alertLevel, Utype, UValue, (int)UMax, originalDataID);

@@ -90,7 +90,12 @@ public class AlertListAdapter extends BaseAdapter {
         TextView message = (TextView) view.findViewById(R.id.message);
         message.setText(ai.getUTypeMsg());
         TextView valueView = (TextView)view.findViewById(R.id.uvalue);
-        valueView.setText("超限值: " + String.format("%1$.1f", CrtbUtils.formatDouble(ai.getUValue(), 1))
+        AlertUtils.getDeltaTime(ai);
+        double correction = ai.getCorrection();
+        if (AlertUtils.isSpeed(ai.getUType())) {
+            correction = correction / AlertUtils.getDeltaTime(ai);
+        }
+        valueView.setText("超限值: " + String.format("%1$.1f", CrtbUtils.formatDouble(ai.getUValue() + correction, 1))
                 + AlertUtils.getAlertValueUnit(ai.getUType()));
         TextView edtstate = (TextView) view.findViewById(R.id.edtstate);
         edtstate.setText(ai.getHandling());

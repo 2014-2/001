@@ -1180,7 +1180,9 @@ public class AlertUtils {
                             }
                         }
                         float curCorrection = p.getDataCorrection();
-                        float totalCorrection = curCorrection + thisCorrection;
+                        // Yongdong: Only the latest correction work. 
+//                        float totalCorrection = curCorrection + thisCorrection;
+                        float totalCorrection = thisCorrection;
 //                        if (!checkExceeding(uValue + totalCorrection, uType)) {
 //                            tarAlertStatus = alertStatus;
 //                        }
@@ -1214,7 +1216,9 @@ public class AlertUtils {
                             }
                         }
                         float curCorrection = p.getDataCorrection();
-                        float totalCorrection = curCorrection + thisCorrection;
+                        // Yongdong: Only the latest correction work. 
+//                        float totalCorrection = curCorrection + thisCorrection;
+                        float totalCorrection = thisCorrection;
 //                        if (!checkExceeding(uValue + totalCorrection, uType)) {
 //                            tarAlertStatus = alertStatus;
 //                        }
@@ -1266,7 +1270,9 @@ public class AlertUtils {
                     }
                 }
                 float curCorrection = s_1.getDataCorrection();
-                float totalCorrection = curCorrection + thisCorrection;
+                // Yongdong: Only the latest correction work.
+//                float totalCorrection = curCorrection + thisCorrection;
+                float totalCorrection = thisCorrection;
 //                if (!checkExceeding(uValue + totalCorrection, uType)) {
 //                    tarAlertStatus = alertStatus;
 //                }
@@ -1587,5 +1593,92 @@ public class AlertUtils {
         }
 
         return ret;
+    }
+
+    public static double getDeltaTime(AlertInfo currentAlert) {
+//      AlertInfo currentAlert = alerts.get(clickedItem);
+      Date thisTime = null;
+      List pastInfoList = null;
+      int type = 0;
+      if (currentAlert == null) {
+          return 1;
+      }
+      String originalID = currentAlert.getOriginalDataID();
+      if (!TextUtils.isEmpty(originalID)) {
+          ArrayList<String> guids = new ArrayList<String>();
+          if (originalID.contains(AlertUtils.ORIGINAL_ID_DIVIDER)) {
+              String[] idStrs = originalID.split(AlertUtils.ORIGINAL_ID_DIVIDER);
+              for (String idStr : idStrs) {
+                  guids.add(idStr);
+              }
+          } else {
+              guids.add(originalID);
+          }
+
+          if (guids.size() == 1) {//测点
+              String guid = guids.get(0);
+              int measNo = -1;
+              if (currentAlert.getPntType().contains("A")) {//隧道内断面
+                  type = 1;
+                  TunnelSettlementTotalData tPoint = TunnelSettlementTotalDataDao.defaultDao().queryOneByGuid(guid);
+                  if (tPoint != null) {
+                      pastInfoList = TunnelSettlementTotalDataDao.defaultDao().queryInfoBeforeMeasId(
+                              tPoint.getChainageId(), tPoint.getPntType(), tPoint.getID());
+                      thisTime = tPoint.getSurveyTime();
+                  }
+              } else {
+                  // Subsidence
+                  type = 2;
+                  SubsidenceTotalData sPoint = SubsidenceTotalDataDao.defaultDao().queryOneByGuid(guid);
+                  if (sPoint != null) {
+                      pastInfoList = SubsidenceTotalDataDao.defaultDao().queryInfoBeforeMeasId(
+                              sPoint.getChainageId(), sPoint.getPntType(), sPoint.getID());
+                      thisTime = sPoint.getSurveyTime();
+                  }
+              }
+          } else {
+              TunnelSettlementTotalData s_1 = TunnelSettlementTotalDataDao.defaultDao()
+                      .queryOneByGuid(guids.get(0));
+              String pnt1Type = s_1.getPntType();
+              String oppositePntType = pnt1Type.substring(0, pnt1Type.length() - 1) + "2";
+              TunnelSettlementTotalData s_2 = TunnelSettlementTotalDataDao.defaultDao()
+                      .queryOppositePointOfALine(s_1, oppositePntType);
+              return AlertUtils.getLineConvergenceExceedTime(s_1, s_2);
+          }
+      } 
+
+      if (pastInfoList != null && pastInfoList.size() > 0) {
+          Object lastInfo = pastInfoList.get(pastInfoList.size() - 1);
+          String[] lastCoords = null;
+          Date lastTime = null;
+          if (type == 1) {
+              lastCoords = ((TunnelSettlementTotalData) lastInfo).getCoordinate().split(",");
+              lastTime = ((TunnelSettlementTotalData) lastInfo).getSurveyTime();
+//          thisDataCorrection = ((TunnelSettlementTotalData) lastInfo).getDataCorrection();
+          } else if (type == 2) {
+              lastCoords = ((SubsidenceTotalData) lastInfo).getCoordinate().split(",");
+              lastTime = ((SubsidenceTotalData) lastInfo).getSurveyTime();
+//          thisDataCorrection = ((SubsidenceTotalData) lastInfo).getDataCorrection();
+          }
+          
+          if (thisTime != null && lastTime != null) {
+              long deltaT = Math.abs(thisTime.getTime() - lastTime.getTime());
+              Log.d(TAG, "delta t: " + deltaT + " ms");
+              if (deltaT < Time.ONE_HOUR) {
+                  deltaT = Time.ONE_HOUR;//ONE HOUR at least to avoid infinity
+              }
+              double deltaTInDay = ((double)deltaT / Time.DAY_MILLISECEND_RATIO);
+              double h = 1d/24d;
+              if (deltaTInDay == 0) {
+                  deltaTInDay = h;
+              }
+              return deltaTInDay;
+          }
+      }
+      return 1;
+  }
+
+    public static boolean isSpeed(int uType) {
+        return uType == GONGDINGI_XIACHEN_SULV_EXCEEDING || uType == SHOULIAN_SULV_EXCEEDING || uType == DIBIAO_XIACHEN_SULV_EXCEEDING;
     }
 }
