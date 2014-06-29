@@ -441,6 +441,9 @@ public class AlertUtils {
             handling = "";
         }
 
+
+        TunnelCrossSectionIndex sectionInfo = TunnelCrossSectionIndexDao.defaultDao().querySectionIndexByGuid(s_1.getChainageId());
+
         String sheetId = s_1.getSheetId();
         String originalDataID = s_1.getGuid() + ORIGINAL_ID_DIVIDER + s_2.getGuid();
         float thisCorrection = s_1.getDataCorrection();
@@ -1680,5 +1683,43 @@ public class AlertUtils {
 
     public static boolean isSpeed(int uType) {
         return uType == GONGDINGI_XIACHEN_SULV_EXCEEDING || uType == SHOULIAN_SULV_EXCEEDING || uType == DIBIAO_XIACHEN_SULV_EXCEEDING;
+    }
+
+    /// <summary>
+    /// 获取沉降分析的管理等级，
+    /// 截止201-04-22，在拱顶下沉、周边收敛、地表下沉中都使用了该算法
+    /// 在后期，可能依据沉降类型采用不同的算法
+    /// </summary>
+    /// <param name="maxU0">累计变形的最大值，单位是毫米</param>
+    /// <param name="currentChainage">当前的里程，单位是米</param>
+    /// <param name="excavationChainage">掌子面里程，单位是米</param>
+    /// <param name="excavationWidth">断面宽度，单位是米</param>
+    /// <param name="surveyValue">用于分析的累计变形值</param>
+    /// <returns>只能返回正整数1,2,3；其中1表示管理等级为1级，依此类推</returns>
+    public static int GetManagementLevel(double maxU0, double currentChainage,
+            double excavationChainage, double excavationWidth, double surveyValue) {
+        surveyValue = Math.abs(surveyValue);
+        int managementLevel = 1;
+        double limitValue = maxU0; // mm
+        double deltaChainage = Math.abs(currentChainage - excavationChainage);
+        /*
+         * <uint is meter; absolute distance between currentChainage and
+         * ExcavationChainage>.
+         */
+
+        if (deltaChainage <= excavationWidth) {
+            limitValue = 0.65 * maxU0;
+        } else if (deltaChainage > excavationWidth && deltaChainage <= 2 * excavationWidth) {
+            limitValue = 0.9 * maxU0;
+        }
+
+        if (surveyValue < limitValue / 3.0) {
+            managementLevel = 3;
+        } else if (surveyValue > (2.0 * limitValue / 3.0)) {
+            managementLevel = 1;
+        } else {
+            managementLevel = 2;
+        }
+        return managementLevel;
     }
 }
