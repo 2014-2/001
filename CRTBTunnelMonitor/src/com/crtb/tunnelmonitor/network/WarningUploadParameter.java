@@ -9,7 +9,7 @@ public final class WarningUploadParameter {
 	private static final String KEY_POINT_CODE = "测点编码或收敛测点编码对";
 	private static final String KEY_WARNING_LEVEL = "预警级别";
 	private static final String KEY_TRANSFORM_SPEED = "变形速度值";
-	private static final String KEY_WARNING_POINT_VALUE = "预警测点的量测值";
+	private static final String KEY_WARNING_POINT_VALUE = "预警测点的变形值";
 	private static final String KEY_WARNING_TIME = "预警时间";
 	private static final String KEY_WARNING_PERSON = "预警处理责任人";
 	private static final String KEY_WARNING_DESCRIPTION = "预警处理过程描述";
