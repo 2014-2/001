@@ -18,6 +18,7 @@ import com.crtb.tunnelmonitor.AppCRTBApplication;
 import com.crtb.tunnelmonitor.dao.impl.v2.AlertHandlingInfoDao;
 import com.crtb.tunnelmonitor.dao.impl.v2.AlertListDao;
 import com.crtb.tunnelmonitor.dao.impl.v2.CrownSettlementARCHINGDao;
+import com.crtb.tunnelmonitor.dao.impl.v2.RawSheetIndexDao;
 import com.crtb.tunnelmonitor.dao.impl.v2.SubsidenceCrossSectionExIndexDao;
 import com.crtb.tunnelmonitor.dao.impl.v2.SubsidenceCrossSectionIndexDao;
 import com.crtb.tunnelmonitor.dao.impl.v2.SubsidenceTotalDataDao;
@@ -273,11 +274,12 @@ public class AlertUtils {
                             //若本条预警已消警，但重测时又超限，则需要再打开
 //                            if (al == null || curHandlingAlertId < 0) {
                                 int alertId = -1;
+                                int alertLevel = GetManagementLevel(sheetId, chainageId, accumulativeSubsidence,uType);
                                 if (type == 1) {
-                                    alertId = AlertListDao.defaultDao().insertOrUpdate((TunnelSettlementTotalData) point, 3/* default */,
+                                    alertId = AlertListDao.defaultDao().insertOrUpdate((TunnelSettlementTotalData) point, alertLevel,
                                             uType, accumulativeSubsidence, ACCUMULATIVE_THRESHOLD, originalDataID);
                                 } else {
-                                    alertId = AlertListDao.defaultDao().insertOrUpdate((SubsidenceTotalData) point, 3/* default */,
+                                    alertId = AlertListDao.defaultDao().insertOrUpdate((SubsidenceTotalData) point, alertLevel,
                                             uType, accumulativeSubsidence, ACCUMULATIVE_THRESHOLD, originalDataID);
                                 }
                                 String handlingRemark = "";
@@ -306,11 +308,12 @@ public class AlertUtils {
                                 AlertHandlingInfoDao.defaultDao().insertItem(alertId,
                                         handling,
                                         handlingTime, duePerson, ALERT_STATUS_HANDLED, 1/* true */);
+                                int alertLevel = GetManagementLevel(sheetId, chainageId, accumulativeSubsidence,uType);
                                 if (type == 1) {
-                                    AlertListDao.defaultDao().insertOrUpdate((TunnelSettlementTotalData) point, 3/* default */,
+                                    AlertListDao.defaultDao().insertOrUpdate((TunnelSettlementTotalData) point, alertLevel,
                                             uType, accumulativeSubsidence, ACCUMULATIVE_THRESHOLD, originalDataID);
                                 } else {
-                                    AlertListDao.defaultDao().insertOrUpdate((SubsidenceTotalData) point, 3/* default */,
+                                    AlertListDao.defaultDao().insertOrUpdate((SubsidenceTotalData) point, alertLevel,
                                             uType, accumulativeSubsidence, ACCUMULATIVE_THRESHOLD, originalDataID);
                                 }
                             } else if (al.getUploadStatus() != 2) {
@@ -367,11 +370,12 @@ public class AlertUtils {
                             //若本条预警已消警，但重测时又超限，则需要再打开
 //                            if (al == null || curHandlingAlertId < 0) {
                                 int alertId = -1;
+                                int alertLevel = GetManagementLevel(sheetId, chainageId, subsidenceSpeed,uType);
                                 if (type == 1) {
-                                    alertId = AlertListDao.defaultDao().insertOrUpdate((TunnelSettlementTotalData) point, 3/* default */,
+                                    alertId = AlertListDao.defaultDao().insertOrUpdate((TunnelSettlementTotalData) point, alertLevel,
                                             uType, subsidenceSpeed, SPEED_THRESHOLD, originalDataID);
                                 } else {
-                                    alertId = AlertListDao.defaultDao().insertOrUpdate((SubsidenceTotalData) point, 3/* default */,
+                                    alertId = AlertListDao.defaultDao().insertOrUpdate((SubsidenceTotalData) point, alertLevel,
                                             uType, subsidenceSpeed, SPEED_THRESHOLD, originalDataID);
                                 }
                                 String handlingRemark = "";
@@ -399,11 +403,12 @@ public class AlertUtils {
                                 AlertHandlingInfoDao.defaultDao().insertItem(alertId,
                                         handling,
                                         handlingTime, duePerson, ALERT_STATUS_HANDLED, 1/* true */);
+                                int alertLevel = GetManagementLevel(sheetId, chainageId, subsidenceSpeed,uType);
                                 if (type == 1) {
-                                    alertId = AlertListDao.defaultDao().insertOrUpdate((TunnelSettlementTotalData) point, 3/* default */,
+                                    alertId = AlertListDao.defaultDao().insertOrUpdate((TunnelSettlementTotalData) point, alertLevel,
                                             uType, subsidenceSpeed, SPEED_THRESHOLD, originalDataID);
                                 } else {
-                                    alertId = AlertListDao.defaultDao().insertOrUpdate((SubsidenceTotalData) point, 3/* default */,
+                                    alertId = AlertListDao.defaultDao().insertOrUpdate((SubsidenceTotalData) point, alertLevel,
                                             uType, subsidenceSpeed, SPEED_THRESHOLD, originalDataID);
                                 }
                             } else if (al.getUploadStatus() != 2) {//重测
@@ -440,9 +445,6 @@ public class AlertUtils {
         if (handling == null) {
             handling = "";
         }
-
-
-        TunnelCrossSectionIndex sectionInfo = TunnelCrossSectionIndexDao.defaultDao().querySectionIndexByGuid(s_1.getChainageId());
 
         String sheetId = s_1.getSheetId();
         String originalDataID = s_1.getGuid() + ORIGINAL_ID_DIVIDER + s_2.getGuid();
@@ -515,7 +517,8 @@ public class AlertUtils {
 //                        AlertList al = AlertListDao.defaultDao().queryOne(sheetId, chainageId, originalDataID, uType);
                         //若本条预警已消警，但重测时又超限，则需要再打开
 //                        if (al == null || curHandlingAlertId < 0) {
-                            int alertId = AlertListDao.defaultDao().insertOrUpdate(s_1, 3/* default */,
+                            int alertLevel = GetManagementLevel(sheetId, chainageId, convergence,uType);
+                            int alertId = AlertListDao.defaultDao().insertOrUpdate(s_1, alertLevel,
                                     uType, convergence, ACCUMULATIVE_THRESHOLD, originalDataID);
                             
                             String handlingRemark = "";
@@ -542,7 +545,8 @@ public class AlertUtils {
                                      handling, handlingTime,
                                             AppCRTBApplication.getInstance().mUserName,
                                     ALERT_STATUS_HANDLED, 1/* true */);
-                            AlertListDao.defaultDao().insertOrUpdate(s_1, 3/* default */,
+                            int alertLevel = GetManagementLevel(sheetId, chainageId, convergence,uType);
+                            AlertListDao.defaultDao().insertOrUpdate(s_1, alertLevel,
                                     uType, convergence, ACCUMULATIVE_THRESHOLD, originalDataID);
                         } else if (al.getUploadStatus() != 2) {
                             AlertHandlingInfoDao.defaultDao().deleteByAlertId(alertId);
@@ -596,7 +600,8 @@ public class AlertUtils {
 //                        AlertList al = AlertListDao.defaultDao().queryOne(sheetId, chainageId, originalDataID, uType);
                         //若本条预警已消警，但重测时又超限，则需要再打开
 //                        if (al == null || curHandlingAlertId < 0) {
-                            int alertId = AlertListDao.defaultDao().insertOrUpdate(s_1, 3/* default */, uType, shoulianSpeed,
+                            int alertLevel = GetManagementLevel(sheetId, chainageId, shoulianSpeed,uType);
+                            int alertId = AlertListDao.defaultDao().insertOrUpdate(s_1, alertLevel, uType, shoulianSpeed,
                                     SPEED_THRESHOLD, originalDataID);
                             String handlingRemark = "";
                             if (curHandlingAlertId >= 0 /*&& alertId == curHandlingAlertId*/) {
@@ -621,7 +626,8 @@ public class AlertUtils {
                                      handling, handlingTime,
                                             AppCRTBApplication.getInstance().mUserName,
                                     ALERT_STATUS_HANDLED, 1/* true */);
-                            AlertListDao.defaultDao().insertOrUpdate(s_1, 3/* default */, uType, shoulianSpeed,
+                            int alertLevel = GetManagementLevel(sheetId, chainageId, shoulianSpeed,uType);
+                            AlertListDao.defaultDao().insertOrUpdate(s_1, alertLevel, uType, shoulianSpeed,
                                     SPEED_THRESHOLD, originalDataID);
                         } else if (al.getUploadStatus() != 2) {
                             AlertHandlingInfoDao.defaultDao().deleteByAlertId(alertId);
@@ -1696,8 +1702,75 @@ public class AlertUtils {
     /// <param name="excavationWidth">断面宽度，单位是米</param>
     /// <param name="surveyValue">用于分析的累计变形值</param>
     /// <returns>只能返回正整数1,2,3；其中1表示管理等级为1级，依此类推</returns>
-    public static int GetManagementLevel(double maxU0, double currentChainage,
-            double excavationChainage, double excavationWidth, double surveyValue) {
+    public static int GetManagementLevel(
+            String sheetID, String chainageID, double surveyValue, int uType) {
+        double maxU0 = -1;
+        double currentChainage = 0;
+        double excavationWidth = 0;
+        double excavationChainage = RawSheetIndexDao.defaultDao().queryOneByGuid(sheetID)
+                .getFACEDK();
+
+        switch (uType) {
+            case GONGDING_LEIJI_XIACHEN_EXCEEDING: {
+                TunnelCrossSectionIndex sectionInfo = TunnelCrossSectionIndexDao.defaultDao()
+                        .querySectionIndexByGuid(
+                                chainageID);
+                maxU0 = sectionInfo.getGDU0();
+                currentChainage = sectionInfo.getChainage();
+                excavationWidth = sectionInfo.getWidth();
+            }
+                break;
+            case GONGDINGI_XIACHEN_SULV_EXCEEDING: {
+                TunnelCrossSectionIndex sectionInfo = TunnelCrossSectionIndexDao.defaultDao()
+                        .querySectionIndexByGuid(
+                                chainageID);
+                maxU0 = sectionInfo.getGDVelocity();
+                currentChainage = sectionInfo.getChainage();
+                excavationWidth = sectionInfo.getWidth();
+            }
+                break;
+            case SHOULIAN_LEIJI_EXCEEDING: {
+                TunnelCrossSectionIndex sectionInfo = TunnelCrossSectionIndexDao.defaultDao()
+                        .querySectionIndexByGuid(
+                                chainageID);
+                maxU0 = sectionInfo.getSLU0();
+                currentChainage = sectionInfo.getChainage();
+                excavationWidth = sectionInfo.getWidth();
+            }
+                break;
+
+            case SHOULIAN_SULV_EXCEEDING: {
+                TunnelCrossSectionIndex sectionInfo = TunnelCrossSectionIndexDao.defaultDao()
+                        .querySectionIndexByGuid(
+                                chainageID);
+                maxU0 = sectionInfo.getSLLimitVelocity();
+                currentChainage = sectionInfo.getChainage();
+                excavationWidth = sectionInfo.getWidth();
+            }
+                break;
+
+            case DIBIAO_LEIJI_XIACHEN_EXCEEDING: {
+                SubsidenceCrossSectionIndex sectionInfo = SubsidenceCrossSectionIndexDao
+                        .defaultDao().querySectionByGuid(chainageID);
+                maxU0 = sectionInfo.getDBU0();
+                currentChainage = sectionInfo.getChainage();
+                excavationWidth = sectionInfo.getWidth();
+            }
+                break;
+            case DIBIAO_XIACHEN_SULV_EXCEEDING: {
+                SubsidenceCrossSectionIndex sectionInfo = SubsidenceCrossSectionIndexDao
+                        .defaultDao().querySectionByGuid(chainageID);
+                maxU0 = sectionInfo.getDBLimitVelocity();
+                currentChainage = sectionInfo.getChainage();
+                excavationWidth = sectionInfo.getWidth();
+            }
+                break;
+
+        }
+
+        if (maxU0 < 0) {
+            return 3;
+        }
         surveyValue = Math.abs(surveyValue);
         int managementLevel = 1;
         double limitValue = maxU0; // mm
