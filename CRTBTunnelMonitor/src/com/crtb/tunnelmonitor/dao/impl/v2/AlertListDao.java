@@ -90,11 +90,11 @@ public class AlertListDao extends AbstractDao<AlertList> {
 
     }
 
-    public void deleteAlert(String sheetId, int chainageId, String originalDataID, int uType) {
+    public void deleteAlert(String sheetId, String chainageId, String originalDataID) {
        
     	final IAccessDatabase mDatabase = getCurrentDb();
         
-        Log.d(TAG, "AlertListDao deleteAlert, uType: " + uType);
+        Log.d(TAG, "AlertListDao deleteAlert, originalDataID: " + originalDataID);
 
         if (mDatabase == null) {
             return;
@@ -102,10 +102,9 @@ public class AlertListDao extends AbstractDao<AlertList> {
 
         String sql = "delete from AlertList where SheetID=?"
                 + " AND CrossSectionID=?"
-                + " AND Utype=?"
                 + " AND originalDataID=?";
 
-        String[] args = new String[] {sheetId, String.valueOf(chainageId), String.valueOf(uType), originalDataID };
+        String[] args = new String[] {sheetId, chainageId,  originalDataID };
 
         mDatabase.execute(sql, args);
 
@@ -367,5 +366,4 @@ public class AlertListDao extends AbstractDao<AlertList> {
         }
         return null;
     }
-
 }

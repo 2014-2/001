@@ -195,7 +195,7 @@ public class WarningActivity extends Activity {
                         }
                         warningValueTV.setText("超限值: "
                                 + String.format("%1$.1f",
-                                        CrtbUtils.formatDouble(alert.getUValue() + realCorrection, 1))
+                                        CrtbUtils.formatDouble(alert.getUValue(), 1))
                                 + AlertUtils.getAlertValueUnit(alert.getUType()));
                     }
                     if (mWarningRemarkView != null) {
