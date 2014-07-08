@@ -183,15 +183,17 @@ public class TunnelSettlementTotalDataDao extends AbstractDao<TunnelSettlementTo
             return null;
         }
 
+        int firstLineID = queryAsFirstLineDataID(chainageId, pntType, id);
         String sql = "select * from TunnelSettlementTotalData where chainageId=\'"
                 + chainageId + "\'"
                 + " AND pntType=\'"
                 + pntType
                 + "\' AND ID<?"
+                + " AND ID>=?"
                 + " AND DataStatus != ?"
                 + " order by ID ASC";
 
-        String[] args = new String[] {String.valueOf(id), String.valueOf(AlertUtils.POINT_DATASTATUS_DISCARD)};
+        String[] args = new String[] {String.valueOf(id), String.valueOf(firstLineID), String.valueOf(AlertUtils.POINT_DATASTATUS_DISCARD)};
         
         return mDatabase.queryObjects(sql, args, TunnelSettlementTotalData.class);
     }
@@ -328,5 +330,32 @@ public class TunnelSettlementTotalDataDao extends AbstractDao<TunnelSettlementTo
 		
 		return mDatabase.queryObjects(sql, SQLiteParamUtils.toParamemter(guid),TunnelSettlementTotalData.class);
 	}
-	
+
+	private int queryAsFirstLineDataID(
+            String chainageId, String pntType, int id) {
+
+	    int ret = -1;
+        final IAccessDatabase mDatabase = getCurrentDb();
+
+        if (mDatabase == null) {
+            return ret;
+        }
+
+        String sql = "select * from TunnelSettlementTotalData where chainageId=\'"
+                + chainageId + "\'"
+                + " AND pntType=\'"
+                + pntType
+                + "\' AND ID<?"
+                + " AND DataStatus == ?"
+                + " order by ID ASC";
+
+        String[] args = new String[] {String.valueOf(id), String.valueOf(AlertUtils.POINT_DATASTATUS_AS_FIRSTLINE)};
+        List<TunnelSettlementTotalData> list =  mDatabase.queryObjects(sql, args, TunnelSettlementTotalData.class);
+        if (list != null & list.size() > 0) {
+            for (TunnelSettlementTotalData data : list) {
+                ret = Math.max(ret, data.getID());
+            }
+        }
+        return ret;
+	}
 }

@@ -446,6 +446,9 @@ public class AlertUtils {
             handling = "";
         }
 
+        if (s_1.getDataStatus() == POINT_DATASTATUS_AS_FIRSTLINE) {
+            return ret;
+        }
         String sheetId = s_1.getSheetId();
         String originalDataID = s_1.getGuid() + ORIGINAL_ID_DIVIDER + s_2.getGuid();
         float thisCorrection = s_1.getDataCorrection();

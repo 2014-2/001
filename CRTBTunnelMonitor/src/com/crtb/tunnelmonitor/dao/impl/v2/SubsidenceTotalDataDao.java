@@ -7,6 +7,7 @@ import org.zw.android.framework.db.core.SQLiteParamUtils;
 import org.zw.android.framework.util.StringUtils;
 
 import com.crtb.tunnelmonitor.entity.SubsidenceTotalData;
+import com.crtb.tunnelmonitor.entity.TunnelSettlementTotalData;
 import com.crtb.tunnelmonitor.utils.AlertUtils;
 
 public class SubsidenceTotalDataDao extends AbstractDao<SubsidenceTotalData> {
@@ -190,11 +191,12 @@ public class SubsidenceTotalDataDao extends AbstractDao<SubsidenceTotalData> {
         if (mDatabase == null) {
             return null;
         }
-
+        int firstLineID = queryAsFirstLineDataID(chainageId, pntType, id);
         String sql = "select * from SubsidenceTotalData where"
                 + " chainageId=\'" + chainageId + "\'"
                 + " AND pntType=\'" + pntType + "\'"
                 + " AND ID < " + String.valueOf(id)
+                + " AND ID >= " + String.valueOf(firstLineID)
                 + " AND DataStatus != "
                 + String.valueOf(AlertUtils.POINT_DATASTATUS_DISCARD)
                 + " order by ID ASC";
@@ -252,5 +254,32 @@ public class SubsidenceTotalDataDao extends AbstractDao<SubsidenceTotalData> {
             String[] args = new String[]{guid};
             db.execute(sql, args);
         }
+    }
+
+    private int queryAsFirstLineDataID(
+            String chainageId, String pntType, int id) {
+
+        int ret = -1;
+        final IAccessDatabase mDatabase = getCurrentDb();
+
+        if (mDatabase == null) {
+            return ret;
+        }
+
+        String sql = "select * from SubsidenceTotalData where"
+                + " chainageId=\'" + chainageId + "\'"
+                + " AND pntType=\'" + pntType + "\'"
+                + " AND ID < " + String.valueOf(id)
+                + " AND DataStatus == "
+                + String.valueOf(AlertUtils.POINT_DATASTATUS_AS_FIRSTLINE)
+                + " order by ID ASC";
+
+        List<SubsidenceTotalData> list =  mDatabase.queryObjects(sql, SubsidenceTotalData.class);
+        if (list != null & list.size() > 0) {
+            for (SubsidenceTotalData data : list) {
+                ret = Math.max(ret, data.getID());
+            }
+        }
+        return ret;
     }
 }
