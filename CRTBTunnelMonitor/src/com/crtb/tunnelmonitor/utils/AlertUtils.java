@@ -109,12 +109,12 @@ public class AlertUtils {
             return null;
         }
         StringBuilder sb1 = new StringBuilder();
-        if (ex.leijiType >= 0) {
+        if (Math.abs(ex.leijiValue) > ACCUMULATIVE_THRESHOLD) {
             sb1.append(U_TYPE_MSGS[ex.leijiType]).append(" ").append(ex.leijiValue).append("毫米");
         }
 
         StringBuilder sb2 = new StringBuilder();
-        if (ex.sulvType >= 0) {
+        if (Math.abs(ex.sulvValue) > SPEED_THRESHOLD) {
             sb2.append(U_TYPE_MSGS[ex.sulvType]).append(" ").append(ex.sulvValue).append("毫米/天");
         }
 
@@ -1511,7 +1511,7 @@ public class AlertUtils {
         float s = 0f;
         if (pastPointList != null && pastPointList.size() > 0) {
             for (TunnelSettlementTotalData p : pastPointList) {
-                if (p != null) {
+                if (p != null && p.getDataStatus() == 3) {
                     s += p.getDataCorrection();
                 }
             }
@@ -1528,7 +1528,7 @@ public class AlertUtils {
         float s = 0f;
         if (pastPointList != null && pastPointList.size() > 0) {
             for (SubsidenceTotalData p : pastPointList) {
-                if (p != null) {
+                if (p != null && p.getDataStatus() == 3) {
                     s += p.getDataCorrection();
                 }
             }
