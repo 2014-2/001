@@ -112,7 +112,9 @@ public class RSACoder {
 		try {
 			de_txt = new String(des_decrypt(
 					ByteToStringUtil.base64StrToByte(cipher), password));
-			de_txt = de_txt.substring(0, de_txt.indexOf("@"));
+            if (de_txt.contains("@")) {
+                de_txt = de_txt.substring(0, de_txt.indexOf("@"));
+            }
 			System.out.println("des解密：" + de_txt);
 		} catch (Exception e) {
 			return "解密失败！";
