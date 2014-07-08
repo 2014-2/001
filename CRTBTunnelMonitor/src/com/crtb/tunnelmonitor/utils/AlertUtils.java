@@ -268,7 +268,7 @@ public class AlertUtils {
                     
                     ret.leijiType = uType;
                     ret.leijiValue = accumulativeSubsidence;
-                    if (Math.abs(accumulativeSubsidence) >= ACCUMULATIVE_THRESHOLD) {
+                    if (Math.abs(accumulativeSubsidence) > ACCUMULATIVE_THRESHOLD) {
                         if (!readOnly) {
 //                            AlertList al = AlertListDao.defaultDao().queryOne(sheetId, chainageId, originalDataID, uType);
                             //若本条预警已消警，但重测时又超限，则需要再打开
@@ -364,7 +364,7 @@ public class AlertUtils {
                     subsidenceSpeed = CrtbUtils.formatDouble(subsidenceSpeed, 1);
                     ret.sulvType = uType;
                     ret.sulvValue = subsidenceSpeed;
-                    if (Math.abs(subsidenceSpeed) >= SPEED_THRESHOLD) {
+                    if (Math.abs(subsidenceSpeed) > SPEED_THRESHOLD) {
                         if (!readOnly) {
 //                            AlertList al = AlertListDao.defaultDao().queryOne(sheetId, chainageId, originalDataID, uType);
                             //若本条预警已消警，但重测时又超限，则需要再打开
@@ -512,10 +512,10 @@ public class AlertUtils {
                 convergence += sumOfCorrections;
 //                convergence = Math.abs(convergence);
                 int uType = SHOULIAN_LEIJI_EXCEEDING;
-                if (Math.abs(convergence) >= ACCUMULATIVE_THRESHOLD) {
-                    convergence = CrtbUtils.formatDouble(convergence, 1);
-                    ret.leijiType = uType;
-                    ret.leijiValue = convergence;
+                convergence = CrtbUtils.formatDouble(convergence, 1);
+                ret.leijiType = uType;
+                ret.leijiValue = convergence;
+                if (Math.abs(convergence) > ACCUMULATIVE_THRESHOLD) {
                     if (!readOnly) {
 //                        AlertList al = AlertListDao.defaultDao().queryOne(sheetId, chainageId, originalDataID, uType);
                         //若本条预警已消警，但重测时又超限，则需要再打开
@@ -595,7 +595,7 @@ public class AlertUtils {
                 }
                 double shoulianSpeed = deltaLenth / deltaTInDay;
                 int uType = SHOULIAN_SULV_EXCEEDING;
-                if (Math.abs(shoulianSpeed) >= SPEED_THRESHOLD) {
+                if (Math.abs(shoulianSpeed) > SPEED_THRESHOLD) {
                     shoulianSpeed = CrtbUtils.formatDouble(shoulianSpeed, 1);
                     ret.sulvType = uType;
                     ret.sulvValue = shoulianSpeed;
