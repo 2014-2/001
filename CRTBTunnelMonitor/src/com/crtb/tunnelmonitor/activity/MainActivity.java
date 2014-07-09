@@ -1,11 +1,14 @@
 package com.crtb.tunnelmonitor.activity;
 
+import java.util.logging.Logger;
+
 import org.zw.android.framework.util.StringUtils;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.LinearLayout;
@@ -146,6 +149,8 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 		
 		// 加载数据库
 		mCurrentWorkPlan = ProjectIndexDao.defaultWorkPlanDao().queryEditWorkPlan();
+		
+		Log.d("MainActivity", "zhouwei >> current dbname = " + name + " ProjectIndex=" + mCurrentWorkPlan);
 	}
 
 	private void showToast(String msg) {

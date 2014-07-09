@@ -104,7 +104,7 @@ public final class ProjectIndexDao extends AbstractDao<ProjectIndex> {
 		
 		if(db == null){
 			
-			Log.e("AbstractDao", "zhouwei : 数据库null");
+			Log.e("ProjectIndexDao", "zhouwei >> 查询当前编辑的工作面，数据库对象为null");
 			
 			return null ;
 		}
@@ -246,7 +246,7 @@ public final class ProjectIndexDao extends AbstractDao<ProjectIndex> {
 		if(user == null){
 			return DB_EXECUTE_FAILED ;
 		}
-
+		
         int limit = 0;
         int userType = AppCRTBApplication.getInstance().getCurUserType();
         if (userType == CrtbUser.LICENSE_TYPE_DEFAULT) {
