@@ -37,6 +37,7 @@ public class TunnelAsyncQueryTask extends AsyncQueryTask {
                 List<MeasureData> measureDataList = new ArrayList<MeasureData>();
                 List<TunnelSettlementTotalData> measurePoints = getUnUploadMeasurePoints(sheetGuid, sectionIndex.getGuid());
                 if (measurePoints != null && measurePoints.size() > 0) {
+                	/*
                 	 int measureNo = -1;
                      TunnelMeasureData measureData = null;
                      for(TunnelSettlementTotalData point : measurePoints) {
@@ -46,7 +47,13 @@ public class TunnelAsyncQueryTask extends AsyncQueryTask {
                              measureDataList.add(measureData);
                          }
                          measureData.addMeasurePoint(point);
-                     }
+                     }*/
+                	 // ignore the measure no.
+                	 TunnelMeasureData measureData = new TunnelMeasureData();
+                	 for(TunnelSettlementTotalData point : measurePoints) {
+                		 measureData.addMeasurePoint(point);
+                	 }
+                	 measureDataList.add(measureData);
                      section.setMeasureData(measureDataList);
                 }
                 if (section.needUpload()) {

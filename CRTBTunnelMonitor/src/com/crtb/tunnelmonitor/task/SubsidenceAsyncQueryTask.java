@@ -37,7 +37,7 @@ public class SubsidenceAsyncQueryTask extends AsyncQueryTask {
                 List<MeasureData> measureDataList = new ArrayList<MeasureData>();
                 List<SubsidenceTotalData> measurePoints = getUnUploadMeasurePoints(sheetGuid, sectionIndex.getGuid());
                 if (measurePoints != null && measurePoints.size() > 0) {
-                	 int measureNo = -1;
+                	 /*int measureNo = -1;
                      SubsidenceMeasureData measureData = null;
                      for(SubsidenceTotalData point : measurePoints) {
                          if (measureNo != point.getMEASNo()) {
@@ -46,8 +46,14 @@ public class SubsidenceAsyncQueryTask extends AsyncQueryTask {
                              measureDataList.add(measureData);
                          }
                          measureData.addMeasurePoint(point);
-                     }
-                     section.setMeasureData(measureDataList);
+                     }*/
+                     // ignore the measure no.
+                	SubsidenceMeasureData measureData = new SubsidenceMeasureData();
+                	for(SubsidenceTotalData point : measurePoints) {
+                		measureData.addMeasurePoint(point);
+                	}
+                	measureDataList.add(measureData);
+                    section.setMeasureData(measureDataList);
                 }
 				if (section.needUpload()) {
 					sections.add(section);
