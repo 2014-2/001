@@ -234,35 +234,35 @@ public class RecordActivity extends WorkFlowActivity implements OnPageChangeList
 						
 						// 是否存在测量数据
 						List<TunnelSettlementTotalData> list = TunnelSettlementTotalDataDao.defaultDao().queryTunnelTotalDataSheet(info.getGuid());
-						
+							
 						if(list != null && list.size() > 0){
 							CrtbDialogHint hint = new CrtbDialogHint(RecordActivity.this, R.drawable.ic_warnning, "该记录单存在测量数据,不可删除!");
 							hint.show() ;
 							return ;
 						}
-						
+							
 						// 提示删除
 						CrtbDialogDelete delete = new CrtbDialogDelete(RecordActivity.this,R.drawable.ic_warnning,"执行该操作将删除记录单的数据,不可恢复!");
-						
-						delete.setButtonClick(new IButtonOnClick() {
 							
-							@Override
-							public void onClick(int id) {
+						delete.setButtonClick(new IButtonOnClick() {
 								
-								if(id == CrtbDialogDelete.BUTTON_ID_CONFIRM){
+								@Override
+								public void onClick(int id) {
 									
-									int code = RawSheetIndexDao.defaultDao().delete(info) ;
-									
-									if(code == RawSheetIndexDao.DB_EXECUTE_SUCCESS){
-										CrtbDialogResult.createDeleteSuccessDialog(RecordActivity.this).show();
-										mTunnelSectionList.onReload() ;
+									if(id == CrtbDialogDelete.BUTTON_ID_CONFIRM){
+										
+										int code = RawSheetIndexDao.defaultDao().delete(info) ;
+										
+										if(code == RawSheetIndexDao.DB_EXECUTE_SUCCESS){
+											CrtbDialogResult.createDeleteSuccessDialog(RecordActivity.this).show();
+											mTunnelSectionList.onReload() ;
+										}
 									}
 								}
-							}
-						}) ;
-						
+							}) ;
+							
 						delete.show(); 
-						
+							
 					} else {
 						
 						CrtbDialogHint hint = new CrtbDialogHint(RecordActivity.this,R.drawable.ic_warnning, "你不能删除以往的数据");
@@ -281,24 +281,24 @@ public class RecordActivity extends WorkFlowActivity implements OnPageChangeList
 							hint.show() ;
 							return ;
 						}
-						
-						CrtbDialogDelete delete = new CrtbDialogDelete(RecordActivity.this,R.drawable.ic_warnning,"执行该操作将删除记录单的全部数据,不可恢复!");
-						
-						delete.setButtonClick(new IButtonOnClick() {
 							
-							@Override
-							public void onClick(int id) {
+						CrtbDialogDelete delete = new CrtbDialogDelete(RecordActivity.this,R.drawable.ic_warnning,"执行该操作将删除记录单的全部数据,不可恢复!");
+							
+						delete.setButtonClick(new IButtonOnClick() {
 								
-								if(id == CrtbDialogDelete.BUTTON_ID_CONFIRM){
+								@Override
+								public void onClick(int id) {
 									
-									int code = RawSheetIndexDao.defaultDao().delete(info) ;
-									
-									if(code == RawSheetIndexDao.DB_EXECUTE_SUCCESS){
-										CrtbDialogResult.createDeleteSuccessDialog(RecordActivity.this).show();
-										mSubsidenceSectionList.onReload() ;
+									if(id == CrtbDialogDelete.BUTTON_ID_CONFIRM){
+										
+										int code = RawSheetIndexDao.defaultDao().delete(info) ;
+										
+										if(code == RawSheetIndexDao.DB_EXECUTE_SUCCESS){
+											CrtbDialogResult.createDeleteSuccessDialog(RecordActivity.this).show();
+											mSubsidenceSectionList.onReload() ;
+										}
 									}
 								}
-							}
 						}) ;
 						
 						delete.show(); 

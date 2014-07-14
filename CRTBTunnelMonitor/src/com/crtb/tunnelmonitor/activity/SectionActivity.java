@@ -214,12 +214,6 @@ public class SectionActivity extends WorkFlowActivity implements OnPageChangeLis
 			
 			SubsidenceCrossSectionIndex section = (SubsidenceCrossSectionIndex)bean ;
 			
-			// 断面是否上传
-			if(section.getUploadStatus() == 2){
-				showText("断面已经上传，不能删除!");
-				return ;
-			}
-			
 			// 编辑
 			if(menu.equals(getString(R.string.common_edit))
 					|| menu.equals(getString(R.string.common_look))){
@@ -233,6 +227,12 @@ public class SectionActivity extends WorkFlowActivity implements OnPageChangeLis
 			} 
 			// 删除
 			else if(menu.equals(getString(R.string.common_delete))){
+				
+				// 断面是否上传
+				if(section.getUploadStatus() == 2){
+					showText("断面已经上传，不能删除!");
+					return ;
+				}
 				
 				// 是否存在数据
 				if(section.isHasTestData()){
