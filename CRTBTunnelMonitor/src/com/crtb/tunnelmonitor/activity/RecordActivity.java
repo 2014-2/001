@@ -230,7 +230,7 @@ public class RecordActivity extends WorkFlowActivity implements OnPageChangeList
 				if(info.getCrossSectionType() == RawSheetIndex.CROSS_SECTION_TYPE_TUNNEL){
 					
 					// 是否最后一条数据
-					if(mTunnelSectionList.isLastRawSheetIndex(info)){
+					// if(mTunnelSectionList.isLastRawSheetIndex(info)){
 						
 						// 是否存在测量数据
 						List<TunnelSettlementTotalData> list = TunnelSettlementTotalDataDao.defaultDao().queryTunnelTotalDataSheet(info.getGuid());
@@ -263,17 +263,17 @@ public class RecordActivity extends WorkFlowActivity implements OnPageChangeList
 							
 						delete.show(); 
 							
-					} else {
+					/*} else {
 						
 						CrtbDialogHint hint = new CrtbDialogHint(RecordActivity.this,R.drawable.ic_warnning, "你不能删除以往的数据");
 						hint.show() ;
-					}
+					}*/
 				}
 				// 地表下沉
 				else if(info.getCrossSectionType() == RawSheetIndex.CROSS_SECTION_TYPE_SUBSIDENCES){
 					
 					// 是否最后一条数据
-					if(mSubsidenceSectionList.isLastRawSheetIndex(info)){
+					//if(mSubsidenceSectionList.isLastRawSheetIndex(info)){
 						
 						// 是否存在测量数据
 						if(SubsidenceTotalDataDao.defaultDao().checkRawSheetIndexHasData(info.getGuid())){
@@ -303,10 +303,10 @@ public class RecordActivity extends WorkFlowActivity implements OnPageChangeList
 						
 						delete.show(); 
 						
-					} else {
+					/*} else {
 						CrtbDialogHint hint = new CrtbDialogHint(RecordActivity.this,R.drawable.ic_warnning, "你不能删除以往的数据");
 						hint.show() ;
-					}
+					}*/
 				}
 			}
 		}
