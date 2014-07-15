@@ -43,7 +43,14 @@ public class SubsidenceMeasureData extends MeasureData {
 		StringBuilder sb = new StringBuilder();
 		final int totalCount = mMeasurePoints.size();
 		for (int i = 0; i < totalCount; i++) {
-			sb.append(sectionCode + "DB" + String.format("%02d", i) + "/");
+		    int id = 0;
+		    try {
+		        id = Integer.valueOf(mMeasurePoints.get(i).getPntType());
+		        id--;
+		    } catch(Exception e) {
+		    }
+		    id = Math.max(0, id);
+			sb.append(sectionCode + "DB" + id + "/");
 		}
 		sb.deleteCharAt(sb.lastIndexOf("/"));
 
