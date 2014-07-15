@@ -247,6 +247,38 @@ public class TunnelMeasureData extends MeasureData {
 			public void run() {
 				TunnelSettlementTotalDataDao dao = TunnelSettlementTotalDataDao.defaultDao();
 				for (TunnelSettlementTotalData point : mMeasurePoints) {
+                    if (POINT_TYPE_S1_1.equals(point.getPntType())) {
+                        TunnelSettlementTotalData pointS1_2 = getPointByType(POINT_TYPE_S1_2);
+                        if (pointS1_2 == null) {
+                            continue;
+                        }
+                    } else if (POINT_TYPE_S1_2.equals(point.getPntType())) {
+                        TunnelSettlementTotalData pointS1_1 = getPointByType(POINT_TYPE_S1_1);
+                        if (pointS1_1 == null) {
+                            continue;
+                        }
+                    } else if (POINT_TYPE_S2_1.equals(point.getPntType())) {
+                        TunnelSettlementTotalData pointS2_2 = getPointByType(POINT_TYPE_S2_2);
+                        if (pointS2_2 == null) {
+                            continue;
+                        }
+                    } else if (POINT_TYPE_S2_2.equals(point.getPntType())) {
+                        TunnelSettlementTotalData pointS2_1 = getPointByType(POINT_TYPE_S2_1);
+                        if (pointS2_1 == null) {
+                            continue;
+                        }
+                    } else if (POINT_TYPE_S3_1.equals(point.getPntType())) {
+                        TunnelSettlementTotalData pointS3_2 = getPointByType(POINT_TYPE_S3_2);
+                        if (pointS3_2 == null) {
+                            continue;
+                        }
+                    } else if (POINT_TYPE_S3_2.equals(point.getPntType())) {
+                        TunnelSettlementTotalData pointS3_1 = getPointByType(POINT_TYPE_S3_1);
+                        if (pointS3_1 == null) {
+                            continue;
+                        }
+                    }
+
 					point.setInfo("2");
 					point.setUploadStatus(2); //表示该测点已上传
 					dao.update(point);
