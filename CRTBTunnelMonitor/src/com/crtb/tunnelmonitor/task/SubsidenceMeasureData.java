@@ -50,7 +50,7 @@ public class SubsidenceMeasureData extends MeasureData {
 		    } catch(Exception e) {
 		    }
 		    id = Math.max(0, id);
-			sb.append(sectionCode + "DB" + id + "/");
+			sb.append(sectionCode + "DB" + String.format("%02d", id) + "/");
 		}
 		sb.deleteCharAt(sb.lastIndexOf("/"));
 
