@@ -1,6 +1,7 @@
 
 package com.crtb.tunnelmonitor.utils;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Enumeration;
@@ -954,8 +955,6 @@ public class AlertUtils {
                     ai.setAlertId(c.getInt(0));
 //                    ai.setAlertHandlingId(c.getInt(1));
 //                    ai.setXinghao(CrtbUtils.formatSectionName(prefix, c.getDouble(1)));
-                    String dateStr = c.getString(1);
-                    ai.setDate(dateStr);
                     ai.setPntType(c.getString(2));
                     int uType = c.getInt(3);
                     ai.setUType(uType);
@@ -968,9 +967,9 @@ public class AlertUtils {
                     ai.setSectionId(c.getString(5));
                     ai.setAlertLevel(c.getInt(6));
                     // Yongdong: UValue should be calculated by raw data, not by AlertList.UValue
-                    Double uVaule = getUVaule(c.getString(8), uType);
-                    ai.setUValue(uVaule != null ? uVaule : c.getDouble(7));
-                   
+                    OtherInfo info = getUVaule(c.getString(8), uType);
+                    ai.setUValue(info.mUVaule != null ? info.mUVaule : c.getDouble(7));
+                    ai.setDate(info.mDate != null ? info.mDate : c.getString(1));
                     ai.setOriginalDataID(c.getString(8));
                     ai.setAlertInfo(c.getString(9));
                     ai.setUploadStatus(c.getInt(10));
@@ -2045,20 +2044,32 @@ public class AlertUtils {
         return ret;
     }
 
-    private static Double getUVaule(String dataGuid, int uType) {
+    public static class OtherInfo {
+        Double mUVaule = null;
+        String mDate = null;
+    }
+
+    private static OtherInfo getUVaule(String dataGuid, int uType) {
+        OtherInfo info = new OtherInfo();
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         if (uType == GONGDINGI_XIACHEN_SULV_EXCEEDING || uType == DIBIAO_LEIJI_XIACHEN_EXCEEDING
                 || uType == DIBIAO_XIACHEN_SULV_EXCEEDING
                 || uType == GONGDING_LEIJI_XIACHEN_EXCEEDING) {
             Object point = TunnelSettlementTotalDataDao.defaultDao().queryOneByGuid(dataGuid);
             if (point == null) {
                 point = SubsidenceTotalDataDao.defaultDao().queryOneByGuid(dataGuid);
+                info.mDate = format.format(((SubsidenceTotalData)point).getSurveyTime());
+            } else {
+                info.mDate = format.format(((TunnelSettlementTotalData)point).getSurveyTime());
             }
+            
             Exceeding ex = checkPointSubsidenceExceed(point, -1, null, null, true);
             if (uType == GONGDINGI_XIACHEN_SULV_EXCEEDING || uType == DIBIAO_XIACHEN_SULV_EXCEEDING) {
-                return ex.sulvValue;
+                info.mUVaule = ex.sulvValue;
             } else {
-                return ex.leijiValue;
+                info.mUVaule = ex.leijiValue;
             }
+            return info;
         }
 
         if (uType == SHOULIAN_LEIJI_EXCEEDING || uType == SHOULIAN_SULV_EXCEEDING) {
@@ -2071,13 +2082,21 @@ public class AlertUtils {
                     s_2 = TunnelSettlementTotalDataDao.defaultDao().queryOneByGuid(guids[1]);
                 }
             }
+
+            if (s_1.getSurveyTime().getTime() >  s_2.getSurveyTime().getTime()) {
+                info.mDate = format.format(s_1.getSurveyTime());
+            } else {
+                info.mDate = format.format(s_2.getSurveyTime());
+            }
+
             Exceeding ex2 = checkLineConvergenceExceed(s_1, s_2, -1, null, null, true);
             if (uType == SHOULIAN_LEIJI_EXCEEDING){
-                return ex2.leijiValue;
+                info.mUVaule = ex2.leijiValue;
             } else {
-                return ex2.sulvValue;
+                info.mUVaule = ex2.sulvValue;
             }
+            return info;
         }
-        return null;
+        return info;
     }
 }
