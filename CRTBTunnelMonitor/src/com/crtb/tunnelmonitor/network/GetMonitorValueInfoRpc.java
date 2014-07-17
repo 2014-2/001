@@ -90,7 +90,7 @@ class GetMonitorValueInfoRpc extends AbstractRpc {
 						pointTestData.setCoordinate(coordinate.replace("#", ","));
 						pointTestData.setSurveyTime(CrtbUtils.parseDate(time));
 						//将测量点数据标记已上传
-						pointTestData.setInfo("2");
+//						pointTestData.setInfo("2");
 						pointTestData.setUploadStatus(2); //表示该测点已上传
 						pointTestData.setPntType("A");
 						//TODO: 无法获取此数据，暂时用0代替
@@ -106,7 +106,7 @@ class GetMonitorValueInfoRpc extends AbstractRpc {
 						pointTestData1.setCoordinate(coordinate1);
 						pointTestData1.setSurveyTime(CrtbUtils.parseDate(time));
 						//将测量点数据标记已上传
-						pointTestData1.setInfo("2");
+//						pointTestData1.setInfo("2");
 						pointTestData1.setPntType("S1-1");
 						//TODO: 无法获取此数据，暂时用0代替
 						pointTestData1.setSurveyorID(String.valueOf(0));
@@ -118,7 +118,7 @@ class GetMonitorValueInfoRpc extends AbstractRpc {
 						pointTestData2.setCoordinate(coordinate2);
 						pointTestData2.setSurveyTime(CrtbUtils.parseDate(time));
 						//将测量点数据标记已上传
-						pointTestData2.setInfo("2");
+//						pointTestData2.setInfo("2");
 						pointTestData2.setPntType("S1-2");
 						//TODO: 无法获取此数据，暂时用0代替
 						pointTestData2.setSurveyorID(String.valueOf(0));

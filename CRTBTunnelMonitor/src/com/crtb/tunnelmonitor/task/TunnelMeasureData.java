@@ -279,7 +279,7 @@ public class TunnelMeasureData extends MeasureData {
                         }
                     }
 
-					point.setInfo("2");
+//					point.setInfo("2");
 					point.setUploadStatus(2); //表示该测点已上传
 					dao.update(point);
 				}
