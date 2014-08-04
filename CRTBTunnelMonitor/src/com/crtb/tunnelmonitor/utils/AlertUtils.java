@@ -596,10 +596,10 @@ public class AlertUtils {
                 }
                 double shoulianSpeed = deltaLenth / deltaTInDay;
                 int uType = SHOULIAN_SULV_EXCEEDING;
+                shoulianSpeed = CrtbUtils.formatDouble(shoulianSpeed, 1);
+                ret.sulvType = uType;
+                ret.sulvValue = shoulianSpeed;
                 if (Math.abs(shoulianSpeed) > SPEED_THRESHOLD) {
-                    shoulianSpeed = CrtbUtils.formatDouble(shoulianSpeed, 1);
-                    ret.sulvType = uType;
-                    ret.sulvValue = shoulianSpeed;
                     if (!readOnly) {
 //                        AlertList al = AlertListDao.defaultDao().queryOne(sheetId, chainageId, originalDataID, uType);
                         //若本条预警已消警，但重测时又超限，则需要再打开
