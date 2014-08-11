@@ -264,11 +264,18 @@ public class RecordNewActivity extends WorkFlowActivity implements OnPageChangeL
 			String descr 		= record_dotype.getEditableText().toString().trim();
 			String currentTime 	= record_buildtime.getEditableText().toString().trim() ;
 						
+			ArrayList<Double> chainages = sectionListView.getChainages();
 			if (StringUtils.isEmpty(chainage)) {
 				showText("掌子面里程不能为空");
 				return;
 			}
 
+            for (Double c : chainages) {
+                if (Math.abs(c - CrtbUtils.formatDouble(chainage)) >= 500) {
+                    showText("距离掌子面里程不能大于500米");
+                    return;
+                }
+            }
 			if (StringUtils.isEmpty(person)) {
 				showText("测量员不能为空");
 				return;

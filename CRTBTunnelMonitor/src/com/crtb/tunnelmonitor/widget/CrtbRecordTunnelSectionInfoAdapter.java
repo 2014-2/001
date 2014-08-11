@@ -1,5 +1,7 @@
 package com.crtb.tunnelmonitor.widget;
 
+import java.util.ArrayList;
+
 import org.zw.android.framework.ioc.InjectCore;
 import org.zw.android.framework.ioc.InjectLayout;
 import org.zw.android.framework.ioc.InjectView;
@@ -105,4 +107,15 @@ public final class CrtbRecordTunnelSectionInfoAdapter extends CrtbEntityAdapter<
 		@InjectView(id=R.id.t3)
 		TextView status ;
 	}
+
+    protected ArrayList<Double> getChainages() {
+        ArrayList<Double> chainageList = new ArrayList<Double>();
+        for (TunnelCrossSectionIndex item : mList) {
+            if (item.isUsed()) {
+                chainageList.add(item.getChainage());
+            }
+        }
+        return chainageList;
+    }
+
 }
