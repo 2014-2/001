@@ -15,6 +15,8 @@ import android.util.Log;
 
 import com.crtb.tunnelmonitor.AppCRTBApplication;
 import com.crtb.tunnelmonitor.dao.impl.v2.ProjectIndexDao;
+import com.crtb.tunnelmonitor.dao.impl.v2.SubsidenceCrossSectionExIndexDao;
+import com.crtb.tunnelmonitor.dao.impl.v2.TunnelCrossSectionExIndexDao;
 import com.crtb.tunnelmonitor.entity.CrtbUser;
 import com.crtb.tunnelmonitor.entity.ExcavateMethodEnum;
 import com.crtb.tunnelmonitor.entity.ProjectIndex;
@@ -280,4 +282,32 @@ public final class CrtbUtils {
         }
         return type;
     }
+    
+	public static int updateNewSectionCodeNumber() {
+
+		String tag = "GenerateSectionCode";
+		boolean state = false;
+		int maxNo = 0;
+		int maxTunnelSectionNo = -2;
+		int maxSubSectionNo = -2;
+
+
+		maxTunnelSectionNo = TunnelCrossSectionExIndexDao.defaultDao()
+				.queryMaxTunnelSectionNo();
+		maxSubSectionNo = SubsidenceCrossSectionExIndexDao.defaultDao()
+				.queryMaxSubsidenceSectionNo();
+
+		if (maxTunnelSectionNo < 0 || maxSubSectionNo < 0) {
+			Log.i(tag, "断面编码数据异常");
+		} else{
+			maxNo = maxTunnelSectionNo > maxSubSectionNo ? maxTunnelSectionNo
+					: maxSubSectionNo;
+			state = true;
+		}
+		
+		CrtbAppConfig.getInstance().setSectionSequence(maxNo);
+		Log.i("CrtbWebService", "更新断面编码:"+maxNo);
+		return maxNo;
+	}
+
 }

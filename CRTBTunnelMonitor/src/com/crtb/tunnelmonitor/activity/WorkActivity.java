@@ -32,6 +32,7 @@ import com.crtb.tunnelmonitor.mydefine.CrtbDialogFileBrowse;
 import com.crtb.tunnelmonitor.mydefine.CrtbDialogHint;
 import com.crtb.tunnelmonitor.utils.CrtbDbFileUtils;
 import com.crtb.tunnelmonitor.widget.CrtbWorkPlanListView;
+import com.crtb.tunnelmonitor.utils.CrtbUtils;
 
 /**
  * work plan
@@ -84,6 +85,9 @@ public final class WorkActivity extends WorkFlowActivity {
 			
 			// current edit workplan
 			ProjectIndexDao.defaultWorkPlanDao().updateCurrentWorkPlan(bean);
+			
+			int newSectionCodeNumber = CrtbUtils.updateNewSectionCodeNumber();
+//			Toast.makeText(this,"工点编码顺序号："+newSectionCodeNumber,Toast.LENGTH_LONG).show();
 			
 			finish() ;
 			

@@ -4,6 +4,9 @@ import org.zw.android.framework.IAccessDatabase;
 
 import com.crtb.tunnelmonitor.entity.SubsidenceCrossSectionExIndex;
 
+import java.util.List;
+import android.util.Log;
+
 public class SubsidenceCrossSectionExIndexDao  extends AbstractDao<SubsidenceCrossSectionExIndex> {
 	private static SubsidenceCrossSectionExIndexDao _instance;
 
@@ -49,4 +52,42 @@ public class SubsidenceCrossSectionExIndexDao  extends AbstractDao<SubsidenceCro
         String sql = "select * from SubsidenceCrossSectionExIndex where SECTCODE = ?";
         return mDatabase.queryObject(sql, new String[] { sectionCode }, SubsidenceCrossSectionExIndex.class);
     }
+    
+    public int queryMaxSubsidenceSectionNo() {
+
+		int maxSectionNo = 0;
+		int curNo = -1;
+		int secionCharCount = 16;
+		String maxSectionNoStr = "";
+		String maxSectionCode = "";
+
+		final IAccessDatabase mDatabase = getCurrentDb();
+
+		if (mDatabase == null) {
+			return maxSectionNo;
+		}
+
+		String sql = "select * from SubsidenceCrossSectionExIndex";
+		List<SubsidenceCrossSectionExIndex> crosses = mDatabase.queryObjects(sql,
+				new String[] {}, SubsidenceCrossSectionExIndex.class);
+
+		if (crosses == null) {
+			return maxSectionNo = 0;
+		}
+		for (SubsidenceCrossSectionExIndex cross : crosses) {
+			maxSectionCode = cross.getSECTCODE();
+			if (maxSectionCode.length() != secionCharCount) {
+				Log.d(TAG, "SubsidenceCrossSectionExIndex data format error");
+				maxSectionNo = 0;
+				break;
+			} else {
+				maxSectionNoStr = maxSectionCode.substring(12);
+				curNo = Integer.valueOf(maxSectionNoStr);
+				if (maxSectionNo < curNo) {
+					maxSectionNo = curNo;
+				}
+			}
+		}
+		return maxSectionNo;
+	}
 }
