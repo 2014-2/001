@@ -618,8 +618,8 @@ public class WarningActivity extends Activity {
             if (thisTime != null && lastTime != null) {
                 long deltaT = Math.abs(thisTime.getTime() - lastTime.getTime());
                 Log.d(TAG, "delta t: " + deltaT + " ms");
-                if (deltaT < Time.ONE_HOUR) {
-                    deltaT = Time.ONE_HOUR;//ONE HOUR at least to avoid infinity
+                if (deltaT < Time.ONE_MILLISECOND) {
+                    deltaT = Time.ONE_MILLISECOND;//ONE MILLISECOND at least to lift restriction
                 }
                 double deltaTInDay = ((double)deltaT / Time.DAY_MILLISECEND_RATIO);
                 double h = 1d/24d;
