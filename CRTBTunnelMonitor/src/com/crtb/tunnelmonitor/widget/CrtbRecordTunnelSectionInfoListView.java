@@ -151,4 +151,7 @@ public class CrtbRecordTunnelSectionInfoListView extends CrtbBaseListView {
 		TunnelCrossSectionIndexDao.defaultDao().queryAllSection(mHandler) ;
 	}
 	
+    public ArrayList<Double> getChainages() {
+        return mAdapter.getChainages();
+    }
 }

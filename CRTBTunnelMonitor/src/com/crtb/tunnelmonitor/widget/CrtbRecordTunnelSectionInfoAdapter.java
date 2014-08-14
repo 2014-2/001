@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.crtb.tunnelmonitor.activity.R;
 import com.crtb.tunnelmonitor.entity.TunnelCrossSectionIndex;
 import com.crtb.tunnelmonitor.utils.CrtbUtils;
+import java.util.ArrayList;
 
 /**
  * 
@@ -105,4 +106,14 @@ public final class CrtbRecordTunnelSectionInfoAdapter extends CrtbEntityAdapter<
 		@InjectView(id=R.id.t3)
 		TextView status ;
 	}
+	
+    protected ArrayList<Double> getChainages() {
+        ArrayList<Double> chainageList = new ArrayList<Double>();
+        for (TunnelCrossSectionIndex item : mList) {
+            if (item.isUsed()) {
+                chainageList.add(item.getChainage());
+            }
+        }
+        return chainageList;
+    }
 }

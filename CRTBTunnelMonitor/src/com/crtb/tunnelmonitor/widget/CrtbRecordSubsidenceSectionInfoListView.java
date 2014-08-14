@@ -143,4 +143,7 @@ public class CrtbRecordSubsidenceSectionInfoListView extends CrtbBaseListView {
 		SubsidenceCrossSectionIndexDao.defaultDao().queryAllSection(mHandler);
 	}
 	
+    public ArrayList<Double> getChainages() {
+        return mAdapter.getChainages();
+    }
 }
