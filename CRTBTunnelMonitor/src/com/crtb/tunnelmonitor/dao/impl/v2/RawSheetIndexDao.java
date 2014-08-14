@@ -172,7 +172,7 @@ public class RawSheetIndexDao extends AbstractDao<RawSheetIndex> {
 			return false ;
 		}
 		
-		String sql = "select * from RawSheetIndex where CrossSectionType = ? ORDER BY ID DESC limit 0,2";
+		String sql = "select * from RawSheetIndex where CrossSectionType = ? ORDER BY CreateTime DESC limit 0,2";
 		
 		RawSheetIndex old = null ;
 		
