@@ -79,7 +79,7 @@ class GetSectInfoByCodeRpc extends AbstractRpc {
 			}
 			try {
 				String chainage = data.getPropertyAsString(i++);
-				String[] chainageInfo = chainage.substring(2).split("\\+");
+				String[] chainageInfo = chainage.split("\\+");
 				final float total = getlastNumber(chainageInfo[0]) * 1000 + Float.parseFloat(chainageInfo[1]);
 				section.setChainage(total);
 			} catch (NullPointerException e) {
@@ -160,7 +160,7 @@ class GetSectInfoByCodeRpc extends AbstractRpc {
 
 	private static int getlastNumber(String prefix) {
 		int lastNumberInt = 0;
-		Pattern p = Pattern.compile("[^0-9]+([0-9]+)$");
+		Pattern p = Pattern.compile("[^0-9]*([0-9]+)$");
 		Matcher matcher = p.matcher(prefix);
 		if (matcher.find()) {
 		    String someNumberStr = matcher.group(1);
