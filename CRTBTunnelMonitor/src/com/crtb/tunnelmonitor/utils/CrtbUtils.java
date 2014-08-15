@@ -15,15 +15,20 @@ import android.util.Log;
 
 import com.crtb.tunnelmonitor.AppCRTBApplication;
 import com.crtb.tunnelmonitor.dao.impl.v2.ProjectIndexDao;
+import com.crtb.tunnelmonitor.dao.impl.v2.SiteProjectMappingDao;
 import com.crtb.tunnelmonitor.dao.impl.v2.SubsidenceCrossSectionExIndexDao;
+import com.crtb.tunnelmonitor.dao.impl.v2.SurveyerInformationDao;
 import com.crtb.tunnelmonitor.dao.impl.v2.TunnelCrossSectionExIndexDao;
+import com.crtb.tunnelmonitor.dao.impl.v2.WorkSiteIndexDao;
 import com.crtb.tunnelmonitor.entity.CrtbUser;
 import com.crtb.tunnelmonitor.entity.ExcavateMethodEnum;
 import com.crtb.tunnelmonitor.entity.ProjectIndex;
+import com.crtb.tunnelmonitor.entity.SiteProjectMapping;
 import com.crtb.tunnelmonitor.entity.SubsidenceCrossSectionIndex;
 import com.crtb.tunnelmonitor.entity.SurveyerInformation;
 import com.crtb.tunnelmonitor.entity.TunnelCrossSectionIndex;
 import com.crtb.tunnelmonitor.entity.TunnelSettlementTotalData;
+import com.crtb.tunnelmonitor.entity.WorkSiteIndex;
 import com.crtb.tunnelmonitor.network.CrtbWebService;
 import com.crtb.tunnelmonitor.network.PointUploadParameter;
 import com.crtb.tunnelmonitor.network.SectionUploadParamter;
@@ -308,5 +313,32 @@ public final class CrtbUtils {
 		CrtbAppConfig.getInstance().setSectionSequence(maxNo);
 		Log.i("CrtbWebService", "更新断面编码:"+maxNo);
 		return maxNo;
+	}
+    
+	public static SurveyerInformation getSurveyerInfoBySheetGuid(String sheetGuid){
+		String TAG = "CrtbWebServices";
+		SurveyerInformationDao surveyerInfoDao = SurveyerInformationDao
+				.defaultDao();
+		SurveyerInformation surveyer = surveyerInfoDao
+				.querySurveyerBySheetGuid(sheetGuid);
+
+		// 相应记录单没有测量员信息
+		if (surveyer == null) {
+			Log.i(TAG, "RawSheetIndex no Surveyer");
+			surveyer = AppCRTBApplication.getInstance().getCurPerson();
+		}
+
+		//确保测量员不为null
+		if (surveyer == null) {
+			surveyer = new SurveyerInformation();
+		}
+		if (surveyer.getSurveyerName() == null) {
+			surveyer.setSurveyerName("");
+		}
+
+		if (surveyer.getCertificateID() == null) {
+			surveyer.setCertificateID("");
+		}
+		return surveyer;
 	}
 }

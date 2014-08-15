@@ -137,4 +137,52 @@ public class SurveyerInformationDao extends AbstractDao<SurveyerInformation> {
 
         return id;
     }
+    
+    public SurveyerInformation querySurveyerBySheetGuid(String sheetGuid){
+		String TAG = "CrtbWebService";
+		SurveyerInformation surveyer = null;
+		String surveyerName = "";
+		String certificationId = "";
+		Boolean existInServer = false;
+
+		if (sheetGuid != null) {
+			final IAccessDatabase mDatabase = getCurrentDb();
+
+			if (mDatabase != null) {
+				String sql = "select * from SurveyerInformation where ProjectID = ?";
+				String[] args = new String[] { sheetGuid };
+				surveyer = mDatabase.queryObject(sql, args,
+						SurveyerInformation.class);
+			}
+		}
+
+		if(surveyer != null){
+			surveyerName = surveyer.getSurveyerName();
+			certificationId = surveyer.getCertificateID();
+			if (surveyerName != null && certificationId != null) {
+				Log.i(TAG, "RawSheetGuid=" + sheetGuid + " SurveyerName="
+						+ surveyerName + " certificationId=" + certificationId);
+
+				final IAccessDatabase mDatabaseDefault = getDefaultDb();
+				if (mDatabaseDefault != null) {
+					String sql = "select * from SurveyerInformation where SurveyerName = ? and CertificateID = ?";
+					String[] args = new String[] { surveyerName,
+							certificationId };
+					surveyer = mDatabaseDefault.queryObject(sql, args,
+							SurveyerInformation.class);
+					if (surveyer != null) {
+						existInServer = true;
+					}
+				}
+			}
+		}
+
+		if (!existInServer) {
+			Log.i(TAG, "Surveyer not exist in Server");
+			surveyer = null;
+		}
+
+    	 return surveyer;
+    }
+    
 }

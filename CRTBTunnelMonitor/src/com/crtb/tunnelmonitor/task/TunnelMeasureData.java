@@ -296,4 +296,14 @@ public class TunnelMeasureData extends MeasureData {
 		}
 		return result;
 	}
+	
+	public String getSheetGuid() {
+		String sheetGuid = "";
+		TunnelSettlementTotalData first = mMeasurePoints.size() > 0 ? mMeasurePoints
+				.get(0) : null;
+		if (first != null) {
+			sheetGuid = first.getSheetId();
+		}
+		return sheetGuid;
+	}
 }

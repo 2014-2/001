@@ -7,6 +7,7 @@ import android.util.Log;
 import com.crtb.tunnelmonitor.dao.impl.v2.AbstractDao;
 import com.crtb.tunnelmonitor.dao.impl.v2.TunnelCrossSectionExIndexDao;
 import com.crtb.tunnelmonitor.dao.impl.v2.TunnelCrossSectionIndexDao;
+import com.crtb.tunnelmonitor.entity.SurveyerInformation;
 import com.crtb.tunnelmonitor.entity.TunnelCrossSectionExIndex;
 import com.crtb.tunnelmonitor.entity.TunnelCrossSectionIndex;
 import com.crtb.tunnelmonitor.network.CrtbWebService;
@@ -92,8 +93,13 @@ public class TunnelAsyncUploadTask extends AsyncUploadTask {
         parameter.setMeasureDate(measureData.getMeasureDate());
         parameter.setPointValueList(measureData.getValueList());
         parameter.setPointCoordinateList(measureData.getCoordinateList());
-        parameter.setSurveyorName(CrtbUtils.getSurveyorName());
-        parameter.setSurveyorId(CrtbUtils.getSurveyorCertificateID());
+		String sheetGuid = measureData.getSheetGuid();
+		if (sheetGuid != null) {
+			SurveyerInformation surveyer = CrtbUtils
+					.getSurveyerInfoBySheetGuid(sheetGuid);
+			parameter.setSurveyorName(surveyer.getSurveyerName());
+			parameter.setSurveyorId(surveyer.getCertificateID());
+		}
         parameter.setRemark("");
         CrtbWebService.getInstance().uploadTestResult(parameter, new RpcCallback() {
 

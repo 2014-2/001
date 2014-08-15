@@ -9,6 +9,7 @@ import com.crtb.tunnelmonitor.dao.impl.v2.SubsidenceCrossSectionExIndexDao;
 import com.crtb.tunnelmonitor.dao.impl.v2.SubsidenceCrossSectionIndexDao;
 import com.crtb.tunnelmonitor.entity.SubsidenceCrossSectionExIndex;
 import com.crtb.tunnelmonitor.entity.SubsidenceCrossSectionIndex;
+import com.crtb.tunnelmonitor.entity.SurveyerInformation;
 import com.crtb.tunnelmonitor.network.CrtbWebService;
 import com.crtb.tunnelmonitor.network.DataCounter;
 import com.crtb.tunnelmonitor.network.PointUploadParameter;
@@ -91,8 +92,13 @@ public class SubsidenceAsyncUploadTask extends AsyncUploadTask {
         parameter.setMeasureDate(measureData.getMeasureDate());
         parameter.setPointValueList(measureData.getValueList());
         parameter.setPointCoordinateList(measureData.getCoordinateList());
-        parameter.setSurveyorName(CrtbUtils.getSurveyorName());
-        parameter.setSurveyorId(CrtbUtils.getSurveyorCertificateID());
+		String sheetGuid = measureData.getSheetGuid();
+		if (sheetGuid != null) {
+			SurveyerInformation surveyer = CrtbUtils
+					.getSurveyerInfoBySheetGuid(sheetGuid);
+			parameter.setSurveyorName(surveyer.getSurveyerName());
+			parameter.setSurveyorId(surveyer.getCertificateID());
+		}
         parameter.setRemark("");
         CrtbWebService.getInstance().uploadTestResult(parameter, new RpcCallback() {
 
