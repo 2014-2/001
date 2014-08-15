@@ -31,6 +31,7 @@ import com.crtb.tunnelmonitor.mydefine.CrtbDialogDelete.IButtonOnClick;
 import com.crtb.tunnelmonitor.mydefine.CrtbDialogFileBrowse;
 import com.crtb.tunnelmonitor.mydefine.CrtbDialogHint;
 import com.crtb.tunnelmonitor.utils.CrtbDbFileUtils;
+import com.crtb.tunnelmonitor.utils.CrtbUtils;
 import com.crtb.tunnelmonitor.widget.CrtbWorkPlanListView;
 
 /**
@@ -84,7 +85,7 @@ public final class WorkActivity extends WorkFlowActivity {
 			
 			// current edit workplan
 			ProjectIndexDao.defaultWorkPlanDao().updateCurrentWorkPlan(bean);
-			
+			CrtbUtils.updateNewSectionCodeNumber();
 			finish() ;
 			
 		} else if(menu.equals(getString(R.string.common_edit))){

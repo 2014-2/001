@@ -1,6 +1,10 @@
 package com.crtb.tunnelmonitor.dao.impl.v2;
 
+import java.util.List;
+
 import org.zw.android.framework.IAccessDatabase;
+
+import android.util.Log;
 
 import com.crtb.tunnelmonitor.entity.TunnelCrossSectionExIndex;
 
@@ -54,4 +58,47 @@ public class TunnelCrossSectionExIndexDao extends AbstractDao<TunnelCrossSection
 	    return mDatabase.queryObject(sql, new String[] { sectionCode }, TunnelCrossSectionExIndex.class);
 	}
 	
+	public int queryMaxTunnelSectionNo() {
+
+		int maxSectionNo = 0;
+		int curNo = -1;
+		int secionCharCount = 16;
+		String maxSectionNoStr = "";
+		String maxSectionCode = "";
+
+		final IAccessDatabase mDatabase = getCurrentDb();
+
+		if (mDatabase == null) {
+			return maxSectionNo;
+		}
+
+		String sql = "select * from TunnelCrossSectionExIndex";
+		List<TunnelCrossSectionExIndex> crosses = mDatabase.queryObjects(sql,
+				new String[] {}, TunnelCrossSectionExIndex.class);
+
+		if (crosses == null) {
+			return maxSectionNo = 0;
+		}
+		for (TunnelCrossSectionExIndex cross : crosses) {
+			maxSectionCode = cross.getSECTCODE();
+			if (maxSectionCode.length() != secionCharCount) {
+				Log.d(TAG, "TunnelCrossSectionExIndex data format error");
+				maxSectionNo = 0;
+				continue;
+			} else {
+				maxSectionNoStr = maxSectionCode.substring(12);
+				try {
+					curNo = Integer.valueOf(maxSectionNoStr);
+				} catch (Exception e) {
+					e.printStackTrace();
+					continue;
+				}
+				if (maxSectionNo < curNo) {
+					maxSectionNo = curNo;
+				}
+			}
+		}
+		return maxSectionNo;
+	}
+
 }
