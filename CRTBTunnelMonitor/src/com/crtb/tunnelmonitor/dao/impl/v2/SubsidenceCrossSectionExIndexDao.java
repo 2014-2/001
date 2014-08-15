@@ -79,10 +79,15 @@ public class SubsidenceCrossSectionExIndexDao  extends AbstractDao<SubsidenceCro
 			if (maxSectionCode.length() != secionCharCount) {
 				Log.d(TAG, "SubsidenceCrossSectionExIndex data format error");
 				maxSectionNo = 0;
-				break;
+				continue;
 			} else {
 				maxSectionNoStr = maxSectionCode.substring(12);
-				curNo = Integer.valueOf(maxSectionNoStr);
+				try {
+					curNo = Integer.valueOf(maxSectionNoStr);
+				} catch (Exception e) {
+					e.printStackTrace();
+					continue;
+				}
 				if (maxSectionNo < curNo) {
 					maxSectionNo = curNo;
 				}

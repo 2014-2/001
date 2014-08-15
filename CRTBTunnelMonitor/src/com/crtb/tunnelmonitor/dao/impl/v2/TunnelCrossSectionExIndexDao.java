@@ -83,10 +83,15 @@ public class TunnelCrossSectionExIndexDao extends AbstractDao<TunnelCrossSection
 			if (maxSectionCode.length() != secionCharCount) {
 				Log.d(TAG, "TunnelCrossSectionExIndex data format error");
 				maxSectionNo = 0;
-				break;
+				continue;
 			} else {
 				maxSectionNoStr = maxSectionCode.substring(12);
-				curNo = Integer.valueOf(maxSectionNoStr);
+				try {
+					curNo = Integer.valueOf(maxSectionNoStr);
+				} catch (Exception e) {
+					e.printStackTrace();
+					continue;
+				}
 				if (maxSectionNo < curNo) {
 					maxSectionNo = curNo;
 				}
