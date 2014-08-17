@@ -1,5 +1,7 @@
 package com.crtb.tunnelmonitor.activity;
 
+import java.util.List;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -38,25 +40,46 @@ public class ServersActivity extends Activity implements OnClickListener {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_servers);
 		initView();
-		// 服务器相关所有操作都必须先打开工作面
-		ProjectIndex currentProject = ProjectIndexDao.defaultWorkPlanDao().queryEditWorkPlan();
-		if (currentProject == null) {
-			Toast.makeText(getApplicationContext(), "请先打开工作面", Toast.LENGTH_SHORT).show();
-			finish();
-		} else {
-			SiteProjectMapping mapping = SiteProjectMappingDao.defaultDao().queryOneByProjectId(currentProject.getId());
-			if (mapping == null) {
-				Toast.makeText(getApplicationContext(), "请先下载工点数据", Toast.LENGTH_SHORT).show();
-			} else {
-				WorkSiteIndex workSiteIndex = WorkSiteIndexDao.defaultDao().queryWorkSiteById(mapping.getWorkSiteId());
-				if (workSiteIndex == null) {
-					Toast.makeText(getApplicationContext(), "未查询到关联的工点数据", Toast.LENGTH_SHORT).show();
-				} else {
-					CrtbWebService.getInstance().setZoneCode(workSiteIndex.getZoneCode());
-					CrtbWebService.getInstance().setSiteCode(workSiteIndex.getSiteCode());
-				}
-			}
-		}
+		// 获取当前工作面
+        ProjectIndex currentProject = ProjectIndexDao.defaultWorkPlanDao()
+                .queryEditWorkPlan();
+        if (currentProject == null) {
+            Toast.makeText(getApplicationContext(), "请先打开工作面",
+                    Toast.LENGTH_SHORT).show();
+            finish();
+        }
+        // 判断工点是否已经下载
+        List<WorkSiteIndex> originalWorkSiteList = WorkSiteIndexDao
+                .defaultDao().queryAllWorkSite();
+        if (originalWorkSiteList == null || originalWorkSiteList.size() < 1) {
+            Toast.makeText(getApplicationContext(), "请先下载工点数据",
+                    Toast.LENGTH_SHORT).show();
+            return;
+        }
+        // 判断是否关联工点
+        SiteProjectMapping mapping = SiteProjectMappingDao.defaultDao()
+                .queryOneByProjectId(currentProject.getId());
+        if (mapping == null) {
+            Toast.makeText(getApplicationContext(), "请先关联工点数据",
+                    Toast.LENGTH_SHORT).show();
+            return;
+        }
+        // 获取工点信息、并保存到CrtbWebService中工点信息
+        WorkSiteIndex workSiteIndex = WorkSiteIndexDao.defaultDao()
+                .queryWorkSiteById(mapping.getWorkSiteId());
+        if (workSiteIndex == null) {
+            Toast.makeText(getApplicationContext(), "请重新关联工点数据",
+                    Toast.LENGTH_SHORT).show();
+            // 清空当前工点信息
+            CrtbWebService.getInstance().setZoneCode("");
+            CrtbWebService.getInstance().setSiteCode("");
+        } else {
+            // 保存当前工点信息
+            CrtbWebService.getInstance().setZoneCode(
+                    workSiteIndex.getZoneCode());
+            CrtbWebService.getInstance().setSiteCode(
+                    workSiteIndex.getSiteCode());
+        }
 	}
 
 	/** 初始化控件 */
