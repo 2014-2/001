@@ -6,7 +6,7 @@ import java.util.Date;
 import com.crtb.tunnelmonitor.dao.impl.v2.RawSheetIndexDao;
 import com.crtb.tunnelmonitor.utils.AlertUtils;
 
-public class MergedAlert {
+public class MergedAlert implements Comparable<MergedAlert>{
 
     private AlertInfo leijiAlert = null;
     private AlertInfo sulvAlert = null;
@@ -116,5 +116,10 @@ public class MergedAlert {
         }
 
         return true;
+    }
+
+    @Override
+    public int compareTo(MergedAlert another) {
+        return sheetDate.compareTo(another.getSheetDate());
     }
 }

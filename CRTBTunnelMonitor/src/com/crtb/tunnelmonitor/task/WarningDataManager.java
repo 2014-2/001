@@ -1,6 +1,7 @@
 package com.crtb.tunnelmonitor.task;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -73,6 +74,7 @@ public class WarningDataManager {
 //				}
 //			}
 			ArrayList<MergedAlert> mal = AlertUtils.getMergedAlerts();
+			Collections.sort(mal);
 			if (mal != null && mal.size() > 0) {
 			    for (MergedAlert ma : mal) {
 //			        boolean can = AlertUtils.mergedAlertCanBeUploaded(ma);
