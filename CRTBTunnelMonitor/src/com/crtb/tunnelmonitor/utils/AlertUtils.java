@@ -110,7 +110,7 @@ public class AlertUtils {
             return null;
         }
         StringBuilder sb1 = new StringBuilder();
-//        if (Math.abs(ex.leijiValue) > ACCUMULATIVE_THRESHOLD) {
+        //if (Math.abs(ex.leijiValue) > ACCUMULATIVE_THRESHOLD) {
         if (ex.leijiType > 0) {
             sb1.append(U_TYPE_MSGS[ex.leijiType]).append(" ").append(ex.leijiValue).append("毫米");
         }
@@ -351,8 +351,8 @@ public class AlertUtils {
 //                    deltaZ = Math.abs(deltaZ);
                     long deltaT = Math.abs(thisTime.getTime() - lastTime.getTime());
                     Log.d(TAG, "delta t: " + deltaT + " ms");
-                    if (deltaT < Time.ONE_HOUR) {
-                        deltaT = Time.ONE_HOUR;//ONE HOUR at least to avoid infinity
+                    if (deltaT < Time.ONE_MILLISECOND) {
+                        deltaT = Time.ONE_MILLISECOND;//ONE MILLISECOND at least to avoid infinity
                     }
                     double deltaTInDay = ((double)deltaT / Time.DAY_MILLISECEND_RATIO);
                     double h = 1d/24d;
@@ -588,8 +588,8 @@ public class AlertUtils {
                     lastTime = s_2LastTime.getTime();
                 }
                 double deltaTime = Math.abs((thisTime - lastTime));
-                if (deltaTime < Time.ONE_HOUR) {
-                    deltaTime = Time.ONE_HOUR;//ONE HOUR at least to avoid infinity
+                if (deltaTime < Time.ONE_MILLISECOND) {
+                    deltaTime = Time.ONE_MILLISECOND;//ONE MILLISECOND at least to avoid infinity
                 }
                 double deltaTInDay = (deltaTime / Time.DAY_MILLISECEND_RATIO);
                 double h = 1d/24d;
@@ -1608,8 +1608,8 @@ public class AlertUtils {
                     lastTime = s_2LastTime.getTime();
                 }
                 double deltaTime = Math.abs((thisTime - lastTime));
-                if (deltaTime < Time.ONE_HOUR) {
-                    deltaTime = Time.ONE_HOUR;//ONE HOUR at least to avoid infinity
+                if (deltaTime < Time.ONE_MILLISECOND) {
+                    deltaTime = Time.ONE_MILLISECOND;//ONE MILLISECOND at least to avoid infinity
                 }
                 double deltaTInDay = (deltaTime / Time.DAY_MILLISECEND_RATIO);
                 double h = 1d/24d;
@@ -1692,8 +1692,8 @@ public class AlertUtils {
           if (thisTime != null && lastTime != null) {
               long deltaT = Math.abs(thisTime.getTime() - lastTime.getTime());
               Log.d(TAG, "delta t: " + deltaT + " ms");
-              if (deltaT < Time.ONE_HOUR) {
-                  deltaT = Time.ONE_HOUR;//ONE HOUR at least to avoid infinity
+              if (deltaT < Time.ONE_MILLISECOND) {
+                  deltaT = Time.ONE_MILLISECOND;//ONE MILLISECOND at least to avoid infinity
               }
               double deltaTInDay = ((double)deltaT / Time.DAY_MILLISECEND_RATIO);
               double h = 1d/24d;
@@ -1925,8 +1925,8 @@ public class AlertUtils {
 //                    deltaZ = Math.abs(deltaZ);
                     long deltaT = Math.abs(thisTime.getTime() - lastTime.getTime());
                     Log.d(TAG, "delta t: " + deltaT + " ms");
-                    if (deltaT < Time.ONE_HOUR) {
-                        deltaT = Time.ONE_HOUR;//ONE HOUR at least to avoid infinity
+                    if (deltaT < Time.ONE_MILLISECOND) {
+                        deltaT = Time.ONE_MILLISECOND;//ONE MILLISECOND at least to avoid infinity
                     }
                     double deltaTInDay = ((double)deltaT / Time.DAY_MILLISECEND_RATIO);
                     double h = 1d/24d;
@@ -2030,8 +2030,8 @@ public class AlertUtils {
                     lastTime = s_2LastTime.getTime();
                 }
                 double deltaTime = Math.abs((thisTime - lastTime));
-                if (deltaTime < Time.ONE_HOUR) {
-                    deltaTime = Time.ONE_HOUR;//ONE HOUR at least to avoid infinity
+                if (deltaTime < Time.ONE_MILLISECOND) {
+                    deltaTime = Time.ONE_MILLISECOND;//ONE MILLISECOND at least to avoid infinity
                 }
                 double deltaTInDay = (deltaTime / Time.DAY_MILLISECEND_RATIO);
                 double h = 1d/24d;
