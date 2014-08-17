@@ -32,7 +32,7 @@ public class SubsidenceMeasureData extends MeasureData {
 	public Date getMeasureDate() {
 		Date mesureDate = null;
 		if (mMeasurePoints != null && mMeasurePoints.size() > 0) {
-			SubsidenceTotalData point = mMeasurePoints.get(0);
+			SubsidenceTotalData point = mMeasurePoints.get(mMeasurePoints.size() - 1);
 			mesureDate = point.getSurveyTime();
 		}
 		return mesureDate;

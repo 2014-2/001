@@ -43,7 +43,7 @@ public class TunnelMeasureData extends MeasureData {
 	public Date getMeasureDate() {
 		Date mesureDate = null;
 		if (mMeasurePoints != null && mMeasurePoints.size() > 0) {
-			TunnelSettlementTotalData point = mMeasurePoints.get(0);
+			TunnelSettlementTotalData point = mMeasurePoints.get(mMeasurePoints.size() - 1);
 			mesureDate = point.getSurveyTime();
 		}
 		return mesureDate;
