@@ -384,4 +384,32 @@ public final class CrtbUtils {
 		return list;
 	}
 	
+	public static void updateWorkSiteInfo(ProjectIndex currentProject) {
+
+		WorkSiteIndex workSiteIndex = null;
+		
+		if (currentProject != null) {
+			// 判断是否关联工点
+			SiteProjectMapping mapping = SiteProjectMappingDao.defaultDao()
+					.queryOneByProjectId(currentProject.getId());
+			if (mapping != null) {
+
+				// 获取工点信息、并保存到CrtbWebService中工点信息
+				workSiteIndex = WorkSiteIndexDao.defaultDao()
+						.queryWorkSiteById(mapping.getWorkSiteId());
+			}
+		}
+		
+		if (workSiteIndex == null) {
+			// 清空当前工点信息
+			CrtbWebService.getInstance().setZoneCode("");
+			CrtbWebService.getInstance().setSiteCode("");
+		} else {
+			// 保存当前工点信息
+			CrtbWebService.getInstance().setZoneCode(
+					workSiteIndex.getZoneCode());
+			CrtbWebService.getInstance().setSiteCode(
+					workSiteIndex.getSiteCode());
+		}
+	}
 }
