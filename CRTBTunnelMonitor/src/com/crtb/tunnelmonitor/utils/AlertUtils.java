@@ -1465,6 +1465,8 @@ public class AlertUtils {
                         currentHandling = handling;
                     } else {
                         AlertListDao.defaultDao().deleteAlert(p.getSheetId(), chainageId, p.getGuid());
+                        TunnelSettlementTotalDataDao.defaultDao().updateDataStatus(p.getGuid(), AlertUtils.POINT_DATASTATUS_NONE, 0);
+                        p = TunnelSettlementTotalDataDao.defaultDao().queryOneByGuid(p.getGuid());
                     }
                     checkPointSubsidenceExceed(p, curHandlingAlertId, handling, handlingTime, false);
                 }
@@ -1479,6 +1481,8 @@ public class AlertUtils {
                         currentHandling = handling;
                     } else {
                         AlertListDao.defaultDao().deleteAlert(p.getSheetId(), chainageId, p.getGuid());
+                        SubsidenceTotalDataDao.defaultDao().updateDataStatus(p.getGuid(), AlertUtils.POINT_DATASTATUS_NONE, 0);
+                        p = SubsidenceTotalDataDao.defaultDao().queryOneByGuid(p.getGuid());
                     }
                     checkPointSubsidenceExceed(p, curHandlingAlertId, handling, handlingTime, false);
                 }
