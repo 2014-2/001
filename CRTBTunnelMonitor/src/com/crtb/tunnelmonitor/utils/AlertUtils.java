@@ -72,6 +72,8 @@ public class AlertUtils {
 
     public static final String[] U_TYPE_MSGS = {"拱顶累计下沉值超限", "拱顶下沉速率超限", "累计收敛超限", "收敛速率超限", "地表累计下沉值超限", "地表下沉速率超限"};
 
+    public static final String[] U_TYPE_MSGS_SAFE = {"拱顶累计下沉值", "拱顶下沉速率", "累计收敛", "收敛速率", "地表累计下沉值", "地表下沉速率"};
+
     public static final int ALERT_STATUS_HANDLED = 0;
     public static final int ALERT_STATUS_OPEN = 1;
     public static final int ALERT_STATUS_HANDLING = 2;
@@ -112,13 +114,21 @@ public class AlertUtils {
         StringBuilder sb1 = new StringBuilder();
         //if (Math.abs(ex.leijiValue) > ACCUMULATIVE_THRESHOLD) {
         if (ex.leijiType > 0) {
-            sb1.append(U_TYPE_MSGS[ex.leijiType]).append(" ").append(ex.leijiValue).append("毫米");
+            if (Math.abs(ex.leijiValue) > ACCUMULATIVE_THRESHOLD) {
+                sb1.append(U_TYPE_MSGS[ex.leijiType]).append(" ").append(ex.leijiValue).append("毫米");
+            } else {
+                sb1.append(U_TYPE_MSGS_SAFE[ex.leijiType]).append(" ").append(ex.leijiValue).append("毫米");
+            }
         }
 
         StringBuilder sb2 = new StringBuilder();
         //if (Math.abs(ex.sulvValue) > SPEED_THRESHOLD) {
         if (ex.sulvType > 0) {
-            sb2.append(U_TYPE_MSGS[ex.sulvType]).append(" ").append(ex.sulvValue).append("毫米/天");
+            if (Math.abs(ex.sulvValue) > SPEED_THRESHOLD) {
+                sb2.append(U_TYPE_MSGS[ex.sulvType]).append(" ").append(ex.sulvValue).append("毫米/天");
+            } else {
+                sb2.append(U_TYPE_MSGS_SAFE[ex.sulvType]).append(" ").append(ex.sulvValue).append("毫米/天");
+            }
         }
 
         return new String[] { sb1.toString(), sb2.toString() };
