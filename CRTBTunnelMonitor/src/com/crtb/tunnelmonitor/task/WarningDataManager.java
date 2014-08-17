@@ -157,7 +157,7 @@ public class WarningDataManager {
 			parameter.setWarningLevel(1);
 		}
 		AlertInfo sulvalert = warningData.getSulvAlert();
-    	parameter.setTransformSpeed(sulvalert != null ? (float)sulvalert.getUValue() : 0f);
+    	parameter.setTransformSpeed(sulvalert != null ? (float)sulvalert.getUValue() : 0.001f);
 //    	String originalID = alertInfo.getOriginalDataID();
 //    	List<Integer> ids = new ArrayList<Integer>();
 //        if (originalID.contains(AlertUtils.ORIGINAL_ID_DIVIDER)) {
@@ -180,7 +180,7 @@ public class WarningDataManager {
 //        	pointValue = (float) AlertUtils.getLineLength(point1, point2);
 //        }
         AlertInfo leijiAlert = warningData.getLeijiAlert();
-    	parameter.setWarningPointValue((float) (leijiAlert != null ? leijiAlert.getUValue() : 0f));
+    	parameter.setWarningPointValue((float) (leijiAlert != null ? leijiAlert.getUValue() : 0.001f));
     	parameter.setWarningDate(CrtbUtils.parseDate(alertInfo.getDate()));
     	String duePerson = alertInfo.getDuePerson();
     	if (TextUtils.isEmpty(duePerson)) {
