@@ -306,4 +306,56 @@ public class TunnelMeasureData extends MeasureData {
 		}
 		return sheetGuid;
 	}
+	
+	public static List<MeasureData> createMeasureData(
+            List<TunnelSettlementTotalData> measurePoints) {
+        List<MeasureData> measureDataList = new ArrayList<MeasureData>();
+        TunnelSettlementTotalData a = getPointByType(measurePoints, POINT_TYPE_A);
+        TunnelSettlementTotalData s1_1 = getPointByType(measurePoints, POINT_TYPE_S1_1);
+        TunnelSettlementTotalData s1_2 = getPointByType(measurePoints, POINT_TYPE_S1_2);
+        TunnelSettlementTotalData s2_1 = getPointByType(measurePoints, POINT_TYPE_S2_1);
+        TunnelSettlementTotalData s2_2 = getPointByType(measurePoints, POINT_TYPE_S2_2);
+        TunnelSettlementTotalData s3_1 = getPointByType(measurePoints, POINT_TYPE_S3_1);
+        TunnelSettlementTotalData s3_2 = getPointByType(measurePoints, POINT_TYPE_S3_2);
+
+        if (a != null) {
+            TunnelMeasureData measureData = new TunnelMeasureData();
+            measureData.addMeasurePoint(a);
+            measureDataList.add(measureData);
+        }
+
+        if (s1_1 != null && s1_2 != null) {
+            TunnelMeasureData measureData = new TunnelMeasureData();
+            measureData.addMeasurePoint(s1_1);
+            measureData.addMeasurePoint(s1_2);
+            measureDataList.add(measureData);
+        }
+
+        if (s2_1 != null && s2_2 != null) {
+            TunnelMeasureData measureData = new TunnelMeasureData();
+            measureData.addMeasurePoint(s2_1);
+            measureData.addMeasurePoint(s2_2);
+            measureDataList.add(measureData);
+        }
+
+        if (s3_1 != null && s3_2 != null) {
+            TunnelMeasureData measureData = new TunnelMeasureData();
+            measureData.addMeasurePoint(s3_1);
+            measureData.addMeasurePoint(s3_2);
+            measureDataList.add(measureData);
+        }
+
+        return measureDataList;
+    }
+
+    private static TunnelSettlementTotalData getPointByType(
+            List<TunnelSettlementTotalData> measurePoints, String type) {
+        TunnelSettlementTotalData result = null;
+        for (TunnelSettlementTotalData point : measurePoints) {
+            if (type.equals(point.getPntType())) {
+                result = point;
+            }
+        }
+        return result;
+    }
 }

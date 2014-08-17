@@ -37,22 +37,23 @@ public class TunnelAsyncQueryTask extends AsyncQueryTask {
                 List<MeasureData> measureDataList = new ArrayList<MeasureData>();
                 List<TunnelSettlementTotalData> measurePoints = getUnUploadMeasurePoints(sheetGuid, sectionIndex.getGuid());
                 if (measurePoints != null && measurePoints.size() > 0) {
-                	 int measureNo = -1;
-                     TunnelMeasureData measureData = null;
-                     for(TunnelSettlementTotalData point : measurePoints) {
-                           // Yongdong: The same sheet should test at the same time. And MeasNo is always 1 now.
-//                         if (measureNo != point.getMEASNo()) {
-//                             measureNo = point.getMEASNo();
+//                	 int measureNo = -1;
+//                     TunnelMeasureData measureData = null;
+//                     for(TunnelSettlementTotalData point : measurePoints) {
+//                           // Yongdong: The same sheet should test at the same time. And MeasNo is always 1 now.
+////                         if (measureNo != point.getMEASNo()) {
+////                             measureNo = point.getMEASNo();
+////                             measureData = new TunnelMeasureData();
+////                             measureDataList.add(measureData);
+////                         }
+//                         if (measureData == null) {
 //                             measureData = new TunnelMeasureData();
 //                             measureDataList.add(measureData);
 //                         }
-                         if (measureData == null) {
-                             measureData = new TunnelMeasureData();
-                             measureDataList.add(measureData);
-                         }
-                         measureData.addMeasurePoint(point);
-                     }
-                     section.setMeasureData(measureDataList);
+//                         measureData.addMeasurePoint(point);
+//                     }
+//                     section.setMeasureData(measureDataList);
+                	 section.setMeasureData(TunnelMeasureData.createMeasureData(measurePoints));
                 }
                 if (section.needUpload()) {
                 	sections.add(section);
