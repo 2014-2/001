@@ -36,6 +36,7 @@ import com.crtb.tunnelmonitor.dao.impl.v2.RawSheetIndexDao;
 import com.crtb.tunnelmonitor.entity.ProjectIndex;
 import com.crtb.tunnelmonitor.entity.RawSheetIndex;
 import com.crtb.tunnelmonitor.entity.SurveyerInformation;
+import com.crtb.tunnelmonitor.task.AsyncUpdateTask;
 import com.crtb.tunnelmonitor.utils.CrtbUtils;
 import com.crtb.tunnelmonitor.widget.CrtbRecordTunnelSectionInfoListView;
 
@@ -272,7 +273,7 @@ public class RecordNewActivity extends WorkFlowActivity implements OnPageChangeL
 
             for (Double c : chainages) {
                 if (Math.abs(c - CrtbUtils.formatDouble(chainage)) >= 500) {
-                    showText("距离掌子面里程不能大于500米");
+                    showText("距掌子面距离需小于500米,否则无法上传至工管中心");
                     return;
                 }
             }
@@ -328,12 +329,14 @@ public class RecordNewActivity extends WorkFlowActivity implements OnPageChangeL
 			} else {
 				
 				// 重新设置记录单上传状态: 部分上传状态
-				if(recordInfo.getUploadStatus() == 2 && sectionGuis != null){
-					
-					if(!sectionGuis.equals(sections)){
-						recordInfo.setUploadStatus(3);
-					}
-				}
+//				if(recordInfo.getUploadStatus() == 2 && sectionGuis != null){
+//					
+//					if(!sectionGuis.equals(sections)){
+//						recordInfo.setUploadStatus(3);
+//					}
+//				}
+				int uploadStatus = AsyncUpdateTask.getTunnelSheetStatus(recordInfo);
+				recordInfo.setUploadStatus(uploadStatus);
 				
 				// 基本信息
 				recordInfo.setCrossSectionType(RawSheetIndex.CROSS_SECTION_TYPE_TUNNEL);

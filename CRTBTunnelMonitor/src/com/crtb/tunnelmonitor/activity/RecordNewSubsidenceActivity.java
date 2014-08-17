@@ -36,6 +36,7 @@ import com.crtb.tunnelmonitor.dao.impl.v2.RawSheetIndexDao;
 import com.crtb.tunnelmonitor.entity.ProjectIndex;
 import com.crtb.tunnelmonitor.entity.RawSheetIndex;
 import com.crtb.tunnelmonitor.entity.SurveyerInformation;
+import com.crtb.tunnelmonitor.task.AsyncUpdateTask;
 import com.crtb.tunnelmonitor.utils.CrtbUtils;
 import com.crtb.tunnelmonitor.widget.CrtbRecordSubsidenceSectionInfoListView;
 
@@ -265,10 +266,18 @@ public class RecordNewSubsidenceActivity extends WorkFlowActivity implements OnP
 			String descr 		= record_dotype.getEditableText().toString().trim();
 			String currentTime 	= record_buildtime.getEditableText().toString().trim() ;
 
+			ArrayList<Double> chainages = sectionListView.getChainages();
 			if (StringUtils.isEmpty(chainage)) {
 				showText("掌子面里程不能为空");
 				return;
 			}
+			
+            for (Double c : chainages) {
+                if (Math.abs(c - CrtbUtils.formatDouble(chainage)) >= 500) {
+                    showText("距掌子面距离需小于500米,否则无法上传至工管中心");
+                    return;
+                }
+            }
 
 			if (StringUtils.isEmpty(person)) {
 				showText("测量员不能为空");
@@ -319,12 +328,14 @@ public class RecordNewSubsidenceActivity extends WorkFlowActivity implements OnP
 			} else {
 				
 				// 是否需要改为部分上传状态
-				if(recordInfo.getUploadStatus() == 2 && sectionGuis != null){
-					
-					if(!sectionGuis.equals(sections)){
-						recordInfo.setUploadStatus(3);
-					}
-				}
+//				if(recordInfo.getUploadStatus() == 2 && sectionGuis != null){
+//					
+//					if(!sectionGuis.equals(sections)){
+//						recordInfo.setUploadStatus(3);
+//					}
+//				}
+				int uploadStatus = AsyncUpdateTask.getSubsidenceSheetStatus(recordInfo);
+				recordInfo.setUploadStatus(uploadStatus);
 				
 				// 基本信息
 				recordInfo.setCrossSectionType(RawSheetIndex.CROSS_SECTION_TYPE_SUBSIDENCES);

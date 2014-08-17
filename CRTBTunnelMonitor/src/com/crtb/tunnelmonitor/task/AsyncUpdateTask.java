@@ -141,43 +141,7 @@ public class AsyncUpdateTask {
 	
 	private void updateTunnelSheetStatus(SheetRecord record) {
 		RawSheetIndex sheetIndex = record.getRawSheet();
-		int totalPoints = 0,  uploadedPoints = 0, unUploadedPoints = 0;
-		List<TunnelCrossSectionIndex> sectionIndexList = TunnelCrossSectionIndexDao.defaultDao().querySectionByGuids(sheetIndex.getCrossSectionIDs());
-		boolean hasEmptySection = false;
-		if (sectionIndexList != null && sectionIndexList.size() > 0) {
-			for(TunnelCrossSectionIndex sectionIndex : sectionIndexList) {
-				totalPoints += getPointNumbers(sectionIndex);
-				//断面相关测点查询
-				List<TunnelSettlementTotalData> pointList = TunnelSettlementTotalDataDao.defaultDao().queryTunnelTotalDatas(sheetIndex.getGuid(), sectionIndex.getGuid());
-				if (pointList != null && pointList.size() > 0) {
-					for(TunnelSettlementTotalData point : pointList) {
-						switch (point.getUploadStatus()) {
-						case 1:
-							unUploadedPoints++;
-							break;
-						case 2:
-							uploadedPoints++;
-						default:
-							break;
-						}
-					}
-				} else {
-					hasEmptySection = true;
-				}
-			}
-		}
-		int uploadStatus;
-		if (uploadedPoints == 0){//所有数据均未上传
-			uploadStatus = 1;
-		} else if (totalPoints == uploadedPoints) { // 所有测量数据均已上传
-			if (!hasEmptySection) {
-				uploadStatus = 2;
-			} else {
-				uploadStatus = 3;
-			}
-		} else {
-			uploadStatus = 3; // 有一部分上传
-		}
+		int uploadStatus = getTunnelSheetStatus(sheetIndex);
 		sheetIndex.setUploadStatus(uploadStatus);
 		RawSheetIndexDao.defaultDao().update(sheetIndex);
 	}
@@ -232,7 +196,87 @@ public class AsyncUpdateTask {
 	
 	private void updateSubsidenceSheetStatus(SheetRecord record) {
 		RawSheetIndex sheetIndex = record.getRawSheet();
-		int totalPoints = 0,  uploadedPoints = 0, unUploadedPoints = 0;
+		int uploadStatus = getSubsidenceSheetStatus(sheetIndex);
+		sheetIndex.setUploadStatus(uploadStatus);
+		RawSheetIndexDao.defaultDao().update(sheetIndex);
+	}
+	
+	private void notifyDone() {
+		if (mListener != null) {
+			mHandler.post(new Runnable() {
+				
+				@Override
+				public void run() {
+					mListener.done();
+				}
+			});
+		}
+	}
+	
+	private static int getPointNumbers(Object section) {
+		int pointNumbers = 0;
+		if (section instanceof TunnelCrossSectionIndex) {
+			TunnelCrossSectionIndex tunnelSection = (TunnelCrossSectionIndex) section;
+			final int type = tunnelSection.getExcavateMethod();
+			for(ExcavateMethodEnum digMethod : ExcavateMethodEnum.values()) {
+				if (digMethod.getCode() == type) {
+					pointNumbers = digMethod.getPoints();
+					break;
+				}
+			}
+		} else if (section instanceof SubsidenceCrossSectionIndex) {
+			SubsidenceCrossSectionIndex subsidenceSection = (SubsidenceCrossSectionIndex) section;
+			pointNumbers = subsidenceSection.getSurveyPnts();
+		} else {
+			Log.e(LOG_TAG, "unknown section: " + section);
+		}
+		return pointNumbers;
+	}
+
+    public static int getTunnelSheetStatus(RawSheetIndex sheetIndex){
+    	int totalPoints = 0,  uploadedPoints = 0, unUploadedPoints = 0;
+		List<TunnelCrossSectionIndex> sectionIndexList = TunnelCrossSectionIndexDao.defaultDao().querySectionByGuids(sheetIndex.getCrossSectionIDs());
+		boolean hasEmptySection = false;
+		if (sectionIndexList != null && sectionIndexList.size() > 0) {
+			for(TunnelCrossSectionIndex sectionIndex : sectionIndexList) {
+				totalPoints += getPointNumbers(sectionIndex);
+				//断面相关测点查询
+				List<TunnelSettlementTotalData> pointList = TunnelSettlementTotalDataDao.defaultDao().queryTunnelTotalDatas(sheetIndex.getGuid(), sectionIndex.getGuid());
+				if (pointList != null && pointList.size() > 0) {
+					for(TunnelSettlementTotalData point : pointList) {
+						switch (point.getUploadStatus()) {
+						case 1:
+							unUploadedPoints++;
+							break;
+						case 2:
+							uploadedPoints++;
+						default:
+							break;
+						}
+					}
+				} else {
+					hasEmptySection = true;
+				}
+			}
+		}
+		int uploadStatus;
+		if (uploadedPoints == 0){//所有数据均未上传
+			uploadStatus = 1;
+		} else if (totalPoints == uploadedPoints) { // 所有测量数据均已上传
+			if (!hasEmptySection) {
+				uploadStatus = 2;
+			} else {
+				uploadStatus = 3;
+			}
+		} else {
+			uploadStatus = 3; // 有一部分上传
+		}
+		
+    	return uploadStatus;
+    }
+
+    public static int getSubsidenceSheetStatus(RawSheetIndex sheetIndex){
+    	int totalPoints = 0,  uploadedPoints = 0, unUploadedPoints = 0;
 		List<SubsidenceCrossSectionIndex>  sectionIndexList = SubsidenceCrossSectionIndexDao.defaultDao().querySectionByGuids(sheetIndex.getCrossSectionIDs());
 		boolean hasEmptySection = false;
 		if (sectionIndexList != null && sectionIndexList.size() > 0) {
@@ -270,39 +314,7 @@ public class AsyncUpdateTask {
 		} else {
 			uploadStatus = 3; // 有一部分上传
 		}
-		sheetIndex.setUploadStatus(uploadStatus);
-		RawSheetIndexDao.defaultDao().update(sheetIndex);
-	}
-	
-	private void notifyDone() {
-		if (mListener != null) {
-			mHandler.post(new Runnable() {
-				
-				@Override
-				public void run() {
-					mListener.done();
-				}
-			});
-		}
-	}
-	
-	private static int getPointNumbers(Object section) {
-		int pointNumbers = 0;
-		if (section instanceof TunnelCrossSectionIndex) {
-			TunnelCrossSectionIndex tunnelSection = (TunnelCrossSectionIndex) section;
-			final int type = tunnelSection.getExcavateMethod();
-			for(ExcavateMethodEnum digMethod : ExcavateMethodEnum.values()) {
-				if (digMethod.getCode() == type) {
-					pointNumbers = digMethod.getPoints();
-					break;
-				}
-			}
-		} else if (section instanceof SubsidenceCrossSectionIndex) {
-			SubsidenceCrossSectionIndex subsidenceSection = (SubsidenceCrossSectionIndex) section;
-			pointNumbers = subsidenceSection.getSurveyPnts();
-		} else {
-			Log.e(LOG_TAG, "unknown section: " + section);
-		}
-		return pointNumbers;
-	}
+		
+		return uploadStatus;
+    }
 }
