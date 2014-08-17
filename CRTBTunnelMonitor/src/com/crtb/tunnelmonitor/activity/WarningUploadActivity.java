@@ -45,6 +45,7 @@ import com.crtb.tunnelmonitor.task.WarningDataManager.UploadWarningData;
 import com.crtb.tunnelmonitor.task.WarningDataManager.WarningLoadListener;
 import com.crtb.tunnelmonitor.task.WarningDataManager.WarningUploadListener;
 import com.crtb.tunnelmonitor.utils.AlertUtils;
+import com.crtb.tunnelmonitor.utils.CrtbUtils;
 
 public class WarningUploadActivity extends Activity {
     private static final String LOG_TAG = "WarningUploadActivity";
@@ -74,6 +75,7 @@ public class WarningUploadActivity extends Activity {
         initB();
         init();
         initProgressOverlay();
+        initCurWorkBinding();
     }
 
     private void init() {
@@ -460,4 +462,15 @@ public class WarningUploadActivity extends Activity {
             return mIsChecked;
         }
     }
+    
+    
+    private void initCurWorkBinding() {
+    	TextView curProject = (TextView)findViewById(R.id.cur_project_name);
+    	TextView curWork = (TextView)findViewById(R.id.cur_work_name);
+    	String[] list = CrtbUtils.getWorkSiteInfo();
+    	if(curWork != null && curProject != null && list != null && list.length == 2){
+    		curProject.setText(list[0]);
+    		curWork.setText(list[1]);
+    	}	
+	}
 }

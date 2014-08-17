@@ -52,6 +52,7 @@ import com.crtb.tunnelmonitor.task.SubsidenceAsyncUploadTask;
 import com.crtb.tunnelmonitor.task.AsyncQueryTask.QueryLisenter;
 import com.crtb.tunnelmonitor.task.TunnelAsyncQueryTask;
 import com.crtb.tunnelmonitor.task.TunnelAsyncUploadTask;
+import com.crtb.tunnelmonitor.utils.CrtbUtils;
 import com.crtb.tunnelmonitor.widget.SubsidenceSectionSheetFragment;
 import com.crtb.tunnelmonitor.widget.TunnelSectionSheetFragment;
 
@@ -85,6 +86,7 @@ public class DataUploadActivity extends FragmentActivity {
         initPager();
         initTab();
         initProgressOverlay();
+        initCurWorkBinding();
     }
 
     protected void setTopbarTitle(String title) {
@@ -455,4 +457,14 @@ public class DataUploadActivity extends FragmentActivity {
             Toast.makeText(getApplicationContext(), "请先选择要上传的记录单", Toast.LENGTH_LONG).show();
         }
     }
+    
+    private void initCurWorkBinding() {
+    	TextView curProject = (TextView)findViewById(R.id.cur_project_name);
+    	TextView curWork = (TextView)findViewById(R.id.cur_work_name);
+    	String[] list = CrtbUtils.getWorkSiteInfo();
+    	if(curWork != null && curProject != null && list != null && list.length == 2){
+    		curProject.setText(list[0]);
+    		curWork.setText(list[1]);
+    	}	
+	}
 }

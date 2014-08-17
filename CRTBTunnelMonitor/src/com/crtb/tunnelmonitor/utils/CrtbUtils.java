@@ -341,4 +341,47 @@ public final class CrtbUtils {
 		}
 		return surveyer;
 	}
+	
+	public static String[] getWorkSiteInfo() {
+		String[] list = new String[2];
+		int workId = 0;
+		String curProjectName = "";
+		String curWorkSiteName = "";
+		final String KEY_CURRENT_WORKPLAN = "_key_current_workplan";
+		SiteProjectMappingDao siteProjDao = null;
+		SiteProjectMapping siteProjMapping = null;
+		WorkSiteIndexDao worksiteDao = null;
+		WorkSiteIndex worksite = null;
+		ProjectIndexDao projIndexDao = null;
+		
+		projIndexDao = ProjectIndexDao.defaultWorkPlanDao();
+		
+		ProjectIndex mCurrentWorkPlan = projIndexDao.queryEditWorkPlan();
+		if (mCurrentWorkPlan != null) {
+
+			curProjectName = mCurrentWorkPlan.getProjectName();
+			siteProjDao = SiteProjectMappingDao.defaultDao();
+			siteProjMapping = siteProjDao.queryOneByProjectId(mCurrentWorkPlan
+					.getId());
+			if (siteProjMapping != null) {
+				workId = siteProjMapping.getWorkSiteId();
+				worksiteDao = WorkSiteIndexDao.defaultDao();
+				worksite = worksiteDao.queryWorkSiteById(workId);
+				if (worksite != null) {
+					curWorkSiteName = worksite.getSiteName();
+				}
+			}
+		} else {
+			curProjectName = "当前还没有打开工作面";
+		}
+		if (curWorkSiteName == "") {
+			curWorkSiteName = "当前工作面没有关联工点";
+		}
+
+		list[0] = curProjectName;
+		list[1] = curWorkSiteName;
+
+		return list;
+	}
+	
 }
