@@ -144,7 +144,7 @@ public class SubsidenceMeasureData extends MeasureData {
 			public void run() {
 				SubsidenceTotalDataDao dao = SubsidenceTotalDataDao.defaultDao();
 				for (SubsidenceTotalData point : mMeasurePoints) {
-					point.setInfo("2");
+//					point.setInfo("2");
 					point.setUploadStatus(2); //表示该测点已上传
 					dao.update(point);
 				}
