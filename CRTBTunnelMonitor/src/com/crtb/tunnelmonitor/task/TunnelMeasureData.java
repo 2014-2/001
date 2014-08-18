@@ -1,6 +1,8 @@
 package com.crtb.tunnelmonitor.task;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -28,6 +30,7 @@ public class TunnelMeasureData extends MeasureData {
 	private static final String POINT_TYPE_S2_2 = "S2-2";
 	private static final String POINT_TYPE_S3_1 = "S3-1";
 	private static final String POINT_TYPE_S3_2 = "S3-2";
+	private TunnelSurveyTimeComparator comparator = new TunnelSurveyTimeComparator();
 
 	private List<TunnelSettlementTotalData> mMeasurePoints = new ArrayList<TunnelSettlementTotalData>();
 	private String mMointorModel = null;
@@ -43,6 +46,7 @@ public class TunnelMeasureData extends MeasureData {
 	public Date getMeasureDate() {
 		Date mesureDate = null;
 		if (mMeasurePoints != null && mMeasurePoints.size() > 0) {
+			Collections.sort(mMeasurePoints, comparator);
 			TunnelSettlementTotalData point = mMeasurePoints.get(mMeasurePoints.size() - 1);
 			mesureDate = point.getSurveyTime();
 		}
@@ -358,4 +362,45 @@ public class TunnelMeasureData extends MeasureData {
         }
         return result;
     }
+    
+	class TunnelSurveyTimeComparator implements
+			Comparator<TunnelSettlementTotalData> {
+
+		private boolean ASC = true;
+
+		public void setSortType(boolean isAsc) {
+			ASC = isAsc;
+		}
+
+		@Override
+		public int compare(TunnelSettlementTotalData lhs,
+				TunnelSettlementTotalData rhs) {
+			int compareValue = -2;
+			boolean dataRight = false;
+
+			if (lhs != null || rhs != null) {
+				Date lSurveyTime = lhs.getSurveyTime();
+				Date rSurveyTime = rhs.getSurveyTime();
+				if (lSurveyTime != null && rSurveyTime != null) {
+					if (ASC) {
+						compareValue = lSurveyTime.compareTo(rSurveyTime);
+					} else {
+						compareValue = rSurveyTime.compareTo(lSurveyTime);
+					}
+					dataRight = true;
+				}
+			}
+
+			if (!dataRight) {
+				try {
+					throw new Exception(
+							"TunnelSurveyTimeComparator reference exception");
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+
+			return compareValue;
+		}
+	}
 }
