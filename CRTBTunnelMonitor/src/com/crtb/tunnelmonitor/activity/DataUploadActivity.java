@@ -55,6 +55,7 @@ import com.crtb.tunnelmonitor.task.TunnelAsyncUploadTask;
 import com.crtb.tunnelmonitor.utils.CrtbUtils;
 import com.crtb.tunnelmonitor.widget.SubsidenceSectionSheetFragment;
 import com.crtb.tunnelmonitor.widget.TunnelSectionSheetFragment;
+import com.crtb.tunnelmonitor.network.CrtbWebService;
 
 
 public class DataUploadActivity extends FragmentActivity {
@@ -289,17 +290,22 @@ public class DataUploadActivity extends FragmentActivity {
                 public void onClick(View v) {
                     ProjectIndex currentProject = ProjectIndexDao.defaultWorkPlanDao().queryEditWorkPlan();
                     if (currentProject != null) {
-                        switch (mPager.getCurrentItem()) {
-                            // 隧道内断面
-                            case 0:
-                            	uploadTunnelSheets();
-                                break;
-                            case 1:
-                            	uploadSubsidenceSheets();
-                                break;
-                            default:
-                                break;
-                        }
+					    String siteCode = CrtbWebService.getInstance().getSiteCode();
+					    if (siteCode == null || siteCode.trim() == "" ) {
+						   Toast.makeText(getApplicationContext(), "请先关联工点", Toast.LENGTH_SHORT).show();
+						} else {
+                            switch (mPager.getCurrentItem()) {
+                                // 隧道内断面
+                                case 0:
+                            	    uploadTunnelSheets();
+                                    break;
+                                case 1:
+                            	    uploadSubsidenceSheets();
+                                    break;
+                                default:
+                                    break;
+                            }
+						}
                     } else {
                         Toast.makeText(getApplicationContext(), "请先打开工作面", Toast.LENGTH_SHORT).show();
                     }
