@@ -113,7 +113,7 @@ public class AlertUtils {
         }
         StringBuilder sb1 = new StringBuilder();
         //if (Math.abs(ex.leijiValue) > ACCUMULATIVE_THRESHOLD) {
-        if (ex.leijiType > 0) {
+        if (ex.leijiType > -1) {
             if (Math.abs(ex.leijiValue) > ACCUMULATIVE_THRESHOLD) {
                 sb1.append(U_TYPE_MSGS[ex.leijiType]).append(" ").append(ex.leijiValue).append("毫米");
             } else {
