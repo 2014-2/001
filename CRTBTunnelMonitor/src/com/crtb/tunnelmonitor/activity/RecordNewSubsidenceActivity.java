@@ -334,8 +334,6 @@ public class RecordNewSubsidenceActivity extends WorkFlowActivity implements OnP
 //						recordInfo.setUploadStatus(3);
 //					}
 //				}
-				int uploadStatus = AsyncUpdateTask.getSubsidenceSheetStatus(recordInfo);
-				recordInfo.setUploadStatus(uploadStatus);
 				
 				// 基本信息
 				recordInfo.setCrossSectionType(RawSheetIndex.CROSS_SECTION_TYPE_SUBSIDENCES);
@@ -344,6 +342,9 @@ public class RecordNewSubsidenceActivity extends WorkFlowActivity implements OnP
 				recordInfo.setTEMPERATURE(temp);
 				recordInfo.setFACEDESCRIPTION(descr);
 				recordInfo.setCrossSectionIDs(sections);
+				
+				int uploadStatus = AsyncUpdateTask.getSubsidenceSheetStatus(recordInfo);
+				recordInfo.setUploadStatus(uploadStatus);
 				
 				// 更新测量人员
 				

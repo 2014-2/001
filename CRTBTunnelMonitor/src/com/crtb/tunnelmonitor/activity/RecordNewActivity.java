@@ -335,8 +335,6 @@ public class RecordNewActivity extends WorkFlowActivity implements OnPageChangeL
 //						recordInfo.setUploadStatus(3);
 //					}
 //				}
-				int uploadStatus = AsyncUpdateTask.getTunnelSheetStatus(recordInfo);
-				recordInfo.setUploadStatus(uploadStatus);
 				
 				// 基本信息
 				recordInfo.setCrossSectionType(RawSheetIndex.CROSS_SECTION_TYPE_TUNNEL);
@@ -345,6 +343,9 @@ public class RecordNewActivity extends WorkFlowActivity implements OnPageChangeL
 				recordInfo.setTEMPERATURE(temp);
 				recordInfo.setFACEDESCRIPTION(descr);
 				recordInfo.setCrossSectionIDs(sections);
+				
+				int uploadStatus = AsyncUpdateTask.getTunnelSheetStatus(recordInfo);
+				recordInfo.setUploadStatus(uploadStatus);
 				
 				// 更新测量人员
 				
