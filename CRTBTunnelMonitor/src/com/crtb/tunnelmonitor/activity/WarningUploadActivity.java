@@ -199,55 +199,67 @@ public class WarningUploadActivity extends Activity {
             chakan.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-				    String siteCode = CrtbWebService.getInstance().getSiteCode();
-					if (siteCode == null || siteCode.trim() == "" ) {
-						Toast.makeText(getApplicationContext(), "请先关联工点", Toast.LENGTH_SHORT).show();
-					} else { 
-                        List<AlertInfo> checkedData = getCheckedAlertInfo();
-                        if (checkedData != null && checkedData.size() > 0) {
-                            Intent intent = new Intent(WarningUploadActivity.this,ReviewWarningActivity.class);
-                            intent.putExtra("alert_info", (Serializable)checkedData);
-                            startActivity(intent);
-                        } else {
-                            Toast.makeText(getApplicationContext(), "请选中预警信息再点击查看",Toast.LENGTH_SHORT).show();
-                        }
-					}
+                	List<AlertInfo> checkedData = getCheckedAlertInfo();
+                    if (checkedData != null && checkedData.size() > 0) {
+                        Intent intent = new Intent(WarningUploadActivity.this,ReviewWarningActivity.class);
+                        intent.putExtra("alert_info", (Serializable)checkedData);
+                        startActivity(intent);
+                    } else {
+                        Toast.makeText(getApplicationContext(), "请选中预警信息再点击查看",Toast.LENGTH_SHORT).show();
+                    }
                     menuWindow.dismiss();
                 }
             });
             shangchuan.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    WarningDataManager dataManager = new WarningDataManager();
-                    List<UploadWarningData> uploadWarningDataList = new ArrayList<UploadWarningData>();
-                    List<WarningUploadData> warningDataList = mAdapter.getWarningData();
-                    if (warningDataList != null && warningDataList.size() > 0) {
-                        for (WarningUploadData uploadData : warningDataList) {
-                            if (uploadData.isChecked()) {
-                                uploadWarningDataList.add(uploadData.getUploadWarningData());
-                            }
-						}
-						if (uploadWarningDataList.size() > 0) {
-							UploadWarningData warningData = uploadWarningDataList.get(0);
-							if (AlertUtils.mergedAlertCanBeUploaded(warningData.getMergedAlert())) {
-								showProgressOverlay();
-								dataManager.uploadData(uploadWarningDataList, new WarningUploadListener() {
-									@Override
-									public void done(final boolean success) {
-										runOnUiThread(new Runnable() {
-											@Override
-											public void run() {
-												updateStatus(success);
-											}
-										});
-									}
-								});
-							} else {
-								Toast.makeText(WarningUploadActivity.this, R.string.alert_upload_promote,
-										Toast.LENGTH_LONG).show();
+					String siteCode = CrtbWebService.getInstance()
+							.getSiteCode();
+					if (siteCode == null || siteCode.trim() == "") {
+						Toast.makeText(getApplicationContext(), "请先关联工点",
+								Toast.LENGTH_SHORT).show();
+					} else {
+						WarningDataManager dataManager = new WarningDataManager();
+						List<UploadWarningData> uploadWarningDataList = new ArrayList<UploadWarningData>();
+						List<WarningUploadData> warningDataList = mAdapter
+								.getWarningData();
+						if (warningDataList != null
+								&& warningDataList.size() > 0) {
+							for (WarningUploadData uploadData : warningDataList) {
+								if (uploadData.isChecked()) {
+									uploadWarningDataList.add(uploadData
+											.getUploadWarningData());
+								}
+							}
+							if (uploadWarningDataList.size() > 0) {
+								UploadWarningData warningData = uploadWarningDataList
+										.get(0);
+								if (AlertUtils
+										.mergedAlertCanBeUploaded(warningData
+												.getMergedAlert())) {
+									showProgressOverlay();
+									dataManager.uploadData(
+											uploadWarningDataList,
+											new WarningUploadListener() {
+												@Override
+												public void done(
+														final boolean success) {
+													runOnUiThread(new Runnable() {
+														@Override
+														public void run() {
+															updateStatus(success);
+														}
+													});
+												}
+											});
+								} else {
+									Toast.makeText(WarningUploadActivity.this,
+											R.string.alert_upload_promote,
+											Toast.LENGTH_LONG).show();
+								}
 							}
 						}
-                    }
+					}
                     menuWindow.dismiss();
                 }
             });
