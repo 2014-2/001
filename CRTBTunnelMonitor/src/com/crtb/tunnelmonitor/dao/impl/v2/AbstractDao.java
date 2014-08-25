@@ -15,7 +15,6 @@ import com.crtb.tunnelmonitor.entity.ControlPointsIndex;
 import com.crtb.tunnelmonitor.entity.ConvergenceSettlementArching;
 import com.crtb.tunnelmonitor.entity.CrownSettlementARCHING;
 import com.crtb.tunnelmonitor.entity.DTMSProjectVersion;
-import com.crtb.tunnelmonitor.entity.DTMSVersion;
 import com.crtb.tunnelmonitor.entity.ProjectSettingIndex;
 import com.crtb.tunnelmonitor.entity.RawSheetIndex;
 import com.crtb.tunnelmonitor.entity.SiteProjectMapping;
@@ -128,21 +127,18 @@ public abstract class AbstractDao<T> {
 		String name = AppPreferences.getPreferences().getCurrentProject();
 
 		if (StringUtils.isEmpty(name)) {
-			
 			Log.e(TAG, "zhouwei : getCurrentDb() 没有打开的工作面");
-			
 			return null;
 		}
 		
-		int pos = name.lastIndexOf(".");
+		// 数据库名称: 去掉.db
+		name	= CrtbDbFileUtils.getDbName(name);
 		
-		// 数据库名称
-		if(pos > 0){
-			name = name.substring(0,pos) ;
-		}
+		// 临时文件名称
+		String tempName = getDbUniqueTempName(name);
 		
-		// return
-		return openDb(name) ;
+		// get database
+		return mFramework.getDatabaseByName(tempName) ;
 	}
 	
 	/**
@@ -156,47 +152,16 @@ public abstract class AbstractDao<T> {
 		if (StringUtils.isEmpty(dbName)) {
 			return;
 		}
-
-		int pos = dbName.lastIndexOf(".");
-
-		// 数据库名称
-		if (pos > 0) {
-			dbName = dbName.substring(0, pos);
-		}
 		
-		// 缓存
-		mFramework.removeDatabaseByName(dbName);
-		
+		// 对应的数据库名称与缓存数据库
+		dbName 			= CrtbDbFileUtils.getDbName(dbName);
+		String tempDb 	= getDbUniqueTempName(dbName);
+
 		// 关闭文件并重新加密
 		CrtbDbFileUtils.closeDbFile(dbName);
-	}
-	
-	/**
-	 * 打开数据库
-	 * 
-	 * @param dbName
-	 * @return
-	 */
-	protected final IAccessDatabase openDb(String dbName){
 		
-		String tempName = getDbUniqueTempName(dbName);
-		
-		// 是否存在临时数据库文件
-		if(!CrtbDbFileUtils.checkDbTemp(dbName)){
-			
-			// 清除缓存
-			mFramework.removeDatabaseByName(tempName);
-			
-			// 打开数据库
-			String[] info = CrtbDbFileUtils.openDbFile(dbName);
-			
-			if(info == null){
-				return null ;
-			}
-		}
-		
-		// open
-		return mFramework.openDatabaseByName(tempName, 0) ;
+		// 缓存
+		mFramework.removeDatabaseByName(tempDb);
 	}
 	
 	public int insert(T bean){

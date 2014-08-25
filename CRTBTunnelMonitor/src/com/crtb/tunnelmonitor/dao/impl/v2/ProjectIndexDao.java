@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.zw.android.framework.IAccessDatabase;
+import org.zw.android.framework.util.StringUtils;
 
 import android.util.Log;
 
@@ -13,7 +14,6 @@ import com.crtb.tunnelmonitor.AppPreferences;
 import com.crtb.tunnelmonitor.entity.CrtbProject;
 import com.crtb.tunnelmonitor.entity.CrtbUser;
 import com.crtb.tunnelmonitor.entity.ProjectIndex;
-import com.crtb.tunnelmonitor.entity.ProjectSettingIndex;
 import com.crtb.tunnelmonitor.utils.CrtbDbFileUtils;
 
 /**
@@ -138,7 +138,7 @@ public final class ProjectIndexDao extends AbstractDao<ProjectIndex> {
 	}
 	
 	// 设置当前工作面
-	public void updateCurrentWorkPlan(ProjectIndex bean){
+	/*public void updateCurrentWorkPlan(ProjectIndex bean){
 		
 		// 关闭当前数据库
 		closeCurrentDb();
@@ -149,6 +149,62 @@ public final class ProjectIndexDao extends AbstractDao<ProjectIndex> {
 		// 设置当前工作面
 		AppPreferences.getPreferences().putCurrentProject(dbName);
 		
+	}*/
+	
+	// 打开工作面
+	public String openProjectIndex(String projectName){
+		
+		if(StringUtils.isEmpty(projectName)){
+			return "不能打开无效工作面" ;
+		}
+		
+		// 需要打开的数据库
+		/////////////// 数据库名称
+		final String dbName 	= projectName;
+		
+		// 临时数据库名称
+		final String tempName 	= getDbUniqueTempName(dbName);
+		
+		// 数据库是否存在
+		IAccessDatabase db 		= mFramework.getDatabaseByName(tempName) ;
+		
+		// 如果数据库已经打开过，直接返回(避免重复打开数据库)
+		if(db != null){
+			System.out.println("zhouwei >> 数据库文件已经打开 ");
+			return null;
+		}
+		
+		// 打开数据库
+		String[] info = CrtbDbFileUtils.openDbFile(dbName);
+
+		if (info == null) {
+			return "数据库解密失败";
+		}
+		
+		// 打开对应的数据库
+		db = mFramework.openDatabaseByName(tempName, 0) ;
+		
+		if(db == null){
+			System.out.println("zhouwei ERROR : openProjectIndex-> 打开数据库失败: " + dbName);
+		}
+		
+		/////////////////////// 关闭上一个工作面 /////////////////////////
+		// 上一个工作面的名称
+		String lastName = AppPreferences.getPreferences().getCurrentProject();
+		
+		if (!StringUtils.isEmpty(lastName)) {
+			
+			lastName = CrtbDbFileUtils.getDbName(lastName);
+			
+			if(!lastName.equals(dbName)){
+				closeCurrentDb() ;
+			}
+		}
+		
+		/////////////////////// 设置当前工作面  /////////////////////////
+		AppPreferences.getPreferences().putCurrentProject(dbName);
+		
+		return null ;
 	}
 	
 	public boolean hasWorkPlan(){
@@ -477,7 +533,11 @@ public final class ProjectIndexDao extends AbstractDao<ProjectIndex> {
 		String proName	= bean.getProjectName() ;
 		String dbTemp	= getDbUniqueTempName(proName) ;
 		
-		getDefaultDb().execute("delete from CrtbProject where ProjectName = ? ", new String[]{proName}) ;
+		boolean error = getDefaultDb().execute("delete from CrtbProject where ProjectName = ? ", new String[]{proName}) ;
+		
+		if(error){
+			System.out.println("zhouwei >> 删除工作面失败");
+		}
 		
 		// 删除数据库缓存
 		mFramework.removeDatabaseByName(dbTemp);
@@ -493,6 +553,8 @@ public final class ProjectIndexDao extends AbstractDao<ProjectIndex> {
 			file = new File(srcPath);
 			file.delete();
 		}
+		
+		// 删除备份文件
 		
 		return DB_EXECUTE_SUCCESS ;
 	}
