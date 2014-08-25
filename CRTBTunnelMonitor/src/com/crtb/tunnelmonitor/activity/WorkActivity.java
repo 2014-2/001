@@ -87,6 +87,8 @@ public final class WorkActivity extends WorkFlowActivity {
 			ProjectIndexDao.defaultWorkPlanDao().updateCurrentWorkPlan(bean);
 			CrtbUtils.updateNewSectionCodeNumber();
 			CrtbUtils.updateWorkSiteInfo(bean);
+			
+			
 			finish() ;
 			
 		} else if(menu.equals(getString(R.string.common_edit))){
