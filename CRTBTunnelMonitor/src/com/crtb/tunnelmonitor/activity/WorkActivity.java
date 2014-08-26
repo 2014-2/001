@@ -84,9 +84,15 @@ public final class WorkActivity extends WorkFlowActivity {
 		if(menu.equals(getString(R.string.common_open))){
 			
 			// current edit workplan
-			ProjectIndexDao.defaultWorkPlanDao().updateCurrentWorkPlan(bean);
+			String error = ProjectIndexDao.defaultWorkPlanDao().openProjectIndex(bean.getProjectName());
+			
+			if(error != null){
+				showText(error);
+				return ;
+			}
+			
 			CrtbUtils.updateNewSectionCodeNumber();
-			CrtbUtils.updateWorkSiteInfo(bean);
+			CrtbUtils.updateWorkSiteInfo(bean);			
 			
 			
 			finish() ;

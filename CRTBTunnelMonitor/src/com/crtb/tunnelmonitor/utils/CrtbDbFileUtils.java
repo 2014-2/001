@@ -1,6 +1,10 @@
 package com.crtb.tunnelmonitor.utils;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -149,11 +153,26 @@ public final class CrtbDbFileUtils {
 	}
 	
 	public static String getLocalDbPath(String dbname){
-		return getLocaPath(dbname + ".db");
+		return getLocaPath(dbname + AppConfig.DB_SUFFIX);
 	}
 	
 	public static String getLocalDbTempPath(String dbname){
 		return getLocaPath(dbname + AppConfig.DB_TEMP_SUFFIX);
+	}
+	
+	public static String getLocalDbBackupPath(String dbname){
+		return getLocaPath(dbname + AppConfig.DB_SUFFIX_BACKUP);
+	}
+	
+	public static String getDbName(String dbname){
+		
+		if(dbname == null) return "" ;
+		
+		int pos = dbname.lastIndexOf(AppConfig.DB_SUFFIX);
+		
+		if(pos > 0) return dbname.substring(0, pos) ;
+		
+		return dbname ;
 	}
 	
 	public static String getLocaPath(String fileName){
@@ -280,8 +299,11 @@ public final class CrtbDbFileUtils {
 					return  ;
 				}*/
 				
+				// 导入临时数据库名称
+				final String tempDbName = importName + AppConfig.DB_TEMP_SUFFIX ;
+				
 				// 打开数据库
-				final IAccessDatabase db = FrameworkFacade.getFrameworkFacade().openDatabaseByName(importName + ".temp", 0);
+				final IAccessDatabase db = FrameworkFacade.getFrameworkFacade().openDatabaseByName(tempDbName, 0);
 				
 				if(db == null){
 					sendMessage(MSG_INPORT_DB_FAILED,"打开数据库失败!") ;
@@ -320,7 +342,7 @@ public final class CrtbDbFileUtils {
 				}
 				
 				// 清除缓存
-				FrameworkFacade.getFrameworkFacade().removeDatabaseByName(importName + ".temp");
+				FrameworkFacade.getFrameworkFacade().removeDatabaseByName(tempDbName);
 				
 				// 密码文件
 				File file = new File(outPath);
@@ -350,8 +372,9 @@ public final class CrtbDbFileUtils {
 				// 导入的数据库名称
 				String dbName 		= obj.getProjectName() ;
 				String newPath 		= getLocalDbPath(dbName);
+				String bpPath		= getLocalDbBackupPath(dbName);
 				
-				// 文件重新复制
+				// 文件解密
 				success 	= encrypt.decrypt(path, newPath) ;
 				
 				if(!success){
@@ -378,6 +401,11 @@ public final class CrtbDbFileUtils {
 					sendMessage(MSG_INPORT_DB_FAILED,"试用版用户, 最多只能有1个工作面") ;
 					
 				} else {
+					
+					// 生成备份文件
+					File src = new File(newPath);
+					File des	= new File(bpPath);
+					fileCopy(src, des);
 					
 					AppLogger.d(TAG, "zhouwei : 数据库导入完成: " + outPath); 
 					
@@ -421,19 +449,49 @@ public final class CrtbDbFileUtils {
 		try{
 			
 			// 数据库名称
-			int pos 	= -1;//dbName.lastIndexOf(".");
-			String name = dbName ;
+			String name = getDbName(dbName) ;
 			
-			if(pos > 0){
-				name	= dbName.substring(0, pos);	
-			}
-			
-			// 加密文件
+			// 1. 加密文件
 			String srcPath	= CrtbDbFileUtils.getLocalDbPath(name);
 			
-			// 解密后的临时文件
+			// 2. 加密文件是否存在
+			File srcFile = new File(srcPath);
+			if(!srcFile.exists()){
+				
+				System.out.println("zhouwei >> openDbFile-->加密文件不存在");
+				
+				// 3.备份文件是否存在
+				String bpPath = CrtbDbFileUtils.getLocalDbBackupPath(name);
+				srcFile = new File(bpPath);
+				
+				// 4. 如果加密文件与备份文件都不存在,则打开数据库失败
+				if(!srcFile.exists()){
+					System.out.println("zhouwei >> openDbFile-->备份文件不存在");
+					return null ;
+				}
+				
+				// 5. 通过备份文件生成.db文件
+				fileCopy(srcFile, new File(srcPath));
+				
+				// 指向备份文件
+				srcPath = bpPath ;
+			}
+			
+			// 加密数据库文件是否存在
+			srcFile = new File(srcPath);
+			if(!srcFile.exists()){
+				System.out.println("zhouwei ERROR : 数据库文件不存在-->" + srcFile);
+				return null ;
+			}
+			
+			// 6. 解密后的临时文件
 			String tempPath = CrtbDbFileUtils.getLocalDbTempPath(name);
 			
+			// 7. 删除临时文件
+			File f = new File(tempPath);
+			if(f != null && f.exists())f.delete() ;
+			
+			// 解密
 			IDbEncrypt encrypt 	= new DbAESEncrypt() ;
 			
 			// 解密
@@ -459,27 +517,31 @@ public final class CrtbDbFileUtils {
 			return null ;
 		}
 		
+		// 数据库名称
+		String name 	= getDbName(dbName);
+
+		// xx.bin 文件
+		String srcPath 	= CrtbDbFileUtils.getLocalDbTempPath(name);
+
+		// xx.db 加密后的文件
+		String desPath 	= CrtbDbFileUtils.getLocalDbPath(name);
+
+		// xx.dbbp 备份文件
+		String bpPath 	= CrtbDbFileUtils.getLocalDbBackupPath(name);
+		
 		try{
 			
-			// 数据库名称
-			int pos 	= -1;//dbName.lastIndexOf(".");
-			String name = dbName ;
-			
-			if(pos > 0){
-				name	= dbName.substring(0, pos);	
+			// 1. 生成备份文件
+			File src = new File(desPath);
+			File des = new File(bpPath);
+			if(src.exists()){
+				fileCopy(src, des);
 			}
 			
-			// sqlite 文件
-			String srcPath	= CrtbDbFileUtils.getLocalDbTempPath(name);
+			// 2. 删除旧的加密文件
+			src.delete() ;
 			
-			// 加密后的文件
-			String desPath	= CrtbDbFileUtils.getLocalDbPath(name);
-			
-			// 删除旧的加密文件
-			File desFile = new File(desPath);
-			desFile.delete() ;
-			
-			// 加密
+			// 3. 加密并生成新文件
 			IDbEncrypt encrypt 	= new DbAESEncrypt() ;
 			boolean noerror 	= encrypt.encrypt(srcPath, desPath) ;
 			
@@ -489,12 +551,69 @@ public final class CrtbDbFileUtils {
 				f.delete() ;
 			}
 			
+			// 4. 如果加密成功,重新生成备份文件
+			if(noerror){
+				src = new File(desPath);
+				des = new File(bpPath);
+				if(src.exists()){
+					fileCopy(src, des);
+				}
+			}
+			
 			return noerror ? new String[]{dbName,desPath} : null ;
 			
 		} catch(Exception e){
 			e.printStackTrace() ;
+			
+			System.out.println("zhouwei >> <<<<<加密文件失败>>>>>");
+			
+			// 如果加密文件失败
+			// 通过备份文件
+			File src = new File(bpPath);
+			File des = new File(desPath);
+			fileCopy(src, des);
 		}
 		
 		return null ;
+	}
+	
+	public static boolean fileCopy(File src, File des){
+		
+		if(src == null || des == null) return false ;
+		
+		FileInputStream fi 	= null;
+		FileOutputStream fo = null;
+		FileChannel in 		= null;
+		FileChannel out 	= null;
+
+		try {
+
+			fi = new FileInputStream(src);
+			fo = new FileOutputStream(des);
+
+			in = fi.getChannel();// 得到对应的文件通道
+			out = fo.getChannel();// 得到对应的文件通道
+
+			in.transferTo(0, in.size(), out);
+
+		} catch (IOException e) {
+			e.printStackTrace();
+			
+			System.out.println("zhouwei >> <<<<<生成备份文件失败>>>>>");
+		} finally {
+			
+			try {
+				
+				fi.close();
+				in.close();
+				fo.close();
+				out.close();
+
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return false ;
 	}
 }

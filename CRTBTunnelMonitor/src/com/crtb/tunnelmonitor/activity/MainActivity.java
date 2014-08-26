@@ -23,6 +23,7 @@ import com.crtb.tunnelmonitor.dao.impl.v2.CrtbLicenseDao;
 import com.crtb.tunnelmonitor.dao.impl.v2.ProjectIndexDao;
 import com.crtb.tunnelmonitor.entity.CrtbUser;
 import com.crtb.tunnelmonitor.entity.ProjectIndex;
+import com.crtb.tunnelmonitor.utils.CrtbDbFileUtils;
 
 /**
  * 主界面 创建时间：2014-3-18下午3:52:30
@@ -141,10 +142,15 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 	protected void onResume() {
 		super.onResume();
 		
-		String name = AppPreferences.getPreferences().getCurrentSimpleProjectName();
+		// 当前工作面
+		String name = AppPreferences.getPreferences().getCurrentProject();
+		name = CrtbDbFileUtils.getDbName(name);
 		mTitle.setText(StringUtils.isEmpty(name) ? getString(R.string.main_title) : name);
 		
-		// 加载数据库
+		// 打开数据库
+		ProjectIndexDao.defaultWorkPlanDao().openProjectIndex(name);
+		
+		// 查询工作面详情
 		mCurrentWorkPlan = ProjectIndexDao.defaultWorkPlanDao().queryEditWorkPlan();
 	}
 
