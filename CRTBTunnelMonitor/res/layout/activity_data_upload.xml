@@ -59,7 +59,7 @@
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:layout_alignParentBottom="true"
-        android:background="@drawable/ic_topbar_bg"
+        android:background="#14839e"
         android:orientation="vertical" >
 
         <LinearLayout
