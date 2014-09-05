@@ -2,21 +2,16 @@ package com.crtb.tunnelmonitor.task;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 
-import android.R.integer;
 import android.os.AsyncTask;
 import android.text.TextUtils;
 import android.util.Log;
 
 import com.crtb.tunnelmonitor.AppCRTBApplication;
-import com.crtb.tunnelmonitor.dao.impl.v2.TunnelCrossSectionExIndexDao;
-import com.crtb.tunnelmonitor.dao.impl.v2.TunnelSettlementTotalDataDao;
+import com.crtb.tunnelmonitor.dao.impl.v2.TunnelCrossSectionIndexDao;
 import com.crtb.tunnelmonitor.entity.AlertInfo;
 import com.crtb.tunnelmonitor.entity.MergedAlert;
-import com.crtb.tunnelmonitor.entity.TunnelCrossSectionExIndex;
-import com.crtb.tunnelmonitor.entity.TunnelSettlementTotalData;
 import com.crtb.tunnelmonitor.network.CrtbWebService;
 import com.crtb.tunnelmonitor.network.DataCounter;
 import com.crtb.tunnelmonitor.network.DataCounter.CounterListener;
@@ -24,10 +19,10 @@ import com.crtb.tunnelmonitor.network.RpcCallback;
 import com.crtb.tunnelmonitor.network.WarningUploadParameter;
 import com.crtb.tunnelmonitor.utils.AlertUtils;
 import com.crtb.tunnelmonitor.utils.CrtbUtils;
+import com.crtb.tunnelmonitor.utils.SectionInterActionManager;
 
 public class WarningDataManager {
 	private static final String LOG_TAG = "WarningDataManager";
-
 	public interface WarningLoadListener {
 		/**
 		 * 数据加载完毕
@@ -48,7 +43,6 @@ public class WarningDataManager {
 
 	private WarningLoadListener mLoadListener;
 	private WarningUploadListener mUploadListener;
-
 	public void loadData(WarningLoadListener loadListener) {
 		mLoadListener = loadListener;
 		new DataLoadTask().execute();
@@ -78,7 +72,7 @@ public class WarningDataManager {
 			if (mal != null && mal.size() > 0) {
 			    for (MergedAlert ma : mal) {
 //			        boolean can = AlertUtils.mergedAlertCanBeUploaded(ma);
-					UploadWarningData warningData = new UploadWarningData();
+			    	UploadWarningData warningData = new UploadWarningData();
 			        warningData.setLeijiAlert(ma.getLeijiAlert());
 			        warningData.setSulvAlert(ma.getSulvAlert());
 					warningData.setSectionCode(warningData.getAlertInfo().getSECTCODE());
@@ -120,7 +114,7 @@ public class WarningDataManager {
 //	}
 	
 	private class DataUploadTask extends AsyncTask<List<UploadWarningData>, Void, Void> {
-
+		
 		@Override
 		protected Void doInBackground(List<UploadWarningData>... params) {
 			if (params != null && params.length > 0) {
@@ -148,7 +142,7 @@ public class WarningDataManager {
     	WarningUploadParameter parameter = new WarningUploadParameter();
     	parameter.setSectionCode(warningData.getSectionCode());
     	parameter.setPointCode(warningData.getPointCode());
-		int level = alertInfo.getAlertLevel();
+    	int level = alertInfo.getAlertLevel();
 		if ((level == 2) || (level == 3)) {
 			parameter.setWarningLevel(1);
 		} else if (level == 1) {
@@ -259,26 +253,14 @@ public class WarningDataManager {
             return ma;
         }
 
+    	private TunnelCrossSectionIndexDao sectionIndexDao = null;
+        
         public String getPointCode() {
-            AlertInfo ai = getAlertInfo();
-    		String pointCode = "";
-    		if ("A".equals(ai.getPntType())) {
-    			pointCode = mSectionCode + "GD01";
-    		}
-    		else if ("S1".equals(ai.getPntType())) {
-    			pointCode = mSectionCode + "SL01" + "#" + mSectionCode + "SL02";
-    		}
-    		else if ("S2".equals(ai.getPntType())) {
-    			pointCode = mSectionCode + "SL03" + "#" + mSectionCode + "SL04";
-    		}
-    		else if ("S3".equals(ai.getPntType())) {
-    			pointCode = mSectionCode + "SL05" + "#" + mSectionCode + "SL06";
-    		}
-    		else
-    		{
-    			pointCode = mSectionCode + String.format("DB%02d", Integer.parseInt(ai.getPntType())-1);
-    		}
-    		return pointCode;
+        	//YX  根据开挖方法，获取点或线对应的测点上传序列    	
+        	AlertInfo ai = getAlertInfo();
+        	int excavateMethod = sectionIndexDao.querySectionIndexByGuid(ai.getSectionId()).getExcavateMethod();        	
+        	SectionInterActionManager sectionInterActionManager = new SectionInterActionManager(excavateMethod);
+        	return sectionInterActionManager.getOneLineDetailsByPointType(ai.getSECTCODE(),ai.getPntType());
     	}
     }
 }

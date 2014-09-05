@@ -57,7 +57,7 @@ public class TesterLoadActivity extends Activity implements OnClickListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.download_tester_layout);
         mServerAddress = (EditText) findViewById(R.id.server_ip);
-        mServerAddress.setText("http://61.237.239.144/fxkz/basedown");
+        mServerAddress.setText("http://61.237.239.144/fxtest/basedown");
         mServerAddress.setSingleLine(true);
         mLoad = (Button) findViewById(R.id.load);
         mUserName = (EditText) findViewById(R.id.username);

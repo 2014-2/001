@@ -92,9 +92,9 @@ public class Constant {
 	//命名空间
 	public static final String NameSpace="webservice.riskcontrol.com";
 	//用户验证
-	public static final String UserSelect = "http://61.237.239.144/fxkz/basedown";
+	public static final String UserSelect = "http://61.237.239.144/fxtest/basedown";
 	//上传
-	public static final String Update = "http://61.237.239.144/fxkz/testdata";
+	public static final String Update = "http://61.237.239.144/fxtest/testdata";
 	
 	//测试用
 	public static final String testUsername = "cl19h1";

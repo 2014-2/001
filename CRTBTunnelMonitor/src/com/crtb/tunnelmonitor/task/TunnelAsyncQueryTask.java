@@ -53,7 +53,10 @@ public class TunnelAsyncQueryTask extends AsyncQueryTask {
 //                         measureData.addMeasurePoint(point);
 //                     }
 //                     section.setMeasureData(measureDataList);
-                	 section.setMeasureData(TunnelMeasureData.createMeasureData(measurePoints));
+
+//YX 获取上传数据                	 
+                	TunnelMeasureData tunnelMeasureDataYX = new TunnelMeasureData(sectionIndex.getExcavateMethod());
+                	section.setMeasureData(tunnelMeasureDataYX.getMeasureDataList(measurePoints));
                 }
                 if (section.needUpload()) {
                 	sections.add(section);

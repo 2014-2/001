@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.crtb.tunnelmonitor.widget.SlidingLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/slidinglayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
@@ -8,89 +9,137 @@
         android:id="@+id/top_bar"
         layout="@layout/activity_topbar_layout" />
 
-    <ScrollView
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+    <RelativeLayout
+        android:id="@+id/menu"
+        android:layout_width="80dp"
+        android:layout_height="fill_parent"
+        android:layout_alignParentLeft="true"
         android:layout_below="@id/top_bar"
-        android:layout_marginBottom="62dp"
-        android:background="@null" >
-
-        <LinearLayout
-            android:id="@+id/test_container_layout"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:background="@null"
-            android:orientation="vertical" />
-        
-    </ScrollView>
-
-    <LinearLayout
-        android:id="@+id/test_bottom_layout"
-        android:layout_width="fill_parent"
-        android:layout_height="@dimen/bottom_button_height"
-        android:layout_alignParentBottom="true"
-        android:orientation="horizontal"
+        android:background="#00ccff"
         android:visibility="visible" >
 
-        <RelativeLayout
-            android:id="@+id/test_bnt_left_section"
-            android:layout_width="0dp"
+        
+
+        <ListView
+            android:id="@+id/test_point_List"
+            android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:layout_weight="1"
-            android:background="@drawable/button_test_selector" >
+            android:layout_gravity="center"
+            android:cacheColorHint="#00ffff" >
+        </ListView>
+    </RelativeLayout>
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true" >
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/ic_arrow_pre" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:text="上一个断面"
-                    android:textColor="#777777"
-                    android:textSize="16sp" />
-            </LinearLayout>
-        </RelativeLayout>
-
-        <ImageView
-            android:layout_width="2dip"
-            android:layout_height="fill_parent"
-            android:background="#c5c5c5" />
+    <LinearLayout
+        android:id="@+id/test_point_content"
+        android:layout_width="320dip"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/top_bar"
+        android:background="#ffffff" >
 
         <RelativeLayout
-            android:id="@+id/test_bnt_next_section"
-            android:layout_width="0dp"
+            android:id="@+id/left_container"
+            android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:layout_weight="1"
-            android:background="@drawable/button_test_selector" >
-
-            <LinearLayout
-                android:layout_width="wrap_content"
+            >
+            
+            <ScrollView
+                android:id="@+id/test_container_scroll"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_centerInParent="true" >
+                android:layout_marginBottom="52dp"
+                android:layout_marginLeft="25dp"
+                android:background="@null" >
 
-                <TextView
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:id="@+id/test_container_layout"
+                    android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="10dp"
-                    android:text="下一个断面"
+                    android:layout_marginTop="20dp"
+                    android:background="@null"
+                    android:orientation="vertical" 
+                    android:paddingBottom ="24dp"
+                    />
+            </ScrollView>
+            
+            <TextView
+                    android:id="@+id/choose_test_point_list"
+                    android:layout_width="16dp"
+                    android:layout_height="fill_parent"
+                    android:layout_alignParentLeft="true"
+                    android:layout_marginLeft="8dp"
+                    android:gravity="center_vertical"
+                    android:text="选择测点列表"
                     android:textColor="#777777"
                     android:textSize="16sp" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/ic_arrow_next" />
+            <LinearLayout
+                android:id="@+id/test_bottom_layout"
+                android:layout_width="fill_parent"
+                android:layout_height="@dimen/bottom_button_height"
+                android:layout_alignParentBottom="true"
+                android:orientation="horizontal"
+                android:visibility="visible" >
+                <RelativeLayout
+                    android:id="@+id/test_bnt_left_section"
+                    android:layout_width="0dp"
+                    android:layout_height="fill_parent"
+                    android:layout_weight="1"
+                    android:background="@drawable/button_test_selector" >
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true" >
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/ic_arrow_pre" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:text="上一个断面"
+                            android:textColor="#777777"
+                            android:textSize="16sp" />
+                    </LinearLayout>
+                </RelativeLayout>
+
+                <ImageView
+                    android:layout_width="2dip"
+                    android:layout_height="fill_parent"
+                    android:background="#c5c5c5" />
+
+                <RelativeLayout
+                    android:id="@+id/test_bnt_next_section"
+                    android:layout_width="0dp"
+                    android:layout_height="fill_parent"
+                    android:layout_weight="1"
+                    android:background="@drawable/button_test_selector" >
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true" >
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="10dp"
+                            android:text="下一个断面"
+                            android:textColor="#777777"
+                            android:textSize="16sp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/ic_arrow_next" />
+                    </LinearLayout>
+                </RelativeLayout>
             </LinearLayout>
         </RelativeLayout>
     </LinearLayout>
 
-</RelativeLayout>
+</com.crtb.tunnelmonitor.widget.SlidingLayout>

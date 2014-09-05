@@ -129,7 +129,7 @@ public final class CrtbUtils {
     public static void fillSectionParamter(TunnelCrossSectionIndex section,
             SectionUploadParamter outParamter) {
         if (section == null || outParamter == null) {
-            return;
+            return ;
         }
         outParamter.setSectionName(section.getSectionName().split("\\.")[0]);
         CrtbAppConfig config = CrtbAppConfig.getInstance();
@@ -139,22 +139,22 @@ public final class CrtbUtils {
                 + String.format("%04d", sectionSequence);
         outParamter.setSectioCode(sectionCode);
         String digMethod = ExcavateMethodEnum.parser(section.getExcavateMethod()).toString();
+        if(digMethod == "CD"){
+        	digMethod = "ZG";
+        } else if(digMethod == "CRD"){
+        	digMethod = "JC";
+        } 
         outParamter.setDigMethod(digMethod);
         String pointList = "";
-        if ("QD".equals(digMethod)) {// 全断面法
-            pointList = sectionCode + "GD01" + "/" + sectionCode + "SL01" + "#" + sectionCode
-                    + "SL02";
-        } else if ("ST".equals(digMethod) || "SC".equals(digMethod)) { // 三台阶法或又侧壁法
-            pointList = sectionCode + "GD01" + "/" + sectionCode + "SL01" + "#" + sectionCode
-                    + "SL02" + "/" + sectionCode + "SL03" + "#" + sectionCode + "SL04" + "/"
-                    + sectionCode + "SL05" + "#" + sectionCode + "SL06";
-        } else if ("DT".equals(digMethod)) {// 台阶法
-            pointList = sectionCode + "GD01" + "/" + sectionCode + "SL01" + "#" + sectionCode
-                    + "SL02" + "/" + sectionCode + "SL03" + "#" + sectionCode + "SL04";
-        } else {
-            Log.e("upload", "unknown dig method: " + digMethod);
-        }
-
+        
+        //YX 生成上传的测点列表数据
+    	SectionInterActionManager sectionInterActionManager = new SectionInterActionManager(section.getExcavateMethod());
+    	pointList = sectionInterActionManager.getPointCodeListBySectionCode(sectionCode);
+  
+		if (pointList == null || pointList.equals("")) {
+			Log.e("upload", "unknown dig method: " + digMethod);
+		}
+        
         outParamter.setPointList(pointList);
         outParamter.setChainage(formatSectionName(getSectionPrefix(), section.getChainage()).split(
                 "\\.")[0]);

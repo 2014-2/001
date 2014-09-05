@@ -33,8 +33,8 @@ public final class CrtbWebService {
 	private static final String TAG = "CrtbWebService";
 	
 	private static final String NAMESPACE = "webservice.riskcontrol.com";
-	private static final String USRE_AUTH_URL = "http://61.237.239.144/fxkz/basedown";
-	private static final String DATA_UPLOAD_URL = "http://61.237.239.144/fxkz/testdata";
+	private static final String USRE_AUTH_URL = "http://61.237.239.144/fxtest/basedown";
+	private static final String DATA_UPLOAD_URL = "http://61.237.239.144/fxtest/testdata";
 	
 	private static final int RETRY_COUNT = 11;
 	private static final int CONNECITON_TIME_OUT = 10000;
