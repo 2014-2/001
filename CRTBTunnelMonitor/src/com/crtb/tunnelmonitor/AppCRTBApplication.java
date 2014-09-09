@@ -25,6 +25,7 @@ import com.crtb.tunnelmonitor.entity.TotalStationIndex;
 import com.crtb.tunnelmonitor.entity.TunnelCrossSectionIndex;
 import com.crtb.tunnelmonitor.utils.CrtbDbFileUtils;
 import com.crtb.tunnelmonitor.utils.CrtbUtils;
+import com.crtb.tunnelmonitor.utils.ExcavateMethodUtil;
 
 public class AppCRTBApplication extends Application {
 
@@ -88,6 +89,9 @@ public class AppCRTBApplication extends Application {
         config.setDatabaseVersion(AppConfig.DB_VERSION); // db version
         FrameworkFacade.create(config);
         mFramework	= FrameworkFacade.getFrameworkFacade() ;
+        
+        // init excavate method util. add by wei.zhou 2014-09-06
+        ExcavateMethodUtil.initContext(this);
 
         // preferences
         AppPreferences.initCrtbPreferences(this);

@@ -276,7 +276,7 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements
 		String pntType = "";
 		int accumulateHeight = 0;
 		if (pointTypeNameList != null) {
-			if (position > 0 && position < pointTypeNameList.size()) {
+			if (position > -1 && position < pointTypeNameList.size()) {
 				pntType = pointTypeNameList.get(position);
 			}
 		}
@@ -1132,6 +1132,7 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements
 		clearData();
 		generateSectionTestData();
 		testPointListAdapter.notifyDataSetChanged();
+		scrollTestViewHolderToTop(0);
 	}
 
 	/**

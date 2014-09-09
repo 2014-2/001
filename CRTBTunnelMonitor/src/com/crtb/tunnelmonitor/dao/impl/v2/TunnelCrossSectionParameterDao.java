@@ -52,7 +52,7 @@ public class TunnelCrossSectionParameterDao extends AbstractDao<TunnelCrossSecti
         return mDatabase.queryObjects(sql, TunnelCrossSectionParameter.class);
     }
 
-    private TunnelCrossSectionParameter queryOneByExcavateMethodYX(int excavateMethod){
+    private TunnelCrossSectionParameter queryStableExcavateMethod(int excavateMethod){
 //    	DT("台阶法",1, 5),
 //    	ST("三台阶法",2, 7),
 //    	QD("全断面法",3, 3),
@@ -69,45 +69,72 @@ public class TunnelCrossSectionParameterDao extends AbstractDao<TunnelCrossSecti
     	
 //YX 本处的点要和开挖方法的枚举定义一样，即点的个数，因为计算上传状态状态时，需要判断断面的点数
     	
-    	TunnelCrossSectionParameter sectionParameter = new TunnelCrossSectionParameter();
+    	TunnelCrossSectionParameter sectionParameter = null;
     	
 		if (excavateMethod == ExcavateMethodEnum.QD.getCode()) {
+			sectionParameter = new TunnelCrossSectionParameter();
 			sectionParameter.setCrownPointNumber(1);
 			sectionParameter.setSurveyLineNumber(1);
 			sectionParameter.setSurveyLinePointNumber(2);
 			sectionParameter.setSurveyLinePointName("S1,1,2");
 		} else if (excavateMethod == ExcavateMethodEnum.DT.getCode()) {
+			sectionParameter = new TunnelCrossSectionParameter();
 			sectionParameter.setCrownPointNumber(1);
 			sectionParameter.setSurveyLineNumber(2);
 			sectionParameter.setSurveyLinePointNumber(4);
 			sectionParameter.setSurveyLinePointName("S1,1,2/S2,3,4");
 		}else if (excavateMethod == ExcavateMethodEnum.ST.getCode()) {
+			sectionParameter = new TunnelCrossSectionParameter();
 			sectionParameter.setCrownPointNumber(1);
 			sectionParameter.setSurveyLineNumber(2);
 			sectionParameter.setSurveyLinePointNumber(4);
 			sectionParameter.setSurveyLinePointName("S1,1,2/S2,3,4/S3,5,6");
 		}else if (excavateMethod == ExcavateMethodEnum.CD.getCode()) {
+			sectionParameter = new TunnelCrossSectionParameter();
     		sectionParameter.setCrownPointNumber(1);
     		sectionParameter.setSurveyLineNumber(4);
     		sectionParameter.setSurveyLinePointNumber(8);
     		sectionParameter.setSurveyLinePointName("S1,3,5/S2,4,6/S3,7,9/S4,8,10");
     		//sectionParameter.setSurveyLinePointName("S1,1,2/S2,3,6/S3,7,10");//开挖后变化
     	} else if(excavateMethod == ExcavateMethodEnum.CRD.getCode()){
+    		sectionParameter = new TunnelCrossSectionParameter();
     		sectionParameter.setCrownPointNumber(1);
     		sectionParameter.setSurveyLineNumber(4);
     		sectionParameter.setSurveyLinePointNumber(8);
     		sectionParameter.setSurveyLinePointName("S1,3,5/S2,4,6/S3,7,9/S4,8,10");
     	} else if(excavateMethod == ExcavateMethodEnum.SC.getCode()){
+    		sectionParameter = new TunnelCrossSectionParameter();
     		sectionParameter.setCrownPointNumber(1);
     		sectionParameter.setSurveyLineNumber(4);
     		sectionParameter.setSurveyLinePointNumber(4);
     		sectionParameter.setSurveyLinePointName("S1,3,5/S2,4,6/S3,3,6");
-    	}
+    	} 
+		
     	return sectionParameter;    	
     }
     
+    private TunnelCrossSectionParameter queryCustomExcavateMethod(int customExcavateMethod){
+    	Log.d(TAG, "TunnelCrossSectionParameterDao queryOneByCustomExcavateMethod, customExcavateMethod: " + customExcavateMethod);
+
+        final IAccessDatabase mDatabase = getCurrentDb();
+
+        if (mDatabase == null) {
+            return null;
+        }
+
+        String sql = "select * from TunnelCrossSectionParameter where ExcavateMethod =?";
+        String[] args = new String[] { String.valueOf(customExcavateMethod) };
+
+        return mDatabase.queryObject(sql, args, TunnelCrossSectionParameter.class);
+    	
+    }
+    
     public TunnelCrossSectionParameter queryOneByExcavateMethod(int excavateMethod){
-    	return queryOneByExcavateMethodYX(excavateMethod);    	
+    	TunnelCrossSectionParameter parameter = queryStableExcavateMethod(excavateMethod);
+    	if(parameter == null){
+    		parameter = queryCustomExcavateMethod(excavateMethod);
+    	}
+    	return parameter;
     }
     
     public TunnelCrossSectionParameter queryOneById(int id) {

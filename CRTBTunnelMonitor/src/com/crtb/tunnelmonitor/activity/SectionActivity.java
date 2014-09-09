@@ -350,9 +350,16 @@ public class SectionActivity extends WorkFlowActivity implements OnPageChangeLis
 		
 		List<MenuSystemItem> systems = new ArrayList<MenuSystemItem>();
 		
+		// 新建
 		MenuSystemItem item = new MenuSystemItem() ;
 		item.setIcon(R.drawable.ic_menu_create);
 		item.setName(getString(R.string.common_create_new));
+		systems.add(item);
+		
+		// 设置
+		item = new MenuSystemItem() ;
+		item.setIcon(R.drawable.parameter);
+		item.setName(getString(R.string.common_setting));
 		systems.add(item);
 		
 		createSystemMenu(systems);
@@ -376,6 +383,12 @@ public class SectionActivity extends WorkFlowActivity implements OnPageChangeLis
 				intent.setClass(SectionActivity.this,SectionNewSubsidenceActivity.class);
 			}
 
+			startActivity(intent);
+			
+		} else if(name.equals(getString(R.string.common_setting))){
+			
+			Intent intent = new Intent();
+			intent.setClass(SectionActivity.this, CustomExcavationActivity.class);
 			startActivity(intent);
 		}
 	}

@@ -27,6 +27,7 @@ import com.crtb.tunnelmonitor.entity.SurveyerInformation;
 import com.crtb.tunnelmonitor.entity.TotalStationIndex;
 import com.crtb.tunnelmonitor.entity.TunnelCrossSectionExIndex;
 import com.crtb.tunnelmonitor.entity.TunnelCrossSectionIndex;
+import com.crtb.tunnelmonitor.entity.TunnelCrossSectionParameter;
 import com.crtb.tunnelmonitor.entity.TunnelSettlementTotalData;
 import com.crtb.tunnelmonitor.entity.WorkSiteIndex;
 import com.crtb.tunnelmonitor.utils.CrtbDbFileUtils;
@@ -90,6 +91,9 @@ public abstract class AbstractDao<T> {
 		
 		db.createTable(SiteProjectMapping.class);
 		db.createTable(WorkSiteIndex.class);
+		
+		// 开挖方法
+		db.createTable(TunnelCrossSectionParameter.class);
 	}
 	
 	/**

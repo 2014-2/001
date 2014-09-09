@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:orientation="horizontal"
+    android:paddingTop="2dp" >
+
+    <LinearLayout
+        android:id="@+id/left_line_layout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1" >
+
+        <TextView
+            android:id="@+id/method_line_left_label"
+            style="@style/work_plan_label"
+            android:layout_width="20dp"
+            android:text="A"
+            android:textColor="@color/black" />
+
+        <EditText
+            android:id="@+id/method_line_left_input"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dip"
+            android:layout_marginRight="10dp"
+            android:enabled="false"
+            android:focusable="false"
+            android:inputType="none"
+            android:maxLength="10"
+            android:singleLine="true" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/right_line_layout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:visibility="invisible" >
+
+        <TextView
+            android:id="@+id/method_line_right_label"
+            style="@style/work_plan_label"
+            android:layout_width="20dp"
+            android:text="S1"
+            android:textColor="@color/black" />
+
+        <EditText
+            android:id="@+id/method_line_right_input"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dip"
+            android:layout_marginRight="10dp"
+            android:enabled="false"
+            android:focusable="false"
+            android:inputType="none"
+            android:maxLength="10"
+            android:singleLine="true" />
+    </LinearLayout>
+
+</LinearLayout>

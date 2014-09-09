@@ -489,14 +489,15 @@ public final class CrtbDbFileUtils {
 			
 			// 7. 删除临时文件
 			File f = new File(tempPath);
-			if(f != null && f.exists())f.delete() ;
+			if(f != null && f.exists()){
+				return new String[]{name,tempPath};
+			}
 			
 			// 解密
 			IDbEncrypt encrypt 	= new DbAESEncrypt() ;
 			
 			// 解密
 			boolean noerror = encrypt.decrypt(srcPath, tempPath) ;
-			
 			return noerror ? new String[]{name,tempPath} : null ;
 			
 		} catch(Exception e){

@@ -25,6 +25,7 @@
     <string name="common_delete">删除</string>
     <string name="common_search">搜索</string>
     <string name="common_look">查看</string>
+    <string name="common_setting">设置</string>
 
     <!-- 工作面模块 -->
     <string name="work_plan_title">工作面管理</string>
@@ -43,10 +44,42 @@
     <string name="section_new_subsidence_title">新建地表下沉断面</string>
 
     <string-array name="section_excavation">
-        <item>全断面法</item>
         <item>台阶法</item>
         <item>三台阶法</item>
+        <item>全断面法</item>
+        <item>中隔壁法</item>
+        <item>交叉中隔壁法</item>
         <item>双侧壁法</item>
+    </string-array>
+    
+    <!-- 开挖模板类型 -->
+    <string-array name="exca_template">
+        <item>中隔壁法</item>
+        <item>交叉中隔壁法</item>
+        <item>双侧壁法</item>
+    </string-array>
+    
+    <!-- 开挖模板拱顶个数 -->
+    <string-array name="exca_gd_counts">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
+    
+    <!-- 开挖模板拱顶个数(双侧壁法) -->
+    <string-array name="exca_lines_counts">
+        <item>2</item>
+        <item>4</item>
+        <item>6</item>
+        <item>8</item>
+    </string-array>
+    
+    <!-- 开挖模板拱顶个数(中隔壁法/交叉中隔壁法) -->
+    <string-array name="exca_lines_counts_cd_or_cdr">
+        <item>4</item>
+        <item>8</item>
+        <item>12</item>
+        <item>16</item>
     </string-array>
 
     <!-- 记录单模块 -->

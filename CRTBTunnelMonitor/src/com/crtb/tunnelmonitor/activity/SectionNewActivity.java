@@ -43,8 +43,11 @@ import com.crtb.tunnelmonitor.dao.impl.v2.TunnelCrossSectionIndexDao;
 import com.crtb.tunnelmonitor.entity.ExcavateMethodEnum;
 import com.crtb.tunnelmonitor.entity.ProjectIndex;
 import com.crtb.tunnelmonitor.entity.TunnelCrossSectionIndex;
+import com.crtb.tunnelmonitor.entity.TunnelCrossSectionParameter;
 import com.crtb.tunnelmonitor.mydefine.CrtbDateDialogUtils;
 import com.crtb.tunnelmonitor.utils.CrtbUtils;
+import com.crtb.tunnelmonitor.utils.ExcavateMethodUtil;
+import com.crtb.tunnelmonitor.widget.CrtbExcavationView;
 
 /**
  * 新建隧道内断面
@@ -109,26 +112,32 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 	@InjectView(id=R.id.img_fangfa,parent="mExcavationInfoLayout")
 	private ImageView section_method ;
 	
+	@InjectView(id=R.id.img_fangfa_custom,parent="mExcavationInfoLayout")
+	private CrtbExcavationView section_custom_view ;
+	
 	@InjectView(id=R.id.section_new_sp,parent="mExcavationInfoLayout")
 	private Spinner section_new_sp;
 	
-	@InjectView(id=R.id.section_new_et_a,parent="mExcavationInfoLayout")
-	private EditText section_new_et_a;
+	@InjectView(id=R.id.kaiwa_container,parent="mExcavationInfoLayout")
+	private LinearLayout mKaiwaContainer ;
 	
-	@InjectView(id=R.id.section_new_et_s1,parent="mExcavationInfoLayout")
-	private EditText section_new_et_s1;
-	
-	@InjectView(id=R.id.section_new_et_s2_label,parent="mExcavationInfoLayout")
-	private TextView section_new_et_s2_label;
-	
-	@InjectView(id=R.id.section_new_et_s2,parent="mExcavationInfoLayout")
-	private EditText section_new_et_s2;
-	
-	@InjectView(id=R.id.section_new_et_s3_label,parent="mExcavationInfoLayout")
-	private TextView section_new_et_s3_label;
-	
-	@InjectView(id=R.id.section_new_et_s3,parent="mExcavationInfoLayout")
-	private EditText section_new_et_s3;
+//	@InjectView(id=R.id.section_new_et_a,parent="mExcavationInfoLayout")
+//	private EditText section_new_et_a;
+//	
+//	@InjectView(id=R.id.section_new_et_s1,parent="mExcavationInfoLayout")
+//	private EditText section_new_et_s1;
+//	
+//	@InjectView(id=R.id.section_new_et_s2_label,parent="mExcavationInfoLayout")
+//	private TextView section_new_et_s2_label;
+//	
+//	@InjectView(id=R.id.section_new_et_s2,parent="mExcavationInfoLayout")
+//	private EditText section_new_et_s2;
+//	
+//	@InjectView(id=R.id.section_new_et_s3_label,parent="mExcavationInfoLayout")
+//	private TextView section_new_et_s3_label;
+//	
+//	@InjectView(id=R.id.section_new_et_s3,parent="mExcavationInfoLayout")
+//	private EditText section_new_et_s3;
 	
 	////////////////////////////////Deformation info ///////////////////////////
 	@InjectView(layout=R.layout.section_new_yuzhi)
@@ -163,6 +172,17 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 	private ProjectIndex mCurrentWorkPlan;
 	private boolean editTime ;
 	
+	private List<String> excaMethods ;
+	private int 		 excaMethodIndex ;
+	
+	// 开挖方式view 定义
+	// 1. 全断面法: 	A , S1
+	// 2. 台阶法: 	A , S1, S2
+	// 3. 三台阶法: 	A , S1, S2, S3
+	// 4. 双侧壁法: 	A , S1, S2, S3, S4(需求增加: 软件里面的默认双侧壁导坑法需要在当前的双侧壁导坑法基础上再增加一条测线，测线名称为S4)
+	// 5. CD/CRD法: 	A1, A2, S1, S2, S3 , S4
+	// 其他
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -186,8 +206,11 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 		section_new_et_prefix.setText(mCurrentWorkPlan.getChainagePrefix());
 		
 		// spinner
-		ArrayAdapter<?> adapter = ArrayAdapter.createFromResource(this, R.array.section_excavation,  
-                android.R.layout.simple_spinner_item) ;
+		excaMethodIndex =  0 ;
+		excaMethods 	= ExcavateMethodUtil.getAllExcavateMethod();
+		
+		// 开挖方式
+		ArrayAdapter<String>  adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, excaMethods);
 		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		section_new_sp.setAdapter(adapter) ;
 		
@@ -203,31 +226,56 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 			public void onItemSelected(AdapterView<?> parent, View view,
 					int position, long id) {
 				
+				excaMethodIndex = position ;
+				String method 	= excaMethods.get(position);
+				
 				if(position == 0){
-					section_new_et_s2_label.setVisibility(View.INVISIBLE);
-					section_new_et_s2.setVisibility(View.INVISIBLE);
-					section_new_et_s3_label.setVisibility(View.INVISIBLE);
-					section_new_et_s3.setVisibility(View.INVISIBLE);
+//					section_new_et_s2_label.setVisibility(View.INVISIBLE);
+//					section_new_et_s2.setVisibility(View.INVISIBLE);
+//					section_new_et_s3_label.setVisibility(View.INVISIBLE);
+//					section_new_et_s3.setVisibility(View.INVISIBLE);
+					section_custom_view.setVisibility(View.GONE);
 					section_method.setBackgroundResource(R.drawable.ic_full_face);
+					createExcavationMethodLine(ExcavateMethodEnum.QD.getCode(),method);
 				} else if(position == 1){
-					section_new_et_s2_label.setVisibility(View.VISIBLE);
-					section_new_et_s2.setVisibility(View.VISIBLE);
-					section_new_et_s3_label.setVisibility(View.INVISIBLE);
-					section_new_et_s3.setVisibility(View.INVISIBLE);
+//					section_new_et_s2_label.setVisibility(View.VISIBLE);
+//					section_new_et_s2.setVisibility(View.VISIBLE);
+//					section_new_et_s3_label.setVisibility(View.INVISIBLE);
+//					section_new_et_s3.setVisibility(View.INVISIBLE);
+					section_custom_view.setVisibility(View.GONE);
 					section_method.setBackgroundResource(R.drawable.ic_step_method);
+					createExcavationMethodLine(ExcavateMethodEnum.DT.getCode(),method);
 				} else if(position == 2){
-					section_new_et_s2_label.setVisibility(View.VISIBLE);
-					section_new_et_s2.setVisibility(View.VISIBLE);
-					section_new_et_s3_label.setVisibility(View.VISIBLE);
-					section_new_et_s3.setVisibility(View.VISIBLE);
+//					section_new_et_s2_label.setVisibility(View.VISIBLE);
+//					section_new_et_s2.setVisibility(View.VISIBLE);
+//					section_new_et_s3_label.setVisibility(View.VISIBLE);
+//					section_new_et_s3.setVisibility(View.VISIBLE);
+					section_custom_view.setVisibility(View.GONE);
 					section_method.setBackgroundResource(R.drawable.ic_three_step);
+					createExcavationMethodLine(ExcavateMethodEnum.ST.getCode(),method);
 				} else if(position == 3){
-					section_new_et_s2_label.setVisibility(View.VISIBLE);
-					section_new_et_s2.setVisibility(View.VISIBLE);
-					section_new_et_s3_label.setVisibility(View.VISIBLE);
-					section_new_et_s3.setVisibility(View.VISIBLE);
+//					section_new_et_s2_label.setVisibility(View.VISIBLE);
+//					section_new_et_s2.setVisibility(View.VISIBLE);
+//					section_new_et_s3_label.setVisibility(View.VISIBLE);
+//					section_new_et_s3.setVisibility(View.VISIBLE);
+					section_custom_view.setVisibility(View.GONE);
 					section_method.setBackgroundResource(R.drawable.ic_dual_slope_method);
+					createExcavationMethodLine(ExcavateMethodEnum.SC.getCode(),method);
+				} else if(position == 4){ // CD/CRD 法
+//					section_new_et_s2_label.setVisibility(View.VISIBLE);
+//					section_new_et_s2.setVisibility(View.VISIBLE);
+//					section_new_et_s3_label.setVisibility(View.VISIBLE);
+//					section_new_et_s3.setVisibility(View.VISIBLE);
+					section_custom_view.setVisibility(View.GONE);
+					section_method.setBackgroundResource(R.drawable.ic_dual_slope_method);
+					createExcavationMethodLine(ExcavateMethodEnum.CD.getCode(),method);
 				} 
+				// 自定义开挖方法
+				else {
+					section_method.setVisibility(View.GONE);
+					section_custom_view.setVisibility(View.VISIBLE);
+					createExcavationMethodLine(-1,method);
+				}
 			}
 
 			@Override
@@ -334,21 +382,29 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 		loadDefault();
 	}
 	
-	private static int getExcavateMethod(String method) {
+	// 根据开挖名称来设置默认spinner 选择
+	private int getExcavateMethod(String method) {
 		
 		if (method == null) {
 			return -1;
 		}
-
-		if (method.equals("全断面法")) {
-			return 0;
-		} else if (method.equals("台阶法")) {
-			return 1;
-		} else if (method.equals("三台阶法")) {
-			return 2;
-		} else if (method.equals("双侧壁法")) {
-			return 3;
+		
+		for(int index = 0 ; index < excaMethods.size() ; index++){
+			
+			if(method.equals(excaMethods.get(index))){
+				return index ;
+			}
 		}
+
+//		if (method.equals("全断面法")) {
+//			return 0;
+//		} else if (method.equals("台阶法")) {
+//			return 1;
+//		} else if (method.equals("三台阶法")) {
+//			return 2;
+//		} else if (method.equals("双侧壁法")) {
+//			return 3;
+//		}
 		
 		return -1;
 	}
@@ -361,10 +417,10 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 		section_new_single_sl.setEnabled(false);
 		
 		// 开挖方式
-		section_new_et_a.setEnabled(false);
-		section_new_et_s1.setEnabled(false);
-		section_new_et_s2.setEnabled(false);
-		section_new_et_s3.setEnabled(false);
+//		section_new_et_a.setEnabled(false);
+//		section_new_et_s1.setEnabled(false);
+//		section_new_et_s2.setEnabled(false);
+//		section_new_et_s3.setEnabled(false);
 		
 		if(sectionInfo != null){
 			
@@ -379,76 +435,80 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 			section_new_et_Chainage.setEnabled(false);
 			section_new_et_width.setEnabled(false);
 			
-			section_new_sp.setSelection(getExcavateMethod(ExcavateMethodEnum.parser(sectionInfo.getExcavateMethod()).getName()));
 			rockgrade.setSelection(CrtbUtils.getRockgrade(sectionInfo.getROCKGRADE()));
 			
-			if(sectionInfo.getSurveyPntName() != null){
-				
-				String[] str = sectionInfo.getSurveyPntName().split(",") ;
-				
-				// A,S1,S2,S3
-				// aa, bb-1, bb-2, cc-1, cc-2, dd-1, dd-2
-				int len = str.length ;
-				
-				// A
-				if(str.length > 1){
-					section_new_et_a.setText(str[0].equals("A") ? "" : str[0]);
-				}
-				
-				// S1
-				if(len >= 3){
-					
-					String s1 = str[1];
-					String ss = s1 ;
-					
-					// 兼容以前的bug
-					if(s1.lastIndexOf("-") > 0){
-						ss = s1.substring(0,s1.lastIndexOf("-"));
-					}
-					
-					if(ss.equals("S1")){
-						section_new_et_s1.setText("");
-					} else {
-						section_new_et_s1.setText(ss);
-					}
-				} 
-				
-				// S2
-				if(len >= 5){
-					
-					String s1 = str[3];
-					String ss = s1 ;
-					
-					// 兼容以前的bug
-					if(s1.lastIndexOf("-") > 0){
-						ss = s1.substring(0,s1.lastIndexOf("-"));
-					}
-					
-					if(ss.equals("S2")){
-						section_new_et_s2.setText("");
-					} else {
-						section_new_et_s2.setText(ss);
-					}
-				} 
-				
-				// S3
-				if(len >= 7){
-					
-					String s1 = str[5];
-					String ss = s1;
-					
-					// 兼容以前的bug
-					if(s1.lastIndexOf("-") > 0){
-						ss = s1.substring(0,s1.lastIndexOf("-"));
-					}
-					
-					if(ss.equals("S3")){
-						section_new_et_s3.setText("");
-					} else {
-						section_new_et_s3.setText(ss);
-					}
-				}
-			}
+			// 开挖方法
+			String method = ExcavateMethodUtil.parserExcavateMethodName(sectionInfo.getExcavateMethod());
+			section_new_sp.setSelection(getExcavateMethod(method));
+			createExcavationMethodLine(sectionInfo.getExcavateMethod(),null);
+			
+//			if(sectionInfo.getSurveyPntName() != null){
+//				
+//				String[] str = sectionInfo.getSurveyPntName().split(",") ;
+//				
+//				// A,S1,S2,S3
+//				// aa, bb-1, bb-2, cc-1, cc-2, dd-1, dd-2
+//				int len = str.length ;
+//				
+//				// A
+//				if(str.length > 1){
+//					// section_new_et_a.setText(str[0].equals("A") ? "" : str[0]);
+//				}
+//				
+//				// S1
+//				if(len >= 3){
+//					
+//					String s1 = str[1];
+//					String ss = s1 ;
+//					
+//					// 兼容以前的bug
+//					if(s1.lastIndexOf("-") > 0){
+//						ss = s1.substring(0,s1.lastIndexOf("-"));
+//					}
+//					
+//					if(ss.equals("S1")){
+//						// section_new_et_s1.setText("");
+//					} else {
+//						// section_new_et_s1.setText(ss);
+//					}
+//				} 
+//				
+//				// S2
+//				if(len >= 5){
+//					
+//					String s1 = str[3];
+//					String ss = s1 ;
+//					
+//					// 兼容以前的bug
+//					if(s1.lastIndexOf("-") > 0){
+//						ss = s1.substring(0,s1.lastIndexOf("-"));
+//					}
+//					
+//					if(ss.equals("S2")){
+//						//section_new_et_s2.setText("");
+//					} else {
+//						//section_new_et_s2.setText(ss);
+//					}
+//				} 
+//				
+//				// S3
+//				if(len >= 7){
+//					
+//					String s1 = str[5];
+//					String ss = s1;
+//					
+//					// 兼容以前的bug
+//					if(s1.lastIndexOf("-") > 0){
+//						ss = s1.substring(0,s1.lastIndexOf("-"));
+//					}
+//					
+//					if(ss.equals("S3")){
+//						//section_new_et_s3.setText("");
+//					} else {
+//						//section_new_et_s3.setText(ss);
+//					}
+//				}
+//			}
 			
 			section_new_leiji_gd.setText(String.valueOf(sectionInfo.getGDU0()));
 			section_new_leiji_sl.setText(String.valueOf(sectionInfo.getSLU0()));
@@ -469,7 +529,226 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 			}
 		}
 	}
+	
+	// 根据开挖方法创建view
+	private void createExcavationMethodLine(int excaMethod,String method){
+		
+		mKaiwaContainer.removeAllViews() ;
+		
+		// 固定开挖方法
+		if(excaMethod != -1){
+			
+			ExcavateMethodEnum exca = ExcavateMethodEnum.parser(excaMethod) ;
+			
+			// 全断面法
+			if(exca == ExcavateMethodEnum.QD){
+				
+				ExcaLineView holder = new ExcaLineView() ;
+				View v = InjectCore.injectOriginalObject(holder);
+				
+				holder.leftLayout.setVisibility(View.VISIBLE);
+				holder.leftLabel.setText("A");
+				
+				holder.rightLayout.setVisibility(View.VISIBLE);
+				holder.rightLabel.setText("S1");
+				
+				mKaiwaContainer.addView(v);
+			} 
+			// 台阶法
+			else if(exca == ExcavateMethodEnum.DT){
+				
+				// line 1
+				ExcaLineView holder = new ExcaLineView() ;
+				View v = InjectCore.injectOriginalObject(holder);
+				
+				holder.leftLayout.setVisibility(View.VISIBLE);
+				holder.leftLabel.setText("A");
+				
+				holder.rightLayout.setVisibility(View.VISIBLE);
+				holder.rightLabel.setText("S1");
+				
+				mKaiwaContainer.addView(v);
+				
+				// line 2
+				holder = new ExcaLineView() ;
+				v = InjectCore.injectOriginalObject(holder);
+				
+				holder.leftLayout.setVisibility(View.VISIBLE);
+				holder.leftLabel.setText("S2");
+				
+				holder.rightLayout.setVisibility(View.INVISIBLE);
+				
+				mKaiwaContainer.addView(v);
+			} 
+			// 三台阶法
+			else if (exca == ExcavateMethodEnum.ST) {
 
+				// line 1
+				ExcaLineView holder = new ExcaLineView();
+				View v = InjectCore.injectOriginalObject(holder);
+
+				holder.leftLayout.setVisibility(View.VISIBLE);
+				holder.leftLabel.setText("A");
+
+				holder.rightLayout.setVisibility(View.VISIBLE);
+				holder.rightLabel.setText("S1");
+
+				mKaiwaContainer.addView(v);
+
+				// line 2
+				holder = new ExcaLineView();
+				v = InjectCore.injectOriginalObject(holder);
+				
+				holder.leftLayout.setVisibility(View.VISIBLE);
+				holder.leftLabel.setText("S2");
+
+				holder.rightLayout.setVisibility(View.VISIBLE);
+				holder.rightLabel.setText("S3");
+
+				mKaiwaContainer.addView(v);
+			}
+			// 双侧壁法 (增加了一跳测线S4)
+			else if(exca == ExcavateMethodEnum.SC){
+				
+				// line 1
+				ExcaLineView holder = new ExcaLineView();
+				View v = InjectCore.injectOriginalObject(holder);
+
+				holder.leftLayout.setVisibility(View.VISIBLE);
+				holder.leftLabel.setText("A");
+
+				holder.rightLayout.setVisibility(View.VISIBLE);
+				holder.rightLabel.setText("S1");
+
+				mKaiwaContainer.addView(v);
+
+				// line 2
+				holder = new ExcaLineView();
+				v = InjectCore.injectOriginalObject(holder);
+				
+				holder.leftLayout.setVisibility(View.VISIBLE);
+				holder.leftLabel.setText("S2");
+
+				holder.rightLayout.setVisibility(View.VISIBLE);
+				holder.rightLabel.setText("S3");
+
+				mKaiwaContainer.addView(v);
+				
+				// line 3
+				holder = new ExcaLineView();
+				v = InjectCore.injectOriginalObject(holder);
+				
+				holder.leftLayout.setVisibility(View.VISIBLE);
+				holder.leftLabel.setText("S4");
+
+				holder.rightLayout.setVisibility(View.INVISIBLE);
+				
+				mKaiwaContainer.addView(v);
+			}
+			// CD/CRD 法
+			else if (exca == ExcavateMethodEnum.CD
+					|| exca == ExcavateMethodEnum.CRD) {
+
+				// line 1
+				ExcaLineView holder = new ExcaLineView();
+				View v = InjectCore.injectOriginalObject(holder);
+
+				holder.leftLayout.setVisibility(View.VISIBLE);
+				holder.leftLabel.setText("A1");
+
+				holder.rightLayout.setVisibility(View.VISIBLE);
+				holder.rightLabel.setText("A2");
+
+				mKaiwaContainer.addView(v);
+
+				// line 2
+				holder = new ExcaLineView();
+				v = InjectCore.injectOriginalObject(holder);
+
+				holder.leftLayout.setVisibility(View.VISIBLE);
+				holder.leftLabel.setText("S1");
+
+				holder.rightLayout.setVisibility(View.VISIBLE);
+				holder.rightLabel.setText("S2");
+
+				mKaiwaContainer.addView(v);
+				
+				// line 3
+				holder = new ExcaLineView();
+				v = InjectCore.injectOriginalObject(holder);
+
+				holder.leftLayout.setVisibility(View.VISIBLE);
+				holder.leftLabel.setText("S3");
+
+				holder.rightLayout.setVisibility(View.VISIBLE);
+				holder.rightLabel.setText("S4");
+
+				mKaiwaContainer.addView(v);
+			}
+		}
+		// 自定义开挖方法
+		else {
+			
+			TunnelCrossSectionParameter item = ExcavateMethodUtil.findCustomExcavateMethod(method);
+			
+			// 开挖方法
+			if(item != null){
+				
+				if(item.getMethodName().equals(method)){
+					
+					List<String> ls = new ArrayList<String>();
+					
+					section_custom_view.clearFlag(CrtbExcavationView.FLAG_A1);
+					section_custom_view.clearFlag(CrtbExcavationView.FLAG_A2);
+					section_custom_view.clearFlag(CrtbExcavationView.FLAG_A3);
+					// 拱顶
+					int gd 	= item.getCrownPointNumber() ;
+					for(int i = 0 ; i < gd ; i++){
+						
+						String p = "A" + (i + 1) ;
+						ls.add(p);
+						
+						if(p.equals("A1")){
+							section_custom_view.addFlag(CrtbExcavationView.FLAG_A1);
+						} else if(p.equals("A2")){
+							section_custom_view.addFlag(CrtbExcavationView.FLAG_A2);
+						} else if(p.equals("A3")){
+							section_custom_view.addFlag(CrtbExcavationView.FLAG_A3);
+						}
+					}
+					
+					// 测线
+					int l	= item.getSurveyLineNumber() ;
+					for(int i = 0 ; i < l ; i++){
+						ls.add("S" + (i + 1));
+					}
+					
+					// 构建view
+					int size = ls.size() ;
+					int row = size % 2 > 0 ? (size / 2) + 1 : size / 2 ;
+					int index = 0 ;
+					
+					for(int r = 0 ; r < row ; r++, index+=2){
+						
+						ExcaLineView holder = new ExcaLineView();
+						View v = InjectCore.injectOriginalObject(holder);
+						holder.leftLayout.setVisibility(View.VISIBLE);
+						holder.leftLabel.setText(ls.get(index));
+						
+						if(index + 1 < size){
+							holder.rightLayout.setVisibility(View.VISIBLE);
+							holder.rightLabel.setText(ls.get(index + 1));
+						} else {
+							holder.rightLayout.setVisibility(View.INVISIBLE);
+						}
+						
+						mKaiwaContainer.addView(v);
+					}
+				}
+			}
+		}
+	}
+	
 	private void initViewPager() {
 		
 		t1 = (TextView) findViewById(R.id.text1);
@@ -591,10 +870,10 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 				return ;
 			}
 			
-			String pointA	= section_new_et_a.getText().toString().trim() ;
-			String pointS1	= section_new_et_s1.getText().toString().trim() ;
-			String pointS2	= section_new_et_s2.getText().toString().trim() ;
-			String pointS3	= section_new_et_s3.getText().toString().trim() ;
+//			String pointA	= "";//section_new_et_a.getText().toString().trim() ;
+//			String pointS1	= "";//section_new_et_s1.getText().toString().trim() ;
+//			String pointS2	= "";//section_new_et_s2.getText().toString().trim() ;
+//			String pointS3	= "";//section_new_et_s3.getText().toString().trim() ;
 			
 			String gdlj	= section_new_leiji_gd.getEditableText().toString().trim() ;
 			String zblj	= section_new_leiji_sl.getEditableText().toString().trim() ;
@@ -627,47 +906,130 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 				return ;
 			}
 			
+			// 构造文本
 			StringBuilder str = new StringBuilder() ;
 			
-			str.append(StringUtils.isEmpty(pointA) ? "A" : pointA);
-			str.append(",");
-			
-			// s1
-			if(StringUtils.isEmpty(pointS1)){
+			// 对于测点取别名的问题,暂时不需要
+			// 0,1,2,3,4 (固定开挖方式)
+			if(excaMethodIndex < 5){
+				
+				// CD/CRD 法
+				if(excaMethodIndex == 4){
+					str.append("A1");
+					str.append(",");
+					str.append("A2");
+				} else {
+					str.append("A");
+				}
+				
+				str.append(",");
+				
+				// S1
 				str.append("S1-1,");
 				str.append("S1-2");
-			} else {
-				str.append(pointS1 + "-1,");
-				str.append(pointS1 + "-2");
-			}
-			
-			// s2 wei.zhou 开挖方式不同，对应的pnyName 不一样 (2014-6-18)
-			if(section_new_et_s2.getVisibility() == View.VISIBLE){
 				
-				str.append(",");
-				
-				if(StringUtils.isEmpty(pointS2)){
+				// S2
+				if(excaMethodIndex == 1 
+						|| excaMethodIndex == 2
+						|| excaMethodIndex == 3
+						|| excaMethodIndex == 4){
+					str.append(",");
 					str.append("S2-1,");
 					str.append("S2-2");
-				} else {
-					str.append(pointS2 + "-1,");
-					str.append(pointS2 + "-2");
+				}
+				
+				// S3
+				if(excaMethodIndex == 2 
+						|| excaMethodIndex == 3
+						|| excaMethodIndex == 4){
+					str.append(",");
+					str.append("S3-1,");
+					str.append("S3-2");
+				}
+				
+				// S4
+				if(excaMethodIndex == 3 // 双侧壁法
+						|| excaMethodIndex == 4){
+					str.append(",");
+					str.append("S4-1,");
+					str.append("S4-2");
+				}
+			} 
+			// 自定义开挖方式
+			else {
+				
+				TunnelCrossSectionParameter item = ExcavateMethodUtil.findCustomExcavateMethod(excaMethods.get(excaMethodIndex));
+				
+				// 拱顶
+				int gd = item.getCrownPointNumber() ;
+				for(int index = 0 ; index < gd ; index++){
+					
+					if(index > 0){
+						str.append(",");
+					}
+					
+					str.append("A" + (index+1));
+				}
+				
+				// 分隔
+				str.append(",");
+				
+				// 测线
+				String ls 	= item.getSurveyLinePointName() ;
+				String[] ay = ls.replaceAll("/", "&").split("&");
+				
+				for(int index = 0 ; index < ay.length ; index++){
+					
+					if(index > 0){
+						str.append(",");
+					}
+					
+					str.append("S" + (index+1));
+					str.append("-1,");
+					str.append("S" + (index+1));
+					str.append("-2");
 				}
 			}
 			
-			// s3  wei.zhou 开挖方式不同，对应的pnyName 不一样 (2014-6-18)
-			if(section_new_et_s3.getVisibility() == View.VISIBLE){
-				
-				str.append(",");
-				
-				if(StringUtils.isEmpty(pointS3)){
-					str.append("S3-1,");
-					str.append("S3-2");
-				} else {
-					str.append(pointS3 + "-1,");
-					str.append(pointS3 + "-2");
-				}
-			}
+//			str.append(StringUtils.isEmpty(pointA) ? "A" : pointA);
+//			str.append(",");
+//			
+//			// s1
+//			if(StringUtils.isEmpty(pointS1)){
+//				str.append("S1-1,");
+//				str.append("S1-2");
+//			} else {
+//				str.append(pointS1 + "-1,");
+//				str.append(pointS1 + "-2");
+//			}
+//			
+			// s2 wei.zhou 开挖方式不同，对应的pnyName 不一样 (2014-6-18)
+//			if(section_new_et_s2.getVisibility() == View.VISIBLE){
+//				
+//				str.append(",");
+//				
+//				if(StringUtils.isEmpty(pointS2)){
+//					str.append("S2-1,");
+//					str.append("S2-2");
+//				} else {
+//					str.append(pointS2 + "-1,");
+//					str.append(pointS2 + "-2");
+//				}
+//			}
+//			
+//			// s3  wei.zhou 开挖方式不同，对应的pnyName 不一样 (2014-6-18)
+//			if(section_new_et_s3.getVisibility() == View.VISIBLE){
+//				
+//				str.append(",");
+//				
+//				if(StringUtils.isEmpty(pointS3)){
+//					str.append("S3-1,");
+//					str.append("S3-2");
+//				} else {
+//					str.append(pointS3 + "-1,");
+//					str.append(pointS3 + "-2");
+//				}
+//			}
 			
 			if(sectionInfo == null){
 				
@@ -700,7 +1062,7 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 				sectionInfo.setSLU0Description(zbdes);
 				
 				// excavation
-				sectionInfo.setExcavateMethod(ExcavateMethodEnum.parser((String)section_new_sp.getSelectedItem()).getCode());
+				sectionInfo.setExcavateMethod(ExcavateMethodUtil.parserExcavateMethodCode((String)section_new_sp.getSelectedItem()));
 				// 围岩级别
 				sectionInfo.setROCKGRADE(rockgrade.getSelectedItem().toString()) ;
 				
@@ -854,5 +1216,25 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 		}
 	}
 
-	
+	@InjectLayout(layout=R.layout.item_excavation_method_line_layout)
+	private class ExcaLineView {
+		
+		@InjectView(id=R.id.left_line_layout)
+		LinearLayout leftLayout ;
+		
+		@InjectView(id=R.id.method_line_left_label)
+		TextView leftLabel ;
+		
+		@InjectView(id=R.id.method_line_left_input)
+		EditText leftInput ;
+		
+		@InjectView(id=R.id.right_line_layout)
+		LinearLayout rightLayout ;
+		
+		@InjectView(id=R.id.method_line_right_label)
+		TextView rightLabel ;
+		
+		@InjectView(id=R.id.method_line_right_input)
+		EditText rightInput ;
+	}
 }

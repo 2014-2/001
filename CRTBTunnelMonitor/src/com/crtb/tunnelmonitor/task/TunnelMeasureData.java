@@ -117,10 +117,7 @@ public class TunnelMeasureData extends MeasureData {
 				//measureDataList
 				
 				TunnelSettlementTotalDataDao dao = TunnelSettlementTotalDataDao.defaultDao();
-				for (TunnelSettlementTotalData point : mtunnelTestPoints) {
-//YX CheckMe:取消了判断线的两个点是否已经上传，因为当前是只有线的两个点都有数据时，才上传
-//YX CheckMe:检查mtunnelTestPoints中是否存在单个线的点
-					
+				for (TunnelSettlementTotalData point : mtunnelTestPoints) {				
 					//point.setInfo("2");
 					point.setUploadStatus(2); //表示该测点已上传
 					dao.update(point);

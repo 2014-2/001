@@ -11,6 +11,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.crtb.tunnelmonitor.activity.R;
@@ -23,6 +24,7 @@ public class CrtbDialogList<T> extends CrtbDialog {
 	private ListView	 mListView ;
 	private OnMenuItemClick<T> mListener ;
 	private T			 mTag ;
+	private RelativeLayout mTitleLayout ;
 
 	public CrtbDialogList(Context context, String[] menus,String title) {
 		super(context);
@@ -43,8 +45,15 @@ public class CrtbDialogList<T> extends CrtbDialog {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.menu_list_dialog_layout);
 		
+		mTitleLayout = (RelativeLayout)findViewById(R.id.dialog_title_layout);
 		mTitle		= (TextView)findViewById(R.id.dialog_title);
 		mListView	= (ListView)findViewById(R.id.dialog_list);
+		
+		if(mTitleStr == null){
+			mTitleLayout.setVisibility(View.GONE);
+		} else {
+			mTitleLayout.setVisibility(View.VISIBLE);
+		}
 		
 		mTitle.setText(mTitleStr);
 		

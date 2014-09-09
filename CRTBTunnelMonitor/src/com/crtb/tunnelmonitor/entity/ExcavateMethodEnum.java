@@ -1,6 +1,5 @@
 package com.crtb.tunnelmonitor.entity;
 
-import android.R.integer;
 
 /**
  * 开挖方式
@@ -31,8 +30,8 @@ public enum ExcavateMethodEnum {
 	ST("三台阶法",2, 7),
 	QD("全断面法",3, 3),
 	HX("环行开发法",4, 0),
-	CD("中壁",5, 0),
-	CRD("中壁",6, 0),
+	CD("中隔壁法",5, 0),
+	CRD("交叉中隔壁法",6, 0),
 	SC("双侧壁法",7, 7),
 	UNKOWN("未知",-10, -1) ;
 
@@ -78,26 +77,39 @@ public enum ExcavateMethodEnum {
 			return CRD ;
 		} else if(name.equals(SC.getName())){
 			return SC ;
-		} 
+		}
 		
 		return UNKOWN ;
 	}
 	
 	public static ExcavateMethodEnum parser(int code){
 		
+		// 1表示台阶法
 		if(code == 1){
 			return DT ;
-		} else if(code == 2){
+		} 
+		// 2表示三台阶法；
+		else if(code == 2){
 			return ST ;
-		} else if(code == 3){
+		} 
+		// 3是全断面法；
+		else if(code == 3){
 			return QD ;
-		} else if(code == 4){
+		} 
+		// 4是环形开挖方法；
+		else if(code == 4){
 			return HX ;
-		} else if(code == 5){
+		} 
+		// 5中隔壁法（软件里面默认的CD法）；
+		else if(code == 5){
 			return CD ;
-		} else if(code == 6){
+		} 
+		// 6是交叉中隔壁法（软件里面默认的交叉中隔壁法）
+		else if(code == 6){
 			return CRD ;
-		} else if(code == 7){
+		} 
+		// 7是双侧壁导坑法(软件里面默认的双侧壁导坑法)
+		else if(code == 7){
 			return SC ;
 		}
 		
