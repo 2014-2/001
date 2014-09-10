@@ -88,24 +88,39 @@
             android:name="com.crtb.tunnelmonitor.activity.SoftwareInfoActivity"
             android:screenOrientation="portrait" >
         </activity>
-        <activity android:name="com.crtb.tunnelmonitor.activity.RegisterActivity" >
+        <activity
+            android:name="com.crtb.tunnelmonitor.activity.RegisterActivity"
+            android:screenOrientation="portrait" >
         </activity>
-        <activity android:name="com.crtb.tunnelmonitor.activity.UserInfoActivity" >
+        <activity
+            android:name="com.crtb.tunnelmonitor.activity.UserInfoActivity"
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name="com.crtb.tunnelmonitor.activity.TesterLoadActivity"
-            android:noHistory="true" >
+            android:noHistory="true"
+            android:screenOrientation="portrait" >
         </activity>
-        <activity android:name="com.crtb.tunnelmonitor.activity.UserBookActivity" >
+        <activity
+            android:name="com.crtb.tunnelmonitor.activity.UserBookActivity"
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name="com.crtb.tunnelmonitor.activity.ServerSettingActivity"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize" >
         </activity>
-        <activity android:name="com.crtb.tunnelmonitor.activity.DataUploadActivity" >
+        <activity
+            android:name="com.crtb.tunnelmonitor.activity.DataUploadActivity"
+            android:screenOrientation="portrait" >
         </activity>
-        <activity android:name="com.crtb.tunnelmonitor.activity.SoftwareUpdateActivity" >
+        <activity
+            android:name="com.crtb.tunnelmonitor.activity.SoftwareUpdateActivity"
+            android:screenOrientation="portrait" >
         </activity>
+        <activity
+            android:name="com.crtb.tunnelmonitor.activity.CustomExcavationActivity"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>
