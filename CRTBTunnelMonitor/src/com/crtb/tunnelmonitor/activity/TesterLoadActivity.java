@@ -23,6 +23,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.crtb.tunnelmonitor.AppConfig;
+import com.crtb.tunnelmonitor.common.Constant;
 import com.crtb.tunnelmonitor.dao.impl.v2.SurveyerInformationDao;
 import com.crtb.tunnelmonitor.entity.SurveyerInformation;
 import com.crtb.tunnelmonitor.event.EventDispatcher;
@@ -57,7 +58,7 @@ public class TesterLoadActivity extends Activity implements OnClickListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.download_tester_layout);
         mServerAddress = (EditText) findViewById(R.id.server_ip);
-        mServerAddress.setText("http://61.237.239.144/fxtest/basedown");
+        mServerAddress.setText(Constant.getUserAuthUrl());
         mServerAddress.setSingleLine(true);
         mLoad = (Button) findViewById(R.id.load);
         mUserName = (EditText) findViewById(R.id.username);

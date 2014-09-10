@@ -29,6 +29,7 @@ import com.crtb.tunnelmonitor.AppConfig;
 import com.crtb.tunnelmonitor.AppHandler;
 import com.crtb.tunnelmonitor.CommonObject;
 import com.crtb.tunnelmonitor.WorkFlowActivity;
+import com.crtb.tunnelmonitor.common.Constant;
 import com.crtb.tunnelmonitor.dao.impl.v2.AlertHandlingInfoDao;
 import com.crtb.tunnelmonitor.dao.impl.v2.AlertListDao;
 import com.crtb.tunnelmonitor.dao.impl.v2.RawSheetIndexDao;
@@ -71,7 +72,7 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements
 
 	private ArrayList<String> pointTypeNameList = new ArrayList<String>();
 
-	private static boolean DEBUG = true;// DEBUG FLAG, set to true to generate
+	private static boolean DEBUG;// DEBUG FLAG, set to true to generate
 										// fake data
 
 	// 测量列表
@@ -140,6 +141,8 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements
 
 		// add by wei.zhou
 		InjectCore.injectUIProperty(this);
+		
+		DEBUG = Constant.getStationDebug();
 
 		Object bean = CommonObject.findObject(KEY_TEST_RAWSHEET_LIST);
 

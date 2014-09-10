@@ -10,6 +10,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.crtb.tunnelmonitor.WorkFlowActivity;
+import com.crtb.tunnelmonitor.common.Constant;
 import com.crtb.tunnelmonitor.network.CrtbWebService;
 import com.crtb.tunnelmonitor.network.RpcCallback;
 import com.crtb.tunnelmonitor.utils.CrtbAppConfig;
@@ -32,6 +33,7 @@ public class ServerSettingActivity extends WorkFlowActivity {
         mServerIp = (EditText) findViewById(R.id.server_ip);
         mUserName = (EditText) findViewById(R.id.username);
         mPassword = (EditText) findViewById(R.id.password);
+        mServerIp.setText(Constant.getUserAuthUrl());
         mUserName.setText(CrtbAppConfig.getInstance().getUserName());
         mPassword.setText(CrtbAppConfig.getInstance().getPassword());
         mOk = (Button) findViewById(R.id.ok);

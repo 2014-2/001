@@ -24,7 +24,6 @@ import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 
-import com.crtb.tunnelmonitor.AppCRTBApplication;
 import com.crtb.tunnelmonitor.common.Constant;
 import com.crtb.tunnelmonitor.task.WorkZone;
 import com.crtb.tunnelmonitor.utils.CrtbAppConfig;
@@ -33,8 +32,8 @@ public final class CrtbWebService {
 	private static final String TAG = "CrtbWebService";
 	
 	private static final String NAMESPACE = "webservice.riskcontrol.com";
-	private static final String USRE_AUTH_URL = "http://61.237.239.144/fxtest/basedown";
-	private static final String DATA_UPLOAD_URL = "http://61.237.239.144/fxtest/testdata";
+	private static final String USRE_AUTH_URL = Constant.getUserAuthUrl();
+	private static final String DATA_UPLOAD_URL = Constant.getUploadUrl();
 	
 	private static final int RETRY_COUNT = 11;
 	private static final int CONNECITON_TIME_OUT = 10000;
@@ -66,7 +65,7 @@ public final class CrtbWebService {
 	}
 	
 	public void login(final String account, final String password, final RpcCallback callback) {
-		GetPublicKeyRpc rpc = new GetPublicKeyRpc(account, AppCRTBApplication.getDeviceMac(), new RpcCallbackWrapper(new RpcCallback() {
+		GetPublicKeyRpc rpc = new GetPublicKeyRpc(account, Constant.getDeviceMac(), new RpcCallbackWrapper(new RpcCallback() {
 			@Override
 			public void onSuccess(Object[] data) {
 				String publicKey = (String)data[0];
@@ -139,7 +138,7 @@ public final class CrtbWebService {
 	 */
 	public void verifyAppUser(String account, String encnryptPassword, String encnryptPublicKey, RpcCallback callback) {
 
-	    VerifyAppUserRpc rpc = new VerifyAppUserRpc(account, encnryptPassword, Constant.testPhysical/*AppCRTBApplication.getDeviceMac()*/, encnryptPublicKey, new RpcCallbackWrapper(callback));
+	    VerifyAppUserRpc rpc = new VerifyAppUserRpc(account, encnryptPassword, Constant.getDeviceMac(), encnryptPublicKey, new RpcCallbackWrapper(callback));
 		sendRequestAsync(rpc, USRE_AUTH_URL);
 		//RpcSendTask task = new RpcSendTask(rpc, USRE_AUTH_URL);
 		//task.execute();
