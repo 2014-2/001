@@ -211,9 +211,9 @@ public class RecordNewSubsidenceActivity extends WorkFlowActivity implements OnP
 			record_Card.setText(surveyer.getCertificateID());
 			record_C.setText(String.valueOf(recordInfo.getTEMPERATURE()));
 			record_dotype.setText(recordInfo.getFACEDESCRIPTION());
-			
-			record_buildtime.setText(DateUtils.toDateString(recordInfo.getCreateTime(),DateUtils.PART_TIME_FORMAT)) ;
-			
+			//YX 时间精确到秒
+			//record_buildtime.setText(DateUtils.toDateString(recordInfo.getCreateTime(),DateUtils.PART_TIME_FORMAT)) ;
+			record_buildtime.setText(DateUtils.toDateString(recordInfo.getCreateTime(),DateUtils.DATE_TIME_FORMAT)) ;
 			record_Chainage.setEnabled(false);
 			record_Person.setEnabled(false);
 			record_Card.setEnabled(false);
@@ -229,7 +229,9 @@ public class RecordNewSubsidenceActivity extends WorkFlowActivity implements OnP
     	
     	} else {
     		editRawSheet	= false ;
-    		record_buildtime.setText(DateUtils.toDateString(DateUtils.getCurrtentTimes(),DateUtils.PART_TIME_FORMAT)) ;
+    		//YX 时间精确到秒
+    		//record_buildtime.setText(DateUtils.toDateString(DateUtils.getCurrtentTimes(),DateUtils.PART_TIME_FORMAT)) ;
+    		record_buildtime.setText(DateUtils.toDateString(DateUtils.getCurrtentTimes(),DateUtils.DATE_TIME_FORMAT)) ;
     	}
     }
     
@@ -309,7 +311,9 @@ public class RecordNewSubsidenceActivity extends WorkFlowActivity implements OnP
 				// 基本信息
 				recordInfo.setCrossSectionType(RawSheetIndex.CROSS_SECTION_TYPE_SUBSIDENCES);
 				recordInfo.setFACEDK(CrtbUtils.formatDouble(chainage));
-				recordInfo.setCreateTime(DateUtils.toDate(currentTime,DateUtils.PART_TIME_FORMAT));
+				//YX 时间精确到秒
+				//recordInfo.setCreateTime(DateUtils.toDate(currentTime,DateUtils.PART_TIME_FORMAT));
+				recordInfo.setCreateTime(DateUtils.toDate(currentTime,DateUtils.DATE_TIME_FORMAT));
 				recordInfo.setTEMPERATURE(temp);
 				recordInfo.setFACEDESCRIPTION(descr);
 				recordInfo.setCrossSectionIDs(sections);
@@ -338,7 +342,9 @@ public class RecordNewSubsidenceActivity extends WorkFlowActivity implements OnP
 				// 基本信息
 				recordInfo.setCrossSectionType(RawSheetIndex.CROSS_SECTION_TYPE_SUBSIDENCES);
 				recordInfo.setFACEDK(CrtbUtils.formatDouble(chainage));
-				recordInfo.setCreateTime(DateUtils.toDate(currentTime,DateUtils.PART_TIME_FORMAT));
+				//YX 时间精确到秒
+				//recordInfo.setCreateTime(DateUtils.toDate(currentTime,DateUtils.PART_TIME_FORMAT));
+				recordInfo.setCreateTime(DateUtils.toDate(currentTime,DateUtils.DATE_TIME_FORMAT));
 				recordInfo.setTEMPERATURE(temp);
 				recordInfo.setFACEDESCRIPTION(descr);
 				recordInfo.setCrossSectionIDs(sections);
