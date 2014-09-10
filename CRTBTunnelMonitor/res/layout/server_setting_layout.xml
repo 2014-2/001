@@ -44,7 +44,6 @@
                 android:layout_marginRight="20dp"
                 android:singleLine="true"
                 android:background="@null"
-                android:text="http://61.237.239.144/fxkz/basedown"
                 android:hint="@string/server_settings_ip_hint"
                 android:layout_toRightOf="@id/ip_title" />
         </RelativeLayout>

@@ -3,6 +3,8 @@ package com.crtb.tunnelmonitor.common;
 
 import java.util.HashMap;
 
+import com.crtb.tunnelmonitor.AppCRTBApplication;
+
 /**
  * 常量定义
  */
@@ -121,10 +123,6 @@ public class Constant {
 
 	//命名空间
 	public static final String NameSpace="webservice.riskcontrol.com";
-	//用户验证
-	public static final String UserSelect = "http://61.237.239.144/fxkz/basedown";
-	//上传
-	public static final String Update = "http://61.237.239.144/fxkz/testdata";
 	
 	//测试用
 	public static final String testUsername = "cl19h1";
@@ -133,7 +131,47 @@ public class Constant {
 	public static final String testDeskey = "crtb1234";
 	public static final String testPublicKey = "MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAMFUtGx6lOnO5dLxy/1uNqUAzG7mhRKkWFJEZ9QWup+Y1+bgRoz2xdlL1ZqwpFi3AYbFrCa37zK1A5WbCvq37j0CAwEAAQ==";
 
+//YX 新增
+	//用户验证-fxtest
+	public static final String USER_SELECT_FXTEST = "http://61.237.239.144/fxtest/basedown";
+	//上传-fxtest
+	public static final String UPDATE_FXTEST = "http://61.237.239.144/fxtest/testdata";
+	
+	//用户验证-fxkz
+	public static final String USER_SELECT_FXKZ = "http://61.237.239.144/fxkz/basedown";
+	//上传-fxkz
+	public static final String UPDATE_FXKZ = "http://61.237.239.144/fxkz/testdata";
 
+	private static VersionControl versionControl = null;
+	
+	public static String getUserAuthUrl(){
+		if(versionControl.getTestServer()){
+			return USER_SELECT_FXTEST;
+		} else{
+			return USER_SELECT_FXKZ;
+		}
+	}
+	
+	public static String getUploadUrl(){
+		if(versionControl.getTestServer()){
+			return UPDATE_FXTEST;
+		} else{
+			return UPDATE_FXKZ;
+		}
+	}
+	
+	public static String getDeviceMac(){
+		if(versionControl.getRealMac()){
+			return AppCRTBApplication.getDeviceMac();
+		} else{
+			return testPhysical;
+		}
+	}
+	
+	public static boolean getStationDebug(){
+		return versionControl.getStationDebug();
+	}
+	
 	public Constant() {
 		// TODO Auto-generated constructor stub
 	}
@@ -145,5 +183,41 @@ public class Constant {
 		// TODO Auto-generated method stub
 
 	}
+	
+	static{
+		//测试版本:手输坐标-fxtest-测试mac地址
+		versionControl = new VersionControl(true,true,false);
+		
+		//发布版本:全站仪坐标-fxkz-真实mac地址
+		//versionControl = new VersionControl(false,false,true);
+	}
 
+	static class VersionControl{
+		// 全站仪手输账号
+		private boolean station_debug;
+		
+		// 测试服务器地址
+		private boolean test_server;
+		
+		//真实Mac地址
+		private boolean realMac;
+		
+		public VersionControl(boolean station_debug,boolean test_server,boolean realMac){
+			this.station_debug = station_debug;
+			this.test_server = test_server;
+			this.realMac = realMac;
+		}
+		
+		public boolean getStationDebug(){
+			return station_debug;
+		}
+		
+		public boolean getTestServer(){
+			return test_server;
+		}
+		
+		public boolean getRealMac(){
+			return realMac;
+		}
+	}
 }
