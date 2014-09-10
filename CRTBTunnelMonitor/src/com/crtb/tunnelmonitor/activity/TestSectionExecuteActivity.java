@@ -27,6 +27,7 @@ import com.crtb.tunnelmonitor.AppConfig;
 import com.crtb.tunnelmonitor.AppHandler;
 import com.crtb.tunnelmonitor.CommonObject;
 import com.crtb.tunnelmonitor.WorkFlowActivity;
+import com.crtb.tunnelmonitor.common.Constant;
 import com.crtb.tunnelmonitor.dao.impl.v2.AlertHandlingInfoDao;
 import com.crtb.tunnelmonitor.dao.impl.v2.AlertListDao;
 import com.crtb.tunnelmonitor.dao.impl.v2.RawSheetIndexDao;
@@ -58,7 +59,7 @@ import com.crtb.tunnelmonitor.utils.Time;
 @InjectLayout(layout = R.layout.activity_testrecord_execute)
 public class TestSectionExecuteActivity extends WorkFlowActivity implements View.OnClickListener {
 
-    private static boolean DEBUG = true ;// DEBUG FLAG, set to true to generate
+    private static boolean DEBUG ;// DEBUG FLAG, set to true to generate
                                          // fake data
     private static int COUNT = 0;// TODO: REMOVE: JUST FOR DEBUG
     private static double X = 2.3614D;
@@ -115,8 +116,10 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements View
         // add by wei.zhou
         InjectCore.injectUIProperty(this);
 
+        DEBUG = Constant.getStationDebug();
+        
         Object bean = CommonObject.findObject(KEY_TEST_RAWSHEET_LIST);
-
+        
         rawSheetIndex = 0;
         rawSheetBean = null;
         showNextHint = true;
