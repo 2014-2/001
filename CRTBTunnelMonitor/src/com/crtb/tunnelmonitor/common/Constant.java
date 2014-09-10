@@ -48,33 +48,63 @@ public class Constant {
         }
     };
 
-	public enum TotalStationType
+    public enum TotalStationType
 	{
-		Leica("徕卡"),	//4
-		Trimble("天宝"),//8
-		LeicaTPS("徕卡TPS"),//0
-		Topcon("拓普康"),//9
-		Pentax("宾得"),//10
-		Sokkia("索佳"),//5
-		Nikon("尼康"),//11
-		South("南方"),//6
-		South302("南方302"),//7
-		KTS("科力达"),//12
-		SanDing("三鼎"),//13
-		RuiDe("瑞得"),//14
-		Foif("苏一光"),//17
-		GeMax("中纬"),//15
-		Kovan("科维");//16
+		Leica("徕卡",4),	//4
+		Trimble("天宝",8),//8
+		LeicaTPS("徕卡TPS",0),//0
+		Topcon("拓普康",9),//9
+		Pentax("宾得",10),//10
+		Sokkia("索佳",5),//5
+		Nikon("尼康",11),//11
+		South("南方",6),//6
+		South302("南方302",7),//7
+		KTS("科力达",12),//12
+		SanDing("三鼎",13),//13
+		RuiDe("瑞得",14),//14
+		Foif("苏一光",17),//17
+		GeMax("中纬",15),//15
+		Kovan("科维",16);//16
 		private final String desc; 
+		private final int val;
 
-        private TotalStationType(String desc) { 
+        private TotalStationType(String desc,int val) { 
                 this.desc = desc; 
+                this.val = val;
         } 
 
         public String getDesc() { 
                 return desc; 
         }	
+        
+        /**
+         * 根据Value获取全站仪的类型
+         * @param ordinal
+         * @return
+         */
+        public static TotalStationType parser(int ordinal){
+        	switch (ordinal)
+        	{
+        	case 4: return Leica; 
+        	case 8: return Trimble;
+        	case 0: return LeicaTPS; 
+        	case 9: return Topcon;
+        	case 10: return Pentax;
+        	case 5: return Sokkia;
+        	case 11: return Nikon;
+        	case 6: return South;
+        	case 7: return South302;
+        	case 12: return KTS;
+        	case 13: return SanDing;
+        	case 14: return RuiDe;
+        	case 17: return Foif;
+        	case 15: return GeMax;
+        	case 16: return Kovan;
+        	}
+	        return null;
+      	}
     }
+    
 	public static final CharSequence ControlPointsItems[] = { "蓝牙连接", "串口连接", "断开连接"};
 	/*工作面行点击菜单项选择name和value*/
 	public static final String Select_WorkRowClickItemsName_Name = "name";

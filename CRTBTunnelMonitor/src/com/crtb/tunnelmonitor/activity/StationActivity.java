@@ -118,7 +118,12 @@ public class StationActivity extends BaseActivity {
         TSCommandType tsCmdType = TSCommandType.NoneTS;
         TotalStationType t = null;
         try {
-            t = Enum.valueOf(TotalStationType.class, tsInfo.getTotalstationTypeString());
+			int stationValue = Integer.parseInt(tsInfo.getTotalstationType());
+			t = TotalStationType.parser(stationValue);		
+			//t = Enum.valueOf(TotalStationType.class, tsInfo.getTotalstationTypeString());
+			Log.d(TAG, String.format("枚举值对key=%1$s,value=%2$s,t=%3$s", 
+	          		tsInfo.getTotalstationTypeString(), tsInfo.getTotalstationType(),
+	          		t.toString()));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -165,7 +170,7 @@ public class StationActivity extends BaseActivity {
 
                 break;
             case 0: // 蓝牙连接
-                Log.d(TAG, "蓝牙连接  clicked");
+            	Log.d(TAG, "蓝牙连接  clicked, " + tsInfo.getInfo());
                 tsParams = new String[] { tsInfo.getName(), tsInfo.getInfo() };
                 int ret = connect(TSConnectType.Bluetooth, tsCmdType,
                         String.valueOf(tsInfo.getID()), tsParams);
