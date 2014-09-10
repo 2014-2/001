@@ -717,6 +717,16 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 						}
 					}
 					
+					// 绘制测线
+					section_custom_view.setPointNumber(item.getSurveyLinePointNumber() / 2);
+					String[] str = item.getSurveyLinePointName().replaceAll("/", "&").split("&");
+					for(int index = 0 ; index < str.length ; index++){
+						
+						String[] ps = str[index].split(",");
+						
+						section_custom_view.addLine(ps[1], ps[2]);
+					}
+					
 					// 测线
 					int l	= item.getSurveyLineNumber() ;
 					for(int i = 0 ; i < l ; i++){

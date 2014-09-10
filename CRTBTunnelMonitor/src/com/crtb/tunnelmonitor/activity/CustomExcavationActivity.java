@@ -128,8 +128,6 @@ public class CustomExcavationActivity extends BaseActivity implements OnClickLis
 					lresid = R.array.exca_lines_counts ;
 				} 
 
-
-				
 				// 测线点对数
 				ArrayAdapter<?> adapter = ArrayAdapter.createFromResource(CustomExcavationActivity.this, lresid,
 						android.R.layout.simple_spinner_item);
@@ -197,21 +195,24 @@ public class CustomExcavationActivity extends BaseActivity implements OnClickLis
 				// 2.4.6.8
 				//int ps = (position + 1) * 2 ;
 				
-//YX 获取测线的点对数
+				//YX 获取测线的点对数
 				try {
 					linePoints = Integer.valueOf(((TextView)parent.getChildAt(0)).getText().toString());
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
 				
+				// 设置测点
+				customView.setPointNumber(linePoints);
+				
 				System.out.println("zhouwei : 选择测线点数" + linePoints);
 				
 				beans.clear() ;
 				
-				TestLine bean = new TestLine() ;
-				bean.lineName = "S1" ;
+				TestLine bean 		= new TestLine() ;
+				bean.lineName 		= "S1" ;
 				bean.lineStartPoint = "1" ;
-				bean.lineEndPoint = "2" ;
+				bean.lineEndPoint	= "" ;
 				
 				beans.add(bean);
 				
@@ -339,6 +340,8 @@ public class CustomExcavationActivity extends BaseActivity implements OnClickLis
 	
 	private void updateTestLineView(){
 		
+		customView.removeAllLine() ;
+		
 		for(int index = 0 ; index < testViews.size() ; index++){
 			
 			View v 			= testViews.get(index) ;
@@ -352,6 +355,8 @@ public class CustomExcavationActivity extends BaseActivity implements OnClickLis
 			name.setText(bean.lineName);
 			start.setText(bean.lineStartPoint);
 			end.setText(bean.lineEndPoint);
+			
+			customView.addLine(bean.lineStartPoint, bean.lineEndPoint);
 		}
 	}
 	
