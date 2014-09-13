@@ -28,6 +28,7 @@ import com.crtb.tunnelmonitor.mydefine.CrtbDialogList;
 import com.crtb.tunnelmonitor.mydefine.CrtbDialogList.OnMenuItemClick;
 import com.crtb.tunnelmonitor.utils.ExcavateMethodUtil;
 import com.crtb.tunnelmonitor.widget.CrtbExcavationView;
+import com.crtb.tunnelmonitor.widget.CrtbExcavationView.DRAW_TYPE;
 
 /**
  * 自定义开挖方式
@@ -96,6 +97,11 @@ public class CustomExcavationActivity extends BaseActivity implements OnClickLis
 		beans.clear() ;
 		dao	= ExcavateMethodDao.defaultDao() ;
 		
+		// 默认
+		customView.setDrawType(DRAW_TYPE.DRAW_TYPE_PAIR);
+		customView.removeAllLine() ;
+		customView.setPointNumber(2);
+		
 		// 模板
 		ArrayAdapter<?> adapter = ArrayAdapter.createFromResource(this,
 				R.array.exca_template,
@@ -111,21 +117,28 @@ public class CustomExcavationActivity extends BaseActivity implements OnClickLis
 				
 				// 测线对数
 				int lresid = R.array.exca_lines_counts ;
+				customView.removeAllLine() ;
 				
 				// CD法
 				if(position == 0){
 					customType	= 5 ;
 					lresid = R.array.exca_lines_counts_cd_or_cdr ;
+					customView.setDrawType(DRAW_TYPE.DRAW_TYPE_CD);
+					customView.setPointNumber(4);
 				} 
 				//CRD
 				else if(position == 1){
 					customType	= 6 ;
 					lresid = R.array.exca_lines_counts_cd_or_cdr ;
+					customView.setDrawType(DRAW_TYPE.DRAW_TYPE_CD);
+					customView.setPointNumber(4);
 				}
 				// 双侧壁法
 				else if(position == 2){
 					customType	= 7 ;
 					lresid = R.array.exca_lines_counts ;
+					customView.setDrawType(DRAW_TYPE.DRAW_TYPE_PAIR);
+					customView.setPointNumber(2);
 				} 
 
 				// 测线点对数

@@ -48,6 +48,7 @@ import com.crtb.tunnelmonitor.mydefine.CrtbDateDialogUtils;
 import com.crtb.tunnelmonitor.utils.CrtbUtils;
 import com.crtb.tunnelmonitor.utils.ExcavateMethodUtil;
 import com.crtb.tunnelmonitor.widget.CrtbExcavationView;
+import com.crtb.tunnelmonitor.widget.CrtbExcavationView.DRAW_TYPE;
 
 /**
  * 新建隧道内断面
@@ -229,47 +230,39 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 				excaMethodIndex = position ;
 				String method 	= excaMethods.get(position);
 				
+				// <item>台阶法</item>
+			    // <item>三台阶法</item>
+			    // <item>全断面法</item>
+			    // <item>中隔壁法</item>
+			    // <item>交叉中隔壁法</item>
+			    // <item>双侧壁法</item>
+				
 				if(position == 0){
-//					section_new_et_s2_label.setVisibility(View.INVISIBLE);
-//					section_new_et_s2.setVisibility(View.INVISIBLE);
-//					section_new_et_s3_label.setVisibility(View.INVISIBLE);
-//					section_new_et_s3.setVisibility(View.INVISIBLE);
 					section_custom_view.setVisibility(View.GONE);
+					section_method.setVisibility(View.VISIBLE);
 					section_method.setBackgroundResource(R.drawable.ic_full_face);
 					createExcavationMethodLine(ExcavateMethodEnum.QD.getCode(),method);
 				} else if(position == 1){
-//					section_new_et_s2_label.setVisibility(View.VISIBLE);
-//					section_new_et_s2.setVisibility(View.VISIBLE);
-//					section_new_et_s3_label.setVisibility(View.INVISIBLE);
-//					section_new_et_s3.setVisibility(View.INVISIBLE);
 					section_custom_view.setVisibility(View.GONE);
+					section_method.setVisibility(View.VISIBLE);
 					section_method.setBackgroundResource(R.drawable.ic_step_method);
 					createExcavationMethodLine(ExcavateMethodEnum.DT.getCode(),method);
 				} else if(position == 2){
-//					section_new_et_s2_label.setVisibility(View.VISIBLE);
-//					section_new_et_s2.setVisibility(View.VISIBLE);
-//					section_new_et_s3_label.setVisibility(View.VISIBLE);
-//					section_new_et_s3.setVisibility(View.VISIBLE);
 					section_custom_view.setVisibility(View.GONE);
+					section_method.setVisibility(View.VISIBLE);
 					section_method.setBackgroundResource(R.drawable.ic_three_step);
 					createExcavationMethodLine(ExcavateMethodEnum.ST.getCode(),method);
-				} else if(position == 3){
-//					section_new_et_s2_label.setVisibility(View.VISIBLE);
-//					section_new_et_s2.setVisibility(View.VISIBLE);
-//					section_new_et_s3_label.setVisibility(View.VISIBLE);
-//					section_new_et_s3.setVisibility(View.VISIBLE);
+				} else if(position == 3 || position == 4){ // CD/CRD 法
 					section_custom_view.setVisibility(View.GONE);
-					section_method.setBackgroundResource(R.drawable.ic_dual_slope_method);
-					createExcavationMethodLine(ExcavateMethodEnum.SC.getCode(),method);
-				} else if(position == 4){ // CD/CRD 法
-//					section_new_et_s2_label.setVisibility(View.VISIBLE);
-//					section_new_et_s2.setVisibility(View.VISIBLE);
-//					section_new_et_s3_label.setVisibility(View.VISIBLE);
-//					section_new_et_s3.setVisibility(View.VISIBLE);
-					section_custom_view.setVisibility(View.GONE);
+					section_method.setVisibility(View.VISIBLE);
 					section_method.setBackgroundResource(R.drawable.ic_dual_slope_method);
 					createExcavationMethodLine(ExcavateMethodEnum.CD.getCode(),method);
-				} 
+				} else if(position == 5){
+					section_custom_view.setVisibility(View.GONE);
+					section_method.setVisibility(View.VISIBLE);
+					section_method.setBackgroundResource(R.drawable.ic_dual_slope_method);
+					createExcavationMethodLine(ExcavateMethodEnum.SC.getCode(),method);
+				}
 				// 自定义开挖方法
 				else {
 					section_method.setVisibility(View.GONE);
@@ -689,10 +682,24 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 		// 自定义开挖方法
 		else {
 			
+			section_custom_view.removeAllLine() ;
+			
 			TunnelCrossSectionParameter item = ExcavateMethodUtil.findCustomExcavateMethod(method);
 			
 			// 开挖方法
 			if(item != null){
+				
+				// CD/CRD 法
+				if(item.getType() == 5 || item.getType() == 6){
+					section_custom_view.setDrawType(DRAW_TYPE.DRAW_TYPE_CD);
+				} 
+				// 双侧壁法
+				else if(item.getType() == 7){
+					section_custom_view.setDrawType(DRAW_TYPE.DRAW_TYPE_PAIR);
+				}
+				
+				// 点对数
+				section_custom_view.setPointNumber(item.getSurveyLinePointNumber());
 				
 				if(item.getMethodName().equals(method)){
 					
@@ -718,7 +725,7 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 					}
 					
 					// 绘制测线
-					section_custom_view.setPointNumber(item.getSurveyLinePointNumber() / 2);
+					// section_custom_view.setPointNumber(item.getSurveyLinePointNumber() / 2);
 					String[] str = item.getSurveyLinePointName().replaceAll("/", "&").split("&");
 					for(int index = 0 ; index < str.length ; index++){
 						
