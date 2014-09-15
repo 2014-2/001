@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.zw.android.framework.IAccessDatabase;
 
+import com.crtb.tunnelmonitor.common.Constant;
 import com.crtb.tunnelmonitor.entity.TunnelCrossSectionParameter;
 
 /**
@@ -45,8 +46,9 @@ public final class ExcavateMethodDao extends AbstractDao<TunnelCrossSectionParam
 		
 		List<TunnelCrossSectionParameter> list = queryExcavateMethod();
 		
-		if(list == null || list.isEmpty()) return 9 ;
+		if(list == null || list.isEmpty()) return Constant.CUSTOM_METHOD_START_INDEX ;
 		
 		return list.get(0).getExcavateMethod() + 1 ;
 	}
+
 }

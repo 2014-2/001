@@ -258,9 +258,7 @@ public class WarningDataManager {
         public String getPointCode() {
         	//YX  根据开挖方法，获取点或线对应的测点上传序列    	
         	AlertInfo ai = getAlertInfo();
-        	int excavateMethod = sectionIndexDao.querySectionIndexByGuid(ai.getSectionId()).getExcavateMethod();        	
-        	SectionInterActionManager sectionInterActionManager = new SectionInterActionManager(excavateMethod);
-        	return sectionInterActionManager.getOneLineDetailsByPointType(ai.getSECTCODE(),ai.getPntType());
+        	return SectionInterActionManager.getOneLineDetailsByPointType(ai.getSECTCODE(),ai.getPntType());
     	}
     }
 }

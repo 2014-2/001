@@ -44,9 +44,9 @@
     <string name="section_new_subsidence_title">新建地表下沉断面</string>
 
     <string-array name="section_excavation">
+        <item>全断面法</item>
         <item>台阶法</item>
         <item>三台阶法</item>
-        <item>全断面法</item>
         <item>中隔壁法</item>
         <item>交叉中隔壁法</item>
         <item>双侧壁法</item>

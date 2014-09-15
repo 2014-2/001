@@ -37,7 +37,6 @@ public class TunnelMeasureData extends MeasureData {
     private SectionInterActionManager sectionInterActionManager;
     private int excavateMethod = -1;
     private String sectionCrossCode = "";
-    private String sectionCrossGuid = "";
     
 	public TunnelMeasureData(int _excavateMethod) {
 		excavateMethod = _excavateMethod;
@@ -47,9 +46,10 @@ public class TunnelMeasureData extends MeasureData {
 		sectionCrossCode = _sectionCrossCode;
 	}
 	
-	public TunnelMeasureData(String noused,String _sectionCrossGuid){
-		sectionCrossGuid = _sectionCrossGuid;
+	public TunnelMeasureData(){
+		
 	}
+	
     
 	@Override
 	public String getPointCodeList(String sectionCode) {
@@ -57,28 +57,6 @@ public class TunnelMeasureData extends MeasureData {
 			Log.i(LOG_TAG, "getPointCodeList + sectionCode ERROR");
 			return "";
 		}
-		return getOneLineDetailsByPointType(sectionCode);
-	}
-	
-    @Override
-	public String getCoordinateList() {
-    	if(mtunnelTestPoints == null || mtunnelTestPoints.size() < 1){
-    		Log.i(LOG_TAG, "getCoordinateList + mtunnelTestPoints ERROR");
-			return "";
-    	}
-    	return getSectionInterActionManager().getCoordinateList(mtunnelTestPoints);
-	}
-
-	@Override
-	public String getValueList() {
-    	if(mtunnelTestPoints == null || mtunnelTestPoints.size() < 1){
-    		Log.i(LOG_TAG, "getValueList + mtunnelTestPoints ERROR");
-			return "";
-    	}
-		return getSectionInterActionManager().getValueList(mtunnelTestPoints);
-	}
-
-	private String getOneLineDetailsByPointType(String sectionCode) {
 		if(mtunnelTestPoints != null ){
 			String pntType = mtunnelTestPoints.get(0).getPntType();
 			if(pntType != null && !pntType.equals("")){
@@ -88,11 +66,31 @@ public class TunnelMeasureData extends MeasureData {
 						pntType = values[0];
 					}
 				}
-				return getSectionInterActionManager().getOneLineDetailsByPointType(sectionCode,pntType);
+				return SectionInterActionManager.getOneLineDetailsByPointType(sectionCode,pntType);
 			}
 		}
+		
 		return "";
 	}
+	
+    @Override
+	public String getCoordinateList() {
+    	if(mtunnelTestPoints == null || mtunnelTestPoints.size() < 1){
+    		Log.i(LOG_TAG, "getCoordinateList + mtunnelTestPoints ERROR");
+			return "";
+    	}
+    	return SectionInterActionManager.getCoordinateList(mtunnelTestPoints);
+	}
+
+	@Override
+	public String getValueList() {
+    	if(mtunnelTestPoints == null || mtunnelTestPoints.size() < 1){
+    		Log.i(LOG_TAG, "getValueList + mtunnelTestPoints ERROR");
+			return "";
+    	}
+		return SectionInterActionManager.getValueList(mtunnelTestPoints);
+	}
+
 	public void addMeasurePoint(TunnelSettlementTotalData point) {
 		mtunnelTestPoints.add(point);
 	}
@@ -115,7 +113,7 @@ public class TunnelMeasureData extends MeasureData {
 			public void run() {
 				
 				//measureDataList
-				
+
 				TunnelSettlementTotalDataDao dao = TunnelSettlementTotalDataDao.defaultDao();
 				for (TunnelSettlementTotalData point : mtunnelTestPoints) {				
 					//point.setInfo("2");
@@ -192,7 +190,14 @@ public class TunnelMeasureData extends MeasureData {
 		}
 		return sheetGuid;
 	}
-	
+
+	/**
+	 * 清洗数据：把数据按拱顶和测线分组
+	 * 获取测量数据列表，保证拱顶的数据在一TunnelMeasureData里，而测线在一个TunnelMeasureData里、且测线必须两个点都存在
+	 * 
+	 * @param tunnelTestPoints 未经分组的原始测量数据A1,A2,S1-2,S1-1,S2-2等数据
+	 * @return 分组的测量数据
+	 */
 	public List<MeasureData> getMeasureDataList(List<TunnelSettlementTotalData> tunnelTestPoints) {
 
 		if(tunnelTestPoints == null){
@@ -200,55 +205,59 @@ public class TunnelMeasureData extends MeasureData {
 		}
 		List<MeasureData> measureDataList = new ArrayList<MeasureData>();
 		TunnelMeasureData measureData = null;
+		TunnelSettlementTotalData p;
 		TunnelSettlementTotalData p1;
 		TunnelSettlementTotalData p2;
-		ArrayList<String> crownList = getSectionInterActionManager().getCrownPointList();
-		ArrayList<String> pointList = getSectionInterActionManager().getSurveyLinePointList();
 		String pntType;
-		TunnelSettlementTotalData testPoint;
+		String lineName;
 		
 		int count = tunnelTestPoints.size();
-		
-		for (int testPointindex = 0; testPointindex < count; testPointindex ++) {
-			testPoint = tunnelTestPoints.get(testPointindex);
-			pntType = testPoint.getPntType();
+		//遍历数据进行分组：找到后就从列表中删除，可减少getPointByType中列表的比较次数
+		for (int pIndex = 0; pIndex < count; pIndex ++) {
+			p = tunnelTestPoints.get(pIndex);
+			pntType = p.getPntType();
 			
-			if(crownList != null){
-//YX A，A1
-				//pointType:A2，或者A
-				
-				if (pntType.equals(CROWN_PREFIX)) {
-					pntType += "1";		
-				}
-				if (crownList.contains(pntType)) {
-					measureData = new TunnelMeasureData(null,testPoint.getChainageId());
-					measureData.addMeasurePoint(testPoint);
-					measureDataList.add(measureData);
-					continue;
-				} else if(pointList != null){
-					if (pointList.contains(pntType)) {
-						int index = pointList.indexOf(pntType);
-						int p1Index;
-						int p2Index;
-						if (index % 2 == 0) {
-							p1Index = index;
-							p2Index = index + 1;
-						} else {
-							p1Index = index - 1;
-							p2Index = index;
-						}
-						p1 = getPointByType(tunnelTestPoints, pointList.get(p1Index));
-						p2 = getPointByType(tunnelTestPoints, pointList.get(p2Index));
-						if (p1 != null && p2 != null) {
-							measureData = new TunnelMeasureData(null,p1.getChainageId());
-							measureData.addMeasurePoint(p1);
-							measureData.addMeasurePoint(p2);
-							measureDataList.add(measureData);
-							testPointindex = testPointindex + 1;
-							continue;
-						}
+			//拱顶
+			if(pntType.contains(CROWN_PREFIX)){
+				measureData = new TunnelMeasureData();
+				measureData.addMeasurePoint(p);
+				measureDataList.add(measureData);
+				tunnelTestPoints.remove(p);
+				--pIndex;
+				--count;
+				continue;
+			}
+			//测线
+			else{
+				//格式S1-2,S12-2,S3-1
+				lineName = pntType.substring(0,pntType.length() - 2);
+				tunnelTestPoints.remove(p);
+				count -= 1;
+				pIndex -= 1;
+				if(pntType.endsWith("1")){
+					p1 = p;	
+					p2 = getPointByType(tunnelTestPoints,lineName + "-2");
+					if(p2 != null){
+						tunnelTestPoints.remove(p2);
+						count -= 1;
 					}
-				} 
+				} else {
+					p1 = getPointByType(tunnelTestPoints,lineName + "-1");
+					p2 = p;
+					if(p1 != null){
+						tunnelTestPoints.remove(p1);
+						count -= 1;
+					}
+				}
+				
+				if (p1 != null && p2 != null) {
+					measureData = new TunnelMeasureData();
+					measureData.addMeasurePoint(p1);
+					measureData.addMeasurePoint(p2);
+					measureDataList.add(measureData);
+					//continue;
+				}
+				 
 			}
 		}
         return measureDataList;
@@ -260,24 +269,11 @@ public class TunnelMeasureData extends MeasureData {
         for (TunnelSettlementTotalData point : tunnelTestPoints) {
             if (type.equals(point.getPntType())) {
                 result = point;
+                break;
             }
         }
         return result;
     }
-    
-    private SectionInterActionManager getSectionInterActionManager(){
-    	if(sectionInterActionManager == null){
-			if (excavateMethod != -1) {
-				sectionInterActionManager = new SectionInterActionManager(excavateMethod);
-			} else if(!sectionCrossGuid.equals("")){
-				sectionInterActionManager = new SectionInterActionManager(null,sectionCrossGuid); 
-			} else if(!sectionCrossCode.equals("")){
-				sectionInterActionManager = new SectionInterActionManager(sectionCrossCode); 
-			}
-    	}
-    	return sectionInterActionManager;
-    }    
-    
 
 	class TunnelSurveyTimeComparator implements
 			Comparator<TunnelSettlementTotalData> {

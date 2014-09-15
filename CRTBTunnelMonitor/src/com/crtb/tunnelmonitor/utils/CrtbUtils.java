@@ -14,11 +14,13 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.crtb.tunnelmonitor.AppCRTBApplication;
+import com.crtb.tunnelmonitor.common.Constant;
 import com.crtb.tunnelmonitor.dao.impl.v2.ProjectIndexDao;
 import com.crtb.tunnelmonitor.dao.impl.v2.SiteProjectMappingDao;
 import com.crtb.tunnelmonitor.dao.impl.v2.SubsidenceCrossSectionExIndexDao;
 import com.crtb.tunnelmonitor.dao.impl.v2.SurveyerInformationDao;
 import com.crtb.tunnelmonitor.dao.impl.v2.TunnelCrossSectionExIndexDao;
+import com.crtb.tunnelmonitor.dao.impl.v2.TunnelCrossSectionParameterDao;
 import com.crtb.tunnelmonitor.dao.impl.v2.WorkSiteIndexDao;
 import com.crtb.tunnelmonitor.entity.CrtbUser;
 import com.crtb.tunnelmonitor.entity.ExcavateMethodEnum;
@@ -138,7 +140,11 @@ public final class CrtbUtils {
         String sectionCode = CrtbWebService.getInstance().getSiteCode()
                 + String.format("%04d", sectionSequence);
         outParamter.setSectioCode(sectionCode);
-        String digMethod = ExcavateMethodEnum.parser(section.getExcavateMethod()).toString();
+        int excavateMethod = section.getExcavateMethod();
+        if(excavateMethod >= Constant.CUSTOM_METHOD_START_INDEX){
+        	excavateMethod = TunnelCrossSectionParameterDao.defaultDao().queryBaseModelByCustomExcavateMethod(excavateMethod);
+        }
+        String digMethod = ExcavateMethodEnum.parser(excavateMethod).toString();
         if(digMethod == "CD"){
         	digMethod = "ZG";
         } else if(digMethod == "CRD"){
@@ -148,8 +154,7 @@ public final class CrtbUtils {
         String pointList = "";
         
         //YX 生成上传的测点列表数据
-    	SectionInterActionManager sectionInterActionManager = new SectionInterActionManager(section.getExcavateMethod());
-    	pointList = sectionInterActionManager.getPointCodeListBySectionCode(sectionCode);
+        pointList = SectionInterActionManager.getPointCodeListBySectionCode(sectionCode,section.getExcavateMethod());
   
 		if (pointList == null || pointList.equals("")) {
 			Log.e("upload", "unknown dig method: " + digMethod);

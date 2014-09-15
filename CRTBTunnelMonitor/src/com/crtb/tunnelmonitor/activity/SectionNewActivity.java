@@ -230,13 +230,12 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 				excaMethodIndex = position ;
 				String method 	= excaMethods.get(position);
 				
-				// <item>台阶法</item>
-			    // <item>三台阶法</item>
-			    // <item>全断面法</item>
-			    // <item>中隔壁法</item>
-			    // <item>交叉中隔壁法</item>
-			    // <item>双侧壁法</item>
-				
+//				<item>全断面法</item>
+//		        <item>台阶法</item>
+//		        <item>三台阶法</item>
+//		        <item>中隔壁法</item>
+//		        <item>交叉中隔壁法</item>
+//		        <item>双侧壁法</item>
 				if(position == 0){
 					section_custom_view.setVisibility(View.GONE);
 					section_method.setVisibility(View.VISIBLE);
@@ -255,7 +254,7 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 				} else if(position == 3 || position == 4){ // CD/CRD 法
 					section_custom_view.setVisibility(View.GONE);
 					section_method.setVisibility(View.VISIBLE);
-					section_method.setBackgroundResource(R.drawable.ic_dual_slope_method);
+					section_method.setBackgroundResource(R.drawable.ic_cd_crd_method);
 					createExcavationMethodLine(ExcavateMethodEnum.CD.getCode(),method);
 				} else if(position == 5){
 					section_custom_view.setVisibility(View.GONE);
@@ -725,7 +724,7 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 					}
 					
 					// 绘制测线
-					// section_custom_view.setPointNumber(item.getSurveyLinePointNumber() / 2);
+					//section_custom_view.setPointNumber(item.getSurveyLinePointNumber() / 2);
 					String[] str = item.getSurveyLinePointName().replaceAll("/", "&").split("&");
 					for(int index = 0 ; index < str.length ; index++){
 						
@@ -921,132 +920,7 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 			if(StringUtils.isEmpty(zbsl)){
 				showText("周边收敛变形速率不能为空");
 				return ;
-			}
-			
-			// 构造文本
-			StringBuilder str = new StringBuilder() ;
-			
-			// 对于测点取别名的问题,暂时不需要
-			// 0,1,2,3,4 (固定开挖方式)
-			if(excaMethodIndex < 5){
-				
-				// CD/CRD 法
-				if(excaMethodIndex == 4){
-					str.append("A1");
-					str.append(",");
-					str.append("A2");
-				} else {
-					str.append("A");
-				}
-				
-				str.append(",");
-				
-				// S1
-				str.append("S1-1,");
-				str.append("S1-2");
-				
-				// S2
-				if(excaMethodIndex == 1 
-						|| excaMethodIndex == 2
-						|| excaMethodIndex == 3
-						|| excaMethodIndex == 4){
-					str.append(",");
-					str.append("S2-1,");
-					str.append("S2-2");
-				}
-				
-				// S3
-				if(excaMethodIndex == 2 
-						|| excaMethodIndex == 3
-						|| excaMethodIndex == 4){
-					str.append(",");
-					str.append("S3-1,");
-					str.append("S3-2");
-				}
-				
-				// S4
-				if(excaMethodIndex == 3 // 双侧壁法
-						|| excaMethodIndex == 4){
-					str.append(",");
-					str.append("S4-1,");
-					str.append("S4-2");
-				}
-			} 
-			// 自定义开挖方式
-			else {
-				
-				TunnelCrossSectionParameter item = ExcavateMethodUtil.findCustomExcavateMethod(excaMethods.get(excaMethodIndex));
-				
-				// 拱顶
-				int gd = item.getCrownPointNumber() ;
-				for(int index = 0 ; index < gd ; index++){
-					
-					if(index > 0){
-						str.append(",");
-					}
-					
-					str.append("A" + (index+1));
-				}
-				
-				// 分隔
-				str.append(",");
-				
-				// 测线
-				String ls 	= item.getSurveyLinePointName() ;
-				String[] ay = ls.replaceAll("/", "&").split("&");
-				
-				for(int index = 0 ; index < ay.length ; index++){
-					
-					if(index > 0){
-						str.append(",");
-					}
-					
-					str.append("S" + (index+1));
-					str.append("-1,");
-					str.append("S" + (index+1));
-					str.append("-2");
-				}
-			}
-			
-//			str.append(StringUtils.isEmpty(pointA) ? "A" : pointA);
-//			str.append(",");
-//			
-//			// s1
-//			if(StringUtils.isEmpty(pointS1)){
-//				str.append("S1-1,");
-//				str.append("S1-2");
-//			} else {
-//				str.append(pointS1 + "-1,");
-//				str.append(pointS1 + "-2");
-//			}
-//			
-			// s2 wei.zhou 开挖方式不同，对应的pnyName 不一样 (2014-6-18)
-//			if(section_new_et_s2.getVisibility() == View.VISIBLE){
-//				
-//				str.append(",");
-//				
-//				if(StringUtils.isEmpty(pointS2)){
-//					str.append("S2-1,");
-//					str.append("S2-2");
-//				} else {
-//					str.append(pointS2 + "-1,");
-//					str.append(pointS2 + "-2");
-//				}
-//			}
-//			
-//			// s3  wei.zhou 开挖方式不同，对应的pnyName 不一样 (2014-6-18)
-//			if(section_new_et_s3.getVisibility() == View.VISIBLE){
-//				
-//				str.append(",");
-//				
-//				if(StringUtils.isEmpty(pointS3)){
-//					str.append("S3-1,");
-//					str.append("S3-2");
-//				} else {
-//					str.append(pointS3 + "-1,");
-//					str.append(pointS3 + "-2");
-//				}
-//			}
+			}	
 			
 			if(sectionInfo == null){
 				
@@ -1063,7 +937,8 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 				sectionInfo.setChainage(cv);
 				sectionInfo.setInbuiltTime(DateUtils.toDate(date, DateUtils.DATE_TIME_FORMAT));
 				sectionInfo.setWidth(w);
-				sectionInfo.setSurveyPntName(str.toString());
+	            //YX 新建断面的时候不需要再保存测点与测线的信息了。	
+				//sectionInfo.setSurveyPntName(str.toString());
 				
 				// 1表示未上传, 2表示已上传
 				sectionInfo.setUploadStatus(1); //表示该断面未上传
@@ -1105,8 +980,9 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 				sectionInfo.setExcavateMethod(ExcavateMethodEnum.parser((String)section_new_sp.getSelectedItem()).getCode());
 				// 围岩级别
 				sectionInfo.setROCKGRADE(rockgrade.getSelectedItem().toString()) ;
-				
-				sectionInfo.setSurveyPntName(str.toString());
+	            
+				//YX 新建断面的时候不需要再保存测点与测线的信息了。	
+				//sectionInfo.setSurveyPntName(str.toString());
 				
 				sectionInfo.setGDU0(Float.valueOf(gdlj));
 				sectionInfo.setGDVelocity(Float.valueOf(gdsl));

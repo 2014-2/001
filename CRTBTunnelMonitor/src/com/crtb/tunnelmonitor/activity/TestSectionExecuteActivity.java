@@ -9,10 +9,12 @@ import org.zw.android.framework.ioc.InjectLayout;
 import org.zw.android.framework.ioc.InjectView;
 import org.zw.android.framework.util.DateUtils;
 import org.zw.android.framework.util.StringUtils;
+
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Message;
 import android.view.View;
+import android.view.ViewGroup.MarginLayoutParams;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
@@ -22,6 +24,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.ScrollView;
 import android.widget.ListView;
+
 import com.crtb.tssurveyprovider.Coordinate3D;
 import com.crtb.tssurveyprovider.ISurveyProvider;
 import com.crtb.tssurveyprovider.TSSurveyProvider;
@@ -182,6 +185,13 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
 				scrollTestViewHolderToTop(position);
+			}
+		});
+		left_container.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				slidingLayout.scrollToRightLayout();
 			}
 		});
 
@@ -754,38 +764,23 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements
 
 							// YX 保存预警时判断点位信息
 							TunnelSettlementTotalData p1 = null, p2 = null;
-							if (excavateMethodType >= ExcavateMethodEnum.CD
-									.getCode()) {
-								if (crownList.contains(info.type)) {
-									doWarning(
-											info.holder,
-											info.holder1,
-											AlertUtils
-													.getPointSubsidenceExceedMsg(
-															obj, false));
-								} else if (pointList.contains(info.type)) {
-									int index = pointList.indexOf(info.type);
-									int p1Index;
-									int p2Index;
-									if (index % 2 == 0) {
-										p1Index = index;
-										p2Index = index + 1;
-									} else {
-										p1Index = index - 1;
-										p2Index = index;
-									}
-									p1 = dao.queryTunnelTotalData(
-											rawSheetBean.getGuid(),
-											tunnelSection.getGuid(),
-											pointList.get(p1Index));
-									p2 = dao.queryTunnelTotalData(
-											rawSheetBean.getGuid(),
-											tunnelSection.getGuid(),
-											pointList.get(p2Index));
-									if (p1 != null && p2 != null) {
-										doWarningLine(tunnelSection.getGuid(),
-												info.type, p1, p2, false);
-									}
+							if (crownList.contains(info.type)) {
+								doWarning(info.holder, info.holder1,AlertUtils.getPointSubsidenceExceedMsg(obj, false));
+							} else if (pointList.contains(info.type)) {
+								int index = pointList.indexOf(info.type);
+								int p1Index;
+								int p2Index;
+								if (index % 2 == 0) {
+									p1Index = index;
+									p2Index = index + 1;
+								} else {
+									p1Index = index - 1;
+									p2Index = index;
+								}
+								p1 = dao.queryTunnelTotalData(rawSheetBean.getGuid(),tunnelSection.getGuid(),pointList.get(p1Index));
+								p2 = dao.queryTunnelTotalData(rawSheetBean.getGuid(),tunnelSection.getGuid(),pointList.get(p2Index));
+								if (p1 != null && p2 != null) {
+									doWarningLine(tunnelSection.getGuid(),info.type, p1, p2, false);
 								}
 							}
 							showText((update ? "更新" : "保存") + "成功");
@@ -898,34 +893,12 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements
 		}
 
 		TestPointHolder view1 = null, view2 = null;
-
-		String point1 = "";
-		String point2 = "";
-		String sheetid = rawSheetBean.getGuid();
-
-		if (type.equals(AppConfig.POINT_S1_1)) {
-			point1 = type;
-			point2 = AppConfig.POINT_S1_2;
-		} else if (type.equals(AppConfig.POINT_S1_2)) {
-			point1 = type;
-			point2 = AppConfig.POINT_S1_1;
-		} else if (type.equals(AppConfig.POINT_S2_1)) {
-			point1 = type;
-			point2 = AppConfig.POINT_S2_2;
-		} else if (type.equals(AppConfig.POINT_S2_2)) {
-			point1 = type;
-			point2 = AppConfig.POINT_S2_1;
-		} else if (type.equals(AppConfig.POINT_S3_1)) {
-			point1 = type;
-			point2 = AppConfig.POINT_S3_2;
-		} else if (type.equals(AppConfig.POINT_S3_2)) {
-			point1 = type;
-			point2 = AppConfig.POINT_S3_1;
-		}
-
+		
 		// YX 获取点的类型
-		point1 = p1.getPntType();
-		point2 = p2.getPntType();
+		String point1 = p1.getPntType();
+		String point2 = p2.getPntType();
+		
+		String sheetid = rawSheetBean.getGuid();
 
 		for (TestPointHolder view : TestViewHolder) {
 
@@ -936,6 +909,9 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements
 					view1 = view;
 				} else if (view.type.equals(point2)) {
 					view2 = view;
+				}
+				if(view1 != null && view2 != null){
+					break;
 				}
 			}
 		}
@@ -948,7 +924,7 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements
 			String[] list) {
 
 		if (list == null || list.length == 0) {
-			return;
+			return; 
 		}
 
 		if (view1 != null) {
@@ -1166,20 +1142,17 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements
 			// YX 测量时，根据断面开挖方法，获取测点信息
 			SectionInterActionManager sectionInterActionManager = new SectionInterActionManager(
 					excavateMethodType);
-			crownList = sectionInterActionManager.getCrownPointList();
-			pointList = sectionInterActionManager.getSurveyLinePointList();
+			crownList = sectionInterActionManager.getCrownPointListByNumber();
+			pointList = sectionInterActionManager.getSurveyPointNameByNumber();
 
 			// 获取拱顶列表
 			if (crownList != null) {
 				for (String crown : crownList) {
 					bean = dao.queryTunnelTotalData(rawSheetBean.getGuid(),
 							tunnelSection.getGuid(), crown);
-					holder = createTunnelTestPointView(bean, null, crown,
-							crown, "");
+					holder = createTunnelTestPointView(bean, null, crown,crown, "");
 					if (bean != null) {
-						doWarning(holder, null,
-								AlertUtils.getPointSubsidenceExceedMsg(bean,
-										true));
+						doWarning(holder, null,AlertUtils.getPointSubsidenceExceedMsg(bean,true));
 					}
 				}
 			}
@@ -1191,18 +1164,15 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements
 				String pointName = "";
 				for (int i = 0; i < count; i++) {
 					pointName = pointList.get(i);
-					bean = dao.queryTunnelTotalData(rawSheetBean.getGuid(),
-							tunnelSection.getGuid(), pointName);
-					holder1 = createTunnelTestPointView(bean, null, pointName,
-							pointName, "");
+					bean = dao.queryTunnelTotalData(rawSheetBean.getGuid(),tunnelSection.getGuid(), pointName);
+					holder1 = createTunnelTestPointView(bean, null, pointName, pointName, "");
 
 					if (i % 2 == 0) { // 测线的第一个点
 						p1 = bean;
 					} else { // 沿线的第二个点
 						p2 = bean;
 						if (p1 != null && p2 != null) {
-							doWarningLine(tunnelSection.getGuid(),
-									pointList.get(i - 1), p1, p2, true);
+							doWarningLine(tunnelSection.getGuid(),pointList.get(i - 1), p1, p2, true);
 						}
 
 					}

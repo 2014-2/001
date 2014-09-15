@@ -143,8 +143,6 @@ public class SlidingLayout extends RelativeLayout implements OnTouchListener {
 	public void scrollToLeftLayout() {
 		leftLayout.setVisibility(VISIBLE);
 		new ScrollTask().execute(-50);
-		leftLayout.requestFocus();
-		leftLayout.requestLayout();
 	}
 
 	/**

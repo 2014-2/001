@@ -141,6 +141,8 @@ public class Constant {
 	public static final String USER_SELECT_FXKZ = "http://61.237.239.144/fxkz/basedown";
 	//上传-fxkz
 	public static final String UPDATE_FXKZ = "http://61.237.239.144/fxkz/testdata";
+	
+	public static final int CUSTOM_METHOD_START_INDEX = 9;
 
 	private static VersionControl versionControl = null;
 	
@@ -185,8 +187,11 @@ public class Constant {
 	}
 	
 	static{
-		//测试版本:手输坐标-fxtest-测试mac地址
+		//YX测试版本:手输坐标-fxtest-测试mac地址
 		versionControl = new VersionControl(true,true,false);
+				
+		//测试版本:手输坐标-fxtest-测试mac地址
+		//versionControl = new VersionControl(true,true,false);
 		
 		//发布版本:全站仪坐标-fxkz-真实mac地址
 		//versionControl = new VersionControl(false,false,true);
