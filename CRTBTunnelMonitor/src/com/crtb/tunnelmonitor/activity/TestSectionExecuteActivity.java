@@ -14,7 +14,6 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Message;
 import android.view.View;
-import android.view.ViewGroup.MarginLayoutParams;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
@@ -41,7 +40,6 @@ import com.crtb.tunnelmonitor.dao.impl.v2.SubsidenceTotalDataDao;
 import com.crtb.tunnelmonitor.dao.impl.v2.TunnelCrossSectionIndexDao;
 import com.crtb.tunnelmonitor.dao.impl.v2.TunnelSettlementTotalDataDao;
 import com.crtb.tunnelmonitor.entity.AlertList;
-import com.crtb.tunnelmonitor.entity.ExcavateMethodEnum;
 import com.crtb.tunnelmonitor.entity.RawSheetIndex;
 import com.crtb.tunnelmonitor.entity.SubsidenceCrossSectionIndex;
 import com.crtb.tunnelmonitor.entity.SubsidenceTotalData;
@@ -346,8 +344,7 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements
 		if (bean != null) {
 
 			// 存在的测量数据
-			String coord = bean.getCoordinate() != null ? bean.getCoordinate()
-					: "";
+			String coord = bean.getCoordinate() != null ? bean.getCoordinate() : "";
 
 			// 默认值
 			String[] str = coord.split(",");
@@ -359,8 +356,7 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements
 
 			Date t = bean.getSurveyTime();
 			// 测试时间
-			holder.mPointTime.setText(t != null ? DateUtils.toDateString(t,
-					DateUtils.DATE_TIME_FORMAT) : "");
+			holder.mPointTime.setText(t != null ? DateUtils.toDateString(t,DateUtils.DATE_TIME_FORMAT) : "");
 		}
 
 		// 测点类型
@@ -373,6 +369,7 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements
 				holder.mPointType.setText(typeName + "-" + suffix);
 			}
 		}
+		
 		String typeNameShow = (String) holder.mPointType.getText();
 		pointTypeNameList.add(typeNameShow);
 
@@ -388,8 +385,7 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements
 				}
 
 				// 测量
-				connectSurveyProvider(holder, holder1, type,
-						RawSheetIndex.CROSS_SECTION_TYPE_TUNNEL);
+				connectSurveyProvider(holder, holder1, type,RawSheetIndex.CROSS_SECTION_TYPE_TUNNEL);
 			}
 		});
 

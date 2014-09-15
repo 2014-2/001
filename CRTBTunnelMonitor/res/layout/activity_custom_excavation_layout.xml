@@ -20,6 +20,7 @@
         android:layout_height="fill_parent"
         android:layout_above="@id/bottom_layout"
         android:layout_below="@id/layout_one"
+        android:scrollbars="none"
         android:background="@null" >
 
         <LinearLayout

@@ -124,6 +124,7 @@ public class CustomExcavationActivity extends BaseActivity implements OnClickLis
 					customType	= 5 ;
 					lresid = R.array.exca_lines_counts_cd_or_cdr ;
 					customView.setDrawType(DRAW_TYPE.DRAW_TYPE_CD);
+					customView.removeAllLine() ;
 					customView.setPointNumber(4);
 				} 
 				//CRD
@@ -131,6 +132,7 @@ public class CustomExcavationActivity extends BaseActivity implements OnClickLis
 					customType	= 6 ;
 					lresid = R.array.exca_lines_counts_cd_or_cdr ;
 					customView.setDrawType(DRAW_TYPE.DRAW_TYPE_CD);
+					customView.removeAllLine() ;
 					customView.setPointNumber(4);
 				}
 				// 双侧壁法
@@ -138,6 +140,7 @@ public class CustomExcavationActivity extends BaseActivity implements OnClickLis
 					customType	= 7 ;
 					lresid = R.array.exca_lines_counts ;
 					customView.setDrawType(DRAW_TYPE.DRAW_TYPE_PAIR);
+					customView.removeAllLine() ;
 					customView.setPointNumber(2);
 				} 
 
@@ -184,7 +187,8 @@ public class CustomExcavationActivity extends BaseActivity implements OnClickLis
 					customView.addFlag(CrtbExcavationView.FLAG_A3);
 				}
 				
-				customView.invalidate() ;
+				// 重置测线
+				resetLines();
 			}
 
 			@Override
@@ -215,21 +219,8 @@ public class CustomExcavationActivity extends BaseActivity implements OnClickLis
 					e.printStackTrace();
 				}
 				
-				// 设置测点
-				customView.setPointNumber(linePoints);
-				
-				System.out.println("zhouwei : 选择测线点数" + linePoints);
-				
-				beans.clear() ;
-				
-				TestLine bean 		= new TestLine() ;
-				bean.lineName 		= "S1" ;
-				bean.lineStartPoint = "1" ;
-				bean.lineEndPoint	= "" ;
-				
-				beans.add(bean);
-				
-				createLineViews() ;
+				// 重置测线
+				resetLines();
 			}
 
 			@Override
@@ -237,6 +228,26 @@ public class CustomExcavationActivity extends BaseActivity implements OnClickLis
 				
 			}
 		});
+	}
+	
+	private void resetLines(){
+		
+		// 清空点对数
+		customView.removeAllLine() ;
+		
+		// 设置测点
+		customView.setPointNumber(linePoints);
+		
+		beans.clear() ;
+		
+		TestLine bean 		= new TestLine() ;
+		bean.lineName 		= "S1" ;
+		bean.lineStartPoint = "1" ;
+		bean.lineEndPoint	= "" ;
+		
+		beans.add(bean);
+		
+		createLineViews() ;
 	}
 
 	@Override
@@ -262,6 +273,19 @@ public class CustomExcavationActivity extends BaseActivity implements OnClickLis
 			if(testViews.isEmpty()){
 				showText("请添加测线");
 				return ;
+			}
+			
+			for(TestLine line : beans ){
+				
+				if(StringUtils.isEmpty(line.lineStartPoint)){
+					showText("测线开始点不能为空");
+					return ;
+				}
+				
+				if(StringUtils.isEmpty(line.lineEndPoint)){
+					showText("测线结束点不能为空");
+					return ;
+				}
 			}
 			
 			TunnelCrossSectionParameter obj = new TunnelCrossSectionParameter() ;
