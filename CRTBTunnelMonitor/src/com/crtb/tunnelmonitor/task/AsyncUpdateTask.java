@@ -10,9 +10,8 @@ import com.crtb.tunnelmonitor.dao.impl.v2.RawSheetIndexDao;
 import com.crtb.tunnelmonitor.dao.impl.v2.SubsidenceCrossSectionIndexDao;
 import com.crtb.tunnelmonitor.dao.impl.v2.SubsidenceTotalDataDao;
 import com.crtb.tunnelmonitor.dao.impl.v2.TunnelCrossSectionIndexDao;
-import com.crtb.tunnelmonitor.dao.impl.v2.TunnelCrossSectionParameterDao;
+import com.crtb.tunnelmonitor.dao.impl.v2.ExcavateMethodDao;
 import com.crtb.tunnelmonitor.dao.impl.v2.TunnelSettlementTotalDataDao;
-import com.crtb.tunnelmonitor.entity.ExcavateMethodEnum;
 import com.crtb.tunnelmonitor.entity.RawSheetIndex;
 import com.crtb.tunnelmonitor.entity.SubsidenceCrossSectionIndex;
 import com.crtb.tunnelmonitor.entity.SubsidenceTotalData;
@@ -219,7 +218,7 @@ public class AsyncUpdateTask {
 		if (section instanceof TunnelCrossSectionIndex) {
 			TunnelCrossSectionIndex tunnelSection = (TunnelCrossSectionIndex) section;
 			final int excavateMethod = tunnelSection.getExcavateMethod();
-			pointNumbers = TunnelCrossSectionParameterDao.defaultDao().getPointsByExcavateMethod(excavateMethod);
+			pointNumbers = ExcavateMethodDao.defaultDao().getPointsByExcavateMethod(excavateMethod);
 		} else if (section instanceof SubsidenceCrossSectionIndex) {
 			SubsidenceCrossSectionIndex subsidenceSection = (SubsidenceCrossSectionIndex) section;
 			pointNumbers = subsidenceSection.getSurveyPnts();

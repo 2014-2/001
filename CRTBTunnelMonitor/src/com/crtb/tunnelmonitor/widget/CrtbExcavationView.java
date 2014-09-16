@@ -160,7 +160,8 @@ public class CrtbExcavationView extends View {
 		final int defColor = mPaint.getColor() ;
 		
 		// draw bg
-		canvas.drawColor(Color.parseColor("#c1ffcf"));
+		//canvas.drawColor(Color.parseColor("#c1ffcf"));
+		canvas.drawColor(Color.parseColor("#ffffff"));
 		
 		if(mDrawType == DRAW_TYPE.DRAW_TYPE_PAIR){
 			drawPair(canvas);

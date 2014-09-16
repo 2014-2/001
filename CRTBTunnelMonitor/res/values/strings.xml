@@ -47,9 +47,9 @@
         <item>全断面法</item>
         <item>台阶法</item>
         <item>三台阶法</item>
-        <item>中隔壁法</item>
+<!--         <item>中隔壁法</item>
         <item>交叉中隔壁法</item>
-        <item>双侧壁法</item>
+        <item>双侧壁法</item> -->
     </string-array>
     
     <!-- 开挖模板类型 -->

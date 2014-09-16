@@ -20,6 +20,7 @@ import com.crtb.tunnelmonitor.BaseActivity;
 import com.crtb.tunnelmonitor.CommonObject;
 import com.crtb.tunnelmonitor.common.Constant;
 import com.crtb.tunnelmonitor.dao.impl.v2.CrtbLicenseDao;
+import com.crtb.tunnelmonitor.dao.impl.v2.ExcavateMethodDao;
 import com.crtb.tunnelmonitor.dao.impl.v2.ProjectIndexDao;
 import com.crtb.tunnelmonitor.entity.CrtbUser;
 import com.crtb.tunnelmonitor.entity.ProjectIndex;
@@ -152,6 +153,9 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 		
 		// 查询工作面详情
 		mCurrentWorkPlan = ProjectIndexDao.defaultWorkPlanDao().queryEditWorkPlan();
+		
+		//更新基础的自定义开挖方法
+		ExcavateMethodDao.defaultDao().checkBaseCustomExcavateMethod();
 	}
 
 	private void showToast(String msg) {

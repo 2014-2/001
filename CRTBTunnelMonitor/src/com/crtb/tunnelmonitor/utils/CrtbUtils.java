@@ -15,12 +15,12 @@ import android.util.Log;
 
 import com.crtb.tunnelmonitor.AppCRTBApplication;
 import com.crtb.tunnelmonitor.common.Constant;
+import com.crtb.tunnelmonitor.dao.impl.v2.ExcavateMethodDao;
 import com.crtb.tunnelmonitor.dao.impl.v2.ProjectIndexDao;
 import com.crtb.tunnelmonitor.dao.impl.v2.SiteProjectMappingDao;
 import com.crtb.tunnelmonitor.dao.impl.v2.SubsidenceCrossSectionExIndexDao;
 import com.crtb.tunnelmonitor.dao.impl.v2.SurveyerInformationDao;
 import com.crtb.tunnelmonitor.dao.impl.v2.TunnelCrossSectionExIndexDao;
-import com.crtb.tunnelmonitor.dao.impl.v2.TunnelCrossSectionParameterDao;
 import com.crtb.tunnelmonitor.dao.impl.v2.WorkSiteIndexDao;
 import com.crtb.tunnelmonitor.entity.CrtbUser;
 import com.crtb.tunnelmonitor.entity.ExcavateMethodEnum;
@@ -142,7 +142,7 @@ public final class CrtbUtils {
         outParamter.setSectioCode(sectionCode);
         int excavateMethod = section.getExcavateMethod();
         if(excavateMethod >= Constant.CUSTOM_METHOD_START_INDEX){
-        	excavateMethod = TunnelCrossSectionParameterDao.defaultDao().queryBaseModelByCustomExcavateMethod(excavateMethod);
+        	excavateMethod = ExcavateMethodDao.defaultDao().queryBaseModelByCustomExcavateMethod(excavateMethod);
         }
         String digMethod = ExcavateMethodEnum.parser(excavateMethod).toString();
         if(digMethod == "CD"){

@@ -21,6 +21,7 @@ import com.crtb.tunnelmonitor.AppHandler;
 import com.crtb.tunnelmonitor.AppPreferences;
 import com.crtb.tunnelmonitor.CommonObject;
 import com.crtb.tunnelmonitor.WorkFlowActivity;
+import com.crtb.tunnelmonitor.dao.impl.v2.ExcavateMethodDao;
 import com.crtb.tunnelmonitor.dao.impl.v2.ProjectIndexDao;
 import com.crtb.tunnelmonitor.entity.CrtbUser;
 import com.crtb.tunnelmonitor.entity.MenuSystemItem;
@@ -93,7 +94,7 @@ public final class WorkActivity extends WorkFlowActivity {
 			
 			CrtbUtils.updateNewSectionCodeNumber();
 			CrtbUtils.updateWorkSiteInfo(bean);			
-			
+			ExcavateMethodDao.defaultDao().checkBaseCustomExcavateMethod();
 			
 			finish() ;
 			

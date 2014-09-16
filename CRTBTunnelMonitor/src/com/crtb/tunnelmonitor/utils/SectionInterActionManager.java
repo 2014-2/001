@@ -7,11 +7,7 @@ import ICT.utils.RSACoder;
 import android.util.Log;
 
 import com.crtb.tunnelmonitor.common.Constant;
-import com.crtb.tunnelmonitor.dao.impl.v2.TunnelCrossSectionExIndexDao;
-import com.crtb.tunnelmonitor.dao.impl.v2.TunnelCrossSectionIndexDao;
-import com.crtb.tunnelmonitor.dao.impl.v2.TunnelCrossSectionParameterDao;
-import com.crtb.tunnelmonitor.entity.TunnelCrossSectionExIndex;
-import com.crtb.tunnelmonitor.entity.TunnelCrossSectionIndex;
+import com.crtb.tunnelmonitor.dao.impl.v2.ExcavateMethodDao;
 import com.crtb.tunnelmonitor.entity.TunnelCrossSectionParameter;
 import com.crtb.tunnelmonitor.entity.TunnelSettlementTotalData;
 
@@ -25,11 +21,11 @@ public class SectionInterActionManager {
 	private static final String CROWN_PREFIX = "A";
 	private static final String POINT_NAME_SEPARATOR = ",";
 	private static final String ITEM_CONNECTOR = "-";
-	private TunnelCrossSectionParameterDao sectionParamDao;
+	private ExcavateMethodDao sectionParamDao;
 	private TunnelCrossSectionParameter sectionParam = null;
 	
 	public SectionInterActionManager(int excavateMethod){
-		sectionParamDao = TunnelCrossSectionParameterDao.defaultDao();
+		sectionParamDao = ExcavateMethodDao.defaultDao();
 		sectionParam = sectionParamDao.queryOneByExcavateMethod(excavateMethod);
 	}
 	
@@ -89,7 +85,7 @@ public class SectionInterActionManager {
 	 *         如包含两个拱顶，一条测线:XLGC123456780001GD01/XLGC123456780001GD02/XLGC123456780001SL01#XLGC123456780001SL02
 	 */
     public static String getPointCodeListBySectionCode(String sectionCode,int excavateMethod){
-    	TunnelCrossSectionParameterDao sectionParamDao = TunnelCrossSectionParameterDao.defaultDao();
+    	ExcavateMethodDao sectionParamDao = ExcavateMethodDao.defaultDao();
     	TunnelCrossSectionParameter sectionParam = sectionParamDao.queryOneByExcavateMethod(excavateMethod);
     	String crownContent = "";
     	String pointContent = "";
