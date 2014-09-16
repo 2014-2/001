@@ -33,6 +33,7 @@ public class CrtbExcavationView extends View {
 	private int PointRadius			= 16 ;
 	
 	private int TEXT_SIZE_BIG		= 20 ;
+	private int TEXT_SIZE_MEDIUM	= 17 ;
 	private int TEXT_SIZE_SMALL 	= 14 ;
 	
 	private final int Color_P		= Color.parseColor("#fab40a");
@@ -63,11 +64,13 @@ public class CrtbExcavationView extends View {
 		PointRadius		= dp2px(4);
 		
 		TEXT_SIZE_BIG	= dp2px(14);
+		TEXT_SIZE_MEDIUM= dp2px(11);
 		TEXT_SIZE_SMALL	= dp2px(8);
 		
 		mPair			= 16 ;
 		mFlag			= FLAG_A1 | FLAG_A2 | FLAG_A3 ;
 		lines.clear() ;
+		
 	}
 	
 	private int dp2px(float value) {
@@ -169,17 +172,67 @@ public class CrtbExcavationView extends View {
 			drawCRD(canvas);
 		}
 		
+		int offset = dp2px(5) ;
+		
+		
 		// 绘制线
-		for(Line l : lines){
+		for(int index = 0 ; index < lines.size() ; index++){
+			
+			Line l 		= lines.get(index);
+			String sn 	= "S" + (index + 1) ;
+			
 			mPaint.setStyle(Style.FILL);
-			mPaint.setStrokeWidth(StrokeWidth);
-			mPaint.setColor(Color.parseColor("#e3d546"));
+			mPaint.setStrokeWidth(dp2px(1));
+			mPaint.setColor(Color.BLACK);
+			//mPaint.setColor(Color.parseColor("#e3d546"));
 			
 			Point start = findPoint(l.start);
 			Point end 	= findPoint(l.end);
 			
 			if(start != null && end != null){
-				canvas.drawLine(start.x,start.y,end.x,end.y,mPaint);
+				
+				boolean findPoint = false ;
+				
+				// 是否存在在同一直线上的点
+				for(Point p : points){
+					
+					if(!p.name.equals(start.name) 
+							&& !p.name.equals(end.name)){
+						
+						if(p.x > start.x 
+								&& p.x <= end.x 
+								&& p.y == start.y){
+							findPoint	= true ;
+							break ;
+						}
+					}
+				}
+				
+				int[] info = getTextWidth(sn, TEXT_SIZE_MEDIUM);
+				
+				if(findPoint){
+					
+					int newsx = (int)(start.x + offset);
+					int newsy = (int)(start.y + offset);
+					
+					int newex = (int)(end.x - offset);
+					int newey = (int)(end.y + offset);
+					
+					canvas.drawLine(start.x,start.y,newsx,newsy,mPaint);
+					canvas.drawLine(newsx - 1,newsy - 1,newex + 1,newey - 1,mPaint);
+					canvas.drawLine(newex,newey,end.x,end.y,mPaint);
+					
+					// 线名
+					mPaint.setColor(Color.BLACK);
+					canvas.drawText(sn, newsx + ((newex - newsx) >> 1), newsy + info[1], mPaint);
+					
+				} else {
+					canvas.drawLine(start.x,start.y,end.x,end.y,mPaint);
+					
+					// 线名
+					mPaint.setColor(Color.BLACK);
+					canvas.drawText(sn, start.x + (((int)(end.x - start.x)) >> 1), start.y + info[1], mPaint);
+				}
 			}
 		}
 		
@@ -237,7 +290,7 @@ public class CrtbExcavationView extends View {
 		mPaint.setStyle(Style.STROKE);
 		mPaint.setStrokeWidth(StrokeWidth * 2);
 		mPaint.setColor(Color.BLACK);
-		canvas.drawArc(laf, 220, 180, !true, mPaint);
+		canvas.drawArc(laf, 200, 180, !true, mPaint);
 		canvas.restore() ;
 		
 		// top
@@ -327,18 +380,18 @@ public class CrtbExcavationView extends View {
 			p.y = nly;
 			points.add(p);
 			drawLinePoint(canvas, nlx, nly);
-			drawPointText(canvas, String.valueOf(++index), nlx, nly, 0,0);
+			drawPointText(canvas, String.valueOf(++index), (int)p.x, (int)p.y, 0,0);
 
 			// 外left
 			int elx = (int) (laf.centerX() + (irr * Math.cos(radian(sag))));
 			int ely = (int) (laf.centerY() - (irr * Math.sin(radian(sag))));
 			p = new Point();
 			p.name = String.valueOf(index + 1);
-			p.x = elx;
+			p.x = elx - offsexX ;
 			p.y = ely;
 			points.add(p);
-			drawLinePoint(canvas, elx - offsexX, ely);
-			drawPointText(canvas, String.valueOf(++index), elx - offsexX, ely, dp2px(3),0);
+			drawLinePoint(canvas, (int)p.x, (int)p.y);
+			drawPointText(canvas, String.valueOf(++index), (int)p.x, (int)p.y, dp2px(3),0);
 
 			// 角度增加
 			sag -= ag;
@@ -353,11 +406,11 @@ public class CrtbExcavationView extends View {
 			int ely = (int) (laf.centerY() - (irr * Math.sin(radian(sag))));
 			p = new Point();
 			p.name = String.valueOf(index + 1);
-			p.x = elx;
+			p.x = elx + offsexX;
 			p.y = ely;
 			points.add(p);
 			drawLinePoint(canvas, elx + offsexX, ely);
-			drawPointText(canvas, String.valueOf(++index), elx + offsexX, ely, dp2px(3),1);
+			drawPointText(canvas, String.valueOf(++index), (int)p.x, (int)p.y, dp2px(3),1);
 			
 			// 内圆right
 			int nrx	= (int)(iaf.centerX() + (irr * Math.cos(radian(sag)))); 
@@ -368,7 +421,7 @@ public class CrtbExcavationView extends View {
 			p.y		= nry ;
 			points.add(p);
 			drawLinePoint(canvas,nrx, nry);
-			drawPointText(canvas, String.valueOf(++index), nrx, nry, 0,1);
+			drawPointText(canvas, String.valueOf(++index), (int)p.x, (int)p.y, 0,1);
 			
 			// 角度增加
 			sag -= ag ;
