@@ -14,7 +14,6 @@ import com.crtb.tunnelmonitor.common.Constant;
 import com.crtb.tunnelmonitor.dao.impl.v2.RawSheetIndexDao;
 import com.crtb.tunnelmonitor.dao.impl.v2.TotalStationInfoDao;
 import com.crtb.tunnelmonitor.dao.impl.v2.TunnelCrossSectionIndexDao;
-import com.crtb.tunnelmonitor.dao.impl.v2.TunnelCrossSectionParameterDao;
 import com.crtb.tunnelmonitor.dao.impl.v2.TunnelSettlementTotalDataDao;
 import com.crtb.tunnelmonitor.entity.RawSheetIndex;
 import com.crtb.tunnelmonitor.entity.TotalStationIndex;
@@ -34,17 +33,6 @@ public class TunnelMeasureData extends MeasureData {
 	private static final String CROWN_PREFIX = "A";
 	private float mFaceDistance = 0f;
     private String mFaceDescription = null;
-    private SectionInterActionManager sectionInterActionManager;
-    private int excavateMethod = -1;
-    private String sectionCrossCode = "";
-    
-	public TunnelMeasureData(int _excavateMethod) {
-		excavateMethod = _excavateMethod;
-	}
-	
-	public TunnelMeasureData(String _sectionCrossCode){
-		sectionCrossCode = _sectionCrossCode;
-	}
 	
 	public TunnelMeasureData(){
 		

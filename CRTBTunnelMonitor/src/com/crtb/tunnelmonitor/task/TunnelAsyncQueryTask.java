@@ -38,7 +38,7 @@ public class TunnelAsyncQueryTask extends AsyncQueryTask {
                 if (measurePoints != null && measurePoints.size() > 0) {
                     
                 	//YX 获取上传数据                	 
-                	TunnelMeasureData tunnelMeasureData = new TunnelMeasureData(sectionIndex.getExcavateMethod());
+                	TunnelMeasureData tunnelMeasureData = new TunnelMeasureData();
                 	section.setMeasureData(tunnelMeasureData.getMeasureDataList(measurePoints));
                 }
                 if (section.needUpload()) {
