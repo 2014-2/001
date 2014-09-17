@@ -603,7 +603,7 @@ public class AlertUtils {
                 }
                 double deltaTInDay = (deltaTime / Time.DAY_MILLISECEND_RATIO);
                 double h = 1d/24d;
-                if (deltaTInDay < h) {
+                if (deltaTInDay == 0) {
                     deltaTInDay = h;
                 }
                 double shoulianSpeed = deltaLenth / deltaTInDay;
