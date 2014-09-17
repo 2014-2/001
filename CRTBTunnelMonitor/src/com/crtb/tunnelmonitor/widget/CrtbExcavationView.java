@@ -200,8 +200,9 @@ public class CrtbExcavationView extends View {
 							&& !p.name.equals(end.name)){
 						
 						if(p.x > start.x 
-								&& p.x <= end.x 
-								&& p.y == start.y){
+								&& p.x < end.x 
+								&& p.y == start.y
+								&& p.y == end.y){
 							findPoint	= true ;
 							break ;
 						}
