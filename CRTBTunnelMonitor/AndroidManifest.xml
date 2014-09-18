@@ -75,7 +75,7 @@
             android:screenOrientation="portrait" />
         <activity
             android:name="com.crtb.tunnelmonitor.activity.TestSectionExecuteActivity"
-            android:windowSoftInputMode="stateVisible|adjustPan"
+            android:windowSoftInputMode="adjustPan"
             android:screenOrientation="portrait" />
         <activity android:name="com.crtb.tunnelmonitor.activity.SectionEditActivity" />
         <activity android:name="com.crtb.tunnelmonitor.activity.StationActivity" />
