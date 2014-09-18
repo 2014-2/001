@@ -373,59 +373,60 @@ public class AlertUtils {
                     subsidenceSpeed = CrtbUtils.formatDouble(subsidenceSpeed, 1);
                     ret.sulvType = uType;
                     ret.sulvValue = subsidenceSpeed;
-                    if (Math.abs(subsidenceSpeed) > SPEED_THRESHOLD) {
-                        if (!readOnly) {
-//                            AlertList al = AlertListDao.defaultDao().queryOne(sheetId, chainageId, originalDataID, uType);
-                            //若本条预警已消警，但重测时又超限，则需要再打开
-//                            if (al == null || curHandlingAlertId < 0) {
-                                int alertId = -1;
-                                int alertLevel = GetManagementLevel(sheetId, chainageId, subsidenceSpeed,uType);
-                                if (type == 1) {
-                                    alertId = AlertListDao.defaultDao().insertOrUpdate((TunnelSettlementTotalData) point, alertLevel,
-                                            uType, subsidenceSpeed, SPEED_THRESHOLD, originalDataID);
-                                } else {
-                                    alertId = AlertListDao.defaultDao().insertOrUpdate((SubsidenceTotalData) point, alertLevel,
-                                            uType, subsidenceSpeed, SPEED_THRESHOLD, originalDataID);
-                                }
-                                String handlingRemark = "";
-                                if (curHandlingAlertId >= 0 /*&& alertId == curHandlingAlertId*/) {
-                                    handlingRemark = handling;
-                                }
-
-                                if (curHandlingAlertId < 0) {//重测
-                                    AlertHandlingInfoDao.defaultDao().deleteByAlertId(alertId);
-                                }
-
-                                AlertHandlingInfoDao.defaultDao().insertItem(alertId, handlingRemark,
-                                        new Date(System.currentTimeMillis()), AppCRTBApplication.getInstance().mUserName, ALERT_STATUS_OPEN/*报警*/, 0/*false*/);
+//采用单控指标，取消速率超限入库                     
+//                    if (Math.abs(subsidenceSpeed) > SPEED_THRESHOLD) {
+//                        if (!readOnly) {
+////                            AlertList al = AlertListDao.defaultDao().queryOne(sheetId, chainageId, originalDataID, uType);
+//                            //若本条预警已消警，但重测时又超限，则需要再打开
+////                            if (al == null || curHandlingAlertId < 0) {
+//                                int alertId = -1;
+//                                int alertLevel = GetManagementLevel(sheetId, chainageId, subsidenceSpeed,uType);
+//                                if (type == 1) {
+//                                    alertId = AlertListDao.defaultDao().insertOrUpdate((TunnelSettlementTotalData) point, alertLevel,
+//                                            uType, subsidenceSpeed, SPEED_THRESHOLD, originalDataID);
+//                                } else {
+//                                    alertId = AlertListDao.defaultDao().insertOrUpdate((SubsidenceTotalData) point, alertLevel,
+//                                            uType, subsidenceSpeed, SPEED_THRESHOLD, originalDataID);
+//                                }
+//                                String handlingRemark = "";
+//                                if (curHandlingAlertId >= 0 /*&& alertId == curHandlingAlertId*/) {
+//                                    handlingRemark = handling;
+//                                }
+//
+//                                if (curHandlingAlertId < 0) {//重测
+//                                    AlertHandlingInfoDao.defaultDao().deleteByAlertId(alertId);
+//                                }
+//
+//                                AlertHandlingInfoDao.defaultDao().insertItem(alertId, handlingRemark,
+//                                        new Date(System.currentTimeMillis()), AppCRTBApplication.getInstance().mUserName, ALERT_STATUS_OPEN/*报警*/, 0/*false*/);
+////                            }
+//                        }
+//                    } else if (!readOnly && sheetId != null) {
+//                        AlertList al = AlertListDao.defaultDao().queryOne(sheetId, chainageId,
+//                                originalDataID, uType);
+//                        if (al != null) {
+//                            int alertId = al.getId();
+//                            if (curHandlingAlertId >= 0) {//处理
+////                                int chainageId1 = Integer.valueOf(al.getCrossSectionID());
+////                                String pntType1 = al.getPntType();
+//                                String duePerson = AppCRTBApplication.getInstance().mUserName;
+//                                AlertHandlingInfoDao.defaultDao().insertItem(alertId,
+//                                        handling,
+//                                        handlingTime, duePerson, ALERT_STATUS_HANDLED, 1/* true */);
+//                                int alertLevel = GetManagementLevel(sheetId, chainageId, subsidenceSpeed,uType);
+//                                if (type == 1) {
+//                                    alertId = AlertListDao.defaultDao().insertOrUpdate((TunnelSettlementTotalData) point, alertLevel,
+//                                            uType, subsidenceSpeed, SPEED_THRESHOLD, originalDataID);
+//                                } else {
+//                                    alertId = AlertListDao.defaultDao().insertOrUpdate((SubsidenceTotalData) point, alertLevel,
+//                                            uType, subsidenceSpeed, SPEED_THRESHOLD, originalDataID);
+//                                }
+//                            } else if (al.getUploadStatus() != 2) {//重测
+//                                AlertHandlingInfoDao.defaultDao().deleteByAlertId(alertId);
+//                                AlertListDao.defaultDao().deleteById(alertId);
 //                            }
-                        }
-                    } else if (!readOnly && sheetId != null) {
-                        AlertList al = AlertListDao.defaultDao().queryOne(sheetId, chainageId,
-                                originalDataID, uType);
-                        if (al != null) {
-                            int alertId = al.getId();
-                            if (curHandlingAlertId >= 0) {//处理
-//                                int chainageId1 = Integer.valueOf(al.getCrossSectionID());
-//                                String pntType1 = al.getPntType();
-                                String duePerson = AppCRTBApplication.getInstance().mUserName;
-                                AlertHandlingInfoDao.defaultDao().insertItem(alertId,
-                                        handling,
-                                        handlingTime, duePerson, ALERT_STATUS_HANDLED, 1/* true */);
-                                int alertLevel = GetManagementLevel(sheetId, chainageId, subsidenceSpeed,uType);
-                                if (type == 1) {
-                                    alertId = AlertListDao.defaultDao().insertOrUpdate((TunnelSettlementTotalData) point, alertLevel,
-                                            uType, subsidenceSpeed, SPEED_THRESHOLD, originalDataID);
-                                } else {
-                                    alertId = AlertListDao.defaultDao().insertOrUpdate((SubsidenceTotalData) point, alertLevel,
-                                            uType, subsidenceSpeed, SPEED_THRESHOLD, originalDataID);
-                                }
-                            } else if (al.getUploadStatus() != 2) {//重测
-                                AlertHandlingInfoDao.defaultDao().deleteByAlertId(alertId);
-                                AlertListDao.defaultDao().deleteById(alertId);
-                            }
-                        }
-                    }
+//                        }
+//                    }
                 }
             }
 
@@ -603,46 +604,47 @@ public class AlertUtils {
                 shoulianSpeed = CrtbUtils.formatDouble(shoulianSpeed, 1);
                 ret.sulvType = uType;
                 ret.sulvValue = shoulianSpeed;
-                if (Math.abs(shoulianSpeed) > SPEED_THRESHOLD) {
-                    if (!readOnly) {
-//                        AlertList al = AlertListDao.defaultDao().queryOne(sheetId, chainageId, originalDataID, uType);
-                        //若本条预警已消警，但重测时又超限，则需要再打开
-//                        if (al == null || curHandlingAlertId < 0) {
-                            int alertLevel = GetManagementLevel(sheetId, chainageId, shoulianSpeed,uType);
-                            int alertId = AlertListDao.defaultDao().insertOrUpdate(s_1, alertLevel, uType, shoulianSpeed,
-                                    SPEED_THRESHOLD, originalDataID);
-                            String handlingRemark = "";
-                            if (curHandlingAlertId >= 0 /*&& alertId == curHandlingAlertId*/) {
-                                handlingRemark = handling;
-                            }
-
-                            if (curHandlingAlertId < 0) {//重测
-                                AlertHandlingInfoDao.defaultDao().deleteByAlertId(alertId);
-                            }
-
-                            AlertHandlingInfoDao.defaultDao().insertItem(alertId, handlingRemark,
-                                    new Date(System.currentTimeMillis()), AppCRTBApplication.getInstance().mUserName, ALERT_STATUS_OPEN/*报警*/, 0/*false*/);
+// 采用单控指标，取消速率超限入库                
+//                if (Math.abs(shoulianSpeed) > SPEED_THRESHOLD) {
+//                    if (!readOnly) {
+////                        AlertList al = AlertListDao.defaultDao().queryOne(sheetId, chainageId, originalDataID, uType);
+//                        //若本条预警已消警，但重测时又超限，则需要再打开
+////                        if (al == null || curHandlingAlertId < 0) {
+//                            int alertLevel = GetManagementLevel(sheetId, chainageId, shoulianSpeed,uType);
+//                            int alertId = AlertListDao.defaultDao().insertOrUpdate(s_1, alertLevel, uType, shoulianSpeed,
+//                                    SPEED_THRESHOLD, originalDataID);
+//                            String handlingRemark = "";
+//                            if (curHandlingAlertId >= 0 /*&& alertId == curHandlingAlertId*/) {
+//                                handlingRemark = handling;
+//                            }
+//
+//                            if (curHandlingAlertId < 0) {//重测
+//                                AlertHandlingInfoDao.defaultDao().deleteByAlertId(alertId);
+//                            }
+//
+//                            AlertHandlingInfoDao.defaultDao().insertItem(alertId, handlingRemark,
+//                                    new Date(System.currentTimeMillis()), AppCRTBApplication.getInstance().mUserName, ALERT_STATUS_OPEN/*报警*/, 0/*false*/);
+////                        }
+//                    }
+//                } else if (!readOnly && sheetId != null) {
+//                    AlertList al = AlertListDao.defaultDao().queryOne(sheetId, chainageId,
+//                            originalDataID, uType);
+//                    if (al != null) {
+//                        int alertId = al.getId();
+//                        if (curHandlingAlertId >= 0) {
+//                            AlertHandlingInfoDao.defaultDao().insertItem(alertId,
+//                                     handling, handlingTime,
+//                                            AppCRTBApplication.getInstance().mUserName,
+//                                    ALERT_STATUS_HANDLED, 1/* true */);
+//                            int alertLevel = GetManagementLevel(sheetId, chainageId, shoulianSpeed,uType);
+//                            AlertListDao.defaultDao().insertOrUpdate(s_1, alertLevel, uType, shoulianSpeed,
+//                                    SPEED_THRESHOLD, originalDataID);
+//                        } else if (al.getUploadStatus() != 2) {
+//                            AlertHandlingInfoDao.defaultDao().deleteByAlertId(alertId);
+//                            AlertListDao.defaultDao().deleteById(alertId);
 //                        }
-                    }
-                } else if (!readOnly && sheetId != null) {
-                    AlertList al = AlertListDao.defaultDao().queryOne(sheetId, chainageId,
-                            originalDataID, uType);
-                    if (al != null) {
-                        int alertId = al.getId();
-                        if (curHandlingAlertId >= 0) {
-                            AlertHandlingInfoDao.defaultDao().insertItem(alertId,
-                                     handling, handlingTime,
-                                            AppCRTBApplication.getInstance().mUserName,
-                                    ALERT_STATUS_HANDLED, 1/* true */);
-                            int alertLevel = GetManagementLevel(sheetId, chainageId, shoulianSpeed,uType);
-                            AlertListDao.defaultDao().insertOrUpdate(s_1, alertLevel, uType, shoulianSpeed,
-                                    SPEED_THRESHOLD, originalDataID);
-                        } else if (al.getUploadStatus() != 2) {
-                            AlertHandlingInfoDao.defaultDao().deleteByAlertId(alertId);
-                            AlertListDao.defaultDao().deleteById(alertId);
-                        }
-                    }
-                }
+//                    }
+//                }
             }
         }
 
