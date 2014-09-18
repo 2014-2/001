@@ -361,14 +361,10 @@ public class AlertUtils {
 //                    deltaZ = Math.abs(deltaZ);
                     long deltaT = Math.abs(thisTime.getTime() - lastTime.getTime());
                     Log.d(TAG, "delta t: " + deltaT + " ms");
-                    if (deltaT < Time.ONE_MILLISECOND) {
-                        deltaT = Time.ONE_MILLISECOND;//ONE MILLISECOND at least to avoid infinity
+                    if (deltaT < Time.ONE_SECOND) {
+                        deltaT = Time.ONE_SECOND;//ONE SECOND at least to avoid infinity
                     }
                     double deltaTInDay = ((double)deltaT / Time.DAY_MILLISECEND_RATIO);
-                    double h = 1d/24d;
-                    if (deltaTInDay == 0) {
-                        deltaTInDay = h;
-                    }
                     Log.d(TAG, "delta t in day: " + deltaTInDay + " day");
                     double subsidenceSpeed = deltaZ / deltaTInDay;
                     Log.d(TAG, "沉降速率: " + subsidenceSpeed + " mm/d");
@@ -598,14 +594,10 @@ public class AlertUtils {
                     lastTime = s_2LastTime.getTime();
                 }
                 double deltaTime = Math.abs((thisTime - lastTime));
-                if (deltaTime < Time.ONE_MILLISECOND) {
-                    deltaTime = Time.ONE_MILLISECOND;//ONE MILLISECOND at least to avoid infinity
+                if (deltaTime < Time.ONE_SECOND) {
+                    deltaTime = Time.ONE_SECOND;//ONE SECOND at least to avoid infinity
                 }
                 double deltaTInDay = (deltaTime / Time.DAY_MILLISECEND_RATIO);
-                double h = 1d/24d;
-                if (deltaTInDay == 0) {
-                    deltaTInDay = h;
-                }
                 double shoulianSpeed = deltaLenth / deltaTInDay;
                 int uType = SHOULIAN_SULV_EXCEEDING;
                 shoulianSpeed = CrtbUtils.formatDouble(shoulianSpeed, 1);
@@ -1622,14 +1614,10 @@ public class AlertUtils {
                     lastTime = s_2LastTime.getTime();
                 }
                 double deltaTime = Math.abs((thisTime - lastTime));
-                if (deltaTime < Time.ONE_MILLISECOND) {
-                    deltaTime = Time.ONE_MILLISECOND;//ONE MILLISECOND at least to avoid infinity
+                if (deltaTime < Time.ONE_SECOND) {
+                    deltaTime = Time.ONE_SECOND;//ONE SECOND at least to avoid infinity
                 }
                 double deltaTInDay = (deltaTime / Time.DAY_MILLISECEND_RATIO);
-                double h = 1d/24d;
-                if (deltaTInDay < h) {
-                    deltaTInDay = h;
-                }
                 return deltaTInDay;
             }
         }
@@ -1706,14 +1694,10 @@ public class AlertUtils {
           if (thisTime != null && lastTime != null) {
               long deltaT = Math.abs(thisTime.getTime() - lastTime.getTime());
               Log.d(TAG, "delta t: " + deltaT + " ms");
-              if (deltaT < Time.ONE_MILLISECOND) {
-                  deltaT = Time.ONE_MILLISECOND;//ONE MILLISECOND at least to avoid infinity
+              if (deltaT < Time.ONE_SECOND) {
+                  deltaT = Time.ONE_SECOND;//ONE SECOND at least to avoid infinity
               }
               double deltaTInDay = ((double)deltaT / Time.DAY_MILLISECEND_RATIO);
-              double h = 1d/24d;
-              if (deltaTInDay == 0) {
-                  deltaTInDay = h;
-              }
               return deltaTInDay;
           }
       }
@@ -1939,14 +1923,10 @@ public class AlertUtils {
 //                    deltaZ = Math.abs(deltaZ);
                     long deltaT = Math.abs(thisTime.getTime() - lastTime.getTime());
                     Log.d(TAG, "delta t: " + deltaT + " ms");
-                    if (deltaT < Time.ONE_MILLISECOND) {
-                        deltaT = Time.ONE_MILLISECOND;//ONE MILLISECOND at least to avoid infinity
+                    if (deltaT < Time.ONE_SECOND) {
+                        deltaT = Time.ONE_SECOND;//ONE SECOND at least to avoid infinity
                     }
                     double deltaTInDay = ((double)deltaT / Time.DAY_MILLISECEND_RATIO);
-                    double h = 1d/24d;
-                    if (deltaTInDay == 0) {
-                        deltaTInDay = h;
-                    }
                     double subsidenceSpeed = deltaZ / deltaTInDay;
                     subsidenceSpeed = CrtbUtils.formatDouble(subsidenceSpeed, 1);
                     ret.put("speed", subsidenceSpeed);
@@ -2044,14 +2024,10 @@ public class AlertUtils {
                     lastTime = s_2LastTime.getTime();
                 }
                 double deltaTime = Math.abs((thisTime - lastTime));
-                if (deltaTime < Time.ONE_MILLISECOND) {
-                    deltaTime = Time.ONE_MILLISECOND;//ONE MILLISECOND at least to avoid infinity
+                if (deltaTime < Time.ONE_SECOND) {
+                    deltaTime = Time.ONE_SECOND;//ONE SECOND at least to avoid infinity
                 }
                 double deltaTInDay = (deltaTime / Time.DAY_MILLISECEND_RATIO);
-                double h = 1d/24d;
-                if (deltaTInDay < h) {
-                    deltaTInDay = h;
-                }
                 double shoulianSpeed = deltaLenth / deltaTInDay;
                 shoulianSpeed = CrtbUtils.formatDouble(shoulianSpeed, 1);
             }

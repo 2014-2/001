@@ -13,7 +13,7 @@ import android.text.TextUtils;
  */
 public class Time {
 	private static final String DEFAULT_FORMAT = "YYYY-MM-DD HH:MM:SS";
-	public static final long ONE_MILLISECOND = 1;
+	public static final long ONE_SECOND = 1000;
     public static final long DAY_MILLISECEND_RATIO = 24 * 60 * 60 * 1000;
 
     public static String getDateCN() {
