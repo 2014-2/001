@@ -515,6 +515,18 @@ public class CustomExcavationActivity extends BaseActivity implements OnClickLis
 							return ;
 						}
 						
+						for(TestLine line : beans){
+							if(temp.equals(line)){
+								continue;
+							}
+
+							if (temp.lineStartPoint.equals(line.lineEndPoint)
+									&& temp.lineEndPoint.equals(line.lineStartPoint)) {
+								showText("测线的两个点不能完全相同");
+								return;
+							}
+						}
+						
 						// 终点
 						bean.lineEndPoint = item ;
 						
