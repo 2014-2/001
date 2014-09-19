@@ -38,6 +38,7 @@ import android.widget.TextView;
 
 import com.crtb.tunnelmonitor.CommonObject;
 import com.crtb.tunnelmonitor.WorkFlowActivity;
+import com.crtb.tunnelmonitor.common.Constant;
 import com.crtb.tunnelmonitor.dao.impl.v2.ProjectIndexDao;
 import com.crtb.tunnelmonitor.dao.impl.v2.TunnelCrossSectionIndexDao;
 import com.crtb.tunnelmonitor.entity.ExcavateMethodEnum;
@@ -280,7 +281,9 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 			@Override
 			public void onItemSelected(AdapterView<?> parent, View view,
 					int position, long id) {
-				
+				String value = ""+Constant.LEI_JI_OFFSET_LEVEL_BASE[position];
+				section_new_leiji_gd.setText(value);
+				section_new_leiji_sl.setText(value);
 			}
 
 			@Override

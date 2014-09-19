@@ -143,8 +143,17 @@ public class Constant {
 	public static final String UPDATE_FXKZ = "http://61.237.239.144/fxkz/testdata";
 	
 	public static final int CUSTOM_METHOD_START_INDEX = 9;
-
+	
+	public static final int LEI_JI_INDEX = 0;
+	
+    public static final int SU_LV_INDEX = 1;
+	
 	private static VersionControl versionControl = null;
+	
+    /**
+     * 累积位移管理等级基数
+     */
+    public static int[] LEI_JI_OFFSET_LEVEL_BASE = new int[]{40,40,40,50,75,75};
 	
 	public static String getUserAuthUrl(){
 		if(versionControl.getTestServer()){
