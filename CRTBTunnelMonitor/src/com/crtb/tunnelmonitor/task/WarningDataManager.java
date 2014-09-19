@@ -143,15 +143,19 @@ public class WarningDataManager {
     	parameter.setSectionCode(warningData.getSectionCode());
     	parameter.setPointCode(warningData.getPointCode());
     	int level = alertInfo.getAlertLevel();
-		if ((level == 2) || (level == 3)) {
-			parameter.setWarningLevel(1);
-		} else if (level == 1) {
-			parameter.setWarningLevel(2);
-		} else {
-			parameter.setWarningLevel(1);
-		}
+//YX 取消转换    	
+//		if ((level == 2) || (level == 3)) {
+//			parameter.setWarningLevel(1);
+//		} else if (level == 1) {
+//			parameter.setWarningLevel(2);
+//		} else {
+//			parameter.setWarningLevel(1);
+//		}
+    	parameter.setWarningLevel(level);
 		AlertInfo sulvalert = warningData.getSulvAlert();
-    	parameter.setTransformSpeed(sulvalert != null ? (float)sulvalert.getUValue() : 0.001f);
+//YX 取消速率默认为0.001f		
+//    	parameter.setTransformSpeed(sulvalert != null ? (float)sulvalert.getUValue() : 0.001f);
+		parameter.setTransformSpeed(sulvalert != null ? (float)sulvalert.getUValue() : 0);		
 //    	String originalID = alertInfo.getOriginalDataID();
 //    	List<Integer> ids = new ArrayList<Integer>();
 //        if (originalID.contains(AlertUtils.ORIGINAL_ID_DIVIDER)) {

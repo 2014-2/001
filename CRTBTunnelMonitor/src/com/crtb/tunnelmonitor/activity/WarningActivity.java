@@ -488,7 +488,7 @@ public class WarningActivity extends Activity {
         String handling = mWarningRemarkView.getText().toString();
         Log.d(TAG, "handleAlert 处理内容：" + handling);
         new AlertManager().handleAlert(alertId, dataStatus, isRebury, correction, curStatus, alertStatus, handling,
-                new Date(System.currentTimeMillis()), new AlertManager.HandleFinishCallback() {
+                new Date(System.currentTimeMillis()),ai.getRockGrade(), new AlertManager.HandleFinishCallback() {
 
                     @Override
                     public void onFinish() {

@@ -34,6 +34,7 @@ public class AlertInfo implements Serializable {
     private int uploadStatus;
     private String alertInfo;
     private String SECTCODE;
+    private String rockGrade;
 
     //    public boolean isState1() {
     //        return state1;
@@ -226,4 +227,11 @@ public class AlertInfo implements Serializable {
         this.duePerson = duePerson;
     }
 
+    public String getRockGrade(){
+    	return rockGrade;
+    }
+    
+    public void SetRockGrade(String rockGrade){
+    	this.rockGrade = rockGrade;
+    }
 }
