@@ -320,7 +320,7 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements
 			SlidingLayout.LayouFirstLoadedEvent {
 		@Override
 		public void callback() {
-			slidingLayout.scrollToLeftLayout();
+			slidingLayout.scrollToRightLayout();
 		}
 	}
 
