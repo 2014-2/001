@@ -149,7 +149,11 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 		mTitle.setText(StringUtils.isEmpty(name) ? getString(R.string.main_title) : name);
 		
 		// 打开数据库
-		ProjectIndexDao.defaultWorkPlanDao().openProjectIndex(name);
+		String error = ProjectIndexDao.defaultWorkPlanDao().openProjectIndex(name);
+		
+		if(error != null){
+			showToast(error);
+		}
 		
 		// 查询工作面详情
 		mCurrentWorkPlan = ProjectIndexDao.defaultWorkPlanDao().queryEditWorkPlan();

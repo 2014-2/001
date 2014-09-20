@@ -11,6 +11,7 @@ import java.util.List;
 import org.zw.android.framework.IAccessDatabase;
 import org.zw.android.framework.impl.ExecuteAsyncTaskImpl;
 import org.zw.android.framework.impl.FrameworkFacade;
+import org.zw.android.framework.util.DateUtils;
 import org.zw.android.framework.util.StringUtils;
 
 import ICT.utils.DbAESEncrypt;
@@ -68,6 +69,12 @@ public final class CrtbDbFileUtils {
 				
 				if(!inport.isDirectory()){
 					inport.mkdir() ;
+				}
+				
+				File backup = new File(crtb, AppConfig.DB_SDCARD_BACKUP);
+				
+				if(!backup.isDirectory()){
+					backup.mkdir() ;
 				}
 				
 			} catch(Exception e){
@@ -162,6 +169,20 @@ public final class CrtbDbFileUtils {
 	
 	public static String getLocalDbBackupPath(String dbname){
 		return getLocaPath(dbname + AppConfig.DB_SUFFIX_BACKUP);
+	}
+	
+	public static String getExternalBackupPath(String dbname){
+		
+		String date = DateUtils.toDateString(DateUtils.getCurrtentTimes(),DateUtils.DATE_FORMAT) ;
+		String path = getExportPath(AppConfig.DB_SDCARD_BACKUP) + "/" + dbname+ "-" + date + ".dtmsdb" ;
+		
+		File f = new File(path);
+		
+		if(f.exists()){
+			f.delete() ;
+		}
+		
+		return path ;
 	}
 	
 	public static String getDbName(String dbname){
@@ -514,7 +535,7 @@ public final class CrtbDbFileUtils {
 	 * 
 	 * @param dbName
 	 */
-	public static String[] closeDbFile(String dbName){
+	public static String[] closeDbFile(String dbName,IAccessDatabase db){
 		
 		if(StringUtils.isEmpty(dbName)){
 			return null ;
@@ -524,7 +545,7 @@ public final class CrtbDbFileUtils {
 		String name 	= getDbName(dbName);
 
 		// xx.bin 文件
-		String srcPath 	= CrtbDbFileUtils.getLocalDbTempPath(name);
+		String binPath 	= CrtbDbFileUtils.getLocalDbTempPath(name);
 
 		// xx.db 加密后的文件
 		String desPath 	= CrtbDbFileUtils.getLocalDbPath(name);
@@ -546,19 +567,48 @@ public final class CrtbDbFileUtils {
 			
 			// 3. 加密并生成新文件
 			IDbEncrypt encrypt 	= new DbAESEncrypt() ;
-			boolean noerror 	= encrypt.encrypt(srcPath, desPath) ;
+			boolean noerror 	= encrypt.encrypt(binPath, desPath) ;
 			
-			// 删除原始文件
-			if(noerror){
-				File f = new File(srcPath);
-				f.delete() ;
+			// 加密失败
+			if(!noerror){
+				
+				// 删除加密文件
+				File f = new File(desPath);
+				f.delete();
+				
+				// 从备份文件拷贝到加密文件(恢复加密文件)
+				src = new File(bpPath);
+				des = new File(desPath);
+				if(src.exists()){
+					fileCopy(src, des);
+				}
+				
+				return null ;
 			}
 			
+			// 删除原始文件
+			File f = new File(binPath);
+			f.delete() ;
+			
 			// 4. 如果加密成功,重新生成备份文件
-			if(noerror){
-				src = new File(desPath);
-				des = new File(bpPath);
-				if(src.exists()){
+			src = new File(desPath);
+			des = new File(bpPath);
+			if(src.exists()){
+				fileCopy(src, des);
+			}
+			
+			// 备份到外部存储卡
+			if(db != null){
+				
+				List<ProjectIndex> list = db.queryObjects("select * from ProjectIndex", ProjectIndex.class);
+			
+				if(list != null && !list.isEmpty()){
+					
+					// 外部备份路径
+					String exbpPath	= CrtbDbFileUtils.getExternalBackupPath(name);
+					
+					src = new File(desPath);
+					des = new File(exbpPath);
 					fileCopy(src, des);
 				}
 			}

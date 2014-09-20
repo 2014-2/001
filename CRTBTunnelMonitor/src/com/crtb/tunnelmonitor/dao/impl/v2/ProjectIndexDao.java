@@ -186,6 +186,7 @@ public final class ProjectIndexDao extends AbstractDao<ProjectIndex> {
 		
 		if(db == null){
 			System.out.println("zhouwei ERROR : openProjectIndex-> 打开数据库失败: " + dbName);
+			return "打开数据库失败" ;
 		}
 		
 		/////////////////////// 关闭上一个工作面 /////////////////////////
@@ -400,7 +401,7 @@ public final class ProjectIndexDao extends AbstractDao<ProjectIndex> {
 			}
 			
 			// 生成加密文件
-			String[] info = CrtbDbFileUtils.closeDbFile(dbName);
+			String[] info = CrtbDbFileUtils.closeDbFile(dbName,mFramework.getDatabaseByName(dbTemp));
 			
 			// 清除数据库缓存
 			mFramework.removeDatabaseByName(dbTemp);
@@ -507,7 +508,7 @@ public final class ProjectIndexDao extends AbstractDao<ProjectIndex> {
 				if(info != null){
 					
 					// 重新加密文件
-					info = CrtbDbFileUtils.closeDbFile(dbName);
+					info = CrtbDbFileUtils.closeDbFile(dbName,mFramework.getDatabaseByName(dbTemp));
 					
 					// 清除数据库缓存
 					mFramework.removeDatabaseByName(dbTemp);

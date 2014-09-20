@@ -162,7 +162,7 @@ public abstract class AbstractDao<T> {
 		String tempDb 	= getDbUniqueTempName(dbName);
 
 		// 关闭文件并重新加密
-		CrtbDbFileUtils.closeDbFile(dbName);
+		CrtbDbFileUtils.closeDbFile(dbName,mFramework.getDatabaseByName(tempDb));
 		
 		// 缓存
 		mFramework.removeDatabaseByName(tempDb);
