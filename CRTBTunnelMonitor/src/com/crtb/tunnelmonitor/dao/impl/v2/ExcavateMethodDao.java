@@ -210,7 +210,7 @@ public final class ExcavateMethodDao extends AbstractDao<TunnelCrossSectionParam
 		if (queryOneByExcavateMethod(excavateMethod) == null) {
 			baseSC.setType(ExcavateMethodEnum.SC.getCode());
 			baseSC.setExcavateMethod(excavateMethod);
-			baseSC.setMethodName("基础双侧壁");
+			baseSC.setMethodName("基础双侧壁法");
 			baseSC.setCrownPointNumber(3);
 			baseSC.setSurveyLinePointNumber(2);
 			baseSC.setSurveyLineNumber(4);
