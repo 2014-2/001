@@ -112,8 +112,9 @@ public class WorkInfoDownloadActivity extends Activity {
             }
         }
         menu.setHeaderTitle(workSiteName);
+       
         menu.add(0, CONTEXT_MENU_DOWNLOAD_WORKSITE, 0, "下载");
-        menu.add(1, CONTEXT_MENU_ASSOCIATE_WORKSITE, 0, "关联(本地和服务器工点必须1对1)");
+        menu.add(1, CONTEXT_MENU_ASSOCIATE_WORKSITE, 0, "关联(本地和服务器必须1对1)");
     }
 
     @Override
