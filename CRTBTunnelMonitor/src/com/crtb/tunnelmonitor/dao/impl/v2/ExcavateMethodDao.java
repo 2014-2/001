@@ -3,6 +3,7 @@ package com.crtb.tunnelmonitor.dao.impl.v2;
 import java.util.List;
 
 import org.zw.android.framework.IAccessDatabase;
+import org.zw.android.framework.db.core.SQLiteParamUtils;
 
 import android.util.Log;
 
@@ -33,7 +34,7 @@ public final class ExcavateMethodDao extends AbstractDao<TunnelCrossSectionParam
 		return _instance;
 	}
 
-	public List<TunnelCrossSectionParameter> queryExcavateMethod() {
+	public List<TunnelCrossSectionParameter> queryAllExcavateMethod() {
 
 		final IAccessDatabase mDatabase = getCurrentDb();
 
@@ -47,11 +48,49 @@ public final class ExcavateMethodDao extends AbstractDao<TunnelCrossSectionParam
 	
 	public int getExcavateMethodValue(){
 		
-		List<TunnelCrossSectionParameter> list = queryExcavateMethod();
+		List<TunnelCrossSectionParameter> list = queryAllExcavateMethod();
 		
 		if(list == null || list.isEmpty()) return Constant.CUSTOM_METHOD_START_INDEX ;
 		
 		return list.get(list.size() - 1).getExcavateMethod() + 1 ;
+	}
+	
+	/**
+	 * 所有自定义开挖方法
+	 * @return
+	 */
+	public List<TunnelCrossSectionParameter> queryCustomExcavateMethod() {
+
+		final IAccessDatabase mDatabase = getCurrentDb();
+
+		if (mDatabase == null) {
+			return null;
+		}
+		
+		// 所有自定义开挖方法
+		return mDatabase.queryObjects("select * from TunnelCrossSectionParameter where ExcavateMethod >= ?",
+				SQLiteParamUtils.toParamemter(Constant.CUSTOM_METHOD_START_INDEX), TunnelCrossSectionParameter.class);
+	}
+	
+	/**
+	 * 删除开挖方法
+	 * 
+	 * @param guid
+	 * @return
+	 */
+	public boolean deleteExcavateMethod(String guid){
+		
+		final IAccessDatabase mDatabase = getCurrentDb();
+
+		if (mDatabase == null || guid == null) {
+			return false;
+		}
+		
+		// 删除
+		mDatabase.execute("delete from TunnelCrossSectionParameter where Guid = ? ", 
+				SQLiteParamUtils.toParamemter(guid));
+		
+		return true ;
 	}
 
     private TunnelCrossSectionParameter queryByStableExcavateMethod(int excavateMethod){

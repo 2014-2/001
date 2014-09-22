@@ -39,7 +39,7 @@ public final class ExcavateMethodUtil {
 		}
 		
 		// 自定义开挖方式
-		List<TunnelCrossSectionParameter> customExcaMethod = ExcavateMethodDao.defaultDao().queryExcavateMethod();
+		List<TunnelCrossSectionParameter> customExcaMethod = ExcavateMethodDao.defaultDao().queryAllExcavateMethod();
 		if(customExcaMethod != null && !customExcaMethod.isEmpty()){
 			for(TunnelCrossSectionParameter item : customExcaMethod){
 				excaMethods.add(item.getMethodName());
@@ -64,7 +64,7 @@ public final class ExcavateMethodUtil {
 		
 		if(exca == ExcavateMethodEnum.UNKOWN){
 			// 自定义开挖方式
-			List<TunnelCrossSectionParameter> customExcaMethod = ExcavateMethodDao.defaultDao().queryExcavateMethod();
+			List<TunnelCrossSectionParameter> customExcaMethod = ExcavateMethodDao.defaultDao().queryAllExcavateMethod();
 			if(customExcaMethod != null && !customExcaMethod.isEmpty()){
 				for(TunnelCrossSectionParameter item : customExcaMethod){
 					if(item.getMethodName().equals(method)){
@@ -94,7 +94,7 @@ public final class ExcavateMethodUtil {
 		if(exca == ExcavateMethodEnum.UNKOWN){
 			
 			// 自定义开挖方式
-			List<TunnelCrossSectionParameter> customExcaMethod = ExcavateMethodDao.defaultDao().queryExcavateMethod();
+			List<TunnelCrossSectionParameter> customExcaMethod = ExcavateMethodDao.defaultDao().queryAllExcavateMethod();
 			
 			if (customExcaMethod != null && !customExcaMethod.isEmpty()) {
 				for (TunnelCrossSectionParameter item : customExcaMethod) {
@@ -117,7 +117,7 @@ public final class ExcavateMethodUtil {
 	 */
 	public static TunnelCrossSectionParameter findCustomExcavateMethod(String method){
 		
-		List<TunnelCrossSectionParameter> customExcaMethod = ExcavateMethodDao.defaultDao().queryExcavateMethod();
+		List<TunnelCrossSectionParameter> customExcaMethod = ExcavateMethodDao.defaultDao().queryAllExcavateMethod();
 		
 		if(method == null || customExcaMethod == null) return null;
 		
