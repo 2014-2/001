@@ -153,8 +153,6 @@ public class WarningDataManager {
 //		}
     	parameter.setWarningLevel(level);
 		AlertInfo sulvalert = warningData.getSulvAlert();
-//YX 取消速率默认为0.001f		
-//    	parameter.setTransformSpeed(sulvalert != null ? (float)sulvalert.getUValue() : 0.001f);
 		parameter.setTransformSpeed(sulvalert != null ? (float)sulvalert.getUValue() : 0);		
 //    	String originalID = alertInfo.getOriginalDataID();
 //    	List<Integer> ids = new ArrayList<Integer>();
