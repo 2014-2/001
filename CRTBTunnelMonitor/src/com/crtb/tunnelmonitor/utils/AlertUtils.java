@@ -1203,7 +1203,9 @@ public class AlertUtils {
 					// 原方法是根据测线的一端是查找另一端，并检查数据状态。
 					// 由于两个测线的两个端点都存在，没有必要再去查找
 					// updateLineConvergenceAlertsAfterCorrection(chainageId,s_1.getPntType(),s_1.getID(), alertId, handling,handlingTime,rockGrade);
-					checkLineConvergenceAlert(s_1, s_2, alertId, handling, handlingTime, false, rockGrade);
+                    s_1.setDataCorrection(totalCorrection);
+                    s_2.setDataCorrection(totalCorrection);
+                    checkLineConvergenceAlert(s_1, s_2, alertId, handling, handlingTime, false, rockGrade);
                 } else if (dataStatus == POINT_DATASTATUS_DISCARD) {
                 	checkLineConvergenceAlert(s_1, s_2, alertId, handling, handlingTime, false,rockGrade);
                 }
