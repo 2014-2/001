@@ -10,6 +10,7 @@ import org.zw.android.framework.ioc.InjectView;
 import org.zw.android.framework.util.DateUtils;
 import org.zw.android.framework.util.StringUtils;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.os.Message;
 import android.view.View;
@@ -52,6 +53,7 @@ import com.crtb.tunnelmonitor.mydefine.CrtbDialogHint;
 import com.crtb.tunnelmonitor.mydefine.CrtbDialogTest;
 import com.crtb.tunnelmonitor.utils.AlertUtils;
 import com.crtb.tunnelmonitor.utils.AlertUtils.OffsetLevel;
+import com.crtb.tunnelmonitor.utils.AlertUtils.UploadFinishCallBack;
 import com.crtb.tunnelmonitor.utils.SectionInterActionManager;
 import com.crtb.tunnelmonitor.utils.Time;
 import com.crtb.tunnelmonitor.widget.SlidingLayout;
@@ -513,6 +515,7 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements
 
 	// 异步测量
 	private void connectSurveyProvider(final TestPointHolder holder,
+
 			final TestPointHolder holde1, final String type,
 			final int sectionType) {
 
@@ -745,7 +748,9 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements
 							// YX 保存预警时判断点位信息
 							TunnelSettlementTotalData p1 = null, p2 = null;
 							if (crownList.contains(info.type)) {
-								doWarning(info.holder, info.holder1,AlertUtils.getPointSubsidenceExceedMsg(obj, false,tunnelSection.getROCKGRADE()));
+								String notice = (update ? "更新" : "保存") + "成功";
+								doWarningPoint(obj, false,tunnelSection.getROCKGRADE(),notice,info.holder);
+								//doWarning(info.holder, info.holder1,AlertUtils.getPointSubsidenceExceedMsg(obj, false,tunnelSection.getROCKGRADE(),null,null));
 							} else if (pointList.contains(info.type)) {
 								int index = pointList.indexOf(info.type);
 								int p1Index;
@@ -760,10 +765,11 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements
 								p1 = dao.queryTunnelTotalData(rawSheetBean.getGuid(),tunnelSection.getGuid(),pointList.get(p1Index));
 								p2 = dao.queryTunnelTotalData(rawSheetBean.getGuid(),tunnelSection.getGuid(),pointList.get(p2Index));
 								if (p1 != null && p2 != null) {
-									doWarningLine(tunnelSection.getGuid(),info.type, p1, p2, false);
+									String notice = (update ? "更新" : "保存") + "成功";
+									doWarningLine(tunnelSection.getGuid(),info.type, p1, p2, false,notice);
 								}
 							}
-							showText((update ? "更新" : "保存") + "成功");
+							//showText((update ? "更新" : "保存") + "成功");
 						} else {
 							showText((update ? "更新" : "保存") + "失败");
 						}
@@ -833,12 +839,12 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements
 //							if (info.holder1 != null) {
 //								info.holder1.warringLayout.removeAllViews();
 //							}
-
-							doWarning(info.holder, info.holder1,
-									AlertUtils.getPointSubsidenceExceedMsg(obj,
-											false,subsidenceSection.getROCKGRADE()));
-							showText((update ? "更新" : "保存") + "成功");
-
+							
+//							doWarning(info.holder, info.holder1,
+//									AlertUtils.getPointSubsidenceExceedMsg(obj,
+//											false,subsidenceSection.getROCKGRADE()));
+							final String notice = (update ? "更新" : "保存") + "成功";
+							doWarningPoint(obj,false,subsidenceSection.getROCKGRADE(),notice,info.holder);
 						} else {
 							showText((update ? "更新" : "保存") + "失败");
 						}
@@ -851,20 +857,28 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements
 		};
 	}
 
+	private void doWarningPoint(Object obj,final boolean readOnly,String sectionGuid,final String notice,final TestPointHolder holder){
+		AlertUtils.getPointSubsidenceExceedMsg(obj,readOnly,tunnelSection.getROCKGRADE(),this,new AlertUtils.UploadFinishCallBack(){
+
+			@Override
+			public void Finish(OffsetLevel[] offsetList, boolean isUploading) {
+				offsetList[0].IsNeedSaveWhenMaxBigger = isUploading;
+				doWarning(holder, null, offsetList);
+				if (!readOnly) {
+					showText(notice);
+				}
+			}
+		});			
+	}
+	
 	private void doWarningLine(String sectionGuid, String type,
 			TunnelSettlementTotalData p1, TunnelSettlementTotalData p2,
-			boolean readOnly) {
+			final boolean readOnly,final String notice) {
 
 		if (sectionGuid == null || type == null) {
 			return;
 		}
 
-		OffsetLevel[] list = AlertUtils
-				.getLineConvergenceExceedMsg(p1, p2, readOnly,tunnelSection.getROCKGRADE());
-
-		if (list == null || list.length == 0) {
-			return;
-		}
 
 		TestPointHolder view1 = null, view2 = null;
 		
@@ -890,8 +904,19 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements
 			}
 		}
 
-		// 处理超限
-		doWarning(view1, view2, list);
+		final TestPointHolder holder = view1;
+		final TestPointHolder holder1 = view2;	
+		AlertUtils.getLineConvergenceExceedMsg(p1, p2, readOnly, tunnelSection.getROCKGRADE(), this, new AlertUtils.UploadFinishCallBack(){
+
+			@Override
+			public void Finish(OffsetLevel[] offsetList, boolean isUploading) {
+				offsetList[0].IsNeedSaveWhenMaxBigger = isUploading;
+				doWarning(holder, holder1, offsetList);
+				if (!readOnly) {
+					showText(notice);
+				}
+			}
+		});
 	}
 
 	private void doWarning(TestPointHolder view1, TestPointHolder view2,
@@ -901,8 +926,8 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements
 			return; 
 		}
 		
-		if (list[Constant.LEI_JI_INDEX].IsLargerThanMaxValue) {
-			checkLeijiWarnningBiggerThanMax();
+		if (list[Constant.LEI_JI_INDEX].IsLargerThanMaxValue && !list[Constant.LEI_JI_INDEX].IsNeedSaveWhenMaxBigger) {
+			clearLeijiWarnningBiggerThanMax();
 			return;
 		}
 
@@ -1131,7 +1156,7 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements
 							tunnelSection.getGuid(), crown);
 					holder = createTunnelTestPointView(bean, null, crown,crown, "");
 					if (bean != null) {
-						doWarning(holder, null,AlertUtils.getPointSubsidenceExceedMsg(bean,true,tunnelSection.getROCKGRADE()));
+						doWarningPoint(bean, true,tunnelSection.getROCKGRADE(),null,holder);
 					}
 				}
 			}
@@ -1151,7 +1176,7 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements
 					} else { // 沿线的第二个点
 						p2 = bean;
 						if (p1 != null && p2 != null) {
-							doWarningLine(tunnelSection.getGuid(),pointList.get(i - 1), p1, p2, true);
+							doWarningLine(tunnelSection.getGuid(),pointList.get(i - 1), p1, p2, true,null);
 						}
 
 					}
@@ -1184,8 +1209,7 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements
 
 				// 预警信息
 				if (bean != null) {
-					doWarning(item, null,
-							AlertUtils.getPointSubsidenceExceedMsg(bean, true,subsidenceSection.getROCKGRADE()));
+					doWarningPoint(bean, true,subsidenceSection.getROCKGRADE(),null,item);
 				}
 			}
 		}
@@ -1304,7 +1328,7 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements
 		String type;
 	}
 
-	private void checkLeijiWarnningBiggerThanMax(){
+	private void clearLeijiWarnningBiggerThanMax(){
 		String coordinate = "";
 		Date surveyTime = null;
 		if(showInfo.tunnelCur != null){
@@ -1317,8 +1341,8 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements
 			//删除新测量的数据
 			else{
 				TunnelSettlementTotalDataDao.defaultDao().delete(showInfo.tunnelCur);
-				coordinate = showInfo.tunnelCur.getCoordinate();
-				surveyTime = showInfo.tunnelCur.getSurveyTime();
+				coordinate = "";
+				surveyTime = null;
 			}
 		} else if (showInfo.subCur != null){
 			//更新回原来的数据
@@ -1330,12 +1354,12 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements
 			//删除新测量的数据
 			else{
 				SubsidenceTotalDataDao.defaultDao().delete(showInfo.subCur);
-				coordinate = showInfo.subCur.getCoordinate();
-				surveyTime = showInfo.subCur.getSurveyTime();
+				coordinate = "";
+				surveyTime = null;
 			}
 		}
 		refreshCoordinateData(coordinate,surveyTime,showInfo.holder);
-		showText("累计超限大于3000毫米不能保存，请重新测量");
+		//showText("累计超限大于3000毫米不能保存，请重新测量");
 	}
 	
 	private void refreshCoordinateData(String coordinate,Date surveyTime,TestPointHolder holder){
@@ -1348,6 +1372,10 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements
 			holder.mPointX.setText(str[0]);
 			holder.mPointY.setText(str[1]);
 			holder.mPointZ.setText(str[2]);
+		} else{
+			holder.mPointX.setText("");
+			holder.mPointY.setText("");
+			holder.mPointZ.setText("");
 		}
 
 		// 测试时间

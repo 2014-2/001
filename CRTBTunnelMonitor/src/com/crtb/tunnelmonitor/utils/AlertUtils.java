@@ -10,6 +10,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteException;
 import android.graphics.Color;
@@ -50,7 +54,7 @@ public class AlertUtils {
     public static final String ORIGINAL_ID_DIVIDER = ",";
 
 	//报警的最大值
-	public static final int SULV_ALARM_MAX_VALUE = 3000;
+	public static final int ALARM_MAX_VALUE = 3000;
     
     // 累计变形值阈值
     public static final double ACCUMULATIVE_THRESHOLD = 100; // mm
@@ -107,8 +111,8 @@ public class AlertUtils {
      * @param readOnly 为true时该方法不会对数据库做出任何修改，只返回预警信息
      * @return
      */
-    public static OffsetLevel[] getPointSubsidenceExceedMsg(Object point, boolean readOnly, String rockGrade) {
-        return checkPointSubsidenceAlert(point, -1, null, null, readOnly,rockGrade);
+    public static void getPointSubsidenceExceedMsg(Object point, boolean readOnly, String rockGrade,Context context,UploadFinishCallBack pCaller) {
+        checkPointSubsidenceAlert(point, -1, null, null, readOnly,rockGrade,context,pCaller);
     }
     
     /**
@@ -117,8 +121,8 @@ public class AlertUtils {
      * @param readOnly 为true时该方法不会对数据库做出任何修改，只返回预警信息
      * @return
      */
-	public static OffsetLevel[] getLineConvergenceExceedMsg(TunnelSettlementTotalData s_1, TunnelSettlementTotalData s_2, boolean readOnly, String rockGrade) {
-		return checkLineConvergenceAlert(s_1, s_2, -1, null, null, readOnly, rockGrade);
+	public static void getLineConvergenceExceedMsg(TunnelSettlementTotalData s_1, TunnelSettlementTotalData s_2, boolean readOnly, String rockGrade,Context context,UploadFinishCallBack pCaller) {
+		checkLineConvergenceAlert(s_1, s_2, -1, null, null, readOnly, rockGrade,context,pCaller);
 	}
 
     public static String getAlertValueUnit(int alertType) {
@@ -313,19 +317,45 @@ public class AlertUtils {
         return ret;
     }
 
-    public static OffsetLevel[] checkPointSubsidenceAlert(Object point, int curHandlingAlertId, String handling, Date handlingTime,boolean readOnly,String rockGrade){
-		if (handling == null) {
-			handling = "";
-		}
-		OffsetLevel[] offsetLevel = null;
-		Exceeding excecding = getPointSubsidenceExceed(point, curHandlingAlertId, handling, handlingTime);
-		if (excecding != null) {
-			offsetLevel = checkOffsetLevel(excecding, rockGrade);
-		}
-		if (!readOnly && offsetLevel != null && !offsetLevel[Constant.LEI_JI_INDEX].IsLargerThanMaxValue) {
+    public static OffsetLevel[] checkPointSubsidenceAlert(final Object point, final int curHandlingAlertId, String handlingOld,final Date handlingTime,boolean readOnly,String rockGrade,final Context context,final UploadFinishCallBack pCaller){
+		/*if (!readOnly && offsetLevel != null && !offsetLevel[Constant.LEI_JI_INDEX].IsLargerThanMaxValue) {
 			updatePointSubsidence(excecding.tunnelData, excecding.subData, offsetLevel[Constant.LEI_JI_INDEX].TransfiniteLevel, offsetLevel[Constant.LEI_JI_INDEX].IsTransfinite, offsetLevel[Constant.LEI_JI_INDEX].Value, offsetLevel[Constant.LEI_JI_INDEX].PreType, excecding.originalDataID, handlingTime, handling, curHandlingAlertId);
+		}*/
+		//return offsetLevel;
+		
+		
+        final String handling = handlingOld == null ? "":handlingOld;
+        
+		final Exceeding excecding = getPointSubsidenceExceed(point, curHandlingAlertId, handling, handlingTime);
+		if (excecding != null) {
+			final OffsetLevel[] offsetLevel = checkOffsetLevel(excecding, rockGrade);
+			
+			if (!readOnly) {
+				if (offsetLevel[Constant.LEI_JI_INDEX].IsLargerThanMaxValue) {
+					judgeUploading(context, new UploadCallBack() {
+
+						@Override
+						public void done(boolean isUploading) {
+							if (isUploading && offsetLevel != null) {
+								updatePointSubsidence(excecding.tunnelData, excecding.subData, offsetLevel[Constant.LEI_JI_INDEX].TransfiniteLevel, offsetLevel[Constant.LEI_JI_INDEX].IsTransfinite, offsetLevel[Constant.LEI_JI_INDEX].Value, offsetLevel[Constant.LEI_JI_INDEX].PreType, excecding.originalDataID, handlingTime, handling, curHandlingAlertId);
+							}
+							pCaller.Finish(offsetLevel, isUploading);
+						}
+					});
+				} else {
+					updatePointSubsidence(excecding.tunnelData, excecding.subData, offsetLevel[Constant.LEI_JI_INDEX].TransfiniteLevel, offsetLevel[Constant.LEI_JI_INDEX].IsTransfinite, offsetLevel[Constant.LEI_JI_INDEX].Value, offsetLevel[Constant.LEI_JI_INDEX].PreType, excecding.originalDataID, handlingTime, handling, curHandlingAlertId);
+					if (pCaller != null) {
+						pCaller.Finish(offsetLevel, false);
+					}
+				}
+			}
+			else {
+				pCaller.Finish(offsetLevel, false);
+			}
+			return offsetLevel;
 		}
-		return offsetLevel;
+		
+		return null;
     }
     
 	private static void updatePointSubsidence(TunnelSettlementTotalData tunnelData, SubsidenceTotalData subData,int alertLevel, boolean isTransfinite, double accumulativeSubsidence, int uType, String originalDataID, Date handlingTime, String handling, int curHandlingAlertId) {
@@ -386,21 +416,40 @@ public class AlertUtils {
 		}
 	}
     
-	public static OffsetLevel[] checkLineConvergenceAlert(TunnelSettlementTotalData s_1,TunnelSettlementTotalData s_2, int curHandlingAlertId, String handling, Date handlingTime,boolean readOnly,String rockGrade){
-        if (handling == null) {
-            handling = "";
-        }
-		OffsetLevel[] offsetLevel = null;
-		Exceeding excecding = getLineConvergenceExceed(s_1, s_2, curHandlingAlertId, handling, handlingTime);
+	public static OffsetLevel[] checkLineConvergenceAlert(final TunnelSettlementTotalData s_1,final TunnelSettlementTotalData s_2,final int curHandlingAlertId,final String handlingOld,final Date handlingTime,final boolean readOnly,String rockGrade,final Context context,final UploadFinishCallBack pCaller){
+        final String handling = handlingOld == null ? "":handlingOld;
+        
+		final Exceeding excecding = getLineConvergenceExceed(s_1, s_2, curHandlingAlertId, handling, handlingTime);
 		if (excecding != null) {
-			offsetLevel = checkOffsetLevel(excecding, rockGrade);
+			final OffsetLevel[] offsetLevel = checkOffsetLevel(excecding, rockGrade);
+			
+			if (!readOnly) {
+				if (offsetLevel[Constant.LEI_JI_INDEX].IsLargerThanMaxValue) {
+					judgeUploading(context, new UploadCallBack() {
+
+						@Override
+						public void done(boolean isUploading) {
+							if (isUploading && offsetLevel != null) {
+								updateLineConvergence(s_1, s_2, offsetLevel[Constant.LEI_JI_INDEX].TransfiniteLevel, offsetLevel[Constant.LEI_JI_INDEX].IsTransfinite, offsetLevel[Constant.LEI_JI_INDEX].Value, offsetLevel[Constant.LEI_JI_INDEX].PreType, excecding.originalDataID, handlingTime, handling, curHandlingAlertId);
+							}
+							pCaller.Finish(offsetLevel, isUploading);
+						}
+					});
+				} else {
+					updateLineConvergence(s_1, s_2, offsetLevel[Constant.LEI_JI_INDEX].TransfiniteLevel, offsetLevel[Constant.LEI_JI_INDEX].IsTransfinite, offsetLevel[Constant.LEI_JI_INDEX].Value, offsetLevel[Constant.LEI_JI_INDEX].PreType, excecding.originalDataID, handlingTime, handling, curHandlingAlertId);
+					if (pCaller != null) {
+						pCaller.Finish(offsetLevel, false);
+					}
+				}
+			} else {
+				pCaller.Finish(offsetLevel, false);
+			}
+			return offsetLevel;
 		}
-		if (!readOnly && offsetLevel != null && !offsetLevel[Constant.LEI_JI_INDEX].IsLargerThanMaxValue) {
-			updateLineConvergence(s_1, s_2, offsetLevel[Constant.LEI_JI_INDEX].TransfiniteLevel, offsetLevel[Constant.LEI_JI_INDEX].IsTransfinite, offsetLevel[Constant.LEI_JI_INDEX].Value, offsetLevel[Constant.LEI_JI_INDEX].PreType, excecding.originalDataID, handlingTime, handling, curHandlingAlertId);
-		}
-		return offsetLevel;
+		
+		return null;
     }
-	
+		
 	private static void updateLineConvergence(TunnelSettlementTotalData s_1, TunnelSettlementTotalData s_2,int alertLevel, boolean isTransfinite, double convergence, int uType, String originalDataID, Date handlingTime, String handling, int curHandlingAlertId) {
 		int alertId = -1;
 		//int alertLevel = -1;
@@ -1100,7 +1149,7 @@ public class AlertUtils {
 //                                handleSameTunnelPointOtherAlertsByCorrection(p, alertId, correction, handlingTime);
 //                            }
                         } else if (dataStatus == POINT_DATASTATUS_DISCARD) {
-                            checkPointSubsidenceAlert(p, alertId, handling, handlingTime, false,rockGrade);
+                            checkPointSubsidenceAlert(p, alertId, handling, handlingTime, false,rockGrade,null,null);
                         	//checkPointSubsidenceExceed(p, alertId, handling, handlingTime, false,rockGrade);
                         }
                     }
@@ -1138,7 +1187,7 @@ public class AlertUtils {
 //                                handleSameGroundPointOtherAlertsByCorrection(p, alertId, correction, handlingTime);
 //                            }
                         } else if (dataStatus == POINT_DATASTATUS_DISCARD) {
-                            checkPointSubsidenceAlert(p, alertId, handling, handlingTime, false,rockGrade);
+                            checkPointSubsidenceAlert(p, alertId, handling, handlingTime, false,rockGrade,null,null);
                         	//checkPointSubsidenceExceed(p, alertId, handling, handlingTime, false,rockGrade);
                         }
                     }
@@ -1205,9 +1254,9 @@ public class AlertUtils {
 					// updateLineConvergenceAlertsAfterCorrection(chainageId,s_1.getPntType(),s_1.getID(), alertId, handling,handlingTime,rockGrade);
                     s_1.setDataCorrection(totalCorrection);
                     s_2.setDataCorrection(totalCorrection);
-                    checkLineConvergenceAlert(s_1, s_2, alertId, handling, handlingTime, false, rockGrade);
+                    checkLineConvergenceAlert(s_1, s_2, alertId, handling, handlingTime, false, rockGrade,null,null);
                 } else if (dataStatus == POINT_DATASTATUS_DISCARD) {
-                	checkLineConvergenceAlert(s_1, s_2, alertId, handling, handlingTime, false,rockGrade);
+                	checkLineConvergenceAlert(s_1, s_2, alertId, handling, handlingTime, false,rockGrade,null,null);
                 }
             }
         }
@@ -1309,7 +1358,7 @@ public class AlertUtils {
                         TunnelSettlementTotalDataDao.defaultDao().updateDataStatus(p.getGuid(), AlertUtils.POINT_DATASTATUS_NONE, 0);
                         p = TunnelSettlementTotalDataDao.defaultDao().queryOneByGuid(p.getGuid());
                     }
-                    checkPointSubsidenceAlert(p, curHandlingAlertId, handling, handlingTime, false,rockGrade);
+                    checkPointSubsidenceAlert(p, curHandlingAlertId, handling, handlingTime, false,rockGrade,null,null);
                     //checkPointSubsidenceExceed(p, curHandlingAlertId, handling, handlingTime, false,rockGrade);
                 }
             }
@@ -1326,7 +1375,7 @@ public class AlertUtils {
                         SubsidenceTotalDataDao.defaultDao().updateDataStatus(p.getGuid(), AlertUtils.POINT_DATASTATUS_NONE, 0);
                         p = SubsidenceTotalDataDao.defaultDao().queryOneByGuid(p.getGuid());
                     }
-                    checkPointSubsidenceAlert(p, curHandlingAlertId, handling, handlingTime, false,rockGrade);
+                    checkPointSubsidenceAlert(p, curHandlingAlertId, handling, handlingTime, false,rockGrade,null,null);
                     //checkPointSubsidenceExceed(p, curHandlingAlertId, handling, handlingTime, false, rockGrade);
                 }
             }
@@ -1725,6 +1774,8 @@ public class AlertUtils {
     	 * 超限等级
     	 */
     	public int TransfiniteLevel;
+    	
+    	public boolean IsNeedSaveWhenMaxBigger;
     }
     
     /**
@@ -1763,7 +1814,7 @@ public class AlertUtils {
 			leiji.TransfiniteLevel = 2;
 		}
 
-		if (value >= SULV_ALARM_MAX_VALUE) {
+		if (value >= ALARM_MAX_VALUE) {
 			leiji.IsLargerThanMaxValue = true;
 		} else {
 			leiji.IsLargerThanMaxValue = false;
@@ -1851,4 +1902,36 @@ public class AlertUtils {
 		
         return alertValue;
     }
+
+	private static void judgeUploading(Context context,final UploadCallBack caller) {
+		AlertDialog.Builder builder = new Builder(context);
+		builder.setCancelable(false);
+		builder.setMessage("累计超限已经大于3000毫米不能上传至工管中心，是否保存");
+		builder.setTitle("测量提示");
+		builder.setPositiveButton("是", new DialogInterface.OnClickListener() {
+
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				dialog.dismiss();
+				caller.done(true);
+			}
+		});
+		builder.setNegativeButton("否", new DialogInterface.OnClickListener() {
+
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				dialog.dismiss();
+				caller.done(false);
+			}
+		});
+		builder.create().show();
+	}
+	
+	public interface UploadCallBack{
+		public void done(boolean state);
+	}
+	
+	public interface UploadFinishCallBack{
+		public void Finish(OffsetLevel[] offsetList,boolean isCancel);
+	}
 }
