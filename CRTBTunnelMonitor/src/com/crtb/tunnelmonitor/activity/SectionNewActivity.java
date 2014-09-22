@@ -234,6 +234,9 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 //				<item>全断面法</item>
 //		        <item>台阶法</item>
 //		        <item>三台阶法</item>
+//		        <item>中隔壁法</item>
+//		        <item>交叉中隔壁法</item>
+//		        <item>双侧壁法</item>
 				if(position == 0){
 					section_custom_view.setVisibility(View.GONE);
 					section_method.setVisibility(View.VISIBLE);
@@ -250,17 +253,17 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 					section_method.setBackgroundResource(R.drawable.ic_three_step);
 					createExcavationMethodLine(ExcavateMethodEnum.ST.getCode(),method);
 				} 
-//				else if(position == 3 || position == 4){ // CD/CRD 法
-//					section_custom_view.setVisibility(View.GONE);
-//					section_method.setVisibility(View.VISIBLE);
-//					section_method.setBackgroundResource(R.drawable.ic_cd_crd_method);
-//					createExcavationMethodLine(ExcavateMethodEnum.CD.getCode(),method);
-//				} else if(position == 5){
-//					section_custom_view.setVisibility(View.GONE);
-//					section_method.setVisibility(View.VISIBLE);
-//					section_method.setBackgroundResource(R.drawable.ic_dual_slope_method);
-//					createExcavationMethodLine(ExcavateMethodEnum.SC.getCode(),method);
-//				}
+				else if(position == 3 || position == 4){ // CD/CRD 法
+					section_custom_view.setVisibility(View.GONE);
+					section_method.setVisibility(View.VISIBLE);
+					section_method.setBackgroundResource(R.drawable.ic_cd_crd_method);
+					createExcavationMethodLine(ExcavateMethodEnum.CD.getCode(),method);
+				} else if(position == 5){
+					section_custom_view.setVisibility(View.GONE);
+					section_method.setVisibility(View.VISIBLE);
+					section_method.setBackgroundResource(R.drawable.ic_dual_slope_method);
+					createExcavationMethodLine(ExcavateMethodEnum.SC.getCode(),method);
+				}
 				// 自定义开挖方法
 				else {
 					section_method.setVisibility(View.GONE);
