@@ -424,7 +424,7 @@ public class WorkNewActivity extends WorkFlowActivity implements OnClickListener
 				info.setLimitedTotalSubsidenceTime(DateUtils.toDate(limitDate,DateUtils.DATE_TIME_FORMAT));
 				info.setInfo(infoStr);
 				
-				int code = ProjectIndexDao.defaultWorkPlanDao().insert(info) ;
+				int code = ProjectIndexDao.defaultWorkPlanDao().insertNewProjectIndex(info) ;
 				
 				// 保存数据
 				if(code == 100){

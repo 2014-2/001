@@ -290,13 +290,13 @@ public final class ProjectIndexDao extends AbstractDao<ProjectIndex> {
 	}
 
 	/**
-	 * 保存工作面
+	 * 新建工作面
+	 * 
 	 * @param bean
 	 * @param mHandler
 	 * @return
 	 */
-	@Override
-	public int insert(ProjectIndex bean) {
+	public int insertNewProjectIndex(ProjectIndex bean) {
 		
 		final CrtbUser user = CrtbLicenseDao.defaultDao().queryCrtbUser() ;
 		
@@ -333,7 +333,7 @@ public final class ProjectIndexDao extends AbstractDao<ProjectIndex> {
         String dbName 	= bean.getProjectName() ;
         String dbTemp	= getDbUniqueTempName(dbName) ;
         
-        // 生成新文件
+        // 生成新的数据库文件
 		final IAccessDatabase db = mFramework.openDatabaseByName(dbTemp, 0);
 		
 		if(db == null){
@@ -343,20 +343,11 @@ public final class ProjectIndexDao extends AbstractDao<ProjectIndex> {
 		// 初始化表
 		loadAllTable(db);
 		
+		// 保存工作面
 		int code = db.saveObject(bean) ;
 		
 		// 保存到对应的数据库
 		if(code > 0){
-			
-			// 保存工程配置文件表
-			/*ProjectSettingIndex setting = new ProjectSettingIndex() ;
-			setting.setProjectName(dbName);
-			setting.setChainagePrefix(bean.getChainagePrefix());
-			setting.setInfo(bean.getInfo());
-			setting.setProjectID(bean.getId());
-			setting.setYMDFormat(0);
-			setting.setHMSFormat(0);
-			db.saveObject(setting);*/
 			
 			ProjectIndex obj = db.queryObject("select * from ProjectIndex where ProjectName = ? ", new String[]{dbName}, ProjectIndex.class) ;
 			
@@ -392,19 +383,13 @@ public final class ProjectIndexDao extends AbstractDao<ProjectIndex> {
 			
 			// 保存失败
 			if(code < 0){
-				
 				Log.e(TAG, "error :保存工作面失败 ");
-				
 				db.execute("delete from ProjectIndex where Id = ", new String[]{String.valueOf(obj.getId())});
-				
 				return DB_EXECUTE_FAILED ;
 			}
 			
-			// 生成加密文件
-			String[] info = CrtbDbFileUtils.closeDbFile(dbName,mFramework.getDatabaseByName(dbTemp));
-			
-			// 清除数据库缓存
-			mFramework.removeDatabaseByName(dbTemp);
+			// 关闭数据库文件，并生成加密文件
+			String[] info = closeDatabase(dbName);
 			
 			if(info != null){
 				return DB_EXECUTE_SUCCESS ;
@@ -431,31 +416,22 @@ public final class ProjectIndexDao extends AbstractDao<ProjectIndex> {
 		// 更新工作面
         String dbName 	= bean.getProjectName() ;
         String dbTemp	= getDbUniqueTempName(dbName) ;
-        String path 	= CrtbDbFileUtils.getLocalDbTempPath(dbName);
         
-        // 数据库打开信息
-        String[] info 	= null ;
+        // 打开数据库
+        String error 	= openProjectIndex(dbName);
         
-        // 临时文件是否存在
-        File file = new File(path);
-        
-        if(!file.exists()){
-        	
-        	 // 打开数据库
-            info = CrtbDbFileUtils.openDbFile(dbName);
-            
-            if(info == null){
-            	return DB_EXECUTE_FAILED ;
-            }
+        if(error != null){
+        	System.out.println("zhouwei >> ERROR : 数据库打开失败 ");
+        	return DB_EXECUTE_FAILED ;
         }
         
-        // 生成新文件
-		final IAccessDatabase db = mFramework.openDatabaseByName(dbTemp, 0);
+        // 得到对应的数据库对象
+        final IAccessDatabase db = mFramework.getDatabaseByName(dbTemp);
 		
 		if(db == null){
 			return DB_EXECUTE_FAILED;
 		}
-		
+        
 		try{
 			
 			// 保存到对应的数据库
@@ -488,31 +464,12 @@ public final class ProjectIndexDao extends AbstractDao<ProjectIndex> {
 				
 				// 更新失败
 				if(code < 0){
-					
 					Log.e(TAG, "error :更新工作面失败 ");
-					
 					return DB_EXECUTE_FAILED;
 				}
 				
-				//String[] param = new String[]{bean.getChainagePrefix()} ;
-				
-				// 更新所有表中里程前缀
-				// 1. 隧道内断面
-				//db.execute("update TunnelCrossSectionIndex set ChainagePrefix = ?",param);
-				// 2. 地表下沉断面
-				//db.execute("update SubsidenceCrossSectionIndex set ChainagePrefix = ?",param);
-				// 3. 记录单
-				//db.execute("update RawSheetIndex set prefix = ?",param);
-				
-				// 生成加密文件
-				if(info != null){
-					
-					// 重新加密文件
-					info = CrtbDbFileUtils.closeDbFile(dbName,mFramework.getDatabaseByName(dbTemp));
-					
-					// 清除数据库缓存
-					mFramework.removeDatabaseByName(dbTemp);
-				}
+				// 关闭数据库
+				closeDatabase(dbName);
 				
 				return DB_EXECUTE_SUCCESS ;
 			}

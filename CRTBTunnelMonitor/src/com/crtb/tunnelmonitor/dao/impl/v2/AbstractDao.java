@@ -157,15 +157,31 @@ public abstract class AbstractDao<T> {
 			return;
 		}
 		
+		closeDatabase(dbName);
+	}
+	
+	/**
+	 * 关闭数据库,并生成加密文件
+	 * 
+	 * @param dbName
+	 */
+	public final String[] closeDatabase(String dbName){
+		
+		if (StringUtils.isEmpty(dbName)) {
+			return null;
+		}
+		
 		// 对应的数据库名称与缓存数据库
 		dbName 			= CrtbDbFileUtils.getDbName(dbName);
-		String tempDb 	= getDbUniqueTempName(dbName);
-
+		String dbTemp 	= getDbUniqueTempName(dbName);
+		
 		// 关闭文件并重新加密
-		CrtbDbFileUtils.closeDbFile(dbName,mFramework.getDatabaseByName(tempDb));
+		String[] info = CrtbDbFileUtils.closeDbFile(dbName,mFramework.getDatabaseByName(dbTemp));
 		
 		// 缓存
-		mFramework.removeDatabaseByName(tempDb);
+		mFramework.removeDatabaseByName(dbTemp);
+		
+		return info ;
 	}
 	
 	public int insert(T bean){
