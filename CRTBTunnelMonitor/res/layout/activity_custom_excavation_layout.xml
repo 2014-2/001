@@ -77,7 +77,8 @@
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="20dp"
                     android:layout_toRightOf="@id/tv"
-                    android:hint="" />
+                    android:hint=""
+                    android:maxLength="10" />
             </RelativeLayout>
 
             <LinearLayout
