@@ -794,8 +794,7 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements
 						obj.setSurveyTime(DateUtils.toDate(info.time,
 								DateUtils.DATE_TIME_FORMAT));
 						obj.setUploadStatus(1);// 表示该测点未上传
-
-						int err = TunnelSettlementTotalDataDao.DB_EXECUTE_FAILED;
+						int err = SubsidenceTotalDataDao.DB_EXECUTE_FAILED;
 						boolean update = false;
 
 						if (old != null) {
@@ -817,7 +816,7 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements
 							showInfo.subCur = obj;
 						}
 
-						if (err == TunnelSettlementTotalDataDao.DB_EXECUTE_SUCCESS) {
+						if (err == SubsidenceTotalDataDao.DB_EXECUTE_SUCCESS) {
 
 							// 保存临时数据
 							// tempSubsidenceData.add(obj);
@@ -837,7 +836,7 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements
 
 							doWarning(info.holder, info.holder1,
 									AlertUtils.getPointSubsidenceExceedMsg(obj,
-											false,tunnelSection.getROCKGRADE()));
+											false,subsidenceSection.getROCKGRADE()));
 							showText((update ? "更新" : "保存") + "成功");
 
 						} else {
