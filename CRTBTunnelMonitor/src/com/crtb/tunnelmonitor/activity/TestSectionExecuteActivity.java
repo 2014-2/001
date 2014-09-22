@@ -857,8 +857,8 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements
 		};
 	}
 
-	private void doWarningPoint(Object obj,final boolean readOnly,String sectionGuid,final String notice,final TestPointHolder holder){
-		AlertUtils.getPointSubsidenceExceedMsg(obj,readOnly,tunnelSection.getROCKGRADE(),this,new AlertUtils.UploadFinishCallBack(){
+	private void doWarningPoint(Object obj,final boolean readOnly,String rockGrade,final String notice,final TestPointHolder holder){
+		AlertUtils.getPointSubsidenceExceedMsg(obj,readOnly,rockGrade,this,new AlertUtils.UploadFinishCallBack(){
 
 			@Override
 			public void Finish(OffsetLevel[] offsetList, boolean isUploading) {
