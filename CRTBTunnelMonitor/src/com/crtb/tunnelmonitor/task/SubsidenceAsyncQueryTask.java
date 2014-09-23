@@ -46,11 +46,13 @@ public class SubsidenceAsyncQueryTask extends AsyncQueryTask {
 //                             measureData = new SubsidenceMeasureData();
 //                             measureDataList.add(measureData);
 //                         }
-                         if (measureData == null) {
-                             measureData = new SubsidenceMeasureData();
-                             measureDataList.add(measureData);
-                         }
-                         measureData.addMeasurePoint(point);
+//                         if (measureData == null) {
+//                             measureData = new SubsidenceMeasureData();
+//                             measureDataList.add(measureData);
+//                         }
+                    	 measureData = new SubsidenceMeasureData();
+                    	 measureData.addMeasurePoint(point);
+                         measureDataList.add(measureData);
                      }
                      section.setMeasureData(measureDataList);
                 }
