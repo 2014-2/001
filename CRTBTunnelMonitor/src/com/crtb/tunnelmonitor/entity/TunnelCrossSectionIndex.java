@@ -96,7 +96,7 @@ public class TunnelCrossSectionIndex implements Serializable {
     	setUploadStatus(1);// 未上传
     	setGuid(CrtbUtils.generatorGUID());
     	setLAYVALUE(0.0f); // 默认值
-    	setLithologic(""); // 默认值
+    	setLithologic("BrittleRock"); // 默认值
     	setROCKGRADE("I"); // 默认值
     }
     

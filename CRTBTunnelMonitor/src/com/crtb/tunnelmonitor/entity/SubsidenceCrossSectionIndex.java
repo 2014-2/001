@@ -85,7 +85,7 @@ public class SubsidenceCrossSectionIndex implements Serializable {
 	public SubsidenceCrossSectionIndex(){
 		setGuid(CrtbUtils.generatorGUID());
 		setLAYVALUE(0.0f); // 默认知道
-		setLithologic(""); // 默认值
+		setLithologic("BrittleRock"); // 默认值
 		setROCKGRADE("I"); // 默认值
 	}
 
