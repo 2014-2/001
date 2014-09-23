@@ -83,8 +83,8 @@ public class CustomExcavationActivity extends BaseActivity implements OnPageChan
 			@Override
 			public void onClick(TunnelCrossSectionParameter bean) {
 				
-				String[] menus = {getString(R.string.common_delete),"取消"} ;
-				
+				//String[] menus = {getString(R.string.common_delete),"取消"} ;
+				String[] menus = {getString(R.string.common_delete)} ;
 				showListActionMenu("开挖方法管理", menus , bean);
 			}
 		}) ;

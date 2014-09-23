@@ -59,7 +59,7 @@ public final class ExcavateMethodDao extends AbstractDao<TunnelCrossSectionParam
 	 * 所有自定义开挖方法
 	 * @return
 	 */
-	public List<TunnelCrossSectionParameter> queryCustomExcavateMethod() {
+	public List<TunnelCrossSectionParameter> queryNoBaseCustomExcavateMethod() {
 
 		final IAccessDatabase mDatabase = getCurrentDb();
 
@@ -69,7 +69,7 @@ public final class ExcavateMethodDao extends AbstractDao<TunnelCrossSectionParam
 		
 		// 所有自定义开挖方法
 		return mDatabase.queryObjects("select * from TunnelCrossSectionParameter where ExcavateMethod >= ?",
-				SQLiteParamUtils.toParamemter(Constant.CUSTOM_METHOD_START_INDEX), TunnelCrossSectionParameter.class);
+				SQLiteParamUtils.toParamemter(Constant.NO_BASE_CUSTOM_METHOD_START_INDEX), TunnelCrossSectionParameter.class);
 	}
 	
 	/**

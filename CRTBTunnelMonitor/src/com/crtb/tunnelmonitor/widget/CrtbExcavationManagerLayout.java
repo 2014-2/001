@@ -59,7 +59,7 @@ public class CrtbExcavationManagerLayout extends LinearLayout {
 		
 		removeAllViews() ;
 		
-		List<TunnelCrossSectionParameter> list = dao.queryCustomExcavateMethod() ;
+		List<TunnelCrossSectionParameter> list = dao.queryNoBaseCustomExcavateMethod() ;
 		
 		if(list == null || list.isEmpty())
 			return ;

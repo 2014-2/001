@@ -144,6 +144,10 @@ public class Constant {
 	
 	public static final int CUSTOM_METHOD_START_INDEX = 9;
 	
+	public static final int NO_BASE_CUSTOM_METHOD_START_INDEX = 13;
+	
+	public static final int TEST_LINE_MAX = 22;
+	
 	public static final int LEI_JI_INDEX = 0;
 	
     public static final int SU_LV_INDEX = 1;
