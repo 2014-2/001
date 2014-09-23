@@ -112,32 +112,36 @@ public final class ExcavateMethodDao extends AbstractDao<TunnelCrossSectionParam
     	
 		if (excavateMethod == ExcavateMethodEnum.QD.getCode()) {
 			sectionParameter = new TunnelCrossSectionParameter();
+			sectionParameter.setExcavateMethod(excavateMethod);
 			sectionParameter.setCrownPointNumber(1);
 			sectionParameter.setSurveyLineNumber(1);
 			sectionParameter.setSurveyLinePointName("S1,1,2");
 		} else if (excavateMethod == ExcavateMethodEnum.DT.getCode()) {
 			sectionParameter = new TunnelCrossSectionParameter();
+			sectionParameter.setExcavateMethod(excavateMethod);
 			sectionParameter.setCrownPointNumber(1);
 			sectionParameter.setSurveyLineNumber(2);
 			sectionParameter.setSurveyLinePointName("S1,1,2/S2,3,4");
 		}else if (excavateMethod == ExcavateMethodEnum.ST.getCode()) {
 			sectionParameter = new TunnelCrossSectionParameter();
+			sectionParameter.setExcavateMethod(excavateMethod);
 			sectionParameter.setCrownPointNumber(1);
 			sectionParameter.setSurveyLineNumber(3);
 			sectionParameter.setSurveyLinePointName("S1,1,2/S2,3,4/S3,5,6");
 		}else if (excavateMethod == ExcavateMethodEnum.CD.getCode()
 			   || excavateMethod == ExcavateMethodEnum.CRD.getCode()) {
 			sectionParameter = new TunnelCrossSectionParameter();
+			sectionParameter.setExcavateMethod(excavateMethod);
     		sectionParameter.setCrownPointNumber(2);
     		sectionParameter.setSurveyLineNumber(4);
     		sectionParameter.setSurveyLinePointName("S1,1,2/S2,3,4/S3,5,6/S4,7,8");
 		} else if(excavateMethod == ExcavateMethodEnum.SC.getCode()){
     		sectionParameter = new TunnelCrossSectionParameter();
+    		sectionParameter.setExcavateMethod(excavateMethod);
     		sectionParameter.setCrownPointNumber(1);
     		sectionParameter.setSurveyLineNumber(3);
     		sectionParameter.setSurveyLinePointName("S1,1,2/S2,3,4/S3,5,6");
     	} 
-		
     	return sectionParameter;    	
     }
     
