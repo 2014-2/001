@@ -1774,8 +1774,6 @@ public class AlertUtils {
     	 * 超限等级
     	 */
     	public int TransfiniteLevel;
-    	
-    	public boolean IsNeedSaveWhenMaxBigger;
     }
     
     /**

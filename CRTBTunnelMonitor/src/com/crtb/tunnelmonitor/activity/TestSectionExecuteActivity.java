@@ -861,12 +861,8 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements
 		AlertUtils.getPointSubsidenceExceedMsg(obj,readOnly,rockGrade,this,new AlertUtils.UploadFinishCallBack(){
 
 			@Override
-			public void Finish(OffsetLevel[] offsetList, boolean isUploading) {
-				offsetList[0].IsNeedSaveWhenMaxBigger = isUploading;
-				doWarning(holder, null, offsetList);
-				if (!readOnly) {
-					showText(notice);
-				}
+			public void Finish(OffsetLevel[] offsetList, boolean isNeedSave) {
+				warnWrapper(notice,readOnly,holder,null,offsetList,isNeedSave);
 			}
 		});			
 	}
@@ -909,26 +905,36 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements
 		AlertUtils.getLineConvergenceExceedMsg(p1, p2, readOnly, tunnelSection.getROCKGRADE(), this, new AlertUtils.UploadFinishCallBack(){
 
 			@Override
-			public void Finish(OffsetLevel[] offsetList, boolean isUploading) {
-				offsetList[0].IsNeedSaveWhenMaxBigger = isUploading;
-				doWarning(holder, holder1, offsetList);
-				if (!readOnly) {
-					showText(notice);
-				}
+			public void Finish(OffsetLevel[] offsetList, boolean isNeedSave) {
+				warnWrapper(notice,readOnly,holder,holder1,offsetList,isNeedSave);
 			}
 		});
 	}
 
+	private void warnWrapper(String notice,boolean readOnly,TestPointHolder holder,TestPointHolder holder1,OffsetLevel[] offsetList, boolean isNeedSave){
+		boolean isNeedClear = false;
+		if (!readOnly) {
+			if (offsetList[Constant.LEI_JI_INDEX].IsLargerThanMaxValue && !isNeedSave) {
+				isNeedClear = true;
+			}
+		} 
+		
+		if (isNeedClear) {
+			clearLeijiWarnningBiggerThanMax();
+		} else {
+			doWarning(holder, holder1, offsetList);
+		}
+
+		if (!readOnly) {
+			showText(notice);
+		}
+	}
+	
 	private void doWarning(TestPointHolder view1, TestPointHolder view2,
 			OffsetLevel[] list) {
 
 		if (list == null || list.length == 0) {
 			return; 
-		}
-		
-		if (list[Constant.LEI_JI_INDEX].IsLargerThanMaxValue && !list[Constant.LEI_JI_INDEX].IsNeedSaveWhenMaxBigger) {
-			clearLeijiWarnningBiggerThanMax();
-			return;
 		}
 
 		if (view1 != null) {
