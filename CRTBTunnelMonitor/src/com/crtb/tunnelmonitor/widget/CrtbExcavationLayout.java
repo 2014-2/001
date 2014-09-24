@@ -285,13 +285,9 @@ public class CrtbExcavationLayout extends LinearLayout implements OnClickListene
 			
 			for(TestLine line : beans ){
 				
-				if(StringUtils.isEmpty(line.lineStartPoint)){
-					showText("测线开始点不能为空");
-					return ;
-				}
-				
-				if(StringUtils.isEmpty(line.lineEndPoint)){
-					showText("测线结束点不能为空");
+				if(StringUtils.isEmpty(line.lineStartPoint)
+						|| StringUtils.isEmpty(line.lineEndPoint)){
+					showText("测线点不能为空");
 					return ;
 				}
 			}
@@ -411,7 +407,7 @@ public class CrtbExcavationLayout extends LinearLayout implements OnClickListene
 	
 	private String findPoint(){
 		
-		String[] ps = getTestLineStartPoint();
+		String[] ps = getTestLineStartPoint(null);
 		
 		for(String p : ps){
 			
@@ -479,7 +475,7 @@ public class CrtbExcavationLayout extends LinearLayout implements OnClickListene
 			@Override
 			public void onClick(View v) {
 				
-				String[] points = getTestLineStartPoint();
+				String[] points = getTestLineStartPoint(bean);
 				
 				CrtbDialogList<String> sd = new CrtbDialogList<String>(getContext(), points, null);
 				sd.show() ;
@@ -489,12 +485,18 @@ public class CrtbExcavationLayout extends LinearLayout implements OnClickListene
 					@Override
 					public void onItemClick(String obj, int position,String item) {
 						
+						// 用于检测的临时线
+						TestLine temp = new TestLine() ;
+						temp.lineStartPoint = item ;
+						temp.lineEndPoint	= bean.lineEndPoint ;
+						
+						if(beans.contains(temp)){
+							showText("不能存在相同的测线");
+							return ;
+						}
+						
 						// 起点
 						bean.lineStartPoint = item ;
-						
-						// 终点
-						String[] eps = getTestLineEndPoint(bean);
-						bean.lineEndPoint = eps[0];
 						
 						updateTestLineView() ;
 					}
@@ -518,6 +520,7 @@ public class CrtbExcavationLayout extends LinearLayout implements OnClickListene
 					@Override
 					public void onItemClick(String obj, int position,String item) {
 						
+						// 用于检测的临时线
 						TestLine temp = new TestLine() ;
 						temp.lineStartPoint = bean.lineStartPoint ;
 						temp.lineEndPoint	= item ;
@@ -525,18 +528,6 @@ public class CrtbExcavationLayout extends LinearLayout implements OnClickListene
 						if(beans.contains(temp)){
 							showText("不能存在相同的测线");
 							return ;
-						}
-						
-						for(TestLine line : beans){
-							if(temp.equals(line)){
-								continue;
-							}
-
-							if (temp.lineStartPoint.equals(line.lineEndPoint)
-									&& temp.lineEndPoint.equals(line.lineStartPoint)) {
-								showText("测线的两个点不能完全相同");
-								return;
-							}
 						}
 						
 						// 终点
@@ -548,13 +539,13 @@ public class CrtbExcavationLayout extends LinearLayout implements OnClickListene
 			}
 		}) ;
 		
-		
 		return v ;
 	}
 	
-	private String[] getTestLineStartPoint(){
+	private String[] getTestLineStartPoint(TestLine bean){
 		
 		List<String> pc = new ArrayList<String>();
+		
 		if(gdPoints == 1){
 			pc.add("A1");
 		} else if(gdPoints == 2){
@@ -573,6 +564,11 @@ public class CrtbExcavationLayout extends LinearLayout implements OnClickListene
 			pc.add(String.valueOf(pos + 2));
 		}
 		
+		// 是否存在结束点
+		if(bean != null && !StringUtils.isEmpty(bean.lineEndPoint)){
+			pc.remove(bean.lineEndPoint);
+		}
+		
 		String[] points = new String[pc.size()];
 		pc.toArray(points);
 		
@@ -581,7 +577,7 @@ public class CrtbExcavationLayout extends LinearLayout implements OnClickListene
 	
 	private String[] getTestLineEndPoint(TestLine bean){
 		
-		String[] points 	= getTestLineStartPoint();
+		String[] points 	= getTestLineStartPoint(bean);
 		List<String> eps 	= new ArrayList<String>();
 		
 		for(String str : points){
@@ -589,7 +585,9 @@ public class CrtbExcavationLayout extends LinearLayout implements OnClickListene
 		}
 		
 		// 删除起点
-		eps.remove(bean.lineStartPoint);
+		if(!StringUtils.isEmpty(bean.lineStartPoint)){
+			eps.remove(bean.lineStartPoint);
+		}
 		
 		String[] array = new String[eps.size()] ;
 		eps.toArray(array);
@@ -612,8 +610,8 @@ public class CrtbExcavationLayout extends LinearLayout implements OnClickListene
 		@Override
 		public boolean equals(Object o) {
 			
-			return lineStartPoint.equals(((TestLine)o).lineStartPoint) 
-					&& lineEndPoint.equals(((TestLine)o).lineEndPoint);
+			return (lineStartPoint.equals(((TestLine)o).lineStartPoint) && lineEndPoint.equals(((TestLine)o).lineEndPoint)) || 
+					(lineStartPoint.equals(((TestLine)o).lineEndPoint) && lineEndPoint.equals(((TestLine)o).lineStartPoint));
 		}
 	}
 }
