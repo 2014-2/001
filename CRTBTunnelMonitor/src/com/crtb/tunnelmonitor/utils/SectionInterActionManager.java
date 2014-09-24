@@ -49,7 +49,7 @@ public class SectionInterActionManager {
 	
 		//YX 只设置台阶法、三台阶、全断面为A，其他定义的均为A1
 		int excavateMethod = sectionParam.getExcavateMethod();
-		if(crownPointNumber == 1 && (excavateMethod == 1 || excavateMethod == 2 || excavateMethod == 3)){
+		if(crownPointNumber == 1 && (excavateMethod <= Constant.STABLE_METHOD_END_INDEX)){
 			crownList.add(CROWN_PREFIX);
 		} else {
 			count = crownPointNumber + 1;

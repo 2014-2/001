@@ -142,6 +142,8 @@ public class Constant {
 	//上传-fxkz
 	public static final String UPDATE_FXKZ = "http://61.237.239.144/fxkz/testdata";
 	
+	public static final int STABLE_METHOD_END_INDEX = 7;
+	
 	public static final int CUSTOM_METHOD_START_INDEX = 9;
 	
 	public static final int NO_BASE_CUSTOM_METHOD_START_INDEX = 13;
