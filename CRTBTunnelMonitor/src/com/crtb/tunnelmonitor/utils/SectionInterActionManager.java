@@ -15,6 +15,7 @@ public class SectionInterActionManager {
 	private static final String LOG_TAG = "SectionInterActionManager";
 	private static final String UPLOAD_CROWN_GD_NAME = "GD";
 	private static final String UPLOAD_TEST_POINT_NAME = "SL";
+	private static final String UPLOAD_DB_POINT_NAME = "DB";
 	private static final String UPLOAD_ITEM_SEPARATOR = "/";
 	private static final String UPLOAD_COORDINATE_SEPARATOR ="#";
 	private static final String LINE_PREFIX = "S";
@@ -128,39 +129,58 @@ public class SectionInterActionManager {
 			Log.i(LOG_TAG, "sectionCode null");
 			return "";
 		}
-		//pointType:A2，或者A
+		//拱顶 pointType:A2，或者A
 		if (pointType.contains(CROWN_PREFIX)) {
 			String gdIndex = pointType.replace(CROWN_PREFIX, "");
 			int index = 1; //单个拱顶，A后面没有序号时，默认为1
 			if(!gdIndex.equals("")){
-				index = Integer.valueOf(gdIndex);
+				try {
+					index = Integer.valueOf(gdIndex);
+				} catch (Exception e) {
+					e.printStackTrace();
+					return "";
+				}
 			}
-			pointInfo =sectionCode + UPLOAD_CROWN_GD_NAME
-					+ String.format("%02d", index);
+			pointInfo = sectionCode + UPLOAD_CROWN_GD_NAME + String.format("%02d", index);
+			return pointInfo;
+		} 
+		//测线
+		else if (pointType.contains(LINE_PREFIX)) {
+			// pointType:S2,或者S4
+			pointType = pointType.replace(LINE_PREFIX, "");
+			int start = 0;
+			int end = 0;
+			int lineIndex = 0;
+			try {
+				lineIndex = Integer.valueOf(pointType);
+			} catch (Exception e) {
+				e.printStackTrace();
+				return "";
+			}
+
+			end = lineIndex * 2;
+			start = end - 1;
+
+			pointInfo = sectionCode + UPLOAD_TEST_POINT_NAME + String.format("%02d", start) 
+					+ UPLOAD_COORDINATE_SEPARATOR + sectionCode + UPLOAD_TEST_POINT_NAME + String.format("%02d", end);
+
+			return pointInfo;
+		} 
+		//地表
+		else {
+			int dbIndex;
+			try {
+				dbIndex = Integer.valueOf(pointType);
+				dbIndex--;
+			} catch (Exception e) {
+				e.printStackTrace();
+				return "";
+			}
+
+			dbIndex = Math.max(0, dbIndex);
+			pointInfo =sectionCode + UPLOAD_DB_POINT_NAME + String.format("%02d", dbIndex);
 			return pointInfo;
 		}
-
-		// pointType:S2,或者S4
-		pointType = pointType.replace("S", "");
-		int start = 0;
-		int end = 0;
-		int lineIndex = 0;
-		try{
-			lineIndex = Integer.valueOf(pointType);	
-		} catch(Exception e){
-			e.printStackTrace();
-			return "";
-		}
-		
-		end = lineIndex * 2;
-		start = end - 1;
-
-		pointInfo = sectionCode + UPLOAD_TEST_POINT_NAME
-				+ String.format("%02d", start) + UPLOAD_COORDINATE_SEPARATOR
-				+ sectionCode + UPLOAD_TEST_POINT_NAME
-				+ String.format("%02d", end);
-
-		return pointInfo;
 	}
 
     /**
