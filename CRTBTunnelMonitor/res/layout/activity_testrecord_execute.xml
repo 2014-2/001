@@ -15,11 +15,9 @@
         android:layout_height="fill_parent"
         android:layout_alignParentLeft="true"
         android:layout_below="@id/top_bar"
-        android:background="#00ccff"
+        android:background="#2a9fb6"
         android:visibility="visible" >
-
         
-
         <ListView
             android:id="@+id/test_point_List"
             android:layout_width="fill_parent"

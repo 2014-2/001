@@ -99,12 +99,12 @@ public class AlertUtils {
     /**
      * 累积位移等级对应的颜色
      */
-    private static int[] leijiOffsetLevelColor = new int[]{Color.GREEN,Color.YELLOW,Color.RED};
+    private static int[] leijiOffsetLevelColor = new int[]{Color.GREEN,Color.parseColor("#C87A05"),Color.RED};
     
     /**
      * 累积位移等级对应的颜色
      */
-    private static int[] sulvOffsetLevelColor = new int[]{Color.GREEN,Color.RED};
+    private static int[] sulvOffsetLevelColor = new int[]{Color.BLACK,Color.BLACK};
     
     /**
      * @param point
