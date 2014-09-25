@@ -9,8 +9,10 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.crtb.tunnelmonitor.AppCRTBApplication;
+import com.crtb.tunnelmonitor.dao.impl.v2.AlertListDao;
 import com.crtb.tunnelmonitor.dao.impl.v2.TunnelCrossSectionIndexDao;
 import com.crtb.tunnelmonitor.entity.AlertInfo;
+import com.crtb.tunnelmonitor.entity.AlertList;
 import com.crtb.tunnelmonitor.entity.MergedAlert;
 import com.crtb.tunnelmonitor.network.CrtbWebService;
 import com.crtb.tunnelmonitor.network.DataCounter;
@@ -176,7 +178,15 @@ public class WarningDataManager {
 //        	pointValue = (float) AlertUtils.getLineLength(point1, point2);
 //        }
         AlertInfo leijiAlert = warningData.getLeijiAlert();
-    	parameter.setWarningPointValue((float) (leijiAlert != null ? leijiAlert.getUValue() : 0.001f));
+
+        //直接使用AlertList的原始值，即是本条报警上没有添加任何改正值的数据
+    	//parameter.setWarningPointValue((float) (leijiAlert != null ? leijiAlert.getUValue() : 0.001f));
+        float UValue = 0.001f;
+		AlertList al = AlertListDao.defaultDao().queryOneById(alertInfo.getAlertId());
+		if (al != null) {
+			UValue = (float) al.getUValue();
+		}
+		parameter.setWarningPointValue(UValue);
     	parameter.setWarningDate(CrtbUtils.parseDate(alertInfo.getDate()));
     	String duePerson = alertInfo.getDuePerson();
     	if (TextUtils.isEmpty(duePerson)) {
