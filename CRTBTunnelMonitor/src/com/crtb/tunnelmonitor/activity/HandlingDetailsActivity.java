@@ -33,8 +33,21 @@ public class HandlingDetailsActivity extends Activity {
         mAlertId = i.getIntExtra(EXTRA_ALERT_ID, -1);
         if (mAlertId >= 0) {
           List<AlertHandlingList> handlings = AlertHandlingInfoDao.defaultDao().queryByAlertIdOrderByHandlingTimeDesc(mAlertId);
-
+          
           if (handlings != null) {
+        	  int count = handlings.size();
+				if (count > 1) {
+					for (int index = 0; index < count; index++) {
+						AlertHandlingList ahl = handlings.get(index);
+						String handing = ahl.getInfo();
+						if(handing.equals("") ||handing.equalsIgnoreCase("null")){
+							handlings.remove(index);
+							count--;
+							index--;
+						}
+					}
+				}
+        	  
               String hc = getString(R.string.handling_count, handlings.size());
               mTitleView.setText(hc);
               mAdapter = new AlertHandlingListAdapter(this, handlings);

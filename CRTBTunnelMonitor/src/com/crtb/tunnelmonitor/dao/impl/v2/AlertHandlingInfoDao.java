@@ -103,14 +103,22 @@ public class AlertHandlingInfoDao extends AbstractDao<AlertHandlingList> {
         String guid = AlertListDao.defaultDao().getGuidById(alertId);
 
         AlertHandlingList ah = new AlertHandlingList();
+        AlertHandlingList old= queryOne(alertId, alertStatus);
+        if(old != null){
+        	ah.setID(old.getID());
+        }
         ah.setAlertID(guid);
         ah.setInfo(handling);
         ah.setHandlingTime(handlingTime);
         ah.setDuePerson(duePerson);
         ah.setAlertStatus(alertStatus);
         ah.setHandlingInfo(false);
-
-        int ret = mDatabase.saveObject(ah);
+        int ret = 0;
+        if(old != null){
+        	ret = mDatabase.updateObject(ah);
+        } else {
+        	ret = mDatabase.saveObject(ah);
+        }
         Log.d(TAG, "AlertHandlingInfoDao insertItem, ret: " + ret);
         return ret;
     }
