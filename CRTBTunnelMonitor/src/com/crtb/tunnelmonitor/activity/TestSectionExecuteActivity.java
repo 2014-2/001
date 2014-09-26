@@ -39,6 +39,7 @@ import com.crtb.tunnelmonitor.dao.impl.v2.SubsidenceCrossSectionIndexDao;
 import com.crtb.tunnelmonitor.dao.impl.v2.SubsidenceTotalDataDao;
 import com.crtb.tunnelmonitor.dao.impl.v2.TunnelCrossSectionIndexDao;
 import com.crtb.tunnelmonitor.dao.impl.v2.TunnelSettlementTotalDataDao;
+import com.crtb.tunnelmonitor.entity.AlertHandlingList;
 import com.crtb.tunnelmonitor.entity.AlertList;
 import com.crtb.tunnelmonitor.entity.RawSheetIndex;
 import com.crtb.tunnelmonitor.entity.SubsidenceCrossSectionIndex;
@@ -53,7 +54,6 @@ import com.crtb.tunnelmonitor.mydefine.CrtbDialogHint;
 import com.crtb.tunnelmonitor.mydefine.CrtbDialogTest;
 import com.crtb.tunnelmonitor.utils.AlertUtils;
 import com.crtb.tunnelmonitor.utils.AlertUtils.OffsetLevel;
-import com.crtb.tunnelmonitor.utils.AlertUtils.UploadFinishCallBack;
 import com.crtb.tunnelmonitor.utils.SectionInterActionManager;
 import com.crtb.tunnelmonitor.utils.Time;
 import com.crtb.tunnelmonitor.widget.SlidingLayout;
@@ -122,6 +122,7 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements
 	private List<RawSheetIndex> rawSheets; // 测量数据
 	private boolean rawSheetCanTest; // 是否能够测量
 	private ShowInfo showInfo ;
+	private DeletedAlertInfo deleteAlertInfo;
 	private int sectionIndex = 0;
 	private int sectionCount;
 	private TunnelCrossSectionIndex tunnelSection;
@@ -463,13 +464,17 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements
 	/**
 	 * 删除隧道内预警信息
 	 */
-	private void deleteTunnelAlertInfo(String sheetId, String chainageid,
+	private DeletedAlertInfo deleteTunnelAlertInfo(String sheetId, String chainageid,
 			String guid) {
-
+		//根据当前条件每次只会有一条AlertList满足条件
+		DeletedAlertInfo deleteInfo = null;
+		
 		if (sheetId == null || chainageid == null || guid == null) {
-			return;
+			return null;
 		}
-
+		
+		deleteInfo = new DeletedAlertInfo();
+		
 		List<AlertList> als = AlertListDao.defaultDao().queryByOrigionalDataId(
 				String.valueOf(sheetId), chainageid, guid);
 
@@ -477,11 +482,18 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements
 			for (AlertList al : als) {
 				if (al.getUploadStatus() != 2) {
 					int alId = al.getId();
-					AlertHandlingInfoDao.defaultDao().deleteByAlertId(alId);
+					List<AlertHandlingList> handings = AlertHandlingInfoDao.defaultDao().queryByAlertIdOrderByHandlingTimeDesc(alId);
+					if (handings != null && handings.size() > 0) {
+						AlertHandlingInfoDao.defaultDao().deleteByAlertId(alId);
+					}
 					AlertListDao.defaultDao().deleteById(alId);
+					deleteInfo.alert = al;
+					deleteInfo.handings = handings;
 				}
 			}
 		}
+		
+		return deleteInfo;
 	}
 
 	/**
@@ -491,13 +503,17 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements
 	 * @param chainageid
 	 * @param guid
 	 */
-	private void deleteSubsidenceAlertInfo(String sheetId, String chainageid,
+	private DeletedAlertInfo deleteSubsidenceAlertInfo(String sheetId, String chainageid,
 			String guid) {
+		// 根据当前条件每次只会有一条AlertList满足条件
+		DeletedAlertInfo deleteInfo = null;
 
 		if (sheetId == null || chainageid == null || guid == null) {
-			return;
+			return null;
 		}
 
+		deleteInfo = new DeletedAlertInfo();
+		
 		List<AlertList> als = AlertListDao.defaultDao().queryByOrigionalDataId(
 				sheetId, chainageid, guid);
 
@@ -505,12 +521,18 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements
 
 			for (AlertList al : als) {
 				if (al.getUploadStatus() != 2) {
-					int alId = al.getId();
-					AlertHandlingInfoDao.defaultDao().deleteByAlertId(alId);
+					int alId = al.getId();				
+					List<AlertHandlingList> handings = AlertHandlingInfoDao.defaultDao().queryByAlertIdOrderByHandlingTimeDesc(alId);
+					if (handings != null && handings.size() > 0) {
+						AlertHandlingInfoDao.defaultDao().deleteByAlertId(alId);
+					}
 					AlertListDao.defaultDao().deleteById(alId);
+					deleteInfo.alert = al;
+					deleteInfo.handings = handings;
 				}
 			}
 		}
+		return deleteInfo;
 	}
 
 	// 异步测量
@@ -733,7 +755,7 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements
 							// tempTunnelData.add(obj);
 
 							// 删除隧道内断面预警
-							deleteTunnelAlertInfo(rawSheetBean.getGuid(),
+							deleteAlertInfo = deleteTunnelAlertInfo(rawSheetBean.getGuid(),
 									tunnelSection.getGuid(),
 									old != null ? old.getGuid() : obj.getGuid());
 
@@ -828,7 +850,7 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements
 							// tempSubsidenceData.add(obj);
 
 							// 删除下沉预警
-							deleteSubsidenceAlertInfo(rawSheetBean.getGuid(),
+							deleteAlertInfo = deleteSubsidenceAlertInfo(rawSheetBean.getGuid(),
 									subsidenceSection.getGuid(),
 									old != null ? old.getGuid() : obj.getGuid());
 
@@ -1364,6 +1386,12 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements
 				surveyTime = null;
 			}
 		}
+		if(deleteAlertInfo != null){
+			//恢复删除的AlertInfo
+			AlertListDao.defaultDao().insertItem(deleteAlertInfo.alert);
+			//恢复删除的AlertHandlingInfo
+			AlertHandlingInfoDao.defaultDao().insertItems(deleteAlertInfo.handings);
+		}
 		refreshCoordinateData(coordinate,surveyTime,showInfo.holder);
 		//showText("累计超限大于3000毫米不能保存，请重新测量");
 	}
@@ -1407,5 +1435,11 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements
 		public TunnelSettlementTotalData tunnelCur;
 		public SubsidenceTotalData subOld;
 		public SubsidenceTotalData subCur;
+    }
+
+    class DeletedAlertInfo{
+    	public AlertList alert;
+    	
+    	public List<AlertHandlingList> handings;
     }
 }

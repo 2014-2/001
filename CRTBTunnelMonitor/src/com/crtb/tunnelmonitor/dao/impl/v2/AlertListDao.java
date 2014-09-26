@@ -297,6 +297,24 @@ public class AlertListDao extends AbstractDao<AlertList> {
         return ret;
     }
 
+    public int insertItem(AlertList alert) {
+
+        Log.d(TAG, "AlertListDao insertItem alert");
+        final IAccessDatabase mDatabase = getCurrentDb();
+
+        if (mDatabase == null) {
+            return -1;
+        }
+
+		int ret = -9;
+		if (alert != null) {
+			ret = mDatabase.saveObject(alert);
+		}
+		Log.d(TAG, "AlertListDao insertItem, ret: " + ret);
+		return ret;
+    }
+
+    
     public void updatePointAlertItem(String sheetId, String chainageId, int Utype, double UValue,
             String originalDataID) {
         IAccessDatabase db = getCurrentDb();

@@ -123,6 +123,21 @@ public class AlertHandlingInfoDao extends AbstractDao<AlertHandlingList> {
         return ret;
     }
 
+    public void insertItems(List<AlertHandlingList> handings){
+    	
+    	 Log.d(TAG, "AlertHandlingInfoDao insertItem");
+         final IAccessDatabase mDatabase = getCurrentDb();
+
+         if (mDatabase == null) {
+             return ;
+         }
+
+ 		if(handings != null && handings.size() > 0){
+        	mDatabase.saveObject(handings);
+        }  	
+ 		Log.d(TAG, "AlertHandlingInfoDao insertItems End");
+    }
+    
     public void deleteItemById(int id) {
         IAccessDatabase db = getCurrentDb();
         if (db != null) {
