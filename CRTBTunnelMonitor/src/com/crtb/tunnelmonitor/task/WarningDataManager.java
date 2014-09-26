@@ -155,7 +155,8 @@ public class WarningDataManager {
 //		}
     	parameter.setWarningLevel(level);
 		AlertInfo sulvalert = warningData.getSulvAlert();
-		parameter.setTransformSpeed(sulvalert != null ? (float)sulvalert.getUValue() : 0);		
+		float sulv = sulvalert != null ? (float)sulvalert.getUValue() : 0;
+		//parameter.setTransformSpeed(sulv);		
 //    	String originalID = alertInfo.getOriginalDataID();
 //    	List<Integer> ids = new ArrayList<Integer>();
 //        if (originalID.contains(AlertUtils.ORIGINAL_ID_DIVIDER)) {
@@ -186,7 +187,9 @@ public class WarningDataManager {
 		if (al != null) {
 			UValue = (float) al.getUValue();
 		}
-		parameter.setWarningPointValue(UValue);
+		//YX 速率键对中存变形值，变形键对中存速率值
+		parameter.setTransformSpeed(UValue);
+		parameter.setWarningPointValue(sulv);
     	parameter.setWarningDate(CrtbUtils.parseDate(alertInfo.getDate()));
     	String duePerson = alertInfo.getDuePerson();
     	if (TextUtils.isEmpty(duePerson)) {
