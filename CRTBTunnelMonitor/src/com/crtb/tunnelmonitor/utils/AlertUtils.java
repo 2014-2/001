@@ -949,8 +949,10 @@ public class AlertUtils {
                     ai.setAlertLevel(c.getInt(6));
                     // Yongdong: UValue should be calculated by raw data, not by AlertList.UValue
                     OtherInfo info = getUVaule(c.getString(8), uType);
-                    ai.setUValue(info.mUVaule != null ? info.mUVaule : c.getDouble(7));
-                    ai.setDate(info.mDate != null ? info.mDate : c.getString(1));
+					if (info != null) {
+						ai.setUValue(info.mUVaule != null ? info.mUVaule : c.getDouble(7));
+						ai.setDate(info.mDate != null ? info.mDate : c.getString(1));
+					}
                     ai.setOriginalDataID(c.getString(8));
                     ai.setAlertInfo(c.getString(9));
                     ai.setUploadStatus(c.getInt(10));
@@ -1704,12 +1706,16 @@ public class AlertUtils {
             Object point = TunnelSettlementTotalDataDao.defaultDao().queryOneByGuid(dataGuid);
             if (point == null) {
                 point = SubsidenceTotalDataDao.defaultDao().queryOneByGuid(dataGuid);
-                info.mDate = format.format(((SubsidenceTotalData)point).getSurveyTime());
+				if (point != null) {
+					info.mDate = format.format(((SubsidenceTotalData) point).getSurveyTime());
+				}
             } else {
                 info.mDate = format.format(((TunnelSettlementTotalData)point).getSurveyTime());
             }
-            
             Exceeding ex = getPointSubsidenceExceed(point, -1, null, null);
+            if(ex == null){
+            	return null;
+            }
             if (uType == GONGDINGI_XIACHEN_SULV_EXCEEDING || uType == DIBIAO_XIACHEN_SULV_EXCEEDING) {
                 info.mUVaule = ex.sulvValue;
             } else {
