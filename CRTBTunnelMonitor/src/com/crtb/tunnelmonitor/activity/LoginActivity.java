@@ -81,7 +81,8 @@ public class LoginActivity extends Activity implements OnClickListener {
 
                 if(intent.getAction().equals(AppConfig.ACTION_RELOAD_ALL_SURVEYER)){
                     mAllSurveyer	= SurveyerInformationDao.defaultDao().queryAllSurveyerInformation() ;
-                    mNameSpinner.setAdapter(new NameAdapter());
+                    initSpinnerAdapter(true);
+                    //mNameSpinner.setAdapter(new NameAdapter());
                 }
             }
         };
@@ -100,7 +101,7 @@ public class LoginActivity extends Activity implements OnClickListener {
         mNote=(EditText)findViewById(R.id.note);
 		//mArrow=(FrameLayout) findViewById(R.id.img);
 		mNameSpinner = (Spinner) findViewById(R.id.name_spinner);
-		mNameSpinner.setAdapter(new NameAdapter());
+		initSpinnerAdapter(false);
         //mNotesArrow=(ImageView) findViewById(R.id.note_arrow);
 		//mUserName = (EditText) findViewById(R.id.username);
         mCard = (EditText) findViewById(R.id.idcard);
@@ -110,7 +111,6 @@ public class LoginActivity extends Activity implements OnClickListener {
 
         // 点击事件
         login_btn.setOnClickListener(this);
-
 //		mArrow.setOnClickListener(new OnClickListener() {
 //			
 //			@Override
@@ -193,6 +193,24 @@ public class LoginActivity extends Activity implements OnClickListener {
         //		});
     }
 
+    private void initSpinnerAdapter(boolean fromBroadcast){
+    	NameAdapter nameAdapter = new NameAdapter();
+    	if(nameAdapter.getCount() < 1){
+    		String text ;
+    		if(fromBroadcast){
+    			text = "请在工管中心网页先添加测量员信息或检查网络通讯";
+    		} else{
+    			text = "请先载入测量员信息";
+    		}
+			Toast.makeText(this, text, Toast.LENGTH_LONG).show();
+			mNameSpinner.setEnabled(false);
+			
+		} else{
+			mNameSpinner.setAdapter(nameAdapter);
+			mNameSpinner.setEnabled(true);
+		}
+    }
+    
     @Override
     protected void onDestroy() {
         super.onDestroy();
