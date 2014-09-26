@@ -6,10 +6,11 @@
     android:layout_marginRight="10dp"
     android:orientation="vertical" >
 
+<!--     android:layout_height="40dp" -->
     <RelativeLayout
         android:id="@+id/dialog_title_layout"
         android:layout_width="fill_parent"
-        android:layout_height="40dp"
+        android:layout_height="wrap_content"
         android:background="#1d7690" >
 
         <TextView
@@ -17,6 +18,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
+            android:gravity="center"
             android:text="工作面管理"
             android:textColor="@color/white"
             android:textSize="20sp" />

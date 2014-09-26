@@ -154,6 +154,7 @@ public abstract class BaseActivity extends Activity {
 		}
 		
 		//
+		mListActionMenu.setTitleStr(title);
 		mListActionMenu.showDialog(bean);
 	}
 	

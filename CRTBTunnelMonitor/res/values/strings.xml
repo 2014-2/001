@@ -161,7 +161,9 @@
     <string name="alert_point_type">点号：%s</string>
     <string name="alert_state">状态：%s</string>
     <string name="alert_handle_method">处理方式：%s</string>
-
+    <string name="work_site_down_down">下载</string>
+    <string name="work_site_down_bind">关联(本地和服务器工点必须1对1)</string>
+    
     <!-- 全站仪模块 -->
     <string name="edit">编辑</string>
     <string name="delete">删除</string>

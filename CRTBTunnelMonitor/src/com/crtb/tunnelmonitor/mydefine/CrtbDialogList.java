@@ -40,6 +40,10 @@ public class CrtbDialogList<T> extends CrtbDialog {
 		mListener = listener ;
 	}
 
+	public void setTitleStr(String title){
+		mTitleStr	= title ;
+	}
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -76,6 +80,9 @@ public class CrtbDialogList<T> extends CrtbDialog {
 	}
 	
 	public void showDialog(T t){
+		if(mTitle != null){
+			mTitle.setText(mTitleStr);
+		}
 		super.show() ;
 		mTag = t ;
 	}

@@ -11,13 +11,9 @@ import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.view.ContextMenu;
-import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -34,7 +30,8 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
+import android.widget.AdapterView.OnItemClickListener;
+import com.crtb.tunnelmonitor.WorkFlowActivity;
 import com.crtb.tunnelmonitor.dao.impl.v2.ProjectIndexDao;
 import com.crtb.tunnelmonitor.dao.impl.v2.SiteProjectMappingDao;
 import com.crtb.tunnelmonitor.dao.impl.v2.WorkSiteIndexDao;
@@ -45,7 +42,7 @@ import com.crtb.tunnelmonitor.network.CrtbWebService;
 import com.crtb.tunnelmonitor.task.DataDownloadManager;
 import com.crtb.tunnelmonitor.task.DataDownloadManager.DownloadListener;
 
-public class WorkInfoDownloadActivity extends Activity {
+public class WorkInfoDownloadActivity extends WorkFlowActivity {
     private static final String LOG_TAG = "WorkInfoDownloadActivity";
     private MenuPopupWindow menuWindow;
 
@@ -63,8 +60,6 @@ public class WorkInfoDownloadActivity extends Activity {
 
     private boolean isDownloading = true;
     private int longPressedItemPosition = -1;
-    private static final int CONTEXT_MENU_DOWNLOAD_WORKSITE  = 0;
-    private static final int CONTEXT_MENU_ASSOCIATE_WORKSITE = 1;
 
     private int curProjectId = -1;
 
@@ -86,11 +81,33 @@ public class WorkInfoDownloadActivity extends Activity {
         mlvWorkInfos = (ListView) findViewById(R.id.lv_workinfo);
         mAdapter = new WorkSitesAdapter();
         mlvWorkInfos.setAdapter(mAdapter);
-        registerForContextMenu(mlvWorkInfos);
+        //使用自定义的弹出对话框
+        //registerForContextMenu(mlvWorkInfos);
+        loadMenuInfo();
         loadData();
     }
 
-    private void loadData() {
+    private void loadMenuInfo() {
+    	mlvWorkInfos.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,int position, long id) {
+		        longPressedItemPosition = position;
+		        String workSiteName = "";
+		        WorkSiteIndex item = null;
+		        if (mAdapter != null) {
+		            item = (WorkSiteIndex) mAdapter.getItem(longPressedItemPosition);
+		            if (item != null) {
+		                workSiteName = item.getSiteName();
+		            }
+		        }			
+				final String[] menus = new String[]{getString(R.string.work_site_down_down),getString(R.string.work_site_down_bind)};
+				showListActionMenu(workSiteName, menus, item);
+			}
+		}) ;
+	}
+
+	private void loadData() {
         List<WorkSiteIndex> workSites = WorkSiteIndexDao.defaultDao().queryAllWorkSite();
         if (workSites == null) {
             workSites = new ArrayList<WorkSiteIndex>();
@@ -101,66 +118,43 @@ public class WorkInfoDownloadActivity extends Activity {
     }
 
     @Override
-    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
-        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
-        longPressedItemPosition = info.position;
-        String workSiteName = "";
-        if (mAdapter != null) {
-            WorkSiteIndex item = (WorkSiteIndex) mAdapter.getItem(longPressedItemPosition);
-            if (item != null) {
-                workSiteName = item.getSiteName();
-            }
-        }
-        menu.setHeaderTitle(workSiteName);
-       
-        menu.add(0, CONTEXT_MENU_DOWNLOAD_WORKSITE, 0, "下载");
-        menu.add(1, CONTEXT_MENU_ASSOCIATE_WORKSITE, 0, "关联(本地和服务器必须1对1)");
-    }
+	protected void onListItemSelected(Object obj, int position, String menu) {
+		if (obj == null || menu == null) {
+			return;
+		}
 
-    @Override
-    public boolean onContextItemSelected(MenuItem item) {
-        if (item.getItemId() == CONTEXT_MENU_DOWNLOAD_WORKSITE) {
-            if (longPressedItemPosition >= 0 && mAdapter != null) {
-                final WorkSiteIndex workSite = (WorkSiteIndex) mAdapter.getItem(longPressedItemPosition);
-                if (item != null) {
-                    CrtbWebService.getInstance().setZoneCode(workSite.getZoneCode());
-                    CrtbWebService.getInstance().setSiteCode(workSite.getSiteCode());
-                    SiteProjectMappingDao.defaultDao().insertOrUpdate(curProjectId, workSite.getID());
-                    loadData();
-                    Toast.makeText(this, "下载功能暂时关闭", Toast.LENGTH_LONG).show();
-//					showProgressOverlay();
-//					DataDownloadManager downloadManager = new DataDownloadManager();
-//					downloadManager.downloadWorkSite(workSite, new DownloadListener() {
-//						@Override
-//						public void done(boolean success) {
-//							updateStatus(success);
-//							if (success) {
-//								new UpdateTask().execute(workSite);
-//							}
-//						}
-//					});
-                }
-            }
-        } else if (item.getItemId() == CONTEXT_MENU_ASSOCIATE_WORKSITE) {
-            if (longPressedItemPosition >= 0 && mAdapter != null) {
-                final WorkSiteIndex workSite = (WorkSiteIndex) mAdapter.getItem(longPressedItemPosition);
-                if (item != null) {
-                    CrtbWebService.getInstance().setZoneCode(workSite.getZoneCode());
-                    CrtbWebService.getInstance().setSiteCode(workSite.getSiteCode());
-                    SiteProjectMappingDao.defaultDao().insertOrUpdate(curProjectId, workSite.getID());
-                    loadData();
-                }
-            }
-        }
-        return super.onContextItemSelected(item);
-    }
+		final WorkSiteIndex workSite = (WorkSiteIndex) obj;
 
-    @Override
-    public void onContextMenuClosed(Menu menu) {
-        longPressedItemPosition = -1;
-        super.onContextMenuClosed(menu);
+		if (menu.equals(getString(R.string.work_site_down_down))) {
+			downWorkSite(workSite);
+		} else if (menu.equals(getString(R.string.work_site_down_bind))) {
+			bindWorkSite(workSite);
+		}
     }
-
+    
+    private void bindWorkSite(final WorkSiteIndex workSite){
+    	CrtbWebService.getInstance().setZoneCode(workSite.getZoneCode());
+		CrtbWebService.getInstance().setSiteCode(workSite.getSiteCode());
+		SiteProjectMappingDao.defaultDao().insertOrUpdate(curProjectId, workSite.getID());
+		loadData();
+    }
+    
+    private void downWorkSite(final WorkSiteIndex workSite){
+    	bindWorkSite(workSite);
+    	Toast.makeText(this, "下载功能暂时关闭", Toast.LENGTH_LONG).show();
+//    	showProgressOverlay();
+//		DataDownloadManager downloadManager = new DataDownloadManager();
+//		downloadManager.downloadWorkSite(workSite, new DownloadListener() {
+//			@Override
+//			public void done(boolean success) {
+//				updateStatus(success);
+//				if (success) {
+//					new UpdateTask().execute(workSite);
+//				}
+//			}
+//		});
+    }
+    
     private void initProgressOverlay() {
         mProgressOverlay = (LinearLayout) findViewById(R.id.progress_overlay);
         mDownloadProgress = (ProgressBar) findViewById(R.id.progressbar);
