@@ -331,7 +331,7 @@ public class AlertUtils {
 			final OffsetLevel[] offsetLevel = checkOffsetLevel(excecding, rockGrade);
 			
 			if (!readOnly) {
-				if (offsetLevel[Constant.LEI_JI_INDEX].IsLargerThanMaxValue) {
+				if (context != null && offsetLevel[Constant.LEI_JI_INDEX].IsLargerThanMaxValue) {
 					judgeUploading(context, new UploadCallBack() {
 
 						@Override
@@ -424,7 +424,7 @@ public class AlertUtils {
 			final OffsetLevel[] offsetLevel = checkOffsetLevel(excecding, rockGrade);
 			
 			if (!readOnly) {
-				if (offsetLevel[Constant.LEI_JI_INDEX].IsLargerThanMaxValue) {
+				if (context != null && offsetLevel[Constant.LEI_JI_INDEX].IsLargerThanMaxValue) {
 					judgeUploading(context, new UploadCallBack() {
 
 						@Override
