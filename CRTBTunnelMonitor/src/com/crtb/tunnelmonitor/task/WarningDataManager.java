@@ -122,7 +122,6 @@ public class WarningDataManager {
 		} else if (level == 1) {
 			parameter.setWarningLevel(2);
 		}
-    	parameter.setWarningLevel(level);
     	
 		float originalSpeedAlert = (float)alertInfo.getOriginalSulvAlertValue();
 		if(originalSpeedAlert == 0){
