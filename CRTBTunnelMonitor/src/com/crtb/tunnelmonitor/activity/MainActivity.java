@@ -148,6 +148,10 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 		name = CrtbDbFileUtils.getDbName(name);
 		mTitle.setText(StringUtils.isEmpty(name) ? getString(R.string.main_title) : name);
 		
+
+		if(name == null || name.equals("")){
+			return;
+		}
 		// 打开数据库
 		String error = ProjectIndexDao.defaultWorkPlanDao().openProjectIndex(name);
 		
