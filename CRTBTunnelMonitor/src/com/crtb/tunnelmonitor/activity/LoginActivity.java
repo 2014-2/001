@@ -13,8 +13,10 @@ import android.graphics.Paint;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.BaseAdapter;
@@ -63,6 +65,8 @@ public class LoginActivity extends Activity implements OnClickListener {
     private BroadcastReceiver mReceiver ;
 
     private AppCRTBApplication mApp;
+    
+    private NameAdapter mNameAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,8 +85,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 
                 if(intent.getAction().equals(AppConfig.ACTION_RELOAD_ALL_SURVEYER)){
                     mAllSurveyer	= SurveyerInformationDao.defaultDao().queryAllSurveyerInformation() ;
-                    initSpinnerAdapter(true);
-                    //mNameSpinner.setAdapter(new NameAdapter());
+                    mNameAdapter.notifyDataSetChanged();
                 }
             }
         };
@@ -101,7 +104,7 @@ public class LoginActivity extends Activity implements OnClickListener {
         mNote=(EditText)findViewById(R.id.note);
 		//mArrow=(FrameLayout) findViewById(R.id.img);
 		mNameSpinner = (Spinner) findViewById(R.id.name_spinner);
-		initSpinnerAdapter(false);
+		initSpinnerAdapter();
         //mNotesArrow=(ImageView) findViewById(R.id.note_arrow);
 		//mUserName = (EditText) findViewById(R.id.username);
         mCard = (EditText) findViewById(R.id.idcard);
@@ -193,22 +196,21 @@ public class LoginActivity extends Activity implements OnClickListener {
         //		});
     }
 
-    private void initSpinnerAdapter(boolean fromBroadcast){
-    	NameAdapter nameAdapter = new NameAdapter();
-    	if(nameAdapter.getCount() < 1){
-    		String text ;
-    		if(fromBroadcast){
-    			text = "请在工管中心网页先添加测量员信息或检查网络通讯";
-    		} else{
-    			text = "请先载入测量员信息";
-    		}
-			Toast.makeText(this, text, Toast.LENGTH_LONG).show();
-			mNameSpinner.setEnabled(false);
-			
-		} else{
-			mNameSpinner.setAdapter(nameAdapter);
-			mNameSpinner.setEnabled(true);
-		}
+    private void initSpinnerAdapter(){
+    	mNameAdapter = new NameAdapter();
+    	mNameSpinner.setAdapter(mNameAdapter);
+    	mNameSpinner.setOnTouchListener(new OnTouchListener(){
+
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				if(mNameAdapter.getCount() < 1){
+		    		String text = "请在工管中心网页先添加测量员信息或检查网络通讯";
+					Toast.makeText(LoginActivity.this, text, Toast.LENGTH_SHORT).show();
+					return true;
+				}
+				return false;
+			}
+    	});
     }
     
     @Override
