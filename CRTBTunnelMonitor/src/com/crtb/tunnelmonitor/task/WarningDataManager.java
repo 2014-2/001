@@ -217,7 +217,6 @@ public class WarningDataManager {
             return ma;
         }
 
-    	private TunnelCrossSectionIndexDao sectionIndexDao = null;
         
         public String getPointCode() {
         	//YX  根据开挖方法，获取点或线对应的测点上传序列    	
