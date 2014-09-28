@@ -133,7 +133,7 @@ public class AlertHandlingInfoDao extends AbstractDao<AlertHandlingList> {
          }
 
  		if(handings != null && handings.size() > 0){
-        	mDatabase.saveObject(handings);
+        	mDatabase.saveObjectList(handings);
         }  	
  		Log.d(TAG, "AlertHandlingInfoDao insertItems End");
     }
