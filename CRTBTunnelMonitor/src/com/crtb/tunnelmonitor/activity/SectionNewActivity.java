@@ -221,6 +221,8 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
                 android.R.layout.simple_spinner_item) ;
 		adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		rockgrade.setAdapter(adapter2) ;
+		//YX 默认设置为4级
+		rockgrade.setSelection(3);
 		
 		section_new_sp.setOnItemSelectedListener(new OnItemSelectedListener() {
 

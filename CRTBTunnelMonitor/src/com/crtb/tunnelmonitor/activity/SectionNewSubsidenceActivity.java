@@ -219,6 +219,8 @@ public class SectionNewSubsidenceActivity extends WorkFlowActivity implements On
 				R.array.rockgrade_array, android.R.layout.simple_spinner_item);
 		adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		rockgrade.setAdapter(adapter2);
+		//YX 默认设置为4级
+		rockgrade.setSelection(3);
 		
 		// 围岩级别
 		rockgrade.setOnItemSelectedListener(new OnItemSelectedListener() {
