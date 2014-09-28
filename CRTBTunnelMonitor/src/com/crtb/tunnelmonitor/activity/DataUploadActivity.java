@@ -90,6 +90,13 @@ public class DataUploadActivity extends FragmentActivity {
         initCurWorkBinding();
     }
 
+    @Override
+    protected void onResume(){
+    	super.onResume();
+    	mTunnelFragment.refreshUI();
+    	mSubsidenceFragment.refreshUI();
+    }
+    
     protected void setTopbarTitle(String title) {
 
         if (mTopbarTitle == null) {
