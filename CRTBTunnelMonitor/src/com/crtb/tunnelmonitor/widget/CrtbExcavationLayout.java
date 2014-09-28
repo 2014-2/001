@@ -455,6 +455,24 @@ public class CrtbExcavationLayout extends LinearLayout implements OnClickListene
 		updateTestLineView() ;
 	}
 	
+	private boolean checkPoint(TestLine temp){
+		
+		String s = temp.lineStartPoint ;
+		String e = temp.lineEndPoint ;
+		
+		if(StringUtils.isEmpty(s) || StringUtils.isEmpty(e)) return false ;
+		
+		for(TestLine bean : beans){
+			
+			if( (bean.lineStartPoint.equals(s) && bean.lineEndPoint.equals(e)) || 
+					(bean.lineEndPoint.equals(s) && bean.lineStartPoint.equals(e))){
+				return true ;
+			}
+		}
+		
+		return false ;
+	}
+	
 	private View createTestLineView(final TestLine bean){
 		
 		View v = mInflater.inflate(R.layout.item_custom_line_layout, null);
@@ -490,7 +508,7 @@ public class CrtbExcavationLayout extends LinearLayout implements OnClickListene
 						temp.lineStartPoint = item ;
 						temp.lineEndPoint	= bean.lineEndPoint ;
 						
-						if(beans.contains(temp)){
+						if(checkPoint(temp)){
 							showText("不能存在相同的测线");
 							return ;
 						}
@@ -525,7 +543,7 @@ public class CrtbExcavationLayout extends LinearLayout implements OnClickListene
 						temp.lineStartPoint = bean.lineStartPoint ;
 						temp.lineEndPoint	= item ;
 						
-						if(beans.contains(temp)){
+						if(checkPoint(temp)){
 							showText("不能存在相同的测线");
 							return ;
 						}
@@ -607,11 +625,18 @@ public class CrtbExcavationLayout extends LinearLayout implements OnClickListene
 			lineEndPoint	= "" ;
 		}
 		
-		@Override
-		public boolean equals(Object o) {
-			
-			return (lineStartPoint.equals(((TestLine)o).lineStartPoint) && lineEndPoint.equals(((TestLine)o).lineEndPoint)) || 
-					(lineStartPoint.equals(((TestLine)o).lineEndPoint) && lineEndPoint.equals(((TestLine)o).lineStartPoint));
-		}
+//		@Override
+//		public boolean equals(Object o) {
+//			
+//			String s = ((TestLine)o).lineStartPoint ;
+//			String e = ((TestLine)o).lineEndPoint ;
+//			
+//			if(StringUtils.isEmpty(s) || StringUtils.isEmpty(e)){
+//				return false ;
+//			}
+//			
+//			return (lineStartPoint.equals(s) && lineEndPoint.equals(e)) || 
+//					(lineStartPoint.equals(e) && lineEndPoint.equals(s));
+//		}
 	}
 }
