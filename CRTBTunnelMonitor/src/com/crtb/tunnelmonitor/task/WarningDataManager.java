@@ -60,20 +60,10 @@ public class WarningDataManager {
 		@Override
 		protected List<UploadWarningData> doInBackground(Void... params) {
 			List<UploadWarningData> uploadWarningDataList = new ArrayList<UploadWarningData>();
-//			ArrayList<AlertInfo> alertInfoList = AlertUtils.getAlertInfoList();
-//			if (alertInfoList != null && alertInfoList.size() > 0) {
-//				for(AlertInfo alertInfo : alertInfoList) {
-//					UploadWarningData warningData = new UploadWarningData();
-//					warningData.setAlertInfo(alertInfo);
-//					warningData.setSectionCode(alertInfo.getSECTCODE());
-//					uploadWarningDataList.add(warningData);
-//				}
-//			}
 			ArrayList<MergedAlert> mal = AlertUtils.getMergedAlerts();
 			Collections.sort(mal);
 			if (mal != null && mal.size() > 0) {
 			    for (MergedAlert ma : mal) {
-//			        boolean can = AlertUtils.mergedAlertCanBeUploaded(ma);
 			    	UploadWarningData warningData = new UploadWarningData();
 			        warningData.setLeijiAlert(ma.getLeijiAlert());
 			        warningData.setSulvAlert(ma.getSulvAlert());
@@ -82,17 +72,6 @@ public class WarningDataManager {
 			    }
 			}
 			
-//			if (uploadWarningDataList.size() == 0) {
-//				UploadWarningData fakeWarningData = new UploadWarningData();
-//				AlertInfo fakeAlertInfo = new AlertInfo();
-//				fakeAlertInfo.setPntType("A");
-//				fakeAlertInfo.setAlertStatus(0);
-//				fakeAlertInfo.setAlertStatusMsg("已销警");
-//				fakeAlertInfo.setDate(CrtbUtils.formatDate(new Date()));
-//				fakeWarningData.setAlertInfo(fakeAlertInfo);
-//				fakeWarningData.setSectionCode("XPCL01SD00010001");
-//				uploadWarningDataList.add(fakeWarningData);
-//			}
 			return uploadWarningDataList;
 		}
 
@@ -105,15 +84,6 @@ public class WarningDataManager {
 
 	}
 
-//	private String getSectionCodeById(int sectionId) {
-//		String sectionCode = "";
-//		TunnelCrossSectionExIndexDao sectionExIndexDao = TunnelCrossSectionExIndexDao.defaultDao();
-//		TunnelCrossSectionExIndex sectionExIndex = sectionExIndexDao.querySectionById(sectionId);
-//		if (sectionExIndex != null) {
-//			sectionCode = sectionExIndex.getSECTCODE();
-//		}
-//		return sectionCode;
-//	}
 	
 	private class DataUploadTask extends AsyncTask<List<UploadWarningData>, Void, Void> {
 		
@@ -157,27 +127,6 @@ public class WarningDataManager {
 		AlertInfo sulvalert = warningData.getSulvAlert();
 		float sulv = sulvalert != null ? (float)sulvalert.getUValue() : 0;
 		//parameter.setTransformSpeed(sulv);		
-//    	String originalID = alertInfo.getOriginalDataID();
-//    	List<Integer> ids = new ArrayList<Integer>();
-//        if (originalID.contains(AlertUtils.ORIGINAL_ID_DIVIDER)) {
-//            String[] idStrs = originalID.split(AlertUtils.ORIGINAL_ID_DIVIDER);
-//            for (String idStr : idStrs) {
-//                ids.add(Integer.valueOf(idStr));
-//            }
-//        } else {
-//            ids.add(Integer.valueOf(originalID));
-//        }
-
-//        float pointValue = 0.0f;
-//        TunnelSettlementTotalDataDao dao = TunnelSettlementTotalDataDao.defaultDao();
-//        if (ids.size() == 1) {
-//        	TunnelSettlementTotalData point = dao.queryOneById(ids.get(0));
-//        	pointValue = Float.parseFloat(point.getCoordinate().split(",")[2]);
-//        } else {
-//        	TunnelSettlementTotalData point1 = dao.queryOneById(ids.get(0));
-//        	TunnelSettlementTotalData point2 = dao.queryOneById(ids.get(1));
-//        	pointValue = (float) AlertUtils.getLineLength(point1, point2);
-//        }
         AlertInfo leijiAlert = warningData.getLeijiAlert();
 
         //直接使用AlertList的原始值，即是本条报警上没有添加任何改正值的数据
