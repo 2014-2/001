@@ -35,7 +35,30 @@ public class AlertInfo implements Serializable {
     private String alertInfo;
     private String SECTCODE;
     private String rockGrade;
+    
+    //YX 用于存储待上传的数据
+    
+    private double originalLeiJiAlertValue;
+    
+    private double originalSulvAlertValue;
 
+    public void setOriginalLeiJiAlertValue(double originalLeiJiAlertValue){
+    	this.originalLeiJiAlertValue = originalLeiJiAlertValue;
+    }
+    
+    public double getOriginalLeiJiAlertValue(){
+    	return originalLeiJiAlertValue;
+    }
+    
+    public void setOriginalSulvAlertValue(double originalSulvAlertValue){
+    	this.originalSulvAlertValue = originalSulvAlertValue;
+    }
+    
+    public double getOriginalSulvAlertValue(){
+    	return originalSulvAlertValue;
+    }
+    
+    
     //    public boolean isState1() {
     //        return state1;
     //    }

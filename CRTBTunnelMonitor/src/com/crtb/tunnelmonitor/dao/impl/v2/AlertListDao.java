@@ -1,7 +1,9 @@
 
 package com.crtb.tunnelmonitor.dao.impl.v2;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.zw.android.framework.IAccessDatabase;
@@ -178,7 +180,6 @@ public class AlertListDao extends AbstractDao<AlertList> {
         Log.d(TAG, "AlertListDao insertOrUpdate TunnelSettlementTotalData");
         String sheetId = point.getSheetId();
         String chainageId = point.getChainageId();
-
 //        String pntType = point.getPntType();
 
 //        if (pntType != null && pntType.length() > 2) {// such as "S1-1" or
@@ -316,13 +317,14 @@ public class AlertListDao extends AbstractDao<AlertList> {
 
     
     public void updatePointAlertItem(String sheetId, String chainageId, int Utype, double UValue,
-            String originalDataID) {
+            String originalDataID,Date surveyTime) {
         IAccessDatabase db = getCurrentDb();
         if (db == null) {
             return;
         }
-
-        String sql = "UPDATE AlertList" + " SET UValue=" + UValue
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String sql = "UPDATE AlertList" + " SET UValue=" + UValue 
+        		+ " SET AlertTime=" + format.format(surveyTime)
                 + " WHERE SheetID=?"
                 + " AND CrossSectionID=?"
                 + " AND Utype=?"
@@ -338,8 +340,8 @@ public class AlertListDao extends AbstractDao<AlertList> {
         Log.d(TAG, "AlertListDao updatePointAlertItem TunnelSettlementTotalData");
         String sheetId = point.getSheetId();
         String chainageId = point.getChainageId();
-
-        updatePointAlertItem(sheetId, chainageId, Utype, UValue, originalDataID);
+        Date surveyTime = point.getSurveyTime();
+        updatePointAlertItem(sheetId, chainageId, Utype, UValue, originalDataID,surveyTime);
     }
 
     public void updatePointAlertItem(SubsidenceTotalData point, int Utype, double UValue,
@@ -347,8 +349,8 @@ public class AlertListDao extends AbstractDao<AlertList> {
         Log.d(TAG, "AlertListDao updatePointAlertItem SubsidenceTotalData");
         String sheetId = point.getSheetId();
         String chainageId = point.getChainageId();
-
-        updatePointAlertItem(sheetId, chainageId, Utype, UValue, originalDataID);
+        Date surveyTime = point.getSurveyTime();
+        updatePointAlertItem(sheetId, chainageId, Utype, UValue, originalDataID,surveyTime);
     }
 
     public List<AlertList> queryTunnelSettlementAlertsByOriginalDataId(int originalDataId) {

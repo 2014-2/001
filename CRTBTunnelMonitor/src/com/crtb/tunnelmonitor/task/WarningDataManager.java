@@ -115,30 +115,28 @@ public class WarningDataManager {
     	parameter.setSectionCode(warningData.getSectionCode());
     	parameter.setPointCode(warningData.getPointCode());
     	int level = alertInfo.getAlertLevel();
-//YX 取消转换    	
-//		if ((level == 2) || (level == 3)) {
-//			parameter.setWarningLevel(1);
-//		} else if (level == 1) {
-//			parameter.setWarningLevel(2);
-//		} else {
-//			parameter.setWarningLevel(1);
-//		}
-    	parameter.setWarningLevel(level);
-		AlertInfo sulvalert = warningData.getSulvAlert();
-		float sulv = sulvalert != null ? (float)sulvalert.getUValue() : 0;
-		//parameter.setTransformSpeed(sulv);		
-        AlertInfo leijiAlert = warningData.getLeijiAlert();
-
-        //直接使用AlertList的原始值，即是本条报警上没有添加任何改正值的数据
-    	//parameter.setWarningPointValue((float) (leijiAlert != null ? leijiAlert.getUValue() : 0.001f));
-        float UValue = 0.001f;
-		AlertList al = AlertListDao.defaultDao().queryOneById(alertInfo.getAlertId());
-		if (al != null) {
-			UValue = (float) al.getUValue();
+//YX 本地2级转换成服务器上的1，1->2   
+//YX 服务器预警级别1：黄色预警;2:红色    	
+		if ((level == 2)) {
+			parameter.setWarningLevel(1);
+		} else if (level == 1) {
+			parameter.setWarningLevel(2);
 		}
-		//YX 速率键对中存变形值，变形键对中存速率值
-		parameter.setTransformSpeed(UValue);
-		parameter.setWarningPointValue(sulv);
+    	parameter.setWarningLevel(level);
+    	
+		float originalSpeedAlert = (float)alertInfo.getOriginalSulvAlertValue();
+		if(originalSpeedAlert == 0){
+			originalSpeedAlert = 0.001f;
+		}
+			
+		float originalAccumulateAlertVale = (float)alertInfo.getOriginalLeiJiAlertValue();
+		if(originalAccumulateAlertVale == 0){
+			originalAccumulateAlertVale = 0.001f;
+		}
+		//YX 速率键对中存变形值
+		parameter.setTransformSpeed(originalAccumulateAlertVale);
+		//YX 变形键对中存速率值
+		parameter.setWarningPointValue(originalSpeedAlert);
     	parameter.setWarningDate(CrtbUtils.parseDate(alertInfo.getDate()));
     	String duePerson = alertInfo.getDuePerson();
     	if (TextUtils.isEmpty(duePerson)) {
