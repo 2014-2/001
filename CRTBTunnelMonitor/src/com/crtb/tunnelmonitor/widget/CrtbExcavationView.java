@@ -45,7 +45,7 @@ public class CrtbExcavationView extends View {
 	
 	private final String[] GD_STR	= {"A1","A2","A3"} ;
 	private int mFlag				= 0 ;
-	private DRAW_TYPE mDrawType		= DRAW_TYPE.DRAW_TYPE_CD ;
+	private DRAW_TYPE mDrawType		= DRAW_TYPE.DRAW_TYPE_PAIR ;
 	
 	public CrtbExcavationView(Context context) {
 		this(context, null);
@@ -67,10 +67,14 @@ public class CrtbExcavationView extends View {
 		TEXT_SIZE_MEDIUM= dp2px(11);
 		TEXT_SIZE_SMALL	= dp2px(8);
 		
-		mPair			= 16 ;
+		mPair			= 4 ;
 		mFlag			= FLAG_A1 | FLAG_A2 | FLAG_A3 ;
 		lines.clear() ;
 		
+		//addLine("1", "2");
+		//addLine("3", "4");
+		//addLine("3", "12");
+		//addLine("7", "16");
 	}
 	
 	private int dp2px(float value) {
@@ -174,7 +178,6 @@ public class CrtbExcavationView extends View {
 		
 		int offset = dp2px(5) ;
 		
-		
 		// 绘制线
 		for(int index = 0 ; index < lines.size() ; index++){
 			
@@ -224,15 +227,15 @@ public class CrtbExcavationView extends View {
 					canvas.drawLine(newex,newey,end.x,end.y,mPaint);
 					
 					// 线名
-					mPaint.setColor(Color.BLACK);
-					canvas.drawText(sn, newsx + ((newex - newsx) >> 1), newsy + info[1], mPaint);
+					mPaint.setColor(Color.parseColor("#e3d546"));
+					canvas.drawText(sn, newsx + ((newex - newsx) >> 1), newsy + (info[1] >> 1) + dp2px(2), mPaint);
 					
 				} else {
 					canvas.drawLine(start.x,start.y,end.x,end.y,mPaint);
 					
 					// 线名
-					mPaint.setColor(Color.BLACK);
-					canvas.drawText(sn, start.x + (((int)(end.x - start.x)) >> 1), start.y + info[1], mPaint);
+					mPaint.setColor(Color.parseColor("#e3d546"));
+					canvas.drawText(sn, start.x + (((int)(end.x - start.x)) >> 1), start.y + (info[1] >> 1) + dp2px(2), mPaint);
 				}
 			}
 		}
@@ -240,8 +243,8 @@ public class CrtbExcavationView extends View {
 		// 大坐标线
 		mPaint.setStrokeWidth(PW);
 		mPaint.setColor(Color.BLACK);
-		//canvas.drawLine(w >> 1, 0, w >> 1, h, mPaint);
-		//canvas.drawLine(0, h >> 1, w, h >> 1, mPaint);
+		//canvas.drawLine(getWidth() >> 1, 0, getWidth() >> 1, getHeight(), mPaint);
+		//canvas.drawLine(0, getHeight() >> 1, getWidth(), getHeight() >> 1, mPaint);
 		
 		// reset color
 		mPaint.setColor(defColor);
@@ -258,8 +261,7 @@ public class CrtbExcavationView extends View {
 		int irh = irw ;				// 矩形高度
 		int irr = irw >> 1 ;		// 圆半径
 		int ix = (w - irw) >> 1 ;	// 矩形开始位置
-		int offy = h - irh * 3 / 4 ;// * 3 / 4;//(h - irh) >> 1 ;
-		int loffx = 0 ;
+		int offy = h - irh * 7 / 8  ;// * 3 / 4;//(h - irh) >> 1 ;
 		RectF iaf = new RectF(ix, offy, ix + irw, offy + irh);
 		Point p = null ;
 		points.clear() ;
@@ -268,7 +270,7 @@ public class CrtbExcavationView extends View {
 		mPaint.setStyle(Style.STROKE);
 		mPaint.setStrokeWidth(StrokeWidth);
 		mPaint.setColor(Color.BLACK);
-		int startA = 160 ;
+		int startA = 140 ;
 		canvas.drawArc(iaf, startA, 180 + ((180 - startA) * 2), !true, mPaint);
 		
 		// 线
@@ -277,40 +279,72 @@ public class CrtbExcavationView extends View {
 		mPaint.setColor(Color.BLACK);
 		int xo = (int)(irr * Math.sin(radian(90 - (180 - startA))));
 		int yo = (int)(irr * Math.cos(radian(90 - (180 - startA))));
-		int yy = (int)(iaf.top + irr + yo - 1) ;
-		canvas.drawLine(iaf.left + (irr - xo) - 1 , yy, iaf.right - (irr - xo) + 1 , iaf.top + irr + yo - 1, mPaint);
+		int yy = (int)(iaf.top + irr + yo) ;
+		canvas.drawLine(iaf.left + (irr - xo) - dp2px(1) , yy, iaf.right - (irr - xo) + dp2px(1) , yy, mPaint);
 	
 		// left 
 		canvas.save() ;
-		int lx 	= (int)(iaf.centerX() - (irr * Math.cos(radian(60)))); // 中心坐标之间的长度
-		int ly 	= (int)(iaf.centerY() - (irr * Math.sin(radian(60)))); // 中心坐标之间的长度
-		Rect lc = new Rect(lx - 1 + loffx, ly - 1, lx + irr + loffx, yy);
+		RectF laf = new RectF(iaf.left - 5 * irr, iaf.top - 2 * irr, iaf.right - irr, iaf.bottom + 2 * irr);
+		// 上边交点坐标
+		double angt = 19 ;
+		int tjx = (int) (laf.centerX() + (irr * 3 * Math.cos(radian(angt))));
+		int tjy = (int) (laf.centerY() - (irr * 3 * Math.sin(radian(angt))));
+		// 下边交点坐标
+		double angb = -12.4 ;
+		int bjx = (int) (laf.centerX() + (irr * 3 * Math.cos(radian(angb))));
+		int bjy = (int) (laf.centerY() - (irr * 3 * Math.sin(radian(angb))));
+		Rect lc = null ;
+		// 裁剪矩形
+		if(tjx < bjx){
+			lc = new Rect(tjx - dp2px(1), tjy, bjx + dp2px(10), bjy);
+		} else {
+			lc = new Rect(bjx - dp2px(1), tjy, tjx + dp2px(10), bjy);
+		}
 		canvas.clipRect(lc);
 		
-		RectF laf = new RectF(iaf.left - irr + loffx, iaf.top, iaf.right - irr + loffx, iaf.bottom);
+		// 绘制上线弧线
 		mPaint.setStyle(Style.STROKE);
 		mPaint.setStrokeWidth(StrokeWidth * 2);
 		mPaint.setColor(Color.BLACK);
-		canvas.drawArc(laf, 200, 180, !true, mPaint);
+		canvas.drawArc(laf, 0, 360, !true, mPaint);
 		canvas.restore() ;
 		
 		// top
 		canvas.save() ;
-		int tx 	= (int)(irr * Math.cos(radian(30))); // 中心坐标之间的长度
-		int ty 	= (int)(irr * Math.sin(radian(30))); // 中心坐标之间的长度
-		Rect tc = new Rect((int)(iaf.centerX() - tx) - 2, (int)(iaf.centerY() - ty), (int)(iaf.centerX() + tx) + 2, yy);
+		RectF taf 	= new RectF(iaf.left - 2 * irr , iaf.top - 5 * irr - dp2px(5) , iaf.right + 2 * irr, iaf.bottom - irr - dp2px(5));
+		// 左边交点
+		double angl = -109 ;
+		int ljx = (int) (taf.centerX() + (irr * 3 * Math.cos(radian(angl))));
+		int ljy = (int) (taf.centerY() - (irr * 3 * Math.sin(radian(angl))));
+		// 右边交点
+		double angr = -71 ;
+		int rjx = (int) (taf.centerX() + (irr * 3 * Math.cos(radian(angr))));
+		int rjy = (int) (taf.centerY() - (irr * 3 * Math.sin(radian(angr))));
+		// 裁剪矩形
+		Rect tc = null ;
+		if(ljy < rjy){
+			tc = new Rect(ljx, ljy, rjx, rjy + dp2px(20)) ;
+		} else {
+			tc = new Rect(ljx, rjy, rjx, ljy + dp2px(20)) ;
+		}
 		canvas.clipRect(tc);
-		RectF taf = new RectF(iaf.left, iaf.top - irr , iaf.right, iaf.bottom - irr);
+		
+		// 绘制上线弧线
 		mPaint.setStyle(Style.STROKE);
 		mPaint.setStrokeWidth(StrokeWidth);
 		mPaint.setColor(Color.BLACK);
 		canvas.drawArc(taf, 0, 180, !true, mPaint);
 		canvas.restore() ;
 		
+		// 交点坐标
+		double angc = -89.8 ;
+		//int jcx = (int) (taf.centerX() + (irr * 3 * Math.cos(radian(angc))));
+		int jcy = (int) (taf.centerY() - (irr * 3 * Math.sin(radian(angc))));
+		
 		int[] info = null ;
 		// A1顶点(三角形)
-		int a = (int) (irr * Math.sin(radian(56)));
-		int b = (int) (irr * Math.cos(radian(56)));
+		int a = (int) (irr * Math.sin(radian(68)));
+		int b = (int) (irr * Math.cos(radian(68)));
 		if ((mFlag & FLAG_A2) == FLAG_A2) {
 			int a1x = (int) (iaf.left + (irr - b));
 			int a1y = (int) (iaf.top + (irr - a));
@@ -362,73 +396,137 @@ public class CrtbExcavationView extends View {
 			canvas.drawText(GD_STR[2], a2x + info[0], a2y - (info[1] >> 1), mPaint);
 		}	
 		
-		// 点对
-		double ag 	= (double)(60 + (180 - startA)) / ((mPair / 2) + 1) ;
-		double sag 	= 60 - ag ;
-		int index = 0 ;
-		int offsexX =  dp2px(3) ;
+		// 从左到右
+		// 分位上下2部分
+		int index 	= 0 ;
+		int offsexX = dp2px(3) ;
+		int size 	= mPair / 4 ;
+		int ltl		= (int)(jcy - iaf.top) / (size + 1) ; // 上部分
+		int lbl		= (int)(bjy - jcy) / (size + 1 ); // 下部分
 		
-		// 从右到左
-		// left
-		for (int i = 0; i < mPair / 2; i++) {
-
-			// 内圆left
-			int nlx = (int) (iaf.centerX() - (irr * Math.cos(radian(sag))));
-			int nly = (int) (iaf.centerY() - (irr * Math.sin(radian(sag))));
+		// 左上
+		for (int i = 0; i < mPair / 4 ; i++) {
+			
+			// 上左
+			int ly = (int)(iaf.top + ltl * (i + 1)) ;
+			int lx = computeTemp(iaf.centerX(),iaf.centerY(),irr,ly,1,0);
 			p = new Point();
+			p.x = lx ;
+			p.y	= ly ;
 			p.name = String.valueOf(index + 1);
-			p.x = nlx;
-			p.y = nly;
 			points.add(p);
-			drawLinePoint(canvas, nlx, nly);
-			drawPointText(canvas, String.valueOf(++index), (int)p.x, (int)p.y, 0,0);
-
-			// 外left
-			int elx = (int) (laf.centerX() + (irr * Math.cos(radian(sag))));
-			int ely = (int) (laf.centerY() - (irr * Math.sin(radian(sag))));
+			drawLinePoint(canvas, lx, ly);
+			drawPointText(canvas, String.valueOf(++index), (int)p.x, (int)p.y, dp2px(0),0);
+			
+			// 上右
+			int lcy = ly ;
+			int lcx = computeTemp(laf.centerX(),laf.centerY(),irr * 3,ly,1,1);
 			p = new Point();
+			p.x = lcx - offsexX;
+			p.y	= lcy ;
 			p.name = String.valueOf(index + 1);
-			p.x = elx - offsexX ;
-			p.y = ely;
 			points.add(p);
 			drawLinePoint(canvas, (int)p.x, (int)p.y);
-			drawPointText(canvas, String.valueOf(++index), (int)p.x, (int)p.y, dp2px(3),0);
-
-			// 角度增加
-			sag -= ag;
+			drawPointText(canvas, String.valueOf(++index), (int)p.x, (int)p.y, dp2px(0),0);
 		}
 		
-		sag 	= 60 - ag ;
-		// right
-		for(int i = 0 ; i < mPair / 2 ; i++){
-			
-			// 外right
-			int elx = (int) (laf.centerX() + (irr * Math.cos(radian(sag))));
-			int ely = (int) (laf.centerY() - (irr * Math.sin(radian(sag))));
+		// 左下
+		for (int i = 0; i < mPair / 4; i++) {
+
+			// 下左
+			int bcy = jcy + lbl * (i + 1) ;	
+			int bcx = computeTemp(iaf.centerX(),iaf.centerY(),irr,bcy,1,0);
 			p = new Point();
+			p.x = bcx ;
+			p.y	= bcy ;
 			p.name = String.valueOf(index + 1);
-			p.x = elx + offsexX;
-			p.y = ely;
 			points.add(p);
-			drawLinePoint(canvas, elx + offsexX, ely);
-			drawPointText(canvas, String.valueOf(++index), (int)p.x, (int)p.y, dp2px(3),1);
+			drawLinePoint(canvas, bcx, bcy);
+			drawPointText(canvas, String.valueOf(++index), (int)p.x, (int)p.y, dp2px(0),0);
 			
-			// 内圆right
-			int nrx	= (int)(iaf.centerX() + (irr * Math.cos(radian(sag)))); 
-			int nry	= (int)(iaf.centerY() - (irr * Math.sin(radian(sag)))); 
-			p = new Point() ;
-			p.name	= String.valueOf(index + 1) ;
-			p.x		= nrx ;
-			p.y		= nry ;
+			// 下右
+			int lcy = bcy;
+			int lcx = computeTemp(laf.centerX(), laf.centerY(), irr * 3, bcy, 1,1);
+			p = new Point();
+			p.x = lcx - offsexX;
+			p.y = lcy;
+			p.name = String.valueOf(index + 1);
 			points.add(p);
-			drawLinePoint(canvas,nrx, nry);
-			drawPointText(canvas, String.valueOf(++index), (int)p.x, (int)p.y, 0,1);
+			drawLinePoint(canvas, (int)p.x, lcy);
+			drawPointText(canvas, String.valueOf(++index), (int) p.x,(int) p.y, dp2px(0), 0);
+		}
+		
+		// 右上
+		for (int i = 0; i < mPair / 4; i++) {
+
+			// 上右
+			int lcy = (int)(iaf.top + ltl * (i + 1)) ;
+			int lcx = computeTemp(laf.centerX(), laf.centerY(), irr * 3, lcy, 1,1);
+			p = new Point();
+			p.x = lcx + offsexX;
+			p.y = lcy;
+			p.name = String.valueOf(index + 1);
+			points.add(p);
+			drawLinePoint(canvas, (int)p.x, lcy);
+			drawPointText(canvas, String.valueOf(++index), (int) p.x,(int) p.y, dp2px(0), 1);
 			
-			// 角度增加
-			sag -= ag ;
+			int ly = lcy ;
+			int lx = computeTemp(iaf.centerX(),iaf.centerY(),irr,ly,1,1);
+			p = new Point();
+			p.x = lx ;
+			p.y	= ly ;
+			p.name = String.valueOf(index + 1);
+			points.add(p);
+			drawLinePoint(canvas, lx, ly);
+			drawPointText(canvas, String.valueOf(++index), (int)p.x, (int)p.y, dp2px(0),1);
+		}
+		
+		// 右下
+		for (int i = 0; i < mPair / 4; i++) {
+			
+			int lcy = jcy + lbl * (i + 1) ;
+			int lcx = computeTemp(laf.centerX(), laf.centerY(), irr * 3, lcy, 1,1);
+			p = new Point();
+			p.x = lcx + offsexX;
+			p.y = lcy;
+			p.name = String.valueOf(index + 1);
+			points.add(p);
+			drawLinePoint(canvas, (int)p.x, lcy);
+			drawPointText(canvas, String.valueOf(++index), (int) p.x,(int) p.y, dp2px(0), 1);
+			
+			int bcy = lcy ;	
+			int bcx = computeTemp(iaf.centerX(),iaf.centerY(),irr,bcy,1,1);
+			p = new Point();
+			p.x = bcx ;
+			p.y	= bcy ;
+			p.name = String.valueOf(index + 1);
+			points.add(p);
+			drawLinePoint(canvas, bcx, bcy);
+			drawPointText(canvas, String.valueOf(++index), (int)p.x, (int)p.y, dp2px(0),1);
 		}
 		
 		canvas.restore() ;
+	}
+	
+	private int computeTemp(double cx , double cy, double r, double value, int type, int rt){
+		
+		double mv = 0 ;
+		
+		// 已知X, 求Y
+		if(type == 0){
+			
+		} 
+		// 已知Y, 求X
+		else {
+			
+			if(rt == 0){
+				mv = cx - Math.sqrt(Math.pow(r, 2) - Math.pow(cy - value, 2));
+			} else {
+				mv = Math.sqrt(Math.pow(r, 2) - Math.pow(cy - value, 2)) + cx;
+			}
+		}
+		
+		return (int) mv ;
 	}
 	
 	private void drawPair(Canvas canvas){
@@ -442,7 +540,7 @@ public class CrtbExcavationView extends View {
 		int irh = irw ;				// 矩形高度
 		int irr = irw >> 1 ;		// 圆半径
 		int ix = (w - irw) >> 1 ;	// 矩形开始位置
-		int offy = h - irh * 3 / 4 ;
+		int offy = h - irh * 7 / 8 ;
 		RectF iaf = new RectF(ix, offy, ix + irw, offy + irh);
 		Point p = null ;
 		points.clear() ;
@@ -451,7 +549,7 @@ public class CrtbExcavationView extends View {
 		mPaint.setStyle(Style.STROKE);
 		mPaint.setStrokeWidth(StrokeWidth);
 		mPaint.setColor(Color.BLACK);
-		int startA = 160 ;
+		int startA = 140 ;
 		canvas.drawArc(iaf, startA, 180 + ((180 - startA) * 2), !true, mPaint);
 		
 		// 线
@@ -460,31 +558,69 @@ public class CrtbExcavationView extends View {
 		mPaint.setColor(Color.BLACK);
 		int xo = (int)(irr * Math.sin(radian(90 - (180 - startA))));
 		int yo = (int)(irr * Math.cos(radian(90 - (180 - startA))));
-		canvas.drawLine(iaf.left + (irr - xo) - 1 , iaf.top + irr + yo - 1, iaf.right - (irr - xo) + 1 , iaf.top + irr + yo - 1, mPaint);
+		int yy = (int)(iaf.top + irr + yo) ;
+		canvas.drawLine(iaf.left + (irr - xo) - dp2px(1) , yy, iaf.right - (irr - xo) + dp2px(1) , yy, mPaint);
 		
 		// left 圆
-		int ls 	= (int)(irr / Math.sin(radian(45))); // 中心坐标之间的长度
-		int lcx = (int)(iaf.centerX() - ls) ;
-		int lcy = (int)iaf.top ;
-		RectF leftR = new RectF(lcx - irr, lcy, lcx + irr, lcy + irh);
-		int lpix = (int)(iaf.centerX() - (irr * Math.cos(radian(45)))); 
-		int lpiy= (int)(iaf.centerY() - (irr * Math.sin(radian(45)))); 
+		int of = dp2px(15);
+		RectF lf = new RectF(iaf.left - irr - of, iaf.top, iaf.right - irr - of, iaf.bottom) ;
+		
+		// 上边交点坐标
+		double angt = 53 ;
+		int ljtx = (int) (lf.centerX() + (irr * Math.cos(radian(angt))));
+		int ljty = (int) (lf.centerY() - (irr * Math.sin(radian(angt))));
+		
+		// 下边交点
+		double angb = -39.5 ;
+		int ljbx = (int) (lf.centerX() + (irr * Math.cos(radian(angb))));
+		int ljby = (int) (lf.centerY() - (irr * Math.sin(radian(angb))));
+		
+		// 坐标裁剪矩形
+		RectF cl = null ;
+		if(ljtx < ljbx){
+			cl	= new RectF(ljtx, ljty, ljbx + (irr >> 1), ljby);
+		} else {
+			cl	= new RectF(ljbx, ljty, ljtx + (irr >> 1), ljby);
+		}
+		
+		// 绘制左边圆
+		canvas.save() ;
+		canvas.clipRect(cl);
+		mPaint.setStyle(Style.STROKE);
+		mPaint.setStrokeWidth(StrokeWidth);
+		mPaint.setColor(Color.BLACK);
+		mPaint.setStrokeJoin(Join.ROUND);
+		canvas.drawArc(lf, 0, 360, false, mPaint);
+		canvas.restore() ;
 		
 		// right 圆
-		int rcx = (int)(iaf.centerX() + ls) ;
-		RectF rightR = new RectF(rcx - irr, lcy, rcx + irr, lcy + irh);
-		int rpix = (int)(iaf.centerX() + (irr * Math.cos(radian(45)))); 
-		Rect cr = new Rect(lpix, lpiy, rpix, (int)(iaf.centerY() + yo));
+		RectF rf = new RectF(iaf.left + irr + of, iaf.top, iaf.right + irr + of, iaf.bottom) ;
 		
-		// 绘制
-		canvas.save() ;
+		// 上边交点坐标
+		double angrt = -233;
+		int rjtx = (int) (rf.centerX() + (irr * Math.cos(radian(angrt))));
+		int rjty = (int) (rf.centerY() - (irr * Math.sin(radian(angrt))));
+
+		// 下边交点
+		double angrb = -141;
+		int rjbx = (int) (rf.centerX() + (irr * Math.cos(radian(angrb))));
+		int rjby = (int) (rf.centerY() - (irr * Math.sin(radian(angrb))));
+		
+		RectF cr = null ;
+		if(rjtx < rjbx){
+			cr	= new RectF(rjtx, rjty, rjbx - (irr >> 1), rjby);
+		} else {
+			cr	= new RectF(rjbx - (irr >> 1), rjty, rjtx, rjby);
+		}
+		
+		// 绘制右边圆
+		canvas.save();
 		canvas.clipRect(cr);
 		mPaint.setStyle(Style.STROKE);
 		mPaint.setStrokeWidth(StrokeWidth);
 		mPaint.setColor(Color.BLACK);
 		mPaint.setStrokeJoin(Join.ROUND);
-		canvas.drawArc(leftR, 315, 90, false, mPaint);
-		canvas.drawArc(rightR, 135, 90, false, mPaint);
+		canvas.drawArc(rf, 0, 360, false, mPaint);
 		canvas.restore() ;
 		
 		// A1顶点
@@ -505,8 +641,8 @@ public class CrtbExcavationView extends View {
 		}
 
 		// A2顶点(三角形)
-		int a = (int) (irr * Math.sin(radian(45)));
-		int b = (int) (irr * Math.cos(radian(45)));
+		int a = (int) (irr * Math.sin(radian(70)));
+		int b = (int) (irr * Math.cos(radian(70)));
 		if((mFlag & FLAG_A2) == FLAG_A2){
 			int a1x = (int) (iaf.left + (irr - b));
 			int a1y = (int) (iaf.top + (irr - a));
@@ -542,69 +678,61 @@ public class CrtbExcavationView extends View {
 			canvas.drawText(GD_STR[2], a2x + info[0], a2y - (info[1] >> 1), mPaint);
 		}
 		
-		// 点对
-		double ag 	= (double)45 / ((mPair / 2) + 1) ;
-		double sag 	= 45 - ag ;
+		// 绘制点
 		int index 	= 0 ;
+		int offsexX = dp2px(0) ;
+		int size 	= mPair / 2 ;
+		int ltl		= (int)(ljby - ljty) / (size + 1) ; // 上部分
 		
-		// 从右到左
-		// left
+		// 左边
 		for(int i = 0 ; i < mPair / 2 ; i++){
 			
-			// 内圆left
-			int nlx = (int) (iaf.centerX() - (irr * Math.cos(radian(sag))));
-			int nly = (int) (iaf.centerY() - (irr * Math.sin(radian(sag))));
-			p = new Point() ;
-			p.name	= String.valueOf(index + 1) ;
-			p.x		= nlx ;
-			p.y		= nly ;
+			// 左
+			int ly = (int) (ljty + ltl * (i + 1));
+			int lx = computeTemp(iaf.centerX(), iaf.centerY(), irr, ly, 1, 0);
+			p = new Point();
+			p.x = lx;
+			p.y = ly;
+			p.name = String.valueOf(index + 1);
 			points.add(p);
-			drawLinePoint(canvas, nlx, nly);
-			drawPointText(canvas, String.valueOf(++index), nlx, nly, 0,0);
-			
-			// 外left
-			int elx = (int) (leftR.centerX() + (irr * Math.cos(radian(sag))));
-			int ely = (int) (leftR.centerY() - (irr * Math.sin(radian(sag))));
-			p = new Point() ;
-			p.name	= String.valueOf(index + 1) ;
-			p.x		= elx ;
-			p.y		= ely ;
+			drawLinePoint(canvas, lx, ly);
+			drawPointText(canvas, String.valueOf(++index), (int) p.x,(int) p.y, dp2px(0), 0);
+
+			// 右
+			int lcy = ly;
+			int lcx = computeTemp(lf.centerX(), lf.centerY(), irr, ly, 1,1);
+			p = new Point();
+			p.x = lcx - offsexX;
+			p.y = lcy;
+			p.name = String.valueOf(index + 1);
 			points.add(p);
-			drawLinePoint(canvas, elx, ely);
-			drawPointText(canvas,String.valueOf(++index),elx,ely,0,1);
-			
-			// 角度增加
-			sag -= ag ;
+			drawLinePoint(canvas, (int) p.x, (int) p.y);
+			drawPointText(canvas, String.valueOf(++index), (int) p.x,(int) p.y, dp2px(0), 0);
 		}
 		
-		sag 	= 45 - ag ;
-		// right
-		for(int i = 0 ; i < mPair / 2 ; i++){
-			
-			// 外right
-			int erx = (int) (rightR.centerX() - (irr * Math.cos(radian(sag))));
-			int ery = (int) (rightR.centerY() - (irr * Math.sin(radian(sag))));
-			p = new Point() ;
-			p.name	= String.valueOf(index + 1) ;
-			p.x		= erx ;
-			p.y		= ery ;
+		// 右上
+		for (int i = 0; i < mPair / 2; i++) {
+
+			// 上右
+			int lcy = (int) (ljty + ltl * (i + 1));
+			int lcx = computeTemp(rf.centerX(), rf.centerY(), irr, lcy,1, 0);
+			p = new Point();
+			p.x = lcx + offsexX;
+			p.y = lcy;
+			p.name = String.valueOf(index + 1);
 			points.add(p);
-			drawLinePoint(canvas, erx, ery);
-			drawPointText(canvas, String.valueOf(++index), erx, ery, 0,0);
-			
-			// 内圆right
-			int nrx	= (int)(iaf.centerX() + (irr * Math.cos(radian(sag)))); 
-			int nry	= (int)(iaf.centerY() - (irr * Math.sin(radian(sag)))); 
-			p = new Point() ;
-			p.name	= String.valueOf(index + 1) ;
-			p.x		= nrx ;
-			p.y		= nry ;
+			drawLinePoint(canvas, (int) p.x, lcy);
+			drawPointText(canvas, String.valueOf(++index), (int) p.x,(int) p.y, dp2px(0), 0);
+
+			int ly = lcy;
+			int lx = computeTemp(iaf.centerX(), iaf.centerY(), irr, ly, 1, 1);
+			p = new Point();
+			p.x = lx;
+			p.y = ly;
+			p.name = String.valueOf(index + 1);
 			points.add(p);
-			drawLinePoint(canvas,nrx, nry);
-			drawPointText(canvas, String.valueOf(++index), nrx, nry, 0,1);
-			
-			// 角度增加
-			sag -= ag ;
+			drawLinePoint(canvas, lx, ly);
+			drawPointText(canvas, String.valueOf(++index), (int) p.x, (int) p.y, dp2px(0), 1);
 		}
 		
 		canvas.restore() ;
@@ -618,7 +746,7 @@ public class CrtbExcavationView extends View {
 	
 	private void drawPointText(Canvas canvas ,String text,int x, int y, int top,int dir){
 		
-		mPaint.setColor(Color.BLACK);
+		mPaint.setColor(Color.RED);
 		mPaint.setTextSize(TEXT_SIZE_SMALL);
 		int[] info = getTextWidth(text, TEXT_SIZE_SMALL);
 		
