@@ -986,7 +986,9 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 				sectionInfo.setWidth(w);
 				
 				// excavation
-				sectionInfo.setExcavateMethod(ExcavateMethodEnum.parser((String)section_new_sp.getSelectedItem()).getCode());
+				//YX 修改时，也还需要转换一次
+				//sectionInfo.setExcavateMethod(ExcavateMethodEnum.parser((String)section_new_sp.getSelectedItem()).getCode());
+				sectionInfo.setExcavateMethod(ExcavateMethodUtil.parserExcavateMethodCode((String)section_new_sp.getSelectedItem()));
 				// 围岩级别
 				sectionInfo.setROCKGRADE(rockgrade.getSelectedItem().toString()) ;
 	            
