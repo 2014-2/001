@@ -240,16 +240,34 @@ public class CrtbExcavationView extends View {
 					canvas.drawLine(newsx - 1,newsy - 1,newex + 1,newey - 1,mPaint);
 					canvas.drawLine(newex,newey,end.x,end.y,mPaint);
 					
-					// 线名
-					mPaint.setColor(Color.parseColor("#e3d546"));
+					// 线名 Color.parseColor("#e3d546")
+					mPaint.setColor(Color.RED);
 					canvas.drawText(sn, newsx + ((newex - newsx) >> 1), newsy + (info[1] >> 1) + dp2px(2), mPaint);
 					
 				} else {
+					
 					canvas.drawLine(start.x,start.y,end.x,end.y,mPaint);
 					
+					float dx = 0 ;
+					float dy = 0 ;
+					
+					// x
+					if(end.x > start.x){
+						dx = start.x + (((int)(end.x - start.x)) >> 1 ) ;
+					} else {
+						dx = end.x + (((int)(start.x - end.x)) >> 1 ) ;
+					}
+					
+					// y
+					if(end.y > start.y){
+						dy = start.y + (((int)(end.y - start.y)) >> 1 ) ;
+					} else {
+						dy = end.y + (((int)(start.y - end.y)) >> 1 ) ;
+					}
+					
 					// 线名
-					mPaint.setColor(Color.parseColor("#e3d546"));
-					canvas.drawText(sn, start.x + (((int)(end.x - start.x)) >> 1), start.y + (info[1] >> 1) + dp2px(2), mPaint);
+					mPaint.setColor(Color.RED);
+					canvas.drawText(sn, dx - (info[0] >> 1), dy - dp2px(2), mPaint);
 				}
 			}
 		}
