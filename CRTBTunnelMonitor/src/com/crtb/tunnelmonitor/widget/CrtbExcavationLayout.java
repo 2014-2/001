@@ -26,7 +26,6 @@ import android.widget.Toast;
 
 import com.crtb.tunnelmonitor.BaseActivity;
 import com.crtb.tunnelmonitor.activity.R;
-import com.crtb.tunnelmonitor.common.Constant;
 import com.crtb.tunnelmonitor.dao.impl.v2.ExcavateMethodDao;
 import com.crtb.tunnelmonitor.entity.TunnelCrossSectionParameter;
 import com.crtb.tunnelmonitor.mydefine.CrtbDialogList;
@@ -257,6 +256,19 @@ public class CrtbExcavationLayout extends LinearLayout implements OnClickListene
 	private void showText(String msg){
 		Toast.makeText(mActivity, msg, Toast.LENGTH_SHORT).show() ;
 	}
+	
+	private static int getLineCounts(int ps){
+		
+		if(ps <= 0) return 0 ;
+		
+		int sum = 0 ;
+		
+		for(int i = 1 ; i < ps ; i++){
+			sum += (ps - i) ;
+		}
+		
+		return sum ;
+	}
 
 	@Override
 	public void onClick(View v) {
@@ -332,10 +344,13 @@ public class CrtbExcavationLayout extends LinearLayout implements OnClickListene
 			break ;
 		case R.id.bnt_increase_line :
 			
-			if(beans.size() >= Constant.TEST_LINE_MAX){
-				showText("最多只能有"+Constant.TEST_LINE_MAX+"条测线");
+			int maxLine = getLineCounts(customView.getAllPoints()) ;
+			
+			if(beans.size() >= maxLine){
+				showText("最多只能有" + maxLine +"条测线");
 				return;
 			}
+			
 			TestLine bean 		= new TestLine() ;
 			bean.lineName 		= "" ;
 			bean.lineStartPoint = findPoint() ;

@@ -70,11 +70,6 @@ public class CrtbExcavationView extends View {
 		mPair			= 4 ;
 		mFlag			= FLAG_A1 | FLAG_A2 | FLAG_A3 ;
 		lines.clear() ;
-		
-		//addLine("1", "2");
-		//addLine("3", "4");
-		//addLine("3", "12");
-		//addLine("7", "16");
 	}
 	
 	private int dp2px(float value) {
@@ -100,6 +95,25 @@ public class CrtbExcavationView extends View {
 	public void removeAllLine(){
 		lines.clear() ;
 		invalidate() ;
+	}
+	
+	public int getAllPoints(){
+		
+		int count = 0 ;
+		
+		if((mFlag & FLAG_A1) == FLAG_A1){
+			count++ ;
+		}
+		
+		if((mFlag & FLAG_A2) == FLAG_A2){
+			count++ ;
+		}
+		
+		if((mFlag & FLAG_A3) == FLAG_A3){
+			count++ ;
+		}
+		
+		return count + (mPair * 2) ;
 	}
 	
 	public void addLine(String start, String end){
