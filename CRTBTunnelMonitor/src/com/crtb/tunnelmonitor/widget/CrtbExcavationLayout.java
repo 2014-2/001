@@ -346,6 +346,7 @@ public class CrtbExcavationLayout extends LinearLayout implements OnClickListene
 		case R.id.bnt_increase_line :
 			if(beans.size() >= Constant.SERVER_ALLOW_TEST_LINE_MAX){
 				showText("最多只能有"+Constant.SERVER_ALLOW_TEST_LINE_MAX+"条测线");
+				return;
 			}
 			
 			int maxLine = getLineCounts(customView.getAllPoints()) ;
