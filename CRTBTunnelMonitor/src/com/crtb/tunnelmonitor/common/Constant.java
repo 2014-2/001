@@ -148,7 +148,7 @@ public class Constant {
 	
 	public static final int NO_BASE_CUSTOM_METHOD_START_INDEX = 13;
 	
-	public static final int TEST_LINE_MAX = 22;
+	public static final int SERVER_ALLOW_TEST_LINE_MAX = 22;
 	
 	public static final int LEI_JI_INDEX = 0;
 	
@@ -205,8 +205,8 @@ public class Constant {
 		//YX测试版本:手输坐标-fxtest-测试mac地址
 		versionControl = new VersionControl(true,true,false);
 				
-		//测试版本:手输坐标-fxtest-测试mac地址
-		//versionControl = new VersionControl(true,true,false);
+		//测试版本:全站仪-fxtest-测试mac地址
+		//versionControl = new VersionControl(false,true,false);
 		
 		//发布版本:全站仪坐标-fxkz-真实mac地址
 		//versionControl = new VersionControl(false,false,true);

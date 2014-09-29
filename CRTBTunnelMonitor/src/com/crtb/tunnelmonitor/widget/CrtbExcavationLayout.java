@@ -26,6 +26,7 @@ import android.widget.Toast;
 
 import com.crtb.tunnelmonitor.BaseActivity;
 import com.crtb.tunnelmonitor.activity.R;
+import com.crtb.tunnelmonitor.common.Constant;
 import com.crtb.tunnelmonitor.dao.impl.v2.ExcavateMethodDao;
 import com.crtb.tunnelmonitor.entity.TunnelCrossSectionParameter;
 import com.crtb.tunnelmonitor.mydefine.CrtbDialogList;
@@ -343,11 +344,14 @@ public class CrtbExcavationLayout extends LinearLayout implements OnClickListene
 			
 			break ;
 		case R.id.bnt_increase_line :
+			if(beans.size() >= Constant.SERVER_ALLOW_TEST_LINE_MAX){
+				showText("最多只能有"+Constant.SERVER_ALLOW_TEST_LINE_MAX+"条测线");
+			}
 			
 			int maxLine = getLineCounts(customView.getAllPoints()) ;
 			
 			if(beans.size() >= maxLine){
-				showText("最多只能有" + maxLine +"条测线");
+				showText("该点对数组合最多只能有" + maxLine +"条测线");
 				return;
 			}
 			
