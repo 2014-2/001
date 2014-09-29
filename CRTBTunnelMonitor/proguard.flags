@@ -17,7 +17,10 @@
 ####add by wei.zhou 2014-05-03
 -keep class com.crtb.tunnelmonitor.entity.**{*;}
 -keep class com.crtb.tunnelmonitor.activity.**{*;}
+####add by yaoxu 2014-09-29
+-keep class com.crtb.tunnelmonitor.widget.**{*;}
 ########################
+
 -keep class com.crtb.utils.**{*;}
 -keep class com.rebcenter.**{*;}
 -keep class android.**{*;}

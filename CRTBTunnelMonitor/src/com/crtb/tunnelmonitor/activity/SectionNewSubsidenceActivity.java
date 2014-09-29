@@ -382,7 +382,7 @@ public class SectionNewSubsidenceActivity extends WorkFlowActivity implements On
 			String dbu0 		= DSection_Value1.getEditableText().toString().trim();
 			String dbl 			= DSection_Value2.getEditableText().toString().trim();
 			String buildtime	= DSection_SetTime.getEditableText().toString().trim();
-			String remark 		= DSection_Info.getEditableText().toString().trim();
+			String dbU0Description 		= DSection_Info.getEditableText().toString().trim();
 			
 			if (StringUtils.isEmpty(dbu0)) {
 				showText("累计变形极限值不能为空");
@@ -427,7 +427,7 @@ public class SectionNewSubsidenceActivity extends WorkFlowActivity implements On
 				subsidence.setDBU0(CrtbUtils.formatFloat(dbu0));
 				subsidence.setDBLimitVelocity(CrtbUtils.formatFloat(dbl));
 				subsidence.setDBU0Time(DateUtils.toDate(buildtime,DateUtils.DATE_TIME_FORMAT));
-				
+				subsidence.setDBU0Description(dbU0Description);
 				// 1表示未上传, 2表示已上传
 				subsidence.setUploadStatus(1); //表示该断面未上传
 				
@@ -458,7 +458,7 @@ public class SectionNewSubsidenceActivity extends WorkFlowActivity implements On
 				subsidence.setDBU0(CrtbUtils.formatFloat(dbu0));
 				subsidence.setDBLimitVelocity(CrtbUtils.formatFloat(dbl));
 				subsidence.setDBU0Time(DateUtils.toDate(buildtime,DateUtils.DATE_TIME_FORMAT));
-				subsidence.setInfo(remark);
+				subsidence.setDBU0Description(dbU0Description);
 
 				// insert
 				dao.update(subsidence);
