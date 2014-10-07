@@ -77,6 +77,12 @@ public final class CrtbDbFileUtils {
 					backup.mkdir() ;
 				}
 				
+				File all = new File(crtb, AppConfig.DB_SDCARD_BACKUP_ALL);
+				
+				if(!all.isDirectory()){
+					all.mkdir() ;
+				}
+				
 			} catch(Exception e){
 				e.printStackTrace() ;
 			}
@@ -150,6 +156,7 @@ public final class CrtbDbFileUtils {
 			File[] fs = dir.listFiles() ;
 			
 			if(fs != null){
+				
 				for(File f : fs){
 					list.add(f);
 				}
@@ -175,6 +182,20 @@ public final class CrtbDbFileUtils {
 		
 		String date = DateUtils.toDateString(DateUtils.getCurrtentTimes(),DateUtils.DATE_FORMAT) ;
 		String path = getExportPath(AppConfig.DB_SDCARD_BACKUP) + "/" + dbname+ "-" + date + ".dtmsdb" ;
+		
+		File f = new File(path);
+		
+		if(f.exists()){
+			f.delete() ;
+		}
+		
+		return path ;
+	}
+	
+	public static String getExternalBackupAllPath(String dbname){
+		
+		String date = DateUtils.toDateString(DateUtils.getCurrtentTimes(),DateUtils.DATE_FORMAT) ;
+		String path = getExportPath(AppConfig.DB_SDCARD_BACKUP_ALL) + "/" + dbname+ "-" + date + ".dtmsdb" ;
 		
 		File f = new File(path);
 		
@@ -311,14 +332,7 @@ public final class CrtbDbFileUtils {
 					return ;
 				}
 				
-				// final CrtbUser user = CrtbLicenseDao.defaultDao().queryCrtbUser() ;
-				
 				final int currentUserType	= AppCRTBApplication.getInstance().getCurUserType() ;
-				
-				/*if(user == null){
-					sendMessage(MSG_INPORT_DB_FAILED,"当前用户类型错误,无法导入!") ;
-					return  ;
-				}*/
 				
 				// 导入临时数据库名称
 				final String tempDbName = importName + AppConfig.DB_TEMP_SUFFIX ;
@@ -535,7 +549,7 @@ public final class CrtbDbFileUtils {
 	 * 
 	 * @param dbName
 	 */
-	public static String[] closeDbFile(String dbName,IAccessDatabase db){
+	public static String[] closeDbAndEncrypt(String dbName,IAccessDatabase db,boolean removeBin){
 		
 		if(StringUtils.isEmpty(dbName)){
 			return null ;
@@ -554,6 +568,13 @@ public final class CrtbDbFileUtils {
 		String bpPath 	= CrtbDbFileUtils.getLocalDbBackupPath(name);
 		
 		try{
+			
+			// 临时文件
+			File binF = new File(binPath);
+			if(!binF.exists()){
+				System.out.println("zhouwei >> <<<<<加密临时文件不存在>>>>>");
+				return null ;
+			}
 			
 			// 1. 生成备份文件
 			File src = new File(desPath);
@@ -586,9 +607,10 @@ public final class CrtbDbFileUtils {
 				return null ;
 			}
 			
-			// 删除原始文件
-			File f = new File(binPath);
-			f.delete() ;
+			// 删除临时文件(非加密文件)
+			if(removeBin){
+				binF.delete() ;
+			}
 			
 			// 4. 如果加密成功,重新生成备份文件
 			src = new File(desPath);
@@ -609,6 +631,7 @@ public final class CrtbDbFileUtils {
 					
 					src = new File(desPath);
 					des = new File(exbpPath);
+					
 					fileCopy(src, des);
 				}
 			}
@@ -624,6 +647,7 @@ public final class CrtbDbFileUtils {
 			// 通过备份文件
 			File src = new File(bpPath);
 			File des = new File(desPath);
+			
 			fileCopy(src, des);
 		}
 		
@@ -641,14 +665,17 @@ public final class CrtbDbFileUtils {
 
 		try {
 
+			long size = src.length() ;
+			
 			fi = new FileInputStream(src);
 			fo = new FileOutputStream(des);
-
+			
 			in = fi.getChannel();// 得到对应的文件通道
 			out = fo.getChannel();// 得到对应的文件通道
-
-			in.transferTo(0, in.size(), out);
-
+			
+			// 文件复制
+			return size == in.transferTo(0, in.size(), out) ;
+			
 		} catch (IOException e) {
 			e.printStackTrace();
 			

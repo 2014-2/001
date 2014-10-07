@@ -5,12 +5,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.zw.android.framework.IAccessDatabase;
+import org.zw.android.framework.impl.ExecuteAsyncTaskImpl;
 import org.zw.android.framework.util.StringUtils;
 
+import android.content.Context;
 import android.util.Log;
 
 import com.crtb.tunnelmonitor.AppCRTBApplication;
+import com.crtb.tunnelmonitor.AppConfig;
+import com.crtb.tunnelmonitor.AppHandler;
 import com.crtb.tunnelmonitor.AppPreferences;
+import com.crtb.tunnelmonitor.BaseAsyncTask;
+import com.crtb.tunnelmonitor.MessageDefine;
 import com.crtb.tunnelmonitor.entity.CrtbProject;
 import com.crtb.tunnelmonitor.entity.CrtbUser;
 import com.crtb.tunnelmonitor.entity.ProjectIndex;
@@ -137,19 +143,67 @@ public final class ProjectIndexDao extends AbstractDao<ProjectIndex> {
 		}
 	}
 	
-	// 设置当前工作面
-	/*public void updateCurrentWorkPlan(ProjectIndex bean){
+	/**
+	 * 备份数据库
+	 * 
+	 * @param context
+	 * @param handler
+	 */
+	public final void backupAllDb(final Context context,AppHandler handler){
 		
-		// 关闭当前数据库
-		closeCurrentDb();
-		
-		// 数据库名称
-		final String dbName = getDbUniqueName(bean.getProjectName());
-		
-		// 设置当前工作面
-		AppPreferences.getPreferences().putCurrentProject(dbName);
-		
-	}*/
+		ExecuteAsyncTaskImpl.defaultSyncExecutor().executeTask(new BaseAsyncTask(handler) {
+
+			@Override
+			public void process() {
+				
+				// 关闭当前数据库
+				String dbName = AppPreferences.getPreferences().getCurrentProject();
+				if(!StringUtils.isEmpty(dbName)){
+					
+					// 对应的数据库名称与缓存数据库
+					dbName 			= CrtbDbFileUtils.getDbName(dbName);
+					String dbTemp 	= getDbUniqueTempName(dbName);
+					
+					// 关闭文件并重新加密
+					String[] info = CrtbDbFileUtils.closeDbAndEncrypt(dbName,mFramework.getDatabaseByName(dbTemp),false);
+					
+					if(info == null){
+						sendMessage(MessageDefine.MSG_BACKUP_HINT, dbName + "备份失败");
+					}
+				}
+				
+				// 备份所有加密文件
+				List<File> fs = CrtbDbFileUtils.getLocalDbFiles(context);
+				
+				for(File f : fs){
+					
+					String fn = f.getName() ;
+					
+					// 数据库后缀名称
+					if(fn.length() > 3){
+						
+						String suffix = fn.substring(fn.length() - 3, fn.length());
+						
+						if(suffix.equals(AppConfig.DB_SUFFIX)){
+							
+							// 备份文件名
+							dbName = fn.substring(0, fn.lastIndexOf(AppConfig.DB_SUFFIX));
+							String src = f.getAbsolutePath() ;
+							String des = CrtbDbFileUtils.getExternalBackupAllPath(dbName);
+							
+							// 文件拷贝
+							if(!CrtbDbFileUtils.fileCopy(new File(src), new File(des))){
+								sendMessage(MessageDefine.MSG_BACKUP_HINT, dbName + "备份失败");
+							}
+						}
+					}
+				}
+				
+				sendMessage(MessageDefine.MSG_BACKUP_SUCCESS);
+			}
+			
+		});
+	}
 	
 	// 打开工作面
 	public String openProjectIndex(String projectName){

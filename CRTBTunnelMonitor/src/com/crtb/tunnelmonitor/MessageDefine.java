@@ -34,4 +34,9 @@ public interface MessageDefine {
 	// 工作面更新
 	public static final int MSG_DELETE_PROJECT_SUCCESS					= MSG_UPDATE_PROJECT_FAILED + 1 ;
 	public static final int MSG_DELETE_PROJECT_FAILED					= MSG_DELETE_PROJECT_SUCCESS + 1 ;
+	
+	// 一键备份
+	public static final int MSG_BACKUP_SUCCESS							= MSG_DELETE_PROJECT_FAILED + 1 ;
+	public static final int MSG_BACKUP_FAILED							= MSG_BACKUP_SUCCESS + 1 ;
+	public static final int MSG_BACKUP_HINT								= MSG_BACKUP_FAILED + 1 ;
 }

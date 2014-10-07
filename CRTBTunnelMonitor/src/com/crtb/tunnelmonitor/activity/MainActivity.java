@@ -15,15 +15,18 @@ import android.widget.Toast;
 
 import com.crtb.tunnelmonitor.AppActivityManager;
 import com.crtb.tunnelmonitor.AppCRTBApplication;
+import com.crtb.tunnelmonitor.AppHandler;
 import com.crtb.tunnelmonitor.AppPreferences;
 import com.crtb.tunnelmonitor.BaseActivity;
 import com.crtb.tunnelmonitor.CommonObject;
+import com.crtb.tunnelmonitor.MessageDefine;
 import com.crtb.tunnelmonitor.common.Constant;
 import com.crtb.tunnelmonitor.dao.impl.v2.CrtbLicenseDao;
 import com.crtb.tunnelmonitor.dao.impl.v2.ExcavateMethodDao;
 import com.crtb.tunnelmonitor.dao.impl.v2.ProjectIndexDao;
 import com.crtb.tunnelmonitor.entity.CrtbUser;
 import com.crtb.tunnelmonitor.entity.ProjectIndex;
+import com.crtb.tunnelmonitor.mydefine.CrtbDialogConnecting;
 import com.crtb.tunnelmonitor.utils.CrtbDbFileUtils;
 
 /**
@@ -50,6 +53,8 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 	private TextView mServer;
 	/** 关于 */
 	private TextView mAbout;
+	/** 关于 */
+	private TextView mBackup;
 	/** 意图 */
 	private Intent intent;
 
@@ -62,6 +67,8 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 
 	private boolean mBackPressedOnce = false;
 	private static final int MSG_CLEAR_BACK_PRESSED_FLAG = 0;
+	
+	private CrtbDialogConnecting mProgressDialog ;
 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -113,6 +120,7 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 		mWarn = (TextView) findViewById(R.id.warn);
 		mServer = (TextView) findViewById(R.id.server);
 		mAbout = (TextView) findViewById(R.id.about);
+		mBackup = (TextView) findViewById(R.id.bnt_backup);
 		// 判断是否显示服务器图标
 		int num = getIntent().getExtras().getInt(Constant.LOGIN_TYPE);
 		if (num == Constant.LOCAL_USER) {
@@ -122,6 +130,7 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 					.getLayoutParams();
 			// param.width=
 		}
+		
 		// 点击事件
 		mWorkSection.setOnClickListener(this);
 		mCrossSection.setOnClickListener(this);
@@ -131,6 +140,7 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 		mWarn.setOnClickListener(this);
 		mServer.setOnClickListener(this);
 		mAbout.setOnClickListener(this);
+		mBackup.setOnClickListener(this);
 		
 		AppCRTBApplication app = AppCRTBApplication.getInstance();
 		
@@ -255,6 +265,19 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 			intent = new Intent(MainActivity.this, AsregardsActivity.class);
 			startActivity(intent);
 			break;
+		case R.id.bnt_backup :
+			
+			if(AppCRTBApplication.getInstance().getCurUserType() != CrtbUser.LICENSE_TYPE_REGISTERED){
+				Toast.makeText(MainActivity.this, "非注册用户不能使用该功能", Toast.LENGTH_SHORT).show();
+				return ;
+			}
+			
+			mProgressDialog = new CrtbDialogConnecting(this);
+			mProgressDialog.showDialog("备份数据库,请稍等...");
+			
+			ProjectIndexDao.defaultWorkPlanDao().backupAllDb(this, mHanlder);
+			
+			break ;
 		}
 
 	}
@@ -275,23 +298,36 @@ public class MainActivity extends BaseActivity implements OnClickListener {
             mBackPressedOnce = true;
             String msg = getString(R.string.press_again_to_exit);
             showToast(msg);
-            mHandler.sendEmptyMessageDelayed(MSG_CLEAR_BACK_PRESSED_FLAG, 1500);
+            mHanlder.sendEmptyMessageDelayed(MSG_CLEAR_BACK_PRESSED_FLAG, 1500);
         }
     }
 
-    private Handler mHandler = new Handler() {
+    @Override
+	protected AppHandler getHandler() {
+    	return new AppHandler(this){
 
-        @Override
-        public void handleMessage(Message msg) {
-            switch(msg.what) {
-            case MSG_CLEAR_BACK_PRESSED_FLAG:
-                mBackPressedOnce = false;
-                break;
-            default:
-                super.handleMessage(msg);
-                break;
-            }
-        }
-    };
-
+			@Override
+			protected void dispose(Message msg) {
+				switch(msg.what){
+				case MSG_CLEAR_BACK_PRESSED_FLAG:
+	                mBackPressedOnce = false;
+	                break;
+				case MessageDefine.MSG_BACKUP_HINT :
+					showText(msg.obj != null ? msg.obj.toString() : "备份提示");
+					break ;
+				case MessageDefine.MSG_BACKUP_SUCCESS :
+					
+					if(mProgressDialog != null){
+						mProgressDialog.dismiss() ;
+						mProgressDialog = null ;
+					}
+					
+					showText("备份完成");
+					
+					break ;
+				}
+			}
+    		
+    	};
+	}
 }

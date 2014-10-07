@@ -37,6 +37,7 @@ public final class AppConfig {
 	public static final String DB_EXPORT_DIR					= "/crtb_export/" ;
 	public static final String DB_IMPORT_DIR					= "/crtb_import/" ;
 	public static final String DB_SDCARD_BACKUP					= "/crtb_backup/" ;
+	public static final String DB_SDCARD_BACKUP_ALL				= "/crtb_backup_all/" ;
 	public static final String DB_SUFFIX						= ".db" ;
 	public static final String DB_SUFFIX_BACKUP					= ".dbbp" ;// 数据库备份文件
 	public static final String DB_TEMP_SUFFIX					= ".bin" ;

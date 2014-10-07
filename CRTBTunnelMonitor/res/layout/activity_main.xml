@@ -109,27 +109,28 @@
             android:text="关于" />
 
         <TextView
-            android:id="@+id/server"
+            android:id="@+id/bnt_backup"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
             android:layout_weight="1"
             android:background="@drawable/gray_bg_selector"
-            android:drawableTop="@drawable/server"
+            android:drawableTop="@drawable/about"
             android:gravity="center"
-            android:text="服务器" />
-
+            android:text="一键备份" />
+        
         <TextView
+            android:id="@+id/server"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
             android:layout_weight="1"
             android:background="@drawable/gray_bg_selector"
-            android:drawableTop="@drawable/warn"
+            android:drawableTop="@drawable/server"
             android:gravity="center"
-            android:text="预警"
-            android:visibility="invisible" />
+            android:text="服务器" />
+			
     </LinearLayout>
 
 </LinearLayout>
