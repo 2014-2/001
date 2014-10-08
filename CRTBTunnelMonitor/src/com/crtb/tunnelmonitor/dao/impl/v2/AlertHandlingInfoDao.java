@@ -104,8 +104,10 @@ public class AlertHandlingInfoDao extends AbstractDao<AlertHandlingList> {
 
         AlertHandlingList ah = new AlertHandlingList();
         AlertHandlingList old= queryOne(alertId, alertStatus);
-        if(old != null){
+        boolean needUpdate = false;
+        if(old != null && (old.getInfo() == null || old.getInfo().equals(""))){
         	ah.setID(old.getID());
+        	needUpdate = true;
         }
         ah.setAlertID(guid);
         ah.setInfo(handling);
@@ -114,7 +116,7 @@ public class AlertHandlingInfoDao extends AbstractDao<AlertHandlingList> {
         ah.setAlertStatus(alertStatus);
         ah.setHandlingInfo(false);
         int ret = 0;
-        if(old != null){
+        if(needUpdate){
         	ret = mDatabase.updateObject(ah);
         } else {
         	ret = mDatabase.saveObject(ah);
