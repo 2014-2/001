@@ -1268,12 +1268,9 @@ public class AlertUtils {
 
 //                    AlertHandlingInfoDao.defaultDao().deleteByAlertId(alertId);
                     
-					// 原方法是根据测线的一端是查找另一端，并检查数据状态。
-					// 由于两个测线的两个端点都存在，没有必要再去查找
-					// updateLineConvergenceAlertsAfterCorrection(chainageId,s_1.getPntType(),s_1.getID(), alertId, handling,handlingTime,rockGrade);
                     s_1.setDataCorrection(totalCorrection);
                     s_2.setDataCorrection(totalCorrection);
-                    checkLineConvergenceAlert(s_1, s_2, alertId, handling, handlingTime, false, rockGrade,null,null);
+                    updateLineConvergenceAlertsAfterCorrection(chainageId, s_1.getPntType(),s_1.getID(), alertId, handling, handlingTime, rockGrade);
                 } else if (dataStatus == POINT_DATASTATUS_DISCARD) {
                 	checkLineConvergenceAlert(s_1, s_2, alertId, handling, handlingTime, false,rockGrade,null,null);
                 }
@@ -1401,6 +1398,23 @@ public class AlertUtils {
         }
     }
 
+    public static void updateLineConvergenceAlertsAfterCorrection(String chainageId, String pntType,
+            int measId, int curHandlingAlertId, String handling, Date handlingTime,String rockGrade) {
+        Log.d(TAG, "updateLineConvergenceAlertsAfterCorrection, pntType: " + pntType);
+        if (pntType.contains("S") && pntType.endsWith("1")) {//测线左点
+            String oppositePntType = pntType.substring(0, pntType.length() - 1) + "2";
+            List<TunnelSettlementTotalData> ls = TunnelSettlementTotalDataDao.defaultDao()
+                    .queryInfoAfterMeasId(chainageId, pntType, measId);
+            if (ls != null && ls.size() > 0) {
+                for (TunnelSettlementTotalData s_1 : ls) {
+                    TunnelSettlementTotalData s_2 = TunnelSettlementTotalDataDao.defaultDao()
+                    .queryOppositePointOfALine(s_1, oppositePntType);//拿到测线右点
+                    checkLineConvergenceAlert(s_1, s_2, curHandlingAlertId, handling, handlingTime, false, rockGrade,null,null);
+                }
+            }
+        }
+    }
+    
     /**
      * @param pastPointList
      * @return 所有pastPointList中的测点数据的DataCorrection的和值，单位：毫米
