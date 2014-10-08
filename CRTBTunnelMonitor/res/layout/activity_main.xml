@@ -115,7 +115,7 @@
             android:layout_marginLeft="20dp"
             android:layout_weight="1"
             android:background="@drawable/gray_bg_selector"
-            android:drawableTop="@drawable/about"
+            android:drawableTop="@drawable/backup"
             android:gravity="center"
             android:text="一键备份" />
         
