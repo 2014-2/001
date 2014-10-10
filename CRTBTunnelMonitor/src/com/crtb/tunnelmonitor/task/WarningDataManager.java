@@ -115,14 +115,7 @@ public class WarningDataManager {
     	parameter.setSectionCode(warningData.getSectionCode());
     	parameter.setPointCode(warningData.getPointCode());
     	int level = alertInfo.getAlertLevel();
-//YX 本地2级转换成服务器上的1，1->2   
-//YX 服务器预警级别1：黄色预警;2:红色    	
-		if ((level == 2)) {
-			parameter.setWarningLevel(1);
-		} else if (level == 1) {
-			parameter.setWarningLevel(2);
-		}
-    	
+
 		float originalSpeedAlert = (float)alertInfo.getOriginalSulvAlertValue();
 		if(originalSpeedAlert == 0){
 			originalSpeedAlert = 0.001f;
@@ -132,6 +125,23 @@ public class WarningDataManager {
 		if(originalAccumulateAlertVale == 0){
 			originalAccumulateAlertVale = 0.001f;
 		}
+		
+		//速率报警GONGDINGI_XIACHEN_SULV_EXCEEDING == 1,SHOULIAN_SULV_EXCEEDING == 3, DIBIAO_XIACHEN_SULV_EXCEEDING == 5
+		int uType = alertInfo.getUType();
+		if(uType == 1 || uType == 3 || uType == 5){
+			originalAccumulateAlertVale = 0.001f;
+			//速率报警时，默认设置为本地二级，服务器为黄色
+			level = 2;
+		}
+		
+		//YX 本地2级转换成服务器上的1，1->2   
+		//YX 服务器预警级别1：黄色预警;2:红色    	
+		if ((level == 2)) {
+			parameter.setWarningLevel(1);
+		} else if (level == 1) {
+			parameter.setWarningLevel(2);
+		}
+		
 		//YX 速率键对中存变形值
 		parameter.setTransformSpeed(originalAccumulateAlertVale);
 		//YX 变形键对中存速率值
