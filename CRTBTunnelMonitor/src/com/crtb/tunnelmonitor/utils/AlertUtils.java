@@ -147,7 +147,7 @@ public class AlertUtils {
      * @param readOnly 为true时该方法不会对数据库做出任何修改，只返回预警信息
      * @return error list; if null or empty, it means no exceeding.
      */
-    private static Exceeding getPointSubsidenceExceed(Object point, int curHandlingAlertId, String handling, Date handlingTime) {
+    private static Exceeding getPointSubsidenceExceed(Object point, int curHandlingAlertId, String handling, Date handlingTime,boolean needOriginalData) {
         Log.d(TAG, "checkPointSubsidenceExceed");
         Exceeding ret = new Exceeding();
         int type = 0;
@@ -170,7 +170,7 @@ public class AlertUtils {
         if (point instanceof TunnelSettlementTotalData) {
             TunnelSettlementTotalData tPoint = (TunnelSettlementTotalData) point;
             dataStatus = tPoint.getDataStatus();
-            if (dataStatus == POINT_DATASTATUS_AS_FIRSTLINE) {
+            if (dataStatus == POINT_DATASTATUS_AS_FIRSTLINE && !needOriginalData) {
                 return null;
             }
             cArc = new CrownSettlementARCHING();
@@ -191,7 +191,7 @@ public class AlertUtils {
         } else if (point instanceof SubsidenceTotalData) {
             SubsidenceTotalData sPoint = (SubsidenceTotalData) point;
             dataStatus = sPoint.getDataStatus();
-            if (dataStatus == POINT_DATASTATUS_AS_FIRSTLINE) {
+            if (dataStatus == POINT_DATASTATUS_AS_FIRSTLINE && !needOriginalData) {
                 return null;
             }
             sArc = new SubsidenceSettlementARCHING();
@@ -313,6 +313,16 @@ public class AlertUtils {
 
         }
         
+        if (dataStatus == POINT_DATASTATUS_AS_FIRSTLINE && needOriginalData) {
+        	ret.sulvValue = 0;
+        	ret.leijiValue = 0;
+        }
+        
+        if (dataStatus == POINT_DATASTATUS_DISCARD && needOriginalData) {
+        	ret.sulvValue = 0;
+        	ret.leijiValue = 0;
+        }
+        
         ret.originalDataID = originalDataID;
         return ret;
     }
@@ -326,7 +336,7 @@ public class AlertUtils {
 		
         final String handling = handlingOld == null ? "":handlingOld;
         
-		final Exceeding excecding = getPointSubsidenceExceed(point, curHandlingAlertId, handling, handlingTime);
+		final Exceeding excecding = getPointSubsidenceExceed(point, curHandlingAlertId, handling, handlingTime, false);
 		if (excecding != null) {
 			final OffsetLevel[] offsetLevel = checkOffsetLevel(excecding, rockGrade);
 			
@@ -466,7 +476,7 @@ public class AlertUtils {
 	public static OffsetLevel[] checkLineConvergenceAlert(final TunnelSettlementTotalData s_1,final TunnelSettlementTotalData s_2,final int curHandlingAlertId,final String handlingOld,final Date handlingTime,final boolean readOnly,String rockGrade,final Context context,final UploadFinishCallBack pCaller){
         final String handling = handlingOld == null ? "":handlingOld;
         
-		final Exceeding excecding = getLineConvergenceExceed(s_1, s_2, curHandlingAlertId, handling, handlingTime);
+		final Exceeding excecding = getLineConvergenceExceed(s_1, s_2, curHandlingAlertId, handling, handlingTime, false);
 		if (excecding != null) {
 			final OffsetLevel[] offsetLevel = checkOffsetLevel(excecding, rockGrade);
 			
@@ -589,7 +599,7 @@ public class AlertUtils {
     * @return error list; if null or empty, it means no exceeding.
     */
     private static Exceeding getLineConvergenceExceed(TunnelSettlementTotalData s_1,
-           TunnelSettlementTotalData s_2, int curHandlingAlertId, String handling, Date handlingTime) {
+           TunnelSettlementTotalData s_2, int curHandlingAlertId, String handling, Date handlingTime,boolean needOriginalData) {
        Log.d(TAG, "getLineConvergenceExceed");
        Exceeding ret = new Exceeding();
 
@@ -601,7 +611,7 @@ public class AlertUtils {
            handling = "";
        }
 
-       if (s_1.getDataStatus() == POINT_DATASTATUS_AS_FIRSTLINE) {
+       if (s_1.getDataStatus() == POINT_DATASTATUS_AS_FIRSTLINE && !needOriginalData) {
            return ret;
        }
        String sheetId = s_1.getSheetId();
@@ -714,6 +724,16 @@ public class AlertUtils {
            }
        }
 
+		if (dataStatus == POINT_DATASTATUS_AS_FIRSTLINE && needOriginalData) {
+			ret.sulvValue = 0;
+			ret.leijiValue = 0;
+		}
+		
+        if (dataStatus == POINT_DATASTATUS_DISCARD && needOriginalData) {
+        	ret.sulvValue = 0;
+        	ret.leijiValue = 0;
+        }
+        
        return ret;
    }
         
@@ -1819,7 +1839,7 @@ public class AlertUtils {
             if (point == null) {
                 point = SubsidenceTotalDataDao.defaultDao().queryOneByGuid(dataGuid);
             } 
-            return getPointSubsidenceExceed(point, -1, null, null);
+            return getPointSubsidenceExceed(point, -1, null, null, true);
         }
 
         if (uType == SHOULIAN_LEIJI_EXCEEDING || uType == SHOULIAN_SULV_EXCEEDING) {
@@ -1832,7 +1852,7 @@ public class AlertUtils {
                     s_2 = TunnelSettlementTotalDataDao.defaultDao().queryOneByGuid(guids[1]);
                 }
             }
-            return getLineConvergenceExceed(s_1, s_2, -1, null, null);
+            return getLineConvergenceExceed(s_1, s_2, -1, null, null, true);
         }
         return null;
     }
