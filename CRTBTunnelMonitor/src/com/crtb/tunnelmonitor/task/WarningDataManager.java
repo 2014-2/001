@@ -2,6 +2,7 @@ package com.crtb.tunnelmonitor.task;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 import android.os.AsyncTask;
@@ -9,10 +10,9 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.crtb.tunnelmonitor.AppCRTBApplication;
-import com.crtb.tunnelmonitor.dao.impl.v2.AlertListDao;
-import com.crtb.tunnelmonitor.dao.impl.v2.TunnelCrossSectionIndexDao;
+import com.crtb.tunnelmonitor.dao.impl.v2.AlertHandlingInfoDao;
+import com.crtb.tunnelmonitor.entity.AlertHandlingList;
 import com.crtb.tunnelmonitor.entity.AlertInfo;
-import com.crtb.tunnelmonitor.entity.AlertList;
 import com.crtb.tunnelmonitor.entity.MergedAlert;
 import com.crtb.tunnelmonitor.network.CrtbWebService;
 import com.crtb.tunnelmonitor.network.DataCounter;
@@ -50,11 +50,14 @@ public class WarningDataManager {
 		new DataLoadTask().execute();
 	}
 
-	public void uploadData(List<UploadWarningData> warningDataList, WarningUploadListener uploadListener) {
+	public void uploadWarningData(UploadWarningData originalData, List<AlertHandlingList> handlings,WarningUploadListener uploadListener){
 		mUploadListener = uploadListener;
-		new DataUploadTask().execute(warningDataList);
+		WarningDataSet dataSet = new WarningDataSet();
+		dataSet.orginalData = originalData;
+		dataSet.handlings = handlings;
+		new DataUploadTask().execute(dataSet);
 	}
-
+	
 	private class DataLoadTask extends AsyncTask<Void, Void, List<UploadWarningData>> {
 
 		@Override
@@ -83,16 +86,14 @@ public class WarningDataManager {
 		}
 
 	}
-
 	
-	private class DataUploadTask extends AsyncTask<List<UploadWarningData>, Void, Void> {
+	private class DataUploadTask extends AsyncTask<WarningDataSet, Void, Void> {
 		
-		@Override
-		protected Void doInBackground(List<UploadWarningData>... params) {
+		protected Void doInBackground(WarningDataSet...params) {
 			if (params != null && params.length > 0) {
-				List<UploadWarningData> warningDataList = params[0];
-				if (warningDataList != null && warningDataList.size() > 0) {
-					DataCounter warningUploadCounter = new DataCounter("WarningUploadCounter", warningDataList.size(), new CounterListener() {
+				WarningDataSet dataSet = params[0];
+				if (dataSet != null && dataSet.handlings.size() > 0) {
+					DataCounter warningUploadCounter = new DataCounter("WarningUploadCounter", dataSet.handlings.size(), new CounterListener() {
 						@Override
 						public void done(boolean success) {
 							if (mUploadListener != null) {
@@ -100,21 +101,23 @@ public class WarningDataManager {
 							}
 						}
 					});
-					for(UploadWarningData warningData : warningDataList) {
-						uploadWarningData(warningData, warningUploadCounter);
-					}
+					upload(dataSet.orginalData,dataSet.handlings,warningUploadCounter);
 				}
 			}
 			return null;
 		}
 	}
 
-    private void uploadWarningData(UploadWarningData warningData, final DataCounter warningUploadCounter) {
+    private void upload(final UploadWarningData warningData,final List<AlertHandlingList> handlings, final DataCounter warningUploadCounter) {
+    	
     	final AlertInfo alertInfo = warningData.getAlertInfo();
-    	WarningUploadParameter parameter = new WarningUploadParameter();
-    	parameter.setSectionCode(warningData.getSectionCode());
-    	parameter.setPointCode(warningData.getPointCode());
+    	String sectionCode = warningData.getSectionCode();
+    	String pointCode = warningData.getPointCode();
     	int level = alertInfo.getAlertLevel();
+    	int serverLevel = 0;
+    	// On website, 1 means alert, 0 means closed. but local database & windows has the different define.
+    	int result = alertInfo.getAlertStatus() == 1 ? 0 : 1;
+    	Date warningDate = CrtbUtils.parseDate(alertInfo.getDate());
 
 		float originalSpeedAlert = (float)alertInfo.getOriginalSulvAlertValue();
 		if(originalSpeedAlert == 0){
@@ -131,46 +134,65 @@ public class WarningDataManager {
 		if(uType == 1 || uType == 3 || uType == 5){
 			originalAccumulateAlertVale = 0.001f;
 			//速率报警时，默认设置为本地二级，服务器为黄色
-			level = 2;
+			serverLevel = 2;
 		}
 		
 		//YX 本地2级转换成服务器上的1，1->2   
 		//YX 服务器预警级别1：黄色预警;2:红色    	
 		if ((level == 2)) {
-			parameter.setWarningLevel(1);
+			serverLevel = 1;
+			
 		} else if (level == 1) {
-			parameter.setWarningLevel(2);
+			serverLevel = 2;
 		}
 		
-		//YX 速率键对中存变形值
-		parameter.setTransformSpeed(originalAccumulateAlertVale);
-		//YX 变形键对中存速率值
-		parameter.setWarningPointValue(originalSpeedAlert);
-    	parameter.setWarningDate(CrtbUtils.parseDate(alertInfo.getDate()));
-    	String duePerson = alertInfo.getDuePerson();
-    	if (TextUtils.isEmpty(duePerson)) {
-    	    duePerson = AppCRTBApplication.mUserName;
+    	int count = handlings.size();
+    	for(int i = 0; i< count; i++){
+    		AlertHandlingList curHandle = handlings.get(i);
+        	String duePerson = curHandle.getDuePerson();
+        	if (TextUtils.isEmpty(duePerson)) {
+        	    duePerson = AppCRTBApplication.mUserName;
+        	}
+        	WarningUploadParameter parameter = new WarningUploadParameter();
+        	parameter.setSectionCode(sectionCode);
+        	parameter.setPointCode(pointCode);
+        	parameter.setWarningLevel(serverLevel);
+        	//YX 速率键对中存变形值
+    		parameter.setTransformSpeed(originalAccumulateAlertVale);
+    		//YX 变形键对中存速率值
+    		parameter.setWarningPointValue(originalSpeedAlert);
+        	parameter.setWarningDate(warningDate);
+        	parameter.setWarningPerson(duePerson);
+        	parameter.setWarningDescription(curHandle.getInfo());
+        	parameter.setWarningEndTime(curHandle.getHandlingTime());
+        	parameter.setWarningResult(result);
+    		parameter.setRemark(curHandle.getInfo() == null ? "" : curHandle.getInfo());
+    		final int curHandingID = curHandle.getID();
+            CrtbWebService.getInstance().uploadWarningData(parameter, new RpcCallback() {
+
+                @Override
+                public void onSuccess(Object[] data) {
+                	//设置处理详情的上传状态:2表示已上传,默认为1
+                	AlertHandlingInfoDao.defaultDao().updateUploadStatus(curHandingID, 2);
+                	warningUploadCounter.increase(true);	
+                    Log.d(LOG_TAG, "AlertHandlingID = "+ curHandingID + "upload success.");
+                }
+
+                @Override
+                public void onFailed(String reason) {
+                	warningUploadCounter.increase(false);
+                	if(reason == null){
+                		reason = "empty";
+                	}
+                	Log.d(LOG_TAG, "AlertHandlingID = "+ curHandingID + "upload failed." + reason);
+                }
+            });
     	}
-    	parameter.setWarningPerson(duePerson);
-    	parameter.setWarningDescription(alertInfo.getHandling());
-    	parameter.setWarningEndTime(CrtbUtils.parseDate(alertInfo.getHandlingTime()));
-    	// On website, 1 means alert, 0 means closed. but local database & windows has the different define.
-    	parameter.setWarningResult(alertInfo.getAlertStatus() == 1 ? 0 : 1);
-    	parameter.setRemark(alertInfo.getHandling());
-        CrtbWebService.getInstance().uploadWarningData(parameter, new RpcCallback() {
-
-            @Override
-            public void onSuccess(Object[] data) {
-            	warningUploadCounter.increase(true);
-                Log.d(LOG_TAG, "upload warning data success.");
-            }
-
-            @Override
-            public void onFailed(String reason) {
-            	warningUploadCounter.increase(false);
-                Log.d(LOG_TAG, "upload warning data failed.");
-            }
-        });
+    }
+    
+    private class WarningDataSet{
+    	public UploadWarningData orginalData;
+    	public List<AlertHandlingList> handlings;
     }
     
     public class UploadWarningData {

@@ -51,6 +51,7 @@ public class AlertHandlingListAdapter extends BaseAdapter {
             h.personView = (TextView) v.findViewById(R.id.person);
             h.remarkView = (TextView) v.findViewById(R.id.remark);
             h.statusView = (TextView) v.findViewById(R.id.status);
+            h.uploadView = (TextView) v.findViewById(R.id.uploadedstate);
             v.setTag(h);
         }
         AlertHandlingList item = (AlertHandlingList) getItem(position);
@@ -64,6 +65,7 @@ public class AlertHandlingListAdapter extends BaseAdapter {
             }
             holder.remarkView.setText(mContext.getString(R.string.handling_remark, handling));
             holder.statusView.setText(mContext.getString(R.string.handling_status, AlertUtils.ALERT_STATUS_MSGS[item.getAlertStatus()]));
+            holder.uploadView.setText(item.getUploadStatus() == 2 ? "上传状态: 已上传":"上传状态: 未上传");
         }
         return v;
     }
@@ -73,5 +75,6 @@ public class AlertHandlingListAdapter extends BaseAdapter {
         TextView personView;
         TextView remarkView;
         TextView statusView;
+        TextView uploadView;
     }
 }

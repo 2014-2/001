@@ -35,11 +35,15 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.crtb.tunnelmonitor.dao.impl.v2.AlertHandlingInfoDao;
 import com.crtb.tunnelmonitor.dao.impl.v2.AlertListDao;
+import com.crtb.tunnelmonitor.entity.AlertHandlingList;
 import com.crtb.tunnelmonitor.entity.AlertInfo;
 import com.crtb.tunnelmonitor.entity.AlertList;
 import com.crtb.tunnelmonitor.network.CrtbWebService;
+import com.crtb.tunnelmonitor.network.DataCounter;
 import com.crtb.tunnelmonitor.network.RpcCallback;
+import com.crtb.tunnelmonitor.network.DataCounter.CounterListener;
 import com.crtb.tunnelmonitor.task.WarningDataManager;
 import com.crtb.tunnelmonitor.task.WarningDataManager.UploadWarningData;
 import com.crtb.tunnelmonitor.task.WarningDataManager.WarningLoadListener;
@@ -219,7 +223,6 @@ public class WarningUploadActivity extends Activity {
 						Toast.makeText(getApplicationContext(), "请先关联工点",
 								Toast.LENGTH_SHORT).show();
 					} else {
-						WarningDataManager dataManager = new WarningDataManager();
 						List<UploadWarningData> uploadWarningDataList = new ArrayList<UploadWarningData>();
 						List<WarningUploadData> warningDataList = mAdapter
 								.getWarningData();
@@ -238,24 +241,10 @@ public class WarningUploadActivity extends Activity {
 										.mergedAlertCanBeUploaded(warningData
 												.getMergedAlert())) {
 									showProgressOverlay();
-									dataManager.uploadData(
-											uploadWarningDataList,
-											new WarningUploadListener() {
-												@Override
-												public void done(
-														final boolean success) {
-													runOnUiThread(new Runnable() {
-														@Override
-														public void run() {
-															updateStatus(success);
-														}
-													});
-												}
-											});
+									//默认同一时刻只能选择一条数据上传
+									uploadWarning(uploadWarningDataList.get(0));
 								} else {
-									Toast.makeText(WarningUploadActivity.this,
-											R.string.alert_upload_promote,
-											Toast.LENGTH_LONG).show();
+									Toast.makeText(WarningUploadActivity.this, R.string.alert_upload_promote, Toast.LENGTH_LONG).show();
 								}
 							}
 						}
@@ -274,6 +263,45 @@ public class WarningUploadActivity extends Activity {
             setBackgroundDrawable(dw);
             setOutsideTouchable(true);
         };
+    }
+    
+    private void uploadWarning(UploadWarningData originalData){
+    	AlertInfo alertInfo = originalData.getAlertInfo();
+    	int alertId = alertInfo.getAlertId();
+		WarningDataManager dataManager = new WarningDataManager();
+		List<AlertHandlingList> handlings = AlertHandlingInfoDao.defaultDao().queryByAlertIdOrderByHandlingTimeAscAndNoUpload(alertId);
+		if(handlings == null || handlings.size() < 1){
+			AlertHandlingList ahl = AlertHandlingInfoDao.defaultDao().queryNoHandlingInfoByAlertId(alertInfo);
+			if (ahl != null) {
+				handlings = new ArrayList<AlertHandlingList>();
+				handlings.add(ahl);
+			} else {
+				// 所有处理详情已经上传了，且没有没有处理详情的情况
+				updateStatus(true);
+				return;
+			}
+    	}
+		
+       	if(handlings.size() > 1){
+       		//排除第一条处理详情为null的数据
+       		String handlingInfo = handlings.get(0).getInfo();
+       		if(handlingInfo == null || handlingInfo.equals("")){
+       			handlings.remove(0);
+       		}
+       	}
+       	
+		dataManager.uploadWarningData(originalData,handlings,new WarningUploadListener() {
+			@Override
+			public void done(
+					final boolean success) {
+				runOnUiThread(new Runnable() {
+					@Override
+					public void run() {
+						updateStatus(success);
+					}
+				});
+			}
+		});
     }
 
     private List<AlertInfo> getCheckedAlertInfo() {
@@ -312,28 +340,6 @@ public class WarningUploadActivity extends Activity {
             }
         }
         return true;
-    }
-
-    private void uploadWarningData() {
-        showProgressOverlay();
-        CrtbWebService.getInstance().uploadWarningData(null, new RpcCallback() {
-
-            @Override
-            public void onSuccess(Object[] data) {
-                Log.d(LOG_TAG, "upload warning data success.");
-                // Toast.makeText(getApplicationContext(), "上传预警信息成功",
-                // Toast.LENGTH_SHORT).show();
-                updateStatus(true);
-            }
-
-            @Override
-            public void onFailed(String reason) {
-                Log.d(LOG_TAG, "upload warning data failed.");
-                // Toast.makeText(getApplicationContext(), "上传预警信息失败",
-                // Toast.LENGTH_SHORT).show();
-                updateStatus(false);
-            }
-        });
     }
 
     public void initB() {
@@ -490,4 +496,5 @@ public class WarningUploadActivity extends Activity {
     		curWork.setText(list[1]);
     	}	
 	}
+
 }

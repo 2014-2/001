@@ -109,7 +109,7 @@ public class AlertUtils {
      * @return
      */
     public static void getPointSubsidenceExceedMsg(Object point, boolean readOnly, String rockGrade,Context context,UploadFinishCallBack pCaller) {
-        checkPointSubsidenceAlert(point, -1, null, null, readOnly,rockGrade,context,pCaller);
+        checkPointSubsidenceAlert(point, -1, -1, null, null, readOnly,rockGrade,context,pCaller);
     }
     
     /**
@@ -119,7 +119,7 @@ public class AlertUtils {
      * @return
      */
 	public static void getLineConvergenceExceedMsg(TunnelSettlementTotalData s_1, TunnelSettlementTotalData s_2, boolean readOnly, String rockGrade,Context context,UploadFinishCallBack pCaller) {
-		checkLineConvergenceAlert(s_1, s_2, -1, null, null, readOnly, rockGrade,context,pCaller);
+		checkLineConvergenceAlert(s_1, s_2, -1, -1, null, null, readOnly, rockGrade,context,pCaller);
 	}
 
     public static String getAlertValueUnit(int alertType) {
@@ -147,7 +147,7 @@ public class AlertUtils {
      * @param readOnly 为true时该方法不会对数据库做出任何修改，只返回预警信息
      * @return error list; if null or empty, it means no exceeding.
      */
-    private static Exceeding getPointSubsidenceExceed(Object point, int curHandlingAlertId, String handling, Date handlingTime,boolean needOriginalData) {
+    private static Exceeding getPointSubsidenceExceed(Object point, int curHandlingAlertId, int handling, String info, Date handlingTime,boolean needOriginalData) {
         Log.d(TAG, "checkPointSubsidenceExceed");
         Exceeding ret = new Exceeding();
         int type = 0;
@@ -225,7 +225,7 @@ public class AlertUtils {
                     int aid = al.getId();
                     AlertHandlingInfoDao
                             .defaultDao()
-                            .insertIfNotExist(aid, handling, handlingTime,
+                            .insertIfNotExist(aid, handling, info, handlingTime,
                                     AppCRTBApplication.getInstance().mUserName, ALERT_STATUS_HANDLED, 0/*false*/);
                 }
             }
@@ -327,16 +327,8 @@ public class AlertUtils {
         return ret;
     }
 
-    public static OffsetLevel[] checkPointSubsidenceAlert(final Object point, final int curHandlingAlertId, String handlingOld,final Date handlingTime,boolean readOnly,String rockGrade,final Context context,final UploadFinishCallBack pCaller){
-		/*if (!readOnly && offsetLevel != null && !offsetLevel[Constant.LEI_JI_INDEX].IsLargerThanMaxValue) {
-			updatePointSubsidence(excecding.tunnelData, excecding.subData, offsetLevel[Constant.LEI_JI_INDEX].TransfiniteLevel, offsetLevel[Constant.LEI_JI_INDEX].IsTransfinite, offsetLevel[Constant.LEI_JI_INDEX].Value, offsetLevel[Constant.LEI_JI_INDEX].PreType, excecding.originalDataID, handlingTime, handling, curHandlingAlertId);
-		}*/
-		//return offsetLevel;
-		
-		
-        final String handling = handlingOld == null ? "":handlingOld;
-        
-		final Exceeding excecding = getPointSubsidenceExceed(point, curHandlingAlertId, handling, handlingTime, false);
+    public static OffsetLevel[] checkPointSubsidenceAlert(final Object point, final int curHandlingAlertId, final int handling, final String info,final Date handlingTime,boolean readOnly,String rockGrade,final Context context,final UploadFinishCallBack pCaller){
+		final Exceeding excecding = getPointSubsidenceExceed(point, curHandlingAlertId, handling, info, handlingTime, false);
 		if (excecding != null) {
 			final OffsetLevel[] offsetLevel = checkOffsetLevel(excecding, rockGrade);
 			
@@ -347,13 +339,13 @@ public class AlertUtils {
 						@Override
 						public void done(boolean isUploading) {
 							if (isUploading && offsetLevel != null) {
-								updatePointSubsidence(excecding.tunnelData, excecding.subData, offsetLevel, excecding.originalDataID, handlingTime, handling, curHandlingAlertId);
+								updatePointSubsidence(excecding.tunnelData, excecding.subData, offsetLevel, excecding.originalDataID, handlingTime, handling, info, curHandlingAlertId);
 							}
 							pCaller.Finish(offsetLevel, isUploading);
 						}
 					});
 				} else {
-					updatePointSubsidence(excecding.tunnelData, excecding.subData, offsetLevel, excecding.originalDataID, handlingTime, handling, curHandlingAlertId);
+					updatePointSubsidence(excecding.tunnelData, excecding.subData, offsetLevel, excecding.originalDataID, handlingTime, handling, info, curHandlingAlertId);
 					if (pCaller != null) {
 						pCaller.Finish(offsetLevel, false);
 					}
@@ -368,7 +360,7 @@ public class AlertUtils {
 		return null;
     }
     
-	private static void updatePointSubsidence(TunnelSettlementTotalData tunnelData, SubsidenceTotalData subData,OffsetLevel[] offsetLevel, String originalDataID, Date handlingTime, String handling, int curHandlingAlertId) {
+	private static void updatePointSubsidence(TunnelSettlementTotalData tunnelData, SubsidenceTotalData subData,OffsetLevel[] offsetLevel, String originalDataID, Date handlingTime, int handling, String info, int curHandlingAlertId) {
 		int alertLevelLeiJi = offsetLevel[Constant.LEI_JI_INDEX].TransfiniteLevel;
 		boolean isTransfiniteLeiJi = offsetLevel[Constant.LEI_JI_INDEX].IsTransfinite;
 		double accumulativeSubsidence = offsetLevel[Constant.LEI_JI_INDEX].Value;
@@ -404,14 +396,14 @@ public class AlertUtils {
 			
 			String handlingRemark = "";
 			if (curHandlingAlertId >= 0 /* && alertId == curHandlingAlertId */) {
-				handlingRemark = handling;
+				handlingRemark = info;
 			}
 
 			if (curHandlingAlertId < 0) {// 重测，删除原来数据的报警信息
 				AlertHandlingInfoDao.defaultDao().deleteByAlertId(alertId);
 			}
 
-			AlertHandlingInfoDao.defaultDao().insertItem(alertId, handlingRemark, new Date(System.currentTimeMillis()), duePerson, ALERT_STATUS_OPEN/* 报警 */, 0/* false */);
+			AlertHandlingInfoDao.defaultDao().insertItem(alertId,handling, handlingRemark, new Date(System.currentTimeMillis()), duePerson, ALERT_STATUS_OPEN/* 报警 */, 0/* false */);
 
 		} 
 		//没有超限
@@ -420,7 +412,7 @@ public class AlertUtils {
 			if (alert != null) {
 				alertId = alert.getId();
 				if (curHandlingAlertId >= 0) {
-					AlertHandlingInfoDao.defaultDao().insertItem(alertId, handling, handlingTime, duePerson, ALERT_STATUS_HANDLED, 1/* true */);
+					AlertHandlingInfoDao.defaultDao().insertItem(alertId, handling, info, handlingTime, duePerson, ALERT_STATUS_HANDLED, 1/* true */);
 					if (tunnelData != null) {
 						alertId = AlertListDao.defaultDao().insertOrUpdate(tunnelData, alertLevelLeiJi, uTypeLeiJi, accumulativeSubsidence, ACCUMULATIVE_THRESHOLD, originalDataID);
 					} else {
@@ -443,14 +435,14 @@ public class AlertUtils {
 			}
 			String handlingRemark = "";
 			if (curHandlingAlertId >= 0 ) {
-				handlingRemark = handling;
+				handlingRemark = info;
 			}
 
 			if (curHandlingAlertId < 0) {// 重测
 				AlertHandlingInfoDao.defaultDao().deleteByAlertId(alertId);
 			}
 
-			AlertHandlingInfoDao.defaultDao().insertItem(alertId, handlingRemark, new Date(System.currentTimeMillis()), duePerson, ALERT_STATUS_OPEN/* 报警 */, 0/* false */);
+			AlertHandlingInfoDao.defaultDao().insertItem(alertId,handling, handlingRemark, new Date(System.currentTimeMillis()), duePerson, ALERT_STATUS_OPEN/* 报警 */, 0/* false */);
 		}
 		// 没有超限
 		else {
@@ -459,7 +451,7 @@ public class AlertUtils {
 			if (al != null) {
 				alertId = al.getId();
 				if (curHandlingAlertId >= 0) {// 处理
-					AlertHandlingInfoDao.defaultDao().insertItem(alertId, handling, handlingTime, duePerson, ALERT_STATUS_HANDLED, 1/* true */);
+					AlertHandlingInfoDao.defaultDao().insertItem(alertId, handling, info, handlingTime, duePerson, ALERT_STATUS_HANDLED, 1/* true */);
 					if (tunnelData != null) {
 						alertId = AlertListDao.defaultDao().insertOrUpdate(tunnelData, alertLevelSuLv, uTypeSuLv, speedSubsidence, SPEED_THRESHOLD, originalDataID);
 					} else {
@@ -473,10 +465,9 @@ public class AlertUtils {
 		}
 	}
     
-	public static OffsetLevel[] checkLineConvergenceAlert(final TunnelSettlementTotalData s_1,final TunnelSettlementTotalData s_2,final int curHandlingAlertId,final String handlingOld,final Date handlingTime,final boolean readOnly,String rockGrade,final Context context,final UploadFinishCallBack pCaller){
-        final String handling = handlingOld == null ? "":handlingOld;
+	public static OffsetLevel[] checkLineConvergenceAlert(final TunnelSettlementTotalData s_1,final TunnelSettlementTotalData s_2,final int curHandlingAlertId,final int handling, final String info,final Date handlingTime,final boolean readOnly,String rockGrade,final Context context,final UploadFinishCallBack pCaller){
         
-		final Exceeding excecding = getLineConvergenceExceed(s_1, s_2, curHandlingAlertId, handling, handlingTime, false);
+		final Exceeding excecding = getLineConvergenceExceed(s_1, s_2, curHandlingAlertId, handling, info, handlingTime, false);
 		if (excecding != null) {
 			final OffsetLevel[] offsetLevel = checkOffsetLevel(excecding, rockGrade);
 			
@@ -487,13 +478,13 @@ public class AlertUtils {
 						@Override
 						public void done(boolean isUploading) {
 							if (isUploading && offsetLevel != null) {
-								updateLineConvergence(s_1, s_2, offsetLevel, excecding.originalDataID, handlingTime, handling, curHandlingAlertId);
+								updateLineConvergence(s_1, s_2, offsetLevel, excecding.originalDataID, handlingTime, handling, info, curHandlingAlertId);
 							}
 							pCaller.Finish(offsetLevel, isUploading);
 						}
 					});
 				} else {
-					updateLineConvergence(s_1, s_2, offsetLevel, excecding.originalDataID, handlingTime, handling, curHandlingAlertId);
+					updateLineConvergence(s_1, s_2, offsetLevel, excecding.originalDataID, handlingTime, handling, info, curHandlingAlertId);
 					if (pCaller != null) {
 						pCaller.Finish(offsetLevel, false);
 					}
@@ -507,7 +498,7 @@ public class AlertUtils {
 		return null;
     }
 		
-	private static void updateLineConvergence(TunnelSettlementTotalData s_1, TunnelSettlementTotalData s_2, OffsetLevel[] offsetLevel, String originalDataID, Date handlingTime, String handling, int curHandlingAlertId) {
+	private static void updateLineConvergence(TunnelSettlementTotalData s_1, TunnelSettlementTotalData s_2, OffsetLevel[] offsetLevel, String originalDataID, Date handlingTime, int handling, String info, int curHandlingAlertId) {
 		int alertLevelLeiJi = offsetLevel[Constant.LEI_JI_INDEX].TransfiniteLevel;
 		boolean isTransfiniteLeiJi = offsetLevel[Constant.LEI_JI_INDEX].IsTransfinite;
 		double convergence = offsetLevel[Constant.LEI_JI_INDEX].Value;
@@ -535,14 +526,14 @@ public class AlertUtils {
 
 			String handlingRemark = "";
 			if (curHandlingAlertId >= 0) {
-				handlingRemark = handling;
+				handlingRemark = info;
 			}
 
 			if (curHandlingAlertId < 0) {// 重测
 				AlertHandlingInfoDao.defaultDao().deleteByAlertId(alertId);
 			}
 
-			AlertHandlingInfoDao.defaultDao().insertItem(alertId, handlingRemark, new Date(System.currentTimeMillis()), duePerson, ALERT_STATUS_OPEN/* 报警 */, 0/* false */);
+			AlertHandlingInfoDao.defaultDao().insertItem(alertId,handling, handlingRemark, new Date(System.currentTimeMillis()), duePerson, ALERT_STATUS_OPEN/* 报警 */, 0/* false */);
 		}
 		// 没有超限
 		else {
@@ -550,7 +541,7 @@ public class AlertUtils {
 			if (al != null) {
 				alertId = al.getId();
 				if (curHandlingAlertId >= 0) {
-					AlertHandlingInfoDao.defaultDao().insertItem(alertId, handling, handlingTime, duePerson, ALERT_STATUS_HANDLED, 1/* true */);
+					AlertHandlingInfoDao.defaultDao().insertItem(alertId, handling,info, handlingTime, duePerson, ALERT_STATUS_HANDLED, 1/* true */);
 					AlertListDao.defaultDao().insertOrUpdate(s_1, alertLevelLeiJi, uTypeLeiJi, convergence, ACCUMULATIVE_THRESHOLD, originalDataID);
 				} else if (al.getUploadStatus() != 2) {
 					AlertHandlingInfoDao.defaultDao().deleteByAlertId(alertId);
@@ -564,14 +555,14 @@ public class AlertUtils {
 			alertId = AlertListDao.defaultDao().insertOrUpdate(s_1, alertLevelSuLv, uTypeSuLv, shoulianSpeed, SPEED_THRESHOLD, originalDataID);
 			String handlingRemark = "";
 			if (curHandlingAlertId >= 0) {
-				handlingRemark = handling;
+				handlingRemark = info;
 			}
 
 			if (curHandlingAlertId < 0) {// 重测
 				AlertHandlingInfoDao.defaultDao().deleteByAlertId(alertId);
 			}
 
-			AlertHandlingInfoDao.defaultDao().insertItem(alertId, handlingRemark, new Date(System.currentTimeMillis()), duePerson, ALERT_STATUS_OPEN/* 报警 */, 0/* false */);
+			AlertHandlingInfoDao.defaultDao().insertItem(alertId, handling, handlingRemark, new Date(System.currentTimeMillis()), duePerson, ALERT_STATUS_OPEN/* 报警 */, 0/* false */);
 		}
 		// 没有超限
 		else {
@@ -579,7 +570,7 @@ public class AlertUtils {
 			if (al != null) {
 				alertId = al.getId();
 				if (curHandlingAlertId >= 0) {
-					AlertHandlingInfoDao.defaultDao().insertItem(alertId, handling, handlingTime, duePerson, ALERT_STATUS_HANDLED, 1/* true */);
+					AlertHandlingInfoDao.defaultDao().insertItem(alertId, handling, info, handlingTime, duePerson, ALERT_STATUS_HANDLED, 1/* true */);
 					AlertListDao.defaultDao().insertOrUpdate(s_1, alertLevelSuLv, uTypeSuLv, shoulianSpeed, SPEED_THRESHOLD, originalDataID);
 				} else if (al.getUploadStatus() != 2) {
 					AlertHandlingInfoDao.defaultDao().deleteByAlertId(alertId);
@@ -599,16 +590,12 @@ public class AlertUtils {
     * @return error list; if null or empty, it means no exceeding.
     */
     private static Exceeding getLineConvergenceExceed(TunnelSettlementTotalData s_1,
-           TunnelSettlementTotalData s_2, int curHandlingAlertId, String handling, Date handlingTime,boolean needOriginalData) {
+           TunnelSettlementTotalData s_2, int curHandlingAlertId, int handling,String info, Date handlingTime,boolean needOriginalData) {
        Log.d(TAG, "getLineConvergenceExceed");
        Exceeding ret = new Exceeding();
 
        if (s_1 == null || s_2 == null) {
            return null;
-       }
-
-       if (handling == null) {
-           handling = "";
        }
 
        if (s_1.getDataStatus() == POINT_DATASTATUS_AS_FIRSTLINE && !needOriginalData) {
@@ -644,7 +631,7 @@ public class AlertUtils {
                    int aid = al.getId();
                    AlertHandlingInfoDao
                            .defaultDao()
-                           .insertIfNotExist(aid, handling, handlingTime,
+                           .insertIfNotExist(aid, handling,info, handlingTime,
                                    AppCRTBApplication.getInstance().mUserName, ALERT_STATUS_HANDLED, 0/*false*/);
                }
            }
@@ -1212,7 +1199,7 @@ public class AlertUtils {
      *            要新插入AlertHandlingList表的HandlingTime列
      */
     public static void handleAlert(int alertId, int dataStatus, boolean isRebury, float correction,
-            int curAlertStatus, int alertStatus, String handling, Date handlingTime,String rockGrade) {
+            int curAlertStatus, int alertStatus, int handling, String info, Date handlingTime,String rockGrade) {
         Log.d(TAG, "handleAlert");
 
         AlertList al = AlertListDao.defaultDao().queryOneById(alertId);
@@ -1274,7 +1261,7 @@ public class AlertUtils {
 //                                handleSameTunnelPointOtherAlertsByCorrection(p, alertId, correction, handlingTime);
 //                            }
                         } else if (dataStatus == POINT_DATASTATUS_DISCARD) {
-                            checkPointSubsidenceAlert(p, alertId, handling, handlingTime, false,rockGrade,null,null);
+                            checkPointSubsidenceAlert(p, alertId, handling, info, handlingTime, false,rockGrade,null,null);
                         	//checkPointSubsidenceExceed(p, alertId, handling, handlingTime, false,rockGrade);
                         }
                     }
@@ -1312,7 +1299,7 @@ public class AlertUtils {
 //                                handleSameGroundPointOtherAlertsByCorrection(p, alertId, correction, handlingTime);
 //                            }
                         } else if (dataStatus == POINT_DATASTATUS_DISCARD) {
-                            checkPointSubsidenceAlert(p, alertId, handling, handlingTime, false,rockGrade,null,null);
+                            checkPointSubsidenceAlert(p, alertId, handling, info, handlingTime, false,rockGrade,null,null);
                         	//checkPointSubsidenceExceed(p, alertId, handling, handlingTime, false,rockGrade);
                         }
                     }
@@ -1321,10 +1308,10 @@ public class AlertUtils {
                 if (id != -1) {
                     if (dataStatus == POINT_DATASTATUS_AS_FIRSTLINE) {
 //                        tarAlertStatus = alertStatus;
-                        handleAsFirstLine(alertId, alertStatus, handling, duePerson, handlingTime,
+                        handleAsFirstLine(alertId, alertStatus, handling, info, duePerson, handlingTime,
                                 chainageId, pntType, id);
                     }
-                    updatePointSubsidenceAlertsAfterCorrection(chainageId, pntType, id, alertId, handling, handlingTime,rockGrade);
+                    updatePointSubsidenceAlertsAfterCorrection(chainageId, pntType, id, alertId, handling, info, handlingTime,rockGrade);
                 }
             } else {//测线
                 TunnelSettlementTotalData s_1 = TunnelSettlementTotalDataDao.defaultDao()
@@ -1365,10 +1352,10 @@ public class AlertUtils {
                     if (dataStatus == POINT_DATASTATUS_AS_FIRSTLINE) {
 //                        tarAlertStatus = alertStatus;
                         String s1Type = s_1.getPntType();
-                        handleAsFirstLine(alertId, alertStatus, handling, duePerson, handlingTime,
+                        handleAsFirstLine(alertId, alertStatus, handling, info, duePerson, handlingTime,
                                 chainageId, s1Type, s_1.getID());
                         String oppositeType = s1Type.substring(0, s1Type.length() - 1) + "2";
-                        handleAsFirstLine(alertId, alertStatus, handling, duePerson, handlingTime,
+                        handleAsFirstLine(alertId, alertStatus, handling, info, duePerson, handlingTime,
                                 chainageId, oppositeType, s_1.getID());
                     }
 
@@ -1376,9 +1363,9 @@ public class AlertUtils {
                     
                     s_1.setDataCorrection(totalCorrection);
                     s_2.setDataCorrection(totalCorrection);
-                    updateLineConvergenceAlertsAfterCorrection(chainageId, s_1.getPntType(),s_1.getID(), alertId, handling, handlingTime, rockGrade);
+                    updateLineConvergenceAlertsAfterCorrection(chainageId, s_1.getPntType(),s_1.getID(), alertId, handling, info, handlingTime, rockGrade);
                 } else if (dataStatus == POINT_DATASTATUS_DISCARD) {
-                	checkLineConvergenceAlert(s_1, s_2, alertId, handling, handlingTime, false,rockGrade,null,null);
+                	checkLineConvergenceAlert(s_1, s_2, alertId, handling, info, handlingTime, false,rockGrade,null,null);
                 }
             }
         }
@@ -1392,11 +1379,8 @@ public class AlertUtils {
     }
 
     // 本条数据作为首行，即 将之前数据均设为不参与计算;然后删除本条（包括）之前的数据产生的所有预警信息
-    public static void handleAsFirstLine(int alertId, int alertStatus, String handling,
+    public static void handleAsFirstLine(int alertId, int alertStatus, int handling,String info,
             String duePerson, Date handlingTime, String chainageId, String pntType, int measDataId) {
-        if (handling == null) {
-            handling = "";
-        }
         if (pntType.contains("A") || pntType.contains("S")) {// 隧道内断面
             List<TunnelSettlementTotalData> ls = TunnelSettlementTotalDataDao.defaultDao()
                     .queryInfoBeforeMeasId(chainageId, pntType, measDataId + 1);
@@ -1416,10 +1400,10 @@ public class AlertUtils {
                                 } else {
                                     String handlingRemark = "";
                                     if (alertId >= 0 /*&& alertId == curAlertId*/) {
-                                        handlingRemark = handling;
+                                        handlingRemark = info;
                                     }
                                     AlertHandlingInfoDao.defaultDao()
-                                            .insertIfNotExist(curAlertId, handlingRemark, handlingTime,
+                                            .insertIfNotExist(curAlertId,handling, handlingRemark, handlingTime,
                                                     duePerson, alertStatus, 0/*false*/);
                                 }
                             }
@@ -1449,7 +1433,7 @@ public class AlertUtils {
                                     AlertListDao.defaultDao().delete(alert);
                                 } else if (curAlertId != alertId) {//alertId 在handleAlert中已处理
                                     AlertHandlingInfoDao.defaultDao()
-                                            .insertItem(curAlertId, handling, handlingTime,
+                                            .insertItem(curAlertId, handling,info, handlingTime,
                                                     duePerson, alertStatus, 0/*false*/);
                                 }
                             }
@@ -1465,7 +1449,7 @@ public class AlertUtils {
     }
 
     private static void updatePointSubsidenceAlertsAfterCorrection(String chainageId, String pntType,
-            int measId, int curHandlingAlertId, String handling, Date handlingTime,String rockGrade) {
+            int measId, int curHandlingAlertId, int handling, String info, Date handlingTime,String rockGrade) {
         Log.d(TAG, "updatePointSubsidenceAlertsAfterCorrection, pntType: " + pntType);
         if (pntType.contains("A")) {//隧道内断面
             List<TunnelSettlementTotalData> ls = TunnelSettlementTotalDataDao.defaultDao()
@@ -1474,13 +1458,13 @@ public class AlertUtils {
                 for (TunnelSettlementTotalData p : ls) {
                     String currentHandling = "";
                     if (p.getID() == measId) {
-                        currentHandling = handling;
+                        currentHandling = info;
                     } else {
                         AlertListDao.defaultDao().deleteAlert(p.getSheetId(), chainageId, p.getGuid());
                         TunnelSettlementTotalDataDao.defaultDao().updateDataStatus(p.getGuid(), AlertUtils.POINT_DATASTATUS_NONE, 0);
                         p = TunnelSettlementTotalDataDao.defaultDao().queryOneByGuid(p.getGuid());
                     }
-                    checkPointSubsidenceAlert(p, curHandlingAlertId, handling, handlingTime, false,rockGrade,null,null);
+                    checkPointSubsidenceAlert(p, curHandlingAlertId, handling, info, handlingTime, false,rockGrade,null,null);
                     //checkPointSubsidenceExceed(p, curHandlingAlertId, handling, handlingTime, false,rockGrade);
                 }
             }
@@ -1491,13 +1475,13 @@ public class AlertUtils {
                 for (SubsidenceTotalData p : ls) {
                     String currentHandling = "";
                     if (p.getID() == measId) {
-                        currentHandling = handling;
+                        currentHandling = info;
                     } else {
                         AlertListDao.defaultDao().deleteAlert(p.getSheetId(), chainageId, p.getGuid());
                         SubsidenceTotalDataDao.defaultDao().updateDataStatus(p.getGuid(), AlertUtils.POINT_DATASTATUS_NONE, 0);
                         p = SubsidenceTotalDataDao.defaultDao().queryOneByGuid(p.getGuid());
                     }
-                    checkPointSubsidenceAlert(p, curHandlingAlertId, handling, handlingTime, false,rockGrade,null,null);
+                    checkPointSubsidenceAlert(p, curHandlingAlertId, handling, info, handlingTime, false,rockGrade,null,null);
                     //checkPointSubsidenceExceed(p, curHandlingAlertId, handling, handlingTime, false, rockGrade);
                 }
             }
@@ -1505,17 +1489,17 @@ public class AlertUtils {
     }
 
     public static void updateLineConvergenceAlertsAfterCorrection(String chainageId, String pntType,
-            int measId, int curHandlingAlertId, String handling, Date handlingTime,String rockGrade) {
+            int measId, int curHandlingAlertId, int handling, String info, Date handlingTime,String rockGrade) {
         Log.d(TAG, "updateLineConvergenceAlertsAfterCorrection, pntType: " + pntType);
         if (pntType.contains("S") && pntType.endsWith("1")) {//测线左点
             String oppositePntType = pntType.substring(0, pntType.length() - 1) + "2";
             List<TunnelSettlementTotalData> ls = TunnelSettlementTotalDataDao.defaultDao()
                     .queryInfoAfterMeasId(chainageId, pntType, measId);
             if (ls != null && ls.size() > 0) {
-                for (TunnelSettlementTotalData s_1 : ls) {
+                for (TunnelSettlementTotalData s_1 : ls) {               	
                     TunnelSettlementTotalData s_2 = TunnelSettlementTotalDataDao.defaultDao()
-                    .queryOppositePointOfALine(s_1, oppositePntType);//拿到测线右点
-                    checkLineConvergenceAlert(s_1, s_2, curHandlingAlertId, handling, handlingTime, false, rockGrade,null,null);
+                    .queryOppositePointOfALine(s_1, oppositePntType);//拿到测线右点                    
+                    checkLineConvergenceAlert(s_1, s_2, curHandlingAlertId, handling, info, handlingTime, false, rockGrade,null,null);
                 }
             }
         }
@@ -1839,7 +1823,7 @@ public class AlertUtils {
             if (point == null) {
                 point = SubsidenceTotalDataDao.defaultDao().queryOneByGuid(dataGuid);
             } 
-            return getPointSubsidenceExceed(point, -1, null, null, true);
+            return getPointSubsidenceExceed(point, -1, -1, null, null, true);
         }
 
         if (uType == SHOULIAN_LEIJI_EXCEEDING || uType == SHOULIAN_SULV_EXCEEDING) {
@@ -1852,7 +1836,7 @@ public class AlertUtils {
                     s_2 = TunnelSettlementTotalDataDao.defaultDao().queryOneByGuid(guids[1]);
                 }
             }
-            return getLineConvergenceExceed(s_1, s_2, -1, null, null, true);
+            return getLineConvergenceExceed(s_1, s_2, -1, -1, null, null, true);
         }
         return null;
     }
@@ -1958,6 +1942,8 @@ public class AlertUtils {
 				sbSulv.append(U_TYPE_MSGS_SAFE[sulv.PreType]).append(" ").append(sulv.Value).append("毫米");
 			}
 			sulv.Content = sbSulv.toString();
+			//速率永不超限
+			sulv.IsTransfinite = false;
 		}
 		offsetList[1] = sulv;
 		

@@ -4,11 +4,13 @@ import java.util.Date;
 import java.util.List;
 
 import org.zw.android.framework.IAccessDatabase;
+import org.zw.android.framework.util.DateUtils;
 
 import android.util.Log;
 
 import com.crtb.tunnelmonitor.entity.AlertHandlingList;
-import com.crtb.tunnelmonitor.entity.AlertList;
+import com.crtb.tunnelmonitor.entity.AlertInfo;
+import com.crtb.tunnelmonitor.utils.AlertUtils;
 
 public class AlertHandlingInfoDao extends AbstractDao<AlertHandlingList> {
 
@@ -53,6 +55,58 @@ public class AlertHandlingInfoDao extends AbstractDao<AlertHandlingList> {
 
         return db.queryObjects(sql, new String[]{alertGuid}, AlertHandlingList.class);
     }
+    
+    public List<AlertHandlingList> queryByAlertIdOrderByHandlingTimeAscAndNoUpload(int alertId) {
+        final IAccessDatabase db = getCurrentDb();
+        String alertGuid = AlertListDao.defaultDao().getGuidById(alertId);
+
+        if (alertGuid == null || db == null) {
+            return null;
+        }
+
+
+        String sql = "SELECT * from AlertHandlingList"
+                + " WHERE"
+                + " AlertID=?"
+                + " And AlertStatus != 2"
+                + " ORDER BY HandlingTime"
+                ;
+
+        return db.queryObjects(sql, new String[]{alertGuid}, AlertHandlingList.class);
+    }
+    
+    public AlertHandlingList queryNoHandlingInfoByAlertId(AlertInfo alertInfo) {
+        final IAccessDatabase db = getCurrentDb();
+        String alertGuid = AlertListDao.defaultDao().getGuidById(alertInfo.getAlertId());
+
+        if (alertGuid == null || db == null) {
+            return null;
+        }
+
+        String sql = "SELECT Top 1 from AlertHandlingList"
+                + " WHERE"
+                + " AlertID=?"
+                + " ORDER BY HandlingTime"
+                ;
+
+		AlertHandlingList ahl = db.queryObject(sql, new String[] { alertGuid },AlertHandlingList.class);
+		if (ahl == null) {
+			// 存在没有处理的详情的AlertList，自动添加一个处理详情
+			ahl = new AlertHandlingList();
+			ahl.setAlertID(alertGuid);
+			ahl.setAlertStatus(AlertUtils.ALERT_STATUS_OPEN);
+			ahl.setHandling(AlertUtils.POINT_DATASTATUS_NONE);
+			ahl.setInfo("");
+			ahl.setHandlingTime(DateUtils.toDate(alertInfo.getDate()));
+			ahl.setDuePerson(alertInfo.getDuePerson() != null ? alertInfo.getDuePerson() : "");
+			ahl.setHandlingInfo(false);
+			db.saveObject(ahl);
+			return ahl;
+		} else {
+			// 不存在没有处理详情的AlertListIndex
+			return null;
+		}
+    }
 
     public AlertHandlingList queryOne(int alertId,
             int alertStatus) {
@@ -75,19 +129,16 @@ public class AlertHandlingInfoDao extends AbstractDao<AlertHandlingList> {
         return db.queryObject(sql, args, AlertHandlingList.class);
     }
 
-    public int insertIfNotExist(int alertId, String handling, Date handlingTime, String duePerson,
+    public int insertIfNotExist(int alertId, int handling,String info, Date handlingTime, String duePerson,
             int alertStatus, int handlingInfo) {
         int id = -1;
-        if (handling == null) {
-            handling = "";
-        }
         if (queryOne(alertId, alertStatus) == null) {
-            id = insertItem(alertId, handling, handlingTime, duePerson, alertStatus, handlingInfo);
+            id = insertItem(alertId, handling,info, handlingTime, duePerson, alertStatus, handlingInfo);
         }
         return id;
     }
 
-    public int insertItem(int alertId, String handling, Date handlingTime, String duePerson,
+    public int insertItem(int alertId, int handling,String info, Date handlingTime, String duePerson,
             int alertStatus, int handlingInfo) {
         Log.d(TAG, "AlertHandlingInfoDao insertItem");
         final IAccessDatabase mDatabase = getCurrentDb();
@@ -95,9 +146,9 @@ public class AlertHandlingInfoDao extends AbstractDao<AlertHandlingList> {
         if (mDatabase == null) {
             return -1;
         }
-
-        if (handling == null) {
-            handling = "";
+        
+        if(info == null){
+        	info = "";
         }
 
         String guid = AlertListDao.defaultDao().getGuidById(alertId);
@@ -110,7 +161,9 @@ public class AlertHandlingInfoDao extends AbstractDao<AlertHandlingList> {
         	needUpdate = true;
         }
         ah.setAlertID(guid);
-        ah.setInfo(handling);
+        ah.setInfo(info);
+        //YX 正常保存handling
+        ah.setHandling(handling);
         ah.setHandlingTime(handlingTime);
         ah.setDuePerson(duePerson);
         ah.setAlertStatus(alertStatus);
@@ -167,6 +220,17 @@ public class AlertHandlingInfoDao extends AbstractDao<AlertHandlingList> {
         if (db != null) {
             String sql = "UPDATE AlertHandlingList"
                     + " SET AlertStatus=" + alertStatus
+                    + " WHERE ID=?";
+            String[] args = new String[]{String.valueOf(id)};
+            db.execute(sql, args);
+        }
+    }
+    
+    public void updateUploadStatus(int id, int uploadStatus) {
+        IAccessDatabase db = getCurrentDb();
+        if (db != null) {
+            String sql = "UPDATE AlertHandlingList"
+                    + " SET UploadStatus=" + uploadStatus
                     + " WHERE ID=?";
             String[] args = new String[]{String.valueOf(id)};
             db.execute(sql, args);

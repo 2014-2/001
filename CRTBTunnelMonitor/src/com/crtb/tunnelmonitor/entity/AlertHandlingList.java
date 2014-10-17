@@ -75,6 +75,10 @@ public class AlertHandlingList implements Serializable {
     }
 
     public void setHandling(int handling) {
+        if(handling >= AlertUtils.ALERT_HANDLING.length || handling < 0) {
+        	//处理详情错误
+        	handling = 0;
+        }
         Handling = handling;
     }
 
@@ -124,11 +128,11 @@ public class AlertHandlingList implements Serializable {
 
     public void setInfo(String info) {
         Info = info;
-        for (int i =0; i< AlertUtils.ALERT_HANDLING.length; i++) {
-            if (info.contains(AlertUtils.ALERT_HANDLING[i])) {
-                setHandling(i);
-            }
-        }
+//        for (int i =0; i< AlertUtils.ALERT_HANDLING.length; i++) {
+//            if (info.contains(AlertUtils.ALERT_HANDLING[i])) {
+//                setHandling(i);
+//            }
+//        }
     }
 
     public AlertHandlingList() {

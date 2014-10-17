@@ -14,14 +14,15 @@ public class AlertManager {
     private int mAlertStatus;
     private boolean mIsRebury = false;
     private float mCorretion;
-    private String mHandling;
+    private int mHandling;
+    private String mInfo;
     private Date mHandlingTime;
     private HandleFinishCallback mCallback;
     private int mCurAlertStatus;
     private String mRockGrage;
 
     public void handleAlert(int alertId, int dataStatus, boolean isRebury, float correction, int curAlertStatus, int alertStatus,
-            String handling, Date handlingTime,String rockGrage, HandleFinishCallback callback) {
+            int handling, String info, Date handlingTime,String rockGrage, HandleFinishCallback callback) {
         Log.d(TAG, "handleAlert");
         mAlertId = alertId;
         mDataStatus = dataStatus;
@@ -33,6 +34,7 @@ public class AlertManager {
         mHandlingTime = handlingTime;
         mCallback = callback;
         mRockGrage = rockGrage;
+        mInfo = info;
 
         new HandleAlertTask().execute();
     }
@@ -43,7 +45,7 @@ public class AlertManager {
         protected Void doInBackground(Void... params) {
             Log.d(TAG, "HandleAlertTask doInBackground");
             AlertUtils.handleAlert(mAlertId, mDataStatus, mIsRebury, mCorretion, mCurAlertStatus,
-                    mAlertStatus, mHandling, mHandlingTime,mRockGrage);
+                    mAlertStatus, mHandling, mInfo, mHandlingTime,mRockGrage);
             return null;
         }
 
