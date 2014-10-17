@@ -32,6 +32,7 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.crtb.tunnelmonitor.AppHandler;
@@ -235,6 +236,9 @@ public class WorkNewActivity extends WorkFlowActivity implements OnClickListener
 		mPager.setAdapter(new MyPagerAdapter(listViews));
 		mPager.setCurrentItem(0);
 		mPager.setOnPageChangeListener(new MyOnPageChangeListener());
+		
+		ScrollView container = (ScrollView)tabTwoView.findViewById(R.id.work_new_variant_value_container);
+		container.setVisibility(View.GONE);
 	}
 
 	private void initView() {

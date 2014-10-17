@@ -6,6 +6,7 @@
     android:orientation="vertical" >
 
     <ScrollView
+        android:id="@+id/work_new_variant_value_container"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_marginLeft="10dp"
@@ -329,5 +330,22 @@
             </LinearLayout>
         </LinearLayout>
     </ScrollView>
+    
+    <ImageView
+        android:id="@+id/notice"
+        android:layout_marginTop="20dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:scaleType="matrix"
+        android:src="@drawable/work_new_remark" />
+
+    <TextView
+        android:id="@+id/remark"
+        android:layout_margin="30dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="上述表中只列出了累计变形量的控制指标，关于速率的控制指标，详细内容请参考铁路总公司印发的《隧道围岩量测标准化管理实施意见》" />
 
 </LinearLayout>
