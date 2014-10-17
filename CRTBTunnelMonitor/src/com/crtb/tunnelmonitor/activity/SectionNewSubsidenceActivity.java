@@ -174,6 +174,12 @@ public class SectionNewSubsidenceActivity extends WorkFlowActivity implements On
 					}
 				}
 				
+//YX 排除 "."				
+				if(posDot == 0 && temp.length() == 1){
+					edt.delete(0, 1);
+					return;
+				}
+				
 				temp = edt.toString();
 				
 				if(!StringUtils.isEmpty(temp)){

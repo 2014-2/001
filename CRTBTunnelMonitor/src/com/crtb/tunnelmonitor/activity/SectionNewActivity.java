@@ -326,7 +326,6 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 			
 			@Override
 			public void afterTextChanged(Editable edt) {
-				
 				String temp = edt.toString();
 				
 				int posDot = temp.indexOf(".");
@@ -335,6 +334,11 @@ public class SectionNewActivity extends WorkFlowActivity implements OnClickListe
 					if (temp.length() - posDot - 1 > 3) {
 						edt.delete(posDot + 4, posDot + 5);
 					}
+				}
+//YX 排除 "."				
+				if(posDot == 0 && temp.length() == 1){
+					edt.delete(0, 1);
+					return;
 				}
 				
 				temp = edt.toString();
