@@ -97,7 +97,6 @@ public class AlertListAdapter extends BaseAdapter {
 		TextView message = (TextView) view.findViewById(R.id.message);
 		message.setText(ai.getUTypeMsg());
 		TextView valueView = (TextView) view.findViewById(R.id.uvalue);
-		AlertUtils.getDeltaTime(ai);
 		double correction = ai.getCorrection();
 		if (AlertUtils.isSpeed(ai.getUType())) {
 			correction = correction / AlertUtils.getDeltaTime(ai);
