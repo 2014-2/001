@@ -50,14 +50,33 @@ class GetZoneAndSiteCodeRpc extends AbstractRpc {
 			WorkZone workZone = new WorkZone();
 			final int totalCount = data.getPropertyCount();
 			if (totalCount > 0) {
-				String[] zoneInfo = data.getPropertyAsString(0).split("#");
-				workZone.setZoneCode(zoneInfo[0]);
-				workZone.setZoneName(zoneInfo[1]);
+				int markerIndex = 0;
+				String info = null;
+				String code = null;
+				String name = null;
+				info = data.getPropertyAsString(0);
+				markerIndex = info.indexOf("#");
+				if (markerIndex < 1) {
+					notifyFailed("Exception Data: no # " + info);
+					return;
+				}
+				code = info.substring(0, markerIndex);
+				name = info.substring(markerIndex + 1);
+				workZone.setZoneCode(code);
+				workZone.setZoneName(name);
+				
 				for(int i = 1; i < totalCount; i++) {
 					WorkSite workSite = new WorkSite();
-					String[] siteInfo = data.getPropertyAsString(i).split("#");
-					workSite.setSiteCode(siteInfo[0]);
-					workSite.setSiteName(siteInfo[1]);
+					info = data.getPropertyAsString(i);
+					markerIndex = info.indexOf("#");
+					if (markerIndex < 1) {
+						notifyFailed("Exception Data: no # " + info);
+						return;
+					}
+					code = info.substring(0, markerIndex);
+					name = info.substring(markerIndex + 1);
+					workSite.setSiteCode(code);
+					workSite.setSiteName(name);
 					workZone.addWorkSite(workSite);
 				}
 			}
