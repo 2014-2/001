@@ -798,14 +798,16 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements
 					}
 					// 地表下沉
 					else {
-
+//YX sub-1 ,保存时，在显示的基础上加1						
+						String subPntType = ""+(Integer.valueOf(info.type)+1);
 						SubsidenceTotalDataDao dao = SubsidenceTotalDataDao
 								.defaultDao();
 
 						// 存在的测量点信息
 						SubsidenceTotalData old = dao.querySubsidenceTotalData(
 								rawSheetBean.getGuid(),
-								subsidenceSection.getGuid(), info.type);
+//YX sub-1							
+								subsidenceSection.getGuid(), subPntType);
 
 						final SubsidenceTotalData obj = new SubsidenceTotalData();
 						// DTMS DBDesign_V1.7.9_20140604 - 修改追踪表.xlsx
@@ -815,7 +817,7 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements
 						obj.setChainageId(subsidenceSection.getGuid());
 						// DTMS DBDesign_V1.7.9_20140604 - 修改追踪表.xlsx
 						obj.setSheetId(rawSheetBean.getGuid());
-						obj.setPntType(info.type); // 测量点类型
+						obj.setPntType(subPntType); // 测量点类型
 						obj.setSurveyorID(surveyer.getCertificateID());// 测量人员id
 
 						obj.setCoordinate(info.x + "," + info.y + "," + info.z);
@@ -1231,9 +1233,8 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements
 
 				bean = dao.querySubsidenceTotalData(rawSheetBean.getGuid(),
 						subsidenceSection.getGuid(), index);
-
-				TestPointHolder item = createSubsidenceTestPointView(bean,
-						index);
+//YX sub-1				
+				TestPointHolder item = createSubsidenceTestPointView(bean,""+id);
 
 				// 预警信息
 				if (bean != null) {

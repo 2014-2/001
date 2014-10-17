@@ -80,7 +80,12 @@ public class ReviewWarningActivity extends Activity {
             AlertDataHolder holder = (AlertDataHolder)convertView.getTag();
             holder.mTvXinghao.setText(alertInfo.getXinghao());
             holder.mTvDate.setText(alertInfo.getDate());
-            holder.mTvPntType.setText(getString(R.string.alert_point_type, alertInfo.getPntType()));
+//YX sub-1
+            String pntType = alertInfo.getPntType();
+            if(!pntType.startsWith("A") && !pntType.startsWith("S")){
+		        pntType = "" + (Integer.valueOf(pntType) - 1);
+            }
+            holder.mTvPntType.setText(getString(R.string.alert_point_type, pntType));
             holder.mTvTypeMsg.setText(alertInfo.getUTypeMsg());
             holder.mTvState.setText(getString(R.string.alert_state, alertInfo.getAlertStatusMsg()));
             holder.mTvHandleMethod.setText(getString(R.string.alert_handle_method, alertInfo.getChuliFangshi()));

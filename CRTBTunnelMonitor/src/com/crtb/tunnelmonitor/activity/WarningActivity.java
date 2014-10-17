@@ -282,7 +282,12 @@ public class WarningActivity extends Activity {
 
                                     mHandleCompleteView.setVisibility(View.VISIBLE);
                                     warningSignalTV.setText(alert.getXinghao());
-                                    warningPointNumTV.setText("点号："+alert.getPntType());
+//YX sub-1
+                                    String pntType = alert.getPntType();
+                                    if(!pntType.startsWith("A") && !pntType.startsWith("S")){
+								        pntType = "" + (Integer.valueOf(pntType) - 1);
+                                    }
+                                    warningPointNumTV.setText("点号："+pntType);
                                     warningStateTV.setText("状态："+alert.getAlertStatusMsg());
                                     warningValueTV.setText("超限值: " + String.format("%1$.1f", CrtbUtils.formatDouble(alert.getUValue(), 1))
                                             + AlertUtils.getAlertValueUnit(alert.getUType()));
@@ -291,7 +296,7 @@ public class WarningActivity extends Activity {
                                     warningDealWayTV.setText(alert.getChuliFangshi());
                                     oldDateMileageTV.setText(Html.fromHtml("<font color=\"#0080ee\">里程: </font>" + alert.getXinghao()));
                                     oldDateListNumTV.setText(Html.fromHtml("<font color=\"#0080ee\">记录单号: </font>" + date));
-                                    oldDatePointTV.setText(Html.fromHtml("<font color=\"#0080ee\">测点: </font>" + alert.getPntType()));
+                                    oldDatePointTV.setText(Html.fromHtml("<font color=\"#0080ee\">测点: </font>" + pntType));
                                     mCorrectionView.setText(String.valueOf(alert.getCorrection()));
 //                                    mWarningRemarkView.setText(alert.getHandling());
 
@@ -360,7 +365,9 @@ public class WarningActivity extends Activity {
                              mCheckedRaidoId == mDealWayBtnCorrection.getId()
 //                            || mCheckedRaidoId == mDealWayBtnNormal.getId()
                             || mCheckedRaidoId == mDealWayBtnRebury.getId()) {
-                        handleAlert();
+                        if(!handleAlert()){
+                        	return;
+                        }
                         handlingStep = 2;
                         mHandleCompleteView.setVisibility(View.GONE);
                         refreshData();
@@ -439,12 +446,13 @@ public class WarningActivity extends Activity {
 //        AlertInfo.count = adapter.getCount();
     }
 
-    private void handleAlert() {
+    private boolean handleAlert() {
+    	boolean isBreak = false;
 
 //        int alertHandlingId = alerts.get(clickedItem).getAlertHandlingId();
         AlertInfo ai = (AlertInfo) adapter.getItem(clickedItem);
         if (ai == null) {
-            return;
+            return true;
         }
 
         boolean isRebury = false;
@@ -485,9 +493,18 @@ public class WarningActivity extends Activity {
 
         int alertStatus = 0;// TODO : may also be 2?, if so,
                             // 需要将mBtnOnClickListener中deal_with_btn也要和complete_btn一样的逻辑
-        String handling = mWarningRemarkView.getText().toString();
+        
+        int handling = dataStatus;
+        
+        String info = mWarningRemarkView.getText().toString();
+        if(info.trim().equals("")){
+        	Toast.makeText(WarningActivity.this, "请录入报警原因及销警措施", Toast.LENGTH_LONG).show();
+        	isBreak = false;
+        	return isBreak;
+        }
+        
         Log.d(TAG, "handleAlert 处理内容：" + handling);
-        new AlertManager().handleAlert(alertId, dataStatus, isRebury, correction, curStatus, alertStatus, handling,
+        new AlertManager().handleAlert(alertId, dataStatus, isRebury, correction, curStatus, alertStatus, handling, info,
                 new Date(System.currentTimeMillis()),ai.getRockGrade(), new AlertManager.HandleFinishCallback() {
 
                     @Override
@@ -496,6 +513,8 @@ public class WarningActivity extends Activity {
                         refreshData();
                     }
                 });
+        isBreak = true;
+        return isBreak;
     }
 
     private void cancelHandling() {
