@@ -25,7 +25,7 @@
     <string name="common_delete">删除</string>
     <string name="common_search">搜索</string>
     <string name="common_look">查看</string>
-    <string name="common_setting">设置</string>
+    <string name="common_setting">自定义</string>
 
     <!-- 工作面模块 -->
     <string name="work_plan_title">工作面管理</string>
@@ -117,7 +117,7 @@
     <string name="deal_way_add">添加改正值</string>
     <string name="deal_way_normal">正常参与计算</string>
     <string name="deal_way_rebury">重埋</string>
-    <string name="remark_correction">添加改正值%.1f毫米</string>
+    <string name="remark_correction">请录入报警原因及销警措施（添加改正值%.1f毫米）</string>
 
     <!-- 升级模块 -->
     <string name="update_title">软件升级</string>
