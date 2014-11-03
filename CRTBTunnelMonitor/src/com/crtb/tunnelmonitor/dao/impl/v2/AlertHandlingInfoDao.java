@@ -10,6 +10,7 @@ import android.util.Log;
 
 import com.crtb.tunnelmonitor.entity.AlertHandlingList;
 import com.crtb.tunnelmonitor.entity.AlertInfo;
+import com.crtb.tunnelmonitor.entity.AlertList;
 import com.crtb.tunnelmonitor.utils.AlertUtils;
 
 public class AlertHandlingInfoDao extends AbstractDao<AlertHandlingList> {
@@ -68,7 +69,7 @@ public class AlertHandlingInfoDao extends AbstractDao<AlertHandlingList> {
         String sql = "SELECT * from AlertHandlingList"
                 + " WHERE"
                 + " AlertID=?"
-                + " And AlertStatus != 2"
+                + " And UploadStatus != 2"
                 + " ORDER BY HandlingTime"
                 ;
 
@@ -83,10 +84,11 @@ public class AlertHandlingInfoDao extends AbstractDao<AlertHandlingList> {
             return null;
         }
 
-        String sql = "SELECT Top 1 from AlertHandlingList"
+        String sql = "SELECT * from AlertHandlingList"
                 + " WHERE"
                 + " AlertID=?"
                 + " ORDER BY HandlingTime"
+                + " LIMIT 1"
                 ;
 
 		AlertHandlingList ahl = db.queryObject(sql, new String[] { alertGuid },AlertHandlingList.class);

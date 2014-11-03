@@ -124,7 +124,7 @@ public class WarningUploadActivity extends Activity {
         mProgressOverlay.setVisibility(View.GONE);
     }
 
-    private void updateStatus(boolean isSuccess) {
+    private void updateStatus(boolean isSuccess,final String notice) {
         isUploading = false;
         mUploadStatusIcon.setVisibility(View.VISIBLE);
         mUploadProgress.setIndeterminate(false);
@@ -277,7 +277,7 @@ public class WarningUploadActivity extends Activity {
 				handlings.add(ahl);
 			} else {
 				// 所有处理详情已经上传了，且没有没有处理详情的情况
-				updateStatus(true);
+				updateStatus(true,"该预警及处理详情已经上传成功，无须再上传");
 				return;
 			}
     	}
@@ -297,7 +297,7 @@ public class WarningUploadActivity extends Activity {
 				runOnUiThread(new Runnable() {
 					@Override
 					public void run() {
-						updateStatus(success);
+						updateStatus(success,getString(R.string.data_upload_alert_success));
 					}
 				});
 			}
