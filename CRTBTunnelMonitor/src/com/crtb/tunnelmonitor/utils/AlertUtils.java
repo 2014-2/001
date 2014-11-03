@@ -91,7 +91,7 @@ public class AlertUtils {
     public static final int POINT_DATASTATUS_AS_FIRSTLINE = 2;
     public static final int POINT_DATASTATUS_CORRECTION = 3;
     public static final int POINT_DATASTATUS_NORMAL = 4;
-    public static final String[] ALERT_HANDLING = {"没有处理", "不参与计算", "作为首行", "添加改正值", "正常参与计算"};
+    public static final String[] ALERT_HANDLING = {"没有处理", "不参与计算", "作为首行", "添加修正值", "正常参与计算"};
     
     /**
      * 累积位移等级对应的颜色

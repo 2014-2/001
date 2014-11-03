@@ -64,7 +64,7 @@ public class TunnelSettlementTotalData implements Serializable {
 								// 0:正常
 								// 1:数据不参与计算
 								// 2:数据作为首行
-								// 3:改正值
+								// 3:修正值
 
 	@ColumnFloat
 	private float DataCorrection;	// 异常数据修正值
