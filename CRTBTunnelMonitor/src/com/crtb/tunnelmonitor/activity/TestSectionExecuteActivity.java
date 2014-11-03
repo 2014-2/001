@@ -1074,10 +1074,11 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements
 
 				SubsidenceTotalDataDao dao = SubsidenceTotalDataDao
 						.defaultDao();
-
+                final String subPntType = "" + (Integer.valueOf(type) + 1);
+				
 				SubsidenceTotalData data = dao.querySubsidenceTotalData(
 						rawSheetBean.getGuid(), subsidenceSection.getGuid(),
-						type);
+						subPntType);
 
 				if (data == null) {
 					showText("该测点不存在观测数据!");
@@ -1106,7 +1107,7 @@ public class TestSectionExecuteActivity extends WorkFlowActivity implements
 							String chainageid = subsidenceSection.getGuid();
 							SubsidenceTotalData obj = dao
 									.querySubsidenceTotalData(sheetId,
-											chainageid, type);
+											chainageid, subPntType);
 
 							if (obj != null) {
 
