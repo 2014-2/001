@@ -166,7 +166,8 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/tv_layout"
             android:layout_marginTop="3dip" 
-            android:cacheColorHint="#000000">
+>
+<!--                         android:cacheColorHint="#000000" -->
         </ListView>
     </RelativeLayout>
 
