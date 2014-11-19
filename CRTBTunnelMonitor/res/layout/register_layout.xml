@@ -15,7 +15,8 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/bottom_button_height"
         android:layout_alignParentBottom="true"
-        android:orientation="horizontal" >
+        android:orientation="horizontal"
+        android:id="@+id/linearLayout">
         <Button
             android:id="@+id/cancel"
             android:layout_width="0dp"
@@ -57,7 +58,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="30dp"
-                android:text="序列号" />
+                android:text="@string/register_serialNumberName" />
 
             <EditText
                 android:id="@+id/serial_number"
@@ -82,7 +83,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="30dp"
-                android:text="注册码" />
+                android:text="@string/register_registerCodeName" />
 
             <EditText
                 android:id="@+id/regist_code"
@@ -91,13 +92,30 @@
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="20dp"
                 android:layout_weight="1" />
+
         </LinearLayout>
     </LinearLayout>
 
-    <View  
+    <View
 	   android:layout_width="fill_parent"  
 	   android:layout_height="1px" 
 	   android:layout_below="@+id/imageView1"
-	   android:background="?android:attr/listDivider" /> 
+	   android:background="?android:attr/listDivider" />
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/register_browseButtonName"
+        android:id="@+id/btn_browseRegisterFile"
+        android:layout_marginRight="40dp"
+        android:layout_above="@+id/linearLayout"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="200dp"
+        android:onClick="browseRegistryFileList_Click" />
+    <!--<TextView-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginLeft="30dp"-->
+        <!--android:layout_marginBottom="100dp"-->
+        <!--android:text="@string/register_fileLocationHint" />-->
 </RelativeLayout>
