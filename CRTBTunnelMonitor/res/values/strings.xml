@@ -42,30 +42,33 @@
     <string name="section_title">断面管理</string>
     <string name="section_new_title">新建隧道内断面</string>
     <string name="section_new_subsidence_title">新建地表下沉断面</string>
+    <string name="section_stop">断面封存</string>
 
     <string-array name="section_excavation">
         <item>全断面法</item>
         <item>台阶法</item>
         <item>三台阶法</item>
-<!--         <item>中隔壁法</item>
-        <item>交叉中隔壁法</item> -->
+        <!--
+             <item>中隔壁法</item>
+        <item>交叉中隔壁法</item>
+        -->
         <item>双侧壁法</item>
     </string-array>
-    
+
     <!-- 开挖模板类型 -->
     <string-array name="exca_template">
         <item>中隔壁法</item>
         <item>交叉中隔壁法</item>
         <item>双侧壁法</item>
     </string-array>
-    
+
     <!-- 开挖模板拱顶个数 -->
     <string-array name="exca_gd_counts">
         <item>1</item>
         <item>2</item>
         <item>3</item>
     </string-array>
-    
+
     <!-- 开挖模板拱顶个数(双侧壁法) -->
     <string-array name="exca_lines_counts">
         <item>2</item>
@@ -73,7 +76,7 @@
         <item>6</item>
         <item>8</item>
     </string-array>
-    
+
     <!-- 开挖模板拱顶个数(中隔壁法/交叉中隔壁法) -->
     <string-array name="exca_lines_counts_cd_or_cdr">
         <item>4</item>
@@ -128,6 +131,10 @@
     <string name="copyright">Copy©2014\n中铁天宝数字工程有限责任公司\nAll Rights Reserved.</string>
     <string name="description">"围岩监测解决方案-外业数据采集软件主要用于在隧道监控量测现场，建立与多种型号全站仪的连接，实时采集断面的观测数据与预警提醒，并对超限进行超限处理。并严格按照现行《铁路隧道监控量测数据接口规定》上传数据至工管中心。"</string>
     <string name="software_update">软件升级</string>
+    <string name="register_browseButtonName">自动检测注册文件...</string>
+    <string name="register_serialNumberName">序列号</string>
+    <string name="register_registerCodeName">注册码</string>
+    <string name="register_fileLocationHint">请在SD卡的crtb_db目录下放入注册文件！</string>
 
     <!-- 服务器模块 -->
     <string name="server_settings_ip_hint">输入服务器地址</string>
@@ -157,13 +164,14 @@
     <string name="tester_load_timeout">获取测量员超时</string>
     <string name="tester_load_invalid_username">用户名未通过验证</string>
     <string name="tester_load_invalid_password">密码未通过验证</string>
-    <string name="alert_upload_promote">有未消警或未上传历史数据，本条不能上传！</string>
-    <string name="alert_point_type">点号：%s</string>
+<!--     <string name="alert_upload_promote">有未消警或未上传历史数据，本条不能上传！</string> -->
+    <string name="alert_upload_promote">该监测位置存在未消警的历史数据，本条不能上传！</string>
+    <string name="alert_point_type">点位：%s</string>
     <string name="alert_state">状态：%s</string>
     <string name="alert_handle_method">处理方式：%s</string>
     <string name="work_site_down_down">下载</string>
     <string name="work_site_down_bind">关联(本地和服务器工点必须1对1)</string>
-    
+
     <!-- 全站仪模块 -->
     <string name="edit">编辑</string>
     <string name="delete">删除</string>
@@ -178,7 +186,7 @@
         <item>@string/delete</item>
         <!-- <item>@string/com_connect</item> -->
     </string-array>
-    
+
     <!-- 围岩级别 -->
     <string-array name="rockgrade_array">
         <item>I</item>
@@ -188,5 +196,4 @@
         <item>V</item>
         <item>VI</item>
     </string-array>
-
 </resources>
