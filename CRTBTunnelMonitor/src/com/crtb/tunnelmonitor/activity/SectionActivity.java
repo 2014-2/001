@@ -147,7 +147,7 @@ public class SectionActivity extends WorkFlowActivity implements OnPageChangeLis
 		if(bean == null || menu == null){
 			return ;
 		}
-		
+				
 		// 隧道内断面
 		if(bean instanceof TunnelCrossSectionIndex){
 			
@@ -273,6 +273,10 @@ public class SectionActivity extends WorkFlowActivity implements OnPageChangeLis
 				}
 			}
 		}
+	}
+	
+	public interface OperationCallBack{
+		public void done(boolean state);
 	}
 
 	private void loadViewPager(){

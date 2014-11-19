@@ -1,87 +1,74 @@
 package com.crtb.tunnelmonitor.activity;
 
 import java.io.Serializable;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Random;
-
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupWindow;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.crtb.tunnelmonitor.CommonObject;
+import com.crtb.tunnelmonitor.activity.WarningShowSortBySectionActivity.SectionWarning;
+import com.crtb.tunnelmonitor.common.Constant;
 import com.crtb.tunnelmonitor.dao.impl.v2.AlertHandlingInfoDao;
 import com.crtb.tunnelmonitor.dao.impl.v2.AlertListDao;
 import com.crtb.tunnelmonitor.entity.AlertHandlingList;
 import com.crtb.tunnelmonitor.entity.AlertInfo;
 import com.crtb.tunnelmonitor.entity.AlertList;
+import com.crtb.tunnelmonitor.entity.WaringUploadDataContainer;
 import com.crtb.tunnelmonitor.network.CrtbWebService;
-import com.crtb.tunnelmonitor.network.DataCounter;
-import com.crtb.tunnelmonitor.network.RpcCallback;
-import com.crtb.tunnelmonitor.network.DataCounter.CounterListener;
 import com.crtb.tunnelmonitor.task.WarningDataManager;
-import com.crtb.tunnelmonitor.task.WarningDataManager.UploadWarningData;
+import com.crtb.tunnelmonitor.infors.UploadWarningEntity;
 import com.crtb.tunnelmonitor.task.WarningDataManager.WarningLoadListener;
 import com.crtb.tunnelmonitor.task.WarningDataManager.WarningUploadListener;
 import com.crtb.tunnelmonitor.utils.AlertUtils;
 import com.crtb.tunnelmonitor.utils.CrtbUtils;
+import com.crtb.tunnelmonitor.widget.CrtbProgressOverlay;
 
 public class WarningUploadActivity extends Activity {
     private static final String LOG_TAG = "WarningUploadActivity";
     private MenuPopupWindow menuWindow;
     private ListView mlvWarningList;
-    private LinearLayout mProgressOverlay;
-    private ProgressBar mUploadProgress;
-    private ImageView mUploadStatusIcon;
-    private TextView mUploadStatusText;
-    private boolean isUploading = true;
+    private CrtbProgressOverlay progressOverlay = null;
+    private WarningDataManager dataManager = null;
     private WarningUploadAdapter mAdapter;
-
-    private Random ran = new Random();
-    private String s[] = new String[20];
-    private String ss[] = {"拱顶", "测线S1", "测线S2"};
-    private String sss[] = {"开","正在处理","已消警"};
-    private String ssss[] = {"", "", "", ""};
-    private String s2[] = {"拱顶的累计沉降值超限", "拱顶的单次下沉速率超限", "累计收敛值超限",
-            "地表的累计沉降值超限","地表的单次下沉速率超限" ,"单次收敛速率超限"};
-
+    private WaringUploadDataContainer dataContainer;
+    private boolean needQueryData = false;
+    public static final String CURRENT_EDIT_SECTION = "current_edit_section";
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_warning_upload);
         TextView title=(TextView) findViewById(R.id.tv_topbar_title);
         title.setText(R.string.upload_warning_data);
-        initB();
         init();
         initProgressOverlay();
         initCurWorkBinding();
-    }
 
+        dataContainer = (WaringUploadDataContainer)CommonObject.findObject(WaringUploadDataContainer.KEY);
+        CommonObject.remove(WaringUploadDataContainer.KEY);
+        loadData();
+    }
+    
     private void init() {
         mlvWarningList = (ListView) findViewById(R.id.warning_list);
         mlvWarningList.setOnItemClickListener(new OnItemClickListener() {
@@ -92,52 +79,24 @@ public class WarningUploadActivity extends Activity {
         });
         mAdapter = new WarningUploadAdapter();
         mlvWarningList.setAdapter(mAdapter);
-        loadData();
     }
 
     private void initProgressOverlay() {
-        mProgressOverlay = (LinearLayout)findViewById(R.id.progress_overlay);
-        mUploadProgress = (ProgressBar)findViewById(R.id.progressbar);
-        mUploadStatusIcon = (ImageView)findViewById(R.id.upload_status_icon);
-        mUploadStatusText = (TextView)findViewById(R.id.upload_status_text);
-        mProgressOverlay.setOnTouchListener(new OnTouchListener() {
-
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (!isUploading) {
-                    hideProgressOverlay();
-                }
-                return true;
-            }
-        });
+    	  progressOverlay = new CrtbProgressOverlay(this,CrtbUtils.getProgressLayout(this));
     }
 
     private void showProgressOverlay() {
-        mProgressOverlay.setVisibility(View.VISIBLE);
-        mUploadProgress.setIndeterminate(true);
-        mUploadStatusIcon.setVisibility(View.GONE);
-        mUploadStatusText.setText(R.string.data_uploading_alert);
-        isUploading = true;
+    	progressOverlay.showProgressOverlay(getString(R.string.data_uploading_alert));
     }
 
-    private void hideProgressOverlay() {
-        mProgressOverlay.setVisibility(View.GONE);
-    }
-
-    private void updateStatus(boolean isSuccess,final String notice) {
-        isUploading = false;
-        mUploadStatusIcon.setVisibility(View.VISIBLE);
-        mUploadProgress.setIndeterminate(false);
-        mUploadProgress.setProgress(100);
+    private void updateStatus(boolean isSuccess) {
         if (isSuccess) {
-            mUploadStatusIcon.setImageResource(R.drawable.success);
-            mUploadStatusText.setText(R.string.data_upload_alert_success);
-
+        	progressOverlay.uploadFinish(true,getString(R.string.data_upload_alert_success));
             List<WarningUploadData> warningDataList = mAdapter.getWarningData();
             if (warningDataList != null && warningDataList.size() > 0) {
                 for (WarningUploadData uploadData : warningDataList) {
                     if (uploadData.isChecked()) {
-                        UploadWarningData uW = uploadData.getUploadWarningData();
+                        UploadWarningEntity uW = uploadData.getUploadWarningData();
                         if (uW != null) {
                             ArrayList<AlertInfo> ais = uW.getAlertInfos();
                             if (ais != null && ais.size() > 0) {
@@ -156,44 +115,48 @@ public class WarningUploadActivity extends Activity {
                     }
                 }
             }
-
+            needQueryData = true;
             loadData();
         } else {
-            mUploadStatusIcon.setImageResource(R.drawable.fail);
-            mUploadStatusText.setText(R.string.data_upload_alert_fail);
+            progressOverlay.uploadFinish(false,dataManager.getNotice());
         }
 
     }
 
     private void loadData() {
-        WarningDataManager dataManager = new WarningDataManager();
-        dataManager.loadData(new WarningLoadListener() {
-            @Override
-            public void done(List<UploadWarningData> uploadDataList) {
-                List<WarningUploadData> warningDataList = new ArrayList<WarningUploadData>();
-                for(UploadWarningData uploadWarningData : uploadDataList) {
-                    WarningUploadData warningData = new WarningUploadData();
-                    warningData.setUploadWarningData(uploadWarningData);
-                    warningData.setChecked(false);
-                    warningDataList.add(warningData);
-                }
-                mAdapter.setWarningData(warningDataList);
-            }
-        });
+		if (!needQueryData) {
+			mAdapter.setWarningData(dataContainer.getWaringDataList());
+			return;
+		}
+
+		needQueryData = false;
+		String sectionGuid = dataContainer.getCurSectionGuid();
+		WarningDataManager dataManager = new WarningDataManager();
+		dataManager.loadDataSortBySectionGuid(sectionGuid, new WarningLoadListener() {
+			@Override
+			public void done(List<UploadWarningEntity> uploadDataList) {
+				List<WarningUploadData> waringDataList = new ArrayList<WarningUploadData>();
+				for (UploadWarningEntity uploadWarningData : uploadDataList) {
+
+					WarningUploadData warningData = new WarningUploadData();
+					warningData.setUploadWarningData(uploadWarningData);
+					warningData.setChecked(false);
+					waringDataList.add(warningData);
+				}
+				dataContainer.setWaringDataList(waringDataList);
+				CommonObject.putObject(WarningUploadActivity.CURRENT_EDIT_SECTION,waringDataList);
+				mAdapter.setWarningData(dataContainer.getWaringDataList());
+			}
+		});		
     }
 
     class MenuPopupWindow extends PopupWindow {
         public RelativeLayout chakan;
         public RelativeLayout shangchuan;
         private View mMenuView;
-        private Intent intent;
-        public Context c;
-        AlertDialog dlg = null;
 
-        public MenuPopupWindow(Activity context) {
+        public MenuPopupWindow(final Activity context) {
             super(context);
-            this.c = context;
-            dlg = new AlertDialog.Builder(c).create();
             LayoutInflater inflater = (LayoutInflater) context
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             mMenuView = inflater.inflate(R.layout.menu_warning_upload, null);
@@ -220,32 +183,34 @@ public class WarningUploadActivity extends Activity {
 					String siteCode = CrtbWebService.getInstance()
 							.getSiteCode();
 					if (siteCode == null || siteCode.trim() == "") {
-						Toast.makeText(getApplicationContext(), "请先关联工点",
-								Toast.LENGTH_SHORT).show();
+						Toast.makeText(getApplicationContext(), "请先关联工点",Toast.LENGTH_SHORT).show();
 					} else {
-						List<UploadWarningData> uploadWarningDataList = new ArrayList<UploadWarningData>();
+						List<UploadWarningEntity> uploadWarningDataList = new ArrayList<UploadWarningEntity>();
 						List<WarningUploadData> warningDataList = mAdapter
 								.getWarningData();
 						if (warningDataList != null
 								&& warningDataList.size() > 0) {
 							for (WarningUploadData uploadData : warningDataList) {
 								if (uploadData.isChecked()) {
-									uploadWarningDataList.add(uploadData
-											.getUploadWarningData());
+									uploadWarningDataList.add(uploadData.getUploadWarningData());
 								}
 							}
 							if (uploadWarningDataList.size() > 0) {
-								UploadWarningData warningData = uploadWarningDataList
-										.get(0);
-								if (AlertUtils
-										.mergedAlertCanBeUploaded(warningData
-												.getMergedAlert())) {
-									showProgressOverlay();
-									//默认同一时刻只能选择一条数据上传
-									uploadWarning(uploadWarningDataList.get(0));
-								} else {
-									Toast.makeText(WarningUploadActivity.this, R.string.alert_upload_promote, Toast.LENGTH_LONG).show();
+								UploadWarningEntity warningData = uploadWarningDataList.get(0);
+								AlertInfo ai = warningData.getLeijiAlert();
+								//更新累积报警值
+								if(ai != null){
+								    AlertUtils.getAlertTransfiniteInfo(ai);
 								}
+								
+								if (!AlertUtils.hasUnhandledPreviousWarningData(ai)) {
+									CrtbUtils.showDialogWithYes(context, getString(R.string.upload_warning_data), getString(R.string.alert_upload_promote));
+									return;
+								}
+								
+								showProgressOverlay();
+								//默认同一时刻只能选择一条数据上传
+								uploadWarning(warningData);
 							}
 						}
 					}
@@ -265,10 +230,10 @@ public class WarningUploadActivity extends Activity {
         };
     }
     
-    private void uploadWarning(UploadWarningData originalData){
+    private void uploadWarning(UploadWarningEntity originalData){
     	AlertInfo alertInfo = originalData.getAlertInfo();
     	int alertId = alertInfo.getAlertId();
-		WarningDataManager dataManager = new WarningDataManager();
+		dataManager = new WarningDataManager();
 		List<AlertHandlingList> handlings = AlertHandlingInfoDao.defaultDao().queryByAlertIdOrderByHandlingTimeAscAndNoUpload(alertId);
 		if(handlings == null || handlings.size() < 1){
 			AlertHandlingList ahl = AlertHandlingInfoDao.defaultDao().queryNoHandlingInfoByAlertId(alertInfo);
@@ -277,7 +242,8 @@ public class WarningUploadActivity extends Activity {
 				handlings.add(ahl);
 			} else {
 				// 所有处理详情已经上传了，且没有没有处理详情的情况
-				updateStatus(true,"该预警及处理详情已经上传成功，无须再上传");
+				//YX 此处的处理和数据上传里的预警处理不一致，是由于数据处理里面要精确的判断个数
+				updateStatus(false);
 				return;
 			}
     	}
@@ -292,12 +258,11 @@ public class WarningUploadActivity extends Activity {
        	
 		dataManager.uploadWarningData(originalData,handlings,new WarningUploadListener() {
 			@Override
-			public void done(
-					final boolean success) {
+			public void done(final boolean success,boolean hasData) {
 				runOnUiThread(new Runnable() {
 					@Override
 					public void run() {
-						updateStatus(success,getString(R.string.data_upload_alert_success));
+						updateStatus(success);
 					}
 				});
 			}
@@ -309,7 +274,7 @@ public class WarningUploadActivity extends Activity {
         List<WarningUploadData> allData = mAdapter.getWarningData();
         for (WarningUploadData data : allData) {
             if (data.isChecked()) {
-                UploadWarningData d = data.getUploadWarningData();
+                UploadWarningEntity d = data.getUploadWarningData();
                 if (d != null) {
                     AlertInfo leiji = d.getLeijiAlert();
                     if (leiji != null) {
@@ -328,6 +293,7 @@ public class WarningUploadActivity extends Activity {
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
+    	
         if (event.getAction() == KeyEvent.ACTION_DOWN) {
             if (keyCode == KeyEvent.KEYCODE_MENU) {
                 if (menuWindow == null) {
@@ -336,25 +302,18 @@ public class WarningUploadActivity extends Activity {
                 menuWindow.showAtLocation(new View(this), Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
             }
             if (keyCode == KeyEvent.KEYCODE_BACK) {
-                this.finish();
+            	if(!progressOverlay.isUploading()){
+					if (progressOverlay != null && progressOverlay.showing()) {
+						progressOverlay.hideProgressOverlay();
+					} else{
+						this.finish();						
+					}
+            	}
             }
         }
         return true;
     }
 
-    public void initB() {
-        for (int i = 0; i < s.length; i++) {
-            s[i] = "DK+"
-                    + (10 + ran.nextInt(10))
-                    + ((Math.round(ran.nextDouble() + 100) / 100.0) + (ran
-                            .nextInt(100) + 100));
-        }
-    }
-
-    public String getdate() {
-        SimpleDateFormat simp = new SimpleDateFormat("yyyy-MM-dd hh:mm");
-        return simp.format(new Date());
-    }
 
     private static class ViewHolder {
         TextView mWarningTime;
@@ -455,36 +414,37 @@ public class WarningUploadActivity extends Activity {
         }
     }
 
-    public class WarningUploadData {
-        private UploadWarningData mUploadWarningData;
-        private boolean mIsChecked;
+	public static class WarningUploadData implements Serializable{
+		private static final long serialVersionUID = 1L;
+		private UploadWarningEntity mUploadWarningData;
+		private boolean mIsChecked;
 
-        public void setUploadWarningData(UploadWarningData uploadWarningData) {
-            mUploadWarningData = uploadWarningData;
-        }
+		public void setUploadWarningData(UploadWarningEntity uploadWarningData) {
+			mUploadWarningData = uploadWarningData;
+		}
 
-        public UploadWarningData getUploadWarningData() {
-            return mUploadWarningData;
-        }
+		public UploadWarningEntity getUploadWarningData() {
+			return mUploadWarningData;
+		}
 
-        public boolean isUploaded() {
-            if (mUploadWarningData != null) {
-                AlertInfo ai = mUploadWarningData.getAlertInfo();
-                if (ai != null) {
-                    return ai.getUploadStatus() == 2;
-                }
-            }
-            return false;
-        }
+		public boolean isUploaded() {
+			if (mUploadWarningData != null) {
+				AlertInfo ai = mUploadWarningData.getAlertInfo();
+				if (ai != null) {
+					return ai.getUploadStatus() == 2;
+				}
+			}
+			return false;
+		}
 
-        public void setChecked(boolean checked) {
-            mIsChecked = checked;
-        }
+		public void setChecked(boolean checked) {
+			mIsChecked = checked;
+		}
 
-        public boolean isChecked() {
-            return mIsChecked;
-        }
-    }
+		public boolean isChecked() {
+			return mIsChecked;
+		}
+	}
     
     
     private void initCurWorkBinding() {
@@ -495,6 +455,5 @@ public class WarningUploadActivity extends Activity {
     		curProject.setText(list[0]);
     		curWork.setText(list[1]);
     	}	
-	}
-
+	}    
 }

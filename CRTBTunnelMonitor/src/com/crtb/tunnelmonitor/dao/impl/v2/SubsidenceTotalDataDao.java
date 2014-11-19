@@ -6,6 +6,7 @@ import org.zw.android.framework.IAccessDatabase;
 import org.zw.android.framework.db.core.SQLiteParamUtils;
 import org.zw.android.framework.util.StringUtils;
 
+import com.crtb.tunnelmonitor.common.Constant;
 import com.crtb.tunnelmonitor.entity.SubsidenceTotalData;
 import com.crtb.tunnelmonitor.entity.TunnelSettlementTotalData;
 import com.crtb.tunnelmonitor.utils.AlertUtils;
@@ -198,7 +199,7 @@ public class SubsidenceTotalDataDao extends AbstractDao<SubsidenceTotalData> {
                 + " AND ID < " + String.valueOf(id)
                 + " AND ID >= " + String.valueOf(firstLineID)
                 + " AND DataStatus != "
-                + String.valueOf(AlertUtils.POINT_DATASTATUS_DISCARD)
+                + String.valueOf(Constant.POINT_DATASTATUS_DISCARD)
                 + " order by ID ASC";
 
         return mDatabase.queryObjects(sql, SubsidenceTotalData.class);
@@ -226,7 +227,7 @@ public class SubsidenceTotalDataDao extends AbstractDao<SubsidenceTotalData> {
                 + " AND pntType=\'" + pntType + "\'"
                 + " AND ID >= " + String.valueOf(measId)
                 + " AND DataStatus != "
-                + String.valueOf(AlertUtils.POINT_DATASTATUS_DISCARD)
+                + String.valueOf(Constant.POINT_DATASTATUS_DISCARD)
                 + " order by ID ASC";
         
         return mDatabase.queryObjects(sql, SubsidenceTotalData.class);
@@ -237,7 +238,7 @@ public class SubsidenceTotalDataDao extends AbstractDao<SubsidenceTotalData> {
         if (db != null) {
             String sql = "UPDATE SubsidenceTotalData"
                     + " SET DataStatus=dataStatus"
-                    + ", DataCorrection=" + ((dataStatus == AlertUtils.POINT_DATASTATUS_CORRECTION) ? correction : 0f)
+                    + ", DataCorrection=" + ((dataStatus == Constant.POINT_DATASTATUS_CORRECTION) ? correction : 0f)
                     + " WHERE ID=?";
             String[] args = new String[]{String.valueOf(id)};
             db.execute(sql, args);
@@ -249,7 +250,7 @@ public class SubsidenceTotalDataDao extends AbstractDao<SubsidenceTotalData> {
         if (db != null) {
             String sql = "UPDATE SubsidenceTotalData"
                     + " SET DataStatus=" + dataStatus
-                    + ", DataCorrection=" + ((dataStatus == AlertUtils.POINT_DATASTATUS_CORRECTION) ? correction : 0f)
+                    + ", DataCorrection=" + ((dataStatus == Constant.POINT_DATASTATUS_CORRECTION) ? correction : 0f)
                     + " WHERE Guid=?";
             String[] args = new String[]{guid};
             db.execute(sql, args);
@@ -271,7 +272,7 @@ public class SubsidenceTotalDataDao extends AbstractDao<SubsidenceTotalData> {
                 + " AND pntType=\'" + pntType + "\'"
                 + " AND ID < " + String.valueOf(id)
                 + " AND DataStatus == "
-                + String.valueOf(AlertUtils.POINT_DATASTATUS_AS_FIRSTLINE)
+                + String.valueOf(Constant.POINT_DATASTATUS_AS_FIRSTLINE)
                 + " order by ID ASC";
 
         List<SubsidenceTotalData> list =  mDatabase.queryObjects(sql, SubsidenceTotalData.class);
@@ -281,5 +282,18 @@ public class SubsidenceTotalDataDao extends AbstractDao<SubsidenceTotalData> {
             }
         }
         return ret;
+    }
+    
+    public SubsidenceTotalData queryLastOne() {
+        
+        final IAccessDatabase mDatabase = getCurrentDb();
+        
+        if (mDatabase == null) {
+            return null;
+        }
+        
+        String sql = "select * from SubsidenceTotalData where Guid = ? Order by Id limit 1";
+        
+        return mDatabase.queryObject(sql, null, SubsidenceTotalData.class);
     }
 }

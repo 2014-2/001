@@ -3,6 +3,7 @@ package com.crtb.tunnelmonitor.entity;
 
 import java.io.Serializable;
 
+import com.crtb.tunnelmonitor.common.Constant;
 import com.crtb.tunnelmonitor.utils.AlertUtils;
 
 import android.text.TextUtils;
@@ -35,10 +36,12 @@ public class AlertInfo implements Serializable {
     private String alertInfo;
     private String SECTCODE;
     private String rockGrade;
-    
-    //YX 用于存储待上传的数据
-    
-    private double originalLeiJiAlertValue;
+    private boolean computed;
+
+
+
+	//YX 用于存储待上传的数据
+	private double originalLeiJiAlertValue;
     
     private double originalSulvAlertValue;
 
@@ -206,9 +209,9 @@ public class AlertInfo implements Serializable {
     public String getAlertStatusMsg() {
         //TODO: Workaround for the "null" string problem
         if (TextUtils.isEmpty(alertStatusMsg) || alertStatusMsg.equalsIgnoreCase("null")) {
-            if (alertStatus >= AlertUtils.ALERT_STATUS_HANDLED
-                    && alertStatus <= AlertUtils.ALERT_STATUS_HANDLING) {
-                alertStatusMsg = AlertUtils.ALERT_STATUS_MSGS[alertStatus];
+            if (alertStatus >= Constant.ALERT_STATUS_HANDLED
+                    && alertStatus <= Constant.ALERT_STATUS_HANDLING) {
+                alertStatusMsg = Constant.ALERT_STATUS_MSGS[alertStatus];
             }
         }
         return alertStatusMsg;
@@ -257,4 +260,13 @@ public class AlertInfo implements Serializable {
     public void SetRockGrade(String rockGrade){
     	this.rockGrade = rockGrade;
     }
+    
+    public boolean getComputed() {
+		return computed;
+	}
+
+	public void setComputed(boolean computed) {
+		this.computed = computed;
+	}
+    
 }

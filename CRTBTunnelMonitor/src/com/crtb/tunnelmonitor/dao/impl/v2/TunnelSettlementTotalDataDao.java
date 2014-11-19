@@ -8,6 +8,7 @@ import org.zw.android.framework.util.StringUtils;
 
 import android.util.Log;
 
+import com.crtb.tunnelmonitor.common.Constant;
 import com.crtb.tunnelmonitor.entity.TunnelSettlementTotalData;
 import com.crtb.tunnelmonitor.utils.AlertUtils;
 
@@ -193,7 +194,7 @@ public class TunnelSettlementTotalDataDao extends AbstractDao<TunnelSettlementTo
                 + " AND DataStatus != ?"
                 + " order by ID ASC";
 
-        String[] args = new String[] {String.valueOf(id), String.valueOf(firstLineID), String.valueOf(AlertUtils.POINT_DATASTATUS_DISCARD)};
+        String[] args = new String[] {String.valueOf(id), String.valueOf(firstLineID), String.valueOf(Constant.POINT_DATASTATUS_DISCARD)};
         
         return mDatabase.queryObjects(sql, args, TunnelSettlementTotalData.class);
     }
@@ -223,7 +224,7 @@ public class TunnelSettlementTotalDataDao extends AbstractDao<TunnelSettlementTo
                 + " order by ID ASC";
 
         String[] args = new String[] { String.valueOf(id),
-                String.valueOf(AlertUtils.POINT_DATASTATUS_DISCARD) };
+                String.valueOf(Constant.POINT_DATASTATUS_DISCARD) };
         
         return mDatabase.queryObjects(sql, args, TunnelSettlementTotalData.class);
     }
@@ -264,7 +265,7 @@ public class TunnelSettlementTotalDataDao extends AbstractDao<TunnelSettlementTo
             
             String sql = "UPDATE TunnelSettlementTotalData"
                     + " SET DataStatus=" + dataStatus
-                    + ", DataCorrection=" + ((dataStatus == AlertUtils.POINT_DATASTATUS_CORRECTION) ? correction : 0f)
+                    + ", DataCorrection=" + ((dataStatus == Constant.POINT_DATASTATUS_CORRECTION) ? correction : 0f)
                     + " WHERE Guid=?";
             
             String[] args = new String[]{guid};
@@ -283,7 +284,7 @@ public class TunnelSettlementTotalDataDao extends AbstractDao<TunnelSettlementTo
         	
             String sql = "UPDATE TunnelSettlementTotalData"
                     + " SET DataStatus=" + dataStatus
-                    + ", DataCorrection=" + ((dataStatus == AlertUtils.POINT_DATASTATUS_CORRECTION) ? correction : 0f)
+                    + ", DataCorrection=" + ((dataStatus == Constant.POINT_DATASTATUS_CORRECTION) ? correction : 0f)
                     + " WHERE ID=?";
             
             String[] args = new String[]{String.valueOf(id)};
@@ -349,7 +350,7 @@ public class TunnelSettlementTotalDataDao extends AbstractDao<TunnelSettlementTo
                 + " AND DataStatus == ?"
                 + " order by ID ASC";
 
-        String[] args = new String[] {String.valueOf(id), String.valueOf(AlertUtils.POINT_DATASTATUS_AS_FIRSTLINE)};
+        String[] args = new String[] {String.valueOf(id), String.valueOf(Constant.POINT_DATASTATUS_AS_FIRSTLINE)};
         List<TunnelSettlementTotalData> list =  mDatabase.queryObjects(sql, args, TunnelSettlementTotalData.class);
         if (list != null & list.size() > 0) {
             for (TunnelSettlementTotalData data : list) {
@@ -358,4 +359,17 @@ public class TunnelSettlementTotalDataDao extends AbstractDao<TunnelSettlementTo
         }
         return ret;
 	}
+	
+    public TunnelSettlementTotalData queryLastOne() {
+        
+        final IAccessDatabase mDatabase = getCurrentDb();
+        
+        if (mDatabase == null) {
+            return null;
+        }
+        
+        String sql = "select * from SubsidenceTotalData where Guid = ? Order by Id limit 1";
+        
+        return mDatabase.queryObject(sql, null, TunnelSettlementTotalData.class);
+    }
 }

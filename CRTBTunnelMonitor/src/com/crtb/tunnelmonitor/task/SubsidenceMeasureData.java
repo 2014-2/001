@@ -17,6 +17,7 @@ import com.crtb.tunnelmonitor.entity.RawSheetIndex;
 import com.crtb.tunnelmonitor.entity.SubsidenceCrossSectionIndex;
 import com.crtb.tunnelmonitor.entity.SubsidenceTotalData;
 import com.crtb.tunnelmonitor.entity.TotalStationIndex;
+import com.crtb.tunnelmonitor.entity.TunnelSettlementTotalData;
 
 public class SubsidenceMeasureData extends MeasureData {
 	private List<SubsidenceTotalData> mMeasurePoints = new ArrayList<SubsidenceTotalData>();
@@ -28,6 +29,13 @@ public class SubsidenceMeasureData extends MeasureData {
 		mMeasurePoints.add(point);
 	}
 
+	public String getOriginalDataId(){
+		if (mMeasurePoints != null && mMeasurePoints.size() > 0) {
+			return mMeasurePoints.get(0).getGuid();
+		}
+		return "";
+	}
+	
 	@Override
 	public Date getMeasureDate() {
 		Date mesureDate = null;

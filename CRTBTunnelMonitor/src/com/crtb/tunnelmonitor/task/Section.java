@@ -3,6 +3,10 @@ package com.crtb.tunnelmonitor.task;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.crtb.tunnelmonitor.entity.AlertInfo;
+import com.crtb.tunnelmonitor.entity.SubsidenceCrossSectionIndex;
+import com.crtb.tunnelmonitor.entity.TunnelCrossSectionIndex;
+
 /**
  * 断面
  * 
@@ -10,9 +14,38 @@ import java.util.List;
  * 
  */
 public abstract class Section {
+	private TunnelCrossSectionIndex tunnel;
+	private SubsidenceCrossSectionIndex sub;
+	
+	public TunnelCrossSectionIndex getTunnel() {
+		return tunnel;
+	}
+
+	public void setTunnel(TunnelCrossSectionIndex tunnel) {
+		this.tunnel = tunnel;
+	}
+
+	public SubsidenceCrossSectionIndex getSub() {
+		return sub;
+	}
+
+	public void setSub(SubsidenceCrossSectionIndex sub) {
+		this.sub = sub;
+	}
+
+	
 	private int mRowId;
 	private String mSectionCode;
 	private List<MeasureData> mMeasureData;
+	private List<AlertInfo> mAlertInfo;
+
+	public List<AlertInfo> getmAlertInfo() {
+		return mAlertInfo;
+	}
+
+	public void setmAlertInfo(List<AlertInfo> mAlertInfo) {
+		this.mAlertInfo = mAlertInfo;
+	}
 
 	public void setSectionCode(String sectionCode) {
 		mSectionCode = sectionCode;

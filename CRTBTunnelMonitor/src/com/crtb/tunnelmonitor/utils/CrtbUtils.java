@@ -6,14 +6,24 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.UUID;
 
+import org.zw.android.framework.util.StringUtils;
+
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import com.crtb.tunnelmonitor.AppCRTBApplication;
+import com.crtb.tunnelmonitor.activity.R;
+import com.crtb.tunnelmonitor.activity.SectionStopActivity;
 import com.crtb.tunnelmonitor.common.Constant;
 import com.crtb.tunnelmonitor.dao.impl.v2.ExcavateMethodDao;
 import com.crtb.tunnelmonitor.dao.impl.v2.ProjectIndexDao;
@@ -416,5 +426,57 @@ public final class CrtbUtils {
 			CrtbWebService.getInstance().setSiteCode(
 					workSiteIndex.getSiteCode());
 		}
+	}
+
+	public interface UploadCall{
+		public void ok();
+	}
+	
+	public static void showDialogWithYesOrNo(Context context,String title, String msg,final UploadCall caller) {
+		if(context == null || StringUtils.isEmpty(title) || StringUtils.isEmpty(msg) || caller == null){
+			return;
+		}
+		AlertDialog.Builder builder = new Builder(context);
+		builder.setMessage(msg);
+		builder.setTitle(title);
+		builder.setPositiveButton("是", new DialogInterface.OnClickListener() {
+
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				dialog.dismiss();
+				caller.ok();
+			}
+		});
+		
+		builder.setNegativeButton("否", new DialogInterface.OnClickListener() {
+
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				dialog.dismiss();
+			}
+		});
+		
+		builder.create().show();
+	}
+	
+	public static void showDialogWithYes(Context context,String title, String msg) {
+		if(context == null || StringUtils.isEmpty(title) || StringUtils.isEmpty(msg)){
+			return;
+		}
+		AlertDialog.Builder builder = new Builder(context);
+		builder.setMessage(msg);
+		builder.setTitle(title);
+		builder.setPositiveButton("是", new DialogInterface.OnClickListener() {
+
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				dialog.dismiss();
+			}
+		});
+		builder.create().show();
+	}
+	
+	public static ViewGroup getProgressLayout(Activity activity){
+		return (LinearLayout)activity.getLayoutInflater().inflate(R.layout.layout_progress_overlay, null);
 	}
 }

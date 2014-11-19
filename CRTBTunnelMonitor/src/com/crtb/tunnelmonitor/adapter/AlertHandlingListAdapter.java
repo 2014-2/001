@@ -10,6 +10,7 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.crtb.tunnelmonitor.activity.R;
+import com.crtb.tunnelmonitor.common.Constant;
 import com.crtb.tunnelmonitor.entity.AlertHandlingList;
 import com.crtb.tunnelmonitor.utils.AlertUtils;
 import com.crtb.tunnelmonitor.utils.CrtbUtils;
@@ -64,7 +65,7 @@ public class AlertHandlingListAdapter extends BaseAdapter {
                 handling = "";
             }
             holder.remarkView.setText(mContext.getString(R.string.handling_remark, handling));
-            holder.statusView.setText(mContext.getString(R.string.handling_status, AlertUtils.ALERT_STATUS_MSGS[item.getAlertStatus()]));
+            holder.statusView.setText(mContext.getString(R.string.handling_status, Constant.ALERT_STATUS_MSGS[item.getAlertStatus()]));
             holder.uploadView.setText(item.getUploadStatus() == 2 ? "上传状态: 已上传":"上传状态: 未上传");
         }
         return v;

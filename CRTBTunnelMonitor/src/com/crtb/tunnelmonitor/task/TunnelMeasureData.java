@@ -39,6 +39,19 @@ public class TunnelMeasureData extends MeasureData {
 	}
 	
     
+	public String getOriginalDataId(){
+		String originalDataId = null;
+	    for(TunnelSettlementTotalData tstd : mtunnelTestPoints){
+	    	originalDataId += tstd.getGuid();
+	    }
+	    if(mtunnelTestPoints.size() == 1){
+	    	originalDataId = mtunnelTestPoints.get(0).getGuid();
+	    } else if(mtunnelTestPoints.size() == 2){
+	    	originalDataId = mtunnelTestPoints.get(0).getGuid() +","+ mtunnelTestPoints.get(1).getGuid();
+	    }
+	    return originalDataId;
+	}
+	
 	@Override
 	public String getPointCodeList(String sectionCode) {
 		if(sectionCode == null || sectionCode.length() < 1){
@@ -209,6 +222,7 @@ public class TunnelMeasureData extends MeasureData {
 			if(pntType.contains(CROWN_PREFIX)){
 				measureData = new TunnelMeasureData();
 				measureData.addMeasurePoint(p);
+				measureData.uploaded = p.getUploadStatus() == 2;
 				measureDataList.add(measureData);
 				tunnelTestPoints.remove(p);
 				--pIndex;
@@ -242,6 +256,7 @@ public class TunnelMeasureData extends MeasureData {
 					measureData = new TunnelMeasureData();
 					measureData.addMeasurePoint(p1);
 					measureData.addMeasurePoint(p2);
+					measureData.uploaded = p1.getUploadStatus() == 2;
 					measureDataList.add(measureData);
 					//continue;
 				}

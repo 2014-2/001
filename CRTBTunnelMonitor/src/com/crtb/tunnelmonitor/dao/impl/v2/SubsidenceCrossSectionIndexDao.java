@@ -87,6 +87,28 @@ public final class SubsidenceCrossSectionIndexDao extends AbstractDao<Subsidence
         return super.insert(bean);
     }
 
+    public void queryAllSectionBySql(AppHandler handler,final String sql){
+		
+		ExecuteAsyncTaskImpl.defaultSyncExecutor().executeTask(new BaseAsyncTask(handler) {
+			
+			@Override
+			public void process() {
+				
+				final IAccessDatabase mDatabase = getCurrentDb();
+				
+				if(mDatabase == null){
+					return;
+				}
+
+				List<SubsidenceCrossSectionIndex> list = mDatabase.queryObjects(sql, SubsidenceCrossSectionIndex.class) ;
+				
+				if(list != null){
+					sendMessage(MSG_QUERY_SUBSIDENCE_SECTION_SUCCESS, list);
+				}
+			}
+		}) ;
+	}
+    
 	public void queryAllSection(AppHandler handler){
 		
 		ExecuteAsyncTaskImpl.defaultSyncExecutor().executeTask(new BaseAsyncTask(handler) {

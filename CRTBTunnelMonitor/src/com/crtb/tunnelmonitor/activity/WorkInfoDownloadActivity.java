@@ -5,32 +5,26 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupWindow;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
+
 import com.crtb.tunnelmonitor.WorkFlowActivity;
 import com.crtb.tunnelmonitor.dao.impl.v2.ProjectIndexDao;
 import com.crtb.tunnelmonitor.dao.impl.v2.SiteProjectMappingDao;
@@ -41,6 +35,8 @@ import com.crtb.tunnelmonitor.entity.WorkSiteIndex;
 import com.crtb.tunnelmonitor.network.CrtbWebService;
 import com.crtb.tunnelmonitor.task.DataDownloadManager;
 import com.crtb.tunnelmonitor.task.DataDownloadManager.DownloadListener;
+import com.crtb.tunnelmonitor.utils.CrtbUtils;
+import com.crtb.tunnelmonitor.widget.CrtbProgressOverlay;
 
 public class WorkInfoDownloadActivity extends WorkFlowActivity {
     private static final String LOG_TAG = "WorkInfoDownloadActivity";
@@ -50,18 +46,11 @@ public class WorkInfoDownloadActivity extends WorkFlowActivity {
 
     private WorkSitesAdapter mAdapter;
 
-    private LinearLayout mProgressOverlay;
-
-    private ProgressBar mDownloadProgress;
-
-    private ImageView mDownloadStatusIcon;
-
-    private TextView mDownloadStatusText;
-
-    private boolean isDownloading = true;
     private int longPressedItemPosition = -1;
 
     private int curProjectId = -1;
+    
+    private CrtbProgressOverlay progressOverlay;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -156,59 +145,27 @@ public class WorkInfoDownloadActivity extends WorkFlowActivity {
     }
     
     private void initProgressOverlay() {
-        mProgressOverlay = (LinearLayout) findViewById(R.id.progress_overlay);
-        mDownloadProgress = (ProgressBar) findViewById(R.id.progressbar);
-        mDownloadStatusIcon = (ImageView) findViewById(R.id.download_status_icon);
-        mDownloadStatusText = (TextView) findViewById(R.id.download_status_text);
-        mProgressOverlay.setOnTouchListener(new OnTouchListener() {
-
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (!isDownloading) {
-                    hideProgressOverlay();
-                }
-                return true;
-            }
-        });
+    	progressOverlay = new CrtbProgressOverlay(this, CrtbUtils.getProgressLayout(this));
     }
 
     private void showProgressOverlay() {
-        mProgressOverlay.setVisibility(View.VISIBLE);
-        mDownloadProgress.setIndeterminate(true);
-        mDownloadStatusIcon.setVisibility(View.GONE);
-        mDownloadStatusText.setText(R.string.data_downloading);
-        isDownloading = true;
-    }
-
-    private void hideProgressOverlay() {
-        mProgressOverlay.setVisibility(View.GONE);
+        progressOverlay.showProgressOverlay(getString(R.string.data_downloading));
     }
 
     private void updateStatus(boolean isSuccess) {
-        isDownloading = false;
-        mDownloadStatusIcon.setVisibility(View.VISIBLE);
-        mDownloadProgress.setIndeterminate(false);
-        mDownloadProgress.setProgress(100);
-        if (isSuccess) {
-            mDownloadStatusIcon.setImageResource(R.drawable.success);
-            mDownloadStatusText.setText(R.string.data_download_success);
-        } else {
-            mDownloadStatusIcon.setImageResource(R.drawable.fail);
-            mDownloadStatusText.setText(R.string.data_download_fail);
+    	String notice = getString(R.string.data_download_success);
+        if (!isSuccess) {
+        	notice = getString(R.string.data_download_fail);
         }
+		progressOverlay.uploadFinish(isSuccess, notice);
     }
 
     class MenuPopupWindow extends PopupWindow {
         public RelativeLayout xiazai;
         private View mMenuView;
-        private Intent intent;
-        public Context c;
-        AlertDialog dlg = null;
 
         public MenuPopupWindow(Activity context) {
             super(context);
-            this.c = context;
-            dlg = new AlertDialog.Builder(c).create();
             LayoutInflater inflater = (LayoutInflater) context
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             mMenuView = inflater.inflate(R.layout.menu_workinfo_download, null);
@@ -260,7 +217,13 @@ public class WorkInfoDownloadActivity extends WorkFlowActivity {
                         | Gravity.CENTER_HORIZONTAL, 0, 0);
             }
             if (keyCode == KeyEvent.KEYCODE_BACK) {
-                this.finish();
+            	if(!progressOverlay.isUploading()){
+					if (progressOverlay != null && progressOverlay.showing()) {
+						progressOverlay.hideProgressOverlay();
+					} else{
+						this.finish();						
+					}
+            	}
             }
         }
         return true;

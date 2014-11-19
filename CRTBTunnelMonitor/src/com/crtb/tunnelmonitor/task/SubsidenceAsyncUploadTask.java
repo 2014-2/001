@@ -1,12 +1,18 @@
 package com.crtb.tunnelmonitor.task;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import android.util.Log;
 
+import com.crtb.tunnelmonitor.common.Constant;
 import com.crtb.tunnelmonitor.dao.impl.v2.AbstractDao;
+import com.crtb.tunnelmonitor.dao.impl.v2.AlertListDao;
 import com.crtb.tunnelmonitor.dao.impl.v2.SubsidenceCrossSectionExIndexDao;
 import com.crtb.tunnelmonitor.dao.impl.v2.SubsidenceCrossSectionIndexDao;
+import com.crtb.tunnelmonitor.entity.AlertInfo;
+import com.crtb.tunnelmonitor.entity.AlertList;
+import com.crtb.tunnelmonitor.entity.MergedAlert;
 import com.crtb.tunnelmonitor.entity.SubsidenceCrossSectionExIndex;
 import com.crtb.tunnelmonitor.entity.SubsidenceCrossSectionIndex;
 import com.crtb.tunnelmonitor.entity.SurveyerInformation;
@@ -16,10 +22,12 @@ import com.crtb.tunnelmonitor.network.PointUploadParameter;
 import com.crtb.tunnelmonitor.network.RpcCallback;
 import com.crtb.tunnelmonitor.network.SectionUploadParamter;
 import com.crtb.tunnelmonitor.network.DataCounter.CounterListener;
+import com.crtb.tunnelmonitor.infors.UploadWarningEntity;
+import com.crtb.tunnelmonitor.utils.AlertUtils;
 import com.crtb.tunnelmonitor.utils.CrtbUtils;
 
 public class SubsidenceAsyncUploadTask extends AsyncUploadTask {
-	private static final String LOG_TAG = "SubsidenceAsyncUploadTask";
+	private final String LOG_TAG = "SubsidenceAsyncUploadTask";
 	
 	public SubsidenceAsyncUploadTask(UploadListener listener) {
 		super(listener);
@@ -73,61 +81,38 @@ public class SubsidenceAsyncUploadTask extends AsyncUploadTask {
                     sectionUploadCounter.increase(success);
                 }
             });
-            for(MeasureData measureData : measureDataList) {
-                uploadMeasureData(sectionCode, (SubsidenceMeasureData)measureData, pointUploadCounter);
-            }
+			List<String> originalDataList = new ArrayList<String>();
+			List<SubsidenceMeasureData> measureList = new ArrayList<SubsidenceMeasureData>();
+			int count = 0;
+			for (MeasureData measureData : measureDataList) {
+				SubsidenceMeasureData SubsidenceMeasureData = (SubsidenceMeasureData) measureData;
+				originalDataList.add(SubsidenceMeasureData.getOriginalDataId());
+				measureList.add(SubsidenceMeasureData);
+				count++;
+			}
+			final List<AlertInfo> alerts = AlertUtils.getWarnDataList(originalDataList);
+			if (Constant.getNoUploadDataWhenWarningUnHandled()) {
+				if (hasUnhandledAlert(alerts)) {
+					notice = "该记录单存在未关闭的预警，请先处理";
+					sectionUploadCounter.increase(false, notice);
+				}
+			}
+			for (int i = 0; i < count; i++) {
+				uploadMeasureDataWrapper(sectionCode, measureList.get(i), alerts.get(i), pointUploadCounter);
+				// uploadMeasureDataWrapper(sectionCode, (SubsidenceMeasureData) measureData, pointUploadCounter);
+			}
         } else {
             // 如果没有测点数据，则直接判断为上传断面成功
             sectionUploadCounter.increase(true);
         }
 	}
 
-	private void uploadMeasureData(String sectionCode, final SubsidenceMeasureData measureData, final DataCounter pointUploadCounter) {
-		PointUploadParameter parameter = new PointUploadParameter();
-        parameter.setSectionCode(sectionCode);
-        parameter.setPointCodeList(measureData.getPointCodeList(sectionCode));
-        parameter.setTunnelFaceDistance(measureData.getFaceDistance());
-        parameter.setProcedure(measureData.getFaceDescription());
-        parameter.setMonitorModel(measureData.getMonitorModel());
-        parameter.setMeasureDate(measureData.getMeasureDate());
-        parameter.setPointValueList(measureData.getValueList());
-        parameter.setPointCoordinateList(measureData.getCoordinateList());
-		String sheetGuid = measureData.getSheetGuid();
-		if (sheetGuid != null) {
-			SurveyerInformation surveyer = CrtbUtils
-					.getSurveyerInfoBySheetGuid(sheetGuid);
-			parameter.setSurveyorName(surveyer.getSurveyerName());
-			parameter.setSurveyorId(surveyer.getCertificateID());
+	private void uploadMeasureDataWrapper(String sectionCode, final SubsidenceMeasureData measureData,final AlertInfo curAlertInfo, final DataCounter pointUploadCounter) {
+		//final AlertInfo curAlertInfo = AlertUtils.getWarnData(measureData.getOriginalDataId());
+		if (measureData.uploaded) {
+			uploadWarnWrapper(curAlertInfo,pointUploadCounter);
+		} else {
+			uploadMeasureData(sectionCode,measureData,curAlertInfo,pointUploadCounter);
 		}
-        parameter.setRemark("");
-        CrtbWebService.getInstance().uploadTestResult(parameter, new RpcCallback() {
-
-            @Override
-            public void onSuccess(Object[] data) {
-            	measureData.markAsUploaded();
-            	pointUploadCounter.increase(true);
-//                CrtbWebService.getInstance().confirmSubmitData(new RpcCallback() {
-//
-//                    @Override
-//                    public void onSuccess(Object[] data) {
-//                        measureData.markAsUploaded();
-//                        Log.d(LOG_TAG, "upload test data success.");
-//                        pointUploadCounter.increase(true);
-//                    }
-//
-//                    @Override
-//                    public void onFailed(String reason) {
-//                        Log.d(LOG_TAG, "confirm test data failed: " + reason);
-//                        pointUploadCounter.increase(false);
-//                    }
-//                });
-            }
-
-            @Override
-            public void onFailed(String reason) {
-                Log.d(LOG_TAG, "upload test data failed.");
-                pointUploadCounter.increase(false);
-            }
-        });
 	}
 }

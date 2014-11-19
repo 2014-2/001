@@ -1,5 +1,6 @@
 package com.crtb.tunnelmonitor.activity;
 
+import com.crtb.tunnelmonitor.AppConfig;
 import com.crtb.tunnelmonitor.common.Constant;
 import com.crtb.tunnelmonitor.dao.impl.v2.AbstractDao;
 import com.crtb.tunnelmonitor.dao.impl.v2.CrtbLicenseDao;
@@ -11,6 +12,7 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Environment;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.Log;
@@ -21,6 +23,11 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import java.io.*;
+
+
 
 public class RegisterActivity extends Activity implements OnClickListener {
 
@@ -31,6 +38,8 @@ public class RegisterActivity extends Activity implements OnClickListener {
     private Button mOk, mCancel;
 
     private String mDeviceId = null;
+
+    private Button mBrowseRegistryButton;/*<adong: private variable for BrowseRegistryFile Button>*/
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +52,8 @@ public class RegisterActivity extends Activity implements OnClickListener {
 
         mDeviceId = getDeviceId();
         mSerialNumberView.setText(mDeviceId);
+        mBrowseRegistryButton=( Button) findViewById(R.id.btn_browseRegisterFile);/*<adong: defualt value forBrowseRegistryFile Button>*/
+
 
         boolean registered = false;
         if (!TextUtils.isEmpty(mDeviceId)) {
@@ -61,6 +72,7 @@ public class RegisterActivity extends Activity implements OnClickListener {
             mRegisterCodeView.setEnabled(false);
             mOk.setEnabled(false);
             mCancel.setEnabled(false);
+            mBrowseRegistryButton.setEnabled(false);/*<adong: disable BrowseRegistryFile Button when already registred>*/
         } else {
             mSerialNumberView.setEnabled(true);
             mRegisterCodeView.setEnabled(true);
@@ -68,6 +80,8 @@ public class RegisterActivity extends Activity implements OnClickListener {
             mCancel.setEnabled(true);
             mOk.setOnClickListener(this);
             mCancel.setOnClickListener(this);
+            mBrowseRegistryButton.setEnabled(true);/*<adong: enable BrowseRegistryFile Button>*/
+            mBrowseRegistryButton.setOnClickListener(this);/*<adong: enable BrowseRegistryFile Button>*/
         }
     }
 
@@ -79,14 +93,95 @@ public class RegisterActivity extends Activity implements OnClickListener {
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-        case R.id.ok:
-            boolean b = checkAndRegistration();
-            showDialog(b, null);
-            break;
-        case R.id.cancel:
-            RegisterActivity.this.finish();
-            break;
+            case R.id.ok:
+                boolean b = checkAndRegistration();
+                showDialog(b, null);
+                break;
+            case R.id.cancel:
+                RegisterActivity.this.finish();
+                break;
+            case R.id.btn_browseRegisterFile:
+                browseRegistryFileList_Click();
+                break;
         }
+    }
+
+    //
+    //author:adong
+    //date:2014-11-4
+    //modify:2014-11-6
+    //note:browse registery file
+    //
+    public void browseRegistryFileList_Click() {
+        String registryCode = "";
+        String hint_RootDirectoryNotFound = "未找到注册文件夹crtb_db!";
+        String hint_RegistryNotFound = "在SD卡的crtb_db下未找到注册文件!";
+        String hint_RegistryFormatError = "注册文件格式不正确！";
+        String hint = "";
+
+        final File file = Environment.getExternalStorageDirectory();
+        String path = file.getAbsolutePath();
+        File registryFilesRootPath = new File(path + AppConfig.DB_ROOT);
+        String mSerialNumber=mSerialNumberView.getText().toString();
+        String testFilePath = path + AppConfig.DB_ROOT + mSerialNumber+".CRTBReg";
+
+
+        File testFile = new File(testFilePath);
+        if (!file.isDirectory()) {
+            hint = hint_RootDirectoryNotFound;
+        } else {
+            try {
+                InputStream fis = new FileInputStream(testFile);
+                int length = fis.available();
+                byte[] buffer = new byte[length];
+
+                fis.read(buffer);
+                String res = org.apache.http.util.EncodingUtils.getString(buffer, "UTF-8");
+                fis.close();
+
+                String[] resList = res.split("\n");
+                String expectedStartString = "RegisterCode:";
+                int startPos = expectedStartString.length();
+                hint = hint_RegistryFormatError;
+
+                if ((resList.length == 3) && resList[1].length() > startPos) {
+                    registryCode = resList[1].substring(startPos);
+
+                    if (!registryCode.isEmpty()) {
+                        mRegisterCodeView.setText(registryCode);
+
+                        hint = "okay";
+                    }
+
+                }
+
+            } catch (java.io.FileNotFoundException e) {
+                Log.d("TestFile", "The File doesn't not exist.");
+                hint = hint_RegistryNotFound;
+            } catch (IOException e) {
+                Log.d("TestFile", e.getMessage());
+                hint = hint_RegistryFormatError;
+            }
+
+
+        }
+
+        //
+        //author:adong
+        //date:2014-11-6
+        //note:begin to invoke checkAndRegistration
+        //
+        if(hint=="okay") {
+            boolean b = checkAndRegistration();
+
+            showDialog(b, null);
+        }
+        else
+        {
+            Toast.makeText(this, hint, Toast.LENGTH_LONG).show();
+
+        }
+
     }
 
     private boolean checkAndRegistration() {

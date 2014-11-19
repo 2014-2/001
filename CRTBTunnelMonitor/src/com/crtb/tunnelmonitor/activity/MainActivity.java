@@ -187,7 +187,6 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 
 	@Override
 	public void onClick(View v) {
-
 	    int userType = AppCRTBApplication.getInstance().getCurUserType();
 	    if (userType == CrtbUser.LICENSE_TYPE_DEFAULT && v.getId() != R.id.about) {
 	        showToast("该功能对未注册用户不可用！");
@@ -196,7 +195,7 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 	    
 	    switch (v.getId()) {
 		case R.id.worksection:// 工作面
-		{
+		{			
 			intent = new Intent(MainActivity.this, WorkActivity.class);
 			startActivity(intent);
 		}
@@ -253,7 +252,8 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 			if (mCurrentWorkPlan == null) {
 				Toast.makeText(MainActivity.this, "请先打开工作面", 3000).show();
 			} else {
-				intent = new Intent(MainActivity.this, WarningActivity.class);
+				//intent = new Intent(MainActivity.this, WarningActivity.class);
+				intent = new Intent(MainActivity.this, WarningTypeSortBySectionActivity.class);
 				startActivity(intent);
 			}
 			break;
@@ -322,8 +322,7 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 						mProgressDialog = null ;
 					}
 					
-					showText("备份完成");
-					
+					showText("备份完成,已将所有工作面备份到SD卡的crtb_db/crtb_backup_all");
 					break ;
 				}
 			}

@@ -3,8 +3,6 @@ package com.crtb.tunnelmonitor.widget;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.R.bool;
-import android.R.integer;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.os.AsyncTask;
@@ -24,7 +22,6 @@ import android.widget.TextView;
 import com.crtb.tunnelmonitor.activity.R;
 import com.crtb.tunnelmonitor.dao.impl.v2.RawSheetIndexDao;
 import com.crtb.tunnelmonitor.entity.RawSheetIndex;
-import com.crtb.tunnelmonitor.task.SheetRecord;
 import com.crtb.tunnelmonitor.utils.CrtbUtils;
 
 @SuppressLint("ValidFragment")

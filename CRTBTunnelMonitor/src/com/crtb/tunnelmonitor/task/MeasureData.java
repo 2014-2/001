@@ -9,6 +9,9 @@ import java.util.Date;
  *
  */
 public abstract class MeasureData {
+	
+	public boolean uploaded;
+	
 	 /**
 	  * 获取测量时间 
 	  * 
@@ -38,4 +41,24 @@ public abstract class MeasureData {
       * 将测量数据标识为已上传
       */
      public abstract void markAsUploaded();
+
+	protected String getSheetGuid() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	protected String getMonitorModel() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	protected String getFaceDescription() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public float getFaceDistance() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
 }

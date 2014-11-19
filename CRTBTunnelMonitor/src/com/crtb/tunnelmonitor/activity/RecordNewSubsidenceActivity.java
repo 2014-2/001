@@ -202,7 +202,6 @@ public class RecordNewSubsidenceActivity extends WorkFlowActivity implements OnP
     		setTopbarTitle("编辑地表下沉断面记录单");
     		sectionGuis	= recordInfo.getCrossSectionIDs() ;
     		sectionListView.setSectionIds(recordInfo.getGuid(),sectionGuis);
-    		
     		surveyer = RawSheetIndexDao.defaultDao().querySurveyerBySheetIndexGuid(recordInfo.getGuid());
 			
     		section_new_et_prefix.setText(mCurrentWorkPlan.getChainagePrefix());
@@ -232,6 +231,8 @@ public class RecordNewSubsidenceActivity extends WorkFlowActivity implements OnP
     		//YX 时间精确到秒
     		//record_buildtime.setText(DateUtils.toDateString(DateUtils.getCurrtentTimes(),DateUtils.PART_TIME_FORMAT)) ;
     		record_buildtime.setText(DateUtils.toDateString(DateUtils.getCurrtentTimes(),DateUtils.DATE_TIME_FORMAT)) ;
+    		//排除已经封存的断面
+    		sectionListView.setNeedRemoveStopSection(true);
     	}
     }
     

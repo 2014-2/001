@@ -3,6 +3,7 @@ package com.crtb.tunnelmonitor.entity;
 
 import java.util.Date;
 
+import com.crtb.tunnelmonitor.common.Constant;
 import com.crtb.tunnelmonitor.dao.impl.v2.RawSheetIndexDao;
 import com.crtb.tunnelmonitor.utils.AlertUtils;
 
@@ -108,10 +109,10 @@ public class MergedAlert implements Comparable<MergedAlert>{
 
     // 是否已销警
     public boolean isHandled() {
-        if (leijiAlert != null && leijiAlert.getAlertStatus() != AlertUtils.ALERT_STATUS_HANDLED) {
+        if (leijiAlert != null && leijiAlert.getAlertStatus() != Constant.ALERT_STATUS_HANDLED) {
             return false;
         }
-        if (sulvAlert != null && sulvAlert.getAlertStatus() != AlertUtils.ALERT_STATUS_HANDLED) {
+        if (sulvAlert != null && sulvAlert.getAlertStatus() != Constant.ALERT_STATUS_HANDLED) {
             return false;
         }
 

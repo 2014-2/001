@@ -2,12 +2,9 @@ package com.crtb.tunnelmonitor.activity;
 
 import java.util.ArrayList;
 import java.util.List;
-
+import org.zw.android.framework.util.StringUtils;
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.AlertDialog.Builder;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
@@ -23,18 +20,14 @@ import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.PopupWindow;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -53,6 +46,7 @@ import com.crtb.tunnelmonitor.task.AsyncQueryTask.QueryLisenter;
 import com.crtb.tunnelmonitor.task.TunnelAsyncQueryTask;
 import com.crtb.tunnelmonitor.task.TunnelAsyncUploadTask;
 import com.crtb.tunnelmonitor.utils.CrtbUtils;
+import com.crtb.tunnelmonitor.widget.CrtbProgressOverlay;
 import com.crtb.tunnelmonitor.widget.SubsidenceSectionSheetFragment;
 import com.crtb.tunnelmonitor.widget.TunnelSectionSheetFragment;
 import com.crtb.tunnelmonitor.network.CrtbWebService;
@@ -68,15 +62,11 @@ public class DataUploadActivity extends FragmentActivity {
     private SubsidenceSectionSheetFragment mSubsidenceFragment;
     private TextView mTunnelTab;
     private TextView mSubsidenceTab;
-    private LinearLayout mProgressOverlay;
-    private ProgressBar mUploadProgress;
-    private ImageView mUploadStatusIcon;
-    private TextView mUploadStatusText;
-    private boolean isUploading = true;
     private int bmpW;
     private int offset = 0;
     private int currIndex = 0;
     private MenuPopupWindow menuWindow;
+    private CrtbProgressOverlay progressOverlay;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -159,53 +149,19 @@ public class DataUploadActivity extends FragmentActivity {
     }
 
     private void initProgressOverlay() {
-        mProgressOverlay = (LinearLayout)findViewById(R.id.progress_overlay);
-        mUploadProgress = (ProgressBar)findViewById(R.id.progressbar);
-        mUploadStatusIcon = (ImageView)findViewById(R.id.upload_status_icon);
-        mUploadStatusText = (TextView)findViewById(R.id.upload_status_text);
-        mProgressOverlay.setOnTouchListener(new OnTouchListener() {
-
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (!isUploading) {
-                    hideProgressOverlay();
-                }
-                return true;
-            }
-        });
+		progressOverlay = new CrtbProgressOverlay(this, CrtbUtils.getProgressLayout(this));
     }
 
     private void showProgressOverlay() {
-        mProgressOverlay.setVisibility(View.VISIBLE);
-        mUploadProgress.setIndeterminate(true);
-        mUploadStatusIcon.setVisibility(View.GONE);
-        mUploadStatusText.setText(R.string.data_uploading);
-        isUploading = true;
+    	progressOverlay.showProgressOverlay(getString(R.string.data_uploading));
     }
 
-    private void hideProgressOverlay() {
-        mProgressOverlay.setVisibility(View.GONE);
-    }
-
-    private void updateStatus(boolean isSuccess, int code) {
-        isUploading = false;
-        mUploadStatusIcon.setVisibility(View.VISIBLE);
-        mUploadProgress.setIndeterminate(false);
-        mUploadProgress.setProgress(100);
-        if (isSuccess) {
-            mUploadStatusIcon.setImageResource(R.drawable.success);
-            mUploadStatusText.setText(R.string.data_upload_success);
-        } else {
-            mUploadStatusIcon.setImageResource(R.drawable.fail);
-            switch (code) {
-			case AsyncUploadTask.CODE_NO_MEASURE_DATA:
-				mUploadStatusText.setText(R.string.data_upload_fail_1);
-				break;
-			default:
-				mUploadStatusText.setText(R.string.data_upload_fail);
-				break;
-			}
-        }
+    private void updateStatus(boolean isSuccess, int code,String notice) {
+        
+        if(notice == null && StringUtils.isEmpty(notice)){
+        	notice = getString(R.string.data_upload_fail);
+        }        
+        progressOverlay.uploadFinish(isSuccess, notice);
     }
 
     class UploadPagerAdapter extends FragmentPagerAdapter {
@@ -281,12 +237,10 @@ public class DataUploadActivity extends FragmentActivity {
         private View mMenuView;
         private Intent intent;
         public Context c;
-        AlertDialog dlg = null;
 
         public MenuPopupWindow(Activity context) {
             super(context);
             this.c = context;
-            dlg = new AlertDialog.Builder(c).create();
             LayoutInflater inflater = (LayoutInflater)context
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             mMenuView = inflater.inflate(R.layout.menu_data_upload, null);
@@ -301,17 +255,22 @@ public class DataUploadActivity extends FragmentActivity {
 					    if (siteCode == null || siteCode.trim() == "" ) {
 						   Toast.makeText(getApplicationContext(), "请先关联工点", Toast.LENGTH_SHORT).show();
 						} else {
-                            switch (mPager.getCurrentItem()) {
-                                // 隧道内断面
-                                case 0:
-                            	    uploadTunnelSheets();
-                                    break;
-                                case 1:
-                            	    uploadSubsidenceSheets();
-                                    break;
-                                default:
-                                    break;
-                            }
+							CrtbUtils.showDialogWithYesOrNo(DataUploadActivity.this,"数据上传","观测数据、预警和处理详情将会同时上传,是否继续？",new CrtbUtils.UploadCall(){
+
+								@Override
+								public void ok() {
+									switch (mPager.getCurrentItem()) {
+	                                // 隧道内断面
+	                                case 0:
+	                            	    uploadTunnelSheets();
+	                                    break;
+	                                case 1:
+	                            	    uploadSubsidenceSheets();
+	                                    break;
+	                                default:
+	                                    break;
+	                            }
+								}});
 						}
                     } else {
                         Toast.makeText(getApplicationContext(), "请先打开工作面", Toast.LENGTH_SHORT).show();
@@ -343,7 +302,13 @@ public class DataUploadActivity extends FragmentActivity {
                         | Gravity.CENTER_HORIZONTAL, 0, 0);
             }
             if (keyCode == KeyEvent.KEYCODE_BACK) {
-                this.finish();
+            	if(!progressOverlay.isUploading()){
+					if (progressOverlay != null && progressOverlay.showing()) {
+						progressOverlay.hideProgressOverlay();
+					} else{
+						this.finish();						
+					}
+            	}
             }
         }
         return true;
@@ -351,26 +316,13 @@ public class DataUploadActivity extends FragmentActivity {
     
 	private void uploadTunnelSheets() {
 		if (!mTunnelFragment.checkData()) {
-			AlertDialog.Builder builder = new Builder(this);
-			builder.setMessage(R.string.data_upload_promote_content);
-			builder.setTitle(R.string.data_upload_promote_title);
-			builder.setPositiveButton(R.string.data_upload_confirm, new DialogInterface.OnClickListener() {
-				
+			CrtbUtils.showDialogWithYesOrNo(this, getString(R.string.data_upload_promote_title), getString(R.string.data_upload_promote_content), new CrtbUtils.UploadCall(){
+
 				@Override
-				public void onClick(DialogInterface dialog, int which) {
-					dialog.dismiss();
+				public void ok() {
 					doUploadTunnelSheets();
 				}
 			});
-			builder.setNegativeButton(R.string.data_upload_deny, new DialogInterface.OnClickListener() {
-				
-				@Override
-				public void onClick(DialogInterface dialog, int which) {
-					dialog.dismiss();
-					//Nothing need to do
-				}
-			});
-			builder.create().show();
 		} else {
 			doUploadTunnelSheets();
 		}
@@ -385,16 +337,16 @@ public class DataUploadActivity extends FragmentActivity {
 				public void done(final List<SheetRecord> records) {
 					if (records != null && records.size() > 0) {
 						showProgressOverlay();
-						AsyncUploadTask uploadTask = new TunnelAsyncUploadTask(new UploadListener() {
+						final AsyncUploadTask uploadTask = new TunnelAsyncUploadTask(new UploadListener() {
 							@Override
-							public void done(final boolean success, final int code) {
+							public void done(final boolean success, final int code,final String notice) {
 								AsyncUpdateTask updateTask = new AsyncUpdateTask(AsyncUpdateTask.TYPE_TUNNEL, records, new UpdateListener() {
 									@Override
 									public void done() {
 										if (success) {
 											mTunnelFragment.refreshUI();
 										}
-										updateStatus(success, code);
+										updateStatus(success, code, notice);
 									}
 								});
 								updateTask.execute();
@@ -412,29 +364,16 @@ public class DataUploadActivity extends FragmentActivity {
 	
     private void uploadSubsidenceSheets() {
     	if (!mSubsidenceFragment.checkData()) {
-    		AlertDialog.Builder builder = new Builder(this);
-			builder.setMessage(R.string.data_upload_promote_content);
-			builder.setTitle(R.string.data_upload_promote_title);
-			builder.setPositiveButton(R.string.data_upload_confirm, new DialogInterface.OnClickListener() {
-				
-				@Override
-				public void onClick(DialogInterface dialog, int which) {
-					dialog.dismiss();
-					doUploadSubsidenceSheets();
-				}
-			});
-			builder.setNegativeButton(R.string.data_upload_deny, new DialogInterface.OnClickListener() {
-				
-				@Override
-				public void onClick(DialogInterface dialog, int which) {
-					dialog.dismiss();
-					//Nothing need to do
-				}
-			});
-			builder.create().show();
-		} else {
-			doUploadSubsidenceSheets();
-		}
+    		CrtbUtils.showDialogWithYesOrNo(this, getString(R.string.data_upload_promote_title), getString(R.string.data_upload_promote_content), new CrtbUtils.UploadCall(){
+
+    			@Override
+    			public void ok() {
+    				doUploadSubsidenceSheets();
+    			}
+    		});
+    	} else {
+    		doUploadSubsidenceSheets();
+    	}
     }
     
     private void doUploadSubsidenceSheets() {
@@ -448,14 +387,14 @@ public class DataUploadActivity extends FragmentActivity {
 			            showProgressOverlay();
 			            AsyncUploadTask uploadTask  = new SubsidenceAsyncUploadTask(new UploadListener() {
 			                @Override
-			                public void done(final boolean success, final int code) {
+			                public void done(final boolean success, final int code,final String notice) {
 			                	AsyncUpdateTask updateTask = new AsyncUpdateTask(AsyncUpdateTask.TYPE_SUBSIDENCE, records, new UpdateListener() {
 									@Override
 									public void done() {
 										if (success) {
 					                        mSubsidenceFragment.refreshUI();
 					                    }
-					                    updateStatus(success, code);
+					                    updateStatus(success, code, notice);
 									}
 								});
 			                	updateTask.execute();

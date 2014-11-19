@@ -12,6 +12,7 @@ import org.zw.android.framework.db.Table;
 import org.zw.android.framework.db.core.ColumnPrimaryKey;
 import org.zw.android.framework.db.core.ColumnPrimaryKey.PrimaryKeyType;
 
+import com.crtb.tunnelmonitor.common.Constant;
 import com.crtb.tunnelmonitor.utils.AlertUtils;
 
 /**
@@ -75,7 +76,7 @@ public class AlertHandlingList implements Serializable {
     }
 
     public void setHandling(int handling) {
-        if(handling >= AlertUtils.ALERT_HANDLING.length || handling < 0) {
+        if(handling >= Constant.ALERT_HANDLING.length || handling < 0) {
         	//处理详情错误
         	handling = 0;
         }

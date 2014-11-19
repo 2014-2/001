@@ -34,6 +34,8 @@ public class ServersActivity extends Activity implements OnClickListener {
 	private TextView mWarnUpload;
 	/** 下载工作面" */
 	private TextView mWorkInfoDownload;
+	/** 断面封存 */
+	private TextView mSectionStop;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -90,10 +92,12 @@ public class ServersActivity extends Activity implements OnClickListener {
 		mDataUpload = (TextView) findViewById(R.id.data_upload);
 		mWarnUpload = (TextView) findViewById(R.id.warn_upload);
 		mWorkInfoDownload = (TextView) findViewById(R.id.workinfo_download);
+		mSectionStop = (TextView) findViewById(R.id.section_stop);
 		mParameter.setOnClickListener(this);
 		mDataUpload.setOnClickListener(this);
 		mWarnUpload.setOnClickListener(this);
 		mWorkInfoDownload.setOnClickListener(this);
+		mSectionStop.setOnClickListener(this);
 	}
 
 	@Override
@@ -110,6 +114,9 @@ public class ServersActivity extends Activity implements OnClickListener {
 			break;
 		case R.id.workinfo_download:
 			JumpWorkInfoDownload();
+			break;
+		case R.id.section_stop:
+			JumpSectionStop();
 			break;
 		default:
 			break;
@@ -128,13 +135,19 @@ public class ServersActivity extends Activity implements OnClickListener {
 	}
 
 	private void JumpWarningUpload() {
-		Intent intent = new Intent(this, WarningUploadActivity.class);
+		//Intent intent = new Intent(this, WarningUploadActivity.class);
+		Intent intent = new Intent(this, WarningShowSortBySectionActivity.class);
 		startActivity(intent);
 	}
 
 	private void JumpWorkInfoDownload() {
 		Intent intent = new Intent(this, WorkInfoDownloadActivity.class);
 		startActivity(intent);
+	}
+	
+	private void JumpSectionStop() {
+		Intent intent = new Intent(this,SectionStopActivity.class);
+		startActivity(intent);		
 	}
 
 }

@@ -11,6 +11,7 @@ import android.widget.AdapterView;
 import android.widget.Toast;
 
 import com.crtb.tunnelmonitor.AppHandler;
+import com.crtb.tunnelmonitor.dao.impl.v2.CrossSectionStopSurveyingDao;
 import com.crtb.tunnelmonitor.dao.impl.v2.TunnelCrossSectionIndexDao;
 import com.crtb.tunnelmonitor.dao.impl.v2.TunnelSettlementTotalDataDao;
 import com.crtb.tunnelmonitor.entity.TunnelCrossSectionIndex;
@@ -26,6 +27,10 @@ public class CrtbRecordTunnelSectionInfoListView extends CrtbBaseListView {
 	private String sheetGuid ;
 	private CrtbRecordTunnelSectionInfoAdapter mAdapter ;
 	private List<String> sectionIds = new ArrayList<String>() ;
+	private boolean needRemoveStopSection;
+	public void setNeedRemoveStopSection(boolean needRemoveStopSection) {
+		this.needRemoveStopSection = needRemoveStopSection;
+	}
 	
 	public CrtbRecordTunnelSectionInfoListView(Context context) {
 		this(context, null);
@@ -62,6 +67,11 @@ public class CrtbRecordTunnelSectionInfoListView extends CrtbBaseListView {
 								return ;
 							}
 						}
+					}
+					
+					if (CrossSectionStopSurveyingDao.defaultDao().getSectionStopState(section.getGuid())) {
+						Toast.makeText(context, "该断面已经封存，不能操作", Toast.LENGTH_SHORT).show();
+						return ;
 					}
 				}
 				
@@ -124,6 +134,16 @@ public class CrtbRecordTunnelSectionInfoListView extends CrtbBaseListView {
 				if(msg.what == MSG_QUERY_SECTION_SUCCESS){
 					
 					List<TunnelCrossSectionIndex> list = (ArrayList<TunnelCrossSectionIndex>)msg.obj ;
+					if(needRemoveStopSection){
+						if(list != null){
+							for (int i = 0; i < list.size(); i++) {
+								if(CrossSectionStopSurveyingDao.defaultDao().getSectionStopState(list.get(i).getGuid())){
+									list.remove(i);
+									i--;
+								}
+							}
+						}
+					}
 					
 					if(list != null && sectionIds != null){
 						

@@ -222,4 +222,25 @@ public class RawSheetIndexDao extends AbstractDao<RawSheetIndex> {
 		return DB_EXECUTE_FAILED;
 	}
 	
+	public boolean isExistSectionGuidInLastRawSheet(String sectionGuid,int sectionType){	
+		final IAccessDatabase mDatabase = getCurrentDb();
+		
+		if(mDatabase == null){
+			return false ;
+		}
+		
+		String sql = "select * from RawSheetIndex where CrossSectionType = ? ORDER BY CreateTime DESC limit 1";
+		RawSheetIndex last = null; 	
+		if(sectionType == RawSheetIndex.CROSS_SECTION_TYPE_TUNNEL){
+			last = mDatabase.queryObject(sql, new String[]{String.valueOf(RawSheetIndex.CROSS_SECTION_TYPE_TUNNEL)}, RawSheetIndex.class);
+		} else {
+			last = mDatabase.queryObject(sql, new String[]{String.valueOf(RawSheetIndex.CROSS_SECTION_TYPE_SUBSIDENCES)}, RawSheetIndex.class);
+		}
+		
+		if(last != null && last.getCrossSectionIDs().contains(sectionGuid)){
+			return false;
+		}
+		
+		return true;
+	}
 }

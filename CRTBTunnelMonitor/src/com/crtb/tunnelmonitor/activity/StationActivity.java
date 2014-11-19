@@ -39,6 +39,7 @@ import com.crtb.tunnelmonitor.common.Constant.TotalStationType;
 import com.crtb.tunnelmonitor.dao.impl.v2.ProjectIndexDao;
 import com.crtb.tunnelmonitor.dao.impl.v2.TotalStationInfoDao;
 import com.crtb.tunnelmonitor.entity.TotalStationIndex;
+import com.crtb.tunnelmonitor.utils.CrtbUtils;
 
 public class StationActivity extends BaseActivity {
 	public static final String TAG = "StationActivity";
@@ -301,14 +302,11 @@ public class StationActivity extends BaseActivity {
         } else {
             msg = "连接全站仪" + mStations.get(iListPos).getName() + result;
         }
+        
         AlertDialog dlg = new AlertDialog.Builder(StationActivity.this)
-        // .setIcon(R.drawable.successgreen)
                 .setMessage(msg).create();
         dlg.show();
-        // Window window = dlg.getWindow();
-        // window.setContentView(R.layout.connectyesdialog);
-        // TextView text = (TextView) window.findViewById(R.id.connertexryes);
-        // text.setText("连接全站仪" + mStations.get(iListPos).getName() + result);
+//      CrtbUtils.showDialogWithYes(this, "全站仪连接管理", msg);
         return ret;
     }
 
@@ -327,17 +325,11 @@ public class StationActivity extends BaseActivity {
             }
         }
 
-        // Window window = dlg.getWindow();
-        // window.setContentView(R.layout.connectyesdialog);
-        // ImageView icon = (ImageView) window.findViewById(R.id.icon);
         if (ret == 1) {
             result = "成功";
         } else {
             result = "失败";
-            // icon.setImageResource(R.drawable.failred);
         }
-        // TextView text = (TextView) window.findViewById(R.id.connertexryes);
-        // text.setText();
         String msg = null;
         if (ret == 2) {
             msg = mStations.get(iListPos).getName() + "已经是断开连接状态";
@@ -346,6 +338,7 @@ public class StationActivity extends BaseActivity {
         }
         AlertDialog dlg = new AlertDialog.Builder(StationActivity.this).setMessage(msg).create();
         dlg.show();
+//        CrtbUtils.showDialogWithYes(this, "全站仪连接管理", msg);        
         return ret;
     }
 

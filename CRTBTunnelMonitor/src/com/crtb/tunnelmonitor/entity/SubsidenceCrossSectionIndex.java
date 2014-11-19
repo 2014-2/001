@@ -82,11 +82,31 @@ public class SubsidenceCrossSectionIndex implements Serializable {
 	
 	private String sectionName ;		// 断面名称
 	
+	private boolean checked ;				// 是否选择
+
+    public boolean isChecked() {
+		return checked;
+	}
+
+	public void setChecked(boolean checked) {
+		this.checked = checked;
+	}
+	
 	public SubsidenceCrossSectionIndex(){
 		setGuid(CrtbUtils.generatorGUID());
 		setLAYVALUE(0.0f); // 默认知道
 		setLithologic("BrittleRock"); // 默认值
 		setROCKGRADE("I"); // 默认值
+	}
+	
+    private boolean sectionStop;       // 断面封存状态
+
+    public boolean getSectionStop() {
+		return sectionStop;
+	}
+
+	public void setSectionStop(boolean sectionStop) {
+		this.sectionStop = sectionStop;
 	}
 
 	public int getID() {

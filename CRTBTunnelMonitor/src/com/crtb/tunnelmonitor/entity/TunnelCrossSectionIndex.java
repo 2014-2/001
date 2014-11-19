@@ -89,16 +89,36 @@ public class TunnelCrossSectionIndex implements Serializable {
 
     @ColumnString(length = 255)
     private String ROCKGRADE; 			// 围岩级别 使用罗马数字I，II，III，IV，V，VI
+    
+	private boolean used;				// 是否选中----------扩展
+	
+	private boolean checked ;				// 是否选择
 
-    private boolean used;				// 是否选中----------扩展
+    public boolean isChecked() {
+		return checked;
+	}
 
-    public TunnelCrossSectionIndex(){
+	public void setChecked(boolean checked) {
+		this.checked = checked;
+	}
+
+	public TunnelCrossSectionIndex(){
     	setUploadStatus(1);// 未上传
     	setGuid(CrtbUtils.generatorGUID());
     	setLAYVALUE(0.0f); // 默认值
     	setLithologic("BrittleRock"); // 默认值
     	setROCKGRADE("I"); // 默认值
     }
+    
+    private boolean sectionStop;       // 断面封存状态
+
+    public boolean getSectionStop() {
+		return sectionStop;
+	}
+
+	public void setSectionStop(boolean sectionStop) {
+		this.sectionStop = sectionStop;
+	}
     
     public int getID() {
         return ID;

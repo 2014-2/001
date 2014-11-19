@@ -4,21 +4,24 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.crtb.tunnelmonitor.entity.RawSheetIndex;
+import com.crtb.tunnelmonitor.entity.SubsidenceCrossSectionIndex;
+import com.crtb.tunnelmonitor.entity.TunnelCrossSectionIndex;
 import com.crtb.tunnelmonitor.utils.CrtbUtils;
 
 /**
  * 记录单(隧道内断面/地表下沉断面)
  *
  */
-public class SheetRecord {
+public class SheetRecord { 
 	private RawSheetIndex mRawSheet;
     private List<Section> mUnUploadSections;
     private boolean mIsChecked;
 
-    SheetRecord() {
+    
+    public SheetRecord() {
         mUnUploadSections = new ArrayList<Section>();
     }
-
+    
     public void setRawSheet(RawSheetIndex rawSheet) {
         mRawSheet = rawSheet;
     }

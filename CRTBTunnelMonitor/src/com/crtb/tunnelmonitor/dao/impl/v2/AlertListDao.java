@@ -12,6 +12,7 @@ import android.database.Cursor;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.crtb.tunnelmonitor.common.Constant;
 import com.crtb.tunnelmonitor.entity.AlertList;
 import com.crtb.tunnelmonitor.entity.SubsidenceTotalData;
 import com.crtb.tunnelmonitor.entity.TunnelSettlementTotalData;
@@ -102,13 +103,20 @@ public class AlertListDao extends AbstractDao<AlertList> {
             return;
         }
 
-        String sql = "delete from AlertList where SheetID=?"
+        String sql = "select * from AlertList where SheetID=?"
                 + " AND CrossSectionID=?"
-                + " AND originalDataID=?";
+                + " AND originalDataID=?"
+                + " Limit 1";
 
         String[] args = new String[] {sheetId, chainageId,  originalDataID };
 
-        mDatabase.execute(sql, args);
+        AlertList alert = mDatabase.queryObject(sql, args, AlertList.class);
+        if(alert != null){
+        	String alertGuid = alert.getGuid();
+        	mDatabase.deleteObject(alert);
+        	sql =  "delete  from AlertHandlingList where AlertID=?";
+        	mDatabase.execute(sql, new String[] {alertGuid});
+        }
 
     }
 
@@ -156,9 +164,9 @@ public class AlertListDao extends AbstractDao<AlertList> {
         	
             String oid = a.getOriginalDataId();
             
-            if (oid.contains(AlertUtils.ORIGINAL_ID_DIVIDER)) {
+            if (oid.contains(Constant.ORIGINAL_ID_DIVIDER)) {
             	
-                String[] s = oid.split(AlertUtils.ORIGINAL_ID_DIVIDER);
+                String[] s = oid.split(Constant.ORIGINAL_ID_DIVIDER);
                 
                 if (s.length == 2) {
                     if (originalDataID.equals(s[0]) || originalDataID.equals(s[1])) {
@@ -385,5 +393,20 @@ public class AlertListDao extends AbstractDao<AlertList> {
             return c;
         }
         return null;
+    }
+    
+    public AlertList queryOneOrigionalDataId(String orginalDataId){
+    	 final IAccessDatabase mDatabase = getCurrentDb();
+
+         if (mDatabase == null) {
+             return null;
+         }
+         
+         String sql = "SELECT * FROM AlertList "
+        		 + " WHERE originalDataID = ? "
+        		 + " ORDER BY AlertTime DESC "
+                 + " LIMIT 1";
+         
+         return mDatabase.queryObject(sql, new String[]{orginalDataId}, AlertList.class);
     }
 }

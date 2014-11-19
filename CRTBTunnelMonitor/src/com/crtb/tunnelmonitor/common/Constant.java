@@ -1,9 +1,16 @@
 
 package com.crtb.tunnelmonitor.common;
 
+import java.util.Date;
 import java.util.HashMap;
 
+import org.apache.http.impl.cookie.DateParseException;
+import org.apache.http.impl.cookie.DateUtils;
+
+import android.graphics.Color;
+
 import com.crtb.tunnelmonitor.AppCRTBApplication;
+import com.crtb.tunnelmonitor.utils.CrtbUtils;
 
 /**
  * 常量定义
@@ -125,17 +132,88 @@ public class Constant {
 	public static final String NameSpace="webservice.riskcontrol.com";
 	
 	//测试用
-	public static final String testUsername = "cl19h1";
+	public static final String LOG_TAG = "CrtbWebService";
+	public static final String SERVER_LOG_TAG = "CrtbWebService";
+	public static final String ACTIVITY_LOG_TAG = "CrtbActivity";
+	
+	public static final String testUsername = "cl19h2";
 	public static final String testPassword = "123456";
-	public static final String testPhysical= "04:4b:ff:07:de:23";
+	public static String testPhysical= "04:4b:ff:07:de:22";
+	public static final String testCard= "522722198906031000";
+	//public static  String testPhysical= "72:80:09:00:60:11";
 	public static final String testDeskey = "crtb1234";
 	public static final String testPublicKey = "MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAMFUtGx6lOnO5dLxy/1uNqUAzG7mhRKkWFJEZ9QWup+Y1+bgRoz2xdlL1ZqwpFi3AYbFrCa37zK1A5WbCvq37j0CAwEAAQ==";
 
+//YX 从AlertUtils 移到 当前文件 
+//    public static final String[] U_TYPE_MSGS = {"拱顶累计下沉值超限", "拱顶下沉速率超限", "累计收敛超限", "收敛速率超限", "地表累计下沉值超限", "地表下沉速率超限"};
+//
+//    public static final String[] U_TYPE_MSGS_SAFE = {"拱顶累计下沉值", "拱顶下沉速率", "累计收敛", "收敛速率", "地表累计下沉值", "地表下沉速率"};
+	
+    public static final String[] U_TYPE_MSGS = {"拱顶累计下沉超限", "拱顶下沉速率超限", "累计收敛超限", "收敛速率超限", "地表累计下沉超限", "地表下沉速率超限"};
+
+    public static final String[] U_TYPE_MSGS_SAFE = {"拱顶累计下沉", "拱顶下沉速率", "累计收敛", "收敛速率", "地表累计下沉", "地表下沉速率"};
+
+    /**
+     * 累积位移等级对应的颜色
+     */
+    public static int[] leijiOffsetLevelColor = new int[]{Color.GREEN,Color.RED,Color.parseColor("#C87A05")};
+    
+    /**
+     * 累积位移等级对应的颜色
+     */
+    public static int[] sulvOffsetLevelColor = new int[]{Color.BLACK,Color.BLACK};
+    
+	/**
+	 * 报警的最大值
+	 */
+	public static final int ALARM_MAX_VALUE = 3000;
+	
+    // 累计变形值阈值
+    public static final double ACCUMULATIVE_THRESHOLD = 100; // mm
+
+    // 变形速率阈值
+    public static final double SPEED_THRESHOLD = 5; // mm/d
+    
+    // 对应  AlertList 表中的OriginalDataID列, 一条测线两测点数据id间的分隔符
+    public static final String ORIGINAL_ID_DIVIDER = ",";
+
+    // 0表示拱顶累计下沉值超限
+    public static final int GONGDING_LEIJI_XIACHEN_EXCEEDING = 0;
+
+    // 1表示拱顶下沉速率超限
+    public static final int GONGDINGI_XIACHEN_SULV_EXCEEDING = 1;
+
+    // 2表示收敛累计值超限
+    public static final int SHOULIAN_LEIJI_EXCEEDING = 2;
+
+    // 3表示收敛速率超限
+    public static final int SHOULIAN_SULV_EXCEEDING = 3;
+
+    // 4表示地表累计下沉值超限
+    public static final int DIBIAO_LEIJI_XIACHEN_EXCEEDING = 4;
+
+    // 5表示地表下沉速率超限
+    public static final int DIBIAO_XIACHEN_SULV_EXCEEDING = 5;
+
+    public static final int ALERT_STATUS_HANDLED = 0;
+    public static final int ALERT_STATUS_OPEN = 1;
+    public static final int ALERT_STATUS_HANDLING = 2;
+    public static final String[] ALERT_STATUS_MSGS = {"已消警", "开", "处理中"};
+
+    public static final int POINT_DATASTATUS_NONE = 0;
+    public static final int POINT_DATASTATUS_DISCARD = 1;
+    public static final int POINT_DATASTATUS_AS_FIRSTLINE = 2;
+    public static final int POINT_DATASTATUS_CORRECTION = 3;
+    public static final int POINT_DATASTATUS_NORMAL = 4;
+    public static final String[] ALERT_HANDLING = {"没有处理", "不参与计算", "作为首行", "添加修正值", "正常参与计算"};
+    
 //YX 新增
+	
+	public static Date WaringDeadTime = CrtbUtils.parseDate("2014-11-15 0:0:0");
 	//用户验证-fxtest
-	public static final String USER_SELECT_FXTEST = "http://61.237.239.144/fxtest/basedown";
+	public static final String USER_SELECT_FXTEST = "http://61.237.239.144/wylctest/basedown";
 	//上传-fxtest
-	public static final String UPDATE_FXTEST = "http://61.237.239.144/fxtest/testdata";
+	public static final String UPDATE_FXTEST = "http://61.237.239.144/wylctest/testdata";
 	
 	//用户验证-fxkz
 	public static final String USER_SELECT_FXKZ = "http://61.237.239.144/fxkz/basedown";
@@ -153,6 +231,7 @@ public class Constant {
 	public static final int LEI_JI_INDEX = 0;
 	
     public static final int SU_LV_INDEX = 1;
+	public static final String WARNING_TYPE = "WARING_TYPE";
 	
 	private static VersionControl versionControl = null;
 	
@@ -189,27 +268,26 @@ public class Constant {
 		return versionControl.getStationDebug();
 	}
 	
-	public Constant() {
-		// TODO Auto-generated constructor stub
+	public static boolean getIsTestInfo(){
+		return versionControl.getTestInfo();
 	}
-
+	
+	public static boolean getIsEditMac(){
+		return versionControl.getIsEditMac();
+	}
+	
 	/**
-	 * @param args
+	 * 上传观测数据时，存在往往未处理的预警，则不上传观测数据
+	 * @return
 	 */
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-
+	public static boolean getNoUploadDataWhenWarningUnHandled(){
+		return versionControl.getNoUploadDataWhenWarningUnHandled();
 	}
 	
 	static{
-		//YX测试版本:手输坐标-fxtest-测试mac地址
-		versionControl = new VersionControl(true,true,false);
-				
-		//测试版本:全站仪-fxtest-测试mac地址
-		//versionControl = new VersionControl(false,true,false);
-		
-		//发布版本:全站仪坐标-fxkz-真实mac地址
-		//versionControl = new VersionControl(false,false,true);
+		//YX测试版本:手输坐标-wlyctest-测试mac地址
+		//station_debug,test_server,realMac,useTestInfo,editMac,noUploadDataWhenWarningUnHandled
+		versionControl = new VersionControl(false,false,true,false,false,false);
 	}
 
 	static class VersionControl{
@@ -222,10 +300,22 @@ public class Constant {
 		//真实Mac地址
 		private boolean realMac;
 		
-		public VersionControl(boolean station_debug,boolean test_server,boolean realMac){
+		//用户测试
+		private boolean useTestInfo; 
+		
+		//编辑Mac
+		private boolean editMac;
+		
+		//存在没有处理的预警，是否不上传数据
+		private boolean noUploadDataWhenWarningUnHandled;
+		
+		public VersionControl(boolean station_debug,boolean test_server,boolean realMac,boolean useTestInfo,boolean editMac,boolean noUploadDataWhenWarningUnHandled){
 			this.station_debug = station_debug;
 			this.test_server = test_server;
 			this.realMac = realMac;
+			this.useTestInfo = useTestInfo;
+			this.editMac = editMac;
+			this.noUploadDataWhenWarningUnHandled = noUploadDataWhenWarningUnHandled;
 		}
 		
 		public boolean getStationDebug(){
@@ -238,6 +328,18 @@ public class Constant {
 		
 		public boolean getRealMac(){
 			return realMac;
+		}
+		
+		public boolean getTestInfo(){
+			return useTestInfo;
+		}
+		
+		public boolean getIsEditMac(){
+			return editMac;
+		}
+		
+		public boolean getNoUploadDataWhenWarningUnHandled(){
+			return noUploadDataWhenWarningUnHandled;
 		}
 	}
 }

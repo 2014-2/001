@@ -33,17 +33,18 @@ public class TunnelAsyncQueryTask extends AsyncQueryTask {
                 		section.setSectionCode(sectionExIndex.getSECTCODE());
                 	}
 				}
-				//断面的未上传测量数据
-                List<TunnelSettlementTotalData> measurePoints = getUnUploadMeasurePoints(sheetGuid, sectionIndex.getGuid());
+				//获取断面的所有测量数据
+                TunnelSettlementTotalDataDao pointDao = TunnelSettlementTotalDataDao.defaultDao();
+                List<TunnelSettlementTotalData> measurePoints = pointDao.queryTunnelTotalDatas(sheetGuid, sectionIndex.getGuid());
                 if (measurePoints != null && measurePoints.size() > 0) {
-                    
                 	//YX 获取上传数据                	 
                 	TunnelMeasureData tunnelMeasureData = new TunnelMeasureData();
                 	section.setMeasureData(tunnelMeasureData.getMeasureDataList(measurePoints));
                 }
-                if (section.needUpload()) {
-                	sections.add(section);
-                }
+//                if (section.needUpload()) {
+//                	sections.add(section);
+//                }
+                sections.add(section);
 			}
 		}
 		return sections;

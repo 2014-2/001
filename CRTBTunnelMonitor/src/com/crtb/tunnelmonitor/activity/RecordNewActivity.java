@@ -232,6 +232,8 @@ public class RecordNewActivity extends WorkFlowActivity implements OnPageChangeL
     		//YX 时间精确到秒
     		//record_buildtime.setText(DateUtils.toDateString(DateUtils.getCurrtentTimes(),DateUtils.PART_TIME_FORMAT)) ;
     		record_buildtime.setText(DateUtils.toDateString(DateUtils.getCurrtentTimes(),DateUtils.DATE_TIME_FORMAT)) ;
+    		//排除已经封存的断面
+    		sectionListView.setNeedRemoveStopSection(true);
     	}
     }
     

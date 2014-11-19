@@ -239,7 +239,7 @@ public final class WorkActivity extends WorkFlowActivity {
 			if(browse.hasIuputFiles()){
 				browse.show() ;
 			} else {
-				showText("没有可导入的数据库文件");
+				showText("没有可导入的工作面,请把工作面文件放入SD卡的crtb_db/crtb_import中。");
 			}
 			
 		}

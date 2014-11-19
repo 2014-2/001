@@ -13,6 +13,7 @@ import com.crtb.tunnelmonitor.entity.AlertHandlingList;
 import com.crtb.tunnelmonitor.entity.AlertList;
 import com.crtb.tunnelmonitor.entity.ControlPointsIndex;
 import com.crtb.tunnelmonitor.entity.ConvergenceSettlementArching;
+import com.crtb.tunnelmonitor.entity.CrossSectionStopSurveying;
 import com.crtb.tunnelmonitor.entity.CrownSettlementARCHING;
 import com.crtb.tunnelmonitor.entity.DTMSProjectVersion;
 import com.crtb.tunnelmonitor.entity.ProjectSettingIndex;
@@ -94,6 +95,9 @@ public abstract class AbstractDao<T> {
 		
 		// 开挖方法
 		db.createTable(TunnelCrossSectionParameter.class);
+		
+		// 断面封存状态
+		db.createTable(CrossSectionStopSurveying.class);
 	}
 	
 	/**

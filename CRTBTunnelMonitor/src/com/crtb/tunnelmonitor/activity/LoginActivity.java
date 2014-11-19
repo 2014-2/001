@@ -3,6 +3,8 @@ package com.crtb.tunnelmonitor.activity;
 
 import java.util.List;
 
+import org.zw.android.framework.util.StringUtils;
+
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.BroadcastReceiver;
@@ -32,6 +34,7 @@ import com.crtb.tunnelmonitor.AppConfig;
 import com.crtb.tunnelmonitor.common.Constant;
 import com.crtb.tunnelmonitor.dao.impl.v2.SurveyerInformationDao;
 import com.crtb.tunnelmonitor.entity.SurveyerInformation;
+import com.crtb.tunnelmonitor.utils.CrtbAppConfig;
 
 /**
  * 服务器登录界面 创建时间：2014-3-18下午4:11:55
@@ -108,6 +111,10 @@ public class LoginActivity extends Activity implements OnClickListener {
         //mNotesArrow=(ImageView) findViewById(R.id.note_arrow);
 		//mUserName = (EditText) findViewById(R.id.username);
         mCard = (EditText) findViewById(R.id.idcard);
+		if (Constant.getIsTestInfo()) {
+			mCard.setText(Constant.testCard);
+			mNote.setText(""+CrtbAppConfig.getInstance().getSectionSequence());
+		}
         mDownload=(TextView) findViewById(R.id.load_teser);
         mDownload.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG);
         mDownload.setOnClickListener(this);
@@ -224,8 +231,19 @@ public class LoginActivity extends Activity implements OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.login_btn:
-                //获取用户名和密码
-			//String name = mUserName.getText().toString().trim();
+            	if(Constant.getIsEditMac()){
+            		String txt = mNote.getText().toString();
+            		if(!StringUtils.isEmpty(txt)){
+            			try{
+            				int value = Integer.valueOf(txt);
+            				CrtbAppConfig.getInstance().setSectionSequence(value);
+
+            			} catch(Exception e){
+            				
+            			}
+            		}
+            	}
+            //获取用户名和密码
 			String name = "";
 			Object surveyor = mNameSpinner.getSelectedItem();
 			if (surveyor instanceof SurveyerInformation) {

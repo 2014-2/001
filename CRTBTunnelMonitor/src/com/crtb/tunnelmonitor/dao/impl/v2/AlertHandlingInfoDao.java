@@ -8,6 +8,7 @@ import org.zw.android.framework.util.DateUtils;
 
 import android.util.Log;
 
+import com.crtb.tunnelmonitor.common.Constant;
 import com.crtb.tunnelmonitor.entity.AlertHandlingList;
 import com.crtb.tunnelmonitor.entity.AlertInfo;
 import com.crtb.tunnelmonitor.entity.AlertList;
@@ -96,8 +97,8 @@ public class AlertHandlingInfoDao extends AbstractDao<AlertHandlingList> {
 			// 存在没有处理的详情的AlertList，自动添加一个处理详情
 			ahl = new AlertHandlingList();
 			ahl.setAlertID(alertGuid);
-			ahl.setAlertStatus(AlertUtils.ALERT_STATUS_OPEN);
-			ahl.setHandling(AlertUtils.POINT_DATASTATUS_NONE);
+			ahl.setAlertStatus(Constant.ALERT_STATUS_OPEN);
+			ahl.setHandling(Constant.POINT_DATASTATUS_NONE);
 			ahl.setInfo("");
 			ahl.setHandlingTime(DateUtils.toDate(alertInfo.getDate()));
 			ahl.setDuePerson(alertInfo.getDuePerson() != null ? alertInfo.getDuePerson() : "");
@@ -130,6 +131,26 @@ public class AlertHandlingInfoDao extends AbstractDao<AlertHandlingList> {
 
         return db.queryObject(sql, args, AlertHandlingList.class);
     }
+    
+    public AlertHandlingList queryOneByHandling(int alertId, int handling) {
+        String alertGuid = AlertListDao.defaultDao().getGuidById(alertId);
+
+        final IAccessDatabase db = getCurrentDb();
+
+        if (db == null) {
+            return null;
+        }
+
+        String sql = "SELECT * from AlertHandlingList WHERE"
+                + " AlertID=?"
+                + " AND Handling = ?";
+
+        String[] args = new String[] {
+                alertGuid, String.valueOf(handling)
+        };
+
+        return db.queryObject(sql, args, AlertHandlingList.class);
+    }
 
     public int insertIfNotExist(int alertId, int handling,String info, Date handlingTime, String duePerson,
             int alertStatus, int handlingInfo) {
@@ -156,7 +177,7 @@ public class AlertHandlingInfoDao extends AbstractDao<AlertHandlingList> {
         String guid = AlertListDao.defaultDao().getGuidById(alertId);
 
         AlertHandlingList ah = new AlertHandlingList();
-        AlertHandlingList old= queryOne(alertId, alertStatus);
+        AlertHandlingList old= queryOneByHandling(alertId, Constant.POINT_DATASTATUS_NONE);
         boolean needUpdate = false;
         if(old != null && (old.getInfo() == null || old.getInfo().equals(""))){
         	ah.setID(old.getID());

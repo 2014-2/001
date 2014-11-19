@@ -68,6 +68,13 @@ public class TesterLoadActivity extends Activity implements OnClickListener {
         mLoad.setOnClickListener(this);
         mListView = (ListView) findViewById(R.id.listview);
         init();
+		if (Constant.getIsTestInfo()) {
+			mUserName.setText(Constant.testUsername);
+			mPassword.setText(Constant.testPassword);
+		}
+		if(Constant.getIsEditMac()){
+			mServerAddress.setText(Constant.testPhysical);
+		}
     }
 
     private void init() {
@@ -85,7 +92,9 @@ public class TesterLoadActivity extends Activity implements OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.load:
-
+            	if(Constant.getIsEditMac()){
+            	    Constant.testPhysical = mServerAddress.getText().toString();
+            	}
                 String name = mUserName.getText().toString().trim();
                 String pwd = mPassword.getText().toString().trim();
 

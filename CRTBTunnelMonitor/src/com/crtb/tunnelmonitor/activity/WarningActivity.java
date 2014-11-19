@@ -1,570 +1,762 @@
 package com.crtb.tunnelmonitor.activity;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Random;
 
+import org.zw.android.framework.ioc.InjectLayout;
 import org.zw.android.framework.util.DateUtils;
 
-import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.text.Editable;
 import android.text.Html;
-import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
-import android.widget.*;
+import android.view.View.OnTouchListener;
+import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.ProgressBar;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.crtb.tunnelmonitor.AppCRTBApplication;
+import com.crtb.tunnelmonitor.WorkFlowActivity;
 import com.crtb.tunnelmonitor.adapter.AlertListAdapter;
-import com.crtb.tunnelmonitor.dao.impl.v2.AlertHandlingInfoDao;
+import com.crtb.tunnelmonitor.common.Constant;
+import com.crtb.tunnelmonitor.dao.impl.v2.CrossSectionStopSurveyingDao;
 import com.crtb.tunnelmonitor.dao.impl.v2.RawSheetIndexDao;
-import com.crtb.tunnelmonitor.dao.impl.v2.SubsidenceTotalDataDao;
-import com.crtb.tunnelmonitor.dao.impl.v2.TunnelSettlementTotalDataDao;
 import com.crtb.tunnelmonitor.entity.AlertInfo;
 import com.crtb.tunnelmonitor.entity.CrtbUser;
+import com.crtb.tunnelmonitor.entity.MergedAlert;
 import com.crtb.tunnelmonitor.entity.RawSheetIndex;
-import com.crtb.tunnelmonitor.entity.SubsidenceTotalData;
-import com.crtb.tunnelmonitor.entity.TunnelSettlementTotalData;
 import com.crtb.tunnelmonitor.utils.AlertManager;
 import com.crtb.tunnelmonitor.utils.AlertUtils;
 import com.crtb.tunnelmonitor.utils.CrtbUtils;
-import com.crtb.tunnelmonitor.utils.Time;
+import com.crtb.tunnelmonitor.widget.CrtbProgressOverlay;
 
-public class WarningActivity extends Activity {
+/**
+ * 开始测量
+ * 
+ * YX:整理Case、添加上一个断面、下一个断面
+ */
+public class WarningActivity extends WorkFlowActivity {
 
-    protected static final String TAG = "WarningActivity";
+	protected static final String TAG = "WarningActivity";
+	private List<String> sectionChainPrefix;
+	private int curSectionIndex;
+	private int sectionCount;
+	private StringSort stringSort = new StringSort();
+	private String sectionType;
+	private List<AlertInfo> curAlerts;
+	private LinearLayout test_bottom_layout;
+	private boolean isFirstEnter = true;
+	private HashMap<String,Warning> warings;
+	private Warning curWarning;
+	private String projectPrefix;
+	private ListView listview;
+	private RelativeLayout warningMenu;
+	private RelativeLayout mHandleCompleteView;
+	private RadioGroup mDealWayRadios;
+	// private RadioButton mDealWayBtnDiscard;
+	// private RadioButton mDealWayBtnAsFirst;
+	private RadioButton mDealWayBtnCorrection;
+	private RadioButton mDealWayBtnRebury;
+	// private RadioButton mDealWayBtnNormal;
 
-//    private static final int MSG_REFRESH_LIST = 0;
+	private RadioButton[] mRadioBtns;
 
-    private ListView listview;
+	private EditText mCorrectionView;
+	private TextView mCorrectionUnitView;
+	private EditText mWarningRemarkView;
 
-    private RelativeLayout warningMenu;
-    private RelativeLayout mHandleCompleteView;
-    private RadioGroup mDealWayRadios;
-//    private RadioButton mDealWayBtnDiscard;
-//    private RadioButton mDealWayBtnAsFirst;
-    private RadioButton mDealWayBtnCorrection;
-    private RadioButton mDealWayBtnRebury;
-//    private RadioButton mDealWayBtnNormal;
+	private TextView baojing, yixiao;
+	private TextView warningSignalTV, warningPointNumTV, warningStateTV, warningValueTV, warningDateTV, warningMessageTV, warningDealWayTV, oldDateMileageTV, oldDateListNumTV, oldDatePointTV;
+	private Button /* normalCalBtn, discardBtn, asFirstLineBtn, */correctionBtn, reburyBtn, handlingDetailBtn, completeOkBtn, completeCancelBtn;
+	private View oldChooseView;
+	private int clickedItem;
+	private AlertListAdapter adapter;
+	private int mAlertNum;
+	private int mHandledAlertNum;
+	protected int mCheckedRaidoId;
+	private int mUserType = CrtbUser.LICENSE_TYPE_DEFAULT;
+	private View.OnClickListener mBtnOnClickListener;
+	
+	private CrtbProgressOverlay progressOverlay;
+	private boolean isInited = false;
 
-    private RadioButton[] mRadioBtns;
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		setContentView(R.layout.activity_warning_sort);
+		super.onCreate(savedInstanceState);
+		try {
+			initClickListener();
+			initHandlingView();
+			initWaringListView();
+			initSectionOperationView();
+			initOther();
+			//refreshData(sectionType);
+		} catch (Exception e) {
+			Log.e(Constant.LOG_TAG,TAG+":"+e.getMessage());
+		}
+	}
+	
+	@Override  
+    public void onWindowFocusChanged(boolean hasFocus) {  
+        if (hasFocus && !isInited)  {  
+        	isInited = true;
+        	showProgressOverlay();
+        	refreshData(sectionType);
+        }  
+    }  
+	
+	private void initClickListener() {
+		mBtnOnClickListener = new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				releaseChooseEffect();
 
-    private EditText mCorrectionView;
-    private TextView mCorrectionUnitView;
-    private EditText mWarningRemarkView;
+				switch (view.getId()) {
+				// case R.id.normal:
+				// case R.id.discard_btn:
+				// case R.id.as_first_line:
+				// case R.id.rebury:
+				case R.id.warning_show_correction:
+					addCorrection(view);
+					break;
+				case R.id.warning_show_handling_detail:
+					showHandlingDetail();
+					break;
+				case R.id.complete_ok:
+					finishHandling();
+					break;
+				case R.id.complete_cancel:
+					cancelHandling();
+					break;
+				case R.id.test_bnt_left_section:
+					preSection();
+					break;
+				case R.id.test_bnt_next_section:
+					nextSection();
+					break;
+				}
+			}
+		};
+	}
+	
+	@Override
+	public void onBackPressed() {
+		//YX 判断处理页面
+		if (mHandleCompleteView != null && mHandleCompleteView.getVisibility() == View.VISIBLE) {
+			cancelHandling();
+			releaseChooseEffect();
+		} 
+		//YX 判断ListView上的菜单
+		else if (warningMenu != null && warningMenu.getVisibility() == View.VISIBLE) {
+			releaseChooseEffect();
+		} 
+		//YX 触发父类的事件
+		else{
+			super.onBackPressed();
+		}
+	}
+	
+	public void initWaringListView() {
+		// rela = (LinearLayout) findViewById(R.id.rela);
+		// normalCalBtn = (Button) findViewById(R.id.normal);
+		// setBtnClickListener(normalCalBtn);
+		// discardBtn = (Button) findViewById(R.id.discard_btn);
+		// setBtnClickListener(discardBtn);
+		// asFirstLineBtn = (Button) findViewById(R.id.as_first_line);
+		// setBtnClickListener(asFirstLineBtn);
+		// reburyBtn = (Button) findViewById(R.id.rebury);
+		// setBtnClickListener(reburyBtn);
+		correctionBtn = (Button) findViewById(R.id.warning_show_correction);
+		setBtnClickListener(correctionBtn);
+		handlingDetailBtn = (Button) findViewById(R.id.warning_show_handling_detail);
+		setBtnClickListener(handlingDetailBtn);
+		adapter = new AlertListAdapter(this, curAlerts);
+		warningMenu = (RelativeLayout) findViewById(R.id.warning_show_menu);
+		listview = (ListView) findViewById(R.id.warning_show_listView);
+		listview.setDividerHeight(1);
+		listview.setAdapter(adapter);
+		listview.setOnItemLongClickListener(new OnItemLongClickListener() {
 
-    private TextView baojing, yixiao;
-    private TextView warningSignalTV, warningPointNumTV, warningStateTV,
-            warningValueTV, warningDateTV, warningMessageTV, warningDealWayTV,
-            oldDateMileageTV, oldDateListNumTV, oldDatePointTV;
-    private Button /*normalCalBtn, discardBtn, asFirstLineBtn,*/ correctionBtn, reburyBtn, handlingDetailBtn, completeOkBtn,completeCancelBtn;
-    private View oldChooseView;
-    private int clickedItem;
-    private int handlingStep;
-    private ArrayList<AlertInfo> alerts;
-//    private LinearLayout rela;
-    private AlertListAdapter adapter;
-    private Random ran = new Random();
-    private String s[] = new String[20];
-//    private String ss[] = {"拱顶", "测线S1", "测线S2"};
-//    private String sss[] = {"开","正在处理","已消警"};
-//    private String ssss[] = {"", "", "", ""};
-//    private String s2[] = {"拱顶的累计沉降值超限", "拱顶的单次下沉速率超限", "累计收敛值超限",
-//            "地表的累计沉降值超限","地表的单次下沉速率超限" ,"单次收敛速率超限"};
+			@Override
+			public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+				if (mUserType != CrtbUser.LICENSE_TYPE_REGISTERED) {
+					Toast.makeText(getApplicationContext(), "预警处理对非注册用户不可用!", Toast.LENGTH_LONG).show();
+					return true;
+				}
 
-    private int mAlertNum;
-    private int mHandledAlertNum;
+				if (oldChooseView != null) {
+					oldChooseView.setBackgroundResource(R.color.warning_bg);
+				}
 
-    protected int mCheckedRaidoId;
+				view.setBackgroundResource(R.color.lightyellow);
+				clickedItem = position;
+				warningMenu.setVisibility(View.VISIBLE);
+				oldChooseView = view;
+				return true;
+			}
+		});
 
-    private int mUserType = CrtbUser.LICENSE_TYPE_DEFAULT;
+		warningMenu.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				warningMenu.setVisibility(View.GONE);
+				if (oldChooseView != null)
+					oldChooseView.setBackgroundResource(R.color.warning_bg);
+			}
+		});
+	}
+	
+	private void initOther(){
+		baojing = (TextView) findViewById(R.id.warning_show_rizhi);
+		yixiao = (TextView) findViewById(R.id.warning_show_yixiaojing);
+		setTopbarTitle("断面名称");
+		sectionType = getIntent().getStringExtra(Constant.WARNING_TYPE);
+		mUserType = AppCRTBApplication.getInstance().getCurUserType();
+		projectPrefix = CrtbUtils.getSectionPrefix();
+		progressOverlay = new CrtbProgressOverlay(this, CrtbUtils.getProgressLayout(this));
+	}
+	
+	private void initHandlingView() {
+		warningSignalTV = (TextView) findViewById(R.id.warning_signal);
+		warningPointNumTV = (TextView) findViewById(R.id.warning_point_num);
+		warningStateTV = (TextView) findViewById(R.id.warning_state);
+		warningValueTV = (TextView) findViewById(R.id.warning_value);
+		warningDateTV = (TextView) findViewById(R.id.warning_date);
+		warningMessageTV = (TextView) findViewById(R.id.warning_message);
+		warningDealWayTV = (TextView) findViewById(R.id.warning_deal_way);
+		oldDateMileageTV = (TextView) findViewById(R.id.old_date_mileage);
+		oldDateListNumTV = (TextView) findViewById(R.id.old_date_list_num);
+		oldDatePointTV = (TextView) findViewById(R.id.old_date_point);
 
-    public void initView(){
-        warningSignalTV = (TextView)findViewById(R.id.warning_signal);
-        warningPointNumTV = (TextView)findViewById(R.id.warning_point_num);
-        warningStateTV = (TextView)findViewById(R.id.warning_state);
-        warningValueTV = (TextView)findViewById(R.id.warning_value);
-        warningDateTV = (TextView)findViewById(R.id.warning_date);
-        warningMessageTV = (TextView)findViewById(R.id.warning_message);
-        warningDealWayTV = (TextView)findViewById(R.id.warning_deal_way);
-        oldDateMileageTV = (TextView)findViewById(R.id.old_date_mileage);
-        oldDateListNumTV = (TextView)findViewById(R.id.old_date_list_num);
-        oldDatePointTV = (TextView)findViewById(R.id.old_date_point);
+		completeOkBtn = (Button) findViewById(R.id.complete_ok);
+		setBtnClickListener(completeOkBtn);
+		completeCancelBtn = (Button) findViewById(R.id.complete_cancel);
+		setBtnClickListener(completeCancelBtn);
+		
+		mHandleCompleteView = (RelativeLayout) findViewById(R.id.complete_warning_rl);
+		mDealWayRadios = (RadioGroup) mHandleCompleteView.findViewById(R.id.radio_group);
+		// mDealWayBtnDiscard = (RadioButton)
+		// mDealWayRadios.findViewById(R.id.radio_button_void);
+		// mDealWayBtnAsFirst = (RadioButton)
+		// mDealWayRadios.findViewById(R.id.radio_button_first);
+		mDealWayBtnCorrection = (RadioButton) mDealWayRadios.findViewById(R.id.radio_button_add);
+		//mDealWayBtnRebury = (RadioButton) mDealWayRadios.findViewById(R.id.radio_button_rebury);
+		// mDealWayBtnNormal = (RadioButton)
+		// mDealWayRadios.findViewById(R.id.radio_button_normal);
+		mDealWayRadios.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 
-        completeOkBtn = (Button)findViewById(R.id.complete_ok);
-        setBtnClickListener(completeOkBtn);
-        completeCancelBtn =  (Button)findViewById(R.id.complete_cancel);
-        setBtnClickListener(completeCancelBtn);
+			@Override
+			public void onCheckedChanged(RadioGroup group, int checkedId) {
+				mCheckedRaidoId = checkedId;
+				if (mCorrectionView != null) {
+					mCorrectionView.setEnabled(checkedId == mDealWayBtnCorrection.getId());
+				}
+			}
+		});
 
-    }
+		mRadioBtns = new RadioButton[] {/*
+										 * mDealWayBtnNormal,
+										 * mDealWayBtnDiscard,
+										 * mDealWayBtnAsFirst,
+										 * mDealWayBtnRebury, 
+										 */mDealWayBtnCorrection};
+		mWarningRemarkView = (EditText) mHandleCompleteView.findViewById(R.id.warning_remark);
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_warning);
-        //rela = (LinearLayout) findViewById(R.id.rela);
-//        normalCalBtn = (Button) findViewById(R.id.normal);
-//        setBtnClickListener(normalCalBtn);
-//        discardBtn = (Button) findViewById(R.id.discard_btn);
-//        setBtnClickListener(discardBtn);
-//        asFirstLineBtn = (Button) findViewById(R.id.as_first_line);
-//        setBtnClickListener(asFirstLineBtn);
-        correctionBtn = (Button) findViewById(R.id.correction);
-        setBtnClickListener(correctionBtn);
-//        reburyBtn = (Button) findViewById(R.id.rebury);
-//        setBtnClickListener(reburyBtn);
-        handlingDetailBtn = (Button) findViewById(R.id.handling_detail);
-        setBtnClickListener(handlingDetailBtn);
+		mCorrectionUnitView = (TextView) mHandleCompleteView.findViewById(R.id.correction_unit);
+		mCorrectionView = (EditText) mHandleCompleteView.findViewById(R.id.add_edit);
+		mCorrectionView.addTextChangedListener(new TextWatcher() {
 
-        initB();
-        initView();
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+				// TODO Auto-generated method stub
 
-        adapter = new AlertListAdapter(this, alerts);
-        refreshData();
+			}
 
-        mHandleCompleteView= (RelativeLayout) findViewById(R.id.complete_warning_rl);
-        mDealWayRadios = (RadioGroup) mHandleCompleteView.findViewById(R.id.radio_group);
-//        mDealWayBtnDiscard = (RadioButton) mDealWayRadios.findViewById(R.id.radio_button_void);
-//        mDealWayBtnAsFirst = (RadioButton) mDealWayRadios.findViewById(R.id.radio_button_first);
-        mDealWayBtnCorrection = (RadioButton) mDealWayRadios.findViewById(R.id.radio_button_add);
-        mDealWayBtnRebury = (RadioButton) mDealWayRadios.findViewById(R.id.radio_button_rebury);
-//        mDealWayBtnNormal = (RadioButton) mDealWayRadios.findViewById(R.id.radio_button_normal);
-        mDealWayRadios.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+				// TODO Auto-generated method stub
 
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                mCheckedRaidoId = checkedId;
-                if (mCorrectionView != null) {
-                    mCorrectionView.setEnabled(checkedId == mDealWayBtnCorrection.getId());
-                }
-            }
-        });
+			}
 
-        mRadioBtns = new RadioButton[]{/*mDealWayBtnNormal, mDealWayBtnDiscard, mDealWayBtnAsFirst, */mDealWayBtnCorrection, mDealWayBtnRebury};
-        mWarningRemarkView = (EditText) mHandleCompleteView.findViewById(R.id.warning_remark);
+			@Override
+			public void afterTextChanged(Editable s) {
+				if (curAlerts == null) {
+					return;
+				}
+				AlertInfo alert = curAlerts.get(clickedItem);
+				if (alert != null) {
+					boolean isSV = alert.getUType() == Constant.SHOULIAN_SULV_EXCEEDING || alert.getUType() == Constant.GONGDINGI_XIACHEN_SULV_EXCEEDING
+							|| alert.getUType() == Constant.DIBIAO_XIACHEN_SULV_EXCEEDING;
 
-        mCorrectionUnitView = (TextView) mHandleCompleteView.findViewById(R.id.correction_unit);
-        mCorrectionView = (EditText) mHandleCompleteView.findViewById(R.id.add_edit);
-        mCorrectionView.addTextChangedListener(new TextWatcher() {
-            
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                // TODO Auto-generated method stub
-                
-            }
-            
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                // TODO Auto-generated method stub
-                
-            }
-            
-            @Override
-            public void afterTextChanged(Editable s) {
-                if (alerts == null) {
-                    return;
-                }
-                AlertInfo alert = alerts.get(clickedItem);
-                if (alert != null) {
-                    boolean isSV = alert.getUType() == AlertUtils.SHOULIAN_SULV_EXCEEDING || 
-                            alert.getUType() == AlertUtils.GONGDINGI_XIACHEN_SULV_EXCEEDING ||
-                            alert.getUType() == AlertUtils.DIBIAO_XIACHEN_SULV_EXCEEDING;
-                   
-                    Editable e = mCorrectionView.getText();
-                    double correction = (double) 0;
-                    if (e != null && e.length() > 0) {
-                        String cstr = e.toString();
-                        if (cstr != null && !cstr.trim().endsWith("-") && !cstr.equals(".")) {
-                            correction = Double.valueOf(cstr);
-                        }
-                    }
-                    if (warningValueTV != null) {
-                        double realCorrection = correction;
-                        if (isSV) {
-                            realCorrection = correction/AlertUtils.getDeltaTime(alerts.get(clickedItem));
-                        }
-                        warningValueTV.setText("超限值: "
-                                + String.format("%1$.1f",
-                                        CrtbUtils.formatDouble(alert.getUValue(), 1))
-                                + AlertUtils.getAlertValueUnit(alert.getUType()));
-                    }
-                    if (mWarningRemarkView != null) {
-                        mWarningRemarkView.setText(getString(R.string.remark_correction, correction));
-                    }
-                }
-            }
-        });
+					Editable e = mCorrectionView.getText();
+					double correction = (double) 0;
+					if (e != null && e.length() > 0) {
+						String cstr = e.toString();
+						if (cstr != null && !cstr.trim().endsWith("-") && !cstr.equals(".")) {
+							correction = Double.valueOf(cstr);
+						}
+					}
+					if (warningValueTV != null) {
+						double realCorrection = correction;
+						if (isSV) {
+							realCorrection = correction / AlertUtils.getDeltaTime(curAlerts.get(clickedItem));
+						}
+						warningValueTV.setText("累计超限: " + String.format("%1$.1f", CrtbUtils.formatDouble(alert.getUValue(), 1)) + AlertUtils.getAlertValueUnit(alert.getUType()));
+					}
+					if (mWarningRemarkView != null) {
+						mWarningRemarkView.setText(getString(R.string.remark_correction, correction));
+					}
+				}
+			}
+		});
 
-        listviewInit();
+	}
 
-        baojing = (TextView) findViewById(R.id.rizhi);
-        yixiao = (TextView) findViewById(R.id.yixiaojing);
-        refreshNum();
+	private void initSectionOperationView() {
+		findViewById(R.id.test_bnt_left_section).setOnClickListener(mBtnOnClickListener);
+		findViewById(R.id.test_bnt_next_section).setOnClickListener(mBtnOnClickListener);
+		test_bottom_layout = (LinearLayout)findViewById(R.id.test_bottom_layout);
+	}
 
-        mUserType  = AppCRTBApplication.getInstance().getCurUserType();
-    }
+	private void showProgressOverlay() {
+		progressOverlay.showProgressOverlay("正在加载预警信息，请稍候");
+	}
 
-    @Override
-    public void onBackPressed() {
-        if (mHandleCompleteView != null && mHandleCompleteView.getVisibility() == View.VISIBLE) {
-            cancelHandling();
-            mHandleCompleteView.setVisibility(View.GONE);
-            if (oldChooseView != null) {
-                oldChooseView.setBackgroundResource(R.color.warning_bg);
-            }
-        } else if (warningMenu != null && warningMenu.getVisibility() == View.VISIBLE) {
-            warningMenu.setVisibility(View.GONE);
-            if (oldChooseView != null) {
-                oldChooseView.setBackgroundResource(R.color.warning_bg);
-            }
-        } else {
-            super.onBackPressed();
-        }
-    }
+	private void preSection() {
+		if(sectionCount == 0){
+			return;
+		}
+		if(sectionCount == 1){
+			Toast.makeText(WarningActivity.this, "已经是第一个断面", Toast.LENGTH_SHORT).show();
+			return;
+		}
+		if (curSectionIndex < 1) {
+			curSectionIndex = sectionCount - 1;
+		} else {
+			--curSectionIndex;
+		}
+		refreshBySectionWrapper();
+	}
 
-    private void refreshNum() {
-        mAlertNum = adapter == null ? 0 :adapter.getCount();
-        mHandledAlertNum = adapter == null ? 0 :adapter.getHandledCount();
-        baojing.setText("报警日志：(" + mAlertNum + ")");
-        yixiao.setText("已消警：(" + mHandledAlertNum + ")");
-    }
+	private void nextSection() {
+		if(sectionCount == 0){
+			return;
+		}
+		if(sectionCount == 1){
+			Toast.makeText(WarningActivity.this, "已经是最后一个断面", Toast.LENGTH_SHORT).show();
+			return;
+		}
+		if (curSectionIndex > sectionCount - 2) {
+			curSectionIndex = 0;
+		} else {
+			++curSectionIndex;
+		}
+		refreshBySectionWrapper();
+	}
 
-    private View.OnClickListener mBtnOnClickListener  =new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            switch (view.getId()) {
-//                case R.id.deal_with_btn:
-//                    switch (handlingStep) {
-//                        case 0:
-//                            AlertHandlingInfoDao.defaultDao().updateAlertStatus(alerts.get(clickedItem).getAlertHandlingId(), 2);
-//                            handlingStep = 1;
-//                            refreshData();
-//                            break;
-//                        case 1:
-//                            Toast.makeText(WarningActivity.this, "已开始处理", Toast.LENGTH_LONG).show();
-//                            break;
-//                    }
-//                    break;
-//                case R.id.normal:
-//                case R.id.discard_btn:
-//                case R.id.as_first_line:
-                case R.id.correction:
-//                case R.id.rebury:
-                    switch (handlingStep) {
-                        case 0:
-                        case 1:
-                            if (alerts != null && alerts.size() > 0 && clickedItem >= 0 && clickedItem < alerts.size()) {
-                                AlertInfo alert = alerts.get(clickedItem);
-                                if (alert != null) {
+	private void refreshNum() {
+		progressOverlay.hideProgressOverlay();
+		refreshBySectionWrapper();
+	}
 
-                                    if (alert.getAlertStatus() == 0) {//"已消警"
-                                        Toast.makeText(WarningActivity.this, "已消警", Toast.LENGTH_LONG).show();
-                                        warningMenu.setVisibility(View.GONE);
-                                        if (oldChooseView != null) {
-                                            oldChooseView.setBackgroundResource(R.color.warning_bg);
-                                        }
-                                        return;
-                                    }
-                                    //FIXME: TIM 
-                                   // RawSheetIndex sheet = RawSheetIndexDao.defaultDao().queryOneById(Integer.valueOf(alert.getSheetId()));
-                                    RawSheetIndex sheet = RawSheetIndexDao.defaultDao().queryOneByGuid(alert.getSheetId());
-                                    String date = DateUtils.toDateString(sheet.getCreateTime(),DateUtils.DATE_TIME_FORMAT);
+	private void refreshBySectionWrapper() {
+		if (sectionCount < 1 || curSectionIndex < 0 || sectionCount < curSectionIndex + 1 || sectionCount == 0) {
+			return;
+		}
+		
+		String secGuid = sectionChainPrefix.get(curSectionIndex).trim();
+		curWarning = warings.get(secGuid);
+		curAlerts = curWarning.getAlerts();
+		if(!curWarning.computed){
+			showProgressOverlay();
+			new GetComputeValueTask().execute();
+		} else {
+			refreshBySection();
+		}
+	}
 
-                                    mHandleCompleteView.setVisibility(View.VISIBLE);
-                                    warningSignalTV.setText(alert.getXinghao());
-//YX sub-1
-                                    String pntType = alert.getPntType();
-                                    if(!pntType.startsWith("A") && !pntType.startsWith("S")){
-								        pntType = "" + (Integer.valueOf(pntType) - 1);
-                                    }
-                                    warningPointNumTV.setText("点号："+pntType);
-                                    warningStateTV.setText("状态："+alert.getAlertStatusMsg());
-                                    warningValueTV.setText("超限值: " + String.format("%1$.1f", CrtbUtils.formatDouble(alert.getUValue(), 1))
-                                            + AlertUtils.getAlertValueUnit(alert.getUType()));
-                                    warningDateTV.setText(alert.getDate());
-                                    warningMessageTV.setText(alert.getUTypeMsg());
-                                    warningDealWayTV.setText(alert.getChuliFangshi());
-                                    oldDateMileageTV.setText(Html.fromHtml("<font color=\"#0080ee\">里程: </font>" + alert.getXinghao()));
-                                    oldDateListNumTV.setText(Html.fromHtml("<font color=\"#0080ee\">记录单号: </font>" + date));
-                                    oldDatePointTV.setText(Html.fromHtml("<font color=\"#0080ee\">测点: </font>" + pntType));
-                                    mCorrectionView.setText(String.valueOf(alert.getCorrection()));
-//                                    mWarningRemarkView.setText(alert.getHandling());
+	private void refreshBySection() {
+		progressOverlay.hideProgressOverlay();
+		if(curAlerts == null){
+			return;
+		}
+		
+		if (curAlerts.size() > 0) {
+			adapter.refreshData(curAlerts);
+			String sectionName = curAlerts.get(0).getXinghao();
+			setTopbarTitle(sectionName + " (" + (curSectionIndex + 1) + "/" + sectionCount + ")");
+		}
+		mAlertNum = adapter == null ? 0 : adapter.getCount();
+		mHandledAlertNum = adapter == null ? 0 : adapter.getHandledCount();
+		baojing.setText("报警日志：(" + mAlertNum + ")");
+		yixiao.setText("已消警：(" + mHandledAlertNum + ")");		
+	}
 
-                                    int raidoId = 0;
-                                    String remark = "";
-                                    switch (view.getId()) {
-//                                        case R.id.normal:
-//                                            raidoId = mDealWayBtnNormal.getId();
-//                                            remark = getString(R.string.deal_way_normal);
-//                                            break;
-//                                        case R.id.discard_btn:
-//                                            raidoId = mDealWayBtnDiscard.getId();
-//                                            remark = getString(R.string.deal_way_void);
-//                                            break;
-//                                        case R.id.as_first_line:
-//                                            raidoId = mDealWayBtnAsFirst.getId();
-//                                            remark = getString(R.string.deal_way_first);
-//                                            break;
-                                        case R.id.correction:
-                                            raidoId = mDealWayBtnCorrection.getId();
-                                            remark = getString(R.string.remark_correction, alert.getCorrection());
-                                            break;
-//                                        case R.id.rebury:
-//                                            raidoId = mDealWayBtnRebury.getId();
-//                                            remark = getString(R.string.deal_way_rebury);
-//                                            break;
-                                    }
+	private void releaseChooseEffect() {
+		warningMenu.setVisibility(View.GONE);
+		if (oldChooseView != null) {
+			oldChooseView.setBackgroundResource(R.color.warning_bg);
+		}
+	}
 
-                                    if (raidoId != 0) {
-                                        for (RadioButton b : mRadioBtns) {
-                                            boolean selected = b.getId() == raidoId;
-                                            b.setVisibility(selected ? View.VISIBLE : View.GONE);
-                                            b.setChecked(selected);
-                                        }
-                                        boolean isCorrection = raidoId == mDealWayBtnCorrection.getId();
-                                        mCorrectionUnitView.setVisibility(isCorrection ? View.VISIBLE : View.GONE);
-                                        mCorrectionView.setVisibility(isCorrection ? View.VISIBLE : View.GONE);
-                                        mCheckedRaidoId = raidoId;
-                                    }
+	public void setBtnClickListener(final Button btn) {
+		btn.setOnClickListener(mBtnOnClickListener);
+	}
 
-                                    if (mWarningRemarkView != null) {
-                                        mWarningRemarkView.setText(remark);
-                                    }
+	private boolean handleAlert() {
+		boolean isBreak = false;
 
-                                }
-                            }
-                            break;
-                        case 2:
-                            Toast.makeText(WarningActivity.this, " 已消警", Toast.LENGTH_LONG).show();
-                            break;
-                    }
-                    break;
-                case R.id.handling_detail:
-                    if (alerts != null && alerts.size() > 0 && clickedItem >= 0 && clickedItem < alerts.size()) {
-                        AlertInfo alert = alerts.get(clickedItem);
-                        Intent i = new Intent(WarningActivity.this, HandlingDetailsActivity.class);
-                        i.putExtra(HandlingDetailsActivity.EXTRA_ALERT_ID, alert.getAlertId());
-                        startActivity(i);
-                    }
-                    break;
-                case R.id.complete_ok:
-                    //alerts.get(clickedItem).setAlertStatusMsg(sss[2]);
-                    if (
-//                            mCheckedRaidoId == mDealWayBtnDiscard.getId()
-//                            || mCheckedRaidoId == mDealWayBtnAsFirst.getId() ||
-                             mCheckedRaidoId == mDealWayBtnCorrection.getId()
-//                            || mCheckedRaidoId == mDealWayBtnNormal.getId()
-                            || mCheckedRaidoId == mDealWayBtnRebury.getId()) {
-                        if(!handleAlert()){
-                        	return;
-                        }
-                        handlingStep = 2;
-                        mHandleCompleteView.setVisibility(View.GONE);
-                        refreshData();
-                    } else {
-                        Toast.makeText(WarningActivity.this, "请选择处理方式！", Toast.LENGTH_LONG).show();
-                    }
-                    break;
-                case R.id.complete_cancel:
-                    cancelHandling();
-                    mHandleCompleteView.setVisibility(View.GONE);
-                    if (oldChooseView != null) {
-                        oldChooseView.setBackgroundResource(R.color.warning_bg);
-                    }
-                    break;
+		AlertInfo ai = (AlertInfo) adapter.getItem(clickedItem);
+		if (ai == null) {
+			return true;
+		}
 
-            }
-            warningMenu.setVisibility(View.GONE);
-        }
-    };
+		boolean isRebury = false;
 
-    public void setBtnClickListener(final Button btn) {
-        btn.setOnClickListener(mBtnOnClickListener);
-    }
+		int curStatus = ai.getAlertStatus();
+		float correction = 0f;
 
-    public void listviewInit() {
+		if (mCorrectionView != null && mCorrectionView.getVisibility() == View.VISIBLE) {
+			Editable e = mCorrectionView.getText();
+			if (e != null && e.length() > 0) {
+				correction = Float.valueOf(e.toString());
+			}
+		}
 
-        warningMenu = (RelativeLayout) findViewById(R.id.warning_menu);
-        listview = (ListView) findViewById(R.id.listView12);
-        listview.setDividerHeight(1);
-        listview.setAdapter(adapter);
-        listview.setOnItemLongClickListener(new OnItemLongClickListener() {
+		int alertId = ai.getAlertId();
+		int dataStatus = Constant.POINT_DATASTATUS_NONE;
+		/*
+		 * if (mCheckedRaidoId == mDealWayBtnDiscard.getId()) { Log.d(TAG,
+		 * "Handling way: discard data"); dataStatus =
+		 * AlertUtils.POINT_DATASTATUS_DISCARD; } else if (mCheckedRaidoId ==
+		 * mDealWayBtnAsFirst.getId()) { Log.d(TAG,
+		 * "Handling way: As First line"); dataStatus =
+		 * AlertUtils.POINT_DATASTATUS_AS_FIRSTLINE; } else
+		 */if (mCheckedRaidoId == mDealWayBtnCorrection.getId()) {
+			Log.d(TAG, "Handling way: Correction");
+			dataStatus = Constant.POINT_DATASTATUS_CORRECTION;
+		}/*
+		 * else if (mCheckedRaidoId == mDealWayBtnNormal.getId()) { Log.d(TAG,
+		 * "Handling way: Normal"); dataStatus =
+		 * AlertUtils.POINT_DATASTATUS_NORMAL; }
+		 */else if (mCheckedRaidoId == mDealWayBtnRebury.getId()) {
+			Log.d(TAG, "Handling way: Rebury");
+			isRebury = true;
+			dataStatus = Constant.POINT_DATASTATUS_CORRECTION;
+		} else if (correction != 0) {
+			Log.d(TAG, "Handling way: Correction");
+			// If no radio button is selected and correction is input, treat as
+			// correction
+			dataStatus = Constant.POINT_DATASTATUS_CORRECTION;
+		}
 
-            @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                if (mUserType != CrtbUser.LICENSE_TYPE_REGISTERED) {
-                    Toast.makeText(getApplicationContext(), "预警处理对非注册用户不可用!", Toast.LENGTH_LONG).show();
-                    return true;
-                }
-                
-                if (oldChooseView != null) {
-                    oldChooseView.setBackgroundResource(R.color.warning_bg);
-                }
-                
-                view.setBackgroundResource(R.color.lightyellow);
-                clickedItem = position;
-                if (alerts.get(position).getAlertStatus() == 1) {//"开"
-                    handlingStep = 0;
-                    warningMenu.setVisibility(View.VISIBLE);
-                }
-                if (alerts.get(position).getAlertStatus() == 2) {//"正在处理"
-                    handlingStep = 1;
-                    warningMenu.setVisibility(View.VISIBLE);
-                }
-                if (alerts.get(position).getAlertStatus() == 0) {//"已消警"
-                    warningMenu.setVisibility(View.VISIBLE);
-//                    Toast.makeText(WarningActivity.this, "已消警", Toast.LENGTH_LONG).show();
-                }
-                oldChooseView = view;
-                return true;
-            }
-        });
+		int alertStatus = 0;// TODO : may also be 2?, if so,
+							// 需要将mBtnOnClickListener中deal_with_btn也要和complete_btn一样的逻辑
 
-//        listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-//            }
-//        });
+		int handling = dataStatus;
 
-        warningMenu.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                warningMenu.setVisibility(View.GONE);
-                if (oldChooseView != null) oldChooseView.setBackgroundResource(R.color.warning_bg);
-            }
-        });
-//        AlertInfo.count = adapter.getCount();
-    }
+		String info = mWarningRemarkView.getText().toString();
+		if (info.trim().equals("")) {
+			Toast.makeText(WarningActivity.this, "请录入报警原因及销警措施", Toast.LENGTH_LONG).show();
+			isBreak = false;
+			return isBreak;
+		}
 
-    private boolean handleAlert() {
-    	boolean isBreak = false;
+		Log.d(TAG, "handleAlert 处理内容：" + handling);
+		new AlertManager().handleAlert(alertId, dataStatus, isRebury, correction, curStatus, alertStatus, handling, info, new Date(System.currentTimeMillis()), ai.getRockGrade(),
+				new AlertManager.HandleFinishCallback() {
 
-//        int alertHandlingId = alerts.get(clickedItem).getAlertHandlingId();
-        AlertInfo ai = (AlertInfo) adapter.getItem(clickedItem);
-        if (ai == null) {
-            return true;
-        }
+					@Override
+					public void onFinish() {
+						String sectionName = sectionChainPrefix.get(curSectionIndex).trim();
+						refreshData(sectionName);
+					}
+				});
+		isBreak = true;
+		return isBreak;
+	}
 
-        boolean isRebury = false;
+	private void setOpertationViewVisibility(boolean state){
+		if(state){
+			test_bottom_layout.setVisibility(View.VISIBLE);
+			mHandleCompleteView.setVisibility(View.GONE);
+		} else {
+			test_bottom_layout.setVisibility(View.GONE);
+			mHandleCompleteView.setVisibility(View.VISIBLE);
+		}
+	}
+	
+	private void addCorrection(View view){
+		if (curAlerts != null) {
+			AlertInfo alert = curAlerts.get(clickedItem);
+			if (alert != null) {
 
-        int curStatus = ai.getAlertStatus();
-        float correction = 0f;
+				if (alert.getAlertStatus() == 0) {// "已消警"
+					Toast.makeText(WarningActivity.this, "已消警", Toast.LENGTH_LONG).show();
+					return;
+				}
+				
+//				if (CrossSectionStopSurveyingDao.defaultDao().getSectionStopState(alert.getSectionId())) {
+//					CrtbUtils.showDialogWithYes(WarningShowActivity.this, "报警处理", "断面已经封存，不能再进行处理!");
+//					return;
+//				}
+				
+				if (!AlertUtils.hasUnhandledPreviousWarningData(alert)) {
+					CrtbUtils.showDialogWithYes(WarningActivity.this, "报警处理", "该监测位置的往期预警必须已关闭，才能处理本期预警!");
+					return;
+				}
 
-        if (mCorrectionView != null && mCorrectionView.getVisibility() == View.VISIBLE) {
-            Editable e = mCorrectionView.getText();
-            if (e != null && e.length() > 0) {
-                correction = Float.valueOf(e.toString());
-            }
-        }
+				if (alert.getAlertStatus() == 0) {// "已消警"
+					Toast.makeText(WarningActivity.this, "已消警", Toast.LENGTH_LONG).show();
+					return;
+				}
+				RawSheetIndex sheet = RawSheetIndexDao.defaultDao().queryOneByGuid(alert.getSheetId());
+				String date = DateUtils.toDateString(sheet.getCreateTime(), DateUtils.DATE_TIME_FORMAT);
 
-        int alertId = ai.getAlertId();
-        int dataStatus = AlertUtils.POINT_DATASTATUS_NONE;
-       /* if (mCheckedRaidoId == mDealWayBtnDiscard.getId()) {
-            Log.d(TAG, "Handling way: discard data");
-            dataStatus = AlertUtils.POINT_DATASTATUS_DISCARD;
-        } else if (mCheckedRaidoId == mDealWayBtnAsFirst.getId()) {
-            Log.d(TAG, "Handling way: As First line");
-            dataStatus = AlertUtils.POINT_DATASTATUS_AS_FIRSTLINE;
-        } else */if (mCheckedRaidoId == mDealWayBtnCorrection.getId()) {
-            Log.d(TAG, "Handling way: Correction");
-            dataStatus = AlertUtils.POINT_DATASTATUS_CORRECTION;
-        }/* else if (mCheckedRaidoId == mDealWayBtnNormal.getId()) {
-            Log.d(TAG, "Handling way: Normal");
-            dataStatus = AlertUtils.POINT_DATASTATUS_NORMAL;
-        } */else if (mCheckedRaidoId == mDealWayBtnRebury.getId()) {
-            Log.d(TAG, "Handling way: Rebury");
-            isRebury = true;
-            dataStatus = AlertUtils.POINT_DATASTATUS_CORRECTION;
-        } else if (correction != 0) {
-            Log.d(TAG, "Handling way: Correction");
-            //If no radio button is selected and correction is input, treat as correction
-            dataStatus = AlertUtils.POINT_DATASTATUS_CORRECTION;
-        }
+				mHandleCompleteView.setVisibility(View.VISIBLE);
+				warningSignalTV.setText(alert.getXinghao());
+				// YX sub-1
+				String pntType = alert.getPntType();
+				if (!pntType.startsWith("A") && !pntType.startsWith("S")) {
+					pntType = "" + (Integer.valueOf(pntType) - 1);
+				}
+				warningPointNumTV.setText("点位：" + pntType);
+				warningStateTV.setText("状态：" + alert.getAlertStatusMsg());
+				warningValueTV.setText("累计超限: " + String.format("%1$.1f", CrtbUtils.formatDouble(alert.getUValue(), 1)) + AlertUtils.getAlertValueUnit(alert.getUType()));
+				warningDateTV.setText(alert.getDate());
+				warningMessageTV.setText(alert.getUTypeMsg());
+				warningDealWayTV.setText(alert.getChuliFangshi());
+				oldDateMileageTV.setText(Html.fromHtml("<font color=\"#0080ee\">里程: </font>" + alert.getXinghao()));
+				oldDateListNumTV.setText(Html.fromHtml("<font color=\"#0080ee\">记录单号: </font>" + date));
+				oldDatePointTV.setText(Html.fromHtml("<font color=\"#0080ee\">测点: </font>" + pntType));
+				mCorrectionView.setText(String.valueOf(alert.getCorrection()));
+				// mWarningRemarkView.setText(alert.getHandling());
 
-        int alertStatus = 0;// TODO : may also be 2?, if so,
-                            // 需要将mBtnOnClickListener中deal_with_btn也要和complete_btn一样的逻辑
-        
-        int handling = dataStatus;
-        
-        String info = mWarningRemarkView.getText().toString();
-        if(info.trim().equals("")){
-        	Toast.makeText(WarningActivity.this, "请录入报警原因及销警措施", Toast.LENGTH_LONG).show();
-        	isBreak = false;
-        	return isBreak;
-        }
-        
-        Log.d(TAG, "handleAlert 处理内容：" + handling);
-        new AlertManager().handleAlert(alertId, dataStatus, isRebury, correction, curStatus, alertStatus, handling, info,
-                new Date(System.currentTimeMillis()),ai.getRockGrade(), new AlertManager.HandleFinishCallback() {
+				int raidoId = 0;
+				String remark = "";
+				switch (view.getId()) {
+				case R.id.warning_show_correction:
+					raidoId = mDealWayBtnCorrection.getId();
+					remark = getString(R.string.remark_correction, alert.getCorrection());
+					break;
+				// case R.id.normal:
+				// raidoId = mDealWayBtnNormal.getId();
+				// remark = getString(R.string.deal_way_normal);
+				// break;
+				// case R.id.discard_btn:
+				// raidoId = mDealWayBtnDiscard.getId();
+				// remark = getString(R.string.deal_way_void);
+				// break;
+				// case R.id.as_first_line:
+				// raidoId = mDealWayBtnAsFirst.getId();
+				// remark = getString(R.string.deal_way_first);
+				// break;
+				// case R.id.rebury:
+				// raidoId = mDealWayBtnRebury.getId();
+				// remark = getString(R.string.deal_way_rebury);
+				// break;
+				}
 
-                    @Override
-                    public void onFinish() {
-//                        mHandler.sendEmptyMessageDelayed(MSG_REFRESH_LIST, 200);
-                        refreshData();
-                    }
-                });
-        isBreak = true;
-        return isBreak;
-    }
+				if (raidoId != 0) {
+					for (RadioButton b : mRadioBtns) {
+						boolean selected = b.getId() == raidoId;
+						b.setVisibility(selected ? View.VISIBLE : View.GONE);
+						b.setChecked(selected);
+					}
+					boolean isCorrection = raidoId == mDealWayBtnCorrection.getId();
+					mCorrectionUnitView.setVisibility(isCorrection ? View.VISIBLE : View.GONE);
+					mCorrectionView.setVisibility(isCorrection ? View.VISIBLE : View.GONE);
+					mCheckedRaidoId = raidoId;
+				}
 
-    private void cancelHandling() {
-        mCheckedRaidoId = 0;
-    }
+				if (mWarningRemarkView != null) {
+					mWarningRemarkView.setText(remark);
+				}
+				setOpertationViewVisibility(false);
+			}
+		}
+	}
+	
+	private void showHandlingDetail(){		
+		if (curAlerts != null) {
+			AlertInfo alert = curAlerts.get(clickedItem);
+			Intent i = new Intent(WarningActivity.this, HandlingDetailsActivity.class);
+			i.putExtra(HandlingDetailsActivity.EXTRA_ALERT_ID, alert.getAlertId());
+			startActivity(i);
+		}
+	}
+	
+	private void finishHandling() {
+		if (mCheckedRaidoId == mDealWayBtnCorrection.getId()
+			// || mCheckedRaidoId == mDealWayBtnDiscard.getId()
+		    // || mCheckedRaidoId == mDealWayBtnAsFirst.getId() ||
+		    // || mCheckedRaidoId == mDealWayBtnNormal.getId()
+			   || mCheckedRaidoId == mDealWayBtnRebury.getId()) {
+			if (!handleAlert()) {
+				return;
+			}
+		} 
+		setOpertationViewVisibility(true);
+	}
+	
+	private void cancelHandling() {
+		mCheckedRaidoId = 0;
+		setOpertationViewVisibility(true);
+	}
 
-    private void refreshData() {
-        new RefreshTask().execute();
-    }
+	private void refreshData(String param) {
+		showProgressOverlay();
+		new RefreshTask().execute(param);
+	}
 
-    public void initB() {
-        for (int i = 0; i < s.length; i++) {
-            s[i] = "DK+"
-                    + (10 + ran.nextInt(10))
-                    + ((double) (Math.round(ran.nextDouble() + 100) / 100.0) + (ran
-                    .nextInt(100) + 100));
-        }
-    }
+	class RefreshTask extends AsyncTask<String, Void, Void> {
 
-//    private Handler mHandler = new Handler() {
-//
-//        @Override
-//        public void handleMessage(Message msg) {
-//            switch(msg.what) {
-//                case MSG_REFRESH_LIST:
-//                    refreshData();
-//                    break;
-//                default:
-//                    super.handleMessage(msg);
-//            }
-//        }
-//        
-//    };
+		@Override
+		protected Void doInBackground(String... params) {
+			
+			if(!isFirstEnter){
+				String secName = params[0]; 
+				curWarning = warings.get(secName);
+				String secGuid = curWarning.getSectionGuid();
+				curWarning.setComputed(false);
+				curWarning.setAlerts(AlertUtils.getAlertInfoListBySectionGuid(secGuid));
+			} else{
+				isFirstEnter = false;
+				warings = new HashMap<String,Warning>();
+				sectionChainPrefix = new ArrayList<String>();
+				
+				ArrayList<AlertInfo> allAlerts = AlertUtils.getAlertInfoListBySectionType(sectionType);
+				
+				if(allAlerts != null && allAlerts.size() > 0){
+					String secGuid;
+					for(AlertInfo alert : allAlerts){
+						Warning warnItem = null;
+						secGuid = alert.getXinghao().trim();
+						if (!sectionChainPrefix.contains(secGuid)) {
+							sectionChainPrefix.add(secGuid);
+						}
+						if(!warings.containsKey(secGuid)){
+							warnItem = new Warning();
+							warings.put(secGuid, warnItem);
+							warnItem.setSectionGuid(alert.getSectionId());
+						} else{
+							warnItem = warings.get(secGuid);
+						}
+						warnItem.addAlert(alert);
+					}
+					curSectionIndex = 0;
+					curWarning = warings.get(sectionChainPrefix.get(0));
+					sectionCount = sectionChainPrefix.size();
+					Collections.sort(sectionChainPrefix, stringSort);
+				}
+			}
+			return null;
+		}
 
-    class RefreshTask extends AsyncTask<Void, Void, Void> {
+		@Override
+		protected void onPostExecute(Void result) {
+			super.onPostExecute(result);
+			refreshNum();
+		}
+	}
 
-        @Override
-        protected Void doInBackground(Void... params) {
-            alerts = AlertUtils.getAlertInfoList();
-            return null;
-        }
+	class GetComputeValueTask extends AsyncTask<Void, Void, Void> {
 
-        @Override
-        protected void onPostExecute(Void result) {
-            super.onPostExecute(result);
-            if (adapter != null) {
-                adapter.refreshData(alerts);
-                refreshNum();
-            }
-        }
-        
-    }
+		@Override
+		protected Void doInBackground(Void... params) {
+			//获取预警详情
+			for (AlertInfo alert : curAlerts) {
+				AlertUtils.getAlertDetailInfo(alert);
+			}
+			curWarning.computed = true;
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(Void result) {
+			super.onPostExecute(result);
+			refreshBySection();
+		}
+	}
+
+	class StringSort implements Comparator<String> {
+
+		@Override
+		public int compare(String lhs, String rhs) {
+			double l = 0;
+			double r = 0;
+			try {
+				lhs = lhs.replace(projectPrefix, "");
+				lhs = lhs.replace("+", "000");
+				rhs = rhs.replace(projectPrefix, "");
+				rhs = rhs.replace("+", "000");
+				l = Double.valueOf(lhs);
+				r = Double.valueOf(rhs);
+			} catch (Exception e) {
+				Log.e(Constant.LOG_TAG, TAG + ":" + e.getMessage());
+			}
+			if ((l - r) > 0){
+				return 1;
+			} else if(r == l){
+				return 0;
+			} else {
+				return -1;
+			}
+		}
+	}
+	
+	class Warning {
+		public boolean isComputed() {
+			return computed;
+		}
+		public void setComputed(boolean computed) {
+			this.computed = computed;
+		}
+		public String getSectionGuid() {
+			return sectionGuid;
+		}
+		public void setSectionGuid(String sectionGuid) {
+			this.sectionGuid = sectionGuid;
+		}
+		public List<AlertInfo> getAlerts() {
+			return alerts;
+		}
+		public void setAlerts(List<AlertInfo> alerts) {
+			if(alerts == null){
+				alerts = new ArrayList<AlertInfo>();
+			}
+			this.alerts = alerts;
+		}
+		
+		public void addAlert(AlertInfo alert) {
+			if(alerts == null){
+				alerts = new ArrayList<AlertInfo>();
+			}
+			alerts.add(alert);
+		}
+		private boolean computed;
+		private String sectionGuid;
+		private List<AlertInfo> alerts;
+	}
 }

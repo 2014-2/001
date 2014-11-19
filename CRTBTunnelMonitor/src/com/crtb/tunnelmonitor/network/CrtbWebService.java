@@ -25,6 +25,7 @@ import android.os.Looper;
 import android.util.Log;
 
 import com.crtb.tunnelmonitor.common.Constant;
+import com.crtb.tunnelmonitor.task.SectionStopEntity;
 import com.crtb.tunnelmonitor.task.WorkZone;
 import com.crtb.tunnelmonitor.utils.CrtbAppConfig;
 
@@ -279,6 +280,12 @@ public final class CrtbWebService {
 		sendRequestAsync(rpc, USRE_AUTH_URL);
 		//RpcSendTask task = new RpcSendTask(rpc, USRE_AUTH_URL);
 		//task.execute();
+	}
+	
+	public void stopSection(SectionStopEntity sectionStop,RpcCallback callback){
+		long randomCode = getRandomCode();
+		StopSectionRpc rpc = new StopSectionRpc(sectionStop, randomCode, new RpcCallbackWrapper(callback));
+		sendRequestAsync(rpc, DATA_UPLOAD_URL);
 	}
 	
 	/**

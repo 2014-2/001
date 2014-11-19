@@ -85,7 +85,7 @@ public class AlertListAdapter extends BaseAdapter {
 		if (!pntType.startsWith("A") && !pntType.startsWith("S")) {
 			pntType = "" + (Integer.valueOf(pntType) - 1);
 		}
-		dianhao.setText("点号：" + pntType);
+		dianhao.setText("点位：" + pntType);
 		TextView chushi = (TextView) view.findViewById(R.id.chulifangshi);
 		String handleWay = ai.getChuliFangshi();
 		if (handleWay == null || handleWay.equalsIgnoreCase("null")) {
@@ -101,10 +101,10 @@ public class AlertListAdapter extends BaseAdapter {
 		if (AlertUtils.isSpeed(ai.getUType())) {
 			correction = correction / AlertUtils.getDeltaTime(ai);
 		}
-		// valueView.setText("超限值: " + String.format("%1$.1f",
+		// valueView.setText("累计超限: " + String.format("%1$.1f",
 		// CrtbUtils.formatDouble(ai.getUValue() + correction, 1))
 		// + AlertUtils.getAlertValueUnit(ai.getUType()));
-		valueView.setText("超限值: "
+		valueView.setText("累计超限: "
 				+ String.format("%1$.1f",
 						CrtbUtils.formatDouble(ai.getUValue(), 1))
 				+ AlertUtils.getAlertValueUnit(ai.getUType()));
@@ -112,11 +112,6 @@ public class AlertListAdapter extends BaseAdapter {
 		edtstate.setText(ai.getHandling());
 
 		return view;
-		// }else{
-		// view.setVisibility(view.GONE);
-		// }
-
-		// return new TextView(context);
 	}
 
 	public int getHandledCount() {
