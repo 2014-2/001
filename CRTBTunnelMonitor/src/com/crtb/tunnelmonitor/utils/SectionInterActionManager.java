@@ -12,7 +12,7 @@ import com.crtb.tunnelmonitor.entity.TunnelCrossSectionParameter;
 import com.crtb.tunnelmonitor.entity.TunnelSettlementTotalData;
 
 public class SectionInterActionManager {
-	private static final String LOG_TAG = "SectionInterActionManager";
+	private static final String TAG = "SectionInterActionManager:";
 	private static final String UPLOAD_CROWN_GD_NAME = "GD";
 	private static final String UPLOAD_TEST_POINT_NAME = "SL";
 	private static final String UPLOAD_DB_POINT_NAME = "DB";
@@ -122,11 +122,11 @@ public class SectionInterActionManager {
 		
 		String pointInfo = "";
 		if (pointType == null || pointType.length() < 1) {
-			Log.i(LOG_TAG, "point type null");
+			Log.d(Constant.LOG_TAG,TAG + "point type null");
 			return "";
 		}
 		if(sectionCode == null || sectionCode.length() < 1){
-			Log.i(LOG_TAG, "sectionCode null");
+			Log.d(Constant.LOG_TAG,TAG + "sectionCode null");
 			return "";
 		}
 		//拱顶 pointType:A2，或者A
@@ -214,13 +214,13 @@ public class SectionInterActionManager {
 				corrdinate = p1Content + UPLOAD_COORDINATE_SEPARATOR + p2Content + UPLOAD_ITEM_SEPARATOR;
 			}		
 		} else{
-			Log.i(LOG_TAG,"没有测量数据");
+			Log.i(Constant.LOG_TAG,TAG +"没有测量数据");
 			return "";
 		}
     
     	corrdinate = corrdinate.substring(0, corrdinate.length() - 1);
     
-		Log.i(LOG_TAG, "coordinate: " + corrdinate);
+    	Log.i(Constant.LOG_TAG,TAG + "coordinate: " + corrdinate);
 		corrdinate = RSACoder.encnryptDes(corrdinate, Constant.testDeskey);
 		return corrdinate;
 	}
@@ -257,12 +257,12 @@ public class SectionInterActionManager {
 						+ UPLOAD_ITEM_SEPARATOR;
 			}
 		} else {
-			Log.i(LOG_TAG, "没有测量值");
+			Log.i(Constant.LOG_TAG,TAG + "没有测量值");
 			return "";
 		}
 
 		value = value.substring(0, value.length() - 1);
-		Log.i(LOG_TAG, "value: " + value);
+		Log.i(Constant.LOG_TAG,TAG + "value: " + value);
 		return value;
 	}	
 }

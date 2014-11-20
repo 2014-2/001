@@ -7,10 +7,12 @@ import java.util.Map;
 
 import org.ksoap2.serialization.SoapObject;
 
+import com.crtb.tunnelmonitor.common.Constant;
+
 import android.util.Log;
 
 class GetSectInfosRpc extends AbstractRpc {
-	private static final String LOG_TAG = "GetSectInfosRpc";
+	private static final String TAG = "GetSectInfosRpc：";
 	private static final String KEY_SITE_CODE = "工点编号";
 	private static final String KEY_SECTION_STATUS = "断面状态";
 	private static final String KEY_RANDOM_CODE = "随机码";
@@ -47,7 +49,7 @@ class GetSectInfosRpc extends AbstractRpc {
 					+ response.getClass().getName());
 			return;
 		}
-		Log.d(LOG_TAG, "response: " + response);
+		Log.d(Constant.LOG_TAG_SERVICE, TAG + "response: " + response);
 		try {
 			/** 
 			 * getSectInfosResponse{
@@ -62,7 +64,7 @@ class GetSectInfosRpc extends AbstractRpc {
 			for(int i = 0; i < count; i++) {
 				String[] sectionInfo = data.getPropertyAsString(i).split("#");
 				codeList.add(sectionInfo[0]);
-				Log.d(LOG_TAG, "section code: " + sectionInfo[0] + ", total: " + sectionInfo[1]);
+				Log.d(Constant.LOG_TAG_SERVICE, TAG + "section code: " + sectionInfo[0] + ", total: " + sectionInfo[1]);
 			}
 			if (codeList.size() > 0) {
 				notifySuccess(codeList.toArray(new String[codeList.size()]));

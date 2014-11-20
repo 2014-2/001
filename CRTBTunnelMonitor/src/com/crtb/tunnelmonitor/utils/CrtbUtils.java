@@ -53,6 +53,7 @@ import com.crtb.tunnelmonitor.network.SectionUploadParamter;
  */
 public final class CrtbUtils {
 	
+	private static final String TAG = "CrtbUtils: ";
 	// static DecimalFormat df = new DecimalFormat("#.0000");
 	private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
@@ -167,7 +168,7 @@ public final class CrtbUtils {
         pointList = SectionInterActionManager.getPointCodeListBySectionCode(sectionCode,section.getExcavateMethod());
   
 		if (pointList == null || pointList.equals("")) {
-			Log.e("upload", "unknown dig method: " + digMethod);
+			Log.d(Constant.LOG_TAG,TAG +  "unknown dig method: " + digMethod);
 		}
         
         outParamter.setPointList(pointList);

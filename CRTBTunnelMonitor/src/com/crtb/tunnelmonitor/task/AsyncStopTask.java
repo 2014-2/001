@@ -14,7 +14,7 @@ import com.crtb.tunnelmonitor.network.CrtbWebService;
 import com.crtb.tunnelmonitor.network.RpcCallback;
 
 public class AsyncStopTask extends AsyncTask<SectionStopEntity, Void, Void> {
-	private static final String LOG_TAG = "AsyncStopTask";
+	private static final String TAG = "AsyncStopTask: ";
 
 	public interface StopListener {
 		/**
@@ -35,7 +35,7 @@ public class AsyncStopTask extends AsyncTask<SectionStopEntity, Void, Void> {
 	@Override
 	protected Void doInBackground(SectionStopEntity... param) {		
 		if (param == null) {
-			Log.w(Constant.LOG_TAG, LOG_TAG + " empty SectionStopEntity.");
+			Log.e(Constant.LOG_TAG_ACTIVITY, TAG +"doInBackground:"+ " empty SectionStopEntity.");
 			done(false, null);
 			return null;
 		}
@@ -64,7 +64,7 @@ public class AsyncStopTask extends AsyncTask<SectionStopEntity, Void, Void> {
 				}
 				state = CrossSectionStopSurveyingDao.defaultDao().insert(sectionStopSurvey);
 				if(state != CrossSectionStopSurveyingDao.defaultDao().DB_EXECUTE_SUCCESS){
-					Log.e(Constant.LOG_TAG,LOG_TAG + " insert CrossSectionStopSurveying failed.");
+					Log.e(Constant.LOG_TAG_ACTIVITY, TAG +"doInBackground:"+" insert CrossSectionStopSurveying failed.");
 				}
 				done(true, null);
 			}

@@ -6,10 +6,12 @@ import java.util.Map;
 
 import org.ksoap2.serialization.SoapObject;
 
+import com.crtb.tunnelmonitor.common.Constant;
+
 import android.util.Log;
 
 class UploadWarningDataRpc extends AbstractRpc {
-	private static final String LOG_TAG = "UploadWarningDataRpc";
+	private static final String TAG = "UploadWarningDataRpc：";
 	private static final String KEY_SECTION_CODE = "断面编号";
 	private static final String KEY_POINT_CODE = "测点编码或收敛测点编码对";
 	private static final String KEY_WARNING_LEVEL = "预警级别";
@@ -70,7 +72,7 @@ class UploadWarningDataRpc extends AbstractRpc {
 			return;
 		}
 		try {
-			Log.d(LOG_TAG, "response: " + response);
+			Log.d(Constant.LOG_TAG_ACTIVITY, TAG + "response: " + response);
 			SoapObject result = (SoapObject) response;
 			int code = Integer.parseInt(result.getPropertyAsString(0));
 			if (code == 1) {

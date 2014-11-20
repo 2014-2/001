@@ -7,11 +7,12 @@ import org.ksoap2.serialization.SoapObject;
 
 import android.util.Log;
 
+import com.crtb.tunnelmonitor.common.Constant;
 import com.crtb.tunnelmonitor.task.WorkSite;
 import com.crtb.tunnelmonitor.task.WorkZone;
 
 class GetZoneAndSiteCodeRpc extends AbstractRpc {
-	private static final String LOG_TAG = "GetZoneAndSiteCodeRpc";
+	private static final String TAG = "GetZoneAndSiteCodeRpc：";
 	private static final String KEY_RANDOM_CODE = "随机码";
 	private static final String KEY_ACTION = "getZoneAndSiteCode";
 	
@@ -42,7 +43,7 @@ class GetZoneAndSiteCodeRpc extends AbstractRpc {
 			notifyFailed("Unknown reponse type: " + response.getClass().getName());
 			return;
 		}
-		Log.d(LOG_TAG, "response: " + response);
+		Log.d(Constant.LOG_TAG_SERVICE, TAG + "response: " + response);
 		try {
 			//getZoneAndSiteCodeResponse{return=anyType{item=XPCL01SG05GQ01#一工区; item=XPCL01SD0001#跃龙门隧道; }; }
 			SoapObject result = (SoapObject) response;

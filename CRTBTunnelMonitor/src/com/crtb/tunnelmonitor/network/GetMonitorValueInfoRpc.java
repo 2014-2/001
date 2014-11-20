@@ -16,7 +16,7 @@ import com.crtb.tunnelmonitor.entity.TunnelSettlementTotalData;
 import com.crtb.tunnelmonitor.utils.CrtbUtils;
 
 class GetMonitorValueInfoRpc extends AbstractRpc {
-	private static final String LOG_TAG = "GetMonitorValueInfoRpc";
+	private static final String TAG = "GetMonitorValueInfoRpc:";
 	private static final String KEY_POINT_CODE = "测点编码";
 	private static final String KEY_RANDOM_CODE = "随机码";
 	private static final String KEY_ACTION = "getMonitorValueInfo";
@@ -59,7 +59,7 @@ class GetMonitorValueInfoRpc extends AbstractRpc {
 			 * 瑞=测量人员，19=身份证id，null=到掌子面距离，null=施工工序
 			 */
 			String pointCode = (String) mParameters.get(KEY_POINT_CODE);
-			Log.d(LOG_TAG, "response(pointCode " + pointCode + "): " + response);
+			Log.d(Constant.LOG_TAG_SERVICE,TAG+"response(pointCode " + pointCode + "): " + response);
 			SoapObject result = (SoapObject) response;
 			SoapObject data = (SoapObject) result.getProperty(0);
 			final int count = data.getPropertyCount();
@@ -79,13 +79,13 @@ class GetMonitorValueInfoRpc extends AbstractRpc {
 				String time = pointInfo[index++];
 				String surveyorName = pointInfo[index++];
 				long surveyorId = Long.parseLong(pointInfo[index++]);
-				Log.d(LOG_TAG, "test data: " + coordinate + "pointinfo: " + data.getPropertyAsString(i));
+				Log.d(Constant.LOG_TAG_SERVICE, TAG + "test data: " + coordinate + "pointinfo: " + data.getPropertyAsString(i));
 				if (coordinate.contains("#")) {
 					String[] coordinateInfo = coordinate.split("#");
 					switch (coordinateInfo.length) {
 					case 3:
 						TunnelSettlementTotalData pointTestData = new TunnelSettlementTotalData();
-						Log.d(LOG_TAG, "coordinate： " + coordinate);
+						Log.d(TAG, "coordinate： " + coordinate);
 						//TODO: 解析剩下的数据
 						pointTestData.setCoordinate(coordinate.replace("#", ","));
 						pointTestData.setSurveyTime(CrtbUtils.parseDate(time));
@@ -101,7 +101,7 @@ class GetMonitorValueInfoRpc extends AbstractRpc {
 						TunnelSettlementTotalData pointTestData1 = new TunnelSettlementTotalData();
 						String coordinate1 = coordinateInfo[0] + "," + coordinateInfo[1] + "," + coordinateInfo[2];
 						String coordinate2 = coordinateInfo[3] + "," + coordinateInfo[4] + "," + coordinateInfo[5];
-						Log.d(LOG_TAG, "coordinate： " + coordinate);
+						Log.d(Constant.LOG_TAG_SERVICE, TAG + "coordinate： " + coordinate);
 						//TODO: 解析剩下的数据
 						pointTestData1.setCoordinate(coordinate1);
 						pointTestData1.setSurveyTime(CrtbUtils.parseDate(time));
@@ -113,7 +113,7 @@ class GetMonitorValueInfoRpc extends AbstractRpc {
 						pointTestDataList.add(pointTestData1);
 
 						TunnelSettlementTotalData pointTestData2 = new TunnelSettlementTotalData();
-						Log.d(LOG_TAG, "coordinate： " + coordinate);
+						Log.d(Constant.LOG_TAG_SERVICE, TAG + "coordinate： " + coordinate);
 						//TODO: 解析剩下的数据
 						pointTestData2.setCoordinate(coordinate2);
 						pointTestData2.setSurveyTime(CrtbUtils.parseDate(time));
@@ -125,11 +125,11 @@ class GetMonitorValueInfoRpc extends AbstractRpc {
 						pointTestDataList.add(pointTestData2);
 						break;
 					default:
-						Log.e(LOG_TAG, "exception coordinate: " + coordinate);
+						Log.e(Constant.LOG_TAG_SERVICE, TAG + "exception coordinate: " + coordinate);
 						break;
 					}
 				} else {
-					Log.e(LOG_TAG, "exception data： " + coordinate);
+					Log.e(Constant.LOG_TAG_SERVICE, TAG + "exception data： " + coordinate);
 				}
 			}
 			final int dataCount = pointTestDataList.size();

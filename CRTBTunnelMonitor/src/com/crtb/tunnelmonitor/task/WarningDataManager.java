@@ -12,6 +12,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.crtb.tunnelmonitor.AppCRTBApplication;
+import com.crtb.tunnelmonitor.common.Constant;
 import com.crtb.tunnelmonitor.dao.impl.v2.AlertHandlingInfoDao;
 import com.crtb.tunnelmonitor.entity.AlertHandlingList;
 import com.crtb.tunnelmonitor.entity.AlertInfo;
@@ -26,7 +27,7 @@ import com.crtb.tunnelmonitor.utils.AlertUtils;
 import com.crtb.tunnelmonitor.utils.CrtbUtils;
 
 public class WarningDataManager {
-	private static final String LOG_TAG = "WarningDataManager";
+	private static final String TAG = "WarningDataManager：";
 	
     /**
      * 预警数据集
@@ -43,10 +44,11 @@ public class WarningDataManager {
     	 * 预警对应的处理详情
     	 */
     	public List<AlertHandlingList> handlings;
+    	
+    	public WarningUploadListener uploadListener;
     } 
 
 	private WarningLoadListener mLoadListener;
-	private WarningUploadListener mUploadListener;
 	
 	/**
 	 * 上传预警数据统计
@@ -61,8 +63,6 @@ public class WarningDataManager {
 	private String notice = "";
 	public String getNotice(){
 		String alarmNotice;
-		boolean errorAllAlarm = false;
-		
 		if(!StringUtils.isEmpty(notice)){
 			return notice;
 		}
@@ -76,15 +76,10 @@ public class WarningDataManager {
 				alarmNotice = "部分预警数据上传成功";
 			} else {
 				alarmNotice = "预警数据上传失败";
-				errorAllAlarm = true;
 			}
 		}
 		
 		notice = alarmNotice + "! ";
-				
-		if(errorAllAlarm){
-			notice += "连接超时，请检查网络连接!" ;
-		}
 		
 		return notice;
 	}
@@ -143,7 +138,7 @@ public class WarningDataManager {
      * @param listener 回调
      * @param originalData 包装后的预警数据
      */
-    public void uploadWarning(AlertInfo alertInfo,UploadWarningEntity originalData, WarningUploadListener listener){
+    public void uploadWarning(AlertInfo alertInfo,UploadWarningEntity originalData,final WarningUploadListener listener){
 
     	int alertId = alertInfo.getAlertId();
 		List<AlertHandlingList> handlings = AlertHandlingInfoDao.defaultDao().queryByAlertIdOrderByHandlingTimeAscAndNoUpload(alertId);
@@ -155,6 +150,7 @@ public class WarningDataManager {
 			} else {
 				// 所有处理详情已经上传了，且没有没有处理详情的情况
 				listener.done(true,false);
+				return;
 			}
     	}
 		
@@ -247,10 +243,10 @@ public class WarningDataManager {
 	 * @param uploadListener
 	 */
 	public void uploadWarningData(UploadWarningEntity originalData, List<AlertHandlingList> handlings,WarningUploadListener uploadListener){
-		mUploadListener = uploadListener;
 		WarningDataSet dataSet = new WarningDataSet();
 		dataSet.orginalData = originalData;
 		dataSet.handlings = handlings;
+		dataSet.uploadListener = uploadListener;
 		new DataUploadTask().execute(dataSet);
 	}
 		
@@ -263,13 +259,13 @@ public class WarningDataManager {
 		
 		protected Void doInBackground(WarningDataSet...params) {
 			if (params != null && params.length > 0) {
-				WarningDataSet dataSet = params[0];
+				final WarningDataSet dataSet = params[0];
 				if (dataSet != null && dataSet.handlings.size() > 0) {
 					DataCounter warningUploadCounter = new DataCounter("WarningUploadCounter", dataSet.handlings.size(), new CounterListener() {
 						@Override
 						public void done(boolean success) {
-							if (mUploadListener != null) {
-								mUploadListener.done(success,true);
+							if (dataSet.uploadListener != null) {
+								dataSet.uploadListener.done(success,true);
 							}
 						}
 					});
@@ -359,7 +355,7 @@ public class WarningDataManager {
 	                	//设置处理详情的上传状态:2表示已上传,默认为1
 	                	AlertHandlingInfoDao.defaultDao().updateUploadStatus(curHandingID, 2);
 	                	warningUploadCounter.increase(true);	
-	                    Log.d(LOG_TAG, "AlertHandlingID = "+ curHandingID + "upload success.");
+	                	Log.d(Constant.LOG_TAG_SERVICE, TAG + "AlertHandlingID = "+ curHandingID + "upload success.");
 	                }
 
 	                @Override
@@ -368,7 +364,7 @@ public class WarningDataManager {
 	                	if(reason == null){
 	                		reason = "empty";
 	                	}
-	                	Log.d(LOG_TAG, "AlertHandlingID = "+ curHandingID + "upload failed." + reason);
+	                	Log.d(Constant.LOG_TAG_SERVICE, TAG + "AlertHandlingID = "+ curHandingID + "upload failed." + reason);
 	                }
 	            });
 	    	}

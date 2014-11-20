@@ -4,6 +4,7 @@ import java.util.List;
 
 import android.util.Log;
 
+import com.crtb.tunnelmonitor.common.Constant;
 import com.crtb.tunnelmonitor.network.CrtbWebService;
 import com.crtb.tunnelmonitor.network.DataCounter;
 import com.crtb.tunnelmonitor.network.DataCounter.CounterListener;
@@ -12,7 +13,7 @@ import com.crtb.tunnelmonitor.network.RpcCallback;
 import com.crtb.tunnelmonitor.utils.CrtbUtils;
 
 public class MeasureDataUploadTask extends SequenceUploadTask {
-	private static final String LOG_TAG = "MeasureDataUploadTask";
+	private static final String TAG = "MeasureDataUploadTask：";
 	private List<MeasureData> mMeasureDataList;
 	private String mSectionCode;
 	private int mPosition;
@@ -26,12 +27,12 @@ public class MeasureDataUploadTask extends SequenceUploadTask {
 			mUploadCounter = new DataCounter("MeasureDataUploadCounter", mMeasureDataList.size(), new CounterListener() {
 				@Override
 				public void done(boolean success) {
-					Log.d(LOG_TAG, "finished: " + success);
+					Log.d(Constant.LOG_TAG_SERVICE, TAG + "finished: " + success);
 				}
 			});
 		} else {
 			mCallback.done(true);
-			Log.w(LOG_TAG, "empty data.");
+			Log.w(Constant.LOG_TAG_SERVICE, TAG + "empty data.");
 		}
 	}
 
@@ -87,13 +88,13 @@ public class MeasureDataUploadTask extends SequenceUploadTask {
                     @Override
                     public void onSuccess(Object[] data) {
                         measureData.markAsUploaded();
-                        Log.d(LOG_TAG, "upload test data success.");
+                        Log.d(Constant.LOG_TAG_SERVICE, TAG + "upload test data success.");
                         onProgress(true);
                     }
 
                     @Override
                     public void onFailed(String reason) {
-                        Log.d(LOG_TAG, "confirm test data failed: " + reason);
+                        Log.d(Constant.LOG_TAG_SERVICE, TAG + "confirm test data failed: " + reason);
                         onProgress(true);
                     }
                 });
@@ -101,7 +102,7 @@ public class MeasureDataUploadTask extends SequenceUploadTask {
 
             @Override
             public void onFailed(String reason) {
-                Log.d(LOG_TAG, "upload test data failed.");
+                Log.d(Constant.LOG_TAG_SERVICE, TAG + "upload test data failed.");
                 onProgress(false);
             }
         });

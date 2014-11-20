@@ -4,12 +4,13 @@ import java.util.List;
 
 import android.util.Log;
 
+import com.crtb.tunnelmonitor.common.Constant;
 import com.crtb.tunnelmonitor.dao.impl.v2.TunnelCrossSectionIndexDao;
 import com.crtb.tunnelmonitor.entity.TunnelCrossSectionIndex;
 import com.crtb.tunnelmonitor.utils.CrtbUtils;
 
 public class ProjectUploadTask {
-	private static final String LOG_TAG = "ProjectUploadTask";
+	private static final String TAG = "ProjectUploadTask：";
 	
 	public interface UploadListener {
 		public void onUploadStart();
@@ -43,13 +44,13 @@ public class ProjectUploadTask {
 		CrtbWebService.getInstance().uploadSection(paramter, new RpcCallback() {
 			@Override
 			public void onSuccess(Object[] data) {
-				Log.d(LOG_TAG, "upload section success.");
+				Log.d(Constant.LOG_TAG_SERVICE, TAG + "upload section success.");
 				// uploadTestResult();
 			}
 
 			@Override
 			public void onFailed(String reason) {
-				Log.d(LOG_TAG, "upload section faled: " + reason);
+				Log.d(Constant.LOG_TAG_SERVICE, TAG + "upload section faled: " + reason);
 			}
 		});
 	}
@@ -65,12 +66,12 @@ public class ProjectUploadTask {
 
 							@Override
 							public void onSuccess(Object[] data) {
-								Log.d(LOG_TAG, "upload test data success.");
+								Log.d(Constant.LOG_TAG_SERVICE, TAG + "upload test data success.");
 							}
 
 							@Override
 							public void onFailed(String reason) {
-								Log.d(LOG_TAG, "confirm test data failed: "
+								Log.d(Constant.LOG_TAG_SERVICE, TAG + "confirm test data failed: "
 										+ reason);
 							}
 						});
@@ -78,7 +79,7 @@ public class ProjectUploadTask {
 
 			@Override
 			public void onFailed(String reason) {
-				Log.d(LOG_TAG, "upload test data failed.");
+				Log.d(Constant.LOG_TAG_SERVICE, TAG + "upload test data failed.");
 			}
 		});
 	}

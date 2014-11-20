@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.ksoap2.serialization.SoapObject;
 
+import com.crtb.tunnelmonitor.common.Constant;
 import com.crtb.tunnelmonitor.task.SectionStopEntity;
 
 import android.util.Log;
@@ -24,7 +25,7 @@ public final class StopSectionRpc extends AbstractRpc {
 	//
 	//<part name="随机码" type="xsd:long"/>
 	
-	private static final String LOG_TAG = "StopSectionRpc";
+	private static final String TAG = "StopSectionRpc：";
 	private static final String KEY_WORK_AREA_CODE = "工区编号";
 	private static final String KEY_WORK_SITE_CODE = "隧道工点编号";
 	private static final String KEY_STATE     = "断面或测点状态";
@@ -70,7 +71,7 @@ public final class StopSectionRpc extends AbstractRpc {
 			return;
 		}
 		try {
-			Log.d(LOG_TAG, "response: " + response);
+			Log.d(Constant.LOG_TAG_SERVICE, TAG + "response: " + response);
 			SoapObject result = (SoapObject) response;
 			int code = Integer.parseInt(result.getPropertyAsString(0));
 			if (code == 1) {

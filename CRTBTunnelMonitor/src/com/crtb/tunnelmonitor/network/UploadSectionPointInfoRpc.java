@@ -6,10 +6,12 @@ import java.util.Map;
 
 import org.ksoap2.serialization.SoapObject;
 
+import com.crtb.tunnelmonitor.common.Constant;
+
 import android.util.Log;
 
 class UploadSectionPointInfoRpc extends AbstractRpc {
-	private static final String LOG_TAG = "UploadSectionPointInfoRpc";
+	private static final String TAG = "UploadSectionPointInfoRpc：";
 	private static final String KEY_ZONE_CODE = "工区编号";
 	private static final String KEY_SITE_CODE = "隧道工点编号";
 	private static final String KEY_SECTION_NAME = "断面名称";
@@ -76,7 +78,7 @@ class UploadSectionPointInfoRpc extends AbstractRpc {
 			return;
 		}
 		try {
-			Log.d(LOG_TAG, "response: " + response);
+			Log.d(Constant.LOG_TAG_ACTIVITY, TAG + "response: " + response);
 			SoapObject result = (SoapObject) response;
 			int code = Integer.parseInt(result.getPropertyAsString(0));
 			if (code == 1) {

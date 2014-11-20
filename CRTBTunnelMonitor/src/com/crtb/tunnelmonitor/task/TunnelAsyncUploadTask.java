@@ -26,12 +26,12 @@ import com.crtb.tunnelmonitor.network.PointUploadParameter;
 import com.crtb.tunnelmonitor.network.RpcCallback;
 import com.crtb.tunnelmonitor.network.SectionUploadParamter;
 import com.crtb.tunnelmonitor.infors.UploadWarningEntity;
+import com.crtb.tunnelmonitor.task.AsyncUploadTask.UploadSet;
 import com.crtb.tunnelmonitor.utils.AlertUtils;
 import com.crtb.tunnelmonitor.utils.CrtbUtils;
 
 public class TunnelAsyncUploadTask extends AsyncUploadTask {
-	private static final String LOG_TAG = "TunnelAsyncUploadTask";
-	private WarningDataManager warningDataManager;
+	private static final String TAG = "TunnelAsyncUploadTask：";
 
 	public TunnelAsyncUploadTask(UploadListener listener) {
 		super(listener);
@@ -39,7 +39,38 @@ public class TunnelAsyncUploadTask extends AsyncUploadTask {
 	}
 
 	@Override
-	protected void uploadSection(final Section section, final DataCounter sectionUploadCounter) {
+	protected UploadSet queryUploadSheet(Section section){
+		UploadSet uploadSet = new UploadSet();
+		uploadSet.section = section;
+		List<MeasureData> measureDataList = section.getMeasureData();
+		if (measureDataList == null || measureDataList.size() < 1) {
+			return uploadSet;
+		}
+			
+		List<String> originalDataList = new ArrayList<String>();
+		List<TunnelMeasureData> measureList = new ArrayList<TunnelMeasureData>();
+		for (MeasureData measureData : measureDataList) {
+			TunnelMeasureData tunnelMeasureData = (TunnelMeasureData) measureData;
+			originalDataList.add(tunnelMeasureData.getOriginalDataId());
+			measureList.add(tunnelMeasureData);
+		}
+		
+		
+		final List<AlertInfo> alerts = AlertUtils.getWarnDataList(originalDataList);
+		if (Constant.getStrictRestrictedUpload()) {
+			if (hasUnhandledAlert(alerts)) {
+				return null;
+			}
+		}
+		uploadSet.alertList = alerts;
+		uploadSet.tunnelMeasureList = measureList;
+		
+		return uploadSet;
+	} 
+	
+	@Override
+	protected void uploadSection(final UploadSet uploadSet, final DataCounter sectionUploadCounter) {
+		final Section section = uploadSet.section;
 		final TunnelCrossSectionIndex sectionIndex = ((TunnelSection) section).getSection();
 		SectionUploadParamter paramter = new SectionUploadParamter();
 		CrtbUtils.fillSectionParamter(sectionIndex, paramter);
@@ -47,6 +78,7 @@ public class TunnelAsyncUploadTask extends AsyncUploadTask {
 			@Override
 			public void onSuccess(Object[] data) {
 				final String sectionCode = (String) data[0];
+				section.setSectionCode(sectionCode);
 				// 将断面状态设置为已上传
 				new Thread(new Runnable() {
 					@Override
@@ -61,62 +93,46 @@ public class TunnelAsyncUploadTask extends AsyncUploadTask {
 						sectionExIndex.setSECTCODE(sectionCode);
 						int code = sectionExIndexDao.insert(sectionExIndex);
 						if (code != AbstractDao.DB_EXECUTE_SUCCESS) {
-							Log.e(LOG_TAG, "insert TunnelCrossSectionExIndex failed.");
+							Log.e(Constant.LOG_TAG_SERVICE,TAG + "insert TunnelCrossSectionExIndex failed.");
 						}
 					}
 				}).start();
-				Log.d(LOG_TAG, "upload section success: section_code: " + sectionCode);
-				uploadMeasureDataList(sectionCode, section.getMeasureData(), sectionUploadCounter);
+				Log.d(Constant.LOG_TAG_SERVICE, TAG + "upload section success: section_code: " + sectionCode);
+				uploadMeasureDataList(uploadSet, sectionUploadCounter);
 			}
 
 			@Override
 			public void onFailed(String reason) {
-				Log.d(LOG_TAG, "upload section faled: " + reason);
+				Log.d(Constant.LOG_TAG_SERVICE, TAG + "upload section faled: " + reason);
 				sectionUploadCounter.increase(false);
 			}
 		});
-
 	}
 
 	@Override
-	protected void uploadMeasureDataList(String sectionCode, final List<MeasureData> measureDataList, final DataCounter sectionUploadCounter) {
-		if (measureDataList != null && measureDataList.size() > 0) {
-			DataCounter pointUploadCounter = new DataCounter("MeasureDataUploadCounter", measureDataList.size(), new CounterListener() {
+	protected void uploadMeasureDataList(UploadSet uploadSet, final DataCounter sectionUploadCounter) {
+        final List<TunnelMeasureData> measureDataList = uploadSet.tunnelMeasureList;
+        final List<AlertInfo> alerts = uploadSet.alertList;
+		final String sectionCode = uploadSet.section.getSectionCode();
+        if (measureDataList != null && measureDataList.size() > 0) {
+			DataCounter pointUploadCounter = new DataCounter("MeasureDataUploadCounter"+sectionCode, measureDataList.size(), new CounterListener() {
 				@Override
 				public void done(boolean success) {
 					sectionUploadCounter.increase(success);
 				}
 			});
-			List<String> originalDataList = new ArrayList<String>();
-			List<TunnelMeasureData> measureList = new ArrayList<TunnelMeasureData>();
-			int count = 0;
-			for (MeasureData measureData : measureDataList) {
-				TunnelMeasureData tunnelMeasureData = (TunnelMeasureData) measureData;
-				originalDataList.add(tunnelMeasureData.getOriginalDataId());
-				measureList.add(tunnelMeasureData);
-				count++;
-			}
-			final List<AlertInfo> alerts = AlertUtils.getWarnDataList(originalDataList);
-			if(Constant.getNoUploadDataWhenWarningUnHandled()){
-				if (hasUnhandledAlert(alerts)) {
-					notice = "该记录单存在未关闭的预警，请先处理";
-					sectionUploadCounter.increase(false,notice);
-				}
-			}
-			for (int i = 0; i < count; i++) {
-				uploadMeasureDataWrapper(sectionCode,measureList.get(i),alerts.get(i),pointUploadCounter);
-				//uploadMeasureDataWrapper(sectionCode, (TunnelMeasureData) measureData, pointUploadCounter);
-			}
 			
+			int count = measureDataList.size();
+			for (int i = 0; i < count; i++) {
+				uploadMeasureDataWrapper(sectionCode, measureDataList.get(i), alerts.get(i), pointUploadCounter);
+			}
 		} else {
 			// 如果没有测点数据，则直接判断为上传断面成功
 			sectionUploadCounter.increase(true);
 		}
 	}
 
-
-	private void uploadMeasureDataWrapper(String sectionCode, final TunnelMeasureData measureData,final AlertInfo curAlertInfo,final DataCounter pointUploadCounter) {
-		//final AlertInfo curAlertInfo = AlertUtils.getWarnData(measureData.getOriginalDataId());
+	private void uploadMeasureDataWrapper(String sectionCode, final TunnelMeasureData measureData,final AlertInfo curAlertInfo, DataCounter pointUploadCounter) {
 		if (measureData.uploaded) {
 			uploadWarnWrapper(curAlertInfo,pointUploadCounter);
 		} else {

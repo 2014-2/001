@@ -58,7 +58,7 @@ import com.crtb.tunnelmonitor.widget.CrtbProgressOverlay;
  */
 public class WarningActivity extends WorkFlowActivity {
 
-	protected static final String TAG = "WarningActivity";
+	protected static final String TAG = "WarningActivity: ";
 	private List<String> sectionChainPrefix;
 	private int curSectionIndex;
 	private int sectionCount;
@@ -113,7 +113,7 @@ public class WarningActivity extends WorkFlowActivity {
 			initOther();
 			//refreshData(sectionType);
 		} catch (Exception e) {
-			Log.e(Constant.LOG_TAG,TAG+":"+e.getMessage());
+			Log.e(Constant.LOG_TAG_ACTIVITY,TAG+e.getMessage());
 		}
 	}
 	
@@ -306,9 +306,7 @@ public class WarningActivity extends WorkFlowActivity {
 				}
 				AlertInfo alert = curAlerts.get(clickedItem);
 				if (alert != null) {
-					boolean isSV = alert.getUType() == Constant.SHOULIAN_SULV_EXCEEDING || alert.getUType() == Constant.GONGDINGI_XIACHEN_SULV_EXCEEDING
-							|| alert.getUType() == Constant.DIBIAO_XIACHEN_SULV_EXCEEDING;
-
+					boolean isSV = AlertUtils.isSpeed(alert.getUType());
 					Editable e = mCorrectionView.getText();
 					double correction = (double) 0;
 					if (e != null && e.length() > 0) {
@@ -714,7 +712,7 @@ public class WarningActivity extends WorkFlowActivity {
 				l = Double.valueOf(lhs);
 				r = Double.valueOf(rhs);
 			} catch (Exception e) {
-				Log.e(Constant.LOG_TAG, TAG + ":" + e.getMessage());
+				Log.e(Constant.LOG_TAG_ACTIVITY, TAG + "StringSort:" + e.getMessage());
 			}
 			if ((l - r) > 0){
 				return 1;

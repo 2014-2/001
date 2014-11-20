@@ -7,10 +7,11 @@ import org.ksoap2.serialization.SoapObject;
 
 import android.util.Log;
 
+import com.crtb.tunnelmonitor.common.Constant;
 import com.crtb.tunnelmonitor.entity.SurveyerInformation;
 
 class GetSurveyorsRpc extends AbstractRpc {
-	private static final String LOG_TAG = "GetSurveyorsRpc";
+	private static final String TAG = "GetSurveyorsRpc：";
 	private static final String KEY_ZONE_CODE = "工区编号";
 	private static final String KEY_RANDOM_CODE = "随机码";
 	private static final String KEY_ACTION = "getSurveyors";
@@ -43,7 +44,7 @@ class GetSurveyorsRpc extends AbstractRpc {
 			notifyFailed("Unknown reponse type: " + response.getClass().getName());
 			return;
 		}
-		Log.d(LOG_TAG, "response: " + response);
+		Log.d(Constant.LOG_TAG_SERVICE, TAG + "response: " + response);
 		try {
 			//zone_code: 
 			//getSurveyorsResponse{return=anyType{item=杨工#102190198805012891; item=石工#310501199001021657; }; }

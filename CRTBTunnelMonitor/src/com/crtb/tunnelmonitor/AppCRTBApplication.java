@@ -16,6 +16,7 @@ import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.crtb.tunnelmonitor.common.Constant;
 import com.crtb.tunnelmonitor.dao.impl.v2.CrtbLicenseDao;
 import com.crtb.tunnelmonitor.entity.ControlPointsIndex;
 import com.crtb.tunnelmonitor.entity.CrtbUser;
@@ -29,7 +30,7 @@ import com.crtb.tunnelmonitor.utils.ExcavateMethodUtil;
 
 public class AppCRTBApplication extends Application {
 
-    private static final String TAG = "AppCRTBApplication";
+    private static final String TAG = "AppCRTBApplication:";
 
     private static AppCRTBApplication instance;
 
@@ -131,12 +132,12 @@ public class AppCRTBApplication extends Application {
     }
 
     public String getCurUsedStationId() {
-        Log.d(TAG, "getCurUsedStationId, returning " + CurUsedStationId);
+        Log.d(Constant.LOG_TAG,TAG + "getCurUsedStationId, returning " + CurUsedStationId);
         return CurUsedStationId ;
     }
 
     public void setCurUsedStationId(String curUsedStationId) {
-        Log.d(TAG, "setCurUsedStationId " + curUsedStationId);
+    	Log.d(Constant.LOG_TAG,TAG + "setCurUsedStationId " + curUsedStationId);
         CurUsedStationId = curUsedStationId;
     }
 

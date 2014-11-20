@@ -16,7 +16,7 @@ import com.crtb.tunnelmonitor.network.RpcCallback;
 import com.crtb.tunnelmonitor.utils.CrtbAppConfig;
 
 public class ServerSettingActivity extends WorkFlowActivity {
-    private static final String LOG_TAG = "ServerSettingActivity";
+    private static final String TAG = "ServerSettingActivity";
     private EditText mServerIp;
     private EditText mUserName;
     private EditText mPassword;
@@ -69,7 +69,7 @@ public class ServerSettingActivity extends WorkFlowActivity {
 
             @Override
             public void onSuccess(Object[] data) {
-                Log.d(LOG_TAG, "login success.");
+            	Log.d(Constant.LOG_TAG_ACTIVITY, TAG + "login success.");
                 storeSettings(serverAddress, userName, password);
                 mProgressDialog.dismiss();
                 Toast.makeText(ServerSettingActivity.this, R.string.server_login_success,
@@ -79,7 +79,7 @@ public class ServerSettingActivity extends WorkFlowActivity {
 
             @Override
             public void onFailed(String reason) {
-                Log.d(LOG_TAG, "login failed: " + reason);
+            	Log.d(Constant.LOG_TAG_ACTIVITY, TAG +"login failed: " + reason);
                 mProgressDialog.dismiss();
                 Toast.makeText(ServerSettingActivity.this, R.string.server_login_failed,
                         Toast.LENGTH_SHORT).show();

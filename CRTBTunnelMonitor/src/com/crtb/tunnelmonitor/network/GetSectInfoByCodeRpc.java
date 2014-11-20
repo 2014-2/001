@@ -10,11 +10,12 @@ import org.zw.android.framework.util.DateUtils;
 
 import android.util.Log;
 
+import com.crtb.tunnelmonitor.common.Constant;
 import com.crtb.tunnelmonitor.entity.ExcavateMethodEnum;
 import com.crtb.tunnelmonitor.entity.TunnelCrossSectionIndex;
 
 class GetSectInfoByCodeRpc extends AbstractRpc {
-	private static final String LOG_TAG = "GetSectInfoByCodeRpc";
+	private static final String TAG = "GetSectInfoByCodeRpc";
 	private static final String KEY_SECTION_CODE = "断面编号";
 	private static final String KEY_RANDOM_CODE = "随机码";
 	private static final String KEY_ACTION = "getSectInfoByCode";
@@ -48,7 +49,7 @@ class GetSectInfoByCodeRpc extends AbstractRpc {
 			return;
 		}
 		String sectionCode = (String) mParameters.get(KEY_SECTION_CODE);
-		Log.d(LOG_TAG, "response( " + sectionCode + " ): " + response);
+		Log.d(Constant.LOG_TAG_SERVICE, TAG + "response( " + sectionCode + " ): " + response);
 		try {
 			/**
 			 * getSectInfoByCodeResponse{return=anyType

@@ -8,7 +8,7 @@ import com.crtb.tunnelmonitor.entity.CrossSectionStopSurveying;
 
 public final class CrossSectionStopSurveyingDao extends AbstractDao<CrossSectionStopSurveying> {
 
-	private String LOG_TAG = "CrossSectionStopSurveyingDao";
+	private String TAG = "CrossSectionStopSurveyingDao: ";
 	
 	private static CrossSectionStopSurveyingDao _instance;
 
@@ -33,7 +33,7 @@ public final class CrossSectionStopSurveyingDao extends AbstractDao<CrossSection
 		}
 		
 		if (sectionGuid == null || StringUtils.isEmpty(sectionGuid)) {
-			Log.i(Constant.LOG_TAG,LOG_TAG +" 断面ID错误");
+			Log.e(Constant.LOG_TAG_DAO,TAG +" 断面ID错误");
 			return false;
 		}
 		

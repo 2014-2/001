@@ -5,6 +5,8 @@ import java.io.FileOutputStream;
 
 import org.zw.android.framework.util.StringUtils;
 
+import com.crtb.tunnelmonitor.common.Constant;
+
 import android.util.Log;
 
 /**
@@ -15,7 +17,7 @@ import android.util.Log;
  */
 public final class DbNoneEncrypt implements IDbEncrypt {
 	
-	static String TAG = "DbNoneEncrypt" ;
+	static String TAG = "DbNoneEncrypt: " ;
 
 	public boolean encrypt(String srcFile, String destFile){
 		
@@ -33,7 +35,7 @@ public final class DbNoneEncrypt implements IDbEncrypt {
 			
 			while((read = in.read(buffer)) > 0){
 				
-				Log.d(TAG, "zhouwei : 导出文件...");
+				Log.d(Constant.LOG_TAG,TAG +" 导出文件...");
 				
 				out.write(buffer, 0, read);
 				out.flush() ;

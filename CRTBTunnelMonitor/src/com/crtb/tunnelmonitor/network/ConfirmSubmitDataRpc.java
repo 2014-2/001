@@ -5,10 +5,12 @@ import java.util.Map;
 
 import org.ksoap2.serialization.SoapObject;
 
+import com.crtb.tunnelmonitor.common.Constant;
+
 import android.util.Log;
 
 class ConfirmSubmitDataRpc extends AbstractRpc {
-	private static final String LOG_TAG = "ConfirmSubmitDataRpc";
+	private static final String TAG = "ConfirmSubmitDataRpc：";
 	private static final String KEY_RANDOM_CODE = "随机码";
 	private static final String KEY_ACTION = "confirmSubmitData";
 	
@@ -40,7 +42,7 @@ class ConfirmSubmitDataRpc extends AbstractRpc {
 			return;
 		}
 		try {
-			Log.d(LOG_TAG, "response: " + response);
+			Log.d(Constant.LOG_TAG_SERVICE,TAG+"response: " + response);
 			SoapObject result = (SoapObject) response;
 			int code = Integer.parseInt(result.getPropertyAsString(0));
 			if (code == 1) {

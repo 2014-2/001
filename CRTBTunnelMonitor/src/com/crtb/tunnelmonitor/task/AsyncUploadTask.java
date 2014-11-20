@@ -25,76 +25,67 @@ import com.crtb.tunnelmonitor.utils.AlertUtils;
 import com.crtb.tunnelmonitor.utils.CrtbUtils;
 
 public abstract class AsyncUploadTask extends AsyncTask<List<SheetRecord>, Void, Void> {
-	private static final String LOG_TAG = "AsyncUploadTask";
+	private static final String TAG = "AsyncUploadTask: ";
 
 	protected WarningDataManager warningDataManager = null;
 	/**
 	 * 上传测量数据统计
 	 */
 	protected int actualUploadTestDataCount = 0;
-	
+
 	/**
 	 * 上传预警数据统计
 	 */
 	protected int actualUploadAarmDataCount = 0;
-	
+
 	/**
 	 * 上传测量数据统计
 	 */
 	protected int exceptedUploadTestDataCount = 0;
-	
+
 	/**
 	 * 上传预警数据统计
 	 */
 	protected int exceptedUploadAarmDataCount = 0;
-	
+
 	protected String notice;
-	
-	public String getNotice(){
+
+	public String getNotice() {
 		String testNotice;
 		String alarmNotice;
-		boolean errorAllTest = false;
-		boolean errorAllAlarm = false;
-		if(notice != null && !StringUtils.isEmpty(notice.trim())){
+		if (notice != null && !StringUtils.isEmpty(notice.trim())) {
 			return notice;
 		}
-		
-		if(exceptedUploadTestDataCount == 0){
+
+		if (exceptedUploadTestDataCount == 0) {
 			testNotice = "无有效观测数据";
 		} else {
-			if(actualUploadTestDataCount == exceptedUploadTestDataCount){
+			if (actualUploadTestDataCount == exceptedUploadTestDataCount) {
 				testNotice = "观测数据上传成功";
-			} else if(actualUploadTestDataCount > 0){
+			} else if (actualUploadTestDataCount > 0) {
 				testNotice = "部分观测数据上传成功";
 			} else {
 				testNotice = "观测数据上传失败";
-				errorAllTest = true;
 			}
 		}
-		
-		if(exceptedUploadAarmDataCount == 0){
+
+		if (exceptedUploadAarmDataCount == 0) {
 			alarmNotice = "无有效预警数据";
 		} else {
-			if(actualUploadAarmDataCount == exceptedUploadAarmDataCount){
+			if (actualUploadAarmDataCount == exceptedUploadAarmDataCount) {
 				alarmNotice = "预警数据上传成功";
-			} else if(actualUploadAarmDataCount > 0){
+			} else if (actualUploadAarmDataCount > 0) {
 				alarmNotice = "部分预警数据上传成功";
 			} else {
 				alarmNotice = "预警数据上传失败";
-				errorAllAlarm = true;
 			}
 		}
-		
+
 		notice = testNotice + "," + alarmNotice + "!";
-				
-		if(errorAllTest && errorAllAlarm){
-			notice += "连接超时，请检查网络连接!" ;
-		}
-		
+
 		return notice;
 	}
-	
-	
+
 	/** 数据上传成功 */
 	public static final int CODE_SUCCESS = 100;
 	/** 记录单中无有效的观测数据 */
@@ -105,7 +96,7 @@ public abstract class AsyncUploadTask extends AsyncTask<List<SheetRecord>, Void,
 		 * 
 		 * @param success
 		 */
-		public void done(boolean success, int code,String notice);
+		public void done(boolean success, int code, String notice);
 	}
 
 	private UploadListener mListener;
@@ -118,7 +109,7 @@ public abstract class AsyncUploadTask extends AsyncTask<List<SheetRecord>, Void,
 	}
 
 	@Override
-	protected Void doInBackground(List<SheetRecord>... params) {		
+	protected Void doInBackground(List<SheetRecord>... params) {
 		if (params != null && params.length > 0) {
 			List<SheetRecord> sheetRecords = params[0];
 			if (sheetRecords != null && sheetRecords.size() > 0) {
@@ -137,32 +128,52 @@ public abstract class AsyncUploadTask extends AsyncTask<List<SheetRecord>, Void,
 					}
 				}
 				if (allUploadSection.size() > 0) {
-					DataCounter sectionUploadCounter = new DataCounter("SectionUploadCounter", allUploadSection.size(),
-							new CounterListener() {
-								@Override
-								public void done(boolean success) {
-									notifyDone(success, CODE_SUCCESS);
-								}
-							});
+					final DataCounter sectionUploadCounter = new DataCounter("SectionUploadCounter", allUploadSection.size(), new CounterListener() {
+						@Override
+						public void done(boolean success) {
+							notifyDone(success, CODE_SUCCESS);
+						}
+					});
+					List<UploadSet> uploadSetList = new ArrayList<UploadSet>();
 					for (Section section : allUploadSection) {
-						if (!section.isUpload()) {
-							uploadSection(section, sectionUploadCounter);
+						UploadSet uploadSet = queryUploadSheet(section);
+						if (uploadSet == null) {
+							notice = "该记录单存在未关闭的预警，请先处理";
+							notifyDone(false, CODE_NO_MEASURE_DATA);
+							return null;
 						} else {
-							Log.d(LOG_TAG, "section is already uploaded: section_code: " + section.getSectionCode());
-							uploadMeasureDataList(section.getSectionCode(), section.getMeasureData(),
-									sectionUploadCounter);
+							uploadSetList.add(uploadSet);
+						}
+					}
+
+					int count = uploadSetList.size();
+					for (int i = 0; i < count; i++) {
+						UploadSet uploadSet = uploadSetList.get(i);
+						if (!uploadSet.section.isUpload()) {
+							uploadSection(uploadSet, sectionUploadCounter);
+						} else {
+							Log.d(Constant.LOG_TAG_SERVICE,TAG + "section is already uploaded: section_code: " + uploadSet.section.getSectionCode());
+							uploadMeasureDataList(uploadSet, sectionUploadCounter);
 						}
 					}
 				} else {
 					notifyDone(false, CODE_NO_MEASURE_DATA);
 				}
 			} else {
-				Log.w(LOG_TAG, "empty data.");
+				Log.w(TAG, "empty data.");
 			}
 		}
 		return null;
 	}
 
+	/**
+	 * 判断能否上传数据，
+	 * 
+	 * @return null:不能上传数据，非null:能上传数据
+	 */
+	protected abstract UploadSet queryUploadSheet(Section section);
+
+	
 	/**
 	 * 上传断面数据
 	 * 
@@ -170,7 +181,7 @@ public abstract class AsyncUploadTask extends AsyncTask<List<SheetRecord>, Void,
 	 * @param sheetId
 	 * @param sectionUploadCounter
 	 */
-	protected abstract void uploadSection(Section section, DataCounter sectionUploadCounter);
+	protected abstract void uploadSection(UploadSet uploadSet, DataCounter sectionUploadCounter);
 
 	/**
 	 * 上传断面的测量数据
@@ -178,15 +189,14 @@ public abstract class AsyncUploadTask extends AsyncTask<List<SheetRecord>, Void,
 	 * @param section
 	 * @param sectionUploadCounter
 	 */
-	protected abstract void uploadMeasureDataList(String sectionCode, List<MeasureData> measureDataList,
-			DataCounter sectionUploadCounter);
+	protected abstract void uploadMeasureDataList(UploadSet uploadSet, DataCounter sectionUploadCounter);
 
 	private void notifyDone(final boolean flag, final int code) {
 		mHandler.post(new Runnable() {
 			@Override
 			public void run() {
 				if (mListener != null) {
-					mListener.done(flag, code,getNotice());
+					mListener.done(flag, code, getNotice());
 				}
 			}
 		});
@@ -206,29 +216,29 @@ public abstract class AsyncUploadTask extends AsyncTask<List<SheetRecord>, Void,
 		return result;
 	}
 
-	protected void uploadWarnWrapper(final AlertInfo curAlertInfo,final DataCounter pointUploadCounter){
-		if(curAlertInfo == null) {
+	protected void uploadWarnWrapper(final AlertInfo curAlertInfo, final DataCounter pointUploadCounter) {
+		if (curAlertInfo == null) {
 			pointUploadCounter.increase(true);
 			return;
 		}
-		
+
 		if (!AlertUtils.hasUnhandledPreviousWarningData(curAlertInfo)) {
 			pointUploadCounter.increase(true);
 			return;
 		}
-		
-		final WarningDataManager.WarningUploadListener lister = new WarningDataManager.WarningUploadListener() {
+
+		WarningDataManager.WarningUploadListener lister = new WarningDataManager.WarningUploadListener() {
 
 			@Override
-			public void done(boolean success,boolean hasData) {
+			public void done(boolean success, boolean hasData) {
 				if (success) {
-					if(!hasData){
+					if (!hasData) {
 						exceptedUploadAarmDataCount--;
 					} else {
 						actualUploadAarmDataCount++;
 					}
 					pointUploadCounter.increase(true);
-					if(curAlertInfo != null){
+					if (curAlertInfo != null) {
 						int alertId = curAlertInfo.getAlertId();
 						AlertList bean = AlertListDao.defaultDao().queryOneById(alertId);
 						if (bean != null) {
@@ -237,7 +247,7 @@ public abstract class AsyncUploadTask extends AsyncTask<List<SheetRecord>, Void,
 						}
 					}
 				} else {
-					Log.d("CrtbWebService","upload warn data failed.");
+					Log.d("CrtbWebService", "upload warn data failed.");
 					pointUploadCounter.increase(false);
 				}
 			}
@@ -248,14 +258,14 @@ public abstract class AsyncUploadTask extends AsyncTask<List<SheetRecord>, Void,
 		originalData.setLeijiAlert(curAlertInfo);
 		originalData.setSectionCode(curAlertInfo.getSECTCODE());
 		exceptedUploadAarmDataCount++;
-		warningDataManager.uploadWarning(curAlertInfo,originalData, lister);
-		
+		warningDataManager.uploadWarning(curAlertInfo, originalData, lister);
+
 	}
 	
-	protected boolean hasUnhandledAlert(List<AlertInfo> alerts){
-		for(AlertInfo alertInfo : alerts){
-			if(alertInfo != null) {
-				if(alertInfo.getAlertStatus() != Constant.ALERT_STATUS_HANDLED){
+	protected boolean hasUnhandledAlert(List<AlertInfo> alerts) {
+		for (AlertInfo alertInfo : alerts) {
+			if (alertInfo != null) {
+				if (alertInfo.getAlertStatus() != Constant.ALERT_STATUS_HANDLED) {
 					return true;
 				}
 			}
@@ -263,49 +273,47 @@ public abstract class AsyncUploadTask extends AsyncTask<List<SheetRecord>, Void,
 		return false;
 	}
 
-	protected void uploadMeasureData(String sectionCode,final MeasureData  measureData,final AlertInfo curAlertInfo,final DataCounter pointUploadCounter) {
-				
-		if(Constant.getNoUploadDataWhenWarningUnHandled()){
-			if(curAlertInfo != null) {
-				if(curAlertInfo.getAlertStatus() != Constant.ALERT_STATUS_HANDLED){
-					pointUploadCounter.increase(false);
-					exceptedUploadTestDataCount--;
-					return;
-				}
-			}
-		}
-		
+	protected void uploadMeasureData(String sectionCode, final MeasureData measureData, final AlertInfo curAlertInfo, final DataCounter pointUploadCounter) {
+
 		exceptedUploadTestDataCount++;
 		PointUploadParameter parameter = new PointUploadParameter();
-        parameter.setSectionCode(sectionCode);
-        parameter.setPointCodeList(measureData.getPointCodeList(sectionCode));
-        parameter.setTunnelFaceDistance(measureData.getFaceDistance());
-        parameter.setProcedure(measureData.getFaceDescription());
-        parameter.setMonitorModel(measureData.getMonitorModel());
-        parameter.setMeasureDate(measureData.getMeasureDate());
-        parameter.setPointValueList(measureData.getValueList());
-        parameter.setPointCoordinateList(measureData.getCoordinateList());
+		parameter.setSectionCode(sectionCode);
+		parameter.setPointCodeList(measureData.getPointCodeList(sectionCode));
+		parameter.setTunnelFaceDistance(measureData.getFaceDistance());
+		parameter.setProcedure(measureData.getFaceDescription());
+		parameter.setMonitorModel(measureData.getMonitorModel());
+		parameter.setMeasureDate(measureData.getMeasureDate());
+		parameter.setPointValueList(measureData.getValueList());
+		parameter.setPointCoordinateList(measureData.getCoordinateList());
 		String sheetGuid = measureData.getSheetGuid();
 		if (sheetGuid != null) {
 			SurveyerInformation surveyer = CrtbUtils.getSurveyerInfoBySheetGuid(sheetGuid);
 			parameter.setSurveyorName(surveyer.getSurveyerName());
 			parameter.setSurveyorId(surveyer.getCertificateID());
 		}
-        parameter.setRemark("");
-        CrtbWebService.getInstance().uploadTestResult(parameter, new RpcCallback() {
-            
-            @Override
+		parameter.setRemark("");
+		CrtbWebService.getInstance().uploadTestResult(parameter, new RpcCallback() {
+
+			@Override
 			public void onSuccess(Object[] data) {
-            	measureData.markAsUploaded();
-            	actualUploadTestDataCount++;
-            	uploadWarnWrapper(curAlertInfo,pointUploadCounter);
+				measureData.markAsUploaded();
+				actualUploadTestDataCount++;
+				uploadWarnWrapper(curAlertInfo, pointUploadCounter);
 			}
 
 			@Override
 			public void onFailed(String reason) {
-				Log.d("CrtbWebService", "upload test data failed.");
+				Log.e(Constant.LOG_TAG_SERVICE, TAG+"upload test data failed.");
 				pointUploadCounter.increase(false);
 			}
-        });
+		});
+	}
+
+	class UploadSet {
+		Section section;
+		List<TunnelMeasureData> tunnelMeasureList;
+		List<SubsidenceMeasureData> subMeasureList;
+		List<String> orginalDataList;
+		List<AlertInfo> alertList;
 	}
 }

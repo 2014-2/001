@@ -8,6 +8,7 @@ import android.os.Looper;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.crtb.tunnelmonitor.common.Constant;
 import com.crtb.tunnelmonitor.dao.impl.v2.SubsidenceCrossSectionExIndexDao;
 import com.crtb.tunnelmonitor.dao.impl.v2.SubsidenceCrossSectionIndexDao;
 import com.crtb.tunnelmonitor.dao.impl.v2.SubsidenceTotalDataDao;
@@ -29,7 +30,7 @@ import com.crtb.tunnelmonitor.utils.CrtbUtils;
 
 
 public class DataDownloadManager {
-	private static final String LOG_TAG = "DataDownloadManager";
+	private static final String TAG = "DataDownloadManager：";
 	
 	public interface DownloadListener {
 		/**
@@ -108,7 +109,7 @@ public class DataDownloadManager {
 
             @Override
             public void onSuccess(Object[] data) {
-                Log.d(LOG_TAG, "download section code list success.");
+            	Log.d(Constant.LOG_TAG_SERVICE,TAG + "download section code list success.");
                 List<String> sectionCodeList = Arrays.asList((String[])data);
                 if (sectionCodeList != null && sectionCodeList.size() > 0) {
                 	//标识断面编码列表下载完毕
@@ -130,7 +131,7 @@ public class DataDownloadManager {
 
             @Override
             public void onFailed(String reason) {
-                Log.d(LOG_TAG, "download section code list failed.");
+            	Log.d(Constant.LOG_TAG_SERVICE,TAG + "download section code list failed.");
                 downloadCounter.finish(reason);
             }
         });
@@ -167,7 +168,7 @@ public class DataDownloadManager {
 
             @Override
             public void onFailed(String reason) {
-                Log.d(LOG_TAG, "downloadSection failed: " + reason);
+            	Log.d(Constant.LOG_TAG_SERVICE,TAG + "downloadSection failed: " + reason);
                 sectionDownloadCounter.increase(false, "SectionList");
             }
         });
@@ -183,12 +184,12 @@ public class DataDownloadManager {
             		storeTunnelPoints(pointTestDataList);
             	}
                 pointDownloadCounter.increase(true, sectionCode);
-                Log.d(LOG_TAG, "download point success.");
+                Log.d(Constant.LOG_TAG_SERVICE,TAG + "download point success.");
             }
 
             @Override
             public void onFailed(String reason) {
-                Log.d(LOG_TAG, "download point failed: " + reason);
+            	Log.d(Constant.LOG_TAG_SERVICE,TAG + "download point failed: " + reason);
                 pointDownloadCounter.increase(false, sectionCode);
             }
         });

@@ -12,7 +12,7 @@ import ICT.utils.RSACoder;
 import android.util.Log;
 
 class UploadTestResultDataRpc extends AbstractRpc {
-	private static final String LOG_TAG = "UploadTestResultDataRpc";
+	private static final String TAG = "UploadTestResultDataRpc：";
 	private static final String KEY_SECTION_CODE = "断面编号";
 	private static final String KEY_POINT_CODE_LIST = "测点的编号序列";
 	private static final String KEY_TUNNEL_FACE_DISTANCE = "该断面到掌子面的距离";
@@ -75,7 +75,7 @@ class UploadTestResultDataRpc extends AbstractRpc {
 			return;
 		}
 		try {
-			Log.d(LOG_TAG, "response: " + response);
+			Log.d(Constant.LOG_TAG_SERVICE, TAG + "response: " + response);
 			SoapObject result = (SoapObject) response;
 			int code = Integer.parseInt(result.getPropertyAsString(0));
 			if (code == 1) {

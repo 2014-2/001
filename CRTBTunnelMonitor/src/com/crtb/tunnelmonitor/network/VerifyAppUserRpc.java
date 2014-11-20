@@ -5,11 +5,13 @@ import java.util.Map;
 
 import org.ksoap2.serialization.SoapObject;
 
+import com.crtb.tunnelmonitor.common.Constant;
+
 import android.text.TextUtils;
 import android.util.Log;
 
 class VerifyAppUserRpc extends AbstractRpc {
-	private static final String LOG_TAG = "VerifyAppUserRpc";
+	private static final String TAG = "VerifyAppUserRpc：";
 	private static final String KEY_ACCOUNT = "登陆账号";
 	private static final String KEY_PASSWORD = "登陆密码";
 	private static final String KEY_MAC_ADDRESS = "设备物理地址";
@@ -47,7 +49,7 @@ class VerifyAppUserRpc extends AbstractRpc {
 			return;
 		}
 		try {
-			Log.d(LOG_TAG, "response: " + response);
+			Log.d(Constant.LOG_TAG_SERVICE, TAG + "response: " + response);
 			SoapObject result = (SoapObject) response;
 			String randomCode = result.getPropertyAsString(0);
 			if (TextUtils.isEmpty(randomCode)) {

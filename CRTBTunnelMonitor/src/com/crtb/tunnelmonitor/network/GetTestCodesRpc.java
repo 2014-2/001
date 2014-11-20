@@ -7,10 +7,12 @@ import java.util.Map;
 
 import org.ksoap2.serialization.SoapObject;
 
+import com.crtb.tunnelmonitor.common.Constant;
+
 import android.util.Log;
 
 class GetTestCodesRpc extends AbstractRpc {
-	private static final String LOG_TAG = "GetTestCodesRpc";
+	private static final String TAG = "GetTestCodesRpc：";
 	private static final String KEY_SECTION_CODE = "断面编号";
 	private static final String KEY_POINT_STATUS = "测点状态";
 	private static final String KEY_RANDOM_CODE = "随机码";
@@ -59,7 +61,7 @@ class GetTestCodesRpc extends AbstractRpc {
 			for(int i = 0; i < count; i++) {
 				String[] pointInfo =  data.getPropertyAsString(i).split("#");
 				pointList.add(pointInfo[0]);
-				Log.d(LOG_TAG, "test point: " + pointInfo[0]);
+				Log.d(Constant.LOG_TAG_SERVICE, TAG + "test point: " + pointInfo[0]);
 			}
 			if (pointList.size() > 0) {
 				notifySuccess(pointList.toArray(new String[pointList.size()]));
