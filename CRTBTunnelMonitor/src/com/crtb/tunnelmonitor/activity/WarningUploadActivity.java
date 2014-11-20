@@ -52,14 +52,16 @@ public class WarningUploadActivity extends Activity {
     private WarningUploadAdapter mAdapter;
     private WaringUploadDataContainer dataContainer;
     private boolean needQueryData = false;
+    private String title = null;
     public static final String CURRENT_EDIT_SECTION = "current_edit_section";
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_warning_upload);
-        TextView title=(TextView) findViewById(R.id.tv_topbar_title);
-        title.setText(R.string.upload_warning_data);
+        TextView txtTitle=(TextView) findViewById(R.id.tv_topbar_title);
+        title = getString(R.string.upload_warning_data);
+        txtTitle.setText(title);
         init();
         initProgressOverlay();
         initCurWorkBinding();
@@ -204,8 +206,15 @@ public class WarningUploadActivity extends Activity {
 								}
 								
 								if (!AlertUtils.hasUnhandledPreviousWarningData(ai)) {
-									CrtbUtils.showDialogWithYes(context, getString(R.string.upload_warning_data), getString(R.string.alert_upload_promote));
+									CrtbUtils.showDialogWithYes(context, title, getString(R.string.alert_upload_promote));
 									return;
+								}
+								
+								if (Constant.getStrictRestrictedUpload()) {
+									if (ai.getAlertStatus() != Constant.ALERT_STATUS_HANDLED) {
+										CrtbUtils.showDialogWithYes(context, title, "该预警为开不能上传，请先处理");
+										return;
+									}
 								}
 								
 								showProgressOverlay();
