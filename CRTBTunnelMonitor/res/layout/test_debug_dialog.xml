@@ -50,7 +50,7 @@
                 android:layout_toRightOf="@id/left"
                 android:inputType="numberDecimal"
                 android:singleLine="true"
-                android:maxLength="10"
+                android:maxLength="17"
                 android:text="100" />
         </RelativeLayout>
 
@@ -91,7 +91,7 @@
                 android:layout_toRightOf="@id/left"
                 android:inputType="numberDecimal"
                 android:singleLine="true"
-                android:maxLength="10"
+                android:maxLength="17"
                 android:text="100" />
         </RelativeLayout>
 
@@ -132,7 +132,7 @@
                 android:layout_toRightOf="@id/left"
                 android:inputType="numberDecimal"
                 android:singleLine="true"
-                android:maxLength="10"
+                android:maxLength="17"
                 android:text="20" />
         </RelativeLayout>
 

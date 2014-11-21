@@ -87,7 +87,7 @@ public class CrtbDialogTest extends CrtbDialog {
 				}
 				
 				if(callback != null){
-					callback.callback(CrtbUtils.formatDouble(x), CrtbUtils.formatDouble(y), CrtbUtils.formatDouble(z), t) ;
+					callback.callback(CrtbUtils.formatDouble(x,4), CrtbUtils.formatDouble(y,4), CrtbUtils.formatDouble(z,4), t) ;
 				}
 				
 				dismiss() ;

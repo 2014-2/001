@@ -524,10 +524,15 @@ public final class CrtbDbFileUtils {
 			
 			// 7. 删除临时文件
 			File f = new File(tempPath);
-			//YX 非正常退出后，把原文件删除后，可能导致最后的更新没有写入到数据库问题
-			if(f != null && f.exists()){
-			    //f.delete() ;
-				return new String[]{name,tempPath};
+
+			if(f != null && f.exists()){			
+				if(tempPath.endsWith("import_temp.bin")){
+					//YX 如果是上次导入的记录，则删除数据
+					f.delete() ;
+				} else {
+					//YX 非正常退出后，把原文件删除后，可能导致最后的更新没有写入到数据库问题
+					return new String[]{name,tempPath};
+				}
 			}
 			
 			// 解密
