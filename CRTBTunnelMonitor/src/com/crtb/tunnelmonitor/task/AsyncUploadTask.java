@@ -1,6 +1,7 @@
 package com.crtb.tunnelmonitor.task;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.zw.android.framework.util.StringUtils;
@@ -265,7 +266,7 @@ public abstract class AsyncUploadTask extends AsyncTask<List<SheetRecord>, Void,
 	protected boolean hasUnhandledAlert(List<AlertInfo> alerts) {
 		for (AlertInfo alertInfo : alerts) {
 			if (alertInfo != null) {
-				if (alertInfo.getAlertStatus() != Constant.ALERT_STATUS_HANDLED) {
+				if( AlertUtils.existUnhandledAlert(alertInfo)){
 					return true;
 				}
 			}

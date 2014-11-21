@@ -211,7 +211,7 @@ public class WarningUploadActivity extends Activity {
 								}
 								
 								if (Constant.getStrictRestrictedUpload()) {
-									if (ai.getAlertStatus() != Constant.ALERT_STATUS_HANDLED) {
+									if(AlertUtils.existUnhandledAlert(ai)){
 										CrtbUtils.showDialogWithYes(context, title, "该预警为开不能上传，请先处理");
 										return;
 									}
