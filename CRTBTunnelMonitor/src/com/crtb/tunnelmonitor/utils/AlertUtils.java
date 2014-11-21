@@ -2122,7 +2122,7 @@ public class AlertUtils {
     
     public static boolean existUnhandledAlert(AlertInfo alertInfo){
     	Date alertDate = CrtbUtils.parseDate(alertInfo.getDate());
-		if (alertDate.before(Constant.WaringDeadTime)) {
+		if (alertDate.after(Constant.WaringDeadTime)) {
 			return alertInfo.getAlertStatus() == Constant.ALERT_STATUS_HANDLED;
 		}
 		return false;
