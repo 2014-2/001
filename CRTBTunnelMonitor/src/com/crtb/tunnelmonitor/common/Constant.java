@@ -17,7 +17,7 @@ import com.crtb.tunnelmonitor.utils.CrtbUtils;
  */
 public class Constant {
 
-	private static Version curVersion = Version.InnerTestUploadStrictRestricted;
+	private static Version curVersion = Version.ReleaseUploadStrictRestricted;
 	
 	/*登录选择name和value*/
 	public static final String LOGIN_TYPE = "name";
@@ -397,6 +397,12 @@ public class Constant {
 		else if (curVersion == Version.HelpCustomUpload) {
 			versionControl = new VersionControl(true, false, false, true, true, false);
 		}
+		//帮客户上传数据：严格限制
+		else if (curVersion == Version.HelpCustomUploadStrictRestricted) {
+			versionControl = new VersionControl(true, false, false, true, true, true);
+		}
+		
+		
 	}
 
 	static class VersionControl{
@@ -466,6 +472,7 @@ public class Constant {
 		ReleaseUploadStrictRestricted,
 		InnerTest,
 		InnerTestUploadStrictRestricted,
-		HelpCustomUpload
+		HelpCustomUpload,
+		HelpCustomUploadStrictRestricted
 	}
 }
