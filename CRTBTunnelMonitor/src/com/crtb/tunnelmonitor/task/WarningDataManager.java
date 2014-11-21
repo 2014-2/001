@@ -288,7 +288,7 @@ public class WarningDataManager {
 	    	String sectionCode = warningData.getSectionCode();
 	    	String pointCode = warningData.getPointCode();
 	    	if(sectionCode == null || StringUtils.isEmpty(pointCode)){
-	    		notice = "请先上传数据，再上传预警";
+	    		notice = "断面还未上传,预警无法上传!";
 	    		warningUploadCounter.increase(false);
 	    		return;
 	    	}
