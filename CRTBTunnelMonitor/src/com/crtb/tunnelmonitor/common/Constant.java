@@ -17,7 +17,7 @@ import com.crtb.tunnelmonitor.utils.CrtbUtils;
  */
 public class Constant {
 
-	private static Version curVersion = Version.ReleaseUploadStrictRestricted;
+	private static Version curVersion = Version.Release;
 	
 	/*登录选择name和value*/
 	public static final String LOGIN_TYPE = "name";
@@ -276,7 +276,7 @@ public class Constant {
     
 //YX 新增
 	
-	public static Date WaringDeadTime = CrtbUtils.parseDate("2014-11-15 0:0:0");
+	public static Date WaringDeadTime = CrtbUtils.parseDate("2015-12-31 0:0:0");
 	//用户验证-wylctest
 	public static final String USER_SELECT_FXTEST = "http://61.237.239.144/wylctest/basedown";
 	//上传-wylctest
