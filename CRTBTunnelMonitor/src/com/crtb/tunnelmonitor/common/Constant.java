@@ -17,7 +17,8 @@ import com.crtb.tunnelmonitor.utils.CrtbUtils;
  */
 public class Constant {
 
-	private static Version curVersion = Version.Release;
+    // 当前对外发布的版本为：严格上传限制版本
+	private static Version curVersion = Version.ReleaseUploadStrictRestricted;
 	
 	/*登录选择name和value*/
 	public static final String LOGIN_TYPE = "name";
