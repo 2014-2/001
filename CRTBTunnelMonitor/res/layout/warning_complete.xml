@@ -11,7 +11,7 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent" >
 
-        <RelativeLayout
+       <RelativeLayout
             android:layout_width="fill_parent"
             android:layout_height="fill_parent" >
 
@@ -87,12 +87,12 @@
                         android:textSize="16sp" />
                 </LinearLayout>
             </LinearLayout>
-
+            
             <TextView
                 android:id="@+id/warning_value"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/part_top"
+                android:layout_below="@id/part_top"
                 android:layout_marginLeft="20dp"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textSize="16sp" />
@@ -101,7 +101,7 @@
                 android:id="@+id/old_date"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/warning_value"
+                android:layout_below="@id/warning_value"
                 android:layout_marginLeft="23dp"
                 android:layout_marginRight="23dp"
                 android:layout_marginTop="14dp"
@@ -135,7 +135,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Medium Text"
-                        android:textAppearance="?android:attr/textAppearanceMedium" />
+                        android:textAppearance="?android:attr/textAppearanceMedium" 
+                        android:visibility="gone" />
 
                     <TextView
                         android:id="@+id/old_date_list_num"
@@ -145,12 +146,52 @@
                         android:textAppearance="?android:attr/textAppearanceMedium" />
 
                     <TextView
-                        android:id="@+id/old_date_point"
+                        android:id="@+id/rock_grade"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Medium Text"
                         android:textAppearance="?android:attr/textAppearanceMedium" />
+                    
+                    <TextView
+                        android:id="@+id/alert_limit"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Medium Text"
+                        android:textAppearance="?android:attr/textAppearanceMedium" />
+                    
+                    <TextView
+                        android:id="@+id/current_value"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Medium Text"
+                        android:textAppearance="?android:attr/textAppearanceMedium" />
+                    
+                    
+                   <TextView
+                        android:id="@+id/no_deal_alert_value"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Medium Text"
+                        android:textAppearance="?android:attr/textAppearanceMedium" />
+                    
+                   <TextView
+                        android:id="@+id/recommand_value"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Medium Text"
+                        android:textAppearance="?android:attr/textAppearanceMedium" />
+                     
+                   
+                    <TextView
+                        android:id="@+id/old_date_point"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Medium Text"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:visibility="gone" />
+                    
                 </LinearLayout>
+                
             </RelativeLayout>
 
             <RelativeLayout

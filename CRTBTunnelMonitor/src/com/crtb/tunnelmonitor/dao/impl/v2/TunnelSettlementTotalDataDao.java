@@ -11,6 +11,7 @@ import android.util.Log;
 import com.crtb.tunnelmonitor.common.Constant;
 import com.crtb.tunnelmonitor.entity.TunnelSettlementTotalData;
 import com.crtb.tunnelmonitor.utils.AlertUtils;
+import com.crtb.tunnelmonitor.utils.AlertUtils.QueryAlertValue;
 
 /**
  * 隧道内测量数据
@@ -371,5 +372,55 @@ public class TunnelSettlementTotalDataDao extends AbstractDao<TunnelSettlementTo
         String sql = "select * from SubsidenceTotalData where Guid = ? Order by Id limit 1";
         
         return mDatabase.queryObject(sql, null, TunnelSettlementTotalData.class);
+    }
+    
+    public QueryAlertValue getPreAlertListOfOriginalDataId(String originalID){    	
+    	String[] idStrs = null;
+    	QueryAlertValue querySet = new AlertUtils.QueryAlertValue();
+    	TunnelSettlementTotalData curTunnel1 = null;
+    	TunnelSettlementTotalData curTunnel2 = null;
+    	TunnelSettlementTotalData preTunnel1 = null;
+    	TunnelSettlementTotalData preTunnel2 = null;
+    	
+    	if (originalID.contains(Constant.ORIGINAL_ID_DIVIDER)) {
+			idStrs = originalID.split(Constant.ORIGINAL_ID_DIVIDER);
+			curTunnel1 = queryOneByGuid(idStrs[0]); 
+			curTunnel2 = queryOneByGuid(idStrs[1]); 
+		} else {
+			curTunnel1 = queryOneByGuid(originalID);
+		}
+    	
+        final IAccessDatabase mDatabase = getCurrentDb();
+        if (mDatabase == null) {
+            return null;
+        }
+        String sql = "SELECT * FROM TunnelSettlementTotalData"
+        + " WHERE PntType = ?" 
+        + " AND ChainageId = ?"
+        + " AND DataStatus != ?" 
+        + " AND Id < ?"
+        + " ORDER BY Id DESC"
+        + " LIMIT 1" ;
+
+		String[] prams = new String[] { 
+				curTunnel1.getPntType(),
+				curTunnel1.getChainageId(),
+				"" + Constant.POINT_DATASTATUS_DISCARD, 
+				"" + curTunnel1.getID() };
+        
+        preTunnel1 = mDatabase.queryObject(sql, prams, TunnelSettlementTotalData.class);
+        if(preTunnel1 != null && preTunnel1.getDataStatus() != Constant.POINT_DATASTATUS_AS_FIRSTLINE){
+        	if(idStrs != null && idStrs.length > 1){
+        		String pnt1Type = preTunnel1.getPntType();
+        		String pnt2Type = pnt1Type.substring(0, pnt1Type.length() - 1) + "2";
+        		preTunnel2 = queryOppositePointOfALine(preTunnel1,pnt2Type);       		
+        	}
+        }
+        
+        querySet.preTunnel1 = preTunnel1;
+        querySet.preTunnel2 = preTunnel2;
+        querySet.curTunnel1 = curTunnel1;
+        querySet.curTunnel2 = curTunnel2;
+    	return querySet;
     }
 }

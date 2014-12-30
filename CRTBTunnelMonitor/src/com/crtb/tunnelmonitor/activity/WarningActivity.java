@@ -7,10 +7,9 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
-import org.zw.android.framework.ioc.InjectLayout;
+import org.apache.commons.codec.binary.StringUtils;
 import org.zw.android.framework.util.DateUtils;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -18,17 +17,13 @@ import android.text.Editable;
 import android.text.Html;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnTouchListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
@@ -40,11 +35,10 @@ import com.crtb.tunnelmonitor.AppCRTBApplication;
 import com.crtb.tunnelmonitor.WorkFlowActivity;
 import com.crtb.tunnelmonitor.adapter.AlertListAdapter;
 import com.crtb.tunnelmonitor.common.Constant;
-import com.crtb.tunnelmonitor.dao.impl.v2.CrossSectionStopSurveyingDao;
 import com.crtb.tunnelmonitor.dao.impl.v2.RawSheetIndexDao;
 import com.crtb.tunnelmonitor.entity.AlertInfo;
+import com.crtb.tunnelmonitor.entity.AlertList;
 import com.crtb.tunnelmonitor.entity.CrtbUser;
-import com.crtb.tunnelmonitor.entity.MergedAlert;
 import com.crtb.tunnelmonitor.entity.RawSheetIndex;
 import com.crtb.tunnelmonitor.utils.AlertManager;
 import com.crtb.tunnelmonitor.utils.AlertUtils;
@@ -88,6 +82,7 @@ public class WarningActivity extends WorkFlowActivity {
 
 	private TextView baojing, yixiao;
 	private TextView warningSignalTV, warningPointNumTV, warningStateTV, warningValueTV, warningDateTV, warningMessageTV, warningDealWayTV, oldDateMileageTV, oldDateListNumTV, oldDatePointTV;
+	private TextView currentValue,rockGrade,alertLimit,noDealAlertValue,recommandValue;
 	private Button /* normalCalBtn, discardBtn, asFirstLineBtn, */correctionBtn, reburyBtn, handlingDetailBtn, completeOkBtn, completeCancelBtn;
 	private View oldChooseView;
 	private int clickedItem;
@@ -248,7 +243,12 @@ public class WarningActivity extends WorkFlowActivity {
 		oldDateMileageTV = (TextView) findViewById(R.id.old_date_mileage);
 		oldDateListNumTV = (TextView) findViewById(R.id.old_date_list_num);
 		oldDatePointTV = (TextView) findViewById(R.id.old_date_point);
-
+		rockGrade = (TextView)findViewById(R.id.rock_grade);
+		alertLimit = (TextView)findViewById(R.id.alert_limit);
+		currentValue = (TextView)findViewById(R.id.current_value);
+		noDealAlertValue = (TextView)findViewById(R.id.no_deal_alert_value);
+		recommandValue = (TextView)findViewById(R.id.recommand_value);
+		
 		completeOkBtn = (Button) findViewById(R.id.complete_ok);
 		setBtnClickListener(completeOkBtn);
 		completeCancelBtn = (Button) findViewById(R.id.complete_cancel);
@@ -541,16 +541,15 @@ public class WarningActivity extends WorkFlowActivity {
 				}
 				warningPointNumTV.setText("点位：" + pntType);
 				warningStateTV.setText("状态：" + alert.getAlertStatusMsg());
-				warningValueTV.setText("累计超限: " + String.format("%1$.1f", CrtbUtils.formatDouble(alert.getUValue(), 1)) + AlertUtils.getAlertValueUnit(alert.getUType()));
+				warningValueTV.setText("累计超限：" + String.format("%1$.1f", CrtbUtils.formatDouble(alert.getUValue(), 1)) + AlertUtils.getAlertValueUnit(alert.getUType()));
+                initPendixInfo(alert);				
 				warningDateTV.setText(alert.getDate());
 				warningMessageTV.setText(alert.getUTypeMsg());
 				warningDealWayTV.setText(alert.getChuliFangshi());
 				oldDateMileageTV.setText(Html.fromHtml("<font color=\"#0080ee\">里程: </font>" + alert.getXinghao()));
 				oldDateListNumTV.setText(Html.fromHtml("<font color=\"#0080ee\">记录单号: </font>" + date));
 				oldDatePointTV.setText(Html.fromHtml("<font color=\"#0080ee\">测点: </font>" + pntType));
-				mCorrectionView.setText(String.valueOf(alert.getCorrection()));
-				// mWarningRemarkView.setText(alert.getHandling());
-
+				mCorrectionView.setText(String.valueOf(alert.getCorrection()));				
 				int raidoId = 0;
 				String remark = "";
 				switch (view.getId()) {
@@ -594,6 +593,21 @@ public class WarningActivity extends WorkFlowActivity {
 				setOpertationViewVisibility(false);
 			}
 		}
+	}
+	
+	/**
+	 * 获取本次变形的值
+	 */
+	private float getCurrentValue(AlertInfo alert){
+		AlertList alertList = new AlertList();
+		alertList.setUValue(alert.getUValue());
+		alertList.setOriginalDataId(alert.getOriginalDataID());
+		alertList.setCrossSectionId(alert.getSectionId());
+		alertList.setPntType(alert.getPntType());
+		alertList.setId(alert.getAlertId());
+		double currentValue = AlertUtils.getRightCorrection(alertList, sectionType);
+		currentValue = CrtbUtils.formatDouble(currentValue, 1);
+		return (float)currentValue;
 	}
 	
 	private void showHandlingDetail(){		
@@ -704,13 +718,19 @@ public class WarningActivity extends WorkFlowActivity {
 		public int compare(String lhs, String rhs) {
 			double l = 0;
 			double r = 0;
+			String [] lArray;
+			String [] rArray;
 			try {
 				lhs = lhs.replace(projectPrefix, "");
-				lhs = lhs.replace("+", "000");
+				lhs = lhs.replace("+",",");
+				lArray = lhs.split(",");				
+				l = Double.valueOf(lArray[0])*1000 + Double.valueOf(lArray[1]);
+				
 				rhs = rhs.replace(projectPrefix, "");
-				rhs = rhs.replace("+", "000");
-				l = Double.valueOf(lhs);
-				r = Double.valueOf(rhs);
+				rhs = rhs.replace("+",",");
+				rArray = rhs.split(",");
+				r = Double.valueOf(rArray[0])*1000 + Double.valueOf(rArray[1]);
+				
 			} catch (Exception e) {
 				Log.e(Constant.LOG_TAG_ACTIVITY, TAG + "StringSort:" + e.getMessage());
 			}
@@ -756,5 +776,42 @@ public class WarningActivity extends WorkFlowActivity {
 		private boolean computed;
 		private String sectionGuid;
 		private List<AlertInfo> alerts;
+	}
+		
+	private void initPendixInfo(AlertInfo alert){
+		boolean isSpeed = false;
+		String unit = AlertUtils.getAlertValueUnit(alert.getUType());
+		double intervalFactor = 0.1;
+		String rockGradeStr = alert.getRockGrade();
+		rockGrade.setText(Html.fromHtml("<font color=\"#0080ee\">围岩等级: </font>" + rockGradeStr));
+		int rockLimit = Constant.LEI_JI_OFFSET_LEVEL_BASE[CrtbUtils.getRockgrade(rockGradeStr)];
+		alertLimit.setText(Html.fromHtml("<font color=\"#0080ee\">围岩阈值: </font>" + rockLimit + "毫米"));
+		double originalValue = 0;
+		if(AlertUtils.isSpeed(alert.getUType())){
+			originalValue = alert.getOriginalSulvAlertValue();
+			noDealAlertValue.setText(Html.fromHtml("<font color=\"#ff0000\">处理前速率: </font>" + originalValue + unit));
+			isSpeed = true;
+		} else {
+			originalValue = alert.getOriginalLeiJiAlertValue();
+			noDealAlertValue.setText(Html.fromHtml("<font color=\"#ff0000\">处理前累计: </font>" + originalValue + unit));
+		}
+		
+		float currentChangedValue = getCurrentValue(alert);
+		currentValue.setText(Html.fromHtml("<font color=\"#ff0000\">本次变形量: </font>" + currentChangedValue + "毫米"));
+		
+		double safeValue = rockLimit - intervalFactor; 
+		double recommand =0;
+		if (originalValue < 0){
+			recommand = originalValue + safeValue;
+		} else {
+			recommand = originalValue - safeValue;
+		}
+		recommand *= -1;
+		
+		recommand = CrtbUtils.formatDouble(recommand, 1);
+		if(isSpeed){
+			recommand = 0;
+		}
+		recommandValue.setText(Html.fromHtml("<font color=\"#ff0000\">理论修正量: </font>" + recommand + "毫米"));
 	}
 }

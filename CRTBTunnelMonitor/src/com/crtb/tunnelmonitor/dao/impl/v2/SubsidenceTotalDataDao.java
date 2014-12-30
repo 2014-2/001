@@ -8,8 +8,8 @@ import org.zw.android.framework.util.StringUtils;
 
 import com.crtb.tunnelmonitor.common.Constant;
 import com.crtb.tunnelmonitor.entity.SubsidenceTotalData;
-import com.crtb.tunnelmonitor.entity.TunnelSettlementTotalData;
 import com.crtb.tunnelmonitor.utils.AlertUtils;
+import com.crtb.tunnelmonitor.utils.AlertUtils.QueryAlertValue;
 
 public class SubsidenceTotalDataDao extends AbstractDao<SubsidenceTotalData> {
 
@@ -295,5 +295,34 @@ public class SubsidenceTotalDataDao extends AbstractDao<SubsidenceTotalData> {
         String sql = "select * from SubsidenceTotalData where Guid = ? Order by Id limit 1";
         
         return mDatabase.queryObject(sql, null, SubsidenceTotalData.class);
+    }
+
+	public QueryAlertValue getPreAlertListOfOriginalDataId(String originalID){    	
+    	QueryAlertValue querySet = new AlertUtils.QueryAlertValue();    	
+    	SubsidenceTotalData curSub= queryOneByGuid(originalID);
+        final IAccessDatabase mDatabase = getCurrentDb();
+        
+        if (mDatabase == null) {
+            return null;
+        }
+        
+        String sql = "SELECT * FROM SubsidenceTotalData"
+                + " WHERE PntType = ?" 
+                + " AND ChainageId = ?"
+                + " AND DataStatus != ?" 
+                + " AND Id < ?"
+                + " ORDER BY Id DESC"
+                + " LIMIT 1" ;
+
+        		String[] prams = new String[] { 
+        				curSub.getPntType(),
+        				curSub.getChainageId(),
+        				"" + Constant.POINT_DATASTATUS_DISCARD, 
+        				"" + curSub.getID() };
+        
+        SubsidenceTotalData preSub = mDatabase.queryObject(sql, prams, SubsidenceTotalData.class);
+		querySet.curSub = curSub;
+		querySet.preSub = preSub;
+    	return querySet;
     }
 }

@@ -8,6 +8,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.codec.binary.StringUtils;
+
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteException;
@@ -1987,6 +1989,15 @@ public class AlertUtils {
 		public void Finish(OffsetLevel[] offsetList,boolean isCancel);
 	}
 	
+	public static class QueryAlertValue {
+		public SubsidenceTotalData curSub;
+		public SubsidenceTotalData preSub;
+		public TunnelSettlementTotalData curTunnel1;
+    	public TunnelSettlementTotalData curTunnel2;
+    	public TunnelSettlementTotalData preTunnel1;
+    	public TunnelSettlementTotalData preTunnel2;
+	}
+	
     
 	/**
      * 根据原始数据去获取、报警数据
@@ -2127,4 +2138,53 @@ public class AlertUtils {
 		}
 		return false;
     }
+    
+	public static double getRightCorrection(AlertList curAlertList,
+			String sectionType) {
+		// 如果未消警，默认为需要处理的报警
+		double rightCorrection = 0;
+		QueryAlertValue querySet = null;
+
+		if (sectionType.equals("TUNNEL")) {
+			querySet = TunnelSettlementTotalDataDao.defaultDao().getPreAlertListOfOriginalDataId(curAlertList.getOriginalDataId());
+			if (querySet != null) {
+				if (querySet.curTunnel2 != null) {
+					double curLine = getLineLength(querySet.curTunnel1,querySet.curTunnel2);
+					double preLine = getLineLength(querySet.preTunnel1,querySet.preTunnel2);
+					rightCorrection = (float) ((preLine - curLine) * 1000);
+				} else {
+					rightCorrection = getZ(querySet.curTunnel1.getCoordinate(),
+							querySet.preTunnel1.getCoordinate());
+				}
+			}
+		} else if (sectionType.equals("SUB")) {
+			querySet = SubsidenceTotalDataDao.defaultDao()
+					.getPreAlertListOfOriginalDataId(
+							curAlertList.getOriginalDataId());
+			if (querySet != null && querySet.curSub != null) {
+				rightCorrection = getZ(querySet.curSub.getCoordinate(),
+						querySet.preSub.getCoordinate());
+			}
+		}
+
+		return CrtbUtils.formatDouble(rightCorrection, 1);
+	}
+
+	private static double getZ(String curOrdinate, String preOrdinate) {
+		String ordSeparator = ",";
+		String[] curOrdinates = curOrdinate.split(ordSeparator);
+		String[] preOrdinates = preOrdinate.split(ordSeparator);
+
+		double curZ = 0;
+		double preZ = 0;
+
+		try {
+			curZ = Double.valueOf(curOrdinates[2]);
+			preZ = Double.valueOf(preOrdinates[2]);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return (preZ - curZ) * 1000;
+	}
 }
