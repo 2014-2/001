@@ -145,6 +145,9 @@ public class StationActivity extends BaseActivity {
                 case Topcon:
                     tsCmdType = TSCommandType.TopconTS01;
                     break;
+                case Trimble:
+                	tsCmdType = TSCommandType.TrimbleTS8;
+                	break;
                 default:
                     break;
             }
