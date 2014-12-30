@@ -53,7 +53,11 @@ public class CrtbAppConfig {
 	}
 	
 	public int getSectionSequence() {
-		return getIntValue(KEY_SECTION_SEQUENCE, 0);
+		int sequence = getIntValue(KEY_SECTION_SEQUENCE, 0);
+		if (sequence < 999) {
+			sequence = 999;
+		}
+		return sequence;
 	}
 	
 	public void setSectionSequence(int sequence) {
