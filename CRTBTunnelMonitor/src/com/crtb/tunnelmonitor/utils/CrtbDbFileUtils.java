@@ -228,7 +228,13 @@ public final class CrtbDbFileUtils {
 		for(File f : list){
 			
 			String fn	= f.getName() ;
-			String sn 	= fn.substring(0, fn.lastIndexOf("."));
+			int extentionIndex = fn.lastIndexOf(".");
+			//YX 排除对于备份文件的验证
+			if(fn.substring(extentionIndex,fn.length()).equals(AppConfig.DB_SUFFIX_BACKUP)){
+				continue;
+			}
+			
+			String sn 	= fn.substring(0, extentionIndex);
 			
 			if(sn.equals(name)){
 				return true;
@@ -524,8 +530,7 @@ public final class CrtbDbFileUtils {
 			
 			// 7. 删除临时文件
 			File f = new File(tempPath);
-
-			if(f != null && f.exists()){			
+			if(f.exists()){
 				if(tempPath.endsWith("import_temp.bin")){
 					//YX 如果是上次导入的记录，则删除数据
 					f.delete() ;
@@ -534,7 +539,6 @@ public final class CrtbDbFileUtils {
 					return new String[]{name,tempPath};
 				}
 			}
-			
 			// 解密
 			IDbEncrypt encrypt 	= new DbAESEncrypt() ;
 			

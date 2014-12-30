@@ -180,7 +180,7 @@ public final class ProjectIndexDao extends AbstractDao<ProjectIndex> {
 					String fn = f.getName() ;
 					
 					// 数据库后缀名称
-					if(fn.length() > 3){
+					if(fn.length() > 3 && !fn.startsWith("import_")){
 						
 						String suffix = fn.substring(fn.length() - 3, fn.length());
 						
