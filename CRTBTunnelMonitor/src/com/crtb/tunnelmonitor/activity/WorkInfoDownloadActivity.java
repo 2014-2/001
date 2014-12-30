@@ -122,14 +122,26 @@ public class WorkInfoDownloadActivity extends WorkFlowActivity {
     }
     
     private void bindWorkSite(final WorkSiteIndex workSite){
-    	CrtbWebService.getInstance().setZoneCode(workSite.getZoneCode());
-		CrtbWebService.getInstance().setSiteCode(workSite.getSiteCode());
-		SiteProjectMappingDao.defaultDao().insertOrUpdate(curProjectId, workSite.getID());
-		loadData();
+    	SiteProjectMapping siteProjectMapping = SiteProjectMappingDao.defaultDao().queryOneByProjectId(curProjectId);
+    	if(siteProjectMapping != null){
+    		CrtbUtils.showDialogWithYes(this, getString(R.string.download_work_site), "该工作面已经关联，若需修改，请联系本单位管理员或中铁天宝技术人员！");
+    	} else {
+    		CrtbUtils.showDialogWithYesOrNo(this, getString(R.string.download_work_site), "现在只能关联一次，请先确定本地和服务器的对应关系,是否关联？",new CrtbUtils.UploadCall() {
+				
+				@Override
+				public void ok() {
+			    	CrtbWebService.getInstance().setZoneCode(workSite.getZoneCode());
+					CrtbWebService.getInstance().setSiteCode(workSite.getSiteCode());
+					SiteProjectMappingDao.defaultDao().insertOrUpdate(curProjectId, workSite.getID());
+					loadData();
+				}
+			});
+    	}
     }
     
     private void downWorkSite(final WorkSiteIndex workSite){
-    	bindWorkSite(workSite);
+//YX 只关联一次时，在下载中就不能直接进行关联了    	
+//    	bindWorkSite(workSite);
     	Toast.makeText(this, "下载功能暂时关闭", Toast.LENGTH_LONG).show();
 //    	showProgressOverlay();
 //		DataDownloadManager downloadManager = new DataDownloadManager();
